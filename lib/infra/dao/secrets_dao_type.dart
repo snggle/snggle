@@ -1,0 +1,1 @@
+enum SecretsDaoType { decrypted, encrypted }
