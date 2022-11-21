@@ -15,7 +15,7 @@ import 'package:auto_route/auto_route.dart' as _i3;
 import 'package:flutter/material.dart' as _i4;
 
 import '../../views/pages/empty_page.dart' as _i2;
-import '../../views/pages/setup_pin_page.dart' as _i1;
+import '../../views/pages/vault_list_page/vault_list_page.dart' as _i1;
 
 class AppRouter extends _i3.RootStackRouter {
   AppRouter([_i4.GlobalKey<_i4.NavigatorState>? navigatorKey])
@@ -23,16 +23,20 @@ class AppRouter extends _i3.RootStackRouter {
 
   @override
   final Map<String, _i3.PageFactory> pagesMap = {
-    SetupPinRoute.name: (routeData) {
-      return _i3.MaterialPageX<void>(
+    VaultListRoute.name: (routeData) {
+      return _i3.CustomPage<void>(
         routeData: routeData,
-        child: const _i1.SetupPinPage(),
+        child: const _i1.VaultListPage(),
+        opaque: true,
+        barrierDismissible: false,
       );
     },
     EmptyRoute.name: (routeData) {
-      return _i3.MaterialPageX<void>(
+      return _i3.CustomPage<void>(
         routeData: routeData,
         child: const _i2.EmptyPage(),
+        opaque: true,
+        barrierDismissible: false,
       );
     },
   };
@@ -40,7 +44,7 @@ class AppRouter extends _i3.RootStackRouter {
   @override
   List<_i3.RouteConfig> get routes => [
         _i3.RouteConfig(
-          SetupPinRoute.name,
+          VaultListRoute.name,
           path: '/',
         ),
         _i3.RouteConfig(
@@ -51,15 +55,15 @@ class AppRouter extends _i3.RootStackRouter {
 }
 
 /// generated route for
-/// [_i1.SetupPinPage]
-class SetupPinRoute extends _i3.PageRouteInfo<void> {
-  const SetupPinRoute()
+/// [_i1.VaultListPage]
+class VaultListRoute extends _i3.PageRouteInfo<void> {
+  const VaultListRoute()
       : super(
-          SetupPinRoute.name,
+          VaultListRoute.name,
           path: '/',
         );
 
-  static const String name = 'SetupPinRoute';
+  static const String name = 'VaultListRoute';
 }
 
 /// generated route for

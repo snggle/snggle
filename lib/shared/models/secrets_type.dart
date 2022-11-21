@@ -1,0 +1,1 @@
+enum SecretsType { decrypted, encrypted }
