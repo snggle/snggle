@@ -10,15 +10,15 @@ class CustomScrollable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scrollbar(
-        //  Persistent visible scrollbar
-        thickness: 5,
-        thumbVisibility: true,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(children: scrollWidgets),
-          ),
-        ));
+      thickness: 5,
+      thumbVisibility: true,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: scrollWidgets),
+        ),
+      ),
+    );
   }
 }

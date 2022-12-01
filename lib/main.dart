@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snuggle/shared/router/router.gr.dart';
 
-void main() {
-  runApp(const AppCore());
-}
+void main() => runApp(const AppCore());
 
 class AppCore extends StatefulWidget {
   const AppCore({Key? key}) : super(key: key);
