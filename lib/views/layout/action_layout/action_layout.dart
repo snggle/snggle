@@ -24,7 +24,6 @@ class ActionLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => _handleActionLayoutFocus(context),
-      //  Create a scaffold ActionLayout
       child: ActionLayoutScaffold(
         enableAppBar: enableAppBar,
         resizeBottomInset: resizeBottomInset,
@@ -37,8 +36,6 @@ class ActionLayout extends StatelessWidget {
   }
 
   void _handleActionLayoutFocus(BuildContext context) {
-    // Any focused widget(s) will get unfocused if user clicks outside the focused widget
-    // This helps to unfocus widgets that may stay peristent such as native keyboards
     FocusScopeNode isFocused = FocusScope.of(context);
     if (!isFocused.hasPrimaryFocus) {
       isFocused.unfocus();

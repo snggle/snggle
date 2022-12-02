@@ -24,8 +24,6 @@ class ActionLayoutScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //  Avoid issue with Keyboard hiding widgets e.g. bottom modals
-      //  It causes any hidden widget due to keyboard coming into view, to move up alongisde the keyboard and come into view too.
       resizeToAvoidBottomInset: resizeBottomInset,
       backgroundColor: Colors.white,
       appBar: enableAppBar
