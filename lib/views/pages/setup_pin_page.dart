@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snuggle/bloc/setup_pin_page/setup_pin_page_cubit.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_confirm_state.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_fail_state.dart';
+import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_setup_later.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_success_state.dart';
 import 'package:snuggle/shared/router/router.gr.dart';
 import 'package:snuggle/views/widgets/pinpad/pinpad.dart';
@@ -53,7 +54,7 @@ class _SetupPinPageState extends State<SetupPinPage> {
       ),
       child: Scaffold(
         body: BlocConsumer<SetupPinPageCubit, ASetupPinPageState>(
-          listener: _onPinpadSuccessState,
+          listener: _handleListener,
           builder: (BuildContext context, ASetupPinPageState setupPinPageState) {
             bool isConfirmState = setupPinPageState is SetupPinPageConfirmState || setupPinPageState is SetupPinPageFailState;
             PinpadController currentPinpadController = isConfirmState ? confirmPinpadController : setupPinpadController;
@@ -142,7 +143,7 @@ class _SetupPinPageState extends State<SetupPinPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     TextButton(
-                      onPressed: () => isConfirmState ? _onCancelConfirmState(context) : _onSetupLater(),
+                      onPressed: () => isConfirmState ? _onCancelConfirmState(context) : _onSetupLater(context),
                       child: isConfirmState ? const Text('Cancel') : const Text('Setup Later'),
                     ),
                     ValueListenableBuilder<int>(
@@ -173,14 +174,16 @@ class _SetupPinPageState extends State<SetupPinPage> {
     context.read<SetupPinPageCubit>().cancelConfirmState();
   }
 
-  void _onPinpadSuccessState(BuildContext context, ASetupPinPageState? setupPinPageState) {
+  void _handleListener(BuildContext context, ASetupPinPageState? setupPinPageState) {
     if (setupPinPageState is SetupPinPageSuccessState) {
-      AutoRouter.of(context).replace(const EmptyRoute());
+      AutoRouter.of(context).replace(MainRoute());
+    } else if (setupPinPageState is SetupPinPageLaterState) {
+      AutoRouter.of(context).replace(MainRoute());
     }
   }
 
-  void _onSetupLater() {
-    AutoRouter.of(context).replace(const EmptyRoute());
+  void _onSetupLater(BuildContext context) {
+    context.read<SetupPinPageCubit>().setupUpLater();
   }
 
   void _onSwitchShufflePinpad({required bool value}) {

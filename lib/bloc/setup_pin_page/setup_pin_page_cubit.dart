@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_confirm_state.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_fail_state.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_init_state.dart';
+import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_setup_later.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_success_state.dart';
+import 'package:snuggle/infra/services/authentication/auth_service.dart';
 import 'package:snuggle/views/widgets/pinpad/pinpad_controller.dart';
 
 part 'a_setup_pin_page_state.dart';
@@ -45,7 +47,19 @@ class SetupPinPageCubit extends Cubit<ASetupPinPageState> {
 
   Future<void> _comparePin(String pin) async {
     if (setupPin == pin) {
-      emit(SetupPinPageSuccessState());
+      bool storePin = await AuthService.storeAuthentication(pin: pin);
+      if (storePin) {
+        emit(SetupPinPageSuccessState());
+      }
+    } else {
+      emit(SetupPinPageFailState());
+    }
+  }
+
+  Future<void> setupUpLater() async {
+    bool authenticateLater = await AuthService.authenticateLater();
+    if (authenticateLater) {
+      emit(SetupPinPageLaterState());
     } else {
       emit(SetupPinPageFailState());
     }
