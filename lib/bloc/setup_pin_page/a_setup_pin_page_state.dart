@@ -4,5 +4,5 @@ abstract class ASetupPinPageState extends Equatable {
   const ASetupPinPageState();
 
   @override
-  List<Object> get props => <Object>[];
+  List<Object> get props => <ASetupPinPageState>[];
 }

@@ -14,7 +14,6 @@
 import 'package:auto_route/auto_route.dart' as _i5;
 import 'package:flutter/material.dart' as _i6;
 
-import '../../bloc/auth_page/auth_page_cubit.dart' as _i7;
 import '../../views/pages/auth_page.dart' as _i4;
 import '../../views/pages/initial_page.dart' as _i1;
 import '../../views/pages/main_page.dart' as _i3;
@@ -49,13 +48,9 @@ class AppRouter extends _i5.RootStackRouter {
       );
     },
     AuthRoute.name: (routeData) {
-      final args = routeData.argsAs<AuthRouteArgs>();
       return _i5.MaterialPageX<void>(
         routeData: routeData,
-        child: _i4.AuthPage(
-          authPageCubit: args.authPageCubit,
-          key: args.key,
-        ),
+        child: const _i4.AuthPage(),
       );
     },
   };
@@ -143,34 +138,12 @@ class MainRouteArgs {
 
 /// generated route for
 /// [_i4.AuthPage]
-class AuthRoute extends _i5.PageRouteInfo<AuthRouteArgs> {
-  AuthRoute({
-    required _i7.AuthPageCubit authPageCubit,
-    _i6.Key? key,
-  }) : super(
+class AuthRoute extends _i5.PageRouteInfo<void> {
+  const AuthRoute()
+      : super(
           AuthRoute.name,
           path: '/auth-page',
-          args: AuthRouteArgs(
-            authPageCubit: authPageCubit,
-            key: key,
-          ),
         );
 
   static const String name = 'AuthRoute';
-}
-
-class AuthRouteArgs {
-  const AuthRouteArgs({
-    required this.authPageCubit,
-    this.key,
-  });
-
-  final _i7.AuthPageCubit authPageCubit;
-
-  final _i6.Key? key;
-
-  @override
-  String toString() {
-    return 'AuthRouteArgs{authPageCubit: $authPageCubit, key: $key}';
-  }
 }

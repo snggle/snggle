@@ -8,10 +8,7 @@ import 'package:snuggle/views/widgets/pinpad/pinpad_controller.dart';
 import 'package:snuggle/views/widgets/pinpad/pinpad_text_fields.dart';
 
 class AuthPage extends StatefulWidget {
-  final AuthPageCubit authPageCubit;
-
   const AuthPage({
-    required this.authPageCubit,
     super.key,
   });
 
@@ -22,6 +19,7 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   late final PinpadController authenticatePinpadController;
   ValueNotifier<bool> isPinShuffledNotifier = ValueNotifier<bool>(false);
+  final AuthPageCubit authPageCubit = AuthPageCubit();
 
   @override
   void initState() {
@@ -41,68 +39,82 @@ class _AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
-      child: BlocConsumer<AuthPageCubit, AAuthPageState>(
-        bloc: widget.authPageCubit,
-        listener: _handleListener,
-        builder: (BuildContext context, AAuthPageState authPageCubitState) {
-          return Scaffold(
-            body: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const <Widget>[
-                          Text('Authenticate'),
-                        ],
-                      ),
-                      if (authPageCubitState is AuthPageInvalidAuthenticationState)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[Text('Incorrect pin, try again')],
-                        ),
-                      if (authPageCubitState is AuthPageLoadingAuthenticationState) const CircularProgressIndicator(),
-                      PinpadTextFields(
-                        pinpadController: authenticatePinpadController,
-                      ),
-                      Row(
+      child: BlocProvider<AuthPageCubit>(
+        create: (BuildContext context) => authPageCubit,
+        child: BlocConsumer<AuthPageCubit, AAuthPageState>(
+          listener: _handleListener,
+          builder: (BuildContext context, AAuthPageState authPageCubitState) {
+            if (authPageCubitState is AuthPageErrorState) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const <Widget>[
+                    Text('Error: Initial Page Setup failed'),
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              );
+            } else {
+              return Scaffold(
+                body: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          const Text('Shuffle Keyboard'),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const <Widget>[
+                              Text('Authenticate'),
+                            ],
+                          ),
+                          if (authPageCubitState is AuthPageInvalidAuthenticationState)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const <Widget>[Text('Incorrect pin, try again')],
+                            ),
+                          if (authPageCubitState is AuthPageLoadingAuthenticationState) const CircularProgressIndicator(),
+                          PinpadTextFields(
+                            pinpadController: authenticatePinpadController,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const Text('Shuffle Keyboard'),
+                              ValueListenableBuilder<bool>(
+                                valueListenable: isPinShuffledNotifier,
+                                builder: (BuildContext context, bool value, _) {
+                                  return Switch(
+                                    key: const Key('shuffle_switch'),
+                                    value: isPinShuffledNotifier.value,
+                                    onChanged: (bool value) => _onSwitchShufflePinpad(value: value),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                           ValueListenableBuilder<bool>(
                             valueListenable: isPinShuffledNotifier,
                             builder: (BuildContext context, bool value, _) {
-                              return Switch(
-                                key: const Key('shuffle_switch'),
-                                value: isPinShuffledNotifier.value,
-                                onChanged: (bool value) => _onSwitchShufflePinpad(value: value),
+                              return AspectRatio(
+                                aspectRatio: 1 / 1,
+                                child: Pinpad(
+                                  pinpadController: authenticatePinpadController,
+                                  pinpadShuffle: isPinShuffledNotifier.value,
+                                  onChanged: _onPinpadChanged,
+                                ),
                               );
                             },
                           ),
                         ],
                       ),
-                      ValueListenableBuilder<bool>(
-                        valueListenable: isPinShuffledNotifier,
-                        builder: (BuildContext context, bool value, _) {
-                          return AspectRatio(
-                            aspectRatio: 1 / 1,
-                            child: Pinpad(
-                              pinpadController: authenticatePinpadController,
-                              pinpadShuffle: isPinShuffledNotifier.value,
-                              onChanged: _onPinpadChanged,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
-        },
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -115,7 +127,7 @@ class _AuthPageState extends State<AuthPage> {
 
   Future<void> _onPinpadChanged() async {
     if (authenticatePinpadController.value.length == authenticatePinpadController.pinpadTextFieldsSize) {
-      await widget.authPageCubit.verifyAuthentication(authenticatePinpadController.value);
+      await authPageCubit.verifyAuthentication(authenticatePinpadController.value);
       authenticatePinpadController.clear();
     }
   }

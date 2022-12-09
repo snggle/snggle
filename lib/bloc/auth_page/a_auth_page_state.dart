@@ -9,16 +9,10 @@ abstract class AAuthPageState extends Equatable {
 
 class AuthPageInitialState extends AAuthPageState {}
 
-class AuthPageSetupAuthenticationState extends AAuthPageState {}
-
-class AuthPageAuthenticateState extends AAuthPageState {}
-
-class AuthPageNoAuthenticationState extends AAuthPageState {}
-
 class AuthPageLoadingAuthenticationState extends AAuthPageState {}
 
 class AuthPageSuccessAuthenticationState extends AAuthPageState {}
 
 class AuthPageInvalidAuthenticationState extends AAuthPageState {}
 
-class AuthPageErrorAuthenticationState extends AAuthPageState {}
+class AuthPageErrorState extends AAuthPageState {}
