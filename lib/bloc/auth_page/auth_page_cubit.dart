@@ -11,7 +11,7 @@ class AuthPageCubit extends Cubit<AAuthPageState> {
 
   final AuthService _authService = globalLocator<AuthService>();
 
-  Future<void> verifyAuthentication(String pin) async {
+  Future<void> verifyAuthentication({required String pin}) async {
     emit(AuthPageLoadingAuthenticationState());
     try {
       bool isAuthenticationValid = await _authService.verifyAuthentication(pin: pin);

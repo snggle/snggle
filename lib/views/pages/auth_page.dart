@@ -18,8 +18,8 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   late final PinpadController authenticatePinpadController;
-  ValueNotifier<bool> isPinShuffledNotifier = ValueNotifier<bool>(false);
   final AuthPageCubit authPageCubit = AuthPageCubit();
+  ValueNotifier<bool> isPinShuffledNotifier = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -85,7 +85,6 @@ class _AuthPageState extends State<AuthPage> {
                                 valueListenable: isPinShuffledNotifier,
                                 builder: (BuildContext context, bool value, _) {
                                   return Switch(
-                                    key: const Key('shuffle_switch'),
                                     value: isPinShuffledNotifier.value,
                                     onChanged: (bool value) => _onSwitchShufflePinpad(value: value),
                                   );
@@ -127,7 +126,7 @@ class _AuthPageState extends State<AuthPage> {
 
   Future<void> _onPinpadChanged() async {
     if (authenticatePinpadController.value.length == authenticatePinpadController.pinpadTextFieldsSize) {
-      await authPageCubit.verifyAuthentication(authenticatePinpadController.value);
+      await authPageCubit.verifyAuthentication(pin: authenticatePinpadController.value);
       authenticatePinpadController.clear();
     }
   }

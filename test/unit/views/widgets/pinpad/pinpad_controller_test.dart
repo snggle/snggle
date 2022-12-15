@@ -3,10 +3,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snuggle/views/widgets/pinpad/pinpad_controller.dart';
 
-import '../../utils/test_utils.dart';
+import '../../../../utils/test_utils.dart';
 
 void main() {
-
   group('Tests of methods addPin(), value getter and removePin()', () {
     test('Should return EMPTY STRINGS for Pinpad and selected Pinpad text-field after constructor init and removePin()', () {
       // Arrange
@@ -22,7 +21,7 @@ void main() {
     });
 
     test('Should replicate whole path of inputting and removing numbers from Pinpad text-fields', () {
-      // Arrange + Act
+      // Arrange
       PinpadController actualSetupPinpadController = PinpadController(pinpadTextFieldsSize: 4);
 
       // Assert

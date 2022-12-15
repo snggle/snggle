@@ -9,6 +9,7 @@ import 'package:snuggle/shared/utils/crypto/bip39.dart';
 
 class AuthService {
   final AuthRepository _authRepository = globalLocator<AuthRepository>();
+
   Future<void> authenticateLater() async {
     await _authRepository.setSetupPinPageFalse();
     await _authRepository.setAuthenticationFalse();
@@ -20,7 +21,7 @@ class AuthService {
   }
 
   Future<bool> isAuthenticationSetup() async {
-    bool isAuthenticationSetup = await _authRepository.checkSetupPinPage();
+    bool isAuthenticationSetup = await _authRepository.checkSetupPinPage() == 'false';
     return isAuthenticationSetup;
   }
 
