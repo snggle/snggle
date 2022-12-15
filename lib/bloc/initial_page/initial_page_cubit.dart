@@ -13,7 +13,7 @@ class InitialPageCubit extends Cubit<AInitialPageState> {
 
   Future<void> isAuthenticationSetup() async {
     try {
-      bool isAuthenticationSetup = await _authService.isAuthenticationSetup();
+      bool isAuthenticationSetup = await _authService.isSetup();
       if (isAuthenticationSetup) {
         bool isAuthenticated = await _authService.isAuthenticated();
         isAuthenticated ? emit(InitialPageAuthenticateState()) : emit(InitialPageNoAuthenticationState());

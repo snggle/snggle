@@ -20,9 +20,9 @@ class AuthService {
     return isAuthenticated;
   }
 
-  Future<bool> isAuthenticationSetup() async {
-    bool isAuthenticationSetup = await _authRepository.checkSetupPinPage() == 'false';
-    return isAuthenticationSetup;
+  Future<bool> isSetup() async {
+    bool isSetup = await _authRepository.checkSetupPinPage() == 'true';
+    return isSetup;
   }
 
   Future<void> storeAuthentication({required String pin}) async {
@@ -31,6 +31,7 @@ class AuthService {
     Digest hashMnemonic = sha256.convert(seed);
     String encryptedHashMnemonic = Aes256.encrypt(pin, hashMnemonic.toString());
 
+    await _authRepository.setSetupPinPageFalse();
     await _authRepository.setAuthenticationTrue();
     await _authRepository.setHashMnemonicPassword(encryptedHashMnemonic.toString());
   }

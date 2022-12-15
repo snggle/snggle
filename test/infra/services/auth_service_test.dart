@@ -53,11 +53,11 @@ void main() {
     });
   });
 
-  group('Tests of ActualAuthService.isAuthenticationSetup ', () {
-    test('Should return false, as no authentication exists or setup on initial run', () async {
+  group('Tests of ActualAuthService.isSetup ', () {
+    test('Should return true, as no authentication exists and is on setup', () async {
       // Act
-      bool actualAuthenticatedSetupValue = await actualAuthService.isAuthenticationSetup();
-      bool expectedAuthenticatedSetupValue = false;
+      bool actualAuthenticatedSetupValue = await actualAuthService.isSetup();
+      bool expectedAuthenticatedSetupValue = true;
 
       // Assert
       expect(actualAuthenticatedSetupValue, expectedAuthenticatedSetupValue);

@@ -76,10 +76,11 @@ void main() {
   });
 
   group('Tests of AuthRepository.setHashMnemonicPassword and AuthRepository.getHashMnemonicPassword', () {
-    test('Should return true for Setting up and Storing HashMnemonicPassword, and checking if they match at the end"', () async {
+    test('Should return true for Setting up and Storing HashMnemonicPassword, and checking if they match at the end', () async {
       // Arrange
-      String expectedHashMnemonic = 'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==';
       FlutterSecureStorage actualStorage = const FlutterSecureStorage();
+
+      String expectedHashMnemonic = 'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==';
 
       // Act
       await actualAuthRepository.setHashMnemonicPassword(expectedHashMnemonic);

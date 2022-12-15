@@ -18,7 +18,7 @@ void main() {
       expect(initialPageCubit.state, InitialPageInitialState());
     });
     blocTest<InitialPageCubit, AInitialPageState>(
-      'Should return a [InitialPageErrorState] as this is the first launch of the App and no database exists',
+      'Should return a [InitialPageSetupAuthenticationState] as this is the first launch of the App and no database exists',
       // Arrange
       build: () => initialPageCubit,
 
@@ -27,7 +27,7 @@ void main() {
         await initialPageCubit.isAuthenticationSetup();
       },
       // Assert
-      expect: () => <AInitialPageState>[InitialPageErrorState()],
+      expect: () => <AInitialPageState>[InitialPageSetupAuthenticationState()],
     );
 
     blocTest<InitialPageCubit, AInitialPageState>(
