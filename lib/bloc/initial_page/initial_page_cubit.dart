@@ -11,14 +11,14 @@ class InitialPageCubit extends Cubit<AInitialPageState> {
 
   final AuthService _authService = globalLocator<AuthService>();
 
-  Future<void> isAuthenticationSetup() async {
+  Future<void> isIntroductionSetup() async {
     try {
-      bool isAuthenticationSetup = await _authService.isSetup();
-      if (isAuthenticationSetup) {
+      bool isIntroductionSetup = await _authService.checkSetupUp();
+      if (isIntroductionSetup) {
+        emit(InitialPageSetupAuthenticationState());
+      } else if (isIntroductionSetup == false) {
         bool isAuthenticated = await _authService.isAuthenticated();
         isAuthenticated ? emit(InitialPageAuthenticateState()) : emit(InitialPageNoAuthenticationState());
-      } else {
-        emit(InitialPageSetupAuthenticationState());
       }
     } catch (e) {
       AppLogger().log(message: e.toString());

@@ -7,7 +7,7 @@ import 'package:snuggle/config/locator.dart';
 void main() {
   initLocator();
 
-  setUpAll(() {
+  setUp(() {
     FlutterSecureStorage.setMockInitialValues(<String, String>{});
   });
   group('Tests of AuthPageCubit States: ', () {
@@ -28,7 +28,7 @@ void main() {
         String pin = 'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==';
         FlutterSecureStorage.setMockInitialValues(<String, String>{
           'is_authenticated': 'true',
-          'encrypted_hash_mnemonic': pin,
+          'hash_mnemonic': pin,
         });
         await authPageCubit.verifyAuthentication(pin: '0000');
       },
@@ -47,7 +47,7 @@ void main() {
       act: (AuthPageCubit authPageCubit) async {
         FlutterSecureStorage.setMockInitialValues(<String, String>{
           'is_authenticated': 'true',
-          'encrypted_hash_mnemonic': 'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==',
+          'hash_mnemonic': 'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==',
         });
         await authPageCubit.verifyAuthentication(pin: '000');
       },

@@ -20,7 +20,7 @@ class InitPage extends StatelessWidget {
             listener: _handleListener,
             builder: (BuildContext context, AInitialPageState initialPageState) {
               if (initialPageState is InitialPageInitialState) {
-                context.read<InitialPageCubit>().isAuthenticationSetup();
+                context.read<InitialPageCubit>().isIntroductionSetup();
               } else if (initialPageState is InitialPageErrorState) {
                 return Center(
                   child: Column(

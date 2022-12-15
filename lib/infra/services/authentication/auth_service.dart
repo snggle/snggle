@@ -11,8 +11,8 @@ class AuthService {
   final AuthRepository _authRepository = globalLocator<AuthRepository>();
 
   Future<void> authenticateLater() async {
-    await _authRepository.setSetupPinPageFalse();
-    await _authRepository.setAuthenticationFalse();
+    await _authRepository.setIntroductionSetup(value: false);
+    await _authRepository.setAuthentication(value: false);
   }
 
   Future<bool> isAuthenticated() async {
@@ -20,7 +20,7 @@ class AuthService {
     return isAuthenticated;
   }
 
-  Future<bool> isSetup() async {
+  Future<bool> checkSetupUp() async {
     bool isSetup = await _authRepository.checkSetupPinPage() == 'true';
     return isSetup;
   }
@@ -31,14 +31,14 @@ class AuthService {
     Digest hashMnemonic = sha256.convert(seed);
     String encryptedHashMnemonic = Aes256.encrypt(pin, hashMnemonic.toString());
 
-    await _authRepository.setSetupPinPageFalse();
-    await _authRepository.setAuthenticationTrue();
-    await _authRepository.setHashMnemonicPassword(encryptedHashMnemonic.toString());
+    await _authRepository.setIntroductionSetup(value: false);
+    await _authRepository.setAuthentication(value: true);
+    await _authRepository.setHashMnemonic(encryptedHashMnemonic.toString());
   }
 
   Future<bool> verifyAuthentication({required String pin}) async {
-    String? encryptedHashMnemonic = await _authRepository.getHashMnemonicPassword();
-    bool verify = Aes256.verifyPassword(pin, encryptedHashMnemonic.toString());
+    String? hashMnemonic = await _authRepository.getHashMnemonicPassword();
+    bool verify = Aes256.verifyPassword(pin, hashMnemonic.toString());
     return verify;
   }
 }

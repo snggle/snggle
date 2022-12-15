@@ -7,7 +7,7 @@ void main() {
   initLocator();
   AuthService actualAuthService = AuthService();
 
-  setUpAll(() {
+  setUp(() {
     FlutterSecureStorage.setMockInitialValues(<String, String>{});
   });
 
@@ -56,7 +56,7 @@ void main() {
   group('Tests of ActualAuthService.isSetup ', () {
     test('Should return true, as no authentication exists and is on setup', () async {
       // Act
-      bool actualAuthenticatedSetupValue = await actualAuthService.isSetup();
+      bool actualAuthenticatedSetupValue = await actualAuthService.checkSetupUp();
       bool expectedAuthenticatedSetupValue = true;
 
       // Assert
@@ -80,7 +80,7 @@ void main() {
   group('Tests of ActualAuthService.verifyAuthentication ', () {
     test('Should return an exception, as verification is false due to no data is setup and stored (storeAuthentication) on initial run', () async {
       // Arrange
-      Exception expectedException = Exception('No data found for key: encrypted_hash_mnemonic');
+      Exception expectedException = Exception('No data found for key: hash_mnemonic');
       try {
         // Act
         await actualAuthService.verifyAuthentication(pin: '0000');
@@ -92,7 +92,7 @@ void main() {
     test('Should return true, as Authentication is setup and stored', () async {
       // Arrange
       Map<String, String> expectedStorageData = <String, String>{
-        'encrypted_hash_mnemonic': 'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==',
+        'hash_mnemonic': 'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==',
       };
       FlutterSecureStorage.setMockInitialValues(expectedStorageData);
 

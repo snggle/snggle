@@ -7,7 +7,7 @@ import 'package:snuggle/config/locator.dart';
 void main() {
   initLocator();
 
-  setUpAll(() {
+  setUp(() {
     FlutterSecureStorage.setMockInitialValues(<String, String>{});
   });
   group('Tests of InitialPage States: ', () {
@@ -24,7 +24,7 @@ void main() {
 
       // Act
       act: (InitialPageCubit initialPageCubit) async {
-        await initialPageCubit.isAuthenticationSetup();
+        await initialPageCubit.isIntroductionSetup();
       },
       // Assert
       expect: () => <AInitialPageState>[InitialPageSetupAuthenticationState()],
@@ -38,7 +38,7 @@ void main() {
       // Act
       act: (InitialPageCubit initialPageCubit) async {
         FlutterSecureStorage.setMockInitialValues(<String, String>{'setup_pin_page': 'false', 'is_authenticated': 'false'});
-        await initialPageCubit.isAuthenticationSetup();
+        await initialPageCubit.isIntroductionSetup();
       },
 
       // Assert
@@ -46,7 +46,7 @@ void main() {
     );
 
     blocTest<InitialPageCubit, AInitialPageState>(
-      'Should return a [InitialPageSetupAuthenticationState] as user setup a pin already, and no longer needs to visit Setup PinPage again',
+      'Should return a [InitialPageAuthenticateState] as user setup a pin already, and no longer needs to visit Setup PinPage again',
       // Arrange
       build: InitialPageCubit.new,
 
@@ -55,9 +55,9 @@ void main() {
         FlutterSecureStorage.setMockInitialValues(<String, String>{
           'setup_pin_page': 'false',
           'is_authenticated': 'true',
-          'encrypted_hash_mnemonic': 'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==',
+          'hash_mnemonic': 'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==',
         });
-        await initialPageCubit.isAuthenticationSetup();
+        await initialPageCubit.isIntroductionSetup();
       },
 
       // Assert
@@ -65,18 +65,18 @@ void main() {
     );
 
     blocTest<InitialPageCubit, AInitialPageState>(
-      'Should return a [InitialPageErrorState] as user has decided to setup later. However, the database has failed to create all the fields and setup them up',
+      'Should return a [InitialPageNoAuthenticationState] as user has decided to setup later.',
       // Arrange
       build: InitialPageCubit.new,
 
       // Act
       act: (InitialPageCubit initialPageCubit) async {
         FlutterSecureStorage.setMockInitialValues(<String, String>{'setup_pin_page': 'false'});
-        await initialPageCubit.isAuthenticationSetup();
+        await initialPageCubit.isIntroductionSetup();
       },
 
       // Assert
-      expect: () => <AInitialPageState>[InitialPageErrorState()],
+      expect: () => <AInitialPageState>[InitialPageNoAuthenticationState()],
     );
   });
 }

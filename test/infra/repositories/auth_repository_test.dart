@@ -5,7 +5,7 @@ import 'package:snuggle/infra/repositories/auth_repository.dart';
 void main() {
   AuthRepository actualAuthRepository = AuthRepository();
 
-  setUpAll(() {
+  setUp(() {
     FlutterSecureStorage.setMockInitialValues(<String, String>{});
   });
 
@@ -51,10 +51,10 @@ void main() {
     });
   });
 
-  group('Tests of AuthRepository.setAuthenticationTrue and setAuthenticationFalse', () {
+  group('Tests of AuthRepository.setAuthentication', () {
     test('Should return true after setting Authentication "is_authenticated" to true', () async {
       // Act
-      await actualAuthRepository.setAuthenticationTrue();
+      await actualAuthRepository.setAuthentication(value: true);
       bool actualValue = await actualAuthRepository.checkAuthentication() == 'true';
 
       bool expectedValue = true;
@@ -65,7 +65,7 @@ void main() {
 
     test('Should return false after setting Authentication "is_authenticated" to false', () async {
       // Act
-      await actualAuthRepository.setAuthenticationFalse();
+      await actualAuthRepository.setAuthentication(value: false);
       bool actualValue = await actualAuthRepository.checkAuthentication() == 'false';
 
       bool expectedValue = true;
@@ -83,8 +83,8 @@ void main() {
       String expectedHashMnemonic = 'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==';
 
       // Act
-      await actualAuthRepository.setHashMnemonicPassword(expectedHashMnemonic);
-      Map<String, String> expectedStorageData = <String, String>{'encrypted_hash_mnemonic': expectedHashMnemonic};
+      await actualAuthRepository.setHashMnemonic(expectedHashMnemonic);
+      Map<String, String> expectedStorageData = <String, String>{'hash_mnemonic': expectedHashMnemonic};
       Map<String, String> actualStorageData = await actualStorage.readAll();
 
       // Assert

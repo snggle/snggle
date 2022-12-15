@@ -1,51 +1,44 @@
 import 'package:snuggle/shared/utils/storage_manager.dart';
 
 class AuthRepository {
-  String encryptedHashMnemonicKey = 'encrypted_hash_mnemonic';
-  String isAuthenticatedKey = 'is_authenticated';
-  String setupPinPage = 'setup_pin_page';
+  final String _hashMnemonicKey = 'hash_mnemonic';
+  final String _isAuthenticatedKey = 'is_authenticated';
+  final String _setupPinPage = 'setup_pin_page';
+  final StorageManager _storage = StorageManager();
 
   Future<String?> checkAuthentication() async {
-    bool checkAuthenticationExists = await StorageManager().containsKeyData(key: isAuthenticatedKey);
+    bool checkAuthenticationExists = await _storage.containsKeyData(key: _isAuthenticatedKey);
     if (checkAuthenticationExists == true) {
-      return StorageManager().getKeyData(key: isAuthenticatedKey);
+      return _storage.getKeyData(key: _isAuthenticatedKey);
     } else if (checkAuthenticationExists == false) {
-      await setAuthenticationFalse();
+      await setAuthentication(value: false);
     }
-    return StorageManager().getKeyData(key: isAuthenticatedKey);
+    return _storage.getKeyData(key: _isAuthenticatedKey);
   }
 
   Future<String?> checkSetupPinPage() async {
-    bool checkSetupExists = await StorageManager().containsKeyData(key: setupPinPage);
+    bool checkSetupExists = await _storage.containsKeyData(key: _setupPinPage);
     if (checkSetupExists == true) {
-      return StorageManager().getKeyData(key: setupPinPage);
-    } else if (checkSetupExists == false) {
-      await Future.wait(<Future<void>>[setSetupPinPageTrue(), setAuthenticationFalse()]);
+      return _storage.getKeyData(key: _setupPinPage);
+    } else {
+      await Future.wait(<Future<void>>[setIntroductionSetup(value: true), setAuthentication(value: false)]);
+      return _storage.getKeyData(key: _setupPinPage);
     }
-    return StorageManager().getKeyData(key: setupPinPage);
   }
 
   Future<String?> getHashMnemonicPassword() async {
-    return StorageManager().getKeyData(key: encryptedHashMnemonicKey);
+    return _storage.getKeyData(key: _hashMnemonicKey);
   }
 
-  Future<void> setAuthenticationTrue() async {
-    await StorageManager().writeKeyData(key: isAuthenticatedKey, data: 'true');
+  Future<void> setAuthentication({required bool value}) async {
+    await _storage.writeKeyData(key: _isAuthenticatedKey, data: value.toString());
   }
 
-  Future<void> setAuthenticationFalse() async {
-    await StorageManager().writeKeyData(key: isAuthenticatedKey, data: 'false');
+  Future<void> setHashMnemonic(String hashMnemonic) async {
+    await _storage.writeKeyData(key: _hashMnemonicKey, data: hashMnemonic);
   }
 
-  Future<void> setHashMnemonicPassword(String encryptedMnemonicHash) async {
-    await StorageManager().writeKeyData(key: encryptedHashMnemonicKey, data: encryptedMnemonicHash);
-  }
-
-  Future<void> setSetupPinPageFalse() async {
-    await StorageManager().writeKeyData(key: setupPinPage, data: 'false');
-  }
-
-  Future<void> setSetupPinPageTrue() async {
-    await StorageManager().writeKeyData(key: setupPinPage, data: 'true');
+  Future<void> setIntroductionSetup({required bool value}) async {
+    await _storage.writeKeyData(key: _setupPinPage, data: value.toString());
   }
 }
