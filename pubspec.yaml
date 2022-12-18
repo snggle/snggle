@@ -47,6 +47,8 @@ dependencies:
   # Small, easy to use and extensible logger which prints beautiful logs.
   # https://pub.dev/packages/logger
   logger: ^1.1.0
+  qr_flutter: ^4.0.0
+  card_swiper: ^2.0.4
 
 dev_dependencies:
   flutter_test:

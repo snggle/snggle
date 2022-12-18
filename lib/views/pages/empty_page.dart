@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snuggle/views/widgets/qr_card/qr_card.dart';
 
 class EmptyPage extends StatelessWidget {
   const EmptyPage({super.key});
@@ -10,8 +11,24 @@ class EmptyPage extends StatelessWidget {
         return false;
       },
       child: Scaffold(
-        body: Container(),
-      ),
+          body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Center(
+              child: QrCard(
+            qrData: const <String>[
+              'ExampleData',
+              'ExampleData;ExampleData;ExampleData',
+              'ExampleData;ExampleData;ExampleData',
+              'ExampleData;ExampleData;ExampleData',
+              'ExampleData;ExampleData;ExampleData',
+              'ExampleData;ExampleData;ExampleData',
+              'ExampleData;ExampleData;ExampleData',
+            ],
+            charactersPerCard: 10,
+          )),
+        ],
+      )),
     );
   }
 }
