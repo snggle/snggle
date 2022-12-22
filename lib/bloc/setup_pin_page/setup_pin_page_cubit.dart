@@ -3,12 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_confirm_state.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_fail_state.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_init_state.dart';
+import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_setup_later.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_success_state.dart';
+import 'package:snuggle/config/locator.dart';
+import 'package:snuggle/infra/services/setup_service.dart';
+import 'package:snuggle/shared/utils/app_logger.dart';
 import 'package:snuggle/views/widgets/pinpad/pinpad_controller.dart';
 
 part 'a_setup_pin_page_state.dart';
 
 class SetupPinPageCubit extends Cubit<ASetupPinPageState> {
+  final SetupService _setupService = globalLocator<SetupService>();
   String setupPin = '';
   final PinpadController setupPinpadController;
   final PinpadController confirmPinpadController;
@@ -40,13 +45,28 @@ class SetupPinPageCubit extends Cubit<ASetupPinPageState> {
 
   Future<void> _setSetupPin(String pin) async {
     setupPin = pin;
+
     emit(SetupPinPageConfirmState());
   }
 
   Future<void> _comparePin(String pin) async {
     if (setupPin == pin) {
-      emit(SetupPinPageSuccessState());
+      try {
+        await _setupService.storeAuthentication(pin: pin).whenComplete(() => emit(SetupPinPageSuccessState()));
+      } catch (e) {
+        AppLogger().log(message: e.toString());
+        emit(SetupPinPageFailState());
+      }
     } else {
+      emit(SetupPinPageFailState());
+    }
+  }
+
+  Future<void> setupUpLater() async {
+    try {
+      await _setupService.setupLater().whenComplete(() => emit(SetupPinPageLaterState()));
+    } catch (e) {
+      AppLogger().log(message: e.toString());
       emit(SetupPinPageFailState());
     }
   }

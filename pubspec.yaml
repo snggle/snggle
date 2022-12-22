@@ -47,6 +47,10 @@ dependencies:
   # Small, easy to use and extensible logger which prints beautiful logs.
   # https://pub.dev/packages/logger
   logger: ^1.1.0
+  flutter_secure_storage: ^7.0.1
+  crypto: 3.0.2
+  encrypt: 5.0.1
+  bip39: 1.0.6
 
 dev_dependencies:
   flutter_test:
