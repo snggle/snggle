@@ -45,24 +45,22 @@ class InitialPage extends StatelessWidget {
       );
     }
     return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: const <Widget>[
-        CircularProgressIndicator(),
-      ],
-    ));
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const <Widget>[
+          CircularProgressIndicator(),
+        ],
+      ),
+    );
   }
 
   void _handleListener(BuildContext context, AInitialPageState? initialPageState) {
     if (initialPageState is InitialPageSetupState) {
-      AutoRouter.of(context).push(
-        const SetupPinRoute(),
-      );
+      context.router.replace(const SetupPinRoute());
     } else if (initialPageState is InitialPageAuthenticationState) {
+      context.router.replace(const AuthenticateRoute());
     } else if (initialPageState is InitialPageSkipAuthenticationState) {
-      AutoRouter.of(context).push(
-        const EmptyRoute(),
-      );
+      context.router.replace(const EmptyRoute());
     }
   }
 }

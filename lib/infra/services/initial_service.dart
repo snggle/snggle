@@ -7,4 +7,9 @@ class InitialService {
   Future<bool> checkSetup() async {
     return _initialRepository.checkSetup();
   }
+
+  Future<bool> isAuthenticated() async {
+    bool isAuthenticated = await _initialRepository.checkAuthentication() == 'true';
+    return isAuthenticated;
+  }
 }

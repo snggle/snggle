@@ -6,9 +6,7 @@ class EmptyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
+      onWillPop: () async => false,
       child: const Scaffold(
         body: Center(
           child: Text('Template'),
