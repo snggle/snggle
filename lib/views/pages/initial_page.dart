@@ -39,7 +39,6 @@ class InitialPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: const <Widget>[
             Text('Error: InitialPageErrorState Error'),
-            CircularProgressIndicator(),
           ],
         ),
       );
@@ -57,6 +56,7 @@ class InitialPage extends StatelessWidget {
     if (initialPageState is InitialPageSetupState) {
       AutoRouter.of(context).push(const SetupPinRoute());
     } else if (initialPageState is InitialPageAuthenticationState) {
+      // TODO(Knight): Add push route for authentication
     } else if (initialPageState is InitialPageSkipAuthenticationState) {
       AutoRouter.of(context).push(const EmptyRoute());
     }
