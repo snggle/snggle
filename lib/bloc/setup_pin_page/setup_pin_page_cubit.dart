@@ -6,6 +6,7 @@ import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_init_state.dar
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_setup_later.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_success_state.dart';
 import 'package:snuggle/config/locator.dart';
+import 'package:snuggle/infra/repositories/commons_repository.dart';
 import 'package:snuggle/infra/services/setup_service.dart';
 import 'package:snuggle/shared/utils/app_logger.dart';
 import 'package:snuggle/views/widgets/pinpad/pinpad_controller.dart';
@@ -13,10 +14,11 @@ import 'package:snuggle/views/widgets/pinpad/pinpad_controller.dart';
 part 'a_setup_pin_page_state.dart';
 
 class SetupPinPageCubit extends Cubit<ASetupPinPageState> {
-  final SetupService _setupService = globalLocator<SetupService>();
   String setupPin = '';
+  final CommonRepository _commonsRepository = globalLocator<CommonRepository>();
   final PinpadController setupPinpadController;
   final PinpadController confirmPinpadController;
+  final SetupService _setupService = globalLocator<SetupService>();
 
   SetupPinPageCubit({
     required this.setupPinpadController,
@@ -64,7 +66,7 @@ class SetupPinPageCubit extends Cubit<ASetupPinPageState> {
 
   Future<void> setupUpLater() async {
     try {
-      await _setupService.setupLater().whenComplete(() => emit(SetupPinPageLaterState()));
+      await _commonsRepository.setInitialSetupVisible(value: false).whenComplete(() => emit(SetupPinPageLaterState()));
     } catch (e) {
       AppLogger().log(message: e.toString());
       emit(SetupPinPageFailState());

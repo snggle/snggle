@@ -2,8 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snuggle/bloc/initial_page/initial_page_cubit.dart';
+import 'package:snuggle/bloc/initial_page/states/initial_page_initial_setup_visible_state.dart';
 import 'package:snuggle/bloc/initial_page/states/initial_page_initial_state.dart';
-import 'package:snuggle/bloc/initial_page/states/initial_page_setup_state.dart';
 import 'package:snuggle/bloc/initial_page/states/initial_page_skip_authentication_state.dart';
 import 'package:snuggle/config/locator.dart';
 
@@ -21,16 +21,16 @@ void main() {
       expect(initialPageCubit.state, InitialPageInitialState());
     });
     blocTest<InitialPageCubit, AInitialPageState>(
-      'Should return a [InitialPageSetupState] at initial launch as user is navigated to Setup',
+      'Should return a [InitialPageInitialSetupVisibleState] at initial launch as user is navigated to Setup',
       // Arrange
       build: () => initialPageCubit,
 
       // Act
       act: (InitialPageCubit initialPageCubit) async {
-        await initialPageCubit.checkSetup();
+        await initialPageCubit.checkInitialSetupVisibleState();
       },
       // Assert
-      expect: () => <AInitialPageState>[InitialPageSetupState()],
+      expect: () => <AInitialPageState>[InitialPageInitialSetupVisibleState()],
     );
 
     blocTest<InitialPageCubit, AInitialPageState>(
@@ -40,8 +40,8 @@ void main() {
 
       // Act
       act: (InitialPageCubit initialPageCubit) async {
-        FlutterSecureStorage.setMockInitialValues(<String, String>{'setup': 'false'});
-        await initialPageCubit.checkSetup();
+        FlutterSecureStorage.setMockInitialValues(<String, String>{'isInitialSetupVisible': 'false'});
+        await initialPageCubit.checkInitialSetupVisibleState();
       },
 
       // Assert
@@ -55,8 +55,8 @@ void main() {
 
       // Act
       act: (InitialPageCubit initialPageCubit) async {
-        FlutterSecureStorage.setMockInitialValues(<String, String>{'setup': 'false', 'is_authenticated': 'false'});
-        await initialPageCubit.checkSetup();
+        FlutterSecureStorage.setMockInitialValues(<String, String>{'isInitialSetupVisible': 'false', 'is_authenticated': 'false'});
+        await initialPageCubit.checkInitialSetupVisibleState();
       },
 
       // Assert
@@ -71,11 +71,11 @@ void main() {
       // Act
       act: (InitialPageCubit initialPageCubit) async {
         FlutterSecureStorage.setMockInitialValues(<String, String>{
-          'setup': 'false',
+          'isInitialSetupVisible': 'false',
           'is_authenticated': 'true',
           'hash_mnemonic': 'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==',
         });
-        await initialPageCubit.checkSetup();
+        await initialPageCubit.checkInitialSetupVisibleState();
       },
 
       // Assert

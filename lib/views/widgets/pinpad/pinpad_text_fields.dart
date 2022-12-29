@@ -22,6 +22,7 @@ class PinpadTextFields extends StatelessWidget {
             width: 75.0,
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: TextField(
+              key: Key('pinpad_text_field_$index'),
               obscureText: obscureText,
               enabled: false,
               controller: pinpadModel.textEditingController,

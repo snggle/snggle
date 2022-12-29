@@ -42,6 +42,7 @@ class PinpadButton extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(4),
         child: TextButton(
+          key: Key('pinpad_button_$numberValue'),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.grey[50],
             foregroundColor: Colors.black,
