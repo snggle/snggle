@@ -14,7 +14,7 @@
 import 'package:auto_route/auto_route.dart' as _i3;
 import 'package:flutter/material.dart' as _i4;
 
-import '../../views/pages/empty_page.dart' as _i2;
+import '../../views/pages/main_navigation_page.dart' as _i2;
 import '../../views/pages/setup_pin_page.dart' as _i1;
 
 class AppRouter extends _i3.RootStackRouter {
@@ -29,10 +29,10 @@ class AppRouter extends _i3.RootStackRouter {
         child: const _i1.SetupPinPage(),
       );
     },
-    EmptyRoute.name: (routeData) {
+    MainNavigationRoute.name: (routeData) {
       return _i3.MaterialPageX<void>(
         routeData: routeData,
-        child: const _i2.EmptyPage(),
+        child: const _i2.MainNavigationPage(),
       );
     },
   };
@@ -44,8 +44,8 @@ class AppRouter extends _i3.RootStackRouter {
           path: '/',
         ),
         _i3.RouteConfig(
-          EmptyRoute.name,
-          path: '/empty-page',
+          MainNavigationRoute.name,
+          path: '/main-navigation-page',
         ),
       ];
 }
@@ -63,13 +63,13 @@ class SetupPinRoute extends _i3.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i2.EmptyPage]
-class EmptyRoute extends _i3.PageRouteInfo<void> {
-  const EmptyRoute()
+/// [_i2.MainNavigationPage]
+class MainNavigationRoute extends _i3.PageRouteInfo<void> {
+  const MainNavigationRoute()
       : super(
-          EmptyRoute.name,
-          path: '/empty-page',
+          MainNavigationRoute.name,
+          path: '/main-navigation-page',
         );
 
-  static const String name = 'EmptyRoute';
+  static const String name = 'MainNavigationRoute';
 }

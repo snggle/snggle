@@ -175,12 +175,12 @@ class _SetupPinPageState extends State<SetupPinPage> {
 
   void _onPinpadSuccessState(BuildContext context, ASetupPinPageState? setupPinPageState) {
     if (setupPinPageState is SetupPinPageSuccessState) {
-      AutoRouter.of(context).replace(const EmptyRoute());
+      AutoRouter.of(context).replace(const MainNavigationRoute());
     }
   }
 
   void _onSetupLater() {
-    AutoRouter.of(context).replace(const EmptyRoute());
+    AutoRouter.of(context).replace(const MainNavigationRoute());
   }
 
   void _onSwitchShufflePinpad({required bool value}) {
