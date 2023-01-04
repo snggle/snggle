@@ -34,45 +34,14 @@ void main() {
     );
 
     blocTest<InitialPageCubit, AInitialPageState>(
-      'Should return a [InitialPageSkipAuthenticationState] when setup is already done before.',
-      // Arrange
-      build: InitialPageCubit.new,
-
-      // Act
-      act: (InitialPageCubit initialPageCubit) async {
-        FlutterSecureStorage.setMockInitialValues(<String, String>{'isInitialSetupVisible': 'false'});
-        await initialPageCubit.checkInitialSetupVisibleState();
-      },
-
-      // Assert
-      expect: () => <AInitialPageState>[InitialPageSkipAuthenticationState()],
-    );
-
-    blocTest<InitialPageCubit, AInitialPageState>(
-      'Should return [InitialPageSkipAuthenticationState] as user decided to setup later',
-      // Arrange
-      build: InitialPageCubit.new,
-
-      // Act
-      act: (InitialPageCubit initialPageCubit) async {
-        FlutterSecureStorage.setMockInitialValues(<String, String>{'isInitialSetupVisible': 'false', 'is_authenticated': 'false'});
-        await initialPageCubit.checkInitialSetupVisibleState();
-      },
-
-      // Assert
-      expect: () => <AInitialPageState>[InitialPageSkipAuthenticationState()],
-    );
-
-    blocTest<InitialPageCubit, AInitialPageState>(
-      'Should return a [InitialPageSkipAuthenticationState] as user setup a pin already, and no longer needs to visit Setup PinPage again',
+      'Should return a [InitialPageSkipAuthenticationState] as user decides to setup later, hence [is_initial_setup_visible] is set to false',
       // Arrange
       build: InitialPageCubit.new,
 
       // Act
       act: (InitialPageCubit initialPageCubit) async {
         FlutterSecureStorage.setMockInitialValues(<String, String>{
-          'isInitialSetupVisible': 'false',
-          'is_authenticated': 'true',
+          'is_initial_setup_visible': 'false',
           'hash_mnemonic': 'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==',
         });
         await initialPageCubit.checkInitialSetupVisibleState();

@@ -5,7 +5,7 @@ import 'package:snuggle/bloc/initial_page/states/initial_page_initial_setup_visi
 import 'package:snuggle/bloc/initial_page/states/initial_page_initial_state.dart';
 import 'package:snuggle/bloc/initial_page/states/initial_page_skip_authentication_state.dart';
 import 'package:snuggle/config/locator.dart';
-import 'package:snuggle/infra/services/initial_service.dart';
+import 'package:snuggle/infra/services/settings_service.dart';
 import 'package:snuggle/shared/utils/app_logger.dart';
 
 part 'a_initial_page_state.dart';
@@ -13,11 +13,11 @@ part 'a_initial_page_state.dart';
 class InitialPageCubit extends Cubit<AInitialPageState> {
   InitialPageCubit() : super(InitialPageInitialState());
 
-  final InitialService _initialService = globalLocator<InitialService>();
+  final SettingsService _settingsService = globalLocator<SettingsService>();
 
   Future<void> checkInitialSetupVisibleState() async {
     try {
-      bool isInitialSetup = await _initialService.checkInitialVisibleSetup();
+      bool isInitialSetup = await _settingsService.checkInitialSetupVisible();
       if (isInitialSetup) {
         emit(InitialPageInitialSetupVisibleState());
       } else {

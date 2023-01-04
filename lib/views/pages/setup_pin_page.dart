@@ -28,14 +28,6 @@ class _SetupPinPageState extends State<SetupPinPage> {
   late final PinpadController confirmPinpadController;
 
   @override
-  void initState() {
-    super.initState();
-    setupPinpadController = PinpadController(pinpadTextFieldsSize: maxPinLength);
-    confirmPinpadController = PinpadController(pinpadTextFieldsSize: maxPinLength);
-    setupPinpadController.requestFirstFocus();
-  }
-
-  @override
   void dispose() {
     pinLengthNotifier.dispose();
     isPinObscuredNotifier.dispose();
@@ -43,6 +35,14 @@ class _SetupPinPageState extends State<SetupPinPage> {
     setupPinpadController.dispose();
     confirmPinpadController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setupPinpadController = PinpadController(pinpadTextFieldsSize: maxPinLength);
+    confirmPinpadController = PinpadController(pinpadTextFieldsSize: maxPinLength);
+    setupPinpadController.requestFirstFocus();
   }
 
   @override

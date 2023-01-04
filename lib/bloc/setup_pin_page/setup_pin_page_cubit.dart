@@ -6,8 +6,7 @@ import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_init_state.dar
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_setup_later.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_success_state.dart';
 import 'package:snuggle/config/locator.dart';
-import 'package:snuggle/infra/repositories/commons_repository.dart';
-import 'package:snuggle/infra/services/setup_service.dart';
+import 'package:snuggle/infra/services/hash_mnemonic_service.dart';
 import 'package:snuggle/shared/utils/app_logger.dart';
 import 'package:snuggle/views/widgets/pinpad/pinpad_controller.dart';
 
@@ -15,15 +14,30 @@ part 'a_setup_pin_page_state.dart';
 
 class SetupPinPageCubit extends Cubit<ASetupPinPageState> {
   String setupPin = '';
-  final CommonRepository _commonsRepository = globalLocator<CommonRepository>();
   final PinpadController setupPinpadController;
   final PinpadController confirmPinpadController;
-  final SetupService _setupService = globalLocator<SetupService>();
+  final HashMnemonicService _hashMnemonicService = globalLocator<HashMnemonicService>();
 
   SetupPinPageCubit({
     required this.setupPinpadController,
     required this.confirmPinpadController,
   }) : super(SetupPinPageInitState());
+
+  Future<void> cancelConfirmState() async {
+    emit(SetupPinPageInitState());
+    confirmPinpadController.clear();
+    setupPinpadController.clear();
+  }
+
+  Future<void> setupUpLater() async {
+    try {
+      // await _commonsRepository.setInitialSetupVisible(value: false).whenComplete(() => emit(SetupPinPageLaterState()));
+      await _hashMnemonicService.storeAuthentication(pin: '0000').whenComplete(() => emit(SetupPinPageLaterState()));
+    } catch (e) {
+      AppLogger().log(message: e.toString());
+      emit(SetupPinPageFailState());
+    }
+  }
 
   Future<void> updateState() async {
     if (state is SetupPinPageInitState) {
@@ -39,22 +53,10 @@ class SetupPinPageCubit extends Cubit<ASetupPinPageState> {
     }
   }
 
-  Future<void> cancelConfirmState() async {
-    emit(SetupPinPageInitState());
-    confirmPinpadController.clear();
-    setupPinpadController.clear();
-  }
-
-  Future<void> _setSetupPin(String pin) async {
-    setupPin = pin;
-
-    emit(SetupPinPageConfirmState());
-  }
-
   Future<void> _comparePin(String pin) async {
     if (setupPin == pin) {
       try {
-        await _setupService.storeAuthentication(pin: pin).whenComplete(() => emit(SetupPinPageSuccessState()));
+        await _hashMnemonicService.storeAuthentication(pin: pin).whenComplete(() => emit(SetupPinPageSuccessState()));
       } catch (e) {
         AppLogger().log(message: e.toString());
         emit(SetupPinPageFailState());
@@ -64,12 +66,9 @@ class SetupPinPageCubit extends Cubit<ASetupPinPageState> {
     }
   }
 
-  Future<void> setupUpLater() async {
-    try {
-      await _commonsRepository.setInitialSetupVisible(value: false).whenComplete(() => emit(SetupPinPageLaterState()));
-    } catch (e) {
-      AppLogger().log(message: e.toString());
-      emit(SetupPinPageFailState());
-    }
+  Future<void> _setSetupPin(String pin) async {
+    setupPin = pin;
+
+    emit(SetupPinPageConfirmState());
   }
 }

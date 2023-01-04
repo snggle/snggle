@@ -17,14 +17,12 @@ class InitialPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
-      child: BlocProvider<InitialPageCubit>(
-        create: (BuildContext context) => _initialPageCubit,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: BlocConsumer<InitialPageCubit, AInitialPageState>(
-            listener: _handleListener,
-            builder: _handleBuilder,
-          ),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: BlocConsumer<InitialPageCubit, AInitialPageState>(
+          bloc: _initialPageCubit,
+          listener: _handleListener,
+          builder: _handleBuilder,
         ),
       ),
     );
@@ -32,7 +30,7 @@ class InitialPage extends StatelessWidget {
 
   Widget _handleBuilder(BuildContext context, AInitialPageState initialPageState) {
     if (initialPageState is InitialPageInitialState) {
-      context.read<InitialPageCubit>().checkInitialSetupVisibleState();
+      _initialPageCubit.checkInitialSetupVisibleState();
     } else if (initialPageState is InitialPageErrorState) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
