@@ -9,8 +9,10 @@ class EmptyPage extends StatelessWidget {
       onWillPop: () async {
         return false;
       },
-      child: Scaffold(
-        body: Container(),
+      child: const Scaffold(
+        body: Center(
+          child: Text('Template'),
+        ),
       ),
     );
   }

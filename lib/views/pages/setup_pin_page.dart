@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snuggle/bloc/setup_pin_page/setup_pin_page_cubit.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_confirm_state.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_fail_state.dart';
+import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_later_state.dart';
 import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_success_state.dart';
 import 'package:snuggle/shared/router/router.gr.dart';
 import 'package:snuggle/views/widgets/pinpad/pinpad.dart';
@@ -27,14 +28,6 @@ class _SetupPinPageState extends State<SetupPinPage> {
   late final PinpadController confirmPinpadController;
 
   @override
-  void initState() {
-    super.initState();
-    setupPinpadController = PinpadController(pinpadTextFieldsSize: maxPinLength);
-    confirmPinpadController = PinpadController(pinpadTextFieldsSize: maxPinLength);
-    setupPinpadController.requestFirstFocus();
-  }
-
-  @override
   void dispose() {
     pinLengthNotifier.dispose();
     isPinObscuredNotifier.dispose();
@@ -42,6 +35,14 @@ class _SetupPinPageState extends State<SetupPinPage> {
     setupPinpadController.dispose();
     confirmPinpadController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setupPinpadController = PinpadController(pinpadTextFieldsSize: maxPinLength);
+    confirmPinpadController = PinpadController(pinpadTextFieldsSize: maxPinLength);
+    setupPinpadController.requestFirstFocus();
   }
 
   @override
@@ -109,7 +110,6 @@ class _SetupPinPageState extends State<SetupPinPage> {
                             valueListenable: isPinShuffledNotifier,
                             builder: (BuildContext context, bool value, _) {
                               return Switch(
-                                key: const Key('shuffle_switch'),
                                 value: isPinShuffledNotifier.value,
                                 onChanged: (bool value) => _onSwitchShufflePinpad(value: value),
                               );
@@ -142,7 +142,7 @@ class _SetupPinPageState extends State<SetupPinPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     TextButton(
-                      onPressed: () => isConfirmState ? _onCancelConfirmState(context) : _onSetupLater(),
+                      onPressed: () => isConfirmState ? _onCancelConfirmState(context) : _onSetupLater(context),
                       child: isConfirmState ? const Text('Cancel') : const Text('Setup Later'),
                     ),
                     ValueListenableBuilder<int>(
@@ -176,11 +176,13 @@ class _SetupPinPageState extends State<SetupPinPage> {
   void _onPinpadSuccessState(BuildContext context, ASetupPinPageState? setupPinPageState) {
     if (setupPinPageState is SetupPinPageSuccessState) {
       AutoRouter.of(context).replace(const EmptyRoute());
+    } else if (setupPinPageState is SetupPinPageLaterState) {
+      AutoRouter.of(context).replace(const EmptyRoute());
     }
   }
 
-  void _onSetupLater() {
-    AutoRouter.of(context).replace(const EmptyRoute());
+  void _onSetupLater(BuildContext context) {
+    context.read<SetupPinPageCubit>().setupLater();
   }
 
   void _onSwitchShufflePinpad({required bool value}) {
