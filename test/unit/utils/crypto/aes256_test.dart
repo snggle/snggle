@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snuggle/shared/utils/crypto/aes256.dart';
+import 'package:snggle/shared/utils/crypto/aes256.dart';
 
 void main() {
   // Arrange

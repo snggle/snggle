@@ -1,5 +1,5 @@
-import 'package:snuggle/config/locator.dart';
-import 'package:snuggle/infra/repositories/settings_repository.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/repositories/settings_repository.dart';
 
 class SettingsService {
   final SettingsRepository _settingsRepository = globalLocator<SettingsRepository>();

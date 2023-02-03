@@ -1,8 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snuggle/config/locator.dart';
-import 'package:snuggle/infra/database_manager.dart';
-import 'package:snuggle/infra/services/settings_service.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/database_manager.dart';
+import 'package:snggle/infra/services/settings_service.dart';
 
 import '../../../utils/test_utils.dart';
 

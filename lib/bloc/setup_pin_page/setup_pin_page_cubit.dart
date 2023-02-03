@@ -1,16 +1,16 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_confirm_state.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_fail_state.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_init_state.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_later_state.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_success_state.dart';
-import 'package:snuggle/config/locator.dart';
-import 'package:snuggle/infra/services/authentication_service.dart';
-import 'package:snuggle/infra/services/settings_service.dart';
-import 'package:snuggle/shared/models/mnemonic_model.dart';
-import 'package:snuggle/shared/utils/app_logger.dart';
-import 'package:snuggle/views/widgets/pinpad/pinpad_controller.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_confirm_state.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_fail_state.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_init_state.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_later_state.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_success_state.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/services/authentication_service.dart';
+import 'package:snggle/infra/services/settings_service.dart';
+import 'package:snggle/shared/models/mnemonic_model.dart';
+import 'package:snggle/shared/utils/app_logger.dart';
+import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
 
 part 'a_setup_pin_page_state.dart';
 

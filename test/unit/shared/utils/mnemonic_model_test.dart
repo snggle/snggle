@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snuggle/shared/models/mnemonic_model.dart';
+import 'package:snggle/shared/models/mnemonic_model.dart';
 
 void main() {
   group('Tests of MnemonicModel.isValid', (){

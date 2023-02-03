@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snuggle/bloc/splash_page/states/splash_page_error_state.dart';
-import 'package:snuggle/bloc/splash_page/states/splash_page_ignore_pin_state.dart';
-import 'package:snuggle/bloc/splash_page/states/splash_page_loading_state.dart';
-import 'package:snuggle/bloc/splash_page/states/splash_page_setup_pin_state.dart';
-import 'package:snuggle/config/locator.dart';
-import 'package:snuggle/infra/services/settings_service.dart';
-import 'package:snuggle/shared/utils/app_logger.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_ignore_pin_state.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_loading_state.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_setup_pin_state.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/services/settings_service.dart';
+import 'package:snggle/shared/utils/app_logger.dart';
 
 part 'a_splash_page_state.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:snuggle/views/layout/action_layout/widgets/action_layout_scaffold.dart';
+import 'package:snggle/views/layout/action_layout/widgets/action_layout_scaffold.dart';
 
 class ActionLayout extends StatelessWidget {
   final bool resizeBottomInset;

@@ -1,4 +1,4 @@
-import 'package:snuggle/infra/database_manager.dart';
+import 'package:snggle/infra/database_manager.dart';
 
 class PrivateKeyRepository {
   final DatabaseManager _databaseManager = DatabaseManager();

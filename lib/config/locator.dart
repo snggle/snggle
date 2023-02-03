@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
-import 'package:snuggle/infra/repositories/private_key_repository.dart';
-import 'package:snuggle/infra/repositories/settings_repository.dart';
-import 'package:snuggle/infra/services/authentication_service.dart';
+import 'package:snggle/infra/repositories/private_key_repository.dart';
+import 'package:snggle/infra/repositories/settings_repository.dart';
+import 'package:snggle/infra/services/authentication_service.dart';
 
-import 'package:snuggle/infra/services/settings_service.dart';
+import 'package:snggle/infra/services/settings_service.dart';
 
 final GetIt globalLocator = GetIt.I;
 

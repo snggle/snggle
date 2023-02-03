@@ -1,10 +1,10 @@
-# snuggle
+# snggle
 Private keys manager
 
 ## Installation
-Use git clone to download [snuggle](https://github.com/snugglers/snuggle) project.
+Use git clone to download [snggle](https://github.com/snggle) project.
 ```bash
-git clone git@github.com:snugglers/snuggle.git
+git clone git@github.com:snggle/snggle.git
 ```
 
 ## Usage

@@ -1,9 +1,9 @@
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
-import 'package:snuggle/config/locator.dart';
-import 'package:snuggle/infra/repositories/private_key_repository.dart';
-import 'package:snuggle/shared/models/mnemonic_model.dart';
-import 'package:snuggle/shared/utils/crypto/aes256.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/repositories/private_key_repository.dart';
+import 'package:snggle/shared/models/mnemonic_model.dart';
+import 'package:snggle/shared/utils/crypto/aes256.dart';
 
 class AuthenticationService {
   final PrivateKeyRepository _privateKeyRepository = globalLocator<PrivateKeyRepository>();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:snuggle/views/widgets/pinpad/pinpad_text_field_model.dart';
+import 'package:snggle/views/widgets/pinpad/pinpad_text_field_model.dart';
 
 class PinpadController extends ChangeNotifier {
   final int pinpadTextFieldsSize;

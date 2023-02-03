@@ -1,13 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snuggle/bloc/splash_page/splash_page_cubit.dart';
-import 'package:snuggle/bloc/splash_page/states/splash_page_error_state.dart';
-import 'package:snuggle/bloc/splash_page/states/splash_page_ignore_pin_state.dart';
-import 'package:snuggle/bloc/splash_page/states/splash_page_loading_state.dart';
-import 'package:snuggle/bloc/splash_page/states/splash_page_setup_pin_state.dart';
-import 'package:snuggle/config/locator.dart';
-import 'package:snuggle/infra/database_manager.dart';
+import 'package:snggle/bloc/splash_page/splash_page_cubit.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_ignore_pin_state.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_loading_state.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_setup_pin_state.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/database_manager.dart';
 
 void main() {
   initLocator();

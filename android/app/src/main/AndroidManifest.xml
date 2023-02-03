@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.storage.snuggle">
+    package="com.snggle.mobile">
    <application
-        android:label="snuggle"
+        android:label="snggle"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snuggle/infra/database_manager.dart';
-import 'package:snuggle/infra/repositories/private_key_repository.dart';
+import 'package:snggle/infra/database_manager.dart';
+import 'package:snggle/infra/repositories/private_key_repository.dart';
 
 void main() {
   PrivateKeyRepository privateKeyRepository = PrivateKeyRepository();

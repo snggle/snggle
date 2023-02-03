@@ -1,15 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snuggle/bloc/setup_pin_page/setup_pin_page_cubit.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_confirm_state.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_fail_state.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_later_state.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_success_state.dart';
-import 'package:snuggle/shared/router/router.gr.dart';
-import 'package:snuggle/views/widgets/pinpad/pinpad.dart';
-import 'package:snuggle/views/widgets/pinpad/pinpad_controller.dart';
-import 'package:snuggle/views/widgets/pinpad/pinpad_text_fields.dart';
+import 'package:snggle/bloc/setup_pin_page/setup_pin_page_cubit.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_confirm_state.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_fail_state.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_later_state.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_success_state.dart';
+import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/views/widgets/pinpad/pinpad.dart';
+import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
+import 'package:snggle/views/widgets/pinpad/pinpad_text_fields.dart';
 
 class SetupPinPage extends StatefulWidget {
   const SetupPinPage({super.key});

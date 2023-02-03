@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:snuggle/views/widgets/pinpad/pinpad_button.dart';
-import 'package:snuggle/views/widgets/pinpad/pinpad_controller.dart';
+import 'package:snggle/views/widgets/pinpad/pinpad_button.dart';
+import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
 
 class Pinpad extends StatefulWidget {
   final bool pinpadShuffle;

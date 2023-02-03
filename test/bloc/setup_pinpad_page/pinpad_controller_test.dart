@@ -1,7 +1,7 @@
 // ignore_for_file: cascade_invocations
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snuggle/views/widgets/pinpad/pinpad_controller.dart';
+import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
 
 import '../../utils/test_utils.dart';
 

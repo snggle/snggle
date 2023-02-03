@@ -1,13 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snuggle/bloc/setup_pin_page/setup_pin_page_cubit.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_confirm_state.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_fail_state.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_init_state.dart';
-import 'package:snuggle/bloc/setup_pin_page/states/setup_pin_page_later_state.dart';
-import 'package:snuggle/config/locator.dart';
-import 'package:snuggle/views/widgets/pinpad/pinpad_controller.dart';
+import 'package:snggle/bloc/setup_pin_page/setup_pin_page_cubit.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_confirm_state.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_fail_state.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_init_state.dart';
+import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_later_state.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
 
 void main() {
   initLocator();

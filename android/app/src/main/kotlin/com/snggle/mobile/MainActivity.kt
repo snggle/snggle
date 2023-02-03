@@ -1,4 +1,4 @@
-package com.storage.snuggle
+package com.snggle.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 

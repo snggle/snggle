@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:snuggle/config/locator.dart';
-import 'package:snuggle/shared/router/router.gr.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/shared/router/router.gr.dart';
 
 void main() {
   initLocator();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:snuggle/views/layout/action_layout/widgets/action_layout_navigation.dart';
-import 'package:snuggle/views/widgets/custom/custom_scrollable.dart';
+import 'package:snggle/views/layout/action_layout/widgets/action_layout_navigation.dart';
+import 'package:snggle/views/widgets/custom/custom_scrollable.dart';
 
 class ActionLayoutScaffold extends StatelessWidget {
   final bool enableAppBar;
