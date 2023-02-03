@@ -1,11 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/bloc/setup_pin_page/setup_pin_page_cubit.dart';
-import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_confirm_state.dart';
-import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_fail_state.dart';
-import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_init_state.dart';
-import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_later_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/app_setup_pin_page_cubit.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_confirm_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_fail_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_init_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_setup_later_state.dart';
+
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
 
@@ -16,39 +17,39 @@ void main() {
     FlutterSecureStorage.setMockInitialValues(<String, String>{});
   });
 
-  group('Tests of SetupPinPage States: ', () {
+  group('Tests of AppSetupPinPage States: ', () {
     // Arrange
     PinpadController confirmPinpadController = PinpadController(pinpadTextFieldsSize: 4);
     PinpadController setupPinpadController = PinpadController(pinpadTextFieldsSize: 4);
 
-    SetupPinPageCubit actualSetupPinpadPageCubit = SetupPinPageCubit(
+    AppSetupPinPageCubit actualAppSetupPinPageCubit = AppSetupPinPageCubit(
       setupPinpadController: setupPinpadController,
       confirmPinpadController: confirmPinpadController,
     );
 
-    test('Should return initial state of [SetupPinPageInitState]', () {
+    test('Should return initial state of [AppSetupPinPageInitState]', () {
       // Assert
-      expect(actualSetupPinpadPageCubit.state, SetupPinPageInitState());
+      expect(actualAppSetupPinPageCubit.state, AppSetupPinPageInitState());
     });
 
-    test('Should return state of [SetupPinPageLaterState], after user decides to to setup later', () async {
+    test('Should return state of [AppSetupPinPageSetupLaterState], after user decides to to setup later', () async {
       // Act
-      await actualSetupPinpadPageCubit.setupLater();
+      await actualAppSetupPinPageCubit.setupLater();
       // Assert
-      expect(actualSetupPinpadPageCubit.state, SetupPinPageLaterState());
+      expect(actualAppSetupPinPageCubit.state, AppSetupPinPageSetupLaterState());
     });
 
-    blocTest<SetupPinPageCubit, ASetupPinPageState>(
-      'Should return a [SetupPinPageConfirmState] after user has setup a pin in [SetupPinPageSetupState]',
+    blocTest<AppSetupPinPageCubit, AAppSetupPinPageState>(
+      'Should return a [AppSetupPinPageConfirmState] after user has setup a pin in [AppSetupPinPageInitState]',
 
       // Arrange
-      build: () => SetupPinPageCubit(
+      build: () => AppSetupPinPageCubit(
         setupPinpadController: setupPinpadController,
         confirmPinpadController: confirmPinpadController,
       ),
 
       // Act
-      act: (SetupPinPageCubit setupPinPageCubit) {
+      act: (AppSetupPinPageCubit setupPinPageCubit) {
         setupPinPageCubit.setupPinpadController.pinpadTextFieldModelList[0].textEditingController.text = '0';
         setupPinPageCubit.setupPinpadController.pinpadTextFieldModelList[1].textEditingController.text = '0';
         setupPinPageCubit.setupPinpadController.pinpadTextFieldModelList[2].textEditingController.text = '0';
@@ -57,18 +58,18 @@ void main() {
       },
 
       // Assert
-      expect: () => <ASetupPinPageState>[SetupPinPageConfirmState()],
+      expect: () => <AAppSetupPinPageState>[AppSetupPinPageConfirmState()],
     );
 
-    blocTest<SetupPinPageCubit, ASetupPinPageState>('Should return a [SetupPinPageSuccessState] from [SetupPinPageConfirmState] after user setups and confirms a pin',
+    blocTest<AppSetupPinPageCubit, AAppSetupPinPageState>('Should return a [AppSetupPinPageSuccessState] from [AppSetupPinPageConfirmState] after user setups and confirms a pin',
 
         // Arrange
-        build: () => SetupPinPageCubit(
+        build: () => AppSetupPinPageCubit(
               setupPinpadController: setupPinpadController,
               confirmPinpadController: confirmPinpadController,
             ),
         // Act
-        act: (SetupPinPageCubit setupPinPageCubit) {
+        act: (AppSetupPinPageCubit setupPinPageCubit) {
           setupPinPageCubit.setupPinpadController.pinpadTextFieldModelList[0].textEditingController.text = '0';
           setupPinPageCubit.setupPinpadController.pinpadTextFieldModelList[1].textEditingController.text = '0';
           setupPinPageCubit.setupPinpadController.pinpadTextFieldModelList[2].textEditingController.text = '0';
@@ -82,20 +83,20 @@ void main() {
         },
 
         // Assert
-        expect: () => <ASetupPinPageState>[
-              SetupPinPageConfirmState(),
+        expect: () => <AAppSetupPinPageState>[
+              AppSetupPinPageConfirmState(),
             ]);
 
-    blocTest<SetupPinPageCubit, ASetupPinPageState>('Should return [SetupPinPageFailState] from [SetupPinPageConfirmState] after user fails to confirm a pin',
+    blocTest<AppSetupPinPageCubit, AAppSetupPinPageState>('Should return [AppSetupPinPageFailState] from [AppSetupPinPageConfirmState] after user fails to confirm a pin',
 
         // Arrange
-        build: () => SetupPinPageCubit(
+        build: () => AppSetupPinPageCubit(
               setupPinpadController: setupPinpadController,
               confirmPinpadController: confirmPinpadController,
             ),
 
         // Act
-        act: (SetupPinPageCubit setupPinPageCubit) {
+        act: (AppSetupPinPageCubit setupPinPageCubit) {
           setupPinPageCubit.setupPinpadController.pinpadTextFieldModelList[0].textEditingController.text = '0';
           setupPinPageCubit.setupPinpadController.pinpadTextFieldModelList[1].textEditingController.text = '0';
           setupPinPageCubit.setupPinpadController.pinpadTextFieldModelList[2].textEditingController.text = '0';
@@ -109,21 +110,21 @@ void main() {
         },
 
         // Assert
-        expect: () => <ASetupPinPageState>[
-              SetupPinPageConfirmState(),
-              SetupPinPageFailState(),
+        expect: () => <AAppSetupPinPageState>[
+              AppSetupPinPageConfirmState(),
+              AppSetupPinPageFailState(),
             ]);
 
-    blocTest<SetupPinPageCubit, ASetupPinPageState>('Should return a [SetupPinPageInitState] from [SetupPinPageConfirmState] after user decides to cancel confirming a pin',
+    blocTest<AppSetupPinPageCubit, AAppSetupPinPageState>('Should return a [AppSetupPinPageInitState] from [AppSetupPinPageConfirmState] after user decides to cancel confirming a pin',
 
         // Arrange
-        build: () => SetupPinPageCubit(
+        build: () => AppSetupPinPageCubit(
               setupPinpadController: setupPinpadController,
               confirmPinpadController: confirmPinpadController,
             ),
 
         // Act
-        act: (SetupPinPageCubit setupPinPageCubit) {
+        act: (AppSetupPinPageCubit setupPinPageCubit) {
           setupPinPageCubit.setupPinpadController.pinpadTextFieldModelList[0].textEditingController.text = '0';
           setupPinPageCubit.setupPinpadController.pinpadTextFieldModelList[1].textEditingController.text = '0';
           setupPinPageCubit.setupPinpadController.pinpadTextFieldModelList[2].textEditingController.text = '0';
@@ -134,9 +135,9 @@ void main() {
         },
 
         // Assert
-        expect: () => <ASetupPinPageState>[
-              SetupPinPageConfirmState(),
-              SetupPinPageInitState(),
+        expect: () => <AAppSetupPinPageState>[
+              AppSetupPinPageConfirmState(),
+              AppSetupPinPageInitState(),
             ]);
   });
 }

@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:snggle/views/pages/app_setup_pin_page.dart';
 import 'package:snggle/views/pages/empty_page.dart';
-import 'package:snggle/views/pages/setup_pin_page.dart';
 import 'package:snggle/views/pages/splash_page.dart';
 
 @MaterialAutoRouter(replaceInRouteName: 'Page,Route', routes: <AutoRoute>[
@@ -9,7 +9,7 @@ import 'package:snggle/views/pages/splash_page.dart';
     initial: true,
   ),
   AutoRoute<void>(
-    page: SetupPinPage,
+    page: AppSetupPinPage,
   ),
   AutoRoute<void>(
     page: EmptyPage,

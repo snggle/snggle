@@ -14,8 +14,8 @@
 import 'package:auto_route/auto_route.dart' as _i4;
 import 'package:flutter/material.dart' as _i5;
 
+import '../../views/pages/app_setup_pin_page.dart' as _i2;
 import '../../views/pages/empty_page.dart' as _i3;
-import '../../views/pages/setup_pin_page.dart' as _i2;
 import '../../views/pages/splash_page.dart' as _i1;
 
 class AppRouter extends _i4.RootStackRouter {
@@ -32,10 +32,10 @@ class AppRouter extends _i4.RootStackRouter {
         child: _i1.SplashPage(key: args.key),
       );
     },
-    SetupPinRoute.name: (routeData) {
+    AppSetupPinRoute.name: (routeData) {
       return _i4.MaterialPageX<void>(
         routeData: routeData,
-        child: const _i2.SetupPinPage(),
+        child: const _i2.AppSetupPinPage(),
       );
     },
     EmptyRoute.name: (routeData) {
@@ -53,8 +53,8 @@ class AppRouter extends _i4.RootStackRouter {
           path: '/',
         ),
         _i4.RouteConfig(
-          SetupPinRoute.name,
-          path: '/setup-pin-page',
+          AppSetupPinRoute.name,
+          path: '/app-setup-pin-page',
         ),
         _i4.RouteConfig(
           EmptyRoute.name,
@@ -88,15 +88,15 @@ class SplashRouteArgs {
 }
 
 /// generated route for
-/// [_i2.SetupPinPage]
-class SetupPinRoute extends _i4.PageRouteInfo<void> {
-  const SetupPinRoute()
+/// [_i2.AppSetupPinPage]
+class AppSetupPinRoute extends _i4.PageRouteInfo<void> {
+  const AppSetupPinRoute()
       : super(
-          SetupPinRoute.name,
-          path: '/setup-pin-page',
+          AppSetupPinRoute.name,
+          path: '/app-setup-pin-page',
         );
 
-  static const String name = 'SetupPinRoute';
+  static const String name = 'AppSetupPinRoute';
 }
 
 /// generated route for

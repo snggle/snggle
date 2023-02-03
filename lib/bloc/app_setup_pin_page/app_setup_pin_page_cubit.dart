@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_confirm_state.dart';
-import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_fail_state.dart';
-import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_init_state.dart';
-import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_later_state.dart';
-import 'package:snggle/bloc/setup_pin_page/states/setup_pin_page_success_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_confirm_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_fail_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_init_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_setup_later_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_success_state.dart';
+
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/authentication_service.dart';
 import 'package:snggle/infra/services/settings_service.dart';
@@ -12,43 +13,43 @@ import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/utils/app_logger.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
 
-part 'a_setup_pin_page_state.dart';
+part 'a_app_setup_pin_page_state.dart';
 
-class SetupPinPageCubit extends Cubit<ASetupPinPageState> {
+class AppSetupPinPageCubit extends Cubit<AAppSetupPinPageState> {
   final PinpadController setupPinpadController;
   final PinpadController confirmPinpadController;
   final AuthenticationService _authenticationService = globalLocator<AuthenticationService>();
   final SettingsService _settingsService = globalLocator<SettingsService>();
 
   String _setupPin = '';
-  
-  SetupPinPageCubit({
+
+  AppSetupPinPageCubit({
     required this.setupPinpadController,
     required this.confirmPinpadController,
-  }) : super(SetupPinPageInitState());
+  }) : super(AppSetupPinPageInitState());
 
   Future<void> cancelConfirmState() async {
     confirmPinpadController.clear();
     setupPinpadController.clear();
-    emit(SetupPinPageInitState());
+    emit(AppSetupPinPageInitState());
   }
 
   Future<void> setupLater() async {
     try {
-      await _settingsService.setSetupPinVisible(value: false).whenComplete(() => emit(SetupPinPageLaterState()));
+      await _settingsService.setSetupPinVisible(value: false).whenComplete(() => emit(AppSetupPinPageSetupLaterState()));
     } catch (e) {
       AppLogger().log(message: e.toString());
-      emit(SetupPinPageFailState());
+      emit(AppSetupPinPageFailState());
     }
   }
 
   Future<void> updateState() async {
-    if (state is SetupPinPageInitState) {
+    if (state is AppSetupPinPageInitState) {
       String pin = setupPinpadController.value;
       if (pin.length == setupPinpadController.pinpadTextFieldsSize) {
         await _setSetupPin(pin);
       }
-    } else if (state is SetupPinPageConfirmState || state is SetupPinPageFailState) {
+    } else if (state is AppSetupPinPageConfirmState || state is AppSetupPinPageFailState) {
       String confirmPin = confirmPinpadController.value;
       if (confirmPin.length == confirmPinpadController.pinpadTextFieldsSize) {
         await _comparePin(confirmPin);
@@ -62,19 +63,19 @@ class SetupPinPageCubit extends Cubit<ASetupPinPageState> {
         MnemonicModel mnemonicModel = MnemonicModel.generate();
         await _authenticationService.setupPrivateKey(mnemonicModel: mnemonicModel, pin: pin);
         await _settingsService.setSetupPinVisible(value: false);
-        emit(SetupPinPageSuccessState());
+        emit(AppSetupPinPageSuccessState());
       } catch (e) {
         AppLogger().log(message: e.toString());
-        emit(SetupPinPageFailState());
+        emit(AppSetupPinPageFailState());
       }
     } else {
-      emit(SetupPinPageFailState());
+      emit(AppSetupPinPageFailState());
     }
   }
 
   Future<void> _setSetupPin(String pin) async {
     _setupPin = pin;
 
-    emit(SetupPinPageConfirmState());
+    emit(AppSetupPinPageConfirmState());
   }
 }

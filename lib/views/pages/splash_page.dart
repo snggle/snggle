@@ -50,7 +50,7 @@ class SplashPage extends StatelessWidget {
 
   void _handleListener(BuildContext context, ASplashPageState? splashPageState) {
     if (splashPageState is SplashPageSetupPinState) {
-      AutoRouter.of(context).push(const SetupPinRoute());
+      AutoRouter.of(context).push(const AppSetupPinRoute());
     } else if (splashPageState is SplashPageIgnorePinState) {
       AutoRouter.of(context).push(const EmptyRoute());
     }
