@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 // TODO(Knight): In future, when there will be more than one manager, enum and class should be extracted into two files and moved to lib/infra/managers/
 
 enum DatabaseEntryKey {
-  privateKey,
+  salt,
   setupPinVisibleBool,
 }
 

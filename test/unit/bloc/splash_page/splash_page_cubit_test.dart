@@ -58,11 +58,7 @@ void main() {
       'Should return a [SplashPageIgnorePinState] as user decides to setup later, hence [setupPinVisibleBool] is set to false',
       // Arrange
       build: () {
-        FlutterSecureStorage.setMockInitialValues(<String, String>{
-          DatabaseEntryKey.setupPinVisibleBool.name: 'false',
-          DatabaseEntryKey.privateKey.name:
-              'HjqvAkkyHxKxcrgueqt/LZenap6I5fjVGOsiAOqRGNcUwm67q6SONnGpWDmOiJdGDnJtVvpgS1o3qORTZs3Izzm3PAUGb0yDY3ZcfvwU9iFmHHfDjq+2Tk5DwdpnhWmoEHxDbg==',
-        });
+        FlutterSecureStorage.setMockInitialValues(<String, String>{DatabaseEntryKey.setupPinVisibleBool.name: 'false'});
         return SplashPageCubit();
       },
 

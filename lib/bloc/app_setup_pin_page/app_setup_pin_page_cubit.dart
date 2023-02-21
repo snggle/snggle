@@ -5,11 +5,12 @@ import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_fail_st
 import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_init_state.dart';
 import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_setup_later_state.dart';
 import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_success_state.dart';
+import 'package:snggle/config/app_config.dart';
 
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/authentication_service.dart';
 import 'package:snggle/infra/services/settings_service.dart';
-import 'package:snggle/shared/models/mnemonic_model.dart';
+import 'package:snggle/shared/models/salt_model.dart';
 import 'package:snggle/shared/utils/app_logger.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
 
@@ -36,7 +37,10 @@ class AppSetupPinPageCubit extends Cubit<AAppSetupPinPageState> {
 
   Future<void> setupLater() async {
     try {
-      await _settingsService.setSetupPinVisible(value: false).whenComplete(() => emit(AppSetupPinPageSetupLaterState()));
+      SaltModel saltModel = await SaltModel.generateSalt(password: AppConfig.defaultPassword, isDefaultPassword: true);
+      await _settingsService.setSetupPinVisible(value: false);
+      await _authenticationService.setSaltModel(saltModel: saltModel);
+      emit(AppSetupPinPageSetupLaterState());
     } catch (e) {
       AppLogger().log(message: e.toString());
       emit(AppSetupPinPageFailState());
@@ -60,9 +64,9 @@ class AppSetupPinPageCubit extends Cubit<AAppSetupPinPageState> {
   Future<void> _comparePin(String pin) async {
     if (_setupPin == pin) {
       try {
-        MnemonicModel mnemonicModel = MnemonicModel.generate();
-        await _authenticationService.setupPrivateKey(mnemonicModel: mnemonicModel, pin: pin);
+        SaltModel saltModel = await SaltModel.generateSalt(password: pin, isDefaultPassword: false);
         await _settingsService.setSetupPinVisible(value: false);
+        await _authenticationService.setSaltModel(saltModel: saltModel);
         emit(AppSetupPinPageSuccessState());
       } catch (e) {
         AppLogger().log(message: e.toString());
