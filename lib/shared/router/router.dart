@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:snggle/views/pages/app_auth_page.dart';
 import 'package:snggle/views/pages/app_setup_pin_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/apps_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
@@ -14,6 +15,9 @@ import 'package:snggle/views/pages/splash_page.dart';
   ),
   AutoRoute<void>(
     page: AppSetupPinPage,
+  ),
+  AutoRoute<void>(
+    page: AppAuthPage,
   ),
   AutoRoute<void>(
     page: BottomNavigationWrapper,

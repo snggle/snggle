@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/splash_page/splash_page_cubit.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_enter_pin_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_ignore_pin_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_loading_state.dart';
@@ -20,14 +21,14 @@ class SplashPage extends StatelessWidget {
         backgroundColor: Colors.white,
         body: BlocConsumer<SplashPageCubit, ASplashPageState>(
           bloc: _splashPageCubit,
-          builder: _handleBuilder,
-          listener: _handleListener,
+          builder: _handleBlocBuilder,
+          listener: _handleBlocListener,
         ),
       ),
     );
   }
 
-  Widget _handleBuilder(BuildContext context, ASplashPageState splashPageState) {
+  Widget _handleBlocBuilder(BuildContext context, ASplashPageState splashPageState) {
     if (splashPageState is SplashPageLoadingState) {
       _splashPageCubit.init();
     } else if (splashPageState is SplashPageErrorState) {
@@ -40,17 +41,20 @@ class SplashPage extends StatelessWidget {
       );
     }
     return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: const <Widget>[
-        CircularProgressIndicator(),
-      ],
-    ));
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const <Widget>[
+          CircularProgressIndicator(),
+        ],
+      ),
+    );
   }
 
-  void _handleListener(BuildContext context, ASplashPageState? splashPageState) {
+  void _handleBlocListener(BuildContext context, ASplashPageState? splashPageState) {
     if (splashPageState is SplashPageSetupPinState) {
       AutoRouter.of(context).replace(const AppSetupPinRoute());
+    } else if (splashPageState is SplashPageEnterPinState) {
+      AutoRouter.of(context).replace(const AppAuthRoute());
     } else if (splashPageState is SplashPageIgnorePinState) {
       AutoRouter.of(context).replace(const BottomNavigationRoute());
     }
