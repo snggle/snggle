@@ -7,7 +7,7 @@ import 'package:snggle/bloc/splash_page/states/splash_page_ignore_pin_state.dart
 import 'package:snggle/bloc/splash_page/states/splash_page_loading_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_setup_pin_state.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/database_manager.dart';
+import 'package:snggle/infra/managers/database_entry_key.dart';
 
 void main() {
   initLocator();

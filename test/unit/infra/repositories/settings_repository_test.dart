@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/infra/database_manager.dart';
+import 'package:snggle/infra/managers/database_entry_key.dart';
 import 'package:snggle/infra/repositories/settings_repository.dart';
 
 import '../../../utils/test_utils.dart';

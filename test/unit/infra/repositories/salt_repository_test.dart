@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/infra/database_manager.dart';
 import 'package:snggle/infra/entities/salt_entity.dart';
+import 'package:snggle/infra/managers/database_entry_key.dart';
 import 'package:snggle/infra/repositories/salt_repository.dart';
 
 void main() {

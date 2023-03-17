@@ -4,8 +4,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/app_config.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/database_manager.dart';
 import 'package:snggle/infra/entities/salt_entity.dart';
+import 'package:snggle/infra/managers/database_entry_key.dart';
 import 'package:snggle/infra/services/auth_service.dart';
 import 'package:snggle/shared/models/salt_model.dart';
 
