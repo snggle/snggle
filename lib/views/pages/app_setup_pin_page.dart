@@ -174,9 +174,9 @@ class _AppSetupPinPageState extends State<AppSetupPinPage> {
 
   void _handleListener(BuildContext context, AAppSetupPinPageState? appSetupPinPageState) {
     if (appSetupPinPageState is AppSetupPinPageSuccessState) {
-      AutoRouter.of(context).replace(const BottomNavigationRoute());
+      AutoRouter.of(context).replace(const AppLifecycleWrapperRoute(children: <PageRouteInfo>[BottomNavigationRoute()]));
     } else if (appSetupPinPageState is AppSetupPinPageSetupLaterState) {
-      AutoRouter.of(context).replace(const BottomNavigationRoute());
+      AutoRouter.of(context).replace(const AppLifecycleWrapperRoute(children: <PageRouteInfo>[BottomNavigationRoute()]));
     }
   }
 

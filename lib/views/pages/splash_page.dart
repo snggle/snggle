@@ -55,7 +55,7 @@ class SplashPage extends StatelessWidget {
     } else if (splashPageState is SplashPageEnterPinState) {
       AutoRouter.of(context).replace(const AppAuthRoute());
     } else if (splashPageState is SplashPageIgnorePinState) {
-      AutoRouter.of(context).replace(const BottomNavigationRoute());
+      AutoRouter.of(context).replace(const AppLifecycleWrapperRoute(children: <PageRouteInfo>[BottomNavigationRoute()]));
     }
   }
 }

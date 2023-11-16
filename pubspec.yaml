@@ -85,6 +85,10 @@ dependencies:
   # https://pub.dev/packages/hd_wallet
   hd_wallet: ^0.0.9
 
+  # Safe Data Leakage via Application Background Screenshot and Prevent Screenshot for Android and iOS.
+  # https://pub.dev/packages/screen_protector/versions/1.2.0
+  screen_protector: ^1.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

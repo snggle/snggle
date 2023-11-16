@@ -4,5 +4,13 @@
          the Flutter tool needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
     -->
+    
+   <!-- Snggle uses the main AndroidManifest for release builds, and aims to built an offline service. 
+        In case, developers uses Android Profiler tool to release build variants of Snggle.
+        Internet access is also removed here to keep Snggle Offline.
+        This file is maintained and not removed in-case Flutter autogenerates it and returns Internet access.
+        
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    --> 
 </manifest>

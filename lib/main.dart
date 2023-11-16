@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:screen_protector/screen_protector.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/theme_config.dart';
 import 'package:snggle/shared/router/router.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   initLocator();
+  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.portraitUp]);
+  await ScreenProtector.preventScreenshotOn();
   runApp(const AppCore());
 }
 

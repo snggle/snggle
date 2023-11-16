@@ -149,7 +149,7 @@ class _AppAuthPageState extends State<AppAuthPage> {
 
   void _handleBlocListener(BuildContext context, AAppAuthPageState appAuthPageState) {
     if (appAuthPageState is AppAuthPageSuccessState) {
-      context.router.replace(const BottomNavigationRoute());
+      AutoRouter.of(context).replace(const AppLifecycleWrapperRoute(children: <PageRouteInfo>[BottomNavigationRoute()]));
     }
   }
 
