@@ -1,40 +1,38 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/views/pages/app_auth_page.dart';
+import 'package:snggle/views/pages/app_setup_pin_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/apps_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
+import 'package:snggle/views/pages/bottom_navigation/secrets_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/settings_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/vault_list_page.dart';
+import 'package:snggle/views/pages/qr_code_generate_page.dart';
+import 'package:snggle/views/pages/splash_page.dart';
 
-@AutoRouterConfig(replaceInRouteName: 'Page,Route')
-class AppRouter extends $AppRouter {
-  @override
-  List<AutoRoute> get routes {
-    return <AutoRoute>[
-      AutoRoute(
-        page: SplashRoute.page,
-        initial: true,
-      ),
-      AutoRoute(
-        page: AppSetupPinRoute.page,
-      ),
-      AutoRoute(
-        page: AppAuthRoute.page,
-      ),
-      AutoRoute(
-        page: BottomNavigationRoute.page,
-        maintainState: true,
-        children: <AutoRoute>[
-          AutoRoute(
-            page: VaultsSectionWrapperRoute.page,
-            children: <AutoRoute>[
-              AutoRoute(page: VaultListRoute.page, initial: true),
-              AutoRoute(page: WalletListRoute.page),
-              AutoRoute(page: WalletDetailsRoute.page),
-            ],
-          ),
-          AutoRoute(page: VaultListRoute.page),
-          AutoRoute(page: WalletListRoute.page),
-          AutoRoute(page: SecretsRoute.page),
-          AutoRoute(page: AppsRoute.page),
-          AutoRoute(page: SettingsRoute.page),
-        ],
-      ),
-    ];
-  }
-}
+@MaterialAutoRouter(replaceInRouteName: 'Page,Route', routes: <AutoRoute>[
+  AutoRoute<void>(
+    page: SplashPage,
+    initial: true,
+  ),
+  AutoRoute<void>(
+    page: AppSetupPinPage,
+  ),
+  AutoRoute<void>(
+    page: AppAuthPage,
+  ),
+  AutoRoute<void>(
+    page: BottomNavigationWrapper,
+    name: 'BottomNavigationRoute',
+    maintainState: true,
+    children: <AutoRoute>[
+      AutoRoute<void>(page: VaultListPage),
+      AutoRoute<void>(page: SecretsPage),
+      AutoRoute<void>(page: AppsPage),
+      AutoRoute<void>(page: SettingsPage),
+    ],
+  ),
+  AutoRoute<void>(
+    page: QrCodeGeneratePage,
+  ),
+])
+class $AppRouter {}
