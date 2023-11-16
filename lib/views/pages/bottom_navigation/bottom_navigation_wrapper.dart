@@ -18,7 +18,7 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
     0: const VaultsSectionWrapperRoute(),
     1: const SecretsRoute(),
     3: const AppsRoute(),
-    4: const SettingsRoute(),
+    4: SettingsRoute(),
   };
 
   @override

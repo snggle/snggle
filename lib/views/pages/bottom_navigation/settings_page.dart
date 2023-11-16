@@ -10,7 +10,23 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: CustomAppBar(title: 'Settings'),
-      body: Center(child: Text('Settings Page')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextButton(
+              onPressed: qrCodeCubit.fetchMemoryQrCode,
+              child: const Text('Fetch QR-code from Memory'),
+            ),
+            BlocBuilder<QRCodeCubit, String>(
+              bloc: qrCodeCubit,
+              builder: (BuildContext context, String state) {
+                return Text(state);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

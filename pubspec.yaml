@@ -85,6 +85,22 @@ dependencies:
   # https://pub.dev/packages/hd_wallet
   hd_wallet: ^0.0.9
 
+  # Dart Image Library provides server and web apps the ability to load, manipulate, and save images with various image file formats.
+  # https://pub.dev/packages/image
+  image: 4.0.15
+
+  # A multi-format 1D/2D barcode image processing library implemented in Dart. This is a port of the Android library.
+  # https://pub.dev/packages/zxing2
+  zxing2: 0.2.0
+
+  # A package that allows you to use a native file explorer to pick single or multiple absolute file paths, with extension filtering support.
+  # https://pub.dev/packages/file_picker
+  file_picker: 5.2.6
+
+  # FFmpeg Kit for Flutter. Supports Android, iOS and macOS platforms.
+  # https://pub.dev/packages/ffmpeg_kit_flutter
+  ffmpeg_kit_flutter: 5.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
