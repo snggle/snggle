@@ -76,7 +76,9 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
   }
 
   void _tapNavigationItem(int index) {
-    if (routes[index] != null) {
+    if (index == 2) {
+      AutoRouter.of(context).push(QrCodeScanRoute());
+    } else if (routes[index] != null) {
       AutoRouter.of(context).navigate(routes[index]!);
       activeIndexNotifier.value = index;
     }
