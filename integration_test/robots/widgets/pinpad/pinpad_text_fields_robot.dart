@@ -7,6 +7,38 @@ class PinpadTextFieldsRobot {
   final WidgetTester widgetTester;
   const PinpadTextFieldsRobot(this.widgetTester);
 
+  Future<void> validateCorrectPin({required String pin}) async {
+    // Arrange
+    StringBuffer buffer = StringBuffer();
+    for (int i = 0; i < 4; i++) {
+      final Finder findPinpadTextField = find.byKey(Key('pinpad_text_field_$i'));
+
+      // Assert
+      TestUtils.printInfo('Should return true if the expected PinpadTextField exists in the screen');
+      expect(findPinpadTextField, findsOneWidget);
+
+      TextField pinpadTextFieldWidget = widgetTester.firstWidget<TextField>(findPinpadTextField);
+      buffer.write(pinpadTextFieldWidget.controller!.text);
+    }
+    expect(buffer.toString(), pin);
+  }
+
+  Future<void> validateFalsePin({required String pin}) async {
+    // Arrange
+    StringBuffer buffer = StringBuffer();
+    for (int i = 0; i < 4; i++) {
+      final Finder findPinpadTextField = find.byKey(Key('pinpad_text_field_$i'));
+
+      // Assert
+      TestUtils.printInfo('Should return true if the expected PinpadTextField exists in the screen');
+      expect(findPinpadTextField, findsOneWidget);
+
+      TextField pinpadTextFieldWidget = widgetTester.firstWidget<TextField>(findPinpadTextField);
+      buffer.write(pinpadTextFieldWidget.controller!.text);
+    }
+    expect(buffer.toString(), isNot(pin));
+  }
+
   Future<void> validateObscurePinpadTextField({required bool obscure}) async {
     // Arrange
     final Finder findPinpadTextField = find.byKey(const Key('pinpad_text_field_0'));
@@ -17,7 +49,7 @@ class PinpadTextFieldsRobot {
 
     TextField pinpadTextFieldWidget = widgetTester.firstWidget<TextField>(findPinpadTextField);
 
-    expect(pinpadTextFieldWidget.obscureText, obscure);
+    return expect(pinpadTextFieldWidget.obscureText, obscure);
   }
 
   Future<void> hidePinpadTextFields() async {
