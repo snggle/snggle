@@ -23,4 +23,15 @@ class AppColors {
       Color(0xFF000000),
     ],
   );
+
+  static Gradient validationGradient = const RadialGradient(
+    radius: 1,
+    center: Alignment(-0.6, -0.6),
+    colors: <Color>[
+      Color(0xFF000000),
+      Color(0xFFFF5050),
+      Color(0xFF939393),
+      Color(0xFF000000),
+    ],
+  );
 }

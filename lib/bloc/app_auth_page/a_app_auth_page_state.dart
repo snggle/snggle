@@ -1,8 +1,10 @@
-part of 'app_auth_page_cubit.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class AAppAuthPageState extends Equatable {
-  const AAppAuthPageState();
+  final List<int> pinNumbers;
+
+  const AAppAuthPageState({required this.pinNumbers});
 
   @override
-  List<Object> get props => <AAppAuthPageState>[];
+  List<Object> get props => <Object>[pinNumbers];
 }
