@@ -1,15 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/app_setup_pin_page/app_setup_pin_page_cubit.dart';
-import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_confirm_state.dart';
-import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_invalid_state.dart';
-import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_setup_later_state.dart';
-import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_success_state.dart';
+import 'package:snggle/bloc/pages/app_setup_pin_page/a_app_setup_pin_page_state.dart';
+import 'package:snggle/bloc/pages/app_setup_pin_page/app_setup_pin_page_cubit.dart';
+import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_confirm_pin_state.dart';
+import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_enter_pin_state.dart';
+import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_invalid_pin_state.dart';
+import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_loading_state.dart';
 import 'package:snggle/shared/router/router.gr.dart';
-import 'package:snggle/views/widgets/pinpad/pinpad.dart';
-import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
-import 'package:snggle/views/widgets/pinpad/pinpad_text_fields.dart';
+import 'package:snggle/shared/utils/logger/app_logger.dart';
+import 'package:snggle/views/widgets/button/custom_text_button.dart';
+import 'package:snggle/views/widgets/generic/loading_scaffold.dart';
+import 'package:snggle/views/widgets/pinpad/pinpad_scaffold.dart';
 
 @RoutePage()
 class AppSetupPinPage extends StatefulWidget {
@@ -20,179 +22,103 @@ class AppSetupPinPage extends StatefulWidget {
 }
 
 class _AppSetupPinPageState extends State<AppSetupPinPage> {
-  int maxPinLength = 4;
-  ValueNotifier<int> pinLengthNotifier = ValueNotifier<int>(0);
-  ValueNotifier<bool> isPinObscuredNotifier = ValueNotifier<bool>(true);
-  ValueNotifier<bool> isPinShuffledNotifier = ValueNotifier<bool>(false);
-
-  late final PinpadController setupPinpadController;
-  late final PinpadController confirmPinpadController;
-
-  @override
-  void initState() {
-    super.initState();
-    setupPinpadController = PinpadController(pinpadTextFieldsSize: maxPinLength);
-    confirmPinpadController = PinpadController(pinpadTextFieldsSize: maxPinLength);
-    setupPinpadController.requestFirstFocus();
-  }
+  final AppSetupPinPageCubit appSetupPinPageCubit = AppSetupPinPageCubit();
 
   @override
   void dispose() {
-    pinLengthNotifier.dispose();
-    isPinObscuredNotifier.dispose();
-    isPinShuffledNotifier.dispose();
-    setupPinpadController.dispose();
-    confirmPinpadController.dispose();
+    appSetupPinPageCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AppSetupPinPageCubit>(
-      create: (BuildContext context) => AppSetupPinPageCubit(
-        setupPinpadController: setupPinpadController,
-        confirmPinpadController: confirmPinpadController,
-      ),
-      child: Scaffold(
-        body: BlocConsumer<AppSetupPinPageCubit, AAppSetupPinPageState>(
-          builder: _handleBuilder,
-          listener: _handleListener,
-        ),
-      ),
-    );
-  }
+    return BlocBuilder<AppSetupPinPageCubit, AAppSetupPinPageState>(
+      bloc: appSetupPinPageCubit,
+      builder: (BuildContext context, AAppSetupPinPageState appSetupPinPageState) {
+        if (appSetupPinPageState is AppSetupPinPageLoadingState) {
+          return const LoadingScaffold();
+        }
 
-  Widget _handleBuilder(BuildContext context, AAppSetupPinPageState appSetupPinPageState) {
-    bool isConfirmState = appSetupPinPageState is AppSetupPinPageConfirmState;
-    PinpadController currentPinpadController = isConfirmState ? confirmPinpadController : setupPinpadController;
-    pinLengthNotifier = ValueNotifier<int>(0);
+        late Widget child;
 
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(isConfirmState ? 'Repeat Access PIN' : 'Setup Access PIN'),
-                ],
-              ),
-              if (appSetupPinPageState is AppSetupPinPageInvalidState)
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[Text('Incorrect pin, try again')],
+        if (appSetupPinPageState is AppSetupPinPageEnterPinState) {
+          child = PinpadScaffold(
+            errorBool: false,
+            title: 'Setup Access PIN',
+            initialPinNumbers: appSetupPinPageState.basePinNumbers,
+            onChanged: _handleBasePinChange,
+            actionButtons: <Widget>[
+              if (appSetupPinPageState.basePinNumbers.isEmpty)
+                CustomTextButton(
+                  title: 'Setup Later',
+                  onPressed: _handleSetupLaterPressed,
                 ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ValueListenableBuilder<bool>(
-                    valueListenable: isPinObscuredNotifier,
-                    builder: (BuildContext context, bool value, _) {
-                      return PinpadTextFields(
-                        obscureText: isPinObscuredNotifier.value,
-                        pinpadController: currentPinpadController,
-                      );
-                    },
-                  ),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: isPinObscuredNotifier,
-                    builder: (BuildContext context, bool value, _) {
-                      return InkWell(
-                        onTap: _onToggleObscureText,
-                        child: Icon(
-                          isPinObscuredNotifier.value ? Icons.visibility : Icons.visibility_off,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Text('Shuffle Keyboard'),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: isPinShuffledNotifier,
-                    builder: (BuildContext context, bool value, _) {
-                      return Switch(
-                        value: isPinShuffledNotifier.value,
-                        onChanged: (bool value) => _onSwitchShufflePinpad(value: value),
-                      );
-                    },
-                  ),
-                ],
-              ),
-              AnimatedBuilder(
-                animation: Listenable.merge(
-                  <ValueNotifier<dynamic>>[
-                    isPinShuffledNotifier,
-                    pinLengthNotifier,
-                  ],
+              if (appSetupPinPageState.basePinNumbers.length >= 4)
+                CustomTextButton(
+                  title: 'Confirm',
+                  onPressed: appSetupPinPageCubit.setupBasePin,
                 ),
-                builder: (BuildContext context, _) {
-                  return AspectRatio(
-                    aspectRatio: 1 / 1,
-                    child: Pinpad(
-                      pinpadController: currentPinpadController,
-                      pinpadShuffle: isPinShuffledNotifier.value,
-                      onChanged: () => pinLengthNotifier.value = currentPinpadController.value.length,
-                    ),
-                  );
-                },
-              ),
             ],
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextButton(
-              onPressed: () => isConfirmState ? _onCancelConfirmState(context) : _onSetupLater(context),
-              child: isConfirmState ? const Text('Cancel') : const Text('Setup Later'),
-            ),
-            ValueListenableBuilder<int>(
-              valueListenable: pinLengthNotifier,
-              builder: (BuildContext context, int value, _) {
-                bool isPinpadTextFieldsFilled = currentPinpadController.value.length == maxPinLength;
+          );
+        } else if (appSetupPinPageState is AppSetupPinPageConfirmPinState) {
+          child = PinpadScaffold(
+            maxPinLength: appSetupPinPageState.basePinNumbers.length,
+            errorBool: appSetupPinPageState is AppSetupPinPageInvalidPinState,
+            title: 'Confirm PIN',
+            initialPinNumbers: appSetupPinPageState.confirmPinNumbers,
+            onChanged: (List<int> confirmPinNumbers) => _handleConfirmPinChange(appSetupPinPageState.basePinNumbers, confirmPinNumbers),
+            actionButtons: <Widget>[
+              if (appSetupPinPageState.confirmPinNumbers.isEmpty)
+                CustomTextButton(
+                  title: 'Return',
+                  onPressed: appSetupPinPageCubit.resetToBasePin,
+                ),
+            ],
+          );
+        }
 
-                return Visibility(
-                  visible: isPinpadTextFieldsFilled,
-                  child: TextButton(
-                    onPressed: () => context.read<AppSetupPinPageCubit>().updateState(),
-                    child: isConfirmState ? const Text('Confirm') : const Text('Next'),
-                  ),
-                );
-              },
+        return PopScope(
+          canPop: (appSetupPinPageState is AppSetupPinPageConfirmPinState) == false,
+          onPopInvoked: _handleBackButtonPressed,
+          child: Material(
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 100),
+              child: child,
             ),
-          ],
-        ),
-      ],
+          ),
+        );
+      },
     );
   }
 
-  void _handleListener(BuildContext context, AAppSetupPinPageState? appSetupPinPageState) {
-    if (appSetupPinPageState is AppSetupPinPageSuccessState) {
-      AutoRouter.of(context).replace(const BottomNavigationRoute());
-    } else if (appSetupPinPageState is AppSetupPinPageSetupLaterState) {
-      AutoRouter.of(context).replace(const BottomNavigationRoute());
+  void _handleBasePinChange(List<int> pinNumbers) {
+    appSetupPinPageCubit.updateBasePin(pinNumbers);
+  }
+
+  void _handleConfirmPinChange(List<int> basePinNumbers, List<int> confirmPinNumbers) {
+    appSetupPinPageCubit.updateConfirmPin(confirmPinNumbers);
+    if (basePinNumbers.length == confirmPinNumbers.length) {
+      _trySetupPin();
     }
   }
 
-  void _onCancelConfirmState(BuildContext context) {
-    context.read<AppSetupPinPageCubit>().cancelConfirmState();
+  Future<void> _trySetupPin() async {
+    try {
+      await appSetupPinPageCubit.setupConfirmPin();
+      await AutoRouter.of(context).replace(const BottomNavigationRoute());
+    } catch (e) {
+      AppLogger().log(message: 'Provided invalid confirm PIN');
+    }
   }
 
-  void _onSetupLater(BuildContext context) {
-    context.read<AppSetupPinPageCubit>().setupLater();
+  Future<void> _handleSetupLaterPressed() async {
+    await appSetupPinPageCubit.setupDefaultPin();
+    await AutoRouter.of(context).replace(const BottomNavigationRoute());
   }
 
-  void _onSwitchShufflePinpad({required bool value}) {
-    isPinShuffledNotifier.value = value;
-  }
-
-  void _onToggleObscureText() {
-    isPinObscuredNotifier.value = !isPinObscuredNotifier.value;
+  void _handleBackButtonPressed(bool didPopBool) {
+    if (appSetupPinPageCubit.state is AppSetupPinPageConfirmPinState) {
+      appSetupPinPageCubit.resetToBasePin();
+    }
   }
 }

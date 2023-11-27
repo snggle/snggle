@@ -89,6 +89,10 @@ dependencies:
   # https://pub.dev/packages/path_provider
   path_provider: ^2.1.2
 
+  # Spring curves for Flutter animations. Based on real physics equations with three damping curves.
+  # https://pub.dev/packages/sprung
+  sprung: ^3.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -116,6 +120,7 @@ flutter:
     - assets/fonts/bauhaus/
     - assets/fonts/icons/
     - assets/icons/
+    - assets/gifs/
   fonts:
     - family: Bauhaus
       fonts:
