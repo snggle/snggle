@@ -112,6 +112,7 @@ flutter:
     - assets/fonts/bauhaus/
     - assets/fonts/icons/
     - assets/icons/
+    - assets/gifs/
   fonts:
     - family: Bauhaus
       fonts:

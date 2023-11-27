@@ -1,92 +1,79 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_confirm_state.dart';
-import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_error_state.dart';
-import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_init_state.dart';
-import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_invalid_state.dart';
-import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_setup_later_state.dart';
-import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_success_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/a_app_setup_pin_page_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_confirm_pin_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_enter_pin_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_invalid_pin_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_loading_state.dart';
 import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
+
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
+import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
-import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
-
-part 'a_app_setup_pin_page_state.dart';
 
 class AppSetupPinPageCubit extends Cubit<AAppSetupPinPageState> {
-  final AuthSingletonCubit _authSingletonCubit = globalLocator<AuthSingletonCubit>();
   final MasterKeyService _masterKeyService = globalLocator<MasterKeyService>();
+  final AuthSingletonCubit _authSingletonCubit;
 
-  final PinpadController setupPinpadController;
-  final PinpadController confirmPinpadController;
+  AppSetupPinPageCubit({AuthSingletonCubit? authSingletonCubit})
+      : _authSingletonCubit = authSingletonCubit ?? globalLocator<AuthSingletonCubit>(),
+        super(const AppSetupPinPageEnterPinState.empty());
 
-  AppSetupPinPageCubit({
-    required this.setupPinpadController,
-    required this.confirmPinpadController,
-  }) : super(AppSetupPinPageInitState());
-
-  Future<void> cancelConfirmState() async {
-    confirmPinpadController.clear();
-    setupPinpadController.clear();
-    emit(AppSetupPinPageInitState());
+  void updateBasePin(List<int> basePinNumbers) {
+    emit(AppSetupPinPageEnterPinState(basePinNumbers: basePinNumbers));
   }
 
-  Future<void> setupLater() async {
-    try {
-      await _masterKeyService.setDefaultMasterKey();
-      _authSingletonCubit.setAppPassword(PasswordModel.defaultPassword());
-      emit(AppSetupPinPageSetupLaterState());
-    } catch (e) {
-      AppLogger().log(message: e.toString());
-      emit(AppSetupPinPageErrorState());
-    }
+  void updateConfirmPin(List<int> confirmPinNumbers) {
+    assert(state is AppSetupPinPageConfirmPinState, 'State must be [AppSetupPinPageConfirmPinState] to call this method');
+
+    AppSetupPinPageConfirmPinState appSetupPinPageConfirmPinState = state as AppSetupPinPageConfirmPinState;
+    emit(appSetupPinPageConfirmPinState.copyWith(confirmPinNumbers: confirmPinNumbers));
   }
 
-  Future<void> updateState() async {
-    if (state is AppSetupPinPageInitState) {
-      _handleFirstPasswordUpdate();
-    } else if (state is AppSetupPinPageConfirmState) {
-      await _handleRepeatedPasswordUpdate(state as AppSetupPinPageConfirmState);
-    }
+  void setupBasePin() {
+    AppSetupPinPageEnterPinState appSetupPinPageEnterPinState = state as AppSetupPinPageEnterPinState;
+    emit(AppSetupPinPageConfirmPinState(
+      basePinNumbers: appSetupPinPageEnterPinState.basePinNumbers,
+      confirmPinNumbers: const <int>[],
+    ));
   }
 
-  void _handleFirstPasswordUpdate() {
-    String firstPassword = setupPinpadController.value;
-    if (firstPassword.length == setupPinpadController.pinpadTextFieldsSize) {
-      emit(AppSetupPinPageConfirmState(passwordModel: PasswordModel.fromPlaintext(firstPassword)));
-    }
-  }
+  Future<void> setupConfirmPin() async {
+    Future<void> minOperationTime = Future<void>.delayed(const Duration(seconds: 1));
 
-  Future<void> _handleRepeatedPasswordUpdate(AppSetupPinPageConfirmState appSetupPinPageConfirmState) async {
-    String secondPassword = confirmPinpadController.value;
-    if (secondPassword.length != confirmPinpadController.pinpadTextFieldsSize) {
-      return;
-    }
+    assert(state is AppSetupPinPageConfirmPinState, 'State must be [AppSetupPinPageConfirmPinState] to call this method');
+    AppSetupPinPageConfirmPinState appSetupPinPageConfirmPinState = state as AppSetupPinPageConfirmPinState;
 
-    PasswordModel firstPasswordModel = appSetupPinPageConfirmState.passwordModel;
-    PasswordModel secondPasswordModel = PasswordModel.fromPlaintext(confirmPinpadController.value);
-    if (firstPasswordModel == secondPasswordModel) {
-      await _setupPassword(firstPasswordModel);
+    if (appSetupPinPageConfirmPinState.arePasswordsEqual()) {
+      List<int> basePinNumbers = appSetupPinPageConfirmPinState.basePinNumbers;
+      PasswordModel passwordModel = PasswordModel.fromPlaintext(basePinNumbers.join(''));
+      await _savePin(passwordModel);
+      await minOperationTime;
     } else {
-      emit(AppSetupPinPageInvalidState(passwordModel: firstPasswordModel));
+      emit(AppSetupPinPageInvalidPinState(
+        basePinNumbers: appSetupPinPageConfirmPinState.basePinNumbers,
+        confirmPinNumbers: appSetupPinPageConfirmPinState.confirmPinNumbers,
+      ));
+      throw InvalidPasswordException('PIN numbers are not equal');
     }
   }
 
-  Future<void> _setupPassword(PasswordModel passwordModel) async {
-    try {
-      MnemonicModel mnemonicModel = MnemonicModel.generate();
-      MasterKeyVO masterKeyVO = await MasterKeyVO.create(passwordModel: passwordModel, mnemonicModel: mnemonicModel);
-      await _masterKeyService.setMasterKey(masterKeyVO);
+  Future<void> setupDefaultPin() async {
+    await _savePin(PasswordModel.defaultPassword());
+  }
 
-      _authSingletonCubit.setAppPassword(passwordModel);
-      emit(AppSetupPinPageSuccessState());
-    } catch (e) {
-      AppLogger().log(message: e.toString());
-      emit(AppSetupPinPageErrorState());
-    }
+  void resetToBasePin() {
+    emit(const AppSetupPinPageEnterPinState.empty());
+  }
+
+  Future<void> _savePin(PasswordModel pinPasswordModel) async {
+    emit(const AppSetupPinPageLoadingState());
+    MnemonicModel mnemonicModel = MnemonicModel.generate();
+    MasterKeyVO masterKeyVO = await MasterKeyVO.create(passwordModel: pinPasswordModel, mnemonicModel: mnemonicModel);
+    await _masterKeyService.setMasterKey(masterKeyVO);
+
+    _authSingletonCubit.setAppPassword(pinPasswordModel);
   }
 }

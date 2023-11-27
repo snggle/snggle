@@ -1,89 +1,102 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:snggle/bloc/app_auth_page/a_app_auth_page_state.dart';
 import 'package:snggle/bloc/app_auth_page/app_auth_page_cubit.dart';
-import 'package:snggle/bloc/app_auth_page/states/app_auth_page_error_state.dart';
-import 'package:snggle/bloc/app_auth_page/states/app_auth_page_initial_state.dart';
-import 'package:snggle/bloc/app_auth_page/states/app_auth_page_invalid_password_state.dart';
-import 'package:snggle/bloc/app_auth_page/states/app_auth_page_load_state.dart';
-import 'package:snggle/bloc/app_auth_page/states/app_auth_page_success_state.dart';
+import 'package:snggle/bloc/app_auth_page/states/app_auth_page_enter_pin_state.dart';
+import 'package:snggle/bloc/app_auth_page/states/app_auth_page_invalid_pin_state.dart';
+import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/services/master_key_service.dart';
-import 'package:snggle/shared/models/mnemonic_model.dart';
+import 'package:snggle/infra/managers/database_parent_key.dart';
+import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/value_objects/master_key_vo.dart';
 
-void main() {
+Future<void> main() async {
   initLocator();
-  final MasterKeyService actuaMasterKeyService = globalLocator<MasterKeyService>();
 
-  setUp(() {
-    FlutterSecureStorage.setMockInitialValues(<String, String>{});
-  });
+  late AppAuthPageCubit actualAppAuthPageCubit;
+  late AuthSingletonCubit authSingletonCubit;
 
-  group('Tests of AppAuthPage States:', () {
-    test('Should return initial state of [AppAuthPageInitialState]', () {
-      AppAuthPageCubit actualAppAuthPageCubit = AppAuthPageCubit();
-      // Assert
-      expect(actualAppAuthPageCubit.state, AppAuthPageInitialState());
+  // @formatter:off
+  Map<String, String> filledMasterKeyDatabase = <String, String>{
+    DatabaseParentKey.encryptedMasterKey.name: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+  };
+  // @formatter:on
+
+  group('Tests of [AppAuthPageCubit]', () {
+    group('Tests of [AppAuthPageCubit] when [pin CORRECT]', () {
+      setUpAll(() {
+        authSingletonCubit = AuthSingletonCubit();
+        actualAppAuthPageCubit = AppAuthPageCubit(authSingletonCubit: authSingletonCubit);
+        FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledMasterKeyDatabase));
+      });
+
+      test('Should [emit AppAuthPageEnterPinState] with [EMPTY pinNumbers] as initial state', () async {
+        // Assert
+        AAppAuthPageState expectedAppAuthPageState = const AppAuthPageEnterPinState.empty();
+
+        expect(actualAppAuthPageCubit.state, expectedAppAuthPageState);
+      });
+
+      test('Should [emit AppAuthPageEnterPinState] with [FILLED pinNumbers]', () async {
+        // Act
+        actualAppAuthPageCubit.updatePinNumbers(const <int>[1, 1, 1, 1]);
+
+        // Assert
+        AAppAuthPageState expectedAppAuthPageState = const AppAuthPageEnterPinState(pinNumbers: <int>[1, 1, 1, 1]);
+
+        expect(actualAppAuthPageCubit.state, expectedAppAuthPageState);
+      });
+
+      test('Should [setup pinNumbers] as an app password in [AuthSingletonCubit]', () async {
+        // Act
+        await actualAppAuthPageCubit.authenticate();
+        PasswordModel? actualAppPasswordModel = authSingletonCubit.currentAppPasswordModel;
+
+        // Assert
+        PasswordModel? expectedAppPasswordModel = PasswordModel.fromPlaintext('1111');
+        AAppAuthPageState expectedAppAuthPageState = const AppAuthPageEnterPinState(pinNumbers: <int>[1, 1, 1, 1]);
+
+        expect(actualAppPasswordModel, expectedAppPasswordModel);
+        expect(actualAppAuthPageCubit.state, expectedAppAuthPageState);
+      });
     });
 
-    blocTest<AppAuthPageCubit, AAppAuthPageState>(
-      'Should return state of [AppAuthPageLoadState] followed by [AppAuthPageErrorState], as no authentication is setup',
-      // Arrange
-      build: () {
-        return AppAuthPageCubit();
-      },
+    group('Tests of [AppAuthPageCubit] when [pin INCORRECT]', () {
+      setUpAll(() {
+        authSingletonCubit = AuthSingletonCubit();
+        actualAppAuthPageCubit = AppAuthPageCubit(authSingletonCubit: authSingletonCubit);
+        FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledMasterKeyDatabase));
+      });
 
-      // Act
-      act: (AppAuthPageCubit actualAppAuthPageCubit) async {
-        await actualAppAuthPageCubit.authenticate(passwordModel: PasswordModel.defaultPassword());
-      },
+      test('Should [emit AppAuthPageEnterPinState] with [EMPTY pinNumbers] as initial state', () async {
+        // Assert
+        AAppAuthPageState expectedAppAuthPageState = const AppAuthPageEnterPinState.empty();
 
-      // Assert
-      expect: () => <AAppAuthPageState>[AppAuthPageLoadState(), AppAuthPageErrorState()],
-    );
+        expect(actualAppAuthPageCubit.state, expectedAppAuthPageState);
+      });
 
-    blocTest<AppAuthPageCubit, AAppAuthPageState>(
-      'Should return final state of [AppAuthPageSuccessState] as authentication is setup, password exist and is valid',
-      // Arrange
-      build: () {
-        return AppAuthPageCubit();
-      },
+      test('Should [emit AppAuthPageEnterPinState] with [FILLED pinNumbers]', () async {
+        // Act
+        actualAppAuthPageCubit.updatePinNumbers(const <int>[9, 9, 9, 9]);
 
-      // Act
-      act: (AppAuthPageCubit actualAppAuthPageCubit) async {
-        PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('password');
-        MnemonicModel actualMnemonicModel = MnemonicModel.fromString('tent gentle scout powder priority rotate lion boss urge chest legal win');
-        MasterKeyVO actualMasterKeyVO = await MasterKeyVO.create(passwordModel: actualPasswordModel, mnemonicModel: actualMnemonicModel);
+        // Assert
+        AAppAuthPageState expectedAppAuthPageState = const AppAuthPageEnterPinState(pinNumbers: <int>[9, 9, 9, 9]);
 
-        await actuaMasterKeyService.setMasterKey(actualMasterKeyVO);
-        await actualAppAuthPageCubit.authenticate(passwordModel: actualPasswordModel);
-      },
+        expect(actualAppAuthPageCubit.state, expectedAppAuthPageState);
+      });
 
-      // Assert
-      expect: () => <AAppAuthPageState>[AppAuthPageLoadState(), AppAuthPageSuccessState()],
-    );
+      test('Should [emit AppAuthPageInvalidPinState] and throw [InvalidPasswordException]', () async {
+        try {
+          // Act
+          await actualAppAuthPageCubit.authenticate();
+        } catch (actualException) {
+          // Assert
+          AAppAuthPageState expectedAppAuthPageState = const AppAuthPageInvalidPinState(pinNumbers: <int>[9, 9, 9, 9]);
 
-    blocTest<AppAuthPageCubit, AAppAuthPageState>(
-      'Should return final state of [AppAuthPageInvalidPasswordState]  as authentication is setup, password exist and is invalid',
-      // Arrange
-      build: () {
-        return AppAuthPageCubit();
-      },
-
-      // Act
-      act: (AppAuthPageCubit actualAppAuthPageCubit) async {
-        PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('password');
-        MnemonicModel actualMnemonicModel = MnemonicModel.fromString('tent gentle scout powder priority rotate lion boss urge chest legal win');
-        MasterKeyVO actualMasterKeyVO = await MasterKeyVO.create(passwordModel: actualPasswordModel, mnemonicModel: actualMnemonicModel);
-
-        await actuaMasterKeyService.setMasterKey(actualMasterKeyVO);
-        await actualAppAuthPageCubit.authenticate(passwordModel: PasswordModel.fromPlaintext('wrong_password'));
-      },
-
-      // Assert
-      expect: () => <AAppAuthPageState>[AppAuthPageLoadState(), AppAuthPageInvalidPasswordState()],
-    );
+          expect(actualException, isA<InvalidPasswordException>());
+          expect(actualAppAuthPageCubit.state, expectedAppAuthPageState);
+        }
+      });
+    });
   });
 }
