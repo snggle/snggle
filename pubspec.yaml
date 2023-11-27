@@ -4,7 +4,7 @@ description: Private keys manager
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.13
+version: 0.0.14
 
 environment:
   sdk: "3.2.2"
@@ -89,6 +89,10 @@ dependencies:
   # https://pub.dev/packages/path_provider
   path_provider: 2.1.2
 
+  # Spring curves for Flutter animations. Based on real physics equations with three damping curves.
+  # https://pub.dev/packages/sprung
+  sprung: 3.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -116,6 +120,7 @@ flutter:
     - assets/fonts/bauhaus/
     - assets/fonts/icons/
     - assets/icons/
+    - assets/gifs/
   fonts:
     - family: Bauhaus
       fonts:
