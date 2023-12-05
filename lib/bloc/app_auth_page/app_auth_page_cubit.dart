@@ -9,7 +9,7 @@ import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/app_auth_service.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/utils/app_logger.dart';
+import 'package:snggle/shared/utils/logger/app_logger.dart';
 
 part 'a_app_auth_page_state.dart';
 

@@ -1,6 +1,5 @@
 import 'package:logger/logger.dart';
-
-enum LogLevel { verbose, debug, info, warning, error, terribleFailure }
+import 'package:snggle/shared/utils/logger/log_level.dart';
 
 class AppLogger {
   static final AppLogger _appLogger = AppLogger._internal();
@@ -13,8 +12,8 @@ class AppLogger {
 
   void log({required String message, LogLevel logLevel = LogLevel.warning}) {
     switch (logLevel) {
-      case LogLevel.verbose:
-        _logger.v(message);
+      case LogLevel.trace:
+        _logger.t(message);
         break;
       case LogLevel.debug:
         _logger.d(message);
@@ -28,8 +27,8 @@ class AppLogger {
       case LogLevel.error:
         _logger.e(message);
         break;
-      case LogLevel.terribleFailure:
-        _logger.wtf(message);
+      case LogLevel.fatal:
+        _logger.f(message);
         break;
     }
   }

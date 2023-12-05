@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 
+@RoutePage(name: 'BottomNavigationRoute')
 class BottomNavigationWrapper extends StatefulWidget {
   const BottomNavigationWrapper({super.key});
 
@@ -23,7 +24,7 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
   Widget build(BuildContext context) {
     return AutoTabsRouter(
       routes: routes.values.toList(),
-      builder: (BuildContext context, Widget child, Animation<double> animation) {
+      builder: (BuildContext context, Widget child) {
         return Scaffold(
           body: child,
           bottomNavigationBar: ValueListenableBuilder<int>(

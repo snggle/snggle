@@ -11,7 +11,7 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/utils/app_logger.dart';
+import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
 

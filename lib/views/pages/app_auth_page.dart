@@ -12,6 +12,7 @@ import 'package:snggle/views/widgets/pinpad/pinpad.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_text_fields.dart';
 
+@RoutePage()
 class AppAuthPage extends StatefulWidget {
   const AppAuthPage({
     super.key,
@@ -44,15 +45,12 @@ class _AppAuthPageState extends State<AppAuthPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        body: BlocProvider<AppAuthPageCubit>(
-          create: (BuildContext context) => appAuthPageCubit,
-          child: BlocConsumer<AppAuthPageCubit, AAppAuthPageState>(
-            builder: _handleBlocBuilder,
-            listener: _handleBlocListener,
-          ),
+    return Scaffold(
+      body: BlocProvider<AppAuthPageCubit>(
+        create: (BuildContext context) => appAuthPageCubit,
+        child: BlocConsumer<AppAuthPageCubit, AAppAuthPageState>(
+          builder: _handleBlocBuilder,
+          listener: _handleBlocListener,
         ),
       ),
     );
@@ -60,10 +58,10 @@ class _AppAuthPageState extends State<AppAuthPage> {
 
   Widget _handleBlocBuilder(BuildContext context, AAppAuthPageState appAuthPageState) {
     if (appAuthPageState is AppAuthPageErrorState) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
+          children: <Widget>[
             Text('Error: [AppAuthPage] Initial Page Setup failed'),
             CircularProgressIndicator(),
           ],
@@ -76,16 +74,16 @@ class _AppAuthPageState extends State<AppAuthPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Text('Sign in'),
                   ],
                 ),
                 if (appAuthPageState is AppAuthPageInvalidPasswordState)
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const <Widget>[Text('Incorrect pin, try again')],
+                    children: <Widget>[Text('Incorrect pin, try again')],
                   ),
                 if (appAuthPageState is AppAuthPageLoadState) const CircularProgressIndicator(),
                 Row(

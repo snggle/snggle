@@ -11,6 +11,7 @@ import 'package:snggle/views/widgets/pinpad/pinpad.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_text_fields.dart';
 
+@RoutePage()
 class AppSetupPinPage extends StatefulWidget {
   const AppSetupPinPage({super.key});
 
@@ -79,9 +80,9 @@ class _AppSetupPinPageState extends State<AppSetupPinPage> {
                 ],
               ),
               if (appSetupPinPageState is AppSetupPinPageInvalidState)
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[Text('Incorrect pin, try again')],
+                  children: <Widget>[Text('Incorrect pin, try again')],
                 ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

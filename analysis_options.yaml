@@ -5,14 +5,16 @@
 # https://github.com/dart-lang/sdk/blob/main/CHANGELOG.md
 
 # https://pub.dev/documentation/analyzer/latest/
-# https://dart-lang.github.io/linter/lints/
-# https://github.com/dart-lang/linter/blob/master/example/all.yaml
+# https://dart.dev/tools/linter-rules
+# https://github.com/dart-lang/linter/blob/main/example/all.yaml
 # https://github.com/dart-lang/lints/blob/main/lib/core.yaml
 # https://github.com/dart-lang/lints/blob/main/lib/recommended.yaml
-# https://github.com/flutter/packages/blob/master/packages/flutter_lints/lib/flutter.yaml
+# https://github.com/flutter/packages/blob/main/packages/flutter_lints/lib/flutter.yaml
+# https://github.com/passsy/dart-lint/releases
+
+# Archived
 # https://github.com/google/pedantic
 # https://github.com/tenhobi/effective_dart
-
 
 analyzer:
   exclude:
@@ -21,13 +23,16 @@ analyzer:
     - lib/generated/**
     - lib/**.g.dart
     - lib/**.gr.dart
-    - lib/test/mocks/**
-  #    - test/integration/**
 
-  # If you want stricter static checks than the Dart type system requires, consider using the implicit-casts and implicit-dynamic flags
-  strong-mode:
-    implicit-casts: false # value of false ensures that the type inference engine never implicitly casts to a more specific type
-    implicit-dynamic: false # value of false ensures that the type inference engine never chooses the dynamic type when it can’t determine a static type
+  language:
+    # Value of true ensures that the type inference engine never implicitly casts to a more specific type
+    # https://github.com/dart-lang/language/blob/main/resources/type-system/strict-casts.md
+    strict-casts: true
+
+    # Value of true ensures that the type inference engine never chooses the dynamic type when it can’t determine a static type
+    # https://github.com/dart-lang/language/blob/main/resources/type-system/strict-raw-types.md
+    strict-raw-types: true
+
   errors:
     missing_required_param: error
     missing_return: error
@@ -43,12 +48,11 @@ analyzer:
     avoid_types_as_parameter_names: error # core recommended flutter // pedantic
     # avoid_web_libraries_in_flutter: ignore # flutter
     cancel_subscriptions: error
+    collection_methods_unrelated_type: error
     control_flow_in_finally: error # recommended flutter
     # discarded_futures: error
     empty_statements: error # recommended flutter
     hash_and_equals: error # core recommended flutter // effective_dart
-    iterable_contains_unrelated_type: error # core recommended flutter
-    list_remove_unrelated_type: error # core recommended flutter
     no_duplicate_case_values: error # core recommended flutter // pedantic
     no_logic_in_create_state: error # flutter
     # prefer_relative_imports: ignore # // effective_dart
@@ -253,6 +257,10 @@ linter:
     # Close instances of dart.core.Sink.
     #- close_sinks
 
+    # Dart SDK: >= 2.19.0 • (Linter v2.0.20)
+    # Invocation of various collection methods with arguments of unrelated types.
+    - collection_methods_unrelated_type
+
     # Dart SDK: >= 2.0.0 • (Linter v0.1.17)
     # Only reference in scope identifiers in doc comments.
     #- comment_references
@@ -286,16 +294,6 @@ linter:
     # Dart SDK: >= 2.0.0 • (Linter v0.1.25)
     # Conditions should not unconditionally evaluate to true or to false.
     #- invariant_booleans (experimental).
-
-    # Dart SDK: >= 2.0.0 • (Linter v0.1.17)
-    # Invocation of Iterable.contains with references of unrelated types.
-    # core recommended flutter
-    - iterable_contains_unrelated_type
-
-    # Dart SDK: >= 2.0.0 • (Linter v0.1.22)
-    # Invocation of remove with references of unrelated types.
-    # core recommended flutter
-    - list_remove_unrelated_type
 
     # Dart SDK: >= 2.0.0 • (Linter v0.1.25)
     # Boolean expression composed only with literals.

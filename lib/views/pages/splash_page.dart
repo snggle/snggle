@@ -9,21 +9,20 @@ import 'package:snggle/bloc/splash_page/states/splash_page_loading_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_setup_pin_state.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 
+@RoutePage()
 class SplashPage extends StatelessWidget {
   final SplashPageCubit _splashPageCubit = SplashPageCubit();
+
   SplashPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: BlocConsumer<SplashPageCubit, ASplashPageState>(
-          bloc: _splashPageCubit,
-          builder: _handleBlocBuilder,
-          listener: _handleBlocListener,
-        ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: BlocConsumer<SplashPageCubit, ASplashPageState>(
+        bloc: _splashPageCubit,
+        builder: _handleBlocBuilder,
+        listener: _handleBlocListener,
       ),
     );
   }
@@ -32,18 +31,18 @@ class SplashPage extends StatelessWidget {
     if (splashPageState is SplashPageLoadingState) {
       _splashPageCubit.init();
     } else if (splashPageState is SplashPageErrorState) {
-      return Column(
+      return const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: const <Widget>[
+        children: <Widget>[
           Text('Error: SplashPageErrorState Error'),
         ],
       );
     }
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const <Widget>[
+        children: <Widget>[
           CircularProgressIndicator(),
         ],
       ),

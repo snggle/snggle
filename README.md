@@ -8,12 +8,12 @@ git clone git@github.com:snggle/snggle.git
 ```
 
 ## Usage
-The project runs on flutter version **3.3.2**. You can use [fvm](https://fvm.app/docs/getting_started/installation)
+The project runs on flutter version **3.16.2**. You can use [fvm](https://fvm.app/docs/getting_started/installation)
 for easy switching between versions otherwise see [flutter installation](https://docs.flutter.dev/get-started/install)
 ```bash
 # Install and use required flutter version
-fvm install 3.3.2
-fvm use 3.3.2
+fvm install 3.16.2
+fvm use 3.16.2
 
 # Install required packages in pubspec.yaml
 fvm flutter pub get
