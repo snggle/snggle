@@ -1,11 +1,9 @@
-import 'package:snggle/infra/managers/database_entry_key.dart';
+import 'package:snggle/infra/managers/database_parent_key.dart';
 
 abstract class IDatabaseManager {
-  Future<bool> containsKey({required DatabaseEntryKey databaseEntryKey});
+  Future<bool> containsKey({required DatabaseParentKey databaseParentKey});
 
-  Future<String> read({required DatabaseEntryKey databaseEntryKey});
+  Future<String> read({required DatabaseParentKey databaseParentKey});
 
-  Future<Map<String, String>> readAll();
-
-  Future<void> write({required DatabaseEntryKey databaseEntryKey, required String data});
-} 
+  Future<void> write({required DatabaseParentKey databaseParentKey, required String plaintextValue});
+}

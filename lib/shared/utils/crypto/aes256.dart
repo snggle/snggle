@@ -5,89 +5,53 @@ import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart';
 
 class Aes256 {
-  static String encrypt(String password, String data) {
-    // Create Hash of Password (Hexadecimal)
-    Digest hashedPassword = sha256.convert(utf8.encode(password));
+  static String encrypt(String password, String decryptedString) {
+    List<int> randomBytes = SecureRandom(16).bytes;
 
-    // Create KEY used for creating AES Object, from Hexadecimal representation of Hash Password
-    final Key key = Key.fromBase16(hashedPassword.toString());
+    List<int> hashedPasswordBytes = sha256.convert(utf8.encode(password)).bytes;
+    List<int> securePasswordBytes = sha256.convert(randomBytes + hashedPasswordBytes).bytes;
 
-    // Generate a random key initial IV (initial initialization vector using Random Secure)
-    final IV iiv = IV.fromSecureRandom(16);
+    Key key = Key.fromBase64(base64Encode(hashedPasswordBytes));
+    Encrypter encrypter = Encrypter(AES(key));
 
-    // Create Object for Encryption and Decryption using Key
-    final Encrypter encrypter = Encrypter(AES(key));
+    Uint8List initializationVectorBytes = Uint8List.fromList(securePasswordBytes.getRange(0, 16).toList());
+    IV initializationVector = IV(initializationVectorBytes);
+    List<int> encryptedDataBytes = encrypter.encrypt(decryptedString, iv: initializationVector).bytes;
 
-    // HEX representation of random secure and hashed password combined to created Hashed IV
-    final Digest hivp = sha256.convert(iiv.bytes + hashedPassword.bytes);
-
-    // HIVP is broken into two components and is using Hex-representation as formula doesn't support bytes
-    // HEX Is of size 64, while Byte is 32
-
-    // Prefix of HIVP is used for AES encryption of data
-    final List<int> prefixHivp = hivp.bytes.getRange(0, 16).toList();
-    final Uint8List unit8Prefix = Uint8List.fromList(prefixHivp);
-    final IV ivAES = IV(unit8Prefix);
-    // Suffix of HIVP is used for fast verification of password, changed from 16 to 4
-    final List<int> suffixHivp = hivp.bytes.getRange(hivp.bytes.length - 4, hivp.bytes.length).toList();
-
-    // hivp.toString().substring(32, 64);
-    // Generate IV for AES encryption of data from first component of HIVP
-
-    // AES encrypt the data using first HIVP component
-    final Encrypted encrypted = encrypter.encrypt(data, iv: ivAES);
-
-    // Provide prefix of random IV, encrypted data and second component of HIVP
-    final List<int> encryptedData = iiv.bytes + encrypted.bytes + suffixHivp;
-    // Convert bytes of encrypted data into base64 string format
-    return base64Encode(encryptedData);
+    List<int> checksumBytes = securePasswordBytes.getRange(securePasswordBytes.length - 4, securePasswordBytes.length).toList();
+    List<int> encryptedStringBytes = randomBytes + encryptedDataBytes + checksumBytes;
+    String encryptedString = base64Encode(encryptedStringBytes);
+    return encryptedString;
   }
 
-  static bool verifyPassword(String password, String encryptedData) {
-    // Create Hash of Password (Hexadecimal)
-    Digest hashedPassword = sha256.convert(utf8.encode(password));
+  static String decrypt(String password, String encryptedString) {
+    List<int> hashedPasswordBytes = sha256.convert(utf8.encode(password)).bytes;
 
-    // Decrypts base 64 string of encrypted data into bytes format
-    final Uint8List base64decode = base64Decode(encryptedData);
+    List<int> encryptedStringBytes = base64Decode(encryptedString);
+    List<int> randomBytes = encryptedStringBytes.getRange(0, 16).toList();
+    List<int> encryptedDataBytes = encryptedStringBytes.getRange(16, encryptedStringBytes.length - 4).toList();
+    List<int> securePasswordBytes = sha256.convert(randomBytes + hashedPasswordBytes).bytes;
 
-    // Get's prefix and suffix
-    final List<int> iiv = base64decode.getRange(0, 16).toList();
-    final List<int> suffixHivp = base64decode.getRange(base64decode.length - 4, base64decode.length).toList();
+    Key key = Key.fromBase64(base64Encode(hashedPasswordBytes));
+    Encrypter encrypter = Encrypter(AES(key));
 
-    // Generate HIV for password generation
-    final Digest hivp = sha256.convert(iiv + hashedPassword.bytes);
-    final List<int> suffixVerification = hivp.bytes.getRange(hivp.bytes.length - 4, hivp.bytes.length).toList();
+    Uint8List initializationVectorBytes = Uint8List.fromList(securePasswordBytes.getRange(0, 16).toList());
+    IV initializationVector = IV(initializationVectorBytes);
 
-    // Converted into String, as Dart == compares memory location at depending on the type.
-    // Comparing these are bytes format, returns a false.
-    if (suffixHivp.toString() == suffixVerification.toString()) {
-      return true;
-    } else {
-      return false;
-    }
+    String decryptedString = encrypter.decrypt(Encrypted(Uint8List.fromList(encryptedDataBytes)), iv: initializationVector);
+    return decryptedString;
   }
 
-  static String decrypt(String password, String encryptedData) {
-    Digest hashedPassword = sha256.convert(utf8.encode(password));
-    // Decrypts base 64 string of encrypted data into bytes format
-    final Uint8List base64decode = base64Decode(encryptedData);
+  static bool isPasswordValid(String password, String encryptedString) {
+    List<int> hashedPasswordBytes = sha256.convert(utf8.encode(password)).bytes;
 
-    // Retrieves the prefix bytes and encrypted data bytes
-    final List<int> iiv = base64decode.getRange(0, 16).toList();
-    final List<int> decryptedBytes = base64decode.getRange(16, base64decode.length - 4).toList();
+    List<int> encryptedStringBytes = base64Decode(encryptedString);
+    List<int> randomBytes = encryptedStringBytes.getRange(0, 16).toList();
+    List<int> expectedChecksumBytes = encryptedStringBytes.getRange(encryptedStringBytes.length - 4, encryptedStringBytes.length).toList();
 
-    // Generates HIVP
-    final Digest hivp = sha256.convert(iiv + hashedPassword.bytes);
+    List<int> securePasswordBytes = sha256.convert(randomBytes + hashedPasswordBytes).bytes;
+    List<int> actualChecksumBytes = securePasswordBytes.getRange(securePasswordBytes.length - 4, securePasswordBytes.length).toList();
 
-    final Key key = Key.fromBase16(hashedPassword.toString());
-    final Encrypter encrypter = Encrypter(AES(key));
-
-    // First compontent of HIVP is used for AES encryption of data
-    final List<int> prefixHivp = hivp.bytes.getRange(0, 16).toList();
-    final Uint8List unit8Prefix = Uint8List.fromList(prefixHivp);
-    // Generate IV for AES encryption of data from first component of HIVP
-    final IV ivAES = IV(unit8Prefix);
-    final String decryptedData = encrypter.decrypt64(base64.encode(decryptedBytes), iv: ivAES);
-    return decryptedData;
+    return actualChecksumBytes.toString() == expectedChecksumBytes.toString();
   }
 }

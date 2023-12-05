@@ -1,10 +1,11 @@
 import 'package:bip39/bip39.dart' as bip39;
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-class MnemonicModel {
+class MnemonicModel extends Equatable {
   final List<String> mnemonicList;
 
-  MnemonicModel(this.mnemonicList);
+  const MnemonicModel(this.mnemonicList);
 
   factory MnemonicModel.generate() {
     String mnemonicString = bip39.generateMnemonic(strength: 256);
@@ -23,6 +24,9 @@ class MnemonicModel {
   String toString() {
     return mnemonicList.join(' ');
   }
+
+  @override
+  List<Object?> get props => <Object>[mnemonicList];
 }
 
 // This function is executed in a separated isolate, so it should be declared as a top-level function

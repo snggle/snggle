@@ -1,12 +1,12 @@
 part of 'auth_singleton_cubit.dart';
 
 class AuthSingletonState extends Equatable {
-  final String? hashedAppPassword;
+  final PasswordModel? appPasswordModel;
 
   const AuthSingletonState({
-    required this.hashedAppPassword,
+    required this.appPasswordModel,
   });
 
   @override
-  List<Object?> get props => <String?>[hashedAppPassword];
+  List<Object?> get props => <Object?>[appPasswordModel];
 }

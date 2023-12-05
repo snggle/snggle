@@ -1,17 +1,18 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
+import 'package:snggle/shared/models/password_model.dart';
 
 void main() {
   group('Tests of AuthSingletonCubit States:', () {
-    const String hashedPassword = '409aeef82584ac10084c368e2c8bce5e00c9e5abb0c5e7e184ef7b784737866e';
+    PasswordModel appPasswordModel = PasswordModel.fromPlaintext('password');
 
     test('Should return initial state of AuthSingletonState', () {
       //  Arrange
       final AuthSingletonCubit actualAuthSingletonCubit = AuthSingletonCubit();
 
       //  Assert
-      AuthSingletonState expectedAuthSingletonState = const AuthSingletonState(hashedAppPassword: null);
+      AuthSingletonState expectedAuthSingletonState = const AuthSingletonState(appPasswordModel: null);
       expect(actualAuthSingletonCubit.state, equals(expectedAuthSingletonState));
     });
 
@@ -22,10 +23,10 @@ void main() {
       },
 
       // Act
-      act: (AuthSingletonCubit actualAuthSingletonCubit) => actualAuthSingletonCubit.setPassword(hashedPassword),
+      act: (AuthSingletonCubit actualAuthSingletonCubit) => actualAuthSingletonCubit.setAppPassword(appPasswordModel),
 
       // Assert
-      expect: () => <AuthSingletonState>[const AuthSingletonState(hashedAppPassword: hashedPassword)],
+      expect: () => <AuthSingletonState>[AuthSingletonState(appPasswordModel: appPasswordModel)],
     );
   });
 }

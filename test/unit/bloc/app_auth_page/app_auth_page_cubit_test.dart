@@ -7,14 +7,15 @@ import 'package:snggle/bloc/app_auth_page/states/app_auth_page_initial_state.dar
 import 'package:snggle/bloc/app_auth_page/states/app_auth_page_invalid_password_state.dart';
 import 'package:snggle/bloc/app_auth_page/states/app_auth_page_load_state.dart';
 import 'package:snggle/bloc/app_auth_page/states/app_auth_page_success_state.dart';
-import 'package:snggle/config/app_config.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/services/auth_service.dart';
-import 'package:snggle/shared/models/salt_model.dart';
+import 'package:snggle/infra/services/master_key_service.dart';
+import 'package:snggle/shared/models/mnemonic_model.dart';
+import 'package:snggle/shared/models/password_model.dart';
+import 'package:snggle/shared/value_objects/master_key_vo.dart';
 
 void main() {
   initLocator();
-  final AuthService actualAuthService = globalLocator<AuthService>();
+  final MasterKeyService actuaMasterKeyService = globalLocator<MasterKeyService>();
 
   setUp(() {
     FlutterSecureStorage.setMockInitialValues(<String, String>{});
@@ -36,7 +37,7 @@ void main() {
 
       // Act
       act: (AppAuthPageCubit actualAppAuthPageCubit) async {
-        await actualAppAuthPageCubit.authenticate(password: AppConfig.defaultPassword);
+        await actualAppAuthPageCubit.authenticate(passwordModel: PasswordModel.defaultPassword());
       },
 
       // Assert
@@ -52,10 +53,12 @@ void main() {
 
       // Act
       act: (AppAuthPageCubit actualAppAuthPageCubit) async {
-        String actualHashedDefaultPassword = '34f9bb6c4bdc40f7c0287c9fdce812c8b4999e599599fa1fb78d5196024357c0';
-        SaltModel actualSaltModel = await SaltModel.generateSalt(hashedPassword: actualHashedDefaultPassword, isDefaultPassword: true);
-        await actualAuthService.setSaltModel(saltModel: actualSaltModel);
-        await actualAppAuthPageCubit.authenticate(password: AppConfig.defaultPassword);
+        PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('password');
+        MnemonicModel actualMnemonicModel = MnemonicModel.fromString('tent gentle scout powder priority rotate lion boss urge chest legal win');
+        MasterKeyVO actualMasterKeyVO = await MasterKeyVO.create(passwordModel: actualPasswordModel, mnemonicModel: actualMnemonicModel);
+
+        await actuaMasterKeyService.setMasterKey(actualMasterKeyVO);
+        await actualAppAuthPageCubit.authenticate(passwordModel: actualPasswordModel);
       },
 
       // Assert
@@ -71,9 +74,12 @@ void main() {
 
       // Act
       act: (AppAuthPageCubit actualAppAuthPageCubit) async {
-        SaltModel actualSaltModel = await SaltModel.generateSalt(hashedPassword: AppConfig.defaultPassword, isDefaultPassword: true);
-        await actualAuthService.setSaltModel(saltModel: actualSaltModel);
-        await actualAppAuthPageCubit.authenticate(password: 'wrong_password');
+        PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('password');
+        MnemonicModel actualMnemonicModel = MnemonicModel.fromString('tent gentle scout powder priority rotate lion boss urge chest legal win');
+        MasterKeyVO actualMasterKeyVO = await MasterKeyVO.create(passwordModel: actualPasswordModel, mnemonicModel: actualMnemonicModel);
+
+        await actuaMasterKeyService.setMasterKey(actualMasterKeyVO);
+        await actualAppAuthPageCubit.authenticate(passwordModel: PasswordModel.fromPlaintext('wrong_password'));
       },
 
       // Assert

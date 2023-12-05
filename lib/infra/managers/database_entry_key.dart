@@ -1,4 +1,0 @@
-enum DatabaseEntryKey {
-  salt,
-  setupPinVisibleBool,
-}

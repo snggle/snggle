@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/app_setup_pin_page/app_setup_pin_page_cubit.dart';
 import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_confirm_state.dart';
-import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_fail_state.dart';
+import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_invalid_state.dart';
 import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_setup_later_state.dart';
 import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_success_state.dart';
 import 'package:snggle/shared/router/router.gr.dart';
@@ -62,7 +62,7 @@ class _AppSetupPinPageState extends State<AppSetupPinPage> {
   }
 
   Widget _handleBuilder(BuildContext context, AAppSetupPinPageState appSetupPinPageState) {
-    bool isConfirmState = appSetupPinPageState is AppSetupPinPageConfirmState || appSetupPinPageState is AppSetupPinPageFailState;
+    bool isConfirmState = appSetupPinPageState is AppSetupPinPageConfirmState;
     PinpadController currentPinpadController = isConfirmState ? confirmPinpadController : setupPinpadController;
     pinLengthNotifier = ValueNotifier<int>(0);
 
@@ -78,7 +78,7 @@ class _AppSetupPinPageState extends State<AppSetupPinPage> {
                   Text(isConfirmState ? 'Repeat Access PIN' : 'Setup Access PIN'),
                 ],
               ),
-              if (appSetupPinPageState is AppSetupPinPageFailState)
+              if (appSetupPinPageState is AppSetupPinPageInvalidState)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const <Widget>[Text('Incorrect pin, try again')],

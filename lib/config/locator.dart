@@ -1,10 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
-import 'package:snggle/infra/repositories/salt_repository.dart';
-import 'package:snggle/infra/repositories/settings_repository.dart';
-import 'package:snggle/infra/services/auth_service.dart';
-
-import 'package:snggle/infra/services/settings_service.dart';
+import 'package:snggle/infra/repositories/master_key_repository.dart';
+import 'package:snggle/infra/services/app_auth_service.dart';
+import 'package:snggle/infra/services/master_key_service.dart';
 
 final GetIt globalLocator = GetIt.I;
 
@@ -19,13 +17,11 @@ void _initCubits() {
 }
 
 void _initRepositories() {
-  globalLocator
-    ..registerLazySingleton<SaltRepository>(SaltRepository.new)
-    ..registerLazySingleton<SettingsRepository>(SettingsRepository.new);
+  globalLocator.registerLazySingleton<MasterKeyRepository>(MasterKeyRepository.new);
 }
 
 void _initServices() {
   globalLocator
-    ..registerLazySingleton<AuthService>(AuthService.new)
-    ..registerLazySingleton<SettingsService>(SettingsService.new);
+    ..registerLazySingleton<AppAuthService>(AppAuthService.new)
+    ..registerLazySingleton<MasterKeyService>(MasterKeyService.new);
 }

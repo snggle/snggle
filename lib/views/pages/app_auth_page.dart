@@ -6,6 +6,7 @@ import 'package:snggle/bloc/app_auth_page/states/app_auth_page_error_state.dart'
 import 'package:snggle/bloc/app_auth_page/states/app_auth_page_invalid_password_state.dart';
 import 'package:snggle/bloc/app_auth_page/states/app_auth_page_load_state.dart';
 import 'package:snggle/bloc/app_auth_page/states/app_auth_page_success_state.dart';
+import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
@@ -165,7 +166,7 @@ class _AppAuthPageState extends State<AppAuthPage> {
   Future<void> _verifyPin() async {
     bool isPinLengthFull = authPinpadController.value.length == authPinpadController.pinpadTextFieldsSize;
     if (isPinLengthFull) {
-      await appAuthPageCubit.authenticate(password: authPinpadController.value);
+      await appAuthPageCubit.authenticate(passwordModel: PasswordModel.fromPlaintext(authPinpadController.value));
     }
   }
 }
