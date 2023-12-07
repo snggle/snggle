@@ -4,7 +4,7 @@ description: Private keys manager
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.4
+version: 0.0.5
 
 environment:
   sdk: ">=3.2.2"
@@ -64,6 +64,10 @@ dependencies:
   # Dart implementation of Bitcoin BIP39 Mnemonic code for generating deterministic keys
   # https://pub.dev/packages/bip39
   bip39: ^1.0.6
+
+  # RFC4122 (v1, v4, v5) UUID Generator and Parser for all Dart platforms (Web, VM, Flutter)
+  # https://pub.dev/packages/uuid
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:

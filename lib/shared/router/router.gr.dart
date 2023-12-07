@@ -17,7 +17,7 @@ import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.d
     as _i4;
 import 'package:snggle/views/pages/bottom_navigation/secrets_page.dart' as _i5;
 import 'package:snggle/views/pages/bottom_navigation/settings_page.dart' as _i6;
-import 'package:snggle/views/pages/bottom_navigation/vault_list_page.dart'
+import 'package:snggle/views/pages/bottom_navigation/vault_list_page/vault_list_page.dart'
     as _i8;
 import 'package:snggle/views/pages/splash_page.dart' as _i7;
 
