@@ -5,6 +5,7 @@ import 'package:snggle/bloc/vault_list_page/vault_list_page_cubit.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/bottom_navigation/vault_list_page/vault_list_item.dart';
+import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
 
 @RoutePage()
 class VaultListPage extends StatefulWidget {
@@ -32,17 +33,20 @@ class _VaultListPageState extends State<VaultListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Vaults'),
+      appBar: const CustomAppBar(
+        title: 'Vaults',
       ),
       body: BlocBuilder<VaultListPageCubit, List<VaultModel>>(
         bloc: vaultListPageCubit,
         builder: (BuildContext context, List<VaultModel> vaultModelList) {
           return ListView.builder(
-            itemCount: vaultModelList.length + 1,
+            itemCount: vaultModelList.length + 2,
             itemBuilder: (BuildContext context, int index) {
-              bool lastItemBool = index == vaultModelList.length;
-              if (lastItemBool) {
+              bool paddingItemBool = index == vaultModelList.length + 1;
+              bool buttonItemBool = index == vaultModelList.length;
+              if (paddingItemBool) {
+                return const SizedBox(height: 100);
+              } else if (buttonItemBool) {
                 return Padding(
                   padding: const EdgeInsets.all(15),
                   child: InkWell(

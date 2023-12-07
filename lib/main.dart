@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/config/theme_config.dart';
 import 'package:snggle/shared/router/router.dart';
 
 void main() {
@@ -22,6 +23,7 @@ class _AppCoreState extends State<AppCore> {
     return MaterialApp.router(
       routeInformationParser: appRouter.defaultRouteParser(),
       routerDelegate: appRouter.delegate(),
+      theme: ThemeConfig().buildTheme(),
       debugShowCheckedModeBanner: false,
       builder: (_, Widget? routerWidget) {
         return routerWidget as Widget;
