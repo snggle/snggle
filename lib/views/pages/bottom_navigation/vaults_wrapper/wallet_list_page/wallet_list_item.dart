@@ -11,12 +11,14 @@ import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 
 class WalletListItem extends StatefulWidget {
-  final WalletModel walletModel;
   final VoidCallback onDelete;
+  final PasswordModel vaultPasswordModel;
+  final WalletModel walletModel;
 
   const WalletListItem({
-    required this.walletModel,
     required this.onDelete,
+    required this.vaultPasswordModel,
+    required this.walletModel,
     super.key,
   });
 
@@ -26,7 +28,10 @@ class WalletListItem extends StatefulWidget {
 
 class _WalletListItemState extends State<WalletListItem> {
   final PasswordModel mockedPasswordModel = PasswordModel.fromPlaintext('1111');
-  late final WalletListItemCubit walletListItemCubit = WalletListItemCubit(walletModel: widget.walletModel);
+  late final WalletListItemCubit walletListItemCubit = WalletListItemCubit(
+    walletModel: widget.walletModel,
+    vaultPasswordModel: widget.vaultPasswordModel,
+  );
 
   @override
   void initState() {

@@ -9,15 +9,19 @@ class SecretsRepository {
     databaseParentKey: DatabaseParentKey.secrets,
   );
 
-  Future<String> getEncryptedSecrets(String containerId) async {
-    return _databaseCollectionWrapper.getById(containerId);
+  Future<Map<String, String>> getAllMapped() async {
+    return _databaseCollectionWrapper.getAllMapped();
   }
 
-  Future<void> saveEncryptedSecrets(String containerId, String encryptedSecrets) async {
-    await _databaseCollectionWrapper.saveWithId(containerId, encryptedSecrets);
+  Future<String> getEncryptedSecrets(String containerPath) async {
+    return _databaseCollectionWrapper.getById(containerPath);
   }
 
-  Future<void> deleteSecrets(String containerId) async {
-    await _databaseCollectionWrapper.deleteById(containerId);
+  Future<void> saveEncryptedSecrets(String containerPath, String encryptedSecrets) async {
+    await _databaseCollectionWrapper.saveWithId(containerPath, encryptedSecrets);
+  }
+
+  Future<void> deleteSecrets(String containerPath) async {
+    await _databaseCollectionWrapper.deleteById(containerPath);
   }
 }

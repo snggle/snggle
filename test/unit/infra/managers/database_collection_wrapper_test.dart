@@ -202,6 +202,62 @@ void main() {
     });
   });
 
+  group('Tests of DatabaseCollectionWrapper.getAllMapped()', () {
+    test('Should [return map of ALL records] if [parent key EXISTS] in database and [HAS VALUES]', () async {
+      // Arrange
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledChildKeysDatabase));
+      actualDatabaseCollectionWrapper = DatabaseCollectionWrapper<Map<String, dynamic>>(
+        databaseParentKey: actualDatabaseParentKey,
+        databaseManager: EncryptedDatabaseManager(),
+      );
+
+      // Act
+      Map<String, dynamic> actualParentKeyValue = await actualDatabaseCollectionWrapper.getAllMapped();
+
+      // Assert
+      Map<String, dynamic> expectedParentKeyValue = <String, dynamic>{
+        'id_1': <String, String>{'test': 'value1'},
+        'id_2': <String, String>{'test': 'value2'},
+      };
+
+      expect(actualParentKeyValue, expectedParentKeyValue);
+    });
+
+    test('Should [return EMPTY map] if [parent key EXISTS] in database and [value EMPTY]', () async {
+      // Arrange
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyChildKeysDatabase));
+      actualDatabaseCollectionWrapper = DatabaseCollectionWrapper<Map<String, dynamic>>(
+        databaseParentKey: actualDatabaseParentKey,
+        databaseManager: EncryptedDatabaseManager(),
+      );
+
+      // Act
+      Map<String, dynamic> actualParentKeyValue = await actualDatabaseCollectionWrapper.getAllMapped();
+
+      // Assert
+      Map<String, dynamic> expectedParentKeyValue = <String, dynamic>{};
+
+      expect(actualParentKeyValue, expectedParentKeyValue);
+    });
+
+    test('Should [return EMPTY map] if [parent key NOT EXIST] in database', () async {
+      // Arrange
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyDatabase));
+      actualDatabaseCollectionWrapper = DatabaseCollectionWrapper<Map<String, dynamic>>(
+        databaseParentKey: actualDatabaseParentKey,
+        databaseManager: EncryptedDatabaseManager(),
+      );
+
+      // Act
+      Map<String, dynamic> actualParentKeyValue = await actualDatabaseCollectionWrapper.getAllMapped();
+
+      // Assert
+      Map<String, dynamic> expectedParentKeyValue = <String, dynamic>{};
+
+      expect(actualParentKeyValue, expectedParentKeyValue);
+    });
+  });
+
   group('Tests of DatabaseCollectionWrapper.getById()', () {
     test('Should [return child key value] if [child key EXISTS] in collection', () async {
       // Arrange

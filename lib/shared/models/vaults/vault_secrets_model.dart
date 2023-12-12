@@ -1,37 +1,26 @@
-import 'dart:convert';
-
-import 'package:equatable/equatable.dart';
+import 'package:snggle/shared/models/a_secrets_model.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
-import 'package:snggle/shared/models/password_model.dart';
 
-class VaultSecretsModel extends Equatable {
-  final String vaultUUid;
+class VaultSecretsModel extends ASecretsModel {
   final MnemonicModel mnemonicModel;
 
   const VaultSecretsModel({
-    required this.vaultUUid,
+    required String path,
     required this.mnemonicModel,
-  });
+  }) : super(path: path);
 
-  factory VaultSecretsModel.decrypt({
-    required String vaultUuid,
-    required String encryptedSecrets,
-    required PasswordModel passwordModel,
-  }) {
-    String decryptedHash = passwordModel.decrypt(encryptedData: encryptedSecrets);
-    Map<String, dynamic> json = jsonDecode(decryptedHash) as Map<String, dynamic>;
+  factory VaultSecretsModel.fromJson(String path, Map<String, dynamic> json) {
     return VaultSecretsModel(
-      vaultUUid: vaultUuid,
+      path: path,
       mnemonicModel: MnemonicModel.fromString(json['mnemonic'] as String),
     );
   }
 
-  String encrypt(PasswordModel passwordModel) {
-    Map<String, dynamic> secretsJson = <String, dynamic>{
+  @override
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
       'mnemonic': mnemonicModel.toString(),
     };
-    String secretsJsonString = jsonEncode(secretsJson);
-    return passwordModel.encrypt(decryptedData: secretsJsonString);
   }
 
   @override

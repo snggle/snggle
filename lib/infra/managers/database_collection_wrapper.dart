@@ -54,6 +54,11 @@ class DatabaseCollectionWrapper<T> {
     return collectionCacheMap.values.toList();
   }
 
+  Future<Map<String, T>> getAllMapped() async {
+    await collectionCacheInitCompleter.future;
+    return collectionCacheMap;
+  }
+
   Future<T> getById(String id) async {
     await collectionCacheInitCompleter.future;
     T? value = collectionCacheMap[id];

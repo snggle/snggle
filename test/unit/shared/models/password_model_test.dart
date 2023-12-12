@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
+import 'package:snggle/shared/models/multi_password_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/crypto/aes256.dart';
 
@@ -30,33 +31,28 @@ void main() {
     });
   });
 
-  group('Tests of PasswordModel.isEncryptedWithCustomPassword()', () {
-    test('Should [return TRUE] if data is [encrypted by CUSTOM password]', () async {
+  group('Tests of PasswordModel.extend()', () {
+    test('Should [return MultiPasswordModel] extended from parent PasswordModel', () {
       // Arrange
-      String actualEncryptedData =
-          'oEGBHJUZ6pw8dF2g6YAz4gmuhTj9x5MN8J2mZDzpoNQ1lDFEUl+hNklVnNJIEbhBXAtnrxo2ghNiiGuRC84LEff+AUEN8Na6+avqOVK+Csf6fS2JwjxJPRhD0mFuKP1QcGdV2g==';
+      PasswordModel actualParentPasswordModel = PasswordModel.fromPlaintext('parent_password');
 
       // Act
-      bool actualCustomPasswordBool = PasswordModel.isEncryptedWithCustomPassword(actualEncryptedData);
+      MultiPasswordModel actualExtendedMultiPasswordModel = actualParentPasswordModel.extend(PasswordModel.fromPlaintext('child_password_1'));
 
       // Assert
-      expect(actualCustomPasswordBool, true);
-    });
+      MultiPasswordModel expectedExtendedMultiPasswordModel = const MultiPasswordModel(
+        mainPasswordModel: PasswordModel(hashedPassword: '3nYpLJdfLcmjo8w5eyQoDHJa05Est/B0mKD4KaKbo1I='),
+        parentPasswordModels: <PasswordModel>[
+          PasswordModel(hashedPassword: 'MlTfCSnflNF3BnDIzgT6TBDeC+a4s1k4o2bLVkGw2uk='),
+        ],
+      );
 
-    test('Should [return FALSE] if data is [encrypted by DEFAULT password]', () async {
-      // Arrange
-      String actualEncryptedData = 'hHbwgENri2fKNi4Lu3aZPQsaW5QIF5NAkcsBvyAzm7pZpJyx2gtdrN8wz1kdM8rbvnVzEvfzSc7ohJJ2wiO7sDOzVuk=';
-
-      // Act
-      bool actualCustomPasswordBool = PasswordModel.isEncryptedWithCustomPassword(actualEncryptedData);
-
-      // Assert
-      expect(actualCustomPasswordBool, false);
+      expect(actualExtendedMultiPasswordModel, expectedExtendedMultiPasswordModel);
     });
   });
 
   group('Tests of PasswordModel.encrypt()', () {
-    test('Should [return hash] representing given data encrypted by hashed password', () {
+    test('Should [return encrypted data] representing given data encrypted by PasswordModel', () {
       // Arrange
       PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('password');
       String actualPasswordHash = 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=';
@@ -76,7 +72,7 @@ void main() {
   });
 
   group('Tests of PasswordModel.decrypt()', () {
-    test('Should [return decrypted hash] if used [PasswordModel VALID]', () {
+    test('Should [return decrypted data] if used [PasswordModel VALID]', () {
       // Arrange
       PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('password');
       String actualEncryptedData = 'gk8RMwEXLBF8Z1tY7O938VO7XxqvshT29Uky/EVE215vm1zB';
@@ -118,14 +114,14 @@ void main() {
 
     test('Should [return FALSE] if PasswordModel [CANNOT decrypt] given String', () {
       // Arrange
-      PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('password');
+      PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('invalid_password');
       String actualEncryptedData = 'gk8RMwEXLBF8Z1tY7O938VO7XxqvshT29Uky/EVE215vm1zB';
 
       // Act
       bool actualPasswordValid = actualPasswordModel.isValidForData(actualEncryptedData);
 
       // Assert
-      expect(actualPasswordValid, true);
+      expect(actualPasswordValid, false);
     });
   });
 }

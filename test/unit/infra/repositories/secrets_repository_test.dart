@@ -41,6 +41,39 @@ void main() {
   };
   // @formatter:on
 
+  group('Tests of SecretsRepository.getAllMapped()', (){
+    test('Should [return map of secrets] if ["secrets" key EXISTS] in database', () async {
+      // Arrange
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledSecretsDatabase));
+      SecretsRepository actualSecretsRepository = SecretsRepository();
+
+      // Act
+      Map<String, dynamic> actualSecretsMap = await actualSecretsRepository.getAllMapped();
+
+      // Assert
+      Map<String, dynamic> expectedSecretsMap = <String, dynamic>{
+        'a99531ff-fd45-40c8-8ac1-6d723c305ee5': expectedEncryptedSecrets1,
+        'e3548cb0-06b0-4b35-8616-4b2df7d31daf': expectedEncryptedSecrets2,
+      };
+
+      expect(actualSecretsMap, expectedSecretsMap);
+    });
+
+    test('Should [return empty map] if ["secrets" key NOT EXISTS] in database', () async {
+      // Arrange
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptySecretsDatabase));
+      SecretsRepository actualSecretsRepository = SecretsRepository();
+
+      // Act
+      Map<String, dynamic> actualSecretsMap = await actualSecretsRepository.getAllMapped();
+
+      // Assert
+      Map<String, dynamic> expectedSecretsMap = <String, dynamic>{};
+
+      expect(actualSecretsMap, expectedSecretsMap);
+    });
+  });
+
   group('Tests of SecretsRepository.getEncryptedSecrets()', () {
     test('Should [return encrypted secrets] if [secrets UUID EXISTS] in collection', () async {
       // Arrange
