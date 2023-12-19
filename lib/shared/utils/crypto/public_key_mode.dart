@@ -1,0 +1,4 @@
+enum PublicKeyMode {
+  compressed,
+  uncompressed,
+}

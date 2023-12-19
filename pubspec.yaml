@@ -81,9 +81,9 @@ dependencies:
   # https://pub.dev/packages/blockchain_utils
   blockchain_utils: ^1.2.1
 
-  # A basic toolkit for Cryptocurrency wallet in Dart. This package is used to generate and manage the Hierarchical Deterministic (HD) Wallet application.
-  # https://pub.dev/packages/hd_wallet
-  hd_wallet: ^0.0.9
+  pointycastle: ^3.7.3
+
+  bech32: ^0.2.2
 
 dev_dependencies:
   flutter_test:
