@@ -15,7 +15,7 @@ class BottomNavigationWrapper extends StatefulWidget {
 class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
   final ValueNotifier<int> activeIndexNotifier = ValueNotifier<int>(0);
   final Map<int, PageRouteInfo> routes = <int, PageRouteInfo>{
-    0: const VaultListRoute(),
+    0: const VaultsSectionWrapperRoute(),
     1: const SecretsRoute(),
     3: const AppsRoute(),
     4: const SettingsRoute(),

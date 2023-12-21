@@ -4,7 +4,7 @@ description: Private keys manager
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.7
+version: 0.0.8
 
 environment:
   sdk: ">=3.2.2"
@@ -72,6 +72,18 @@ dependencies:
   # An SVG rendering and widget library for Flutter, which allows painting and displaying Scalable Vector Graphics 1.1 files.
   # https://pub.dev/packages/flutter_svg
   flutter_svg: ^2.0.9
+
+  # Etherum Blockies implementation
+  # https://pub.dev/packages/blockies_svg
+  blockies_svg: ^1.0.2
+
+  # Comprehensive Crypto & Blockchain Toolkit, Pure Dart, Cross-Platform, Encoding, Cryptography, Addresses, Mnemonics, & More.
+  # https://pub.dev/packages/blockchain_utils
+  blockchain_utils: ^1.2.1
+
+  # A basic toolkit for Cryptocurrency wallet in Dart. This package is used to generate and manage the Hierarchical Deterministic (HD) Wallet application.
+  # https://pub.dev/packages/hd_wallet
+  hd_wallet: ^0.0.9
 
 dev_dependencies:
   flutter_test:

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/vault_list_page/vault_list_page_cubit.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
-import 'package:snggle/views/pages/bottom_navigation/vault_list_page/vault_list_item.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item.dart';
 import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
 
 @RoutePage()
