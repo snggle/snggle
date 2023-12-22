@@ -1,8 +1,10 @@
-import 'package:flutter/services.dart';
+import 'dart:typed_data';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hd_wallet/hd_wallet.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/vault_secrets_service.dart';
+import 'package:snggle/infra/services/wallet_secrets_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/factories/wallet_model_factory.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -10,6 +12,7 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_creation_request_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 
 // TODO(dominik): Temporary cubit implementation. Created for demo purposes.
 // After UI / list implementation responsibility of this cubit may be significantly rebuilt.
@@ -18,14 +21,17 @@ class WalletListPageCubit extends Cubit<List<WalletModel>> {
   final VaultModel vaultModel;
   final PasswordModel vaultPasswordModel;
   final WalletsService _walletsService;
+  final WalletSecretsService _walletSecretsService;
   final VaultSecretsService _vaultSecretsService;
 
   WalletListPageCubit({
     required this.vaultModel,
     required this.vaultPasswordModel,
     WalletsService? walletsService,
+    WalletSecretsService? walletSecretsService,
     VaultSecretsService? vaultSecretsService,
   })  : _walletsService = walletsService ?? globalLocator<WalletsService>(),
+        _walletSecretsService = walletSecretsService ?? globalLocator<WalletSecretsService>(),
         _vaultSecretsService = vaultSecretsService ?? globalLocator<VaultSecretsService>(),
         super(<WalletModel>[]);
 
@@ -54,7 +60,14 @@ class WalletListPageCubit extends Cubit<List<WalletModel>> {
         derivationPath: derivationPath,
       ),
     );
+
+    WalletSecretsModel walletSecretsModel = WalletSecretsModel(
+      walletUuid: walletModel.uuid,
+      privateKey: derivedNode.privateKey!,
+    );
+
     await _walletsService.saveWallet(walletModel);
+    await _walletSecretsService.saveSecrets(walletSecretsModel, PasswordModel.defaultPassword());
     await refresh();
   }
 

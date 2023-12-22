@@ -25,6 +25,7 @@ class AppRouter extends $AppRouter {
             children: <AutoRoute>[
               AutoRoute(page: VaultListRoute.page, initial: true),
               AutoRoute(page: WalletListRoute.page),
+              AutoRoute(page: WalletDetailsRoute.page),
             ],
           ),
           AutoRoute(page: VaultListRoute.page),

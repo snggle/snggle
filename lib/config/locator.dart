@@ -8,6 +8,7 @@ import 'package:snggle/infra/services/app_auth_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/infra/services/vault_secrets_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
+import 'package:snggle/infra/services/wallet_secrets_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/factories/wallet_model_factory.dart';
@@ -39,7 +40,8 @@ void _initServices() {
     ..registerLazySingleton<MasterKeyService>(MasterKeyService.new)
     ..registerLazySingleton<VaultSecretsService>(VaultSecretsService.new)
     ..registerLazySingleton<VaultsService>(VaultsService.new)
-    ..registerLazySingleton<WalletsService>(WalletsService.new);
+    ..registerLazySingleton<WalletsService>(WalletsService.new)
+    ..registerLazySingleton<WalletSecretsService>(WalletSecretsService.new);
 }
 
 void _initFactories() {
