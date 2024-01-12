@@ -3,8 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hd_wallet/hd_wallet.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/services/vault_secrets_service.dart';
-import 'package:snggle/infra/services/wallet_secrets_service.dart';
+import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/factories/wallet_model_factory.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -21,23 +20,20 @@ class WalletListPageCubit extends Cubit<List<WalletModel>> {
   final VaultModel vaultModel;
   final PasswordModel vaultPasswordModel;
   final WalletsService _walletsService;
-  final WalletSecretsService _walletSecretsService;
-  final VaultSecretsService _vaultSecretsService;
+  final SecretsService _secretsService;
 
   WalletListPageCubit({
     required this.vaultModel,
     required this.vaultPasswordModel,
     WalletsService? walletsService,
-    WalletSecretsService? walletSecretsService,
-    VaultSecretsService? vaultSecretsService,
+    SecretsService? secretsService,
   })  : _walletsService = walletsService ?? globalLocator<WalletsService>(),
-        _walletSecretsService = walletSecretsService ?? globalLocator<WalletSecretsService>(),
-        _vaultSecretsService = vaultSecretsService ?? globalLocator<VaultSecretsService>(),
+        _secretsService = secretsService ?? globalLocator<SecretsService>(),
         super(<WalletModel>[]);
 
   Future<void> createNewWallet() async {
     WalletModelFactory walletModelFactory = globalLocator<WalletModelFactory>();
-    VaultSecretsModel vaultSecretsModel = await _vaultSecretsService.getSecrets(vaultModel.uuid, vaultPasswordModel);
+    VaultSecretsModel vaultSecretsModel = await _secretsService.get(vaultModel.filesystemPath, vaultPasswordModel);
 
     // This section is used to determine the next derivation path segment for the new wallet
     // In current demo app, this value is calculated automatically, basing on the last wallet index existing in database
@@ -62,12 +58,12 @@ class WalletListPageCubit extends Cubit<List<WalletModel>> {
     );
 
     WalletSecretsModel walletSecretsModel = WalletSecretsModel(
-      walletUuid: walletModel.uuid,
+      filesystemPath: walletModel.filesystemPath,
       privateKey: derivedNode.privateKey!,
     );
 
     await _walletsService.saveWallet(walletModel);
-    await _walletSecretsService.saveSecrets(walletSecretsModel, PasswordModel.defaultPassword());
+    await _secretsService.save(walletSecretsModel, PasswordModel.defaultPassword());
     await refresh();
   }
 

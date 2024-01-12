@@ -4,7 +4,7 @@ description: Private keys manager
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.10
+version: 0.0.11
 
 environment:
   sdk: ">=3.2.2"
@@ -84,6 +84,10 @@ dependencies:
   # A basic toolkit for Cryptocurrency wallet in Dart. This package is used to generate and manage the Hierarchical Deterministic (HD) Wallet application.
   # https://pub.dev/packages/hd_wallet
   hd_wallet: ^0.0.9
+
+  # Flutter plugin for getting commonly used locations on host platform file systems, such as the temp and app data directories.
+  # https://pub.dev/packages/path_provider
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:
