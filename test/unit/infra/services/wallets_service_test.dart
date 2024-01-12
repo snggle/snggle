@@ -74,14 +74,14 @@ void main() {
 
       // Assert
       List<WalletModel> expectedWalletModelList = <WalletModel>[
-        const WalletModel(
+        WalletModel(
           index: 0,
           uuid: '4e66ba36-966e-49ed-b639-191388ce38de',
           vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
           address: 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
           derivationPath: "m/44'/118'/0'/0/0",
         ),
-        const WalletModel(
+        WalletModel(
           index: 1,
           uuid: '3e7f3547-d78f-4dda-a916-3e9eabd4bfee',
           vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
@@ -111,7 +111,7 @@ void main() {
   group('Tests of WalletsService.saveWallet()', () {
     test('Should [UPDATE wallet] if [wallet UUID EXISTS] in collection', () async {
       // Arrange
-      WalletModel actualUpdatedWalletModel = const WalletModel(
+      WalletModel actualUpdatedWalletModel = WalletModel(
         index: 0,
         uuid: '4e66ba36-966e-49ed-b639-191388ce38de',
         vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
@@ -217,7 +217,7 @@ void main() {
 
     test('Should [SAVE wallet] if [wallet UUID NOT EXISTS] in collection', () async {
       // Arrange
-      WalletModel actualNewWalletModel = const WalletModel(
+      WalletModel actualNewWalletModel = WalletModel(
         index: 2,
         uuid: '8b52e5f2-d265-41d5-8567-47e9f879bd02',
         vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
