@@ -6,9 +6,8 @@ import 'package:snggle/infra/repositories/vaults_repository.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
 import 'package:snggle/infra/services/app_auth_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
-import 'package:snggle/infra/services/vault_secrets_service.dart';
+import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
-import 'package:snggle/infra/services/wallet_secrets_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/factories/wallet_model_factory.dart';
@@ -38,10 +37,9 @@ void _initServices() {
   globalLocator
     ..registerLazySingleton<AppAuthService>(AppAuthService.new)
     ..registerLazySingleton<MasterKeyService>(MasterKeyService.new)
-    ..registerLazySingleton<VaultSecretsService>(VaultSecretsService.new)
+    ..registerLazySingleton<SecretsService>(SecretsService.new)
     ..registerLazySingleton<VaultsService>(VaultsService.new)
-    ..registerLazySingleton<WalletsService>(WalletsService.new)
-    ..registerLazySingleton<WalletSecretsService>(WalletSecretsService.new);
+    ..registerLazySingleton<WalletsService>(WalletsService.new);
 }
 
 void _initFactories() {

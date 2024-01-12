@@ -69,7 +69,7 @@ void main() {
       VaultModel actualVaultModel = actualVaultModelFactory.createFromEntity(actualVaultEntity);
 
       // Assert
-      VaultModel expectedVaultModel = const VaultModel(index: 10, uuid: '7d871464-f352-432d-ad70-b001b38a17c9', name: 'test');
+      VaultModel expectedVaultModel = VaultModel(index: 10, uuid: '7d871464-f352-432d-ad70-b001b38a17c9', name: 'test');
       expect(actualVaultModel, expectedVaultModel);
     });
   });

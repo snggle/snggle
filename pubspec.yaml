@@ -85,6 +85,10 @@ dependencies:
   # https://pub.dev/packages/hd_wallet
   hd_wallet: ^0.0.9
 
+  # Flutter plugin for getting commonly used locations on host platform file systems, such as the temp and app data directories.
+  # https://pub.dev/packages/path_provider
+  path_provider: ^2.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,15 +1,16 @@
-import 'package:equatable/equatable.dart';
+import 'package:snggle/shared/models/a_container_model.dart';
+import 'package:snggle/shared/models/container_path_model.dart';
 
-class VaultModel extends Equatable {
+class VaultModel extends AContainerModel {
   final int index;
   final String uuid;
   final String? name;
 
-  const VaultModel({
+  VaultModel({
     required this.index,
     required this.uuid,
     this.name,
-  });
+  }) : super(containerPathModel: ContainerPathModel(<String>[uuid]));
 
   VaultModel copyWith({
     int? index,
