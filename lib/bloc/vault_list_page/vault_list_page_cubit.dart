@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/services/vault_secrets_service.dart';
+import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
@@ -12,15 +12,15 @@ import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 //  After UI / list implementation responsibility of this cubit should be split into VaultListPageCubit and VaultListItemCubit
 //  Additionally State of this cubit should be changed to VaultListPageState + tests should be written
 class VaultListPageCubit extends Cubit<List<VaultModel>> {
-  final VaultSecretsService _vaultSecretsService;
+  final SecretsService _secretsService;
   final VaultsService _vaultsService;
   final VaultModelFactory _vaultModelFactory;
 
   VaultListPageCubit({
-    VaultSecretsService? vaultSecretsService,
+    SecretsService? secretsService,
     VaultsService? vaultsService,
     VaultModelFactory? vaultModelFactory,
-  })  : _vaultSecretsService = vaultSecretsService ?? globalLocator<VaultSecretsService>(),
+  })  : _secretsService = secretsService ?? globalLocator<SecretsService>(),
         _vaultsService = vaultsService ?? globalLocator<VaultsService>(),
         _vaultModelFactory = vaultModelFactory ?? globalLocator<VaultModelFactory>(),
         super(<VaultModel>[]);
@@ -29,16 +29,16 @@ class VaultListPageCubit extends Cubit<List<VaultModel>> {
     VaultModel newVaultModel = await _vaultModelFactory.createNewVault();
 
     MnemonicModel mnemonicModel = MnemonicModel.generate();
-    VaultSecretsModel vaultSecretsModel = VaultSecretsModel(vaultUUid: newVaultModel.uuid, mnemonicModel: mnemonicModel);
+    VaultSecretsModel vaultSecretsModel = VaultSecretsModel(containerPathModel: newVaultModel.containerPathModel, mnemonicModel: mnemonicModel);
 
     await _vaultsService.saveVault(newVaultModel);
-    await _vaultSecretsService.saveSecrets(vaultSecretsModel, PasswordModel.defaultPassword());
+    await _secretsService.saveSecrets(vaultSecretsModel, PasswordModel.defaultPassword());
     await refresh();
   }
 
   Future<void> deleteVault(VaultModel vaultModel) async {
     await _vaultsService.deleteVaultById(vaultModel.uuid);
-    await _vaultSecretsService.deleteSecrets(vaultModel.uuid);
+    await _secretsService.deleteSecrets(vaultModel.containerPathModel);
     await refresh();
   }
 
