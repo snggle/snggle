@@ -74,8 +74,8 @@ void main() {
 
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[
-        const VaultModel(index: 1, uuid: '92b43ace-5439-4269-8e27-e999907f4379', name: 'Test Vault 1'),
-        const VaultModel(index: 2, uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093', name: 'Test Vault 2'),
+        VaultModel(index: 1, uuid: '92b43ace-5439-4269-8e27-e999907f4379', name: 'Test Vault 1'),
+        VaultModel(index: 2, uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093', name: 'Test Vault 2'),
       ];
 
       expect(actualVaultModelList, expectedVaultModelList);
@@ -99,7 +99,7 @@ void main() {
   group('Tests of VaultsService.saveVault()', () {
     test('Should [UPDATE vault] if [vault UUID EXISTS] in collection', () async {
       // Arrange
-      VaultModel newVaultModel = const VaultModel(index: 2, uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093', name: 'Updated Vault');
+      VaultModel newVaultModel = VaultModel(index: 2, uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093', name: 'Updated Vault');
 
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledVaultsDatabase));
       VaultsService actualVaultsService = VaultsService(vaultsRepository: VaultsRepository());
@@ -144,7 +144,7 @@ void main() {
 
     test('Should [SAVE vault] if [vault UUID NOT EXISTS] in collection', () async {
       // Arrange
-      VaultModel newVaultModel = const VaultModel(index: 1, uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093', name: 'New Vault');
+      VaultModel newVaultModel = VaultModel(index: 1, uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093', name: 'New Vault');
 
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyVaultsDatabase));
       VaultsService actualVaultsService = VaultsService(vaultsRepository: VaultsRepository());
