@@ -1,9 +1,11 @@
+import 'dart:convert';
+
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/infra/exceptions/parent_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/database_parent_key.dart';
 import 'package:snggle/infra/repositories/master_key_repository.dart';
-
 import '../../../utils/test_utils.dart';
 
 void main() {
@@ -12,9 +14,19 @@ void main() {
 
   DatabaseParentKey actualDatabaseParentKey = DatabaseParentKey.encryptedMasterKey;
 
+  String wrappedMasterKey1 = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg=='
+  }, prettyPrintBool: false);
+
+  String wrappedMasterKey2 = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': 'CvujNlKB9l03/Aw2f5+9TW0RxG6ZmNgjmjNJaL48bAY+xn8WiMQJZjposoDQfrB3ZVZwIANxSC5A/EOYto5OFgGRTWVheYH3p8j/w2mMm/lztuoCTie6rddSm4iwY03JWWXK4w=='
+  }, prettyPrintBool: false);
+
   // @formatter:off
   Map<String, String> filledMasterKeyDatabase = <String, String>{
-    actualDatabaseParentKey.name: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    actualDatabaseParentKey.name: wrappedMasterKey1,
   };
 
   Map<String, String> emptyDatabase = <String, String>{};
@@ -26,10 +38,10 @@ void main() {
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledMasterKeyDatabase));
 
       // Act
-      bool actualSaltExistValue = await actualMasterKeyRepository.isMasterKeyExists();
+      bool actualMasterKeyExists = await actualMasterKeyRepository.isMasterKeyExists();
 
       //  Assert
-      expect(actualSaltExistValue, true);
+      expect(actualMasterKeyExists, true);
     });
 
     test('Should [return FALSE] if [master key NOT EXISTS] in database', () async {
@@ -37,10 +49,10 @@ void main() {
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyDatabase));
 
       //  Act
-      bool actualIsSaltExists = await actualMasterKeyRepository.isMasterKeyExists();
+      bool actualMasterKeyExists = await actualMasterKeyRepository.isMasterKeyExists();
 
       // Assert
-      expect(actualIsSaltExists, false);
+      expect(actualMasterKeyExists, false);
     });
   });
 
@@ -50,13 +62,17 @@ void main() {
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledMasterKeyDatabase));
 
       // Act
-      String actualMasterKey = await actualMasterKeyRepository.getMasterKey();
+      Ciphertext actualMasterKeyCiphertext = await actualMasterKeyRepository.getMasterKey();
 
       // Assert
-      String expectedMasterKey =
-          '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==';
+      Ciphertext expectedMasterKeyCiphertext = Ciphertext(
+        encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+        bytes: base64Decode(
+          '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+        ),
+      );
 
-      expect(actualMasterKey, expectedMasterKey);
+      expect(actualMasterKeyCiphertext, expectedMasterKeyCiphertext);
     });
 
     test('Should [throw ParentKeyNotFoundException] if [master key NOT EXISTS] in database', () async {
@@ -73,6 +89,9 @@ void main() {
 
   group('Tests of MasterKeyRepository.setMasterKey()', () {
     test('Should [SAVE hash] if [master key NOT EXISTS] in database', () async {
+      // Arrange
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyDatabase));
+
       // Act
       String? actualEncryptedMasterKey = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
@@ -82,14 +101,20 @@ void main() {
 
       // ********************************************************************************************************************
 
+      // Arrange
+      Ciphertext actualMasterKeyCiphertext = Ciphertext(
+        encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+        bytes: base64Decode(
+          '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+        ),
+      );
+
       // Act
-      await actualMasterKeyRepository.setMasterKey(
-          '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');
+      await actualMasterKeyRepository.setMasterKey(actualMasterKeyCiphertext);
       actualEncryptedMasterKey = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
-      String expectedEncryptedMasterKey =
-          '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==';
+      String expectedEncryptedMasterKey = wrappedMasterKey1;
 
       TestUtils.printInfo('Should [return master key] after saving it in database');
       expect(actualEncryptedMasterKey, expectedEncryptedMasterKey);
@@ -97,32 +122,33 @@ void main() {
 
     test('Should [UPDATE hash] if [master key NOT EXISTS] in database', () async {
       // Arrange
-      // @formatter:off
-      FlutterSecureStorage.setMockInitialValues(<String, String>{
-        actualDatabaseParentKey.name: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-      });
-      // @formatter:on
+      FlutterSecureStorage.setMockInitialValues(filledMasterKeyDatabase);
 
       // Act
       String? actualMasterKey = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
-      String expectedMasterKey =
-          '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==';
+      String expectedMasterKey = wrappedMasterKey1;
 
       TestUtils.printInfo('Should [return master key] as [it already EXISTS] in database');
       expect(actualMasterKey, expectedMasterKey);
 
       // ********************************************************************************************************************
 
+      // Arrange
+      Ciphertext actualMasterKeyCiphertext = Ciphertext(
+        encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+        bytes: base64Decode(
+          'CvujNlKB9l03/Aw2f5+9TW0RxG6ZmNgjmjNJaL48bAY+xn8WiMQJZjposoDQfrB3ZVZwIANxSC5A/EOYto5OFgGRTWVheYH3p8j/w2mMm/lztuoCTie6rddSm4iwY03JWWXK4w==',
+        ),
+      );
+
       // Act
-      await actualMasterKeyRepository.setMasterKey(
-          'CvujNlKB9l03/Aw2f5+9TW0RxG6ZmNgjmjNJaL48bAY+xn8WiMQJZjposoDQfrB3ZVZwIANxSC5A/EOYto5OFgGRTWVheYH3p8j/w2mMm/lztuoCTie6rddSm4iwY03JWWXK4w==');
+      await actualMasterKeyRepository.setMasterKey(actualMasterKeyCiphertext);
       actualMasterKey = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
-      expectedMasterKey =
-          'CvujNlKB9l03/Aw2f5+9TW0RxG6ZmNgjmjNJaL48bAY+xn8WiMQJZjposoDQfrB3ZVZwIANxSC5A/EOYto5OFgGRTWVheYH3p8j/w2mMm/lztuoCTie6rddSm4iwY03JWWXK4w==';
+      expectedMasterKey = wrappedMasterKey2;
 
       TestUtils.printInfo('Should [return master key] after saving it in database');
       expect(actualMasterKey, expectedMasterKey);

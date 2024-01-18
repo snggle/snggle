@@ -10,7 +10,6 @@ import 'package:snggle/infra/repositories/vaults_repository.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
-import 'package:snggle/shared/value_objects/master_key_vo.dart';
 
 import '../../../utils/test_utils.dart';
 
@@ -23,19 +22,16 @@ void main() {
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
   globalLocator<AuthSingletonCubit>().setAppPassword(actualAppPasswordModel);
 
-  // @formatter:off
-  MasterKeyVO actualMasterKeyVO = const MasterKeyVO(encryptedMasterKey: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');
-
   Map<String, String> filledVaultsDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    actualDatabaseParentKey.name:'pJ9oebXNvPd2LtRmPMKTQ7w1fswHP5E/6nTpAro4GpPwruAvkLy1mMTiEbiQ17Bw9tteULmYR3TidUOyimkFWmPD94O4gyhu4MEUP/wFajfsNY4AHjJ2bk7ZdZofZRqXXShkNSSDgQY2kKqlUndUx1XOd4+OcL1S6JuSSFoKm8LGUu5EDlvMRQbbUTkwFnW2kiXCbjBXVeDO4yaAKx6Shctr5ReU3bCT5K+9c2qjkBEb+Mj+qhtvxzaFJBvVZKqRjykBLYU9sSrrJnIzIIERjx+1s4WcIFuYQHvQzqCpPlCDi9ZA5xRm3QGw2tJQ4eRWWp2Tg2UE1PpJQcwR8O4+MZ6TDMg=',
+    actualDatabaseParentKey.name: jsonEncode(<String, dynamic>{
+      '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{'index': 1, 'uuid': '92b43ace-5439-4269-8e27-e999907f4379', 'name': 'Test Vault 1'},
+      'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 2, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'Test Vault 2'},
+    }),
   };
 
   Map<String, String> emptyVaultsDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    actualDatabaseParentKey.name: 'L8uo+Q4teE3WrID1Cnhcopjcv9XJnZFFUBK6X/GfhuW2IFAm',
+    actualDatabaseParentKey.name: jsonEncode(<String, dynamic>{}),
   };
-  // @formatter:on
 
   group('Tests of VaultsService.getLastVaultIndex()', () {
     test('Should [return 2] if the largest vault index is equal 2', () async {
@@ -99,47 +95,37 @@ void main() {
   group('Tests of VaultsService.saveVault()', () {
     test('Should [UPDATE vault] if [vault UUID EXISTS] in collection', () async {
       // Arrange
-      VaultModel newVaultModel = VaultModel(index: 2, uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093', name: 'Updated Vault');
+      VaultModel newVaultModel = VaultModel(index: 2, uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093', name: 'Updated name');
 
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledVaultsDatabase));
       VaultsService actualVaultsService = VaultsService(vaultsRepository: VaultsRepository());
 
       // Act
-      String? actualEncryptedVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
-
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedVaultsKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedVaultsKeyValue!);
-      Map<String, dynamic> actualVaultsMap = jsonDecode(actualDecryptedVaultsKeyValue) as Map<String, dynamic>;
+      String? actualVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
-      Map<String, dynamic> expectedVaultsMap = <String, dynamic>{
+      String expectedVaultsKeyValue = jsonEncode(<String, dynamic>{
         '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{'index': 1, 'uuid': '92b43ace-5439-4269-8e27-e999907f4379', 'name': 'Test Vault 1'},
         'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 2, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'Test Vault 2'},
-      };
+      });
 
       TestUtils.printInfo('Should [return Map of vaults] as ["vaults" key EXISTS] in database');
-      expect(actualVaultsMap, expectedVaultsMap);
+      expect(actualVaultsKeyValue, expectedVaultsKeyValue);
 
       // ************************************************************************************************
 
       // Act
       await actualVaultsService.saveVault(newVaultModel);
-      actualEncryptedVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
-
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      actualDecryptedVaultsKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedVaultsKeyValue!);
-      actualVaultsMap = jsonDecode(actualDecryptedVaultsKeyValue) as Map<String, dynamic>;
+      actualVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
-      expectedVaultsMap = <String, dynamic>{
+      expectedVaultsKeyValue = jsonEncode(<String, dynamic>{
         '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{'index': 1, 'uuid': '92b43ace-5439-4269-8e27-e999907f4379', 'name': 'Test Vault 1'},
-        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 2, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'Updated Vault'},
-      };
+        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 2, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'Updated name'},
+      });
 
       TestUtils.printInfo('Should [return Map of vaults] with updated vault');
-      expect(actualVaultsMap, expectedVaultsMap);
+      expect(actualVaultsKeyValue, expectedVaultsKeyValue);
     });
 
     test('Should [SAVE vault] if [vault UUID NOT EXISTS] in collection', () async {
@@ -150,37 +136,27 @@ void main() {
       VaultsService actualVaultsService = VaultsService(vaultsRepository: VaultsRepository());
 
       // Act
-      String? actualEncryptedVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
-
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedVaultsKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedVaultsKeyValue!);
-      Map<String, dynamic> actualVaultsMap = jsonDecode(actualDecryptedVaultsKeyValue) as Map<String, dynamic>;
+      String? actualVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
-      Map<String, dynamic> expectedVaultsMap = <String, dynamic>{};
+      String expectedVaultsKeyValue = jsonEncode(<String, dynamic>{});
 
-      TestUtils.printInfo('Should [return EMPTY map] as ["vaults" key value is EMPTY]');
-      expect(actualVaultsMap, expectedVaultsMap);
+      TestUtils.printInfo('Should [return EMPTY map] as ["vault" key value is EMPTY]');
+      expect(actualVaultsKeyValue, expectedVaultsKeyValue);
 
       // ************************************************************************************************
 
       // Act
       await actualVaultsService.saveVault(newVaultModel);
-      actualEncryptedVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
-
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      actualDecryptedVaultsKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedVaultsKeyValue!);
-      actualVaultsMap = jsonDecode(actualDecryptedVaultsKeyValue) as Map<String, dynamic>;
+      actualVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
-      expectedVaultsMap = <String, dynamic>{
+      expectedVaultsKeyValue = jsonEncode(<String, dynamic>{
         'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 1, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'New Vault'}
-      };
+      });
 
       TestUtils.printInfo('Should [return Map of vaults] with new vault');
-      expect(actualVaultsMap, expectedVaultsMap);
+      expect(actualVaultsKeyValue, expectedVaultsKeyValue);
     });
   });
 
@@ -191,40 +167,30 @@ void main() {
       VaultsService actualVaultsService = VaultsService(vaultsRepository: VaultsRepository());
 
       // Act
-      String? actualEncryptedVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
-
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedVaultsKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedVaultsKeyValue!);
-      Map<String, dynamic> actualVaultsMap = jsonDecode(actualDecryptedVaultsKeyValue) as Map<String, dynamic>;
+      String? actualVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
-      Map<String, dynamic> expectedVaultsMap = <String, dynamic>{
+      String expectedVaultsKeyValue = jsonEncode(<String, dynamic>{
         '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{'index': 1, 'uuid': '92b43ace-5439-4269-8e27-e999907f4379', 'name': 'Test Vault 1'},
         'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 2, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'Test Vault 2'},
-      };
+      });
 
-      TestUtils.printInfo('Should [return Map of vaults] as ["vaults" key EXISTS] in database');
-      expect(actualVaultsMap, expectedVaultsMap);
+      TestUtils.printInfo('Should [return Map of vaults] as ["vault" key EXISTS] in database');
+      expect(actualVaultsKeyValue, expectedVaultsKeyValue);
 
       // ************************************************************************************************
 
       // Act
       await actualVaultsService.deleteVaultById('b1c2f688-85fc-43ba-9af1-52db40fa3093');
-      actualEncryptedVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
-
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      actualDecryptedVaultsKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedVaultsKeyValue!);
-      actualVaultsMap = jsonDecode(actualDecryptedVaultsKeyValue) as Map<String, dynamic>;
+      actualVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
-      expectedVaultsMap = <String, dynamic>{
+      expectedVaultsKeyValue = jsonEncode(<String, dynamic>{
         '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{'index': 1, 'uuid': '92b43ace-5439-4269-8e27-e999907f4379', 'name': 'Test Vault 1'},
-      };
+      });
 
       TestUtils.printInfo('Should [return Map of vaults] without removed vault');
-      expect(actualVaultsMap, expectedVaultsMap);
+      expect(actualVaultsKeyValue, expectedVaultsKeyValue);
     });
 
     test('Should [throw ChildKeyNotFoundException] if [vault UUID NOT EXISTS] in collection', () async {

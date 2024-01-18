@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
@@ -17,22 +19,21 @@ void main() {
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
   globalLocator<AuthSingletonCubit>().setAppPassword(actualAppPasswordModel);
 
-  // @formatter:off
-  Map<String, String> filledChildKeysDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    actualDatabaseParentKey.name: 'pJ9oebXNvPd2LtRmPMKTQ7w1fswHP5E/6nTpAro4GpPwruAvkLy1mMTiEbiQ17Bw9tteULmYR3TidUOyimkFWmPD94O4gyhu4MEUP/wFajfsNY4AHjJ2bk7ZdZofZRqXXShkNSSDgQY2kKqlUndUx1XOd4+OcL1S6JuSSFoKm8LGUu5EDlvMRQbbUTkwFnW2kiXCbjBXVeDO4yaAKx6Shctr5ReU3bCT5K+9c2qjkBEb+Mj+qhtvxzaFJBvVZKqRjykBLYU9sSrrJnIzIIERjx+1s4WcIFuYQHvQzqCpPlCDi9ZA5xRm3QGw2tJQ4eRWWp2Tg2UE1PpJQcwR8O4+MZ6TDMg=',
+  Map<String, String> filledVaultsDatabase = <String, String>{
+    actualDatabaseParentKey.name: jsonEncode(<String, dynamic>{
+      '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{'index': 1, 'uuid': '92b43ace-5439-4269-8e27-e999907f4379', 'name': 'Test Vault 1'},
+      'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 2, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'Test Vault 2'},
+    }),
   };
 
-  Map<String, String> emptyChildKeysDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    actualDatabaseParentKey.name: 'L8uo+Q4teE3WrID1Cnhcopjcv9XJnZFFUBK6X/GfhuW2IFAm',
+  Map<String, String> emptyVaultsDatabase = <String, String>{
+    actualDatabaseParentKey.name: jsonEncode(<String, dynamic>{}),
   };
-  // @formatter:on
 
   group('Tests of VaultModelFactory.createNewVault()', () {
     test('Should [return VaultModel] with [randomly generated UUID] and [index EQUALS 0] if there are no vaults in the database', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyChildKeysDatabase));
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyVaultsDatabase));
       VaultsService actualVaultsService = VaultsService(vaultsRepository: VaultsRepository());
       VaultModelFactory actualVaultModelFactory = VaultModelFactory(vaultsService: actualVaultsService);
 
@@ -46,7 +47,7 @@ void main() {
 
     test('Should [return VaultModel] with [randomly generated UUID] and [index EQUALS 3] if the previous largest vault index is equal 2', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledChildKeysDatabase));
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledVaultsDatabase));
       VaultsService actualVaultsService = VaultsService(vaultsRepository: VaultsRepository());
       VaultModelFactory actualVaultModelFactory = VaultModelFactory(vaultsService: actualVaultsService);
 

@@ -1,3 +1,4 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/config/locator.dart';
@@ -16,7 +17,7 @@ class AuthSingletonCubit extends Cubit<AuthSingletonState> {
     emit(AuthSingletonState(appPasswordModel: appPasswordModel));
   }
 
-  Future<String> encrypt(String plaintextValue) async {
+  Future<Ciphertext> encrypt(String plaintextValue) async {
     if (plaintextValue.isEmpty) {
       throw const FormatException('Provided [plaintextValue] is empty. AES256 encryption does not support empty strings');
     } else if (currentAppPasswordModel == null) {
@@ -25,19 +26,17 @@ class AuthSingletonCubit extends Cubit<AuthSingletonState> {
 
     MasterKeyVO masterKeyVO = await _masterKeyService.getMasterKey();
 
-    String encryptedValue = masterKeyVO.encrypt(appPasswordModel: currentAppPasswordModel!, decryptedData: plaintextValue);
-    return encryptedValue;
+    Ciphertext ciphertext = masterKeyVO.encrypt(appPasswordModel: currentAppPasswordModel!, plaintextValue: plaintextValue);
+    return ciphertext;
   }
 
-  Future<String> decrypt(String encryptedValue) async {
-    if (encryptedValue.isEmpty) {
-      throw const FormatException('Provided [plaintextValue] is empty. AES256 encryption does not support empty strings');
-    } else if (currentAppPasswordModel == null) {
+  Future<String> decrypt(Ciphertext ciphertext) async {
+    if (currentAppPasswordModel == null) {
       throw Exception('[AuthSingletonCubit] state does not contain [appPasswordModel] which is required to decrypt data with Master Key');
     }
 
     MasterKeyVO masterKeyVO = await _masterKeyService.getMasterKey();
-    String decryptedValue = masterKeyVO.decrypt(appPasswordModel: currentAppPasswordModel!, encryptedData: encryptedValue);
+    String decryptedValue = masterKeyVO.decrypt(appPasswordModel: currentAppPasswordModel!, ciphertext: ciphertext);
     return decryptedValue;
   }
 

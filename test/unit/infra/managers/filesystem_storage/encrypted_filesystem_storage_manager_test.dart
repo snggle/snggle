@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
@@ -11,7 +12,6 @@ import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_mana
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
 import 'package:uuid/uuid.dart';
-
 import '../../../../utils/test_utils.dart';
 
 void main() {
@@ -20,22 +20,40 @@ void main() {
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
   globalLocator<AuthSingletonCubit>().setAppPassword(actualAppPasswordModel);
 
-  // @formatter:off
-  MasterKeyVO actualMasterKeyVO = const MasterKeyVO(encryptedMasterKey: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');
+  MasterKeyVO actualMasterKeyVO = MasterKeyVO(
+    masterKeyCiphertext: Ciphertext.fromBase64(
+      base64: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+      encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+    ),
+  );
+
+  String wrappedSecretsCipher1 = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
+  }, prettyPrintBool: true);
+
+  String wrappedSecretsCipher2 = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
+  }, prettyPrintBool: true);
+
+  String wrappedMasterKey = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg=='
+  }, prettyPrintBool: true);
+
   Map<String, dynamic> actualFilesystemStructure = <String, dynamic>{
     'test': <String, dynamic>{
-      '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-      '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-      '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-        'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
+      '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedSecretsCipher1,
+      '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
+        'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': wrappedSecretsCipher2,
       }
     },
   };
 
   Map<String, String> masterKeyOnlyDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    DatabaseParentKey.encryptedMasterKey.name: wrappedMasterKey,
   };
-  // @formatter:on
 
   late String testSessionUUID;
   late FilesystemStorageManager actualFilesystemStorageManager;
@@ -64,7 +82,7 @@ void main() {
 
     test('Should [return decrypted File content] if file with specified [path EXISTS] (2nd depth)', () async {
       // Act
-      String actualFileContent = await actualFilesystemStorageManager.read('9b282030-4c0f-482e-ba0d-524e10822f65/b1c2f688-85fc-43ba-9af1-52db40fa3093');
+      String actualFileContent = await actualFilesystemStorageManager.read('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/b1c2f688-85fc-43ba-9af1-52db40fa3093');
 
       // Assert
       String expectedFileContent = 'test3';
@@ -81,7 +99,7 @@ void main() {
     test('Should [throw ChildKeyNotFoundException] if file with specified [path NOT EXISTS] (2nd depth)', () async {
       // Assert
 
-      expect(() => actualFilesystemStorageManager.read('9b282030-4c0f-482e-ba0d-524e10822f65/not_exists'), throwsA(isA<ChildKeyNotFoundException>()));
+      expect(() => actualFilesystemStorageManager.read('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/not_exists'), throwsA(isA<ChildKeyNotFoundException>()));
     });
   });
 
@@ -93,10 +111,9 @@ void main() {
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
         'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedSecretsCipher1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
+            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': wrappedSecretsCipher2,
           }
         }
       };
@@ -107,7 +124,7 @@ void main() {
       // ************************************************************************************************
 
       // Act
-      await actualFilesystemStorageManager.write('9b282030-4c0f-482e-ba0d-524e10822f65', 'updated_value');
+      await actualFilesystemStorageManager.write('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8', 'updated_value');
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
@@ -116,9 +133,8 @@ void main() {
       // Assert
       expectedFilesystemStructure = <String, dynamic>{
         'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': 'test1',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'updated_value',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': 'updated_value',
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
             'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': 'test3',
           }
         }
@@ -135,10 +151,9 @@ void main() {
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
         'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedSecretsCipher1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
+            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': wrappedSecretsCipher2,
           }
         }
       };
@@ -149,7 +164,7 @@ void main() {
       // ************************************************************************************************
 
       // Act
-      await actualFilesystemStorageManager.write('9b282030-4c0f-482e-ba0d-524e10822f65/b1c2f688-85fc-43ba-9af1-52db40fa3093', 'updated_value');
+      await actualFilesystemStorageManager.write('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/b1c2f688-85fc-43ba-9af1-52db40fa3093', 'updated_value');
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
@@ -159,8 +174,7 @@ void main() {
       expectedFilesystemStructure = <String, dynamic>{
         'test': <String, dynamic>{
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': 'test1',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'test2',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
             'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': 'updated_value',
           }
         }
@@ -177,10 +191,9 @@ void main() {
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
         'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedSecretsCipher1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
+            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': wrappedSecretsCipher2,
           }
         }
       };
@@ -201,8 +214,7 @@ void main() {
       expectedFilesystemStructure = <String, dynamic>{
         'test': <String, dynamic>{
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': 'test1',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'test2',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
             'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': 'test3',
           },
           'a99531ff-fd45-40c8-8ac1-6d723c305ee5.snggle': 'new_value',
@@ -220,10 +232,9 @@ void main() {
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
         'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedSecretsCipher1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
+            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': wrappedSecretsCipher2,
           }
         }
       };
@@ -234,7 +245,7 @@ void main() {
       // ************************************************************************************************
 
       // Act
-      await actualFilesystemStorageManager.write('9b282030-4c0f-482e-ba0d-524e10822f65/a99531ff-fd45-40c8-8ac1-6d723c305ee5', 'new_value');
+      await actualFilesystemStorageManager.write('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/a99531ff-fd45-40c8-8ac1-6d723c305ee5', 'new_value');
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
@@ -244,8 +255,7 @@ void main() {
       expectedFilesystemStructure = <String, dynamic>{
         'test': <String, dynamic>{
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': 'test1',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'test2',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
             'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': 'test3',
             'a99531ff-fd45-40c8-8ac1-6d723c305ee5.snggle': 'new_value',
           },
@@ -265,10 +275,9 @@ void main() {
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
         'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedSecretsCipher1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
+            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': wrappedSecretsCipher2,
           }
         }
       };
@@ -279,16 +288,12 @@ void main() {
       // ************************************************************************************************
 
       // Act
-      await actualFilesystemStorageManager.delete('9b282030-4c0f-482e-ba0d-524e10822f65');
+      await actualFilesystemStorageManager.delete('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8');
 
       actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
 
       // Assert
-      expectedFilesystemStructure = <String, dynamic>{
-        'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-        }
-      };
+      expectedFilesystemStructure = <String, dynamic>{'test': <String, dynamic>{}};
 
       TestUtils.printInfo('Should [return filesystem structure] without removed value');
       expect(actualFilesystemStructure, expectedFilesystemStructure);
@@ -301,10 +306,9 @@ void main() {
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
         'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedSecretsCipher1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
+            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': wrappedSecretsCipher2,
           }
         }
       };
@@ -315,16 +319,15 @@ void main() {
       // ************************************************************************************************
 
       // Act
-      await actualFilesystemStorageManager.delete('9b282030-4c0f-482e-ba0d-524e10822f65/b1c2f688-85fc-43ba-9af1-52db40fa3093');
+      await actualFilesystemStorageManager.delete('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/b1c2f688-85fc-43ba-9af1-52db40fa3093');
 
       actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
 
       // Assert
       expectedFilesystemStructure = <String, dynamic>{
         'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{}
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedSecretsCipher1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{}
         }
       };
 
