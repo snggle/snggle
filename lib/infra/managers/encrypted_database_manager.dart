@@ -1,3 +1,4 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
 import 'package:snggle/config/locator.dart';
@@ -35,12 +36,14 @@ class EncryptedDatabaseManager implements IDatabaseManager {
     if (encryptedValue == null) {
       throw ParentKeyNotFoundException('${databaseParentKey.name} parent key not found in database');
     }
-    return _authSingletonCubit.decrypt(encryptedValue);
+    Ciphertext ciphertext = Ciphertext.fromJsonString(encryptedValue);
+
+    return _authSingletonCubit.decrypt(ciphertext);
   }
 
   @override
   Future<void> write({required DatabaseParentKey databaseParentKey, required String plaintextValue}) async {
-    String encryptedValue = await _authSingletonCubit.encrypt(plaintextValue);
-    await _flutterSecureStorage.write(key: databaseParentKey.name, value: encryptedValue);
+    Ciphertext ciphertext = await _authSingletonCubit.encrypt(plaintextValue);
+    await _flutterSecureStorage.write(key: databaseParentKey.name, value: ciphertext.toJsonString(prettyPrintBool: false));
   }
 }

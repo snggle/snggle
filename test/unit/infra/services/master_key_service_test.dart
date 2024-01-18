@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
@@ -16,13 +19,14 @@ void main() {
 
   DatabaseParentKey actualDatabaseParentKey = DatabaseParentKey.encryptedMasterKey;
 
-  // @formatter:off
   Map<String, String> filledMasterKeyDatabase = <String, String>{
-    actualDatabaseParentKey.name: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    actualDatabaseParentKey.name: jsonEncode(<String, dynamic>{
+      'algorithm': 'AES/DHKE',
+      'data': '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    }),
   };
 
   Map<String, String> emptyDatabase = <String, String>{};
-  // @formatter:on
 
   group('Tests of MasterKeyService.getMasterKey()', () {
     test('Should [return MasterKeyVO] if [master key EXISTS] in database', () async {
@@ -33,11 +37,12 @@ void main() {
       MasterKeyVO actualMasterKeyVO = await actualMasterKeyService.getMasterKey();
 
       // Assert
-      // @formatter:off
-      MasterKeyVO expectedMasterKeyVO = const MasterKeyVO(
-        encryptedMasterKey: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+      MasterKeyVO expectedMasterKeyVO = MasterKeyVO(
+        masterKeyCiphertext: Ciphertext.fromBase64(
+          encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+          base64: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+        ),
       );
-      // @formatter:on
 
       expect(actualMasterKeyVO, expectedMasterKeyVO);
     });
@@ -98,7 +103,8 @@ void main() {
 
       // Since result of setDefaultMasterKey() method is always random, we are not able to predict the expected value of "encryptedMasterKey".
       // However, generated data should be encrypted via default password, so we can check if we can decrypt hash using this password.
-      bool actualDefaultPasswordValid = PasswordModel.defaultPassword().isValidForData(actualEncryptedMasterKey!);
+      Ciphertext actualMasterKeyCiphertext = Ciphertext.fromJsonString(actualEncryptedMasterKey!);
+      bool actualDefaultPasswordValid = PasswordModel.defaultPassword().isValidForData(actualMasterKeyCiphertext);
 
       // Assert
       TestUtils.printInfo('Should [return TRUE] if default password is valid for master key');
@@ -116,8 +122,10 @@ void main() {
       String? actualMasterKey = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
-      String expectedMasterKey =
-          '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==';
+      String expectedMasterKey = jsonEncode(<String, dynamic>{
+        'algorithm': 'AES/DHKE',
+        'data': '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+      });
 
       TestUtils.printInfo('Should [return hash] as [master key EXISTS] in database');
       expect(actualMasterKey, expectedMasterKey);
@@ -125,19 +133,22 @@ void main() {
       // ********************************************************************************************************************
 
       // Arrange
-      // @formatter:off
-      MasterKeyVO actualMasterKeyVO = const MasterKeyVO(
-        encryptedMasterKey: 'CvujNlKB9l03/Aw2f5+9TW0RxG6ZmNgjmjNJaL48bAY+xn8WiMQJZjposoDQfrB3ZVZwIANxSC5A/EOYto5OFgGRTWVheYH3p8j/w2mMm/lztuoCTie6rddSm4iwY03JWWXK4w==',
+      MasterKeyVO actualMasterKeyVO = MasterKeyVO(
+        masterKeyCiphertext: Ciphertext.fromBase64(
+          encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+          base64: 'CvujNlKB9l03/Aw2f5+9TW0RxG6ZmNgjmjNJaL48bAY+xn8WiMQJZjposoDQfrB3ZVZwIANxSC5A/EOYto5OFgGRTWVheYH3p8j/w2mMm/lztuoCTie6rddSm4iwY03JWWXK4w==',
+        ),
       );
-      // @formatter:on
 
       // Act
       await actualMasterKeyService.setMasterKey(actualMasterKeyVO);
       actualMasterKey = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
-      expectedMasterKey =
-          'CvujNlKB9l03/Aw2f5+9TW0RxG6ZmNgjmjNJaL48bAY+xn8WiMQJZjposoDQfrB3ZVZwIANxSC5A/EOYto5OFgGRTWVheYH3p8j/w2mMm/lztuoCTie6rddSm4iwY03JWWXK4w==';
+      expectedMasterKey = jsonEncode(<String, dynamic>{
+        'algorithm': 'AES/DHKE',
+        'data': 'CvujNlKB9l03/Aw2f5+9TW0RxG6ZmNgjmjNJaL48bAY+xn8WiMQJZjposoDQfrB3ZVZwIANxSC5A/EOYto5OFgGRTWVheYH3p8j/w2mMm/lztuoCTie6rddSm4iwY03JWWXK4w==',
+      });
 
       TestUtils.printInfo('Should [return master key] after saving it in database');
       expect(actualMasterKey, expectedMasterKey);
@@ -157,9 +168,11 @@ void main() {
       // ********************************************************************************************************************
 
       // Arrange
-      MasterKeyVO actualMasterKeyVO = const MasterKeyVO(
-        encryptedMasterKey:
-            '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+      MasterKeyVO actualMasterKeyVO = MasterKeyVO(
+        masterKeyCiphertext: Ciphertext.fromBase64(
+          encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+          base64: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+        ),
       );
 
       // Act
@@ -167,8 +180,10 @@ void main() {
       actualMasterKey = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
-      String expectedMasterKey =
-          '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==';
+      String expectedMasterKey = jsonEncode(<String, dynamic>{
+        'algorithm': 'AES/DHKE',
+        'data': '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+      });
 
       TestUtils.printInfo('Should [return master key] after saving it in database');
       expect(actualMasterKey, expectedMasterKey);

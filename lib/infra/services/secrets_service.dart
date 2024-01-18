@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
 import 'package:snggle/shared/models/a_secrets_model.dart';
@@ -14,22 +15,24 @@ class SecretsService {
   }) : _secretsRepository = secretsRepository ?? globalLocator<SecretsRepository>();
 
   Future<T> getSecrets<T extends ASecretsModel>(ContainerPathModel containerPath, PasswordModel passwordModel) async {
-    String encryptedSecrets = await _secretsRepository.getEncryptedSecrets(containerPath.path);
-    String decryptedHash = passwordModel.decrypt(encryptedData: encryptedSecrets);
+    Ciphertext ciphertext = await _secretsRepository.getEncryptedSecrets(containerPath.path);
+
+    String decryptedHash = passwordModel.decrypt(ciphertext: ciphertext);
     Map<String, dynamic> json = jsonDecode(decryptedHash) as Map<String, dynamic>;
     return ASecretsModel.fromJson<T>(containerPath, json);
   }
 
   Future<bool> isSecretsPasswordValid(ContainerPathModel containerPath, PasswordModel passwordModel) async {
-    String encryptedSecrets = await _secretsRepository.getEncryptedSecrets(containerPath.path);
-    return passwordModel.isValidForData(encryptedSecrets);
+    Ciphertext ciphertext = await _secretsRepository.getEncryptedSecrets(containerPath.path);
+    return passwordModel.isValidForData(ciphertext);
   }
 
   Future<void> saveSecrets(ASecretsModel secretsModel, PasswordModel passwordModel) async {
     Map<String, dynamic> secretsJson = secretsModel.toJson();
     String secretsJsonString = jsonEncode(secretsJson);
-    String encryptedSecrets = passwordModel.encrypt(decryptedData: secretsJsonString);
-    await _secretsRepository.saveEncryptedSecrets(secretsModel.containerPathModel.path, encryptedSecrets);
+
+    Ciphertext ciphertext = passwordModel.encrypt(decryptedData: secretsJsonString);
+    await _secretsRepository.saveEncryptedSecrets(secretsModel.containerPathModel.path, ciphertext);
   }
 
   Future<void> deleteSecrets(ContainerPathModel containerPath) async {

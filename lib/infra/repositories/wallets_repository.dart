@@ -1,12 +1,11 @@
 import 'package:snggle/infra/entities/wallet_entity.dart';
 import 'package:snggle/infra/managers/database_collection_wrapper.dart';
 import 'package:snggle/infra/managers/database_parent_key.dart';
-import 'package:snggle/infra/managers/encrypted_database_manager.dart';
+import 'package:snggle/infra/managers/decrypted_database_manager.dart';
 
 class WalletsRepository {
-  final EncryptedDatabaseManager _encryptedDatabaseManager = EncryptedDatabaseManager();
   late final DatabaseCollectionWrapper<Map<String, dynamic>> _databaseCollectionWrapper = DatabaseCollectionWrapper<Map<String, dynamic>>(
-    databaseManager: _encryptedDatabaseManager,
+    databaseManager: DecryptedDatabaseManager(),
     databaseParentKey: DatabaseParentKey.wallets,
   );
 
