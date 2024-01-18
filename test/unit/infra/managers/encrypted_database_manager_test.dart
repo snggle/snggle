@@ -1,3 +1,4 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
@@ -7,7 +8,6 @@ import 'package:snggle/infra/managers/encrypted_database_manager.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
-
 import '../../../utils/test_utils.dart';
 
 void main() {
@@ -20,30 +20,42 @@ void main() {
 
   globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
 
-  // @formatter:off
-  MasterKeyVO actualMasterKeyVO = const MasterKeyVO(
-      encryptedMasterKey: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');
+  MasterKeyVO actualMasterKeyVO = MasterKeyVO(
+    masterKeyCiphertext: Ciphertext.fromBase64(
+      base64: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+      encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+    ),
+  );
+
+  String wrappedMasterKey = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg=='
+  }, prettyPrintBool: true);
+
+  String wrappedFilledChildKeysDatabase = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': 'OWkmZ2+DccpOdfFHb8ZZQyreGhwj3LEuUViDzTYky9WsbHxQPd8gGfk4nkW/OfFrKHEqsiWaaVh9x0l76h/LbIHcpcT6F2ifeHIoywYwfPeYs2a9'
+  }, prettyPrintBool: true);
 
   Map<String, String> filledChildKeysDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    actualDatabaseEntryKey.name:'OWkmZ2+DccpOdfFHb8ZZQyreGhwj3LEuUViDzTYky9WsbHxQPd8gGfk4nkW/OfFrKHEqsiWaaVh9x0l76h/LbIHcpcT6F2ifeHIoywYwfPeYs2a9',
+    DatabaseParentKey.encryptedMasterKey.name: wrappedMasterKey,
+    actualDatabaseEntryKey.name: wrappedFilledChildKeysDatabase,
   };
 
   Map<String, String> filledChildKeysWithoutMasterKeyDatabase = <String, String>{
-    actualDatabaseEntryKey.name:'OWkmZ2+DccpOdfFHb8ZZQyreGhwj3LEuUViDzTYky9WsbHxQPd8gGfk4nkW/OfFrKHEqsiWaaVh9x0l76h/LbIHcpcT6F2ifeHIoywYwfPeYs2a9',
+    actualDatabaseEntryKey.name: wrappedFilledChildKeysDatabase,
   };
 
   Map<String, String> emptyStringChildKeyDatabaseJson = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    DatabaseParentKey.encryptedMasterKey.name: wrappedMasterKey,
     actualDatabaseEntryKey.name: '',
   };
 
   Map<String, String> masterKeyOnlyDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    DatabaseParentKey.encryptedMasterKey.name: wrappedMasterKey,
   };
 
   Map<String, String> emptyDatabase = <String, String>{};
-  // @formatter:on
 
   group('Tests of EncryptedDatabaseManager.containsKey()', () {
     test('Should [return TRUE] if [parent key EXISTS] in database', () async {
@@ -145,17 +157,18 @@ void main() {
 
       // Assert
       TestUtils.printInfo('Should [return EXISTING VALUE] as [parent key EXISTS] in database');
-      expect(actualEncryptedParentKeyValue, 'OWkmZ2+DccpOdfFHb8ZZQyreGhwj3LEuUViDzTYky9WsbHxQPd8gGfk4nkW/OfFrKHEqsiWaaVh9x0l76h/LbIHcpcT6F2ifeHIoywYwfPeYs2a9');
+      expect(actualEncryptedParentKeyValue, wrappedFilledChildKeysDatabase);
 
       // **************************************************************************************************************
 
       // Act
       await actualEncryptedDatabaseManager.write(databaseParentKey: actualDatabaseEntryKey, plaintextValue: 'updated_test_value');
+      actualEncryptedParentKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseEntryKey.name);
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. Because of that we need to get the actual result and check if we can decrypt it.
-      actualEncryptedParentKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseEntryKey.name);
-      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedParentKeyValue!);
+      Ciphertext actualCiphertext = Ciphertext.fromJsonString(actualEncryptedParentKeyValue!);
+      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, ciphertext: actualCiphertext);
 
       // Assert
       String expectedDecryptedParentKeyValue = 'updated_test_value';
@@ -180,11 +193,12 @@ void main() {
 
       // Act
       await actualEncryptedDatabaseManager.write(databaseParentKey: actualDatabaseEntryKey, plaintextValue: 'saved_test_value');
+      actualEncryptedParentKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseEntryKey.name);
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. Because of that we need to get the actual result and check if we can decrypt it.
-      actualEncryptedParentKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseEntryKey.name);
-      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedParentKeyValue!);
+      Ciphertext actualCiphertext = Ciphertext.fromJsonString(actualEncryptedParentKeyValue!);
+      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, ciphertext: actualCiphertext);
 
       // Assert
       String expectedDecryptedParentKeyValue = 'saved_test_value';

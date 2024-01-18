@@ -10,7 +10,7 @@ class AppAuthService {
     bool masterKeyExistsBool = await _masterKeyService.isMasterKeyExists();
     if (masterKeyExistsBool) {
       MasterKeyVO masterKeyVO = await _masterKeyService.getMasterKey();
-      return PasswordModel.isEncryptedWithCustomPassword(masterKeyVO.encryptedMasterKey);
+      return PasswordModel.isEncryptedWithCustomPassword(masterKeyVO.masterKeyCiphertext);
     } else {
       return false;
     }
@@ -18,6 +18,6 @@ class AppAuthService {
 
   Future<bool> isPasswordValid(PasswordModel appPasswordModel) async {
     MasterKeyVO masterKeyVO = await _masterKeyService.getMasterKey();
-    return appPasswordModel.isValidForData(masterKeyVO.encryptedMasterKey);
+    return appPasswordModel.isValidForData(masterKeyVO.masterKeyCiphertext);
   }
 }

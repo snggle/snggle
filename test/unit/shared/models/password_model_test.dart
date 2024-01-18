@@ -1,7 +1,7 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/utils/crypto/aes256.dart';
 
 void main() {
   group('Tests of [PasswordModel] constructors', () {
@@ -33,11 +33,13 @@ void main() {
   group('Tests of PasswordModel.isEncryptedWithCustomPassword()', () {
     test('Should [return TRUE] if data is [encrypted by CUSTOM password]', () async {
       // Arrange
-      String actualEncryptedData =
-          'oEGBHJUZ6pw8dF2g6YAz4gmuhTj9x5MN8J2mZDzpoNQ1lDFEUl+hNklVnNJIEbhBXAtnrxo2ghNiiGuRC84LEff+AUEN8Na6+avqOVK+Csf6fS2JwjxJPRhD0mFuKP1QcGdV2g==';
+      Ciphertext actualCiphertext = Ciphertext.fromBase64(
+        base64: 'oEGBHJUZ6pw8dF2g6YAz4gmuhTj9x5MN8J2mZDzpoNQ1lDFEUl+hNklVnNJIEbhBXAtnrxo2ghNiiGuRC84LEff+AUEN8Na6+avqOVK+Csf6fS2JwjxJPRhD0mFuKP1QcGdV2g==',
+        encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+      );
 
       // Act
-      bool actualCustomPasswordBool = PasswordModel.isEncryptedWithCustomPassword(actualEncryptedData);
+      bool actualCustomPasswordBool = PasswordModel.isEncryptedWithCustomPassword(actualCiphertext);
 
       // Assert
       expect(actualCustomPasswordBool, true);
@@ -45,10 +47,13 @@ void main() {
 
     test('Should [return FALSE] if data is [encrypted by DEFAULT password]', () async {
       // Arrange
-      String actualEncryptedData = 'hHbwgENri2fKNi4Lu3aZPQsaW5QIF5NAkcsBvyAzm7pZpJyx2gtdrN8wz1kdM8rbvnVzEvfzSc7ohJJ2wiO7sDOzVuk=';
+      Ciphertext actualCiphertext = Ciphertext.fromBase64(
+        base64: 'hHbwgENri2fKNi4Lu3aZPQsaW5QIF5NAkcsBvyAzm7pZpJyx2gtdrN8wz1kdM8rbvnVzEvfzSc7ohJJ2wiO7sDOzVuk=',
+        encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+      );
 
       // Act
-      bool actualCustomPasswordBool = PasswordModel.isEncryptedWithCustomPassword(actualEncryptedData);
+      bool actualCustomPasswordBool = PasswordModel.isEncryptedWithCustomPassword(actualCiphertext);
 
       // Assert
       expect(actualCustomPasswordBool, false);
@@ -62,11 +67,11 @@ void main() {
       String actualPasswordHash = 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=';
 
       // Act
-      String actualEncryptedData = actualPasswordModel.encrypt(decryptedData: 'decrypted_data');
+      Ciphertext actualCiphertext = actualPasswordModel.encrypt(decryptedData: 'decrypted_data');
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to encode and decode text
-      String actualDecryptedData = Aes256.decrypt(actualPasswordHash, actualEncryptedData);
+      String actualDecryptedData = AESDHKEV1().decrypt(actualPasswordHash, actualCiphertext);
 
       // Assert
       String expectedDecryptedData = 'decrypted_data';
@@ -79,10 +84,13 @@ void main() {
     test('Should [return decrypted hash] if used [PasswordModel VALID]', () {
       // Arrange
       PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('password');
-      String actualEncryptedData = 'gk8RMwEXLBF8Z1tY7O938VO7XxqvshT29Uky/EVE215vm1zB';
+      Ciphertext actualCiphertext = Ciphertext.fromBase64(
+        base64: 'gk8RMwEXLBF8Z1tY7O938VO7XxqvshT29Uky/EVE215vm1zB',
+        encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+      );
 
       // Act
-      String actualDecryptedData = actualPasswordModel.decrypt(encryptedData: actualEncryptedData);
+      String actualDecryptedData = actualPasswordModel.decrypt(ciphertext: actualCiphertext);
 
       // Assert
       String expectedDecryptedData = 'decrypted_data';
@@ -93,11 +101,14 @@ void main() {
     test('Should [throw InvalidPasswordException] if used [PasswordModel INVALID]', () {
       // Arrange
       PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('invalid_password');
-      String actualEncryptedData = 'gk8RMwEXLBF8Z1tY7O938VO7XxqvshT29Uky/EVE215vm1zB';
+      Ciphertext actualCiphertext = Ciphertext.fromBase64(
+        base64: 'gk8RMwEXLBF8Z1tY7O938VO7XxqvshT29Uky/EVE215vm1zB',
+        encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+      );
 
       // Assert
       expect(
-        () => actualPasswordModel.decrypt(encryptedData: actualEncryptedData),
+        () => actualPasswordModel.decrypt(ciphertext: actualCiphertext),
         throwsA(isA<InvalidPasswordException>()),
       );
     });
@@ -107,10 +118,13 @@ void main() {
     test('Should [return TRUE] if PasswordModel [CAN decrypt] given String', () {
       // Arrange
       PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('password');
-      String actualEncryptedData = 'gk8RMwEXLBF8Z1tY7O938VO7XxqvshT29Uky/EVE215vm1zB';
+      Ciphertext actualCiphertext = Ciphertext.fromBase64(
+        base64: 'gk8RMwEXLBF8Z1tY7O938VO7XxqvshT29Uky/EVE215vm1zB',
+        encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+      );
 
       // Act
-      bool actualPasswordValid = actualPasswordModel.isValidForData(actualEncryptedData);
+      bool actualPasswordValid = actualPasswordModel.isValidForData(actualCiphertext);
 
       // Assert
       expect(actualPasswordValid, true);
@@ -118,14 +132,17 @@ void main() {
 
     test('Should [return FALSE] if PasswordModel [CANNOT decrypt] given String', () {
       // Arrange
-      PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('password');
-      String actualEncryptedData = 'gk8RMwEXLBF8Z1tY7O938VO7XxqvshT29Uky/EVE215vm1zB';
+      PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('invalid_password');
+      Ciphertext actualCiphertext = Ciphertext.fromBase64(
+        base64: 'gk8RMwEXLBF8Z1tY7O938VO7XxqvshT29Uky/EVE215vm1zB',
+        encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+      );
 
       // Act
-      bool actualPasswordValid = actualPasswordModel.isValidForData(actualEncryptedData);
+      bool actualPasswordValid = actualPasswordModel.isValidForData(actualCiphertext);
 
       // Assert
-      expect(actualPasswordValid, true);
+      expect(actualPasswordValid, false);
     });
   });
 }

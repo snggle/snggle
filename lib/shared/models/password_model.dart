@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:snggle/config/app_config.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
-import 'package:snggle/shared/utils/crypto/aes256.dart';
 
 class PasswordModel extends Equatable {
   final String _hashedPassword;
@@ -21,26 +21,34 @@ class PasswordModel extends Equatable {
     return PasswordModel.fromPlaintext(AppConfig.defaultPassword);
   }
 
-  static bool isEncryptedWithCustomPassword(String encryptedData) {
+  static bool isEncryptedWithCustomPassword(Ciphertext ciphertext) {
     PasswordModel defaultPasswordModel = PasswordModel.defaultPassword();
-    bool defaultPasswordBool = defaultPasswordModel.isValidForData(encryptedData);
+    bool defaultPasswordBool = defaultPasswordModel.isValidForData(ciphertext);
     return defaultPasswordBool == false;
   }
 
-  String encrypt({required String decryptedData}) {
-    return Aes256.encrypt(_hashedPassword, decryptedData);
+  Ciphertext encrypt({required String decryptedData}) {
+    return AESDHKEV1().encrypt(_hashedPassword, decryptedData);
   }
 
-  String decrypt({required String encryptedData}) {
-    bool passwordValidBool = isValidForData(encryptedData);
-    if (passwordValidBool == false) {
-      throw InvalidPasswordException();
+  String decrypt({required Ciphertext ciphertext}) {
+    if (ciphertext.encryptionAlgorithmType != EncryptionAlgorithmType.aesdhke) {
+      throw const FormatException('Invalid encryption algorithm type');
     }
-    return Aes256.decrypt(_hashedPassword, encryptedData);
+
+    bool passwordValidBool = isValidForData(ciphertext);
+    if (passwordValidBool == false) {
+      throw InvalidPasswordException('Cannot decrypt: ${ciphertext.base64}');
+    }
+    return AESDHKEV1().decrypt(_hashedPassword, ciphertext);
   }
 
-  bool isValidForData(String encryptedData) {
-    return Aes256.isPasswordValid(_hashedPassword, encryptedData);
+  bool isValidForData(Ciphertext ciphertext) {
+    if (ciphertext.encryptionAlgorithmType != EncryptionAlgorithmType.aesdhke) {
+      throw const FormatException('Invalid encryption algorithm type');
+    }
+
+    return AESDHKEV1().isPasswordValid(_hashedPassword, ciphertext);
   }
 
   @override

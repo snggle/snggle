@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
 import 'package:snggle/shared/models/a_secrets_model.dart';
@@ -19,17 +20,19 @@ class SecretsService {
   }
 
   Future<T> get<T extends ASecretsModel>(FilesystemPath filesystemPath, PasswordModel passwordModel) async {
-    String encryptedSecrets = await _secretsRepository.getEncrypted(filesystemPath);
-    String decryptedHash = passwordModel.decrypt(encryptedData: encryptedSecrets);
-    Map<String, dynamic> json = jsonDecode(decryptedHash) as Map<String, dynamic>;
+    Ciphertext ciphertext = await _secretsRepository.getEncrypted(filesystemPath);
+
+    String decryptedData = passwordModel.decrypt(ciphertext: ciphertext);
+    Map<String, dynamic> json = jsonDecode(decryptedData) as Map<String, dynamic>;
     return ASecretsModel.fromJson<T>(filesystemPath, json);
   }
 
   Future<void> save(ASecretsModel secretsModel, PasswordModel passwordModel) async {
     Map<String, dynamic> secretsJson = secretsModel.toJson();
     String secretsJsonString = jsonEncode(secretsJson);
-    String encryptedSecrets = passwordModel.encrypt(decryptedData: secretsJsonString);
-    await _secretsRepository.saveEncrypted(secretsModel.filesystemPath, encryptedSecrets);
+
+    Ciphertext ciphertext = passwordModel.encrypt(decryptedData: secretsJsonString);
+    await _secretsRepository.saveEncrypted(secretsModel.filesystemPath, ciphertext);
   }
 
   Future<void> move(FilesystemPath previousFilesystemPath, FilesystemPath newFilesystemPath) async {
@@ -41,7 +44,7 @@ class SecretsService {
   }
 
   Future<bool> isPasswordValid(FilesystemPath filesystemPath, PasswordModel passwordModel) async {
-    String encryptedSecrets = await _secretsRepository.getEncrypted(filesystemPath);
-    return passwordModel.isValidForData(encryptedSecrets);
+    Ciphertext ciphertext = await _secretsRepository.getEncrypted(filesystemPath);
+    return passwordModel.isValidForData(ciphertext);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
@@ -11,10 +12,20 @@ void main() {
 
   // @formatter:off
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
-  MasterKeyVO actualMasterKeyVO = const MasterKeyVO(encryptedMasterKey: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');
+  MasterKeyVO actualMasterKeyVO = MasterKeyVO(
+    masterKeyCiphertext: Ciphertext.fromBase64(
+      base64: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+      encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+    ),
+  );
+
+  String wrappedMasterKey = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg=='
+  }, prettyPrintBool: true);
 
   Map<String, String> masterKeyOnlyDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    DatabaseParentKey.encryptedMasterKey.name: wrappedMasterKey,
   };
   // @formatter:off
 
@@ -48,11 +59,11 @@ void main() {
       String actualValueToEncrypt = 'some_value';
 
       // Act
-      String actualEncryptedValue = await actualMasterKeyController.encrypt(actualValueToEncrypt);
+      Ciphertext actualCiphertext = await actualMasterKeyController.encrypt(actualValueToEncrypt);
 
       // Master key encryption always returns random value. For that reason, we can't assert the result.
       // To check uf encryption works correctly, we need to decrypt the value.
-      String actualDecryptedValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedValue);
+      String actualDecryptedValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, ciphertext: actualCiphertext);
 
       // Assert
       String expectedDecryptedValue = actualValueToEncrypt;
@@ -64,22 +75,25 @@ void main() {
   group('Tests of MasterKeyController.decrypt()', () {
     MasterKeyController actualMasterKeyController = MasterKeyController();
 
-    test('Should [throw Exception] if [password NOT SET]', () {
+    test('Should [throw Exception] if [password NOT SET]', () async {
       // Arrange
-      String actualValueToDecrypt = '';
+      String actualValueToDecrypt = 'ehxqO3FuQmNrrq1yr6afo0GlyewjxLrcC0EioYJ/wGPy19KJ';
+
+      // Act
+      Ciphertext actualCiphertext = Ciphertext.fromBase64(base64: actualValueToDecrypt,  encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke);
 
       // Assert
-      expect(() async => actualMasterKeyController.encrypt(actualValueToDecrypt), throwsException);
+      expect(() async => actualMasterKeyController.decrypt(actualCiphertext), throwsException);
     });
 
     test('Should [throw FormatException] if [encrypted value EMPTY]', () {
       // Arrange
       // Since [masterKeyPasswordModel] is a private variable, the only way to verify if it works correctly, is to repeat two tests: with and without password
       actualMasterKeyController.setPassword(actualAppPasswordModel);
-      String actualValueToDecrypt = '';
+      Ciphertext actualCiphertext = Ciphertext(bytes: const <int>[],  encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke);
 
       // Assert
-      expect(() async => actualMasterKeyController.decrypt(actualValueToDecrypt), throwsFormatException);
+      expect(() async => actualMasterKeyController.decrypt(actualCiphertext), throwsFormatException);
     });
 
     test('Should [return plaintext] decrypted using master key', () async {
@@ -87,7 +101,8 @@ void main() {
       String actualValueToDecrypt = 'ehxqO3FuQmNrrq1yr6afo0GlyewjxLrcC0EioYJ/wGPy19KJ';
 
       // Act
-      String actualDecryptedValue = await actualMasterKeyController.decrypt(actualValueToDecrypt);
+      Ciphertext actualCiphertext = Ciphertext.fromBase64(base64: actualValueToDecrypt,  encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke);
+      String actualDecryptedValue = await actualMasterKeyController.decrypt(actualCiphertext);
 
       // Assert
       String expectedDecryptedValue = 'some_value';

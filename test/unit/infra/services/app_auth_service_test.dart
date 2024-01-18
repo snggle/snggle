@@ -1,3 +1,4 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
@@ -13,13 +14,16 @@ void main() {
   PasswordModel actualPasswordModel1111 = PasswordModel.fromPlaintext('1111');
   PasswordModel actualPasswordModel9999 = PasswordModel.fromPlaintext('9999');
 
-  // @formatter:off
+  String wrappedMasterKey = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg=='
+  }, prettyPrintBool: true);
+
   Map<String, String> filledMasterKeyDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    DatabaseParentKey.encryptedMasterKey.name: wrappedMasterKey,
   };
 
   Map<String, String> emptyDatabase = <String, String>{};
-  // @formatter:on
 
   group('Tests of AppAuthService.isCustomPasswordSet()', () {
     test('Should [return TRUE] if [master key EXISTS] in database and [encrypted with CUSTOM PASSWORD]', () async {

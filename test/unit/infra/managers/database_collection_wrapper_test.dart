@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
@@ -10,7 +11,6 @@ import 'package:snggle/infra/managers/encrypted_database_manager.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
-
 import '../../../utils/test_utils.dart';
 
 void main() {
@@ -24,26 +24,43 @@ void main() {
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
   globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
 
-  // @formatter:off
-  MasterKeyVO actualMasterKeyVO = const MasterKeyVO(
-      encryptedMasterKey: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');
+  MasterKeyVO actualMasterKeyVO = MasterKeyVO(
+    masterKeyCiphertext: Ciphertext.fromBase64(
+      base64: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+      encryptionAlgorithmType: EncryptionAlgorithmType.aesdhke,
+    ),
+  );
+
+  String wrappedMasterKey = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg=='
+  }, prettyPrintBool: true);
+
+  String wrappedFilledChildKeysDatabase = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': 'OWkmZ2+DccpOdfFHb8ZZQyreGhwj3LEuUViDzTYky9WsbHxQPd8gGfk4nkW/OfFrKHEqsiWaaVh9x0l76h/LbIHcpcT6F2ifeHIoywYwfPeYs2a9'
+  }, prettyPrintBool: true);
+
+  String wrappedEmptyChildKeysDatabase = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': 'L8uo+Q4teE3WrID1Cnhcopjcv9XJnZFFUBK6X/GfhuW2IFAm',
+  }, prettyPrintBool: true);
 
   Map<String, String> filledChildKeysDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    actualDatabaseParentKey.name:'OWkmZ2+DccpOdfFHb8ZZQyreGhwj3LEuUViDzTYky9WsbHxQPd8gGfk4nkW/OfFrKHEqsiWaaVh9x0l76h/LbIHcpcT6F2ifeHIoywYwfPeYs2a9',
+    DatabaseParentKey.encryptedMasterKey.name: wrappedMasterKey,
+    actualDatabaseParentKey.name: wrappedFilledChildKeysDatabase,
   };
 
   Map<String, String> emptyChildKeysDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    actualDatabaseParentKey.name: 'L8uo+Q4teE3WrID1Cnhcopjcv9XJnZFFUBK6X/GfhuW2IFAm',
+    DatabaseParentKey.encryptedMasterKey.name: wrappedMasterKey,
+    actualDatabaseParentKey.name: wrappedEmptyChildKeysDatabase,
   };
 
   Map<String, String> masterKeyOnlyDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    DatabaseParentKey.encryptedMasterKey.name: wrappedMasterKey,
   };
 
   Map<String, String> emptyDatabase = <String, String>{};
-  // @formatter:on
 
   group('Tests of [DatabaseCollectionWrapper] constructor with different initial conditions', () {
     test('Should [return FILLED map] if [parent key EXISTS] in database and [HAS VALUES]', () async {
@@ -253,7 +270,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedParentKeyValue!);
+      Ciphertext actualCiphertext = Ciphertext.fromJsonString(actualEncryptedParentKeyValue!);
+      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, ciphertext: actualCiphertext);
       Map<String, dynamic> actualDecryptedParentKeyValueMap = jsonDecode(actualDecryptedParentKeyValue) as Map<String, dynamic>;
 
       // Assert
@@ -273,7 +291,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedParentKeyValue!);
+      actualCiphertext = Ciphertext.fromJsonString(actualEncryptedParentKeyValue!);
+      actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, ciphertext: actualCiphertext);
       actualDecryptedParentKeyValueMap = jsonDecode(actualDecryptedParentKeyValue) as Map<String, dynamic>;
 
       // Assert
@@ -301,7 +320,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedParentKeyValue!);
+      Ciphertext actualCiphertext = Ciphertext.fromJsonString(actualEncryptedParentKeyValue!);
+      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, ciphertext: actualCiphertext);
       Map<String, dynamic> actualDecryptedParentKeyValueMap = jsonDecode(actualDecryptedParentKeyValue) as Map<String, dynamic>;
 
       // Assert
@@ -321,7 +341,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedParentKeyValue!);
+      actualCiphertext = Ciphertext.fromJsonString(actualEncryptedParentKeyValue!);
+      actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, ciphertext: actualCiphertext);
       actualDecryptedParentKeyValueMap = jsonDecode(actualDecryptedParentKeyValue) as Map<String, dynamic>;
 
       // Assert
@@ -346,21 +367,22 @@ void main() {
       );
 
       // Act
-      String? actualParentKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
+      String? actualEncryptedParentKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Assert
       TestUtils.printInfo('Should [return NULL] as [parent key NOT EXISTS] in database');
-      expect(actualParentKeyValue, null);
+      expect(actualEncryptedParentKeyValue, null);
 
       // ********************************************************************************************************************
 
       // Act
       await actualDatabaseCollectionWrapper.saveWithId('new_id', newChildKeyValue);
-      actualParentKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
+      actualEncryptedParentKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualParentKeyValue!);
+      Ciphertext actualCiphertext = Ciphertext.fromJsonString(actualEncryptedParentKeyValue!);
+      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, ciphertext: actualCiphertext);
       Map<String, dynamic> actualDecryptedParentKeyValueMap = jsonDecode(actualDecryptedParentKeyValue) as Map<String, dynamic>;
 
       // Assert
@@ -387,7 +409,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedParentKeyValue!);
+      Ciphertext actualCiphertext = Ciphertext.fromJsonString(actualEncryptedParentKeyValue!);
+      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, ciphertext: actualCiphertext);
       Map<String, dynamic> actualDecryptedParentKeyValueMap = jsonDecode(actualDecryptedParentKeyValue) as Map<String, dynamic>;
 
       // Assert
@@ -407,7 +430,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedParentKeyValue!);
+      actualCiphertext = Ciphertext.fromJsonString(actualEncryptedParentKeyValue!);
+      actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, ciphertext: actualCiphertext);
       actualDecryptedParentKeyValueMap = jsonDecode(actualDecryptedParentKeyValue) as Map<String, dynamic>;
 
       // Assert

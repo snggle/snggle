@@ -1,3 +1,4 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/parent_key_not_found_exception.dart';
@@ -35,12 +36,13 @@ class EncryptedDatabaseManager implements IDatabaseManager {
     if (encryptedValue == null) {
       throw ParentKeyNotFoundException('${databaseParentKey.name} parent key not found in database');
     }
-    return _masterKeyController.decrypt(encryptedValue);
+    Ciphertext ciphertext = Ciphertext.fromJsonString(encryptedValue);
+    return _masterKeyController.decrypt(ciphertext);
   }
 
   @override
   Future<void> write({required DatabaseParentKey databaseParentKey, required String plaintextValue}) async {
-    String encryptedValue = await _masterKeyController.encrypt(plaintextValue);
-    await _flutterSecureStorage.write(key: databaseParentKey.name, value: encryptedValue);
+    Ciphertext ciphertext = await _masterKeyController.encrypt(plaintextValue);
+    await _flutterSecureStorage.write(key: databaseParentKey.name, value: ciphertext.toJsonString(prettyPrintBool: false));
   }
 }

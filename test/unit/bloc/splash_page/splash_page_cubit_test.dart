@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/splash_page/splash_page_cubit.dart';
@@ -11,6 +12,15 @@ import 'package:snggle/infra/managers/database_parent_key.dart';
 
 void main() {
   initLocator();
+
+  String wrappedMasterKey = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': 'Hr7afkeYIZeUWGvYsFEMorVcFSpr2ehXJ8ncwa1XTL71Q39Dl2LLciHKmaqs4YZqMiceOG3uBSHSyt6JP0F4yKJTWh2Ykrc00aHN/Ui58aNaXkyi7FLYbThHj0t2and/25D3XA=='
+  }, prettyPrintBool: true);
+
+  Map<String, String> filledMasterKeyDatabase = <String, String>{
+    DatabaseParentKey.encryptedMasterKey.name: wrappedMasterKey,
+  };
 
   group('Tests of SplashPage States', () {
     test('Should return initial state of [SplashPageLoadingState]', () {
@@ -58,11 +68,7 @@ void main() {
       'Should return a [SplashPageIgnorePinState] as user decides to setup later, hence [setupPinVisibleBool] is set to false',
       // Arrange
       build: () {
-        // @formatter:off
-        FlutterSecureStorage.setMockInitialValues(<String, String>{
-          DatabaseParentKey.encryptedMasterKey.name: 'Hr7afkeYIZeUWGvYsFEMorVcFSpr2ehXJ8ncwa1XTL71Q39Dl2LLciHKmaqs4YZqMiceOG3uBSHSyt6JP0F4yKJTWh2Ykrc00aHN/Ui58aNaXkyi7FLYbThHj0t2and/25D3XA==',
-        });
-        // @formatter:on
+        FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledMasterKeyDatabase));
         return SplashPageCubit();
       },
 

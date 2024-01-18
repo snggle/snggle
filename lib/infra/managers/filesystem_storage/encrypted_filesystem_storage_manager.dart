@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_manager.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
@@ -16,12 +17,13 @@ class EncryptedFilesystemStorageManager extends FilesystemStorageManager {
   @override
   Future<String> read(FilesystemPath filesystemPath) async {
     String encryptedFileContent = await super.read(filesystemPath);
-    return _masterKeyController.decrypt(encryptedFileContent);
+    Ciphertext ciphertext = Ciphertext.fromJsonString(encryptedFileContent);
+    return _masterKeyController.decrypt(ciphertext);
   }
 
   @override
   Future<void> write(FilesystemPath filesystemPath, String plainTextValue) async {
-    String encryptedValue = await _masterKeyController.encrypt(plainTextValue);
-    await super.write(filesystemPath, encryptedValue);
+    Ciphertext ciphertext = await _masterKeyController.encrypt(plainTextValue);
+    await super.write(filesystemPath, ciphertext.toJsonString(prettyPrintBool: true));
   }
 }

@@ -101,6 +101,11 @@ dependencies:
   # https://pub.dev/packages/custom_pop_up_menu
   custom_pop_up_menu: 1.2.4
 
+  cryptography_utils:
+    git:
+      url: git@github.com:snggle/cryptography_utils.git
+      ref: dp-feature/aesdhke-v1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

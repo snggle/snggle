@@ -1,3 +1,4 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:snggle/infra/managers/database_parent_key.dart';
 import 'package:snggle/infra/managers/decrypted_database_manager.dart';
 
@@ -10,12 +11,15 @@ class MasterKeyRepository {
     return masterKeyExistsBool;
   }
 
-  Future<String> getMasterKey() async {
+  Future<Ciphertext> getMasterKey() async {
     String encryptedMasterKey = await _decryptedDatabaseManager.read(databaseParentKey: _databaseParentKey);
-    return encryptedMasterKey;
+    return Ciphertext.fromJsonString(encryptedMasterKey);
   }
 
-  Future<void> setMasterKey(String encryptedMasterKey) async {
-    await _decryptedDatabaseManager.write(databaseParentKey: _databaseParentKey, plaintextValue: encryptedMasterKey);
+  Future<void> setMasterKey(Ciphertext ciphertext) async {
+    await _decryptedDatabaseManager.write(
+      databaseParentKey: _databaseParentKey,
+      plaintextValue: ciphertext.toJsonString(prettyPrintBool: false),
+    );
   }
 }

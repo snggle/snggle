@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
 
@@ -37,14 +38,25 @@ class TestUtils {
     });
   }
 
-  static Map<String, dynamic> readDecryptedTmpFilesystemStructureAsJson(String path, MasterKeyVO masterKeyVO, PasswordModel passwordModel) {
+  static Map<String, dynamic> readDecryptedTmpFilesystemStructureAsJson(
+    String path,
+    MasterKeyVO masterKeyVO,
+    PasswordModel passwordModel, {
+    bool passwordBool = false,
+  }) {
     Map<String, dynamic> encryptedJson = readTmpFilesystemStructureAsJson(path: path);
     Map<String, dynamic> decryptedJson = <String, dynamic>{};
     encryptedJson.forEach((String key, dynamic value) {
-      if (value is Map<String, dynamic>) {
-        decryptedJson[key] = readDecryptedTmpFilesystemStructureAsJson('$path/$key', masterKeyVO, passwordModel);
-      } else if (value is String) {
-        decryptedJson[key] = masterKeyVO.decrypt(appPasswordModel: passwordModel, encryptedData: value);
+      String fileName = key;
+
+      if (fileName.endsWith('.snggle')) {
+        Ciphertext ciphertext = Ciphertext.fromJsonString(value as String);
+        decryptedJson[key] = masterKeyVO.decrypt(appPasswordModel: passwordModel, ciphertext: ciphertext);
+        if (passwordBool) {
+          decryptedJson[key] = passwordModel.decrypt(ciphertext: Ciphertext.fromJsonString(decryptedJson[key] as String));
+        }
+      } else {
+        decryptedJson[key] = readDecryptedTmpFilesystemStructureAsJson('$path/$key', masterKeyVO, passwordModel, passwordBool: passwordBool);
       }
     });
     return decryptedJson;
