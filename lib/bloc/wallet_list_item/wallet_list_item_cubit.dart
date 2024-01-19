@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/wallet_list_item/wallet_list_item_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
+import 'package:snggle/infra/services/wallets_service.dart';
+import 'package:snggle/shared/models/multi_password_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
@@ -11,38 +13,40 @@ import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 // For this reason, this cubit is not covered by tests, which should be added during UI implementation.
 class WalletListItemCubit extends Cubit<WalletListItemState> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
+  final WalletsService _walletsService = globalLocator<WalletsService>();
+  final PasswordModel vaultPasswordModel;
   final WalletModel walletModel;
 
   WalletListItemCubit({
+    required this.vaultPasswordModel,
     required this.walletModel,
   }) : super(const WalletListItemState.decrypted());
 
   Future<void> init() async {
-    bool defaultPasswordBool = await _secretsService.isSecretsPasswordValid(walletModel.containerPathModel, PasswordModel.defaultPassword());
-    if (defaultPasswordBool == true) {
-      emit(const WalletListItemState.decrypted());
-    } else {
+    if (walletModel.passwordProtectedBool) {
       emit(const WalletListItemState.encrypted(lockedBool: true));
+    } else {
+      emit(const WalletListItemState.decrypted());
     }
   }
 
   Future<void> setPassword(PasswordModel passwordModel) async {
-    PasswordModel oldPasswordModel = PasswordModel.defaultPassword();
-    PasswordModel newPasswordModel = passwordModel;
+    MultiPasswordModel oldWalletMultiPasswordModel = vaultPasswordModel.extend(PasswordModel.defaultPassword());
+    MultiPasswordModel newWalletMultiPasswordModel = vaultPasswordModel.extend(passwordModel);
 
-    WalletSecretsModel walletSecretsModel = await _secretsService.getSecrets(walletModel.containerPathModel, oldPasswordModel);
-    await _secretsService.saveSecrets(walletSecretsModel, newPasswordModel);
-
+    walletModel.passwordProtectedBool = true;
+    await _walletsService.saveWallet(walletModel);
+    await _secretsService.changeParentPassword(walletModel.containerPathModel, oldWalletMultiPasswordModel, newWalletMultiPasswordModel);
     emit(const WalletListItemState.encrypted(lockedBool: false));
   }
 
   Future<void> removePassword(PasswordModel passwordModel) async {
-    PasswordModel oldPasswordModel = passwordModel;
-    PasswordModel newPasswordModel = PasswordModel.defaultPassword();
+    MultiPasswordModel oldWalletMultiPasswordModel = vaultPasswordModel.extend(passwordModel);
+    MultiPasswordModel newWalletMultiPasswordModel = vaultPasswordModel.extend(PasswordModel.defaultPassword());
 
-    WalletSecretsModel walletSecretsModel = await _secretsService.getSecrets(walletModel.containerPathModel, oldPasswordModel);
-    await _secretsService.saveSecrets(walletSecretsModel, newPasswordModel);
-
+    walletModel.passwordProtectedBool = false;
+    await _walletsService.saveWallet(walletModel);
+    await _secretsService.changeParentPassword(walletModel.containerPathModel, oldWalletMultiPasswordModel, newWalletMultiPasswordModel);
     emit(const WalletListItemState.decrypted());
   }
 
@@ -51,13 +55,17 @@ class WalletListItemCubit extends Cubit<WalletListItemState> {
   }
 
   Future<void> unlock(PasswordModel walletPasswordModel) async {
-    bool passwordValidBool = await _secretsService.isSecretsPasswordValid(walletModel.containerPathModel, walletPasswordModel);
+    MultiPasswordModel walletMultiPasswordModel = vaultPasswordModel.extend(walletPasswordModel);
+
+    bool passwordValidBool = await _secretsService.isSecretsPasswordValid(walletModel.containerPathModel, walletMultiPasswordModel);
     bool lockedBool = passwordValidBool == false;
     emit(WalletListItemState.encrypted(lockedBool: lockedBool));
   }
 
   Future<WalletSecretsModel> getWalletSecrets(PasswordModel walletPasswordModel) async {
-    WalletSecretsModel walletSecretsModel = await _secretsService.getSecrets(walletModel.containerPathModel, walletPasswordModel);
+    MultiPasswordModel walletMultiPasswordModel = vaultPasswordModel.extend(walletPasswordModel);
+    WalletSecretsModel walletSecretsModel = await _secretsService.getSecrets(walletModel.containerPathModel, walletMultiPasswordModel);
+
     return walletSecretsModel;
   }
 }

@@ -24,8 +24,18 @@ void main() {
 
   Map<String, String> filledVaultsDatabase = <String, String>{
     actualDatabaseParentKey.name: jsonEncode(<String, dynamic>{
-      '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{'index': 1, 'uuid': '92b43ace-5439-4269-8e27-e999907f4379', 'name': 'Test Vault 1'},
-      'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 2, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'Test Vault 2'},
+      '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{
+        'index': 1,
+        'uuid': '92b43ace-5439-4269-8e27-e999907f4379',
+        'password_protected': true,
+        'name': 'Test Vault 1',
+      },
+      'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
+        'index': 2,
+        'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
+        'password_protected': false,
+        'name': 'Test Vault 2',
+      },
     }),
   };
 
@@ -70,8 +80,8 @@ void main() {
 
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[
-        VaultModel(index: 1, uuid: '92b43ace-5439-4269-8e27-e999907f4379', name: 'Test Vault 1'),
-        VaultModel(index: 2, uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093', name: 'Test Vault 2'),
+        VaultModel(index: 1, uuid: '92b43ace-5439-4269-8e27-e999907f4379', passwordProtectedBool: true, name: 'Test Vault 1'),
+        VaultModel(index: 2, uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093', passwordProtectedBool: false, name: 'Test Vault 2'),
       ];
 
       expect(actualVaultModelList, expectedVaultModelList);
@@ -95,7 +105,12 @@ void main() {
   group('Tests of VaultsService.saveVault()', () {
     test('Should [UPDATE vault] if [vault UUID EXISTS] in collection', () async {
       // Arrange
-      VaultModel newVaultModel = VaultModel(index: 2, uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093', name: 'Updated name');
+      VaultModel newVaultModel = VaultModel(
+        index: 2,
+        uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
+        passwordProtectedBool: true,
+        name: 'Updated name',
+      );
 
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledVaultsDatabase));
       VaultsService actualVaultsService = VaultsService(vaultsRepository: VaultsRepository());
@@ -105,8 +120,18 @@ void main() {
 
       // Assert
       String expectedVaultsKeyValue = jsonEncode(<String, dynamic>{
-        '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{'index': 1, 'uuid': '92b43ace-5439-4269-8e27-e999907f4379', 'name': 'Test Vault 1'},
-        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 2, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'Test Vault 2'},
+        '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{
+          'index': 1,
+          'uuid': '92b43ace-5439-4269-8e27-e999907f4379',
+          'password_protected': true,
+          'name': 'Test Vault 1',
+        },
+        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
+          'index': 2,
+          'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
+          'password_protected': false,
+          'name': 'Test Vault 2',
+        },
       });
 
       TestUtils.printInfo('Should [return Map of vaults] as ["vaults" key EXISTS] in database');
@@ -120,8 +145,18 @@ void main() {
 
       // Assert
       expectedVaultsKeyValue = jsonEncode(<String, dynamic>{
-        '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{'index': 1, 'uuid': '92b43ace-5439-4269-8e27-e999907f4379', 'name': 'Test Vault 1'},
-        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 2, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'Updated name'},
+        '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{
+          'index': 1,
+          'uuid': '92b43ace-5439-4269-8e27-e999907f4379',
+          'password_protected': true,
+          'name': 'Test Vault 1',
+        },
+        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
+          'index': 2,
+          'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
+          'password_protected': true,
+          'name': 'Updated name',
+        },
       });
 
       TestUtils.printInfo('Should [return Map of vaults] with updated vault');
@@ -130,7 +165,12 @@ void main() {
 
     test('Should [SAVE vault] if [vault UUID NOT EXISTS] in collection', () async {
       // Arrange
-      VaultModel newVaultModel = VaultModel(index: 1, uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093', name: 'New Vault');
+      VaultModel newVaultModel = VaultModel(
+        index: 1,
+        uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
+        passwordProtectedBool: false,
+        name: 'New Vault',
+      );
 
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyVaultsDatabase));
       VaultsService actualVaultsService = VaultsService(vaultsRepository: VaultsRepository());
@@ -152,7 +192,12 @@ void main() {
 
       // Assert
       expectedVaultsKeyValue = jsonEncode(<String, dynamic>{
-        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 1, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'New Vault'}
+        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
+          'index': 1,
+          'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
+          'password_protected': false,
+          'name': 'New Vault',
+        }
       });
 
       TestUtils.printInfo('Should [return Map of vaults] with new vault');
@@ -171,8 +216,18 @@ void main() {
 
       // Assert
       String expectedVaultsKeyValue = jsonEncode(<String, dynamic>{
-        '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{'index': 1, 'uuid': '92b43ace-5439-4269-8e27-e999907f4379', 'name': 'Test Vault 1'},
-        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 2, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'Test Vault 2'},
+        '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{
+          'index': 1,
+          'uuid': '92b43ace-5439-4269-8e27-e999907f4379',
+          'password_protected': true,
+          'name': 'Test Vault 1',
+        },
+        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
+          'index': 2,
+          'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
+          'password_protected': false,
+          'name': 'Test Vault 2',
+        },
       });
 
       TestUtils.printInfo('Should [return Map of vaults] as ["vault" key EXISTS] in database');
@@ -186,7 +241,12 @@ void main() {
 
       // Assert
       expectedVaultsKeyValue = jsonEncode(<String, dynamic>{
-        '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{'index': 1, 'uuid': '92b43ace-5439-4269-8e27-e999907f4379', 'name': 'Test Vault 1'},
+        '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{
+          'index': 1,
+          'uuid': '92b43ace-5439-4269-8e27-e999907f4379',
+          'password_protected': true,
+          'name': 'Test Vault 1',
+        },
       });
 
       TestUtils.printInfo('Should [return Map of vaults] without removed vault');

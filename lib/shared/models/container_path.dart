@@ -17,6 +17,11 @@ class ContainerPathModel extends Equatable {
 
   String get path => pathSegments.join('/');
 
+  String get parentPath {
+    List<String> parentPathSegments = <String>[...pathSegments]..removeLast();
+    return parentPathSegments.join('/');
+  }
+
   @override
   List<Object?> get props => <Object>[pathSegments];
 }

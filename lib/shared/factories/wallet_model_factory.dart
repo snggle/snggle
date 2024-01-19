@@ -12,6 +12,7 @@ class WalletModelFactory {
       vaultUuid: walletCreationRequestModel.vaultUuid,
       name: walletCreationRequestModel.name,
       address: AtomAddrEncoder().encodeKey(walletCreationRequestModel.publicKey, <String, dynamic>{'hrp': 'kira'}),
+      passwordProtectedBool: false,
       derivationPath: walletCreationRequestModel.derivationPath,
     );
   }
@@ -23,6 +24,7 @@ class WalletModelFactory {
       vaultUuid: walletEntity.vaultUuid,
       address: walletEntity.address,
       derivationPath: walletEntity.derivationPath,
+      passwordProtectedBool: walletEntity.passwordProtectedBool,
       name: walletEntity.name,
     );
   }

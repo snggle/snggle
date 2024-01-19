@@ -14,6 +14,7 @@ import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/a_secrets_model.dart';
 import 'package:snggle/shared/models/container_path.dart';
+import 'package:snggle/shared/models/i_password_model.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
@@ -39,12 +40,27 @@ void main() {
   // @formatter:off
   String wrappedFileContent1 = MapUtils.parseJsonToString(<String, dynamic>{
     'algorithm': 'AES/DHKE',
-    'data': 'xUPduZnpsa4tQvz0XUO+faMzsGL+P+0w3HYlQIeWVTl3zAsZJq0kNor9ipBV3NudufSHsunXNNBGj4FomRK8N0pwMAdmxioU+WS4UsCHZPvG6v12SfMOJ53A3NThYkvZo6kkWLGfeprFTT5Vk047+SnAX02i4dCdYfpXmIdWxLAADvRa6aYJtMrH95xIk37kdQTgwH+37fYQkNXlfj6NVBCN5B8kHSwr+1TAwkE3w2Gqv+dRESojUQKXG4G7x29pzYhcwidXk1XQag5XXStUmveRyGazDSKzGQ4xuy0XdsR9qh46'
+    'data': '3ACgYwYmznInw0AzIvEdgd2SgcFBDVjEIzBWQgEhUVbUzqEIW+/nsq7UXQ+57LIjlG2faaEKOcyApcxaPnp0/9qCXu9B48PBaafSV+PwkiOkEL2BOlNJto9FOR4BjwLgZE/PPTWZNJ76NUrRTQ08GKNzCls='
   }, prettyPrintBool: true);
 
   String wrappedFileContent2 = MapUtils.parseJsonToString(<String, dynamic>{
     'algorithm': 'AES/DHKE',
-    'data': 'Jkrkl9efrN8zRLLhyiZjsSv0/lo5nWzhaaiBdokT4S2x5/hP5nMeZRRN3LHk4ZQ721qJ0vR4k2kWbAewGPhd1iUJQhN89YqgNZ+47P4IX5niq4WvKlZTYWbx+FlI9hKSF6gK4vBY73yaGgvu7uP4+uUwpHrRtp/h0gGWCC3HA9N/Ver/q18zMg8oIqpkLj+klHPWWCAgA+WXM6lGqXQ9wqcSIgI='
+    'data': 'zWRkU49wGoVGxcviwZ3aqEumkprxq92e88BoHyf/9i0bQbdgD73AC/el6WY9ke7j5hEue1LuSTJ0ejuG2nJj1vzdLSOSAdWoxvXqzqIeBoCiJcb4uRNH+E2/XO/kNkBRjmz2SAVvEPEE0MILBI1xB2/fyPwKn81W7ZjzYQpKz0mkQnw1nVVDBMr65MmXudS5rISxAy6bB/VsubimDFXTC/XdoMxnJM5gymR3iG356hjnhmddsyKrZKbifppuhk8UMi/wS1bhIkeHWJQGwuypa4RdaIme+nmCMZgljoL2OgktwKcv'
+  }, prettyPrintBool: true);
+
+  String wrappedFileContentA = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': '3ACgYwYmznInw0AzIvEdgd2SgcFBDVjEIzBWQgEhUVbUzqEIW+/nsq7UXQ+57LIjlG2faaEKOcyApcxaPnp0/9qCXu9B48PBaafSV+PwkiOkEL2BOlNJto9FOR4BjwLgZE/PPTWZNJ76NUrRTQ08GKNzCls='
+  }, prettyPrintBool: true);
+
+  String wrappedFileContentAB = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': 'zWRkU49wGoVGxcviwZ3aqEumkprxq92e88BoHyf/9i0bQbdgD73AC/el6WY9ke7j5hEue1LuSTJ0ejuG2nJj1vzdLSOSAdWoxvXqzqIeBoCiJcb4uRNH+E2/XO/kNkBRjmz2SAVvEPEE0MILBI1xB2/fyPwKn81W7ZjzYQpKz0mkQnw1nVVDBMr65MmXudS5rISxAy6bB/VsubimDFXTC/XdoMxnJM5gymR3iG356hjnhmddsyKrZKbifppuhk8UMi/wS1bhIkeHWJQGwuypa4RdaIme+nmCMZgljoL2OgktwKcv'
+  }, prettyPrintBool: true);
+
+  String wrappedFileContentB = MapUtils.parseJsonToString(<String, dynamic>{
+    'algorithm': 'AES/DHKE',
+    'data': '+T21HxeD62WyyYcrWiHAnwGqJ0d9R65KPgJko6ika21DC38qRkoUq4bB3JY39iENfdV48SdubmbjZGxvEb+KpsqSMC3hh0U/zZS3TxvY/Iy4Eschwb4fFjNCl9HKOrgVwow9eQ+s2u3kBAUCgway/vxYtyWpCRaagXSBVT/JoWct3vuY6ZoFGaTJ2enJklA2ijm7a1W+gZIPYT2XbPESBuPKS8SUDl4zgRATOybRVFZYQOD5Mzfe1leqxSyRWlYmFE/KGnw5O4fK1X8xE17Bvsmk4JGCVAvcs1bOpm4RqNSsWlt/HRvMFoC+JZGRwUfxnK3g6TG/5p7rkxYwSjBrKZmj80NvYnpYmR//K6b4uAy5ePjltSRbGE/7BCfeqsz/adqkKy1hmb694HL4ZLSqB6JubbHHXDhL0Q0DKZulfzQvPNZsXzEdsVMgvtJVRrXa/ILpCHXYFyUGJHUwy44xlK2nnzU='
   }, prettyPrintBool: true);
 
   String wrappedMasterKey = MapUtils.parseJsonToString(<String, dynamic>{
@@ -57,6 +73,18 @@ void main() {
       '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContent1,
       '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
         '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContent2,
+      },
+    },
+  };
+
+  Map<String, dynamic> actualPasswordChangeTestFilesystemStructure = <String, dynamic>{
+    'secrets': <String, dynamic>{
+      'a.snggle': wrappedFileContentA,
+      'a': <String, dynamic>{
+        'b.snggle': wrappedFileContentAB,
+        'b': <String, dynamic>{
+          'c.snggle': wrappedFileContentB,
+        },
       },
     },
   };
@@ -81,6 +109,246 @@ void main() {
 
     SecretsRepository actualSecretsRepository = SecretsRepository(filesystemStorageManager: actualEncryptedFilesystemStorageManager);
     actualSecretsService = SecretsService(secretsRepository: actualSecretsRepository);
+  });
+
+  group('Tests of SecretsService.changeParentPassword()', () {
+    IPasswordModel actualOldPasswordModelA = PasswordModel.fromPlaintext('password1');
+    IPasswordModel actualOldPasswordModelAB = actualOldPasswordModelA.extend(PasswordModel.fromPlaintext('password2'));
+    IPasswordModel actualOldPasswordModelABC = actualOldPasswordModelAB.extend(PasswordModel.fromPlaintext('password3'));
+
+    setUp(() {
+      testSessionUUID = const Uuid().v4();
+      TestUtils.setupTmpFilesystemStructureFromJson(actualPasswordChangeTestFilesystemStructure, path: testSessionUUID);
+
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(masterKeyOnlyDatabase));
+      EncryptedFilesystemStorageManager actualEncryptedFilesystemStorageManager = EncryptedFilesystemStorageManager(
+        rootDirectory: () async => Directory('${TestUtils.testRootDirectory.path}/$testSessionUUID'),
+        databaseParentKey: actualDatabaseParentKey,
+      );
+
+      SecretsRepository actualSecretsRepository = SecretsRepository(filesystemStorageManager: actualEncryptedFilesystemStorageManager);
+      actualSecretsService = SecretsService(secretsRepository: actualSecretsRepository);
+    });
+
+    test('Should [check if passwords VALID] for the next encryption levels (general test for all cases)', () async {
+      // Arrange
+      Map<String, dynamic> actualFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson('', actualMasterKeyVO, actualPasswordModel);
+      Map<String, dynamic> actualTestFilesystemStructure = actualFilesystemStructure[testSessionUUID]! as Map<String, dynamic>;
+      Map<String, dynamic> actualSecretsFilesystemStructure = MapUtils.flattenMap(actualTestFilesystemStructure['secrets'] as Map<String, dynamic>);
+
+      Map<String, Ciphertext> actualCiphertexts = actualSecretsFilesystemStructure.map((String key, dynamic value) {
+        return MapEntry<String, Ciphertext>(key, Ciphertext.fromJsonString(actualSecretsFilesystemStructure[key]! as String));
+      });
+
+      // Act
+      Map<String, bool> actualPasswordMatchMap = actualCiphertexts.map((String key, Ciphertext ciphertext) {
+        return MapEntry<String, bool>(key, actualOldPasswordModelA.isValidForData(ciphertext));
+      });
+
+      // Assert
+      Map<String, bool> expectedPasswordMatchMap = <String, bool>{
+        'a.snggle': true,
+        'a/b.snggle': true,
+        'a/b/c.snggle': true,
+      };
+
+      TestUtils.printInfo('Should [return TRUE] for secrets for which [1st password VALID] (all encryption levels)');
+      expect(actualPasswordMatchMap, expectedPasswordMatchMap);
+
+      // ************************************************************************************************
+
+      actualPasswordMatchMap = actualCiphertexts.map((String key, Ciphertext ciphertext) {
+        return MapEntry<String, bool>(key, actualOldPasswordModelAB.isValidForData(ciphertext));
+      });
+
+      // Assert
+      expectedPasswordMatchMap = <String, bool>{
+        'a.snggle': false,
+        'a/b.snggle': true,
+        'a/b/c.snggle': true,
+      };
+
+      TestUtils.printInfo('Should [return TRUE] for secrets for which [2nd password VALID] (2nd, 3rd encryption levels)');
+      expect(actualPasswordMatchMap, expectedPasswordMatchMap);
+
+      // ************************************************************************************************
+
+      actualPasswordMatchMap = actualCiphertexts.map((String key, Ciphertext ciphertext) {
+        return MapEntry<String, bool>(key, actualOldPasswordModelABC.isValidForData(ciphertext));
+      });
+
+      // Assert
+      expectedPasswordMatchMap = <String, bool>{
+        'a.snggle': false,
+        'a/b.snggle': false,
+        'a/b/c.snggle': true,
+      };
+
+      TestUtils.printInfo('Should [return TRUE] for secrets for which [3rd password VALID] (3rd encryption level)');
+      expect(actualPasswordMatchMap, expectedPasswordMatchMap);
+    });
+
+    test('Should [check if passwords VALID] for the next encryption levels (change 1st encryption level password)', () async {
+      // Arrange
+      IPasswordModel actualNewPasswordModelA = PasswordModel.fromPlaintext('updated_password1');
+      IPasswordModel actualNewPasswordModelAB = actualNewPasswordModelA.extend(PasswordModel.fromPlaintext('password2'));
+      IPasswordModel actualNewPasswordModelABC = actualNewPasswordModelAB.extend(PasswordModel.fromPlaintext('password3'));
+
+      // Act
+      await actualSecretsService.changeParentPassword(
+        ContainerPathModel.fromString('a'),
+        actualOldPasswordModelA,
+        actualNewPasswordModelA,
+      );
+
+      Map<String, dynamic> actualFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson('', actualMasterKeyVO, actualPasswordModel);
+      Map<String, dynamic> actualTestFilesystemStructure = actualFilesystemStructure[testSessionUUID]! as Map<String, dynamic>;
+      Map<String, dynamic> actualSecretsFilesystemStructure = MapUtils.flattenMap(actualTestFilesystemStructure['secrets'] as Map<String, dynamic>);
+
+      Map<String, Ciphertext> actualCiphertexts = actualSecretsFilesystemStructure.map((String key, dynamic value) {
+        return MapEntry<String, Ciphertext>(key, Ciphertext.fromJsonString(actualSecretsFilesystemStructure[key]! as String));
+      });
+
+      // ************************************************************************************************
+
+      // Act
+      Map<String, bool> actualPasswordMatchMap = actualCiphertexts.map((String key, Ciphertext ciphertext) {
+        return MapEntry<String, bool>(key, actualNewPasswordModelA.isValidForData(ciphertext));
+      });
+
+      // Assert
+      Map<String, bool> expectedPasswordMatchMap = <String, bool>{
+        'a.snggle': true,
+        'a/b.snggle': true,
+        'a/b/c.snggle': true,
+      };
+
+      TestUtils.printInfo('Should [return TRUE] for secrets for which [1st password VALID] (all encryption levels)');
+      expect(actualPasswordMatchMap, expectedPasswordMatchMap);
+
+      // ************************************************************************************************
+
+      actualPasswordMatchMap = actualCiphertexts.map((String key, Ciphertext ciphertext) {
+        return MapEntry<String, bool>(key, actualNewPasswordModelAB.isValidForData(ciphertext));
+      });
+
+      // Assert
+      expectedPasswordMatchMap = <String, bool>{
+        'a.snggle': false,
+        'a/b.snggle': true,
+        'a/b/c.snggle': true,
+      };
+
+      TestUtils.printInfo('Should [return TRUE] for secrets for which [2nd password VALID] (2nd, 3rd encryption levels)');
+      expect(actualPasswordMatchMap, expectedPasswordMatchMap);
+
+      // ************************************************************************************************
+
+      actualPasswordMatchMap = actualCiphertexts.map((String key, Ciphertext ciphertext) {
+        return MapEntry<String, bool>(key, actualNewPasswordModelABC.isValidForData(ciphertext));
+      });
+
+      // Assert
+      expectedPasswordMatchMap = <String, bool>{
+        'a.snggle': false,
+        'a/b.snggle': false,
+        'a/b/c.snggle': true,
+      };
+
+      TestUtils.printInfo('Should [return TRUE] for secrets for which [3rd password VALID] (3rd encryption level)');
+      expect(actualPasswordMatchMap, expectedPasswordMatchMap);
+    });
+
+    test('Should [check if passwords VALID] for the next encryption levels (change 2nd encryption level password)', () async {
+      // Arrange
+      IPasswordModel actualNewPasswordModelAB = actualOldPasswordModelA.extend(PasswordModel.fromPlaintext('password2'));
+      IPasswordModel actualNewPasswordModelABC = actualNewPasswordModelAB.extend(PasswordModel.fromPlaintext('password3'));
+
+      // Act
+      await actualSecretsService.changeParentPassword(
+        ContainerPathModel.fromString('a/b'),
+        actualOldPasswordModelAB,
+        actualNewPasswordModelAB,
+      );
+
+      Map<String, dynamic> actualFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson('', actualMasterKeyVO, actualPasswordModel);
+      Map<String, dynamic> actualTestFilesystemStructure = actualFilesystemStructure[testSessionUUID]! as Map<String, dynamic>;
+      Map<String, dynamic> actualSecretsFilesystemStructure = MapUtils.flattenMap(actualTestFilesystemStructure['secrets'] as Map<String, dynamic>);
+
+      Map<String, Ciphertext> actualCiphertexts = actualSecretsFilesystemStructure.map((String key, dynamic value) {
+        return MapEntry<String, Ciphertext>(key, Ciphertext.fromJsonString(actualSecretsFilesystemStructure[key]! as String));
+      });
+
+      // ************************************************************************************************
+
+      // Act
+      Map<String, bool> actualPasswordMatchMap = actualCiphertexts.map((String key, Ciphertext ciphertext) {
+        return MapEntry<String, bool>(key, actualNewPasswordModelAB.isValidForData(ciphertext));
+      });
+
+      // Assert
+      Map<String, bool> expectedPasswordMatchMap = <String, bool>{
+        'a.snggle': false,
+        'a/b.snggle': true,
+        'a/b/c.snggle': true,
+      };
+
+      TestUtils.printInfo('Should [return TRUE] for secrets for which [2nd password VALID] (2nd, 3rd encryption levels)');
+      expect(actualPasswordMatchMap, expectedPasswordMatchMap);
+
+      // ************************************************************************************************
+
+      actualPasswordMatchMap = actualCiphertexts.map((String key, Ciphertext ciphertext) {
+        return MapEntry<String, bool>(key, actualNewPasswordModelABC.isValidForData(ciphertext));
+      });
+
+      // Assert
+      expectedPasswordMatchMap = <String, bool>{
+        'a.snggle': false,
+        'a/b.snggle': false,
+        'a/b/c.snggle': true,
+      };
+
+      TestUtils.printInfo('Should [return TRUE] for secrets for which [3rd password VALID] (3rd encryption level)');
+      expect(actualPasswordMatchMap, expectedPasswordMatchMap);
+    });
+
+    test('Should [check if passwords VALID] for the next encryption levels (change 3rd encryption level password)', () async {
+      // Arrange
+      IPasswordModel actualNewPasswordModelABC = actualOldPasswordModelAB.extend(PasswordModel.fromPlaintext('password3'));
+
+      // Act
+      await actualSecretsService.changeParentPassword(
+        ContainerPathModel.fromString('a/b/c'),
+        actualOldPasswordModelABC,
+        actualNewPasswordModelABC,
+      );
+
+      Map<String, dynamic> actualFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson('', actualMasterKeyVO, actualPasswordModel);
+      Map<String, dynamic> actualTestFilesystemStructure = actualFilesystemStructure[testSessionUUID]! as Map<String, dynamic>;
+      Map<String, dynamic> actualSecretsFilesystemStructure = MapUtils.flattenMap(actualTestFilesystemStructure['secrets'] as Map<String, dynamic>);
+
+      Map<String, Ciphertext> actualCiphertexts = actualSecretsFilesystemStructure.map((String key, dynamic value) {
+        return MapEntry<String, Ciphertext>(key, Ciphertext.fromJsonString(actualSecretsFilesystemStructure[key]! as String));
+      });
+
+      // ************************************************************************************************
+
+      // Act
+      Map<String, bool> actualPasswordMatchMap = actualCiphertexts.map((String key, Ciphertext ciphertext) {
+        return MapEntry<String, bool>(key, actualNewPasswordModelABC.isValidForData(ciphertext));
+      });
+
+      // Assert
+      Map<String, bool> expectedPasswordMatchMap = <String, bool>{
+        'a.snggle': false,
+        'a/b.snggle': false,
+        'a/b/c.snggle': true,
+      };
+
+      TestUtils.printInfo('Should [return TRUE] for secrets for which [3rd password VALID] (3rd encryption level)');
+      expect(actualPasswordMatchMap, expectedPasswordMatchMap);
+    });
   });
 
   group('Tests of SecretsService.getSecrets()', () {
@@ -257,9 +525,9 @@ void main() {
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContent1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContentA,
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
-            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContent2,
+            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContentAB,
           },
         }
       };
@@ -308,9 +576,9 @@ void main() {
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContent1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContentA,
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
-            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContent2,
+            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContentAB,
           },
         }
       };
@@ -361,9 +629,9 @@ void main() {
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContent1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContentA,
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
-            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContent2,
+            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContentAB,
           },
         }
       };
@@ -411,9 +679,9 @@ void main() {
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContent1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContentA,
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
-            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContent2,
+            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContentAB,
           },
         }
       };
@@ -467,9 +735,9 @@ void main() {
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContent1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContentA,
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
-            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContent2,
+            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContentAB,
           },
         }
       };
@@ -506,9 +774,9 @@ void main() {
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContent1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContentA,
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
-            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContent2,
+            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': wrappedFileContentAB,
           },
         }
       };
@@ -526,7 +794,7 @@ void main() {
       // Assert
       expectedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContent1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': wrappedFileContentA,
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{},
         },
       };

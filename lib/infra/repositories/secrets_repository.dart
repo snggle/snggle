@@ -10,6 +10,10 @@ class SecretsRepository {
     FilesystemStorageManager? filesystemStorageManager,
   }) : _filesystemStorageManager = filesystemStorageManager ?? EncryptedFilesystemStorageManager(databaseParentKey: DatabaseParentKey.secrets);
 
+  Future<Map<String, String>> getAllMapped(String path) async {
+    return _filesystemStorageManager.readAllMapped(path);
+  }
+
   Future<Ciphertext> getEncryptedSecrets(String path) async {
     String fileContent = await _filesystemStorageManager.read(path);
     return Ciphertext.fromJsonString(fileContent);

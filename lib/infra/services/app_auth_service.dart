@@ -10,7 +10,8 @@ class AppAuthService {
     bool masterKeyExistsBool = await _masterKeyService.isMasterKeyExists();
     if (masterKeyExistsBool) {
       MasterKeyVO masterKeyVO = await _masterKeyService.getMasterKey();
-      return PasswordModel.isEncryptedWithCustomPassword(masterKeyVO.masterKeyCiphertext);
+      bool defaultPasswordValidBool = PasswordModel.defaultPassword().isValidForData(masterKeyVO.masterKeyCiphertext);
+      return defaultPasswordValidBool == false;
     } else {
       return false;
     }

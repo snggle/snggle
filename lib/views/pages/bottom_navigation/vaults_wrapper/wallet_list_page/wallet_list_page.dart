@@ -76,6 +76,7 @@ class WalletListPageState extends State<WalletListPage> {
                 key: Key(walletModel.uuid),
                 walletModel: walletModel,
                 onDelete: () => _deleteWallet(walletModel),
+                vaultPasswordModel: widget.vaultPasswordModel,
               );
             },
           );

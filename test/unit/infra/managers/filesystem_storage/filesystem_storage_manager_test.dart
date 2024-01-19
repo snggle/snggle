@@ -32,6 +32,34 @@ void main() {
     );
   });
 
+  group('Tests of FilesystemStorageManager.readAllMapped()', () {
+    test('Should [return all files] in specified directory (1st depth)', () async {
+      // Act
+      Map<String, String> actualFileStructure = await actualFilesystemStorageManager.readAllMapped('');
+
+      // Assert
+      Map<String, String> expectedFileStructure = <String, String>{
+        '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': 'test1',
+        '9b282030-4c0f-482e-ba0d-524e10822f65': 'test2',
+        '9b282030-4c0f-482e-ba0d-524e10822f65/b1c2f688-85fc-43ba-9af1-52db40fa3093': 'test3',
+      };
+
+      expect(actualFileStructure, expectedFileStructure);
+    });
+
+    test('Should [return all files] in specified directory (2nd depth)', () async {
+      // Act
+      Map<String, String> actualFileStructure = await actualFilesystemStorageManager.readAllMapped('9b282030-4c0f-482e-ba0d-524e10822f65');
+
+      // Assert
+      Map<String, String> expectedFileStructure = <String, String>{
+        '9b282030-4c0f-482e-ba0d-524e10822f65/b1c2f688-85fc-43ba-9af1-52db40fa3093': 'test3',
+      };
+
+      expect(actualFileStructure, expectedFileStructure);
+    });
+  });
+
   group('Tests of FilesystemStorageManager.read()', () {
     test('Should [return File content] if file with specified [path EXISTS] (1st depth)', () async {
       // Act

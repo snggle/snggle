@@ -5,8 +5,10 @@ import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:snggle/config/app_config.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
+import 'package:snggle/shared/models/i_password_model.dart';
+import 'package:snggle/shared/models/multi_password_model.dart';
 
-class PasswordModel extends Equatable {
+class PasswordModel extends Equatable implements IPasswordModel {
   final String _hashedPassword;
 
   const PasswordModel({required String hashedPassword}) : _hashedPassword = hashedPassword;
@@ -21,16 +23,20 @@ class PasswordModel extends Equatable {
     return PasswordModel.fromPlaintext(AppConfig.defaultPassword);
   }
 
-  static bool isEncryptedWithCustomPassword(Ciphertext ciphertext) {
-    PasswordModel defaultPasswordModel = PasswordModel.defaultPassword();
-    bool defaultPasswordBool = defaultPasswordModel.isValidForData(ciphertext);
-    return defaultPasswordBool == false;
+  @override
+  MultiPasswordModel extend(PasswordModel passwordModel) {
+    return MultiPasswordModel(
+      mainPasswordModel: passwordModel,
+      parentPasswordModels: <PasswordModel>[this],
+    );
   }
 
+  @override
   Ciphertext encrypt({required String decryptedData}) {
     return AESDHKEV1().encrypt(_hashedPassword, decryptedData);
   }
 
+  @override
   String decrypt({required Ciphertext ciphertext}) {
     if (ciphertext.encryptionAlgorithmType != EncryptionAlgorithmType.aesdhke) {
       throw const FormatException('Invalid encryption algorithm type');
@@ -43,6 +49,7 @@ class PasswordModel extends Equatable {
     return AESDHKEV1().decrypt(_hashedPassword, ciphertext);
   }
 
+  @override
   bool isValidForData(Ciphertext ciphertext) {
     if (ciphertext.encryptionAlgorithmType != EncryptionAlgorithmType.aesdhke) {
       throw const FormatException('Invalid encryption algorithm type');
@@ -52,5 +59,5 @@ class PasswordModel extends Equatable {
   }
 
   @override
-  List<Object> get props => <Object>[_hashedPassword];
+  List<Object> get props => <Object>[sha256.convert(_hashedPassword.codeUnits).toString()];
 }

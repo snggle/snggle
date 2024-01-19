@@ -21,8 +21,18 @@ void main() {
 
   Map<String, String> filledVaultsDatabase = <String, String>{
     actualDatabaseParentKey.name: jsonEncode(<String, dynamic>{
-      '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{'index': 1, 'uuid': '92b43ace-5439-4269-8e27-e999907f4379', 'name': 'Test Vault 1'},
-      'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{'index': 2, 'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093', 'name': 'Test Vault 2'},
+      '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{
+        'index': 1,
+        'uuid': '92b43ace-5439-4269-8e27-e999907f4379',
+        'name': 'Test Vault 1',
+        'password_protected': false,
+      },
+      'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
+        'index': 2,
+        'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
+        'name': 'Test Vault 2',
+        'password_protected': true,
+      },
     }),
   };
 
@@ -64,13 +74,23 @@ void main() {
     test('Should [return VaultModel] with values from given VaultEntity', () {
       // Arrange
       VaultModelFactory actualVaultModelFactory = VaultModelFactory();
-      VaultEntity actualVaultEntity = const VaultEntity(index: 10, uuid: '7d871464-f352-432d-ad70-b001b38a17c9', name: 'test');
+      VaultEntity actualVaultEntity = const VaultEntity(
+        index: 10,
+        uuid: '7d871464-f352-432d-ad70-b001b38a17c9',
+        name: 'test',
+        passwordProtectedBool: false,
+      );
 
       // Act
       VaultModel actualVaultModel = actualVaultModelFactory.createFromEntity(actualVaultEntity);
 
       // Assert
-      VaultModel expectedVaultModel = VaultModel(index: 10, uuid: '7d871464-f352-432d-ad70-b001b38a17c9', name: 'test');
+      VaultModel expectedVaultModel = VaultModel(
+        index: 10,
+        uuid: '7d871464-f352-432d-ad70-b001b38a17c9',
+        name: 'test',
+        passwordProtectedBool: false,
+      );
       expect(actualVaultModel, expectedVaultModel);
     });
   });

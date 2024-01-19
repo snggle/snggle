@@ -40,6 +40,7 @@ void main() async {
         vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
         address: 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
         derivationPath: "m/44'/118'/0'/0/0",
+        passwordProtectedBool: false,
       );
 
       // Act
@@ -52,6 +53,7 @@ void main() async {
         vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
         address: 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
         derivationPath: "m/44'/118'/0'/0/0",
+        passwordProtectedBool: false,
       );
 
       expect(actualWalletModel, expectedWalletModel);

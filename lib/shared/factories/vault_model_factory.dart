@@ -14,6 +14,7 @@ class VaultModelFactory {
     VaultModel vaultModel = VaultModel(
       index: lastVaultIndex + 1,
       uuid: const Uuid().v4(),
+      passwordProtectedBool: false,
     );
 
     return vaultModel;
@@ -23,6 +24,7 @@ class VaultModelFactory {
     return VaultModel(
       index: vaultEntity.index,
       uuid: vaultEntity.uuid,
+      passwordProtectedBool: vaultEntity.passwordProtectedBool,
       name: vaultEntity.name,
     );
   }

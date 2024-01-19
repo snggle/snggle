@@ -6,6 +6,7 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/factories/wallet_model_factory.dart';
+import 'package:snggle/shared/models/multi_password_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
@@ -62,8 +63,10 @@ class WalletListPageCubit extends Cubit<List<WalletModel>> {
       privateKey: derivedNode.privateKey!,
     );
 
+    MultiPasswordModel walletMultiPasswordModel = vaultPasswordModel.extend(PasswordModel.defaultPassword());
+
     await _walletsService.saveWallet(walletModel);
-    await _secretsService.saveSecrets(walletSecretsModel, PasswordModel.defaultPassword());
+    await _secretsService.saveSecrets(walletSecretsModel, walletMultiPasswordModel);
     await refresh();
   }
 

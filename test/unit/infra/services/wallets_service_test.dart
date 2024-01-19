@@ -31,6 +31,7 @@ void main() {
           'vault_uuid': '04b5440e-e398-4520-9f9b-f0eea2d816e6',
           'address': 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
           'derivation_path': "m/44'/118'/0'/0/0",
+          'password_protected': false,
         },
         '3e7f3547-d78f-4dda-a916-3e9eabd4bfee': <String, dynamic>{
           'index': 1,
@@ -38,6 +39,7 @@ void main() {
           'vault_uuid': '04b5440e-e398-4520-9f9b-f0eea2d816e6',
           'address': 'kira1skj2f63ztaxk2q43pm2tg7t09r0whf5cadszdn',
           'derivation_path': "m/44'/118'/0'/0/1",
+          'password_protected': false,
         },
         '4d02947e-c838-4a77-bef3-0ffbdb1c7525': <String, dynamic>{
           'index': 0,
@@ -45,6 +47,7 @@ void main() {
           'vault_uuid': '5f5332fb-37c1-4352-9153-d43692615f0f',
           'address': 'kira15808n8vfcf3m88r5jxnq47gjel5lvmxadmsqt5',
           'derivation_path': "m/44'/118'/0'/0/0",
+          'password_protected': true,
         },
         'ef63ccfc-c3da-4212-9dc1-693a9e75e90b': <String, dynamic>{
           'index': 1,
@@ -52,6 +55,7 @@ void main() {
           'vault_uuid': '5f5332fb-37c1-4352-9153-d43692615f0f',
           'address': 'kira1t7lspdwnhjwx23e2r3l04wn6uuhyt60ljkqdgl',
           'derivation_path': "m/44'/118'/0'/0/1",
+          'password_protected': true,
         }
       },
     ),
@@ -99,18 +103,19 @@ void main() {
       // Assert
       List<WalletModel> expectedWalletModelList = <WalletModel>[
         WalletModel(
-          index: 0,
-          uuid: '4e66ba36-966e-49ed-b639-191388ce38de',
-          vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
-          address: 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
-          derivationPath: "m/44'/118'/0'/0/0",
-        ),
+            index: 0,
+            uuid: '4e66ba36-966e-49ed-b639-191388ce38de',
+            vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
+            address: 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
+            derivationPath: "m/44'/118'/0'/0/0",
+            passwordProtectedBool: false),
         WalletModel(
           index: 1,
           uuid: '3e7f3547-d78f-4dda-a916-3e9eabd4bfee',
           vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
           address: 'kira1skj2f63ztaxk2q43pm2tg7t09r0whf5cadszdn',
           derivationPath: "m/44'/118'/0'/0/1",
+          passwordProtectedBool: false,
         ),
       ];
 
@@ -142,6 +147,7 @@ void main() {
         address: 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
         derivationPath: "m/44'/118'/0'/0/0",
         name: 'Updated name',
+        passwordProtectedBool: true,
       );
 
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
@@ -158,6 +164,7 @@ void main() {
           'vault_uuid': '04b5440e-e398-4520-9f9b-f0eea2d816e6',
           'address': 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
           'derivation_path': "m/44'/118'/0'/0/0",
+          'password_protected': false,
         },
         '3e7f3547-d78f-4dda-a916-3e9eabd4bfee': <String, dynamic>{
           'index': 1,
@@ -165,6 +172,7 @@ void main() {
           'vault_uuid': '04b5440e-e398-4520-9f9b-f0eea2d816e6',
           'address': 'kira1skj2f63ztaxk2q43pm2tg7t09r0whf5cadszdn',
           'derivation_path': "m/44'/118'/0'/0/1",
+          'password_protected': false,
         },
         '4d02947e-c838-4a77-bef3-0ffbdb1c7525': <String, dynamic>{
           'index': 0,
@@ -172,6 +180,7 @@ void main() {
           'vault_uuid': '5f5332fb-37c1-4352-9153-d43692615f0f',
           'address': 'kira15808n8vfcf3m88r5jxnq47gjel5lvmxadmsqt5',
           'derivation_path': "m/44'/118'/0'/0/0",
+          'password_protected': true,
         },
         'ef63ccfc-c3da-4212-9dc1-693a9e75e90b': <String, dynamic>{
           'index': 1,
@@ -179,6 +188,7 @@ void main() {
           'vault_uuid': '5f5332fb-37c1-4352-9153-d43692615f0f',
           'address': 'kira1t7lspdwnhjwx23e2r3l04wn6uuhyt60ljkqdgl',
           'derivation_path': "m/44'/118'/0'/0/1",
+          'password_protected': true,
         }
       });
 
@@ -199,6 +209,7 @@ void main() {
           'vault_uuid': '04b5440e-e398-4520-9f9b-f0eea2d816e6',
           'address': 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
           'derivation_path': "m/44'/118'/0'/0/0",
+          'password_protected': true,
           'name': 'Updated name',
         },
         '3e7f3547-d78f-4dda-a916-3e9eabd4bfee': <String, dynamic>{
@@ -207,6 +218,7 @@ void main() {
           'vault_uuid': '04b5440e-e398-4520-9f9b-f0eea2d816e6',
           'address': 'kira1skj2f63ztaxk2q43pm2tg7t09r0whf5cadszdn',
           'derivation_path': "m/44'/118'/0'/0/1",
+          'password_protected': false,
         },
         '4d02947e-c838-4a77-bef3-0ffbdb1c7525': <String, dynamic>{
           'index': 0,
@@ -214,6 +226,7 @@ void main() {
           'vault_uuid': '5f5332fb-37c1-4352-9153-d43692615f0f',
           'address': 'kira15808n8vfcf3m88r5jxnq47gjel5lvmxadmsqt5',
           'derivation_path': "m/44'/118'/0'/0/0",
+          'password_protected': true,
         },
         'ef63ccfc-c3da-4212-9dc1-693a9e75e90b': <String, dynamic>{
           'index': 1,
@@ -221,6 +234,7 @@ void main() {
           'vault_uuid': '5f5332fb-37c1-4352-9153-d43692615f0f',
           'address': 'kira1t7lspdwnhjwx23e2r3l04wn6uuhyt60ljkqdgl',
           'derivation_path': "m/44'/118'/0'/0/1",
+          'password_protected': true,
         }
       });
 
@@ -231,13 +245,13 @@ void main() {
     test('Should [SAVE wallet] if [wallet UUID NOT EXISTS] in collection', () async {
       // Arrange
       WalletModel actualNewWalletModel = WalletModel(
-        index: 2,
-        uuid: '8b52e5f2-d265-41d5-8567-47e9f879bd02',
-        vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
-        address: 'kira143q8vxpvuykt9pq50e6hng9s38vmy844n8k9wx',
-        derivationPath: "m/44'/118'/0'/0/2",
-        name: 'New wallet',
-      );
+          index: 2,
+          uuid: '8b52e5f2-d265-41d5-8567-47e9f879bd02',
+          vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
+          address: 'kira143q8vxpvuykt9pq50e6hng9s38vmy844n8k9wx',
+          derivationPath: "m/44'/118'/0'/0/2",
+          name: 'New wallet',
+          passwordProtectedBool: false);
 
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyWalletsDatabase));
       WalletsService actualWalletsService = WalletsService(walletsRepository: WalletsRepository());
@@ -265,6 +279,7 @@ void main() {
           'vault_uuid': '04b5440e-e398-4520-9f9b-f0eea2d816e6',
           'address': 'kira143q8vxpvuykt9pq50e6hng9s38vmy844n8k9wx',
           'derivation_path': "m/44'/118'/0'/0/2",
+          'password_protected': false,
           'name': 'New wallet',
         },
       });
@@ -291,6 +306,7 @@ void main() {
           'vault_uuid': '04b5440e-e398-4520-9f9b-f0eea2d816e6',
           'address': 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
           'derivation_path': "m/44'/118'/0'/0/0",
+          'password_protected': false,
         },
         '3e7f3547-d78f-4dda-a916-3e9eabd4bfee': <String, dynamic>{
           'index': 1,
@@ -298,6 +314,7 @@ void main() {
           'vault_uuid': '04b5440e-e398-4520-9f9b-f0eea2d816e6',
           'address': 'kira1skj2f63ztaxk2q43pm2tg7t09r0whf5cadszdn',
           'derivation_path': "m/44'/118'/0'/0/1",
+          'password_protected': false,
         },
         '4d02947e-c838-4a77-bef3-0ffbdb1c7525': <String, dynamic>{
           'index': 0,
@@ -305,6 +322,7 @@ void main() {
           'vault_uuid': '5f5332fb-37c1-4352-9153-d43692615f0f',
           'address': 'kira15808n8vfcf3m88r5jxnq47gjel5lvmxadmsqt5',
           'derivation_path': "m/44'/118'/0'/0/0",
+          'password_protected': true,
         },
         'ef63ccfc-c3da-4212-9dc1-693a9e75e90b': <String, dynamic>{
           'index': 1,
@@ -312,6 +330,7 @@ void main() {
           'vault_uuid': '5f5332fb-37c1-4352-9153-d43692615f0f',
           'address': 'kira1t7lspdwnhjwx23e2r3l04wn6uuhyt60ljkqdgl',
           'derivation_path': "m/44'/118'/0'/0/1",
+          'password_protected': true,
         }
       });
 
@@ -332,6 +351,7 @@ void main() {
           'vault_uuid': '04b5440e-e398-4520-9f9b-f0eea2d816e6',
           'address': 'kira1skj2f63ztaxk2q43pm2tg7t09r0whf5cadszdn',
           'derivation_path': "m/44'/118'/0'/0/1",
+          'password_protected': false,
         },
         '4d02947e-c838-4a77-bef3-0ffbdb1c7525': <String, dynamic>{
           'index': 0,
@@ -339,6 +359,7 @@ void main() {
           'vault_uuid': '5f5332fb-37c1-4352-9153-d43692615f0f',
           'address': 'kira15808n8vfcf3m88r5jxnq47gjel5lvmxadmsqt5',
           'derivation_path': "m/44'/118'/0'/0/0",
+          'password_protected': true,
         },
         'ef63ccfc-c3da-4212-9dc1-693a9e75e90b': <String, dynamic>{
           'index': 1,
@@ -346,6 +367,7 @@ void main() {
           'vault_uuid': '5f5332fb-37c1-4352-9153-d43692615f0f',
           'address': 'kira1t7lspdwnhjwx23e2r3l04wn6uuhyt60ljkqdgl',
           'derivation_path': "m/44'/118'/0'/0/1",
+          'password_protected': true,
         }
       });
 

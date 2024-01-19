@@ -5,26 +5,15 @@ class VaultModel extends AContainerModel {
   final int index;
   final String uuid;
   final String? name;
+  bool passwordProtectedBool;
 
   VaultModel({
     required this.index,
     required this.uuid,
+    required this.passwordProtectedBool,
     this.name,
   }) : super(containerPathModel: ContainerPathModel(<String>[uuid]));
 
-  VaultModel copyWith({
-    int? index,
-    bool? encryptedBool,
-    String? uuid,
-    String? name,
-  }) {
-    return VaultModel(
-      index: index ?? this.index,
-      uuid: uuid ?? this.uuid,
-      name: name ?? this.name,
-    );
-  }
-
   @override
-  List<Object?> get props => <Object?>[index, uuid, name];
+  List<Object?> get props => <Object?>[index, uuid, passwordProtectedBool, name];
 }

@@ -7,6 +7,7 @@ class WalletEntity extends Equatable {
   final String vaultUuid;
   final String address;
   final String derivationPath;
+  final bool passwordProtectedBool;
   final String? name;
 
   const WalletEntity({
@@ -15,6 +16,7 @@ class WalletEntity extends Equatable {
     required this.vaultUuid,
     required this.address,
     required this.derivationPath,
+    required this.passwordProtectedBool,
     this.name,
   });
 
@@ -25,6 +27,7 @@ class WalletEntity extends Equatable {
       vaultUuid: json['vault_uuid'] as String,
       address: json['address'] as String,
       derivationPath: json['derivation_path'] as String,
+      passwordProtectedBool: json['password_protected'] as bool,
       name: json['name'] as String?,
     );
   }
@@ -36,6 +39,7 @@ class WalletEntity extends Equatable {
       vaultUuid: walletModel.vaultUuid,
       address: walletModel.address,
       derivationPath: walletModel.derivationPath,
+      passwordProtectedBool: walletModel.passwordProtectedBool,
       name: walletModel.name,
     );
   }
@@ -47,10 +51,11 @@ class WalletEntity extends Equatable {
       'vault_uuid': vaultUuid,
       'address': address,
       'derivation_path': derivationPath,
+      'password_protected': passwordProtectedBool,
       'name': name,
     };
   }
 
   @override
-  List<Object?> get props => <Object?>[index, uuid, vaultUuid, address, derivationPath, name];
+  List<Object?> get props => <Object?>[index, uuid, vaultUuid, address, derivationPath, passwordProtectedBool, name];
 }
