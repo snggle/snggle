@@ -32,6 +32,7 @@ class SecretsService {
     Ciphertext ciphertext = await _secretsRepository.getEncryptedSecrets(containerPath.path);
 
     String decryptedHash = passwordModel.decrypt(ciphertext: ciphertext);
+    print('decryptedHash: $decryptedHash');
     Map<String, dynamic> json = jsonDecode(decryptedHash) as Map<String, dynamic>;
     return ASecretsModel.fromJson<T>(containerPath, json);
   }

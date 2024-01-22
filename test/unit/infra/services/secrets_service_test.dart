@@ -16,6 +16,7 @@ import 'package:snggle/shared/models/a_secrets_model.dart';
 import 'package:snggle/shared/models/container_path.dart';
 import 'package:snggle/shared/models/i_password_model.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
+import 'package:snggle/shared/models/multi_password_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
@@ -40,12 +41,12 @@ void main() {
   // @formatter:off
   String wrappedFileContent1 = MapUtils.parseJsonToString(<String, dynamic>{
     'algorithm': 'AES/DHKE',
-    'data': '3ACgYwYmznInw0AzIvEdgd2SgcFBDVjEIzBWQgEhUVbUzqEIW+/nsq7UXQ+57LIjlG2faaEKOcyApcxaPnp0/9qCXu9B48PBaafSV+PwkiOkEL2BOlNJto9FOR4BjwLgZE/PPTWZNJ76NUrRTQ08GKNzCls='
+    'data': 'xUPduZnpsa4tQvz0XUO+faMzsGL+P+0w3HYlQIeWVTl3zAsZJq0kNor9ipBV3NudufSHsunXNNBGj4FomRK8N0pwMAdmxioU+WS4UsCHZPvG6v12SfMOJ53A3NThYkvZo6kkWLGfeprFTT5Vk047+SnAX02i4dCdYfpXmIdWxLAADvRa6aYJtMrH95xIk37kdQTgwH+37fYQkNXlfj6NVBCN5B8kHSwr+1TAwkE3w2Gqv+dRESojUQKXG4G7x29pzYhcwidXk1XQag5XXStUmveRyGazDSKzGQ4xuy0XdsR9qh46'
   }, prettyPrintBool: true);
 
   String wrappedFileContent2 = MapUtils.parseJsonToString(<String, dynamic>{
     'algorithm': 'AES/DHKE',
-    'data': 'zWRkU49wGoVGxcviwZ3aqEumkprxq92e88BoHyf/9i0bQbdgD73AC/el6WY9ke7j5hEue1LuSTJ0ejuG2nJj1vzdLSOSAdWoxvXqzqIeBoCiJcb4uRNH+E2/XO/kNkBRjmz2SAVvEPEE0MILBI1xB2/fyPwKn81W7ZjzYQpKz0mkQnw1nVVDBMr65MmXudS5rISxAy6bB/VsubimDFXTC/XdoMxnJM5gymR3iG356hjnhmddsyKrZKbifppuhk8UMi/wS1bhIkeHWJQGwuypa4RdaIme+nmCMZgljoL2OgktwKcv'
+    'data': 'CV/dXuESVGpQ3CEi019sTF8kUGboeR+SRUEr6EwNsyHcHG3YwgpE2EYAeUJlHEsDB5NtRnfH3n9Kf13acFminascEZf+92Z9J3YDAPiqFWkxNcqmzfKRZe+ujwetInm4EE9uGuT3HHE2WzjHu7QpXgG4UsVDQJWNRpFKP5M5Ho0oztr2bn02RovudeRF3Ka/XN8a/Fzq689m4z4y3mt2dbjPa6tlSKpd/XHA9muM3EFHcZjC4+EKEx3BGtGrbDKfpE4PIPq0/CPNbUMvuVN8lp5cD1FathDOocv9+b+MGlnjNCYg'
   }, prettyPrintBool: true);
 
   String wrappedFileContentA = MapUtils.parseJsonToString(<String, dynamic>{
@@ -98,6 +99,16 @@ void main() {
   late String testSessionUUID;
 
   setUp(() async {
+    // print(
+    //   actualMasterKeyVO.encrypt(
+    //     appPasswordModel: actualPasswordModel,
+    //     plaintextValue: actualPasswordModel
+    //         .encrypt(
+    //           decryptedData: actualPasswordModel.encrypt(decryptedData: 'test_2').toJsonString(prettyPrintBool: true)
+    //         )
+    //         .toJsonString(prettyPrintBool: true),
+    //   ).base64,
+    // );
     testSessionUUID = const Uuid().v4();
     TestUtils.setupTmpFilesystemStructureFromJson(actualFilesystemStructure, path: testSessionUUID);
 
@@ -372,10 +383,10 @@ void main() {
     test('Should [return ASecretsModel] if [secrets UUID EXISTS] in filesystem storage and [password VALID] (2nd depth)', () async {
       // Arrange
       ContainerPathModel containerPathModel = ContainerPathModel.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/9b282030-4c0f-482e-ba0d-524e10822f65');
-      PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('1111');
+      MultiPasswordModel actualMultiPasswordModel = actualPasswordModel.extend(PasswordModel.fromPlaintext('1111'));
 
       // Act
-      ASecretsModel actualSecretsModel = await actualSecretsService.getSecrets<WalletSecretsModel>(containerPathModel, actualPasswordModel);
+      ASecretsModel actualSecretsModel = await actualSecretsService.getSecrets<WalletSecretsModel>(containerPathModel, actualMultiPasswordModel);
 
       // Assert
       ASecretsModel expectedSecretsModel = WalletSecretsModel(
