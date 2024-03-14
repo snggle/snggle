@@ -89,6 +89,11 @@ dependencies:
   # https://pub.dev/packages/path_provider
   path_provider: ^2.1.2
 
+  gradient_borders: ^1.0.0
+
+  custom_pop_up_menu: ^1.2.4
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
