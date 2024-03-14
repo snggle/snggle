@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_icons.dart';
-import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/groups/network_group_list_item_model.dart';
 import 'package:snggle/shared/models/selection_model.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_agreement_dialog.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
 
-class WalletListPageTooltip extends StatefulWidget {
-  final SelectionModel<AListItemModel> selectionModel;
+class NetworkGroupsListPageTooltip extends StatefulWidget {
+  final SelectionModel<NetworkGroupListItemModel> selectionModel;
   final VoidCallback onSelectAll;
-  final VoidCallback? onGroupSelected;
+  final VoidCallback? onBackupSelected;
   final VoidCallback? onLockSelected;
   final ValueChanged<bool>? onPinValueChanged;
 
-  const WalletListPageTooltip({
+  const NetworkGroupsListPageTooltip({
     required this.selectionModel,
     required this.onSelectAll,
-    this.onGroupSelected,
+    this.onBackupSelected,
     this.onLockSelected,
     this.onPinValueChanged,
     super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => _WalletListPageTooltipState();
+  State<StatefulWidget> createState() => _NetworkGroupsListPageTooltipState();
 }
 
-class _WalletListPageTooltipState extends State<WalletListPageTooltip> {
+class _NetworkGroupsListPageTooltipState extends State<NetworkGroupsListPageTooltip> {
   @override
   Widget build(BuildContext context) {
     return BottomTooltip(
@@ -50,11 +50,6 @@ class _WalletListPageTooltipState extends State<WalletListPageTooltip> {
           iconData: AppIcons.lock,
           label: 'Lock',
           onTap: widget.selectionModel.canLockAll ? _pressLockButton : null,
-        ),
-        BottomTooltipItem(
-          iconData: AppIcons.categories,
-          label: 'Group',
-          onTap: widget.onGroupSelected,
         ),
       ],
     );

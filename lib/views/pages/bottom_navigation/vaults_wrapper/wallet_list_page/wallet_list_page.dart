@@ -7,10 +7,13 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/shared/models/a_container_model.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/groups/wallet_group_list_item_model.dart';
+import 'package:snggle/shared/models/network_config_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_list_item_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_group_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_page_tooltip.dart';
 import 'package:snggle/views/widgets/button/square_outlined_button.dart';
@@ -22,12 +25,14 @@ import 'package:snggle/views/widgets/generic/loading_container.dart';
 class WalletListPage extends StatefulWidget {
   final String pageName;
   final VaultModel vaultModel;
+  final NetworkConfigModel networkConfigModel;
   final AContainerModel parentContainerModel;
   final PasswordModel vaultPasswordModel;
 
   const WalletListPage({
     required this.pageName,
     required this.vaultModel,
+    required this.networkConfigModel,
     required this.parentContainerModel,
     required this.vaultPasswordModel,
     super.key,
@@ -41,6 +46,7 @@ class _WalletListPageState extends State<WalletListPage> {
   static const int loadingItemsCount = 24;
 
   late final WalletListPageCubit walletListPageCubit = WalletListPageCubit(
+    networkConfigModel: widget.networkConfigModel,
     vaultModel: widget.vaultModel,
     containerPathModel: widget.parentContainerModel.containerPathModel,
     vaultPasswordModel: widget.vaultPasswordModel,
@@ -123,6 +129,33 @@ class _WalletListPageState extends State<WalletListPage> {
                           }
                         },
                       );
+                    }
+                    if (listItemModel is WalletGroupListItemModel) {
+                      return WalletGroupListItem(
+                        key: Key(listItemModel.walletGroupModel.id),
+                        walletGroupListItemModel: listItemModel,
+                        vaultModel: widget.vaultModel,
+                        networkConfigModel: widget.networkConfigModel,
+                        selectedBool: listState.selectedItems.contains(listItemModel),
+                        selectionEnabledBool: listState.isSelectionEnabled,
+                        onPinValueChanged: (bool pinnedBool) => walletListPageCubit.pinSelection(
+                          selectedItems: <WalletGroupListItemModel>[listItemModel],
+                          pinnedBool: pinnedBool,
+                        ),
+                        onRefresh: () => walletListPageCubit.refreshSingle(listItemModel),
+                        onDelete: () => _deleteWallet(listItemModel),
+                        onSelectValueChanged: (bool selectedBool) => _updateWalletSelection(
+                          listItemModel: listItemModel,
+                          selectedBool: selectedBool,
+                        ),
+                        onLockValueChanged: (bool lockedBool) {
+                          if (lockedBool) {
+                            _lock(<WalletGroupListItemModel>[listItemModel]);
+                          } else {
+                            _unlock(listItemModel);
+                          }
+                        },
+                      );
                     } else {
                       throw StateError('List item not supported');
                     }
@@ -168,14 +201,18 @@ class _WalletListPageState extends State<WalletListPage> {
               _lock(listState.selectedItems);
               _cancelSelection();
             },
+            onGroupSelected: () {
+              walletListPageCubit.groupSelection(selectedItems: listState.selectedItems);
+              _cancelSelection();
+            },
           );
         },
       ),
     );
   }
 
-  Future<void> _lock(List<AListItemModel> selectedWallets) async {
-    await walletListPageCubit.updateEncryptionStatus(selectedItems: selectedWallets, encryptedBool: true);
+  Future<void> _lock(List<AListItemModel> selectedItems) async {
+    await walletListPageCubit.updateEncryptionStatus(selectedItems: selectedItems, encryptedBool: true);
   }
 
   Future<void> _unlock(AListItemModel listItemModel) async {

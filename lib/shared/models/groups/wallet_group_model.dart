@@ -1,5 +1,6 @@
 import 'package:snggle/shared/models/a_container_model.dart';
 import 'package:snggle/shared/models/container_path_model.dart';
+import 'package:snggle/shared/models/network_config_model.dart';
 import 'package:uuid/uuid.dart';
 
 class WalletGroupModel extends AContainerModel {
@@ -13,6 +14,15 @@ class WalletGroupModel extends AContainerModel {
     required this.name,
     required String parentPath,
   }) : super(containerPathModel: ContainerPathModel.fromString('${parentPath}/${id}'));
+
+  factory WalletGroupModel.fromNetworkConfig({required NetworkConfigModel networkConfigModel, required String parentPath}) {
+    return WalletGroupModel(
+      pinnedBool: false,
+      id: networkConfigModel.id,
+      parentPath: parentPath,
+      name: networkConfigModel.name,
+    );
+  }
 
   factory WalletGroupModel.generate({required String parentPath}) {
     String groupUUID = const Uuid().v4();
