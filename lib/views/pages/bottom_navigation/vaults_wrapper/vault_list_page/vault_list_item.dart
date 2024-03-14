@@ -1,23 +1,40 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
-import 'package:blockies_svg/blockies_svg.dart';
+import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:snggle/bloc/vault_list_item/vault_list_item_cubit.dart';
-import 'package:snggle/bloc/vault_list_item/vault_list_item_state.dart';
+import 'package:flutter/services.dart';
+import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/shared/models/password_entry_result_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/models/vaults/vault_model.dart';
-import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
-import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/secrets_auth_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_icon.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item_template.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item_tooltip.dart';
+import 'package:snggle/views/widgets/actions_tooltip/actions_tooltip_wrapper.dart';
+import 'package:snggle/views/widgets/generic/selection_wrapper.dart';
 
 class VaultListItem extends StatefulWidget {
-  final VaultModel vaultModel;
+  final bool selectedBool;
+  final bool selectingEnabledBool;
+  final VaultListItemModel vaultListItemModel;
   final VoidCallback onDelete;
+  final VoidCallback onRefresh;
+  final ValueChanged<bool> onSelectValueChanged;
+  final ValueChanged<bool> onLockValueChanged;
+  final ValueChanged<bool> onPinValueChanged;
 
   const VaultListItem({
-    required this.vaultModel,
+    required this.selectedBool,
+    required this.selectingEnabledBool,
+    required this.vaultListItemModel,
     required this.onDelete,
+    required this.onRefresh,
+    required this.onSelectValueChanged,
+    required this.onLockValueChanged,
+    required this.onPinValueChanged,
     super.key,
   });
 
@@ -26,178 +43,105 @@ class VaultListItem extends StatefulWidget {
 }
 
 class _VaultListItemState extends State<VaultListItem> {
+  final CustomPopupMenuController actionsPopupController = CustomPopupMenuController();
   final PasswordModel mockedPasswordModel = PasswordModel.fromPlaintext('1111');
-  late final VaultListItemCubit vaultListItemCubit = VaultListItemCubit(vaultModel: widget.vaultModel);
-
-  @override
-  void initState() {
-    super.initState();
-    vaultListItemCubit.init();
-  }
-
-  @override
-  void dispose() {
-    vaultListItemCubit.close();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VaultListItemCubit, VaultListItemState>(
-      bloc: vaultListItemCubit,
-      builder: (BuildContext context, VaultListItemState vaultListItemState) {
-        return Dismissible(
-          background: Container(
-            color: Colors.red,
-            padding: const EdgeInsets.all(15),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Icon(Icons.delete_outline_outlined),
-                Icon(Icons.delete_outline_outlined),
-              ],
-            ),
-          ),
-          key: Key(widget.vaultModel.uuid),
-          onDismissed: (_) => widget.onDelete(),
-          child: ListTile(
-            onTap: () => _navigateToWalletsPage(vaultListItemState.encryptedBool, vaultListItemState.lockedBool),
-            title: Text(
-              'Vault: ${widget.vaultModel.index + 1}',
-              style: const TextStyle(fontSize: 14),
-            ),
-            trailing: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                RichText(
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: vaultListItemState.encryptedBool ? Colors.green : Colors.red,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: <InlineSpan>[
-                      WidgetSpan(
-                        child: Icon(
-                          Icons.lock,
-                          size: 14,
-                          color: vaultListItemState.encryptedBool ? Colors.green : Colors.red,
-                        ),
-                      ),
-                      const TextSpan(text: ' '),
-                      TextSpan(text: vaultListItemState.encryptedBool ? 'With password' : 'Without password'),
-                    ],
-                  ),
-                ),
-                RichText(
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: vaultListItemState.lockedBool ? Colors.green : Colors.red,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: <InlineSpan>[
-                      WidgetSpan(
-                        child: Icon(
-                          Icons.lock,
-                          size: 14,
-                          color: vaultListItemState.lockedBool ? Colors.green : Colors.red,
-                        ),
-                      ),
-                      const TextSpan(text: ' '),
-                      TextSpan(text: vaultListItemState.lockedBool ? 'Locked' : 'Unlocked'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    ...vaultListItemState.vaultWalletsPreview.map((WalletModel walletModel) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 2),
-                        child: ClipOval(
-                          child: SvgPicture.string(Blockies(seed: walletModel.address).toSvg(size: 15)),
-                        ),
-                      );
-                    }).toList(),
-                    if (vaultListItemState.totalWalletsCount > 9)
-                      Text('  +${vaultListItemState.totalWalletsCount - 9}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-                  ],
-                ),
-                TextButtonTheme(
-                  data: TextButtonThemeData(
-                    style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: const Size(10, 30),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        alignment: Alignment.centerLeft),
-                  ),
-                  child: Wrap(
-                    children: <Widget>[
-                      if (vaultListItemState.encryptedBool) ...<Widget>[
-                        if (vaultListItemState.lockedBool)
-                          TextButton(onPressed: _unlock, child: const Text('Unlock'))
-                        else ...<Widget>[
-                          TextButton(onPressed: _lock, child: const Text('Lock')),
-                          const SizedBox(width: 10),
-                          TextButton(onPressed: _removePassword, child: const Text('Remove pass')),
-                          const SizedBox(width: 10),
-                          TextButton(onPressed: _showSecrets, child: const Text('Show Secrets')),
-                          const SizedBox(width: 10),
-                          TextButton(
-                            onPressed: () => _navigateToWalletsPage(vaultListItemState.encryptedBool, vaultListItemState.lockedBool),
-                            child: const Text('Open'),
-                          ),
-                        ]
-                      ] else
-                        TextButton(onPressed: _setPassword, child: const Text('Set password')),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+    Widget itemWidget = VaultListItemTemplate(
+      iconWidget: VaultIcon(
+        lockedBool: widget.vaultListItemModel.isEncrypted,
+        pinnedBool: widget.vaultListItemModel.isPinned,
+        wallets: widget.vaultListItemModel.vaultWalletsPreview,
+      ),
+      titleWidget: Text(
+        widget.vaultListItemModel.name,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          color: AppColors.body1,
+          fontSize: 13,
+        ),
+      ),
     );
-  }
 
-  Future<void> _navigateToWalletsPage(bool encryptedBool, bool lockedBool) async {
-    if (lockedBool) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vault is locked. Unlock it first.')));
-      return;
-    } else {
-      await AutoRouter.of(context).push<void>(
-        WalletListRoute(vaultModel: widget.vaultModel, vaultPasswordModel: encryptedBool ? mockedPasswordModel : PasswordModel.defaultPassword()),
+    if (widget.selectingEnabledBool) {
+      return SelectionWrapper(
+        selectedBool: widget.selectedBool,
+        onSelectValueChanged: widget.onSelectValueChanged,
+        child: itemWidget,
       );
-      await vaultListItemCubit.reload();
+    } else {
+      return ActionsTooltipWrapper(
+        controller: actionsPopupController,
+        content: VaultListItemTooltip(
+          encryptedBool: widget.vaultListItemModel.isEncrypted,
+          pinnedBool: widget.vaultListItemModel.isPinned,
+          name: widget.vaultListItemModel.name,
+          onPinValueChanged: (bool pinnedBool) {
+            actionsPopupController.hideMenu();
+            widget.onPinValueChanged(pinnedBool);
+          },
+          onLockValueChanged: (bool lockedBool) {
+            actionsPopupController.hideMenu();
+            widget.onLockValueChanged(lockedBool);
+          },
+          onSelect: () {
+            widget.onSelectValueChanged(true);
+            actionsPopupController.hideMenu();
+          },
+          onRemove: () {
+            widget.onDelete();
+            actionsPopupController.hideMenu();
+          },
+        ),
+        child: GestureDetector(
+          onTap: _navigateToWalletsPage,
+          onLongPress: _showActionsTooltip,
+          child: itemWidget,
+        ),
+      );
     }
   }
 
-  void _unlock() {
-    vaultListItemCubit.unlock(mockedPasswordModel);
+  void _showActionsTooltip() {
+    FocusScope.of(context).requestFocus(FocusNode());
+    HapticFeedback.lightImpact();
+    actionsPopupController.showMenu();
   }
 
-  void _lock() {
-    vaultListItemCubit.lock();
+  Future<void> _navigateToWalletsPage() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    actionsPopupController.hideMenu();
+    PasswordModel? passwordModel;
+    if (widget.vaultListItemModel.isEncrypted) {
+      passwordModel = await _queryPassword();
+      if (passwordModel == null) {
+        return;
+      }
+    }
+
+    await AutoRouter.of(context).push<void>(
+      WalletListRoute(
+        vaultModel: widget.vaultListItemModel.vaultModel,
+        vaultPasswordModel: passwordModel ?? PasswordModel.defaultPassword(),
+      ),
+    );
   }
 
-  void _setPassword() {
-    vaultListItemCubit.setPassword(mockedPasswordModel);
-  }
+  Future<PasswordModel?> _queryPassword() async {
+    PasswordEntryResultModel? passwordEntryResultModel = await showDialog<PasswordEntryResultModel?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return SecretsAuthPagePage(containerModel: widget.vaultListItemModel.vaultModel);
+      },
+    );
 
-  void _removePassword() {
-    vaultListItemCubit.removePassword(mockedPasswordModel);
-  }
-
-  Future<void> _showSecrets() async {
-    VaultSecretsModel vaultSecretsModel = await vaultListItemCubit.getVaultSecrets(mockedPasswordModel);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(vaultSecretsModel.toString())));
+    if (passwordEntryResultModel?.validBool == true) {
+      return passwordEntryResultModel?.passwordModel;
+    } else {
+      return null;
+    }
   }
 }

@@ -3,7 +3,7 @@ import 'package:blockies_svg/blockies_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
-import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
+import 'package:snggle/views/widgets/custom/custom_app_bar/custom_app_bar.dart';
 
 @RoutePage()
 class WalletDetailsPage extends StatelessWidget {

@@ -8,6 +8,10 @@ import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_
 class BottomNavigationWrapper extends StatefulWidget {
   const BottomNavigationWrapper({super.key});
 
+  static _BottomNavigationWrapperState of(BuildContext context) {
+    return context.findAncestorStateOfType<_BottomNavigationWrapperState>()!;
+  }
+
   @override
   State<BottomNavigationWrapper> createState() => _BottomNavigationWrapperState();
 }
@@ -20,6 +24,8 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
     3: const AppsRoute(),
     4: const SettingsRoute(),
   };
+
+  Widget? tooltipWidget;
 
   @override
   void dispose() {
@@ -45,6 +51,7 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
                   builder: (BuildContext context, int activeIndex, _) {
                     return CustomBottomNavigationBar(
                       selectedIndex: activeIndex,
+                      tooltip: tooltipWidget,
                       onChanged: _tapNavigationItem,
                       bottomNavigationBarItems: const <CustomBottomNavigationBarItemModel>[
                         CustomBottomNavigationBarItemModel(
@@ -73,6 +80,18 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
         );
       },
     );
+  }
+
+  void showTooltip(Widget tooltip) {
+    setState(() {
+      tooltipWidget = tooltip;
+    });
+  }
+
+  void hideTooltip() {
+    setState(() {
+      tooltipWidget = null;
+    });
   }
 
   void _tapNavigationItem(int index) {

@@ -7,7 +7,7 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item.dart';
-import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
+import 'package:snggle/views/widgets/custom/custom_app_bar/custom_app_bar.dart';
 
 @RoutePage()
 class WalletListPage extends StatefulWidget {

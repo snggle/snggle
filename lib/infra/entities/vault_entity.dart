@@ -4,11 +4,13 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 class VaultEntity extends Equatable {
   final int index;
   final String uuid;
+  final bool pinnedBool;
   final String? name;
 
   const VaultEntity({
     required this.index,
     required this.uuid,
+    required this.pinnedBool,
     this.name,
   });
 
@@ -16,6 +18,7 @@ class VaultEntity extends Equatable {
     return VaultEntity(
       index: json['index'] as int,
       uuid: json['uuid'] as String,
+      pinnedBool: json['pinned'] as bool,
       name: json['name'] as String?,
     );
   }
@@ -24,6 +27,7 @@ class VaultEntity extends Equatable {
     return VaultEntity(
       index: vaultModel.index,
       uuid: vaultModel.uuid,
+      pinnedBool: vaultModel.pinnedBool,
       name: vaultModel.name,
     );
   }
@@ -32,10 +36,11 @@ class VaultEntity extends Equatable {
     return <String, dynamic>{
       'index': index,
       'uuid': uuid,
+      'pinned': pinnedBool,
       'name': name,
     };
   }
 
   @override
-  List<Object?> get props => <Object?>[index, uuid, name];
+  List<Object?> get props => <Object?>[index, pinnedBool, uuid, name];
 }

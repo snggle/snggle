@@ -13,6 +13,7 @@ class VaultModelFactory {
     int lastVaultIndex = await _vaultsService.getLastVaultIndex();
     VaultModel vaultModel = VaultModel(
       index: lastVaultIndex + 1,
+      pinnedBool: false,
       uuid: const Uuid().v4(),
     );
 
@@ -23,6 +24,7 @@ class VaultModelFactory {
     return VaultModel(
       index: vaultEntity.index,
       uuid: vaultEntity.uuid,
+      pinnedBool: vaultEntity.pinnedBool,
       name: vaultEntity.name,
     );
   }
