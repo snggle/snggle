@@ -4,7 +4,7 @@ description: Private keys manager
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.9
+version: 0.0.10
 
 environment:
   sdk: ">=3.2.2"
@@ -88,6 +88,15 @@ dependencies:
   # Flutter plugin for getting commonly used locations on host platform file systems, such as the temp and app data directories.
   # https://pub.dev/packages/path_provider
   path_provider: ^2.1.2
+
+  # Gradient borders for inputs and containers. Borders package integrated with a basic flutter widgets as a container and input decorations. Easy in use, platform independent.
+  # https://pub.dev/packages/gradient_borders
+  gradient_borders: ^1.0.0
+
+  # Wrap a widget with CustomPopupMenu, Tap or Long Press this widget, a popup menu would display in a suitable position.
+  # https://pub.dev/packages/custom_pop_up_menu
+  custom_pop_up_menu: ^1.2.4
+
 
 dev_dependencies:
   flutter_test:

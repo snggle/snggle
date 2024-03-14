@@ -20,7 +20,7 @@ void main() {
   // @formatter:off
   Map<String, String> filledChildKeysDatabase = <String, String>{
     DatabaseParentKey.encryptedMasterKey.name: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    actualDatabaseParentKey.name: 'pJ9oebXNvPd2LtRmPMKTQ7w1fswHP5E/6nTpAro4GpPwruAvkLy1mMTiEbiQ17Bw9tteULmYR3TidUOyimkFWmPD94O4gyhu4MEUP/wFajfsNY4AHjJ2bk7ZdZofZRqXXShkNSSDgQY2kKqlUndUx1XOd4+OcL1S6JuSSFoKm8LGUu5EDlvMRQbbUTkwFnW2kiXCbjBXVeDO4yaAKx6Shctr5ReU3bCT5K+9c2qjkBEb+Mj+qhtvxzaFJBvVZKqRjykBLYU9sSrrJnIzIIERjx+1s4WcIFuYQHvQzqCpPlCDi9ZA5xRm3QGw2tJQ4eRWWp2Tg2UE1PpJQcwR8O4+MZ6TDMg=',
+    actualDatabaseParentKey.name: 'L27Zi2cdyeFRM8YkfmUrOjQfp4VXBZ0hQyY+UolOfqxRKgAoEMLa739ozOibvsFVo8gfOhraL3bv4Qcv9ZWnmONA2myFVvkKsTwG7pkacbcN3epQ9lgQgrbsXmqKx4PI+pWpK3pTdHWVLIJx+rQ68/0lxQ5jGbLe2OcM7CUYxkTjmmb2/JTwzVLV49AlY+fb0o/+X5VVtUdMdsH/+6IxOwwsKuiqQHNdlTZGnVKPyca4UF7dWDP2kLbaVBdAC1basI3v/wDJZlr2TDunPHZNTeUhvNtLIKKT0UGpmqG6wzmswKSnIoLVrg9RKOuy02bkFFQNaBDF5ei4GCqD8aprgjqYKvmNf+xzwtYju0dTvi+NKu1OjCbG8c1xc/YTAQwfQsaXEg==',
   };
 
   Map<String, String> emptyChildKeysDatabase = <String, String>{
@@ -63,13 +63,13 @@ void main() {
     test('Should [return VaultModel] with values from given VaultEntity', () {
       // Arrange
       VaultModelFactory actualVaultModelFactory = VaultModelFactory();
-      VaultEntity actualVaultEntity = const VaultEntity(index: 10, uuid: '7d871464-f352-432d-ad70-b001b38a17c9', name: 'test');
+      VaultEntity actualVaultEntity = const VaultEntity(index: 10, uuid: '7d871464-f352-432d-ad70-b001b38a17c9', pinnedBool: true, name: 'test');
 
       // Act
       VaultModel actualVaultModel = actualVaultModelFactory.createFromEntity(actualVaultEntity);
 
       // Assert
-      VaultModel expectedVaultModel = VaultModel(index: 10, uuid: '7d871464-f352-432d-ad70-b001b38a17c9', name: 'test');
+      VaultModel expectedVaultModel = VaultModel(index: 10, uuid: '7d871464-f352-432d-ad70-b001b38a17c9', pinnedBool: true, name: 'test');
       expect(actualVaultModel, expectedVaultModel);
     });
   });

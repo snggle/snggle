@@ -9,11 +9,13 @@ class CustomBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
   final List<CustomBottomNavigationBarItemModel> bottomNavigationBarItems;
   final ValueChanged<int> onChanged;
+  final Widget? tooltip;
 
   const CustomBottomNavigationBar({
     required this.selectedIndex,
     required this.bottomNavigationBarItems,
     required this.onChanged,
+    this.tooltip,
     super.key,
   });
 
@@ -25,16 +27,17 @@ class CustomBottomNavigationBar extends StatelessWidget {
       child: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
-          child: Row(
-            children: <Widget>[
-              for (int i = 0; i < bottomNavigationBarItems.length; i++)
-                CustomBottomNavigationBarItem(
-                  selectedBool: i == selectedIndex,
-                  customBottomNavigationBarItemModel: bottomNavigationBarItems[i],
-                  onTap: () => onChanged(i),
-                ),
-            ],
-          ),
+          child: tooltip ??
+              Row(
+                children: <Widget>[
+                  for (int i = 0; i < bottomNavigationBarItems.length; i++)
+                    CustomBottomNavigationBarItem(
+                      selectedBool: i == selectedIndex,
+                      customBottomNavigationBarItemModel: bottomNavigationBarItems[i],
+                      onTap: () => onChanged(i),
+                    ),
+                ],
+              ),
         ),
       ),
     );

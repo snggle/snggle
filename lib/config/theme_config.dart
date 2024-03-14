@@ -40,7 +40,12 @@ class ThemeConfig {
   }
 
   TextTheme get textTheme {
-    return _baseTheme.textTheme.apply(fontFamily: 'Bauhaus');
+    TextTheme baseTheme = _baseTheme.textTheme.apply(fontFamily: 'Bauhaus', bodyColor: AppColors.body1);
+    baseTheme = baseTheme.copyWith(
+      bodyMedium: baseTheme.bodyMedium?.copyWith(fontSize: 14),
+      labelMedium: baseTheme.labelMedium?.copyWith(fontSize: 12),
+    );
+    return baseTheme;
   }
 
   TextButtonThemeData get textButtonTheme {
