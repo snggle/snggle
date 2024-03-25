@@ -11,7 +11,7 @@
 import 'package:auto_route/auto_route.dart' as _i12;
 import 'package:flutter/material.dart' as _i13;
 import 'package:snggle/shared/models/password_model.dart' as _i16;
-import 'package:snggle/shared/models/vaults/vault_model.dart' as _i15;
+import 'package:snggle/shared/models/vaults/vault_list_item_model.dart' as _i15;
 import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i14;
 import 'package:snggle/views/pages/app_auth_page.dart' as _i1;
 import 'package:snggle/views/pages/app_setup_pin_page.dart' as _i2;
@@ -106,7 +106,7 @@ abstract class $AppRouter extends _i12.RootStackRouter {
       return _i12.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i11.WalletListPage(
-          vaultModel: args.vaultModel,
+          vaultListItemModel: args.vaultListItemModel,
           vaultPasswordModel: args.vaultPasswordModel,
           key: args.key,
         ),
@@ -298,14 +298,14 @@ class WalletDetailsRouteArgs {
 /// [_i11.WalletListPage]
 class WalletListRoute extends _i12.PageRouteInfo<WalletListRouteArgs> {
   WalletListRoute({
-    required _i15.VaultModel vaultModel,
+    required _i15.VaultListItemModel vaultListItemModel,
     required _i16.PasswordModel vaultPasswordModel,
     _i13.Key? key,
     List<_i12.PageRouteInfo>? children,
   }) : super(
           WalletListRoute.name,
           args: WalletListRouteArgs(
-            vaultModel: vaultModel,
+            vaultListItemModel: vaultListItemModel,
             vaultPasswordModel: vaultPasswordModel,
             key: key,
           ),
@@ -320,12 +320,12 @@ class WalletListRoute extends _i12.PageRouteInfo<WalletListRouteArgs> {
 
 class WalletListRouteArgs {
   const WalletListRouteArgs({
-    required this.vaultModel,
+    required this.vaultListItemModel,
     required this.vaultPasswordModel,
     this.key,
   });
 
-  final _i15.VaultModel vaultModel;
+  final _i15.VaultListItemModel vaultListItemModel;
 
   final _i16.PasswordModel vaultPasswordModel;
 
@@ -333,6 +333,6 @@ class WalletListRouteArgs {
 
   @override
   String toString() {
-    return 'WalletListRouteArgs{vaultModel: $vaultModel, vaultPasswordModel: $vaultPasswordModel, key: $key}';
+    return 'WalletListRouteArgs{vaultListItemModel: $vaultListItemModel, vaultPasswordModel: $vaultPasswordModel, key: $key}';
   }
 }

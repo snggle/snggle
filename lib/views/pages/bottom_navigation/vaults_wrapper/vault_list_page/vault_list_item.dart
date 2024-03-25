@@ -129,7 +129,7 @@ class _VaultListItemState extends State<VaultListItem> {
 
     await AutoRouter.of(context).push<void>(
       WalletListRoute(
-        vaultModel: widget.vaultListItemModel.vaultModel,
+        vaultListItemModel: widget.vaultListItemModel,
         vaultPasswordModel: passwordModel ?? PasswordModel.defaultPassword(),
       ),
     );

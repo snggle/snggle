@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 class WalletModelFactory {
   Future<WalletModel> createNewWallet(WalletCreationRequestModel walletCreationRequestModel) async {
     return WalletModel(
+      pinnedBool: false,
       index: walletCreationRequestModel.index,
       uuid: const Uuid().v4(),
       vaultUuid: walletCreationRequestModel.vaultUuid,
@@ -18,6 +19,7 @@ class WalletModelFactory {
 
   WalletModel createFromEntity(WalletEntity walletEntity) {
     return WalletModel(
+      pinnedBool: walletEntity.pinnedBool,
       index: walletEntity.index,
       uuid: walletEntity.uuid,
       vaultUuid: walletEntity.vaultUuid,

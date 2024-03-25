@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 
 class WalletEntity extends Equatable {
+  final bool pinnedBool;
   final int index;
   final String uuid;
   final String vaultUuid;
@@ -10,6 +11,7 @@ class WalletEntity extends Equatable {
   final String? name;
 
   const WalletEntity({
+    required this.pinnedBool,
     required this.index,
     required this.uuid,
     required this.vaultUuid,
@@ -20,6 +22,7 @@ class WalletEntity extends Equatable {
 
   factory WalletEntity.fromJson(Map<String, dynamic> json) {
     return WalletEntity(
+      pinnedBool: json['pinned'] as bool,
       index: json['index'] as int,
       uuid: json['uuid'] as String,
       vaultUuid: json['vault_uuid'] as String,
@@ -31,6 +34,7 @@ class WalletEntity extends Equatable {
 
   factory WalletEntity.fromWalletModel(WalletModel walletModel) {
     return WalletEntity(
+      pinnedBool: walletModel.pinnedBool,
       index: walletModel.index,
       uuid: walletModel.uuid,
       vaultUuid: walletModel.vaultUuid,
@@ -42,6 +46,7 @@ class WalletEntity extends Equatable {
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
+      'pinned': pinnedBool,
       'index': index,
       'uuid': uuid,
       'vault_uuid': vaultUuid,
@@ -52,5 +57,5 @@ class WalletEntity extends Equatable {
   }
 
   @override
-  List<Object?> get props => <Object?>[index, uuid, vaultUuid, address, derivationPath, name];
+  List<Object?> get props => <Object?>[pinnedBool, index, uuid, vaultUuid, address, derivationPath, name];
 }
