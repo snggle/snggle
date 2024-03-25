@@ -437,7 +437,7 @@ void main() {
     });
 
     group('Tests of WalletListPageCubit.lockSelection()', () {
-      test('Should [emit ListState] with updated "encryptedBool" value for selected items (encryptedBool == false)', () async {
+      test('Should [emit ListState] with updated "encryptedBool" value for selected items (encryptedBool == true)', () async {
         // Act
         await actualWalletListPageCubit.lockSelection(
           selectedItems: <AListItemModel>[
@@ -445,36 +445,7 @@ void main() {
             updatedWalletModel2.copyWith(pinnedBool: true),
             walletModel1.copyWith(pinnedBool: true),
           ],
-          encryptedBool: false,
-        );
-
-        ListState actualListState = actualWalletListPageCubit.state;
-
-        // Assert
-        ListState expectedListState = ListState(
-          depth: 0,
-          loadingBool: false,
-          allItems: <AListItemModel>[
-            updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: false),
-            updatedWalletModel2.copyWith(pinnedBool: true, encryptedBool: false),
-            walletModel1.copyWith(pinnedBool: true, encryptedBool: false),
-            walletModel4,
-          ],
-          filesystemPath: FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6'),
-        );
-
-        expect(actualListState, expectedListState);
-      });
-
-      test('Should [emit ListState] with updated "encryptedBool" value for selected items (encryptedBool == true)', () async {
-        // Act
-        await actualWalletListPageCubit.lockSelection(
-          selectedItems: <AListItemModel>[
-            updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: false),
-            updatedWalletModel2.copyWith(pinnedBool: true, encryptedBool: false),
-            walletModel1.copyWith(pinnedBool: true, encryptedBool: false),
-          ],
-          encryptedBool: true,
+          newPasswordModel: PasswordModel.fromPlaintext('1111'),
         );
 
         ListState actualListState = actualWalletListPageCubit.state;
@@ -496,6 +467,58 @@ void main() {
       });
     });
 
+    group('Tests of WalletListPageCubit.unlockSelection()', () {
+      test('Should [emit ListState] with updated "encryptedBool" value for selected WALLET (encryptedBool == false)', () async {
+        // Act
+        await actualWalletListPageCubit.unlockSelection(
+          selectedItem: updatedWalletModel2.copyWith(pinnedBool: true, encryptedBool: true),
+          oldPasswordModel: PasswordModel.fromPlaintext('1111'),
+        );
+
+        ListState actualListState = actualWalletListPageCubit.state;
+
+        // Assert
+        ListState expectedListState = ListState(
+          depth: 0,
+          loadingBool: false,
+          allItems: <AListItemModel>[
+            updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: true),
+            updatedWalletModel2.copyWith(pinnedBool: true, encryptedBool: false),
+            walletModel1.copyWith(pinnedBool: true, encryptedBool: true),
+            walletModel4,
+          ],
+          filesystemPath: FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6'),
+        );
+
+        expect(actualListState, expectedListState);
+      });
+
+      test('Should [emit ListState] with updated "encryptedBool" value for selected GROUP (encryptedBool == false)', () async {
+        // Act
+        await actualWalletListPageCubit.unlockSelection(
+          selectedItem: updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: true),
+          oldPasswordModel: PasswordModel.fromPlaintext('1111'),
+        );
+
+        ListState actualListState = actualWalletListPageCubit.state;
+
+        // Assert
+        ListState expectedListState = ListState(
+          depth: 0,
+          loadingBool: false,
+          allItems: <AListItemModel>[
+            updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: false),
+            updatedWalletModel2.copyWith(pinnedBool: true, encryptedBool: false),
+            walletModel1.copyWith(pinnedBool: true, encryptedBool: true),
+            walletModel4,
+          ],
+          filesystemPath: FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6'),
+        );
+
+        expect(actualListState, expectedListState);
+      });
+    });
+
     group('Tests of WalletListPageCubit.deleteItem()', () {
       test('Should [emit ListState] without deleted WALLET', () async {
         // Act
@@ -507,8 +530,8 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[
-            updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: true),
-            updatedWalletModel2.copyWith(pinnedBool: true, encryptedBool: true),
+            updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: false),
+            updatedWalletModel2.copyWith(pinnedBool: true, encryptedBool: false),
             walletModel4,
           ],
           filesystemPath: FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6'),
@@ -529,7 +552,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[
-            updatedWalletModel2.copyWith(pinnedBool: true, encryptedBool: true),
+            updatedWalletModel2.copyWith(pinnedBool: true, encryptedBool: false),
             walletModel4,
           ],
           filesystemPath: FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6'),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/password_model.dart';
+import 'package:snggle/views/pages/bottom_navigation/secrets_auth_page.dart';
 import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
 import 'package:snggle/views/widgets/drag/source/drag_source_gesture_detector.dart';
 import 'package:snggle/views/widgets/generic/selection_wrapper.dart';
@@ -11,12 +13,14 @@ import 'package:snggle/views/widgets/list/list_item_context_tooltip.dart';
 import 'package:snggle/views/widgets/list/list_item_page_tooltip.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_wrapper.dart';
 
+typedef NavigatedCallback = void Function(AListItemModel listItemModel, PasswordModel passwordModel);
+
 class ListItemActionsWrapper<T extends AListItemModel, C extends AListCubit<T>> extends StatefulWidget {
   final Size listItemSize;
   final String defaultPageTitle;
   final C listCubit;
   final AListItemModel listItemModel;
-  final ValueChanged<AListItemModel> onNavigate;
+  final NavigatedCallback onNavigate;
   final Widget child;
   final DraggedItemNotifier draggedItemNotifier;
   final bool allowItemDeletionBool;
@@ -102,7 +106,21 @@ class _ListItemActionsWrapperState<T extends AListItemModel, C extends AListCubi
     FocusScope.of(context).requestFocus(FocusNode());
     actionsPopupController.hideMenu();
 
-    widget.onNavigate(widget.listItemModel);
+    if (widget.listItemModel.encryptedBool) {
+      showDialog(
+        context: context,
+        barrierColor: Colors.transparent,
+        builder: (BuildContext context) => SecretsAuthPage(
+          title: 'ENTER PIN',
+          listItemModel: widget.listItemModel,
+          passwordValidCallback: (PasswordModel passwordModel) {
+            widget.onNavigate(widget.listItemModel, passwordModel);
+          },
+        ),
+      );
+    } else {
+      widget.onNavigate(widget.listItemModel, PasswordModel.defaultPassword());
+    }
   }
 
   void _openToolbar() {

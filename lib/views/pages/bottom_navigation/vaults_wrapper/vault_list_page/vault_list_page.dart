@@ -151,18 +151,13 @@ class _VaultListPageState extends State<VaultListPage> {
     }
   }
 
-  Future<void> _navigateToNextPage(AListItemModel listItemModel) async {
+  Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
     if (listItemModel is VaultModel) {
-      PasswordModel? passwordModel;
-      if (listItemModel.encryptedBool) {
-        passwordModel = PasswordModel.fromPlaintext('1111');
-      }
-
       await AutoRouter.of(context).push<void>(
         NetworkListRoute(
           name: listItemModel.name,
           vaultModel: listItemModel,
-          vaultPasswordModel: passwordModel ?? PasswordModel.defaultPassword(),
+          vaultPasswordModel: passwordModel,
           filesystemPath: listItemModel.filesystemPath,
         ),
       );

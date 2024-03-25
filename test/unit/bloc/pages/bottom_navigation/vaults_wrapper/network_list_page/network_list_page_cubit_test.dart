@@ -410,7 +410,7 @@ void main() {
     });
 
     group('Tests of NetworkListPageCubit.lockSelection()', () {
-      test('Should [emit ListState] with updated "encryptedBool" value for selected items (encryptedBool == false)', () async {
+      test('Should [emit ListState] with updated "encryptedBool" value for selected ITEMS (encryptedBool == true)', () async {
         // Act
         await actualNetworkListPageCubit.lockSelection(
           selectedItems: <AListItemModel>[
@@ -418,36 +418,7 @@ void main() {
             updatedNetworkGroupModel2.copyWith(pinnedBool: true),
             networkGroupModel1.copyWith(pinnedBool: true),
           ],
-          encryptedBool: false,
-        );
-
-        ListState actualListState = actualNetworkListPageCubit.state;
-
-        // Assert
-        ListState expectedListState = ListState(
-          depth: 0,
-          loadingBool: false,
-          allItems: <AListItemModel>[
-            updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: false),
-            updatedNetworkGroupModel2.copyWith(pinnedBool: true, encryptedBool: false),
-            networkGroupModel1.copyWith(pinnedBool: true, encryptedBool: false),
-            networkGroupModel4,
-          ],
-          filesystemPath: FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6'),
-        );
-
-        expect(actualListState, expectedListState);
-      });
-
-      test('Should [emit ListState] with updated "encryptedBool" value for selected items (encryptedBool == true)', () async {
-        // Act
-        await actualNetworkListPageCubit.lockSelection(
-          selectedItems: <AListItemModel>[
-            updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: false),
-            updatedNetworkGroupModel2.copyWith(pinnedBool: true, encryptedBool: false),
-            networkGroupModel1.copyWith(pinnedBool: true, encryptedBool: false),
-          ],
-          encryptedBool: true,
+          newPasswordModel: PasswordModel.fromPlaintext('1111'),
         );
 
         ListState actualListState = actualNetworkListPageCubit.state;
@@ -469,10 +440,14 @@ void main() {
       });
     });
 
-    group('Tests of NetworkListPageCubit.deleteItem()', () {
-      test('Should [emit ListState] without deleted NETWORK GROUP', () async {
+    group('Tests of NetworkListPageCubit.unlockSelection()', () {
+      test('Should [emit ListState] with updated "encryptedBool" value for selected NETWORK GROUP (encryptedBool == false)', () async {
         // Act
-        await actualNetworkListPageCubit.deleteItem(networkGroupModel1.copyWith(encryptedBool: true));
+        await actualNetworkListPageCubit.unlockSelection(
+          selectedItem: updatedNetworkGroupModel2.copyWith(pinnedBool: true, encryptedBool: true),
+          oldPasswordModel: PasswordModel.fromPlaintext('1111'),
+        );
+
         ListState actualListState = actualNetworkListPageCubit.state;
 
         // Assert
@@ -481,7 +456,55 @@ void main() {
           loadingBool: false,
           allItems: <AListItemModel>[
             updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: true),
-            updatedNetworkGroupModel2.copyWith(pinnedBool: true, encryptedBool: true),
+            updatedNetworkGroupModel2.copyWith(pinnedBool: true, encryptedBool: false),
+            networkGroupModel1.copyWith(pinnedBool: true, encryptedBool: true),
+            networkGroupModel4,
+          ],
+          filesystemPath: FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6'),
+        );
+
+        expect(actualListState, expectedListState);
+      });
+
+      test('Should [emit ListState] with updated "encryptedBool" value for selected GROUP (encryptedBool == false)', () async {
+        // Act
+        await actualNetworkListPageCubit.unlockSelection(
+          selectedItem: updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: true),
+          oldPasswordModel: PasswordModel.fromPlaintext('1111'),
+        );
+
+        ListState actualListState = actualNetworkListPageCubit.state;
+
+        // Assert
+        ListState expectedListState = ListState(
+          depth: 0,
+          loadingBool: false,
+          allItems: <AListItemModel>[
+            updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: false),
+            updatedNetworkGroupModel2.copyWith(pinnedBool: true, encryptedBool: false),
+            networkGroupModel1.copyWith(pinnedBool: true, encryptedBool: true),
+            networkGroupModel4,
+          ],
+          filesystemPath: FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6'),
+        );
+
+        expect(actualListState, expectedListState);
+      });
+    });
+
+    group('Tests of NetworkListPageCubit.deleteItem()', () {
+      test('Should [emit ListState] without deleted NETWORK GROUP', () async {
+        // Act
+        await actualNetworkListPageCubit.deleteItem(networkGroupModel1.copyWith(pinnedBool: true, encryptedBool: true));
+        ListState actualListState = actualNetworkListPageCubit.state;
+
+        // Assert
+        ListState expectedListState = ListState(
+          depth: 0,
+          loadingBool: false,
+          allItems: <AListItemModel>[
+            updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: false),
+            updatedNetworkGroupModel2.copyWith(pinnedBool: true, encryptedBool: false),
             networkGroupModel4,
           ],
           filesystemPath: FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6'),
@@ -492,9 +515,7 @@ void main() {
 
       test('Should [emit ListState] without deleted GROUP', () async {
         // Act
-        await actualNetworkListPageCubit.deleteItem(
-          updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: true),
-        );
+        await actualNetworkListPageCubit.deleteItem(updatedGroupModel.copyWith(pinnedBool: true, encryptedBool: false));
         ListState actualListState = actualNetworkListPageCubit.state;
 
         // Assert
@@ -502,7 +523,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[
-            updatedNetworkGroupModel2.copyWith(pinnedBool: true, encryptedBool: true),
+            updatedNetworkGroupModel2.copyWith(pinnedBool: true, encryptedBool: false),
             networkGroupModel4,
           ],
           filesystemPath: FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6'),

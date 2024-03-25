@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
+import 'package:snggle/views/pages/bottom_navigation/secrets_auth_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/secrets_setup_pin_page.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_agreement_dialog.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_content.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_item.dart';
@@ -54,13 +57,13 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
           ContextTooltipItem(
             iconData: AppIcons.unlock,
             label: 'Unlock',
-            onTap: _pressUnlockButton,
+            onTap: _unlockItem,
           )
         else
           ContextTooltipItem(
             iconData: AppIcons.lock,
             label: 'Lock',
-            onTap: () => _handleLockValueChanged(true),
+            onTap: _lockItem,
           ),
         if (widget.allowItemDeletionBool)
           ContextTooltipItem(
@@ -92,38 +95,41 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
     );
   }
 
-  void _pressUnlockButton() {
-    showDialog(
+  Future<void> _lockItem() async {
+    widget.onCloseToolbar();
+    await showDialog(
       context: context,
-      barrierColor: Colors.transparent,
-      builder: (BuildContext context) => CustomAgreementDialog(
-        title: 'Lock',
-        content: 'Are you sure you want to unlock this item?',
-        onConfirm: () {
-          _handleLockValueChanged(false);
-        },
-      ),
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return SecretsSetupPinPage(
+          passwordValidCallback: (PasswordModel passwordModel) async {
+            await widget.listCubit.lockSelection(selectedItems: <AListItemModel>[widget.listItemModel], newPasswordModel: passwordModel);
+          },
+        );
+      },
     );
   }
 
-  void _handleLockValueChanged(bool lockedBool) {
-    widget.onCloseToolbar.call();
-    if (lockedBool) {
-      _lockItem();
-    } else {
-      _unlockItem();
-    }
-  }
-
-  Future<void> _lockItem() async {
-    await widget.listCubit.lockSelection(selectedItems: <AListItemModel>[widget.listItemModel], encryptedBool: true);
-  }
-
   Future<void> _unlockItem() async {
-    await widget.listCubit.lockSelection(selectedItems: <AListItemModel>[widget.listItemModel], encryptedBool: false);
+    widget.onCloseToolbar();
+    await showDialog(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return SecretsAuthPage(
+          title: 'REMOVE PIN',
+          listItemModel: widget.listItemModel,
+          passwordValidCallback: (PasswordModel passwordModel) async {
+            await widget.listCubit.unlockSelection(selectedItem: widget.listItemModel, oldPasswordModel: passwordModel);
+            widget.onCloseToolbar();
+          },
+        );
+      },
+    );
   }
 
   void _pressDeleteButton() {
+    widget.onCloseToolbar.call();
     showDialog(
       context: context,
       barrierColor: Colors.transparent,
@@ -136,7 +142,6 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
   }
 
   Future<void> _handleDelete() async {
-    widget.onCloseToolbar.call();
     await widget.listCubit.deleteItem(widget.listItemModel);
   }
 

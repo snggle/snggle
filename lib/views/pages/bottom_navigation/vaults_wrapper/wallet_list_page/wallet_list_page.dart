@@ -137,7 +137,7 @@ class _WalletListPageState extends State<WalletListPage> {
     );
   }
 
-  Future<void> _navigateToNextPage(AListItemModel listItemModel) async {
+  Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
     if (listItemModel is WalletModel) {
       await AutoRouter.of(context).push<void>(WalletDetailsRoute(walletModel: listItemModel));
       await walletListPageCubit.refreshAll();

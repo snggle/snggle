@@ -30,17 +30,17 @@ void main() {
   // @formatter:off
   Map<String, dynamic> actualFilesystemStructure = <String, dynamic>{
     'secrets': <String, dynamic>{
-      '37c1345a-fa7e-42b3-a7db-53a3308300c7.snggle': 'ZFiLtfcog0bpfT4AN9tg8jXR9PKtDvcUabkjiDXcoMX/vhusD8PMJ8ovCOhIpND9wWIRpoScteSHCy8IXCB0P7TBUY3QAZb4TYoyO7lUykbPJLUElerGZlrkMYSWECWMQplKYaZhvVbvWuJjHsCoN8hsmn0Gq9rLUfQqbGa2kXNt1LjNSPUtw2oip/aCnF6hKBRqS/pASONW23K114K7ZugSH0/59YlrN+I5bZ60V+kdoFoU',
-      '92b43ace-5439-4269-8e27-e999907f4379.snggle': 'ZFiLtfcog0bpfT4AN9tg8jXR9PKtDvcUabkjiDXcoMX/vhusD8PMJ8ovCOhIpND9wWIRpoScteSHCy8IXCB0P7TBUY3QAZb4TYoyO7lUykbPJLUElerGZlrkMYSWECWMQplKYaZhvVbvWuJjHsCoN8hsmn0Gq9rLUfQqbGa2kXNt1LjNSPUtw2oip/aCnF6hKBRqS/pASONW23K114K7ZugSH0/59YlrN+I5bZ60V+kdoFoU',
-      'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': 'CpghTVIBHTk7+9SgXawmlE91VcpUvCr8/gVwXgME/EDaVM3liUlPyt+LWsye9jwxDFOAkxzuEZJ+FI5tk033Wxq/JuyijTR8Y+lNjU5qZymBSEIcU3FjdzCR9hoHNXJu/DkmFy9CEMBjdQD0YbYCK0lecDNLg9ti7c0NxMv80e8q4uCOJHs5wxvYm1ANct/SiwMf0MKeZCLw5NtO84d7JtnkYVoocCRjwk4KUNAlxJNqlcOF',
+      '37c1345a-fa7e-42b3-a7db-53a3308300c7.snggle': '9qqRbFOUuzjic5e8IBZiDhj1TYGD82zgfVskgYBN/ppNUcLvz5/fgcpxgENLJY/H7fflNEfo/KgLqC1npYq95uweVeZy4KCFSt6yhMORk0HK5owUFfj65uQXw8itFMpfvjq2VkecyDByfz1Mvdd/irmxQOC8W9k54tDgstivs31m0ZULlxwwOG5vaHx9ZGtIdDdel0wSYxBNIWfxvfkNEosIujZd/v3S+6GYX4EqKjRFC05h',
+      '92b43ace-5439-4269-8e27-e999907f4379.snggle': 'L0qHxmfOFe+9h74DtBK+PYnT/qfMYLR1FLjEh0HlO+HGnmr94D8BLzxS2jn1h8udjJN2xoKrBadxbieQcWcKiOXe1qaPobOpNAp3/yu9Rs54m0gQPZYYXyLpIknFvVV1hiVUTG8UusPlSJnQqInzj5q1t0nRjvLpbKB+wNyZHfi1esrj5xn5hfR4tOGldR1Qp/CVeoul9O9ufwko0ObSqqtgNklFYPR+A4qljEEYKiNyv946',
+      'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': 'CZ96LFNk1SuswWVkcX3jR5fnmEE1GbaXnAjiYVx1U63P0LHV/3n7Xgd2Qw79z7OuB1788dYvUdWMMOyAv00okB9DgQcAJIJzR2GjbGHSoPbulCTVCk/1O1w2KBFvvRlYKSpxTof1tsr8/KGR5bdlL7a7rqKBZNkWodwYnuDoWBPQCnEtyD8P1YoJofCCtaTbjiuLWCkiu/u/AkgPhhTD8vRM5zC64n07HiwZpsfA+OYJjwG0',
       'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
-        '4e66ba36-966e-49ed-b639-191388ce38de.snggle': 'BEPaj2w7Fnj2+BlKhCsHK5aAifAgdm+ye4Eyx8apMOLci0SdTTp+/C9dJMszkcQ3SjqVsHUtJUXVKDZCWB28L+ooQb5hUKQeLIiGaO8B1pgY4KtLvV9P1JmjNy7TSDbdfH/ddpQ1Z60gm39vcDbhHMiCLU8rCrNeu3hhB9Tu2kkN+tBHjMn9rxwCuVnjIDjufAdzna8GXiF5yJTW6Nx6xW9zt0x0SyhPX4THfGd0QQIbVhQ1',
+        '4e66ba36-966e-49ed-b639-191388ce38de.snggle': 'CGi4mcSabNRPg+PUjuk170aFtHb1QdocoNmHdWZcX3gjjn6Hysc7t5f/khR6LGRJjXdnFPdxMUAvom5tTpo94JTmyz3hVcmv39Pnevazb2O8uzlW49YaVjDc3Zk28OI8q6q1tc1ADLLesiOHDE1BoiYeLV8=',
       },
-      'e527efe1-a05b-49f5-bfe9-d3532f5c9db9.snggle': 'BrQcp0cakbIn31EdbLCnfzdlUQfwXPj/w7uVoHB6hxkP/SA6Q2vhXQuBJ+TLASlz6FFHTW4OQCqvjQ19RkO+l8F5LSPkQLQcOyOPAaouuUQ8CrbomTzlRr/qz0AoEZB8AyiXvLOghxJoRPPJ6xwux7cTmgSWOKtOPh9sqzJA0dyWVhstI+nfMNnVlXOCgqEMPpwp61xSQ/CvRrFYqht44zJPfWkvBVPd5NBeGd2TtNFBFs9J',
+      'e527efe1-a05b-49f5-bfe9-d3532f5c9db9.snggle': 'am5KJVWm97P0RBMLBPR90VWBq0JAD8SrKPVFeDNTpMC9YMaRSrOXZvpOpMyIHuTuZ+tdjqzqISXu1ortipy4+c0MOt856yrCxwLVRWR7uAyEyS0Jq0atePB1R/f+5Vv5g7wE0PUxjFKNVMShtQ48XKE+YMVh3fbqi7wJBjm5IQbergKCnSGUK57wCWctlNa2MXLnCg==',
       'e527efe1-a05b-49f5-bfe9-d3532f5c9db9': <String, dynamic>{
-        '438791a4-b537-4589-af4f-f56b6449a0bb.snggle': 'CpghTVIBHTk7+9SgXawmlE91VcpUvCr8/gVwXgME/EDaVM3liUlPyt+LWsye9jwxDFOAkxzuEZJ+FI5tk033Wxq/JuyijTR8Y+lNjU5qZymBSEIcU3FjdzCR9hoHNXJu/DkmFy9CEMBjdQD0YbYCK0lecDNLg9ti7c0NxMv80e8q4uCOJHs5wxvYm1ANct/SiwMf0MKeZCLw5NtO84d7JtnkYVoocCRjwk4KUNAlxJNqlcOF',
+        '438791a4-b537-4589-af4f-f56b6449a0bb.snggle': 'v9dqwspRaZwWPf4SnIPsQclu55+3m/zc4IKd7/1FGWBjOF1nNRMeC1wgUF2PkvkP3U+mJkU95WrLHxQbYDXkR7aFXtN9hBDt7Q2+MBhma1pOFYGzhzKrZGWiFAhdWOEV3a52Ep/Y6yMw/dJgf0HhauPBPfeekB+9KxogtVXiTVZQNqQJ7luw00l2blf9sf9oh/Nb4U/PKZZtCWe3fn+Bc4vg2WjYQISoDKUG7fVgBuj1V9CC',
         '438791a4-b537-4589-af4f-f56b6449a0bb': <String, dynamic>{
-          '3e7f3547-d78f-4dda-a916-3e9eabd4bfee.snggle': 'BEPaj2w7Fnj2+BlKhCsHK5aAifAgdm+ye4Eyx8apMOLci0SdTTp+/C9dJMszkcQ3SjqVsHUtJUXVKDZCWB28L+ooQb5hUKQeLIiGaO8B1pgY4KtLvV9P1JmjNy7TSDbdfH/ddpQ1Z60gm39vcDbhHMiCLU8rCrNeu3hhB9Tu2kkN+tBHjMn9rxwCuVnjIDjufAdzna8GXiF5yJTW6Nx6xW9zt0x0SyhPX4THfGd0QQIbVhQ1',
+          '3e7f3547-d78f-4dda-a916-3e9eabd4bfee.snggle': 'CGi4mcSabNRPg+PUjuk170aFtHb1QdocoNmHdWZcX3gjjn6Hysc7t5f/khR6LGRJjXdnFPdxMUAvom5tTpo94JTmyz3hVcmv39Pnevazb2O8uzlW49YaVjDc3Zk28OI8q6q1tc1ADLLesiOHDE1BoiYeLV8=',
         }
       },
     },
@@ -440,7 +440,7 @@ void main() {
     });
 
     group('Tests of VaultListPageCubit.lockSelection()', () {
-      test('Should [emit ListState] with updated "encryptedBool" value for selected vaults (encryptedBool == false)', () async {
+      test('Should [emit ListState] with updated "encryptedBool" value for selected items (encryptedBool == true)', () async {
         // Act
         await actualVaultListPageCubit.lockSelection(
           selectedItems: <AListItemModel>[
@@ -448,36 +448,7 @@ void main() {
             vaultModel1.copyWith(pinnedBool: false),
             updatedVaultModel2.copyWith(pinnedBool: false),
           ],
-          encryptedBool: false,
-        );
-
-        ListState actualListState = actualVaultListPageCubit.state;
-
-        // Assert
-        ListState expectedListState = ListState(
-          depth: 0,
-          loadingBool: false,
-          allItems: <AListItemModel>[
-            vaultModel4,
-            updatedGroupModel.copyWith(pinnedBool: false, encryptedBool: false),
-            vaultModel1.copyWith(pinnedBool: false, encryptedBool: false),
-            updatedVaultModel2.copyWith(pinnedBool: false, encryptedBool: false),
-          ],
-          filesystemPath: const FilesystemPath.empty(),
-        );
-
-        expect(actualListState, expectedListState);
-      });
-
-      test('Should [emit ListState] with updated "encryptedBool" value for selected vaults (encryptedBool == true)', () async {
-        // Act
-        await actualVaultListPageCubit.lockSelection(
-          selectedItems: <AListItemModel>[
-            updatedGroupModel.copyWith(pinnedBool: false, encryptedBool: false),
-            vaultModel1.copyWith(pinnedBool: false, encryptedBool: false),
-            updatedVaultModel2.copyWith(pinnedBool: false, encryptedBool: false),
-          ],
-          encryptedBool: true,
+          newPasswordModel: PasswordModel.fromPlaintext('1111'),
         );
 
         ListState actualListState = actualVaultListPageCubit.state;
@@ -490,6 +461,58 @@ void main() {
             vaultModel4,
             updatedGroupModel.copyWith(pinnedBool: false, encryptedBool: true),
             vaultModel1.copyWith(pinnedBool: false, encryptedBool: true),
+            updatedVaultModel2.copyWith(pinnedBool: false, encryptedBool: true),
+          ],
+          filesystemPath: const FilesystemPath.empty(),
+        );
+
+        expect(actualListState, expectedListState);
+      });
+    });
+
+    group('Tests of VaultListPageCubit.unlockSelection()', () {
+      test('Should [emit ListState] with updated "encryptedBool" value for selected VAULT (encryptedBool == false)', () async {
+        // Act
+        await actualVaultListPageCubit.unlockSelection(
+          selectedItem: vaultModel1.copyWith(pinnedBool: false, encryptedBool: true),
+          oldPasswordModel: PasswordModel.fromPlaintext('1111'),
+        );
+
+        ListState actualListState = actualVaultListPageCubit.state;
+
+        // Assert
+        ListState expectedListState = ListState(
+          depth: 0,
+          loadingBool: false,
+          allItems: <AListItemModel>[
+            vaultModel4,
+            updatedGroupModel.copyWith(pinnedBool: false, encryptedBool: true),
+            vaultModel1.copyWith(pinnedBool: false, encryptedBool: false),
+            updatedVaultModel2.copyWith(pinnedBool: false, encryptedBool: true),
+          ],
+          filesystemPath: const FilesystemPath.empty(),
+        );
+
+        expect(actualListState, expectedListState);
+      });
+
+      test('Should [emit ListState] with updated "encryptedBool" value for selected GROUP (encryptedBool == false)', () async {
+        // Act
+        await actualVaultListPageCubit.unlockSelection(
+          selectedItem: updatedGroupModel.copyWith(pinnedBool: false, encryptedBool: true),
+          oldPasswordModel: PasswordModel.fromPlaintext('1111'),
+        );
+
+        ListState actualListState = actualVaultListPageCubit.state;
+
+        // Assert
+        ListState expectedListState = ListState(
+          depth: 0,
+          loadingBool: false,
+          allItems: <AListItemModel>[
+            vaultModel4,
+            updatedGroupModel.copyWith(pinnedBool: false, encryptedBool: false),
+            vaultModel1.copyWith(pinnedBool: false, encryptedBool: false),
             updatedVaultModel2.copyWith(pinnedBool: false, encryptedBool: true),
           ],
           filesystemPath: const FilesystemPath.empty(),
@@ -512,7 +535,7 @@ void main() {
           loadingBool: false,
           allItems: <AListItemModel>[
             vaultModel4,
-            updatedGroupModel.copyWith(pinnedBool: false, encryptedBool: true),
+            updatedGroupModel.copyWith(pinnedBool: false, encryptedBool: false),
             updatedVaultModel2.copyWith(pinnedBool: false, encryptedBool: true),
           ],
           filesystemPath: const FilesystemPath.empty(),

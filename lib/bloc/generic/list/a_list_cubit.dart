@@ -124,12 +124,36 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
     emit(state.copyWith(allItems: _sortItems(updatedItems), loadingBool: false, selectionModel: null, forceOverrideBool: true));
   }
 
-  Future<void> lockSelection({required List<AListItemModel> selectedItems, required bool encryptedBool}) async {
+  Future<void> lockSelection({required List<AListItemModel> selectedItems, required PasswordModel newPasswordModel}) async {
     List<AListItemModel> updatedItems = List<AListItemModel>.from(state.allItems);
     for (int i = 0; i < updatedItems.length; i++) {
       AListItemModel item = updatedItems[i];
       if (selectedItems.contains(item)) {
-        AListItemModel updatedItem = item.setEncrypted(encryptedBool: encryptedBool);
+        await secretsService.changePassword(item.filesystemPath, PasswordModel.defaultPassword(), newPasswordModel);
+        AListItemModel updatedItem = item.setEncrypted(encryptedBool: true);
+        updatedItems[i] = updatedItem;
+        if (updatedItem is T) {
+          unawaited(saveItem(updatedItem));
+        } else if (updatedItem is GroupModel) {
+          unawaited(saveGroup(updatedItem));
+        }
+      }
+    }
+
+    emit(state.copyWith(allItems: _sortItems(updatedItems), loadingBool: false, selectionModel: null, forceOverrideBool: true));
+  }
+
+  Future<void> unlockSelection({required AListItemModel selectedItem, required PasswordModel oldPasswordModel}) async {
+    List<AListItemModel> updatedItems = List<AListItemModel>.from(state.allItems);
+    for (int i = 0; i < updatedItems.length; i++) {
+      AListItemModel item = updatedItems[i];
+      if (item == selectedItem) {
+        await secretsService.changePassword(
+          item.filesystemPath,
+          oldPasswordModel,
+          PasswordModel.defaultPassword(),
+        );
+        AListItemModel updatedItem = item.setEncrypted(encryptedBool: false);
         updatedItems[i] = updatedItem;
         if (updatedItem is T) {
           unawaited(saveItem(updatedItem));

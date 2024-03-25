@@ -4,8 +4,10 @@ import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/selection_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
+import 'package:snggle/views/pages/bottom_navigation/secrets_setup_pin_page.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_agreement_dialog.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
@@ -88,10 +90,24 @@ class _ListItemPageTooltipState<T extends AListItemModel, C extends AListCubit<T
         title: 'Lock',
         content: 'Are you sure you want to lock selected items?',
         onConfirm: () {
-          widget.listCubit.lockSelection(selectedItems: selectionModel.selectedItems, encryptedBool: true);
           _closeTooltip();
+          _lockSelection(selectionModel);
         },
       ),
+    );
+  }
+
+  void _lockSelection(SelectionModel selectionModel) {
+    showDialog(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return SecretsSetupPinPage(
+          passwordValidCallback: (PasswordModel passwordModel) async {
+            await widget.listCubit.lockSelection(selectedItems: selectionModel.selectedItems, newPasswordModel: passwordModel);
+          },
+        );
+      },
     );
   }
 
