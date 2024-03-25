@@ -13,6 +13,15 @@ class SecretsService {
     SecretsRepository? secretsRepository,
   }) : _secretsRepository = secretsRepository ?? globalLocator<SecretsRepository>();
 
+  Future<void> changePassword(ContainerPathModel containerPathModel, PasswordModel oldPasswordModel, PasswordModel newPasswordModel) async {
+    String secrets = await _secretsRepository.getEncryptedSecrets(containerPathModel.fullPath);
+
+    String decryptedData = oldPasswordModel.decrypt(encryptedData: secrets);
+    String encryptedData = newPasswordModel.encrypt(decryptedData: decryptedData);
+
+    await _secretsRepository.saveEncryptedSecrets(containerPathModel.fullPath, encryptedData);
+  }
+
   Future<T> getSecrets<T extends ASecretsModel>(ContainerPathModel containerPath, PasswordModel passwordModel) async {
     String encryptedSecrets = await _secretsRepository.getEncryptedSecrets(containerPath.fullPath);
     String decryptedHash = passwordModel.decrypt(encryptedData: encryptedSecrets);

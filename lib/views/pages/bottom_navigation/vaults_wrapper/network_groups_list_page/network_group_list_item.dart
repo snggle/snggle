@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/groups/network_group_list_item_model.dart';
+import 'package:snggle/shared/models/password_entry_result_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/views/pages/bottom_navigation/secrets_auth_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/network_groups_list_page/network_group_list_item_tooltip.dart';
 import 'package:snggle/views/widgets/generic/gradient_icon.dart';
 import 'package:snggle/views/widgets/generic/horizontal_list_item/horizontal_list_item.dart';
@@ -23,6 +25,7 @@ class NetworkGroupListItem extends StatefulWidget {
   final ValueChanged<bool> onLockValueChanged;
   final ValueChanged<bool> onPinValueChanged;
   final VaultListItemModel vaultListItemModel;
+  final PasswordModel vaultPasswordModel;
   final NetworkGroupListItemModel networkGroupListItemModel;
 
   const NetworkGroupListItem({
@@ -34,6 +37,7 @@ class NetworkGroupListItem extends StatefulWidget {
     required this.onLockValueChanged,
     required this.onPinValueChanged,
     required this.vaultListItemModel,
+    required this.vaultPasswordModel,
     required this.networkGroupListItemModel,
     super.key,
   });
@@ -150,16 +154,43 @@ class _NetworkGroupListItemState extends State<NetworkGroupListItem> with Ticker
   }
 
   Future<void> _navigateToWalletListPage() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    actionsPopupController.hideMenu();
+
+    PasswordModel? passwordModel;
+    if (widget.networkGroupListItemModel.encryptedBool) {
+      passwordModel = await _queryPassword();
+      if (passwordModel == null) {
+        return;
+      }
+    }
+
     await AutoRouter.of(context).push<void>(
       WalletListRoute(
         pageName: widget.networkGroupListItemModel.networkConfigModel.name,
         vaultModel: widget.vaultListItemModel.vaultModel,
-        vaultPasswordModel: PasswordModel.defaultPassword(),
+        vaultPasswordModel: widget.vaultPasswordModel,
         parentContainerModel: widget.networkGroupListItemModel.walletGroupModel,
         networkConfigModel: widget.networkGroupListItemModel.networkConfigModel,
       ),
     );
     widget.onRefresh();
+  }
+
+  Future<PasswordModel?> _queryPassword() async {
+    PasswordEntryResultModel? passwordEntryResultModel = await showDialog<PasswordEntryResultModel?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return SecretsAuthPagePage(containerModel: widget.vaultListItemModel.vaultModel);
+      },
+    );
+
+    if (passwordEntryResultModel?.validBool == true) {
+      return passwordEntryResultModel?.passwordModel;
+    } else {
+      return null;
+    }
   }
 
   void _showActionsTooltip() {

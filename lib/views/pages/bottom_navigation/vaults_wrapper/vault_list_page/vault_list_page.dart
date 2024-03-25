@@ -8,6 +8,8 @@ import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
+import 'package:snggle/views/pages/bottom_navigation/secrets_remove_pin_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/secrets_setup_pin_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item_layout.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page_tooltip.dart';
@@ -194,11 +196,33 @@ class _VaultListPageState extends State<VaultListPage> {
   }
 
   Future<void> _lockVaults(List<VaultListItemModel> selectedVaults) async {
-    await vaultListPageCubit.updateEncryptionStatus(selectedItems: selectedVaults, encryptedBool: true);
+    bool? successBool = await showDialog<bool?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return SecretsSetupPinPage(containerModels: selectedVaults.map((VaultListItemModel e) => e.vaultModel).toList());
+      },
+    );
+
+    if (successBool == true) {
+      await vaultListPageCubit.updateEncryptionStatus(selectedItems: selectedVaults, encryptedBool: true);
+    }
   }
 
   Future<void> _unlockVault(VaultListItemModel vaultListItemModel) async {
-    await vaultListPageCubit.updateEncryptionStatus(selectedItems: <VaultListItemModel>[vaultListItemModel], encryptedBool: false);
+    bool? successBool = await showDialog<bool?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return SecretsRemovePinPage(containerModel: vaultListItemModel.vaultModel);
+      },
+    );
+    if (successBool == true) {
+      await vaultListPageCubit.updateEncryptionStatus(
+        selectedItems: <VaultListItemModel>[vaultListItemModel],
+        encryptedBool: false,
+      );
+    }
   }
 
   void _cancelSelection() {

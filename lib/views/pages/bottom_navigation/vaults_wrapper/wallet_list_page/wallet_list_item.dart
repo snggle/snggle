@@ -3,9 +3,11 @@ import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/shared/models/password_entry_result_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_list_item_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/views/pages/bottom_navigation/secrets_auth_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item_tooltip.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/generic/horizontal_list_item/horizontal_list_item.dart';
@@ -39,7 +41,6 @@ class WalletListItem extends StatefulWidget {
 
 class _WalletListItemState extends State<WalletListItem> with TickerProviderStateMixin {
   final CustomPopupMenuController actionsPopupController = CustomPopupMenuController();
-  final PasswordModel mockedPasswordModel = PasswordModel.fromPlaintext('1111');
 
   late final AnimationController fadeAnimationController;
   late final AnimationController slideAnimationController;
@@ -148,7 +149,34 @@ class _WalletListItemState extends State<WalletListItem> with TickerProviderStat
   }
 
   Future<void> _navigateToWalletDetailsPage() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    actionsPopupController.hideMenu();
+
+    PasswordModel? passwordModel;
+    if (widget.walletListItemModel.encryptedBool) {
+      passwordModel = await _queryPassword();
+      if (passwordModel == null) {
+        return;
+      }
+    }
+
     await AutoRouter.of(context).push<void>(WalletDetailsRoute(walletModel: widget.walletListItemModel.walletModel));
+  }
+
+  Future<PasswordModel?> _queryPassword() async {
+    PasswordEntryResultModel? passwordEntryResultModel = await showDialog<PasswordEntryResultModel?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return SecretsAuthPagePage(containerModel: widget.walletListItemModel.walletModel);
+      },
+    );
+
+    if (passwordEntryResultModel?.validBool == true) {
+      return passwordEntryResultModel?.passwordModel;
+    } else {
+      return null;
+    }
   }
 
   void _showActionsTooltip() {

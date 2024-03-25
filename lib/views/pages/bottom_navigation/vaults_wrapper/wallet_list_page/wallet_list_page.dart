@@ -13,6 +13,8 @@ import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_list_item_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
+import 'package:snggle/views/pages/bottom_navigation/secrets_remove_pin_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/secrets_setup_pin_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_group_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_page_tooltip.dart';
@@ -135,6 +137,7 @@ class _WalletListPageState extends State<WalletListPage> {
                         key: Key(listItemModel.walletGroupModel.id),
                         walletGroupListItemModel: listItemModel,
                         vaultModel: widget.vaultModel,
+                        vaultPasswordModel: widget.vaultPasswordModel,
                         networkConfigModel: widget.networkConfigModel,
                         selectedBool: listState.selectedItems.contains(listItemModel),
                         selectionEnabledBool: listState.isSelectionEnabled,
@@ -212,11 +215,49 @@ class _WalletListPageState extends State<WalletListPage> {
   }
 
   Future<void> _lock(List<AListItemModel> selectedItems) async {
-    await walletListPageCubit.updateEncryptionStatus(selectedItems: selectedItems, encryptedBool: true);
+    bool? successBool = await showDialog<bool?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return SecretsSetupPinPage(
+          containerModels: selectedItems.map((AListItemModel e) {
+            if (e is WalletListItemModel) {
+              return e.walletModel;
+            } else if (e is WalletGroupListItemModel) {
+              return e.walletGroupModel;
+            } else {
+              throw StateError('List item not supported');
+            }
+          }).toList(),
+        );
+      },
+    );
+
+    if (successBool == true) {
+      await walletListPageCubit.updateEncryptionStatus(selectedItems: selectedItems, encryptedBool: true);
+    }
   }
 
   Future<void> _unlock(AListItemModel listItemModel) async {
-    await walletListPageCubit.updateEncryptionStatus(selectedItems: <AListItemModel>[listItemModel], encryptedBool: false);
+    bool? successBool = await showDialog<bool?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        AContainerModel containerModel;
+        if (listItemModel is WalletListItemModel) {
+          containerModel = listItemModel.walletModel;
+        } else if (listItemModel is WalletGroupListItemModel) {
+          containerModel = listItemModel.walletGroupModel;
+        } else {
+          throw StateError('List item not supported');
+        }
+        return SecretsRemovePinPage(containerModel: containerModel);
+      },
+    );
+
+    if (successBool == true) {
+      await walletListPageCubit.updateEncryptionStatus(selectedItems: <AListItemModel>[listItemModel], encryptedBool: false);
+    }
   }
 
   void _cancelSelection() {

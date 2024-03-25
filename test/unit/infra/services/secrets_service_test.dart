@@ -62,6 +62,54 @@ void main() {
     actualSecretsService = SecretsService(secretsRepository: actualSecretsRepository);
   });
 
+  group('Tests of SecretsService.changePassword()', () {
+    test('Should [UPDATE secrets password] if [secrets UUID EXISTS] in filesystem storage and [old password VALID]', () async {
+      // Arrange
+      ContainerPathModel containerPathModel = ContainerPathModel.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8');
+      PasswordModel actualOldPasswordModel = PasswordModel.fromPlaintext('1111');
+      PasswordModel actualNewPasswordModel = PasswordModel.fromPlaintext('9999');
+
+      // Act
+      await actualSecretsService.changePassword(containerPathModel, actualOldPasswordModel, actualNewPasswordModel);
+
+      Map<String, dynamic> actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID)['secrets'] as Map<String, dynamic>;
+      String actualEncryptedData = actualMasterKeyVO.decrypt(
+        appPasswordModel: actualAppPasswordModel,
+        encryptedData: actualFilesystemStructure['5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle'] as String,
+      );
+      bool actualNewPasswordValid = actualNewPasswordModel.isValidForData(actualEncryptedData);
+
+      // Assert
+      expect(actualNewPasswordValid, true);
+    });
+
+    test('Should [throw InvalidPasswordException] if [secrets UUID EXISTS] in filesystem storage and [old password INVALID]', () async {
+      // Arrange
+      ContainerPathModel containerPathModel = ContainerPathModel.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8');
+      PasswordModel actualOldPasswordModel = PasswordModel.fromPlaintext('invalid_password');
+      PasswordModel actualNewPasswordModel = PasswordModel.fromPlaintext('9999');
+
+      // Act
+      expect(
+        () => actualSecretsService.changePassword(containerPathModel, actualOldPasswordModel, actualNewPasswordModel),
+        throwsA(isA<InvalidPasswordException>()),
+      );
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [secrets UUID NOT EXISTS] in filesystem storage', () async {
+      // Arrange
+      ContainerPathModel containerPathModel = ContainerPathModel.fromString('not/existing/path');
+      PasswordModel actualOldPasswordModel = PasswordModel.fromPlaintext('1111');
+      PasswordModel actualNewPasswordModel = PasswordModel.fromPlaintext('9999');
+
+      // Act
+      expect(
+        () => actualSecretsService.changePassword(containerPathModel, actualOldPasswordModel, actualNewPasswordModel),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
   group('Tests of SecretsService.getSecrets()', () {
     test('Should [return ASecretsModel] if [secrets UUID EXISTS] in filesystem storage and [password VALID]', () async {
       // Arrange

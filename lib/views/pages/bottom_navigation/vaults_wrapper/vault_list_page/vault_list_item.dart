@@ -5,9 +5,11 @@ import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/shared/models/password_entry_result_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/views/pages/bottom_navigation/secrets_auth_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item_layout.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item_tooltip.dart';
 import 'package:snggle/views/widgets/generic/selection_wrapper.dart';
@@ -42,9 +44,6 @@ class VaultListItem extends StatefulWidget {
 
 class _VaultListItemState extends State<VaultListItem> {
   final CustomPopupMenuController actionsPopupController = CustomPopupMenuController();
-
-  // TODO(dominik): Temporary solution to get user password. After implementing "secrets-pin-pages-ui" this line should be replaced by custom page requesting user's password
-  final PasswordModel mockedPasswordModel = PasswordModel.fromPlaintext('1111');
 
   @override
   void dispose() {
@@ -128,7 +127,10 @@ class _VaultListItemState extends State<VaultListItem> {
 
     PasswordModel? passwordModel;
     if (widget.vaultListItemModel.encryptedBool) {
-      passwordModel = mockedPasswordModel;
+      passwordModel = await _queryPassword();
+      if (passwordModel == null) {
+        return;
+      }
     }
 
     await AutoRouter.of(context).push<void>(
@@ -139,6 +141,22 @@ class _VaultListItemState extends State<VaultListItem> {
     );
 
     widget.onRefreshWallets();
+  }
+
+  Future<PasswordModel?> _queryPassword() async {
+    PasswordEntryResultModel? passwordEntryResultModel = await showDialog<PasswordEntryResultModel?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return SecretsAuthPagePage(containerModel: widget.vaultListItemModel.vaultModel);
+      },
+    );
+
+    if (passwordEntryResultModel?.validBool == true) {
+      return passwordEntryResultModel?.passwordModel;
+    } else {
+      return null;
+    }
   }
 
   void _showActionsTooltip() {
