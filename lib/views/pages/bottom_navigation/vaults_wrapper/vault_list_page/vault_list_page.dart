@@ -7,8 +7,11 @@ import 'package:snggle/bloc/vault_list_page/vault_list_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
+import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/pin_removal_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/pin_setup_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item_template.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page_tooltip.dart';
@@ -214,14 +217,33 @@ class _VaultListPageState extends State<VaultListPage> {
   }
 
   Future<void> _lockVaults(List<VaultListItemModel> selectedVaults) async {
-    await vaultListPageCubit.changeSelectionEncryptionStatus(selectedVaults: selectedVaults, encryptedBool: true);
+    bool? successBool = await showDialog<bool?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return SecretsSetupPinPage<VaultSecretsModel>(containerModels: selectedVaults.map((VaultListItemModel e) => e.vaultModel).toList());
+      },
+    );
+
+    if (successBool == true) {
+      await vaultListPageCubit.changeSelectionEncryptionStatus(selectedVaults: selectedVaults, encryptedBool: true);
+    }
   }
 
   Future<void> _unlockVault(VaultListItemModel vaultListItemModel) async {
-    await vaultListPageCubit.changeSelectionEncryptionStatus(
-      selectedVaults: <VaultListItemModel>[vaultListItemModel],
-      encryptedBool: false,
+    bool? successBool = await showDialog<bool?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return PinRemovalPage<VaultSecretsModel>(containerModel: vaultListItemModel.vaultModel);
+      },
     );
+    if (successBool == true) {
+      await vaultListPageCubit.changeSelectionEncryptionStatus(
+        selectedVaults: <VaultListItemModel>[vaultListItemModel],
+        encryptedBool: false,
+      );
+    }
   }
 
   void _cancelSelection() {

@@ -5,9 +5,11 @@ import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/shared/models/password_entry_result_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/secrets_auth_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_icon.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item_template.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item_tooltip.dart';
@@ -113,7 +115,10 @@ class _VaultListItemState extends State<VaultListItem> {
     actionsPopupController.hideMenu();
     PasswordModel? passwordModel;
     if (widget.vaultListItemModel.isEncrypted) {
-      passwordModel = mockedPasswordModel;
+      passwordModel = await _queryPassword();
+      if (passwordModel == null) {
+        return;
+      }
     }
 
     await AutoRouter.of(context).push<void>(
@@ -122,5 +127,21 @@ class _VaultListItemState extends State<VaultListItem> {
         vaultPasswordModel: passwordModel ?? PasswordModel.defaultPassword(),
       ),
     );
+  }
+
+  Future<PasswordModel?> _queryPassword() async {
+    PasswordEntryResultModel? passwordEntryResultModel = await showDialog<PasswordEntryResultModel?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return SecretsAuthPagePage(containerModel: widget.vaultListItemModel.vaultModel);
+      },
+    );
+
+    if (passwordEntryResultModel?.validBool == true) {
+      return passwordEntryResultModel?.passwordModel;
+    } else {
+      return null;
+    }
   }
 }
