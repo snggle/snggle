@@ -65,7 +65,7 @@ class WalletsPreviewIcon extends StatelessWidget {
                 ],
               ),
             ),
-            if(y < 2) SizedBox(height: gapSize),
+            if (y < 2) SizedBox(height: gapSize),
           ],
         ],
       ),
@@ -103,7 +103,7 @@ class WalletsPreviewIcon extends StatelessWidget {
                 if (lockedBool)
                   GradientIcon(
                     AppIcons.lock,
-                    size: 42,
+                    size: padding < 11 ? 27 : 42,
                     gradient: AppColors.primaryGradient,
                   ),
               ],

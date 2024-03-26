@@ -1,35 +1,34 @@
-import 'package:equatable/equatable.dart';
-import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
+import 'package:snggle/shared/models/selection_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_list_item_model.dart';
 
-class WalletSelectionModel with EquatableMixin {
-  final List<WalletListItemModel> selectedWallets;
+class WalletSelectionModel extends SelectionModel<WalletListItemModel> {
+  WalletSelectionModel(super.selectedItems);
 
-  WalletSelectionModel(this.selectedWallets);
-
-  WalletSelectionModel.empty() : selectedWallets = <WalletListItemModel>[];
+  factory WalletSelectionModel.fromSelectionModel(SelectionModel<WalletListItemModel> selectionModel) {
+    return WalletSelectionModel(selectionModel.selectedItems);
+  }
 
   bool get canPinAll {
-    bool allPinnedBool = selectedWallets.every((WalletListItemModel element) => element.walletModel.pinnedBool);
-    bool emptySelectionBool = selectedWallets.isEmpty;
+    bool allPinnedBool = selectedItems.every((WalletListItemModel element) => element.pinnedBool);
+    bool emptySelectionBool = selectedItems.isEmpty;
 
     return emptySelectionBool == false && allPinnedBool == false;
   }
 
   bool get canUnpinAll {
-    bool allUnpinnedBool = selectedWallets.every((WalletListItemModel element) => element.walletModel.pinnedBool == false);
-    bool emptySelectionBool = selectedWallets.isEmpty;
+    bool allUnpinnedBool = selectedItems.every((WalletListItemModel element) => element.pinnedBool == false);
+    bool emptySelectionBool = selectedItems.isEmpty;
 
     return emptySelectionBool == false && allUnpinnedBool == false;
   }
 
   bool get canLockAll {
-    bool anyLockedBool = selectedWallets.any((WalletListItemModel element) => element.encryptedBool);
-    bool emptySelectionBool = selectedWallets.isEmpty;
+    bool anyLockedBool = selectedItems.any((WalletListItemModel element) => element.encryptedBool);
+    bool emptySelectionBool = selectedItems.isEmpty;
 
     return emptySelectionBool == false && anyLockedBool == false;
   }
 
   @override
-  List<Object?> get props => <Object?>[selectedWallets];
+  List<Object?> get props => <Object?>[selectedItems];
 }

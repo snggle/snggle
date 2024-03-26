@@ -1,15 +1,16 @@
-import 'package:snggle/bloc/network_groups_page/network_groups_page_cubit.dart';
-import 'package:snggle/shared/models/a_container_model.dart';
+import 'package:snggle/shared/models/a_list_item.dart';
+import 'package:snggle/shared/models/container_path_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 
-class GroupListItemModel extends AContainerModel {
-  final bool encryptedBool;
+class GroupListItemModel extends AListItem {
+  final ContainerPathModel containerPathModel;
   final List<WalletModel> walletsPreview;
 
-  const GroupListItemModel({
-    required this.encryptedBool,
+  GroupListItemModel({
+    required super.encryptedBool,
+    required super.pinnedBool,
+    required this.containerPathModel,
     required this.walletsPreview,
-    required super.containerPathModel,
   });
 
   @override

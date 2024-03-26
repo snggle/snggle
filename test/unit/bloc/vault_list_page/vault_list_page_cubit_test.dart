@@ -393,7 +393,7 @@ void main() {
       test('Should [emit VaultListPageState] with updated "pinnedBool" value for selected vaults (pinnedBool == true)', () async {
         // Act
         await actualVaultListPageCubit.updatePinnedVaults(
-          selectedVaults: <VaultListItemModel>[
+          selectedItems: <VaultListItemModel>[
             VaultListItemModel(
               encryptedBool: true,
               vaultModel: VaultModel(index: 1, uuid: '92b43ace-5439-4269-8e27-e999907f4379', pinnedBool: false, name: 'Test Vault 123'),
@@ -434,7 +434,7 @@ void main() {
       test('Should [emit VaultListPageState] with updated "pinnedBool" value for selected vaults (pinnedBool == false)', () async {
         // Act
         await actualVaultListPageCubit.updatePinnedVaults(
-          selectedVaults: <VaultListItemModel>[
+          selectedItems: <VaultListItemModel>[
             VaultListItemModel(
               encryptedBool: true,
               vaultModel: VaultModel(index: 1, uuid: '92b43ace-5439-4269-8e27-e999907f4379', pinnedBool: true, name: 'Test Vault 123'),
@@ -476,8 +476,8 @@ void main() {
     group('Tests of VaultListPageCubit.updateEncryptedVaults()', () {
       test('Should [emit VaultListPageState] with updated "encryptedBool" value for selected vaults (encryptedBool == false)', () async {
         // Act
-        await actualVaultListPageCubit.updateEncryptedVaults(
-          selectedVaults: <VaultListItemModel>[
+        await actualVaultListPageCubit.updateEncryptionStatus(
+          selectedItems: <VaultListItemModel>[
             VaultListItemModel(
               encryptedBool: true,
               vaultModel: VaultModel(index: 1, uuid: '92b43ace-5439-4269-8e27-e999907f4379', pinnedBool: false, name: 'Test Vault 123'),
@@ -517,8 +517,8 @@ void main() {
 
       test('Should [emit VaultListPageState] with updated "encryptedBool" value for selected vaults (encryptedBool == true)', () async {
         // Act
-        await actualVaultListPageCubit.updateEncryptedVaults(
-          selectedVaults: <VaultListItemModel>[
+        await actualVaultListPageCubit.updateEncryptionStatus(
+          selectedItems: <VaultListItemModel>[
             VaultListItemModel(
               encryptedBool: false,
               vaultModel: VaultModel(index: 1, uuid: '92b43ace-5439-4269-8e27-e999907f4379', pinnedBool: false, name: 'Test Vault 123'),

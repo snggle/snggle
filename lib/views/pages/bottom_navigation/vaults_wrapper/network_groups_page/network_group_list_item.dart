@@ -3,43 +3,44 @@ import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/shared/models/groups/network_group_list_item_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/models/wallets/wallet_list_item_model.dart';
+import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item_tooltip.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/network_groups_page/network_group_list_item_tooltip.dart';
 import 'package:snggle/views/widgets/actions_tooltip/actions_tooltip_wrapper.dart';
-import 'package:snggle/views/widgets/generic/gradient_text.dart';
+import 'package:snggle/views/widgets/generic/gradient_icon.dart';
 import 'package:snggle/views/widgets/generic/horizontal_list_item.dart';
-import 'package:snggle/views/widgets/generic/wallet_icon.dart';
+import 'package:snggle/views/widgets/generic/wallets_preview_icon.dart';
 
-class WalletListItem extends StatefulWidget {
+class NetworkGroupListItem extends StatefulWidget {
   final bool selectedBool;
   final bool selectionEnabledBool;
   final VoidCallback onRemove;
   final ValueChanged<bool> onSelectValueChanged;
   final ValueChanged<bool> onLockValueChanged;
   final ValueChanged<bool> onPinValueChanged;
-  final WalletListItemModel walletListItemModel;
+  final VaultListItemModel vaultListItemModel;
+  final NetworkGroupListItemModel networkGroupListItemModel;
 
-  const WalletListItem({
+  const NetworkGroupListItem({
     required this.selectedBool,
     required this.selectionEnabledBool,
     required this.onRemove,
     required this.onSelectValueChanged,
     required this.onLockValueChanged,
     required this.onPinValueChanged,
-    required this.walletListItemModel,
+    required this.vaultListItemModel,
+    required this.networkGroupListItemModel,
     super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => _WalletListItemState();
+  State<StatefulWidget> createState() => _NetworkGroupListItemState();
 }
 
-class _WalletListItemState extends State<WalletListItem> {
+class _NetworkGroupListItemState extends State<NetworkGroupListItem> {
   final CustomPopupMenuController actionsPopupController = CustomPopupMenuController();
-
-  final PasswordModel mockedPasswordModel = PasswordModel.fromPlaintext('1111');
 
   @override
   Widget build(BuildContext context) {
@@ -49,49 +50,49 @@ class _WalletListItemState extends State<WalletListItem> {
       selectedBool: widget.selectedBool,
       selectionEnabledBool: widget.selectionEnabledBool,
       onSelectValueChanged: widget.onSelectValueChanged,
-      iconWidget: WalletIcon(
-        address: widget.walletListItemModel.walletModel.address,
-        lockedBool: widget.walletListItemModel.encryptedBool,
-        pinnedBool: widget.walletListItemModel.pinnedBool,
+      iconWidget: WalletsPreviewIcon(
+        radius: 17,
+        lockedBool: widget.networkGroupListItemModel.encryptedBool,
+        pinnedBool: widget.networkGroupListItemModel.pinnedBool,
+        wallets: widget.networkGroupListItemModel.walletsPreview,
+        padding: 8,
       ),
-      titleWidget: Text(widget.walletListItemModel.name, style: textTheme.bodyMedium),
-      subtitleWidget: GradientText(widget.walletListItemModel.shortenedAddress,
-          textStyle: textTheme.bodyMedium,
-          gradient: RadialGradient(
-            radius: 7,
-            center: const Alignment(-1, 1.5),
-            colors: AppColors.primaryGradient.colors,
-          )),
-      trailingWidget: Text(
-        widget.walletListItemModel.walletModel.derivationPath,
-        style: textTheme.labelMedium?.copyWith(color: AppColors.darkGrey, fontSize: 11),
+      titleWidget: Text(widget.networkGroupListItemModel.networkConfigModel.name),
+      trailingWidget: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          GradientIcon(
+            widget.networkGroupListItemModel.networkConfigModel.iconData,
+            gradient: AppColors.primaryGradient,
+            size: 20,
+          ),
+          const SizedBox(height: 6),
+          Text(
+            widget.networkGroupListItemModel.walletsPreview.length.toString(),
+            style: textTheme.labelMedium?.copyWith(color: AppColors.darkGrey),
+          ),
+        ],
       ),
     );
 
     if (widget.selectionEnabledBool == false) {
       itemWidget = ActionsTooltipWrapper(
         controller: actionsPopupController,
-        content: WalletListItemTooltip(
-          encryptedBool: widget.walletListItemModel.encryptedBool,
-          pinnedBool: widget.walletListItemModel.pinnedBool,
-          name: widget.walletListItemModel.name,
+        content: NetworkGroupListItemTooltip(
+          encryptedBool: widget.networkGroupListItemModel.encryptedBool,
+          pinnedBool: widget.networkGroupListItemModel.pinnedBool,
+          name: widget.networkGroupListItemModel.networkConfigModel.name,
           onPinValueChanged: _handlePinValueChanged,
           onLockValueChanged: _handleLockValueChanged,
           onSelect: _handleItemSelected,
           onRemove: _handleItemRemoved,
         ),
         child: GestureDetector(
-          onTap: _navigateToWalletDetailsPage,
+          onTap: _navigateToWalletListPage,
           onLongPress: _showActionsTooltip,
           child: itemWidget,
         ),
-      );
-    }
-
-    if (widget.walletListItemModel.encryptedBool) {
-      itemWidget = Container(
-        color: const Color(0x26DADADA),
-        child: itemWidget,
       );
     }
 
@@ -99,8 +100,10 @@ class _WalletListItemState extends State<WalletListItem> {
   }
 
   void _handlePinValueChanged(bool pinnedBool) {
+    print('_handlePinValueChanged1($pinnedBool)');
     actionsPopupController.hideMenu();
     widget.onPinValueChanged(pinnedBool);
+    print('_handlePinValueChanged1 end');
   }
 
   void _handleLockValueChanged(bool lockedBool) {
@@ -118,8 +121,14 @@ class _WalletListItemState extends State<WalletListItem> {
     actionsPopupController.hideMenu();
   }
 
-  Future<void> _navigateToWalletDetailsPage() async {
-    await AutoRouter.of(context).push<void>(WalletDetailsRoute(walletModel: widget.walletListItemModel.walletModel));
+  Future<void> _navigateToWalletListPage() async {
+    await AutoRouter.of(context).push<void>(
+      WalletListRoute(
+        vaultListItemModel: widget.vaultListItemModel,
+        vaultPasswordModel: PasswordModel.defaultPassword(),
+        parentContainerPathModel: widget.networkGroupListItemModel.containerPathModel,
+      ),
+    );
   }
 
   void _showActionsTooltip() {

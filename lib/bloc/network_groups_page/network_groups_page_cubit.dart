@@ -1,18 +1,15 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hd_wallet/hd_wallet.dart';
-import 'package:snggle/bloc/network_groups_page/network_groups_page_state.dart';
-import 'package:snggle/config/app_icons.dart';
+import 'package:snggle/bloc/list/a_list_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/factories/wallet_model_factory.dart';
 import 'package:snggle/shared/models/container_path_model.dart';
 import 'package:snggle/shared/models/groups/network_group_list_item_model.dart';
+import 'package:snggle/shared/models/network_config_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
@@ -20,7 +17,7 @@ import 'package:snggle/shared/models/wallets/wallet_creation_request_model.dart'
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 
-class NetworkGroupsPageCubit extends Cubit<NetworkGroupsPageState> {
+class NetworkGroupsPageCubit extends AListCubit<NetworkGroupListItemModel> {
   final VaultModel vaultModel;
   final PasswordModel vaultPasswordModel;
   final WalletsService _walletsService;
@@ -32,9 +29,9 @@ class NetworkGroupsPageCubit extends Cubit<NetworkGroupsPageState> {
     WalletsService? walletsService,
     SecretsService? secretsService,
   })  : _walletsService = walletsService ?? globalLocator<WalletsService>(),
-        _secretsService = secretsService ?? globalLocator<SecretsService>(),
-        super(NetworkGroupsPageState(loadingBool: true));
+        _secretsService = secretsService ?? globalLocator<SecretsService>();
 
+  // TODO(dominik): Temporary solution to get the vault name. After implementing "create-vault-ui" this method should be removed.
   Future<void> createNewWallet(String type) async {
     WalletModelFactory walletModelFactory = globalLocator<WalletModelFactory>();
     VaultSecretsModel vaultSecretsModel = await _secretsService.getSecrets(vaultModel.containerPathModel, vaultPasswordModel);
@@ -73,44 +70,42 @@ class NetworkGroupsPageCubit extends Cubit<NetworkGroupsPageState> {
     await refreshAll();
   }
 
-  Future<void> refreshAll() async {
+  @override
+  Future<void> deleteFromDatabase(NetworkGroupListItemModel item) async {
+    // throw UnimplementedError();
+  }
+
+  @override
+  Future<List<NetworkGroupListItemModel>> fetchAllFromDatabase() async {
     List<NetworkGroupListItemModel> networkGroupListItemModelList = <NetworkGroupListItemModel>[];
 
     for (NetworkConfigModel networkConfigModel in NetworkConfigModel.allNetworks) {
       String accessPath = vaultModel.containerPathModel.deriveChildPath(networkConfigModel.id);
       List<WalletModel> walletModels = await _walletsService.getWalletList(accessPath, strictBool: false);
-
-      networkGroupListItemModelList.add(NetworkGroupListItemModel(
-        encryptedBool: false,
-        networkConfigModel: networkConfigModel,
-        walletsPreview: walletModels,
-        containerPathModel: ContainerPathModel.fromString(accessPath),
-      ));
+      if (walletModels.isNotEmpty) {
+        networkGroupListItemModelList.add(NetworkGroupListItemModel(
+          // TODO(dominik): Hardcoded value
+          encryptedBool: false,
+          // TODO(dominik): Hardcoded value
+          pinnedBool: false,
+          networkConfigModel: networkConfigModel,
+          walletsPreview: walletModels,
+          containerPathModel: ContainerPathModel.fromString(accessPath),
+        ));
+      }
     }
 
-    emit(NetworkGroupsPageState(loadingBool: false, allNetworks: networkGroupListItemModelList));
+    return networkGroupListItemModelList;
   }
-}
-
-class NetworkConfigModel extends Equatable {
-  static const NetworkConfigModel kira = NetworkConfigModel(id: 'kira', name: 'Kira', iconData: AppIcons.token_kira);
-  static const NetworkConfigModel ethereum = NetworkConfigModel(id: 'ethereum', name: 'Ethereum', iconData: AppIcons.token_eth);
-  static const NetworkConfigModel polkadot = NetworkConfigModel(id: 'polkadot', name: 'Polkadot', iconData: AppIcons.token_polkadot);
-  static const NetworkConfigModel bitcoin = NetworkConfigModel(id: 'bitcoin', name: 'Bitcoin', iconData: AppIcons.token_btc);
-  static const NetworkConfigModel cosmos = NetworkConfigModel(id: 'cosmos', name: 'Cosmos', iconData: AppIcons.token_cosmos);
-
-  static const List<NetworkConfigModel> allNetworks = <NetworkConfigModel>[kira, ethereum, polkadot, bitcoin, cosmos];
-
-  final String id;
-  final String name;
-  final IconData iconData;
-
-  const NetworkConfigModel({
-    required this.id,
-    required this.name,
-    required this.iconData,
-  });
 
   @override
-  List<Object?> get props => <Object>[id, name, iconData];
+  Future<NetworkGroupListItemModel> fetchSingleFromDatabase(NetworkGroupListItemModel item) async {
+    // throw UnimplementedError();
+    return item;
+  }
+
+  @override
+  Future<void> saveToDatabase(NetworkGroupListItemModel item) async {
+    // throw UnimplementedError();
+  }
 }

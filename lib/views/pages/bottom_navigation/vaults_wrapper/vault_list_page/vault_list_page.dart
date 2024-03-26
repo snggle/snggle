@@ -1,11 +1,12 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:snggle/bloc/list/list_state.dart';
 import 'package:snggle/bloc/vault_list_page/vault_list_page_cubit.dart';
-import 'package:snggle/bloc/vault_list_page/vault_list_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
+import 'package:snggle/shared/models/vaults/vault_selection_model.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item.dart';
@@ -14,6 +15,7 @@ import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_p
 import 'package:snggle/views/widgets/button/square_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_agreement_dialog.dart';
 import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
+import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/gradient_icon.dart';
 import 'package:snggle/views/widgets/generic/loading_container.dart';
 
@@ -44,113 +46,106 @@ class _VaultListPageState extends State<VaultListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VaultListPageCubit, VaultListPageState>(
+    return BlocBuilder<VaultListPageCubit, ListState<VaultListItemModel>>(
       bloc: vaultListPageCubit,
-      builder: (BuildContext context, VaultListPageState vaultListPageState) {
-        bool popAvailableBool = vaultListPageState.isSelectingEnabled;
+      builder: (BuildContext context, ListState<VaultListItemModel> listState) {
+        bool popAvailableBool = listState.isSelectingEnabled;
         bool addButtonVisibleBool = true;
-        if( vaultListPageState.searchPattern != null || vaultListPageState.isSelectingEnabled) {
+        if (listState.searchPattern != null || listState.isSelectingEnabled) {
           addButtonVisibleBool = false;
         }
-        return PopScope(
-          canPop: popAvailableBool == false,
-          onPopInvoked: (_) => _cancelSelection(),
-          child: GestureDetector(
-            onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-            child: Scaffold(
-              appBar: CustomAppBar(
-                title: 'Vaults',
-                popButtonVisible: popAvailableBool,
-                leadingPressedCallback: _cancelSelection,
-                onSearch: vaultListPageCubit.searchVaults,
-                searchBoxVisible: vaultListPageState.searchBoxVisibleBool,
-              ),
-              body: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  border: Border.symmetric(vertical: BorderSide(color: AppColors.lightGrey2)),
-                ),
-                child: CustomScrollView(
-                  shrinkWrap: vaultListPageState.isScrollDisabled,
-                  physics: vaultListPageState.isScrollDisabled ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
-                  slivers: <Widget>[
-                    if (vaultListPageState.hasEmptyVaults)
-                      SliverFillRemaining(
-                        child: Center(
-                          child: IconButton(
-                            onPressed: _createNewVault,
-                            icon: GradientIcon(AppIcons.add_circle, size: 54, gradient: AppColors.primaryGradient),
-                          ),
-                        ),
-                      )
-                    else ...<Widget>[
-                      SliverPadding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        sliver: SliverGrid.builder(
-                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 90,
-                            mainAxisExtent: 133,
-                            crossAxisSpacing: 18,
-                          ),
-                          itemCount: vaultListPageState.loadingBool
-                              ? loadingItemsCount
-                              : (vaultListPageState.visibleVaults.length + (addButtonVisibleBool ? 1 : 0)),
-                          itemBuilder: (BuildContext context, int index) {
-                            if (vaultListPageState.loadingBool) {
-                              return const VaultListItemTemplate(
-                                iconWidget: LoadingContainer(radius: 26),
-                                titleWidget: LoadingContainer(height: 16, radius: 8),
-                              );
-                            }
-
-                            bool buttonItemBool = index == vaultListPageState.visibleVaults.length;
-                            if (buttonItemBool) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: SquareOutlinedButton(
-                                  icon: Icon(
-                                    AppIcons.add,
-                                    size: 54,
-                                    color: AppColors.middleGrey,
-                                  ),
-                                  onTap: _createNewVault,
-                                ),
-                              );
-                            }
-
-                            VaultListItemModel vaultListItemModel = vaultListPageState.visibleVaults[index];
-
-                            return VaultListItem(
-                              key: Key(vaultListItemModel.vaultModel.uuid),
-                              onRefreshWallets: () => vaultListPageCubit.refreshSingle(vaultListItemModel),
-                              selectedBool: vaultListPageState.selectedVaults.contains(vaultListItemModel),
-                              selectionEnabledBool: vaultListPageState.isSelectingEnabled,
-                              vaultListItemModel: vaultListItemModel,
-                              onPinValueChanged: (bool pinnedBool) => vaultListPageCubit.updatePinnedVaults(
-                                selectedVaults: <VaultListItemModel>[vaultListItemModel],
-                                pinnedBool: pinnedBool,
-                              ),
-                              onRemove: () => _removeVault(vaultListItemModel),
-                              onSelectValueChanged: (bool selectedBool) => _updateVaultSelection(
-                                vaultListItemModel: vaultListItemModel,
-                                selectedBool: selectedBool,
-                              ),
-                              onLockValueChanged: (bool lockedBool) {
-                                if (lockedBool) {
-                                  _lockVaults(<VaultListItemModel>[vaultListItemModel]);
-                                } else {
-                                  _unlockVault(vaultListItemModel);
-                                }
-                              },
-                            );
-                          },
-                        ),
+        return CustomScaffold(
+          popAvailableBool: popAvailableBool,
+          customPopCallback: (_) => _cancelSelection(),
+          appBar: CustomAppBar(
+            title: 'Vaults',
+            popButtonVisible: popAvailableBool,
+            leadingPressedCallback: _cancelSelection,
+            onSearch: vaultListPageCubit.search,
+            searchBoxVisible: listState.searchBoxVisibleBool,
+          ),
+          body: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              border: Border.symmetric(vertical: BorderSide(color: AppColors.lightGrey2)),
+            ),
+            child: CustomScrollView(
+              shrinkWrap: listState.isScrollDisabled,
+              physics: listState.isScrollDisabled ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
+              slivers: <Widget>[
+                if (listState.isEmpty)
+                  SliverFillRemaining(
+                    child: Center(
+                      child: IconButton(
+                        onPressed: _createNewVault,
+                        icon: GradientIcon(AppIcons.add_circle, size: 54, gradient: AppColors.primaryGradient),
                       ),
-                      const SliverToBoxAdapter(child: SizedBox(height: 100)),
-                    ],
-                  ],
-                ),
-              ),
+                    ),
+                  )
+                else ...<Widget>[
+                  SliverPadding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    sliver: SliverGrid.builder(
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 90,
+                        mainAxisExtent: 133,
+                        crossAxisSpacing: 18,
+                      ),
+                      itemCount: listState.loadingBool ? loadingItemsCount : (listState.visibleItems.length + (addButtonVisibleBool ? 1 : 0)),
+                      itemBuilder: (BuildContext context, int index) {
+                        if (listState.loadingBool) {
+                          return const VaultListItemTemplate(
+                            iconWidget: LoadingContainer(radius: 26),
+                            titleWidget: LoadingContainer(height: 16, radius: 8),
+                          );
+                        }
+
+                        bool buttonItemBool = index == listState.visibleItems.length;
+                        if (buttonItemBool) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: SquareOutlinedButton(
+                              icon: Icon(
+                                AppIcons.add,
+                                size: 54,
+                                color: AppColors.middleGrey,
+                              ),
+                              onTap: _createNewVault,
+                            ),
+                          );
+                        }
+
+                        VaultListItemModel vaultListItemModel = listState.visibleItems[index];
+
+                        return VaultListItem(
+                          key: Key(vaultListItemModel.vaultModel.uuid),
+                          onRefreshWallets: () => vaultListPageCubit.refreshSingle(vaultListItemModel),
+                          selectedBool: listState.selectedItems.contains(vaultListItemModel),
+                          selectionEnabledBool: listState.isSelectingEnabled,
+                          vaultListItemModel: vaultListItemModel,
+                          onPinValueChanged: (bool pinnedBool) => vaultListPageCubit.pinSelection(
+                            selectedItems: <VaultListItemModel>[vaultListItemModel],
+                            pinnedBool: pinnedBool,
+                          ),
+                          onRemove: () => _removeVault(vaultListItemModel),
+                          onSelectValueChanged: (bool selectedBool) => _updateVaultSelection(
+                            vaultListItemModel: vaultListItemModel,
+                            selectedBool: selectedBool,
+                          ),
+                          onLockValueChanged: (bool lockedBool) {
+                            if (lockedBool) {
+                              _lockVaults(<VaultListItemModel>[vaultListItemModel]);
+                            } else {
+                              _unlockVault(vaultListItemModel);
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 100)),
+                ],
+              ],
             ),
           ),
         );
@@ -176,7 +171,7 @@ class _VaultListPageState extends State<VaultListPage> {
         title: 'Remove',
         content: 'Are you sure you want to remove selected vault?',
         onConfirm: () async {
-          await vaultListPageCubit.deleteVault(vaultListItemModel);
+          await vaultListPageCubit.delete(vaultListItemModel);
         },
       ),
     );
@@ -187,26 +182,26 @@ class _VaultListPageState extends State<VaultListPage> {
       _showBottomNavigationTooltip();
     }
     if (selectedBool) {
-      vaultListPageCubit.selectVault(vaultListItemModel);
+      vaultListPageCubit.selectSingle(vaultListItemModel);
     } else {
-      vaultListPageCubit.unselectVault(vaultListItemModel);
+      vaultListPageCubit.unselectSingle(vaultListItemModel);
     }
   }
 
   void _showBottomNavigationTooltip() {
     BottomNavigationWrapper.of(context).showTooltip(
-      BlocBuilder<VaultListPageCubit, VaultListPageState>(
+      BlocBuilder<VaultListPageCubit, ListState<VaultListItemModel>>(
         bloc: vaultListPageCubit,
-        builder: (BuildContext context, VaultListPageState vaultListPageState) {
+        builder: (BuildContext context, ListState<VaultListItemModel> listState) {
           return VaultListPageTooltip(
-            vaultSelectionModel: vaultListPageState.vaultSelectionModel!,
+            vaultSelectionModel: VaultSelectionModel.fromSelectionModel(listState.selectionModel!),
             onSelectAll: vaultListPageCubit.selectAll,
             onPinValueChanged: (bool pinBool) {
-              vaultListPageCubit.updatePinnedVaults(selectedVaults: vaultListPageState.selectedVaults, pinnedBool: pinBool);
+              vaultListPageCubit.pinSelection(selectedItems: listState.selectedItems, pinnedBool: pinBool);
               _cancelSelection();
             },
             onLockSelected: () {
-              _lockVaults(vaultListPageState.selectedVaults);
+              _lockVaults(listState.selectedItems);
               _cancelSelection();
             },
           );
@@ -216,14 +211,11 @@ class _VaultListPageState extends State<VaultListPage> {
   }
 
   Future<void> _lockVaults(List<VaultListItemModel> selectedVaults) async {
-    await vaultListPageCubit.updateEncryptedVaults(selectedVaults: selectedVaults, encryptedBool: true);
+    await vaultListPageCubit.updateEncryptionStatus(selectedItems: selectedVaults, encryptedBool: true);
   }
 
   Future<void> _unlockVault(VaultListItemModel vaultListItemModel) async {
-    await vaultListPageCubit.updateEncryptedVaults(
-      selectedVaults: <VaultListItemModel>[vaultListItemModel],
-      encryptedBool: false,
-    );
+    await vaultListPageCubit.updateEncryptionStatus(selectedItems: <VaultListItemModel>[vaultListItemModel], encryptedBool: false);
   }
 
   void _cancelSelection() {

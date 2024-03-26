@@ -1,40 +1,34 @@
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
+import 'package:snggle/shared/models/a_list_item.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 
-class VaultListItemModel extends Equatable {
-  final bool encryptedBool;
+class VaultListItemModel extends AListItem {
   final int totalWalletsCount;
-  final VaultModel vaultModel;
   final List<WalletModel> vaultWalletsPreview;
+  late VaultModel vaultModel;
 
   VaultListItemModel({
-    required this.encryptedBool,
+    required super.encryptedBool,
     required this.vaultModel,
     required List<WalletModel> vaultWallets,
   })  : totalWalletsCount = vaultWallets.length,
-        vaultWalletsPreview = vaultWallets.sublist(0, min(9, vaultWallets.length));
+        vaultWalletsPreview = vaultWallets.sublist(0, min(9, vaultWallets.length)),
+        super(pinnedBool: vaultModel.pinnedBool);
 
-  const VaultListItemModel._({
-    required this.encryptedBool,
+  VaultListItemModel._({
+    required super.encryptedBool,
     required this.totalWalletsCount,
     required this.vaultModel,
     required this.vaultWalletsPreview,
-  });
+  }) : super(pinnedBool: vaultModel.pinnedBool);
 
-  VaultListItemModel copyWith({
-    bool? encryptedBool,
-    VaultModel? vaultModel,
-    List<WalletModel>? vaultWallets,
-  }) {
-    return VaultListItemModel._(
-      encryptedBool: encryptedBool ?? this.encryptedBool,
-      vaultModel: vaultModel ?? this.vaultModel,
-      totalWalletsCount: vaultWallets != null ? vaultWallets.length : totalWalletsCount,
-      vaultWalletsPreview: vaultWallets != null ? vaultWallets.sublist(0, min(9, vaultWallets.length)) : vaultWalletsPreview,
-    );
+  @override
+  void setPinned({required bool pinnedBool}) {
+    super.setPinned(pinnedBool: pinnedBool);
+    vaultModel = vaultModel.copyWith(pinnedBool: pinnedBool);
   }
 
   // TODO(dominik): Temporary solution to get the vault name. After implementing "create-vault-ui" this method should be replaced by user-provided name.

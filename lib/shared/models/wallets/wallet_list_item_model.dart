@@ -1,31 +1,22 @@
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
+import 'package:snggle/shared/models/a_list_item.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 
-class WalletListItemModel extends Equatable {
-  final bool encryptedBool;
-  final WalletModel walletModel;
+class WalletListItemModel extends AListItem {
+  late WalletModel walletModel;
 
-  const WalletListItemModel({
-    required this.encryptedBool,
+  WalletListItemModel({
+    required super.encryptedBool,
     required this.walletModel,
-  });
+  }) : super(pinnedBool: walletModel.pinnedBool);
 
-  const WalletListItemModel._({
-    required this.encryptedBool,
-    required this.walletModel,
-  });
-
-  WalletListItemModel copyWith({
-    bool? encryptedBool,
-    WalletModel? walletModel,
-  }) {
-    return WalletListItemModel._(
-      encryptedBool: encryptedBool ?? this.encryptedBool,
-      walletModel: walletModel ?? this.walletModel,
-    );
+  @override
+  void setPinned({required bool pinnedBool}) {
+    super.setPinned(pinnedBool: pinnedBool);
+    walletModel = walletModel.copyWith(pinnedBool: pinnedBool);
   }
 
   // TODO(dominik): Temporary solution to get the vault name. After implementing "create-vault-ui" this method should be replaced by user-provided name.

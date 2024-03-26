@@ -142,7 +142,7 @@ void main() {
       );
 
       // Act
-      List<VaultListItemModel> actualSelectedVaults = actualVaultListPageState.selectedVaults;
+      List<VaultListItemModel> actualSelectedVaults = actualVaultListPageState.selectedItems;
 
       // Assert
       List<VaultListItemModel> expectedSelectedVaults = <VaultListItemModel>[
@@ -175,7 +175,7 @@ void main() {
       );
 
       // Act
-      List<VaultListItemModel> actualSelectedVaults = actualVaultListPageState.selectedVaults;
+      List<VaultListItemModel> actualSelectedVaults = actualVaultListPageState.selectedItems;
 
       // Assert
       List<VaultListItemModel> expectedSelectedVaults = <VaultListItemModel>[];
@@ -188,7 +188,7 @@ void main() {
       VaultListPageState actualVaultListPageState = VaultListPageState(loadingBool: false, allVaults: actualVaultListItemModels);
 
       // Act
-      List<VaultListItemModel> actualSelectedVaults = actualVaultListPageState.selectedVaults;
+      List<VaultListItemModel> actualSelectedVaults = actualVaultListPageState.selectedItems;
 
       // Assert
       List<VaultListItemModel> expectedSelectedVaults = <VaultListItemModel>[];
