@@ -5,7 +5,8 @@ class WalletEntity extends Equatable {
   final bool pinnedBool;
   final int index;
   final String uuid;
-  final String vaultUuid;
+  final String accessPath;
+  final String type;
   final String address;
   final String derivationPath;
   final String? name;
@@ -14,7 +15,8 @@ class WalletEntity extends Equatable {
     required this.pinnedBool,
     required this.index,
     required this.uuid,
-    required this.vaultUuid,
+    required this.accessPath,
+    required this.type,
     required this.address,
     required this.derivationPath,
     this.name,
@@ -25,7 +27,8 @@ class WalletEntity extends Equatable {
       pinnedBool: json['pinned'] as bool,
       index: json['index'] as int,
       uuid: json['uuid'] as String,
-      vaultUuid: json['vault_uuid'] as String,
+      accessPath: json['access_path'] as String,
+      type: json['type'] as String,
       address: json['address'] as String,
       derivationPath: json['derivation_path'] as String,
       name: json['name'] as String?,
@@ -37,7 +40,8 @@ class WalletEntity extends Equatable {
       pinnedBool: walletModel.pinnedBool,
       index: walletModel.index,
       uuid: walletModel.uuid,
-      vaultUuid: walletModel.vaultUuid,
+      accessPath: walletModel.containerPathModel.path,
+      type: walletModel.type,
       address: walletModel.address,
       derivationPath: walletModel.derivationPath,
       name: walletModel.name,
@@ -49,7 +53,8 @@ class WalletEntity extends Equatable {
       'pinned': pinnedBool,
       'index': index,
       'uuid': uuid,
-      'vault_uuid': vaultUuid,
+      'access_path': accessPath,
+      'type': type,
       'address': address,
       'derivation_path': derivationPath,
       'name': name,
@@ -57,5 +62,5 @@ class WalletEntity extends Equatable {
   }
 
   @override
-  List<Object?> get props => <Object?>[pinnedBool, index, uuid, vaultUuid, address, derivationPath, name];
+  List<Object?> get props => <Object?>[pinnedBool, index, uuid, accessPath, type, address, derivationPath, name];
 }

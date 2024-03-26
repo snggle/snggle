@@ -6,11 +6,10 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_list_item_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item_template.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item_tooltip.dart';
 import 'package:snggle/views/widgets/actions_tooltip/actions_tooltip_wrapper.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
-import 'package:snggle/views/widgets/generic/selection_wrapper.dart';
+import 'package:snggle/views/widgets/generic/horizontal_list_item.dart';
 import 'package:snggle/views/widgets/generic/wallet_icon.dart';
 
 class WalletListItem extends StatefulWidget {
@@ -46,7 +45,10 @@ class _WalletListItemState extends State<WalletListItem> {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
 
-    Widget itemWidget = WalletListItemTemplate(
+    Widget itemWidget = HorizontalListItem(
+      selectedBool: widget.selectedBool,
+      selectionEnabledBool: widget.selectionEnabledBool,
+      onSelectValueChanged: widget.onSelectValueChanged,
       iconWidget: WalletIcon(
         address: widget.walletListItemModel.walletModel.address,
         lockedBool: widget.walletListItemModel.encryptedBool,
@@ -66,13 +68,7 @@ class _WalletListItemState extends State<WalletListItem> {
       ),
     );
 
-    if (widget.selectionEnabledBool) {
-      itemWidget = SelectionWrapper(
-        selectedBool: widget.selectedBool,
-        onSelectValueChanged: widget.onSelectValueChanged,
-        child: itemWidget,
-      );
-    } else {
+    if (widget.selectionEnabledBool == false) {
       itemWidget = ActionsTooltipWrapper(
         controller: actionsPopupController,
         content: WalletListItemTooltip(
@@ -91,18 +87,6 @@ class _WalletListItemState extends State<WalletListItem> {
         ),
       );
     }
-
-    itemWidget = Container(
-      height: 80,
-      width: double.infinity,
-      padding: const EdgeInsets.only(left: 6, top: 6, bottom: 6, right: 14),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: AppColors.lightGrey1),
-        ),
-      ),
-      child: itemWidget,
-    );
 
     if (widget.walletListItemModel.encryptedBool) {
       itemWidget = Container(

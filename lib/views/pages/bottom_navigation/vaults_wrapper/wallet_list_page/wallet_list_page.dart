@@ -5,28 +5,28 @@ import 'package:snggle/bloc/wallet_list_page/wallet_list_page_cubit.dart';
 import 'package:snggle/bloc/wallet_list_page/wallet_list_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
+import 'package:snggle/shared/models/a_container_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
-import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_list_item_model.dart';
-import 'package:snggle/shared/models/wallets/wallet_model.dart';
-import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item_template.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_page_tooltip.dart';
 import 'package:snggle/views/widgets/button/square_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_agreement_dialog.dart';
 import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
+import 'package:snggle/views/widgets/generic/horizontal_list_item.dart';
 import 'package:snggle/views/widgets/generic/loading_container.dart';
 
 @RoutePage()
 class WalletListPage extends StatefulWidget {
   final VaultListItemModel vaultListItemModel;
+  final AContainerModel parentContainerModel;
   final PasswordModel vaultPasswordModel;
 
   const WalletListPage({
     required this.vaultListItemModel,
+    required this.parentContainerModel,
     required this.vaultPasswordModel,
     super.key,
   });
@@ -39,7 +39,7 @@ class _WalletListPageState extends State<WalletListPage> {
   static const int loadingItemsCount = 24;
 
   late final WalletListPageCubit walletListPageCubit = WalletListPageCubit(
-    vaultModel: widget.vaultListItemModel.vaultModel,
+    containerModel: widget.parentContainerModel,
     vaultPasswordModel: widget.vaultPasswordModel,
   );
 
@@ -85,7 +85,7 @@ class _WalletListPageState extends State<WalletListPage> {
                           : (walletListPageState.visibleWallets.length + (walletListPageState.searchPattern == null ? 1 : 0)),
                       itemBuilder: (BuildContext context, int index) {
                         if (walletListPageState.loadingBool) {
-                          return const WalletListItemTemplate(
+                          return const HorizontalListItem(
                             iconWidget: LoadingContainer(radius: 26),
                             titleWidget: LoadingContainer(height: 16, width: 64, radius: 8),
                             subtitleWidget: LoadingContainer(height: 16, width: 128, radius: 8),
@@ -95,21 +95,11 @@ class _WalletListPageState extends State<WalletListPage> {
 
                         bool buttonItemBool = index == walletListPageState.visibleWallets.length;
                         if (buttonItemBool) {
-                          return Container(
-                            height: 80,
-                            width: double.infinity,
-                            padding: const EdgeInsets.only(left: 6, top: 6, bottom: 6, right: 14),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: AppColors.lightGrey1),
-                              ),
-                            ),
-                            child: WalletListItemTemplate(
-                              iconWidget: SquareOutlinedButton(
-                                icon: Icon(AppIcons.add, size: 35, color: AppColors.middleGrey),
-                                onTap: walletListPageCubit.createNewWallet,
-                                radius: 17,
-                              ),
+                          return HorizontalListItem(
+                            iconWidget: SquareOutlinedButton(
+                              icon: Icon(AppIcons.add, size: 35, color: AppColors.middleGrey),
+                              onTap: () {},
+                              radius: 17,
                             ),
                           );
                         }

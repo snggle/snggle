@@ -14,75 +14,100 @@ class WalletsPreviewIcon extends StatelessWidget {
   final bool lockedBool;
   final bool pinnedBool;
   final List<WalletModel> wallets;
+  final double radius;
+  final double padding;
 
   const WalletsPreviewIcon({
     required this.lockedBool,
     required this.pinnedBool,
     required this.wallets,
+    this.radius = 26,
+    this.padding = 11,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    double gapSize = 3;
+
     List<WalletModel> visibleWallets = wallets.sublist(0, min(9, wallets.length));
 
     BorderRadius itemRadius = pinnedBool
-        ? const BorderRadius.only(
-            topRight: Radius.circular(26),
-            bottomLeft: Radius.circular(26),
-            bottomRight: Radius.circular(26),
+        ? BorderRadius.only(
+            topRight: Radius.circular(radius),
+            bottomLeft: Radius.circular(radius),
+            bottomRight: Radius.circular(radius),
           )
-        : BorderRadius.circular(26);
+        : BorderRadius.circular(radius);
 
     Widget walletsGridWidget = Padding(
-      padding: const EdgeInsets.all(11),
-      child: GridView.count(
-        crossAxisCount: 3,
-        mainAxisSpacing: 6,
-        crossAxisSpacing: 6,
-        children: visibleWallets.map(
-          (WalletModel e) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(4.5),
-              child: SvgPicture.string(
-                Blockies(seed: e.address).toSvg(size: 13),
+      padding: EdgeInsets.all(padding),
+      child: Column(
+        children: <Widget>[
+          for (int y = 0; y < 3; y++) ...<Widget>[
+            Expanded(
+              child: Row(
+                children: <Widget>[
+                  for (int x = 0; x < 3; x++) ...<Widget>[
+                    if (visibleWallets.length > y * 3 + x)
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4.5),
+                          child: SvgPicture.string(
+                            Blockies(seed: visibleWallets[y * 3 + x].address).toSvg(size: 13),
+                          ),
+                        ),
+                      )
+                    else
+                      const Spacer(),
+                    if (x < 2) SizedBox(width: gapSize),
+                  ],
+                ],
               ),
-            );
-          },
-        ).toList(),
+            ),
+            if(y < 2) SizedBox(height: gapSize),
+          ],
+        ],
       ),
     );
 
     return Stack(
       fit: StackFit.expand,
+      alignment: Alignment.center,
       children: <Widget>[
-        walletsGridWidget,
+        Positioned.fill(
+          child: walletsGridWidget,
+        ),
         if (lockedBool)
-          ClipRRect(
-            borderRadius: itemRadius,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-              child: Container(
-                decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: itemRadius,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
+                ),
               ),
             ),
           ),
-        Container(
-          decoration: BoxDecoration(
-            border: pinnedBool ? GradientBoxBorder(gradient: AppColors.primaryGradient) : Border.all(color: AppColors.middleGrey),
-            borderRadius: itemRadius,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              if (lockedBool)
-                GradientIcon(
-                  AppIcons.lock,
-                  size: 42,
-                  gradient: AppColors.primaryGradient,
-                ),
-            ],
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              border: pinnedBool ? GradientBoxBorder(gradient: AppColors.primaryGradient) : Border.all(color: AppColors.middleGrey),
+              borderRadius: itemRadius,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                if (lockedBool)
+                  GradientIcon(
+                    AppIcons.lock,
+                    size: 42,
+                    gradient: AppColors.primaryGradient,
+                  ),
+              ],
+            ),
           ),
         ),
       ],

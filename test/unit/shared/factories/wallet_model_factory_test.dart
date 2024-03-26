@@ -37,7 +37,7 @@ void main() async {
       WalletEntity actualWalletEntity = const WalletEntity(
         index: 0,
         uuid: '4e66ba36-966e-49ed-b639-191388ce38de',
-        vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
+        accessPath: '04b5440e-e398-4520-9f9b-f0eea2d816e6',
         address: 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
         derivationPath: "m/44'/118'/0'/0/0",
       );

@@ -24,10 +24,10 @@ class WalletsService {
     return currentMaxIndex;
   }
 
-  Future<List<WalletModel>> getWalletList(String vaultUuid) async {
+  Future<List<WalletModel>> getWalletList(String path, {bool strictBool = false}) async {
     WalletModelFactory walletModelFactory = globalLocator<WalletModelFactory>();
     List<WalletEntity> walletEntityList = await _walletsRepository.getAll();
-    walletEntityList = walletEntityList.where((WalletEntity walletEntity) => walletEntity.vaultUuid == vaultUuid).toList();
+    walletEntityList = walletEntityList.where((WalletEntity walletEntity) => strictBool ? walletEntity.accessPath == path : walletEntity.accessPath.startsWith(path)).toList();
 
     List<WalletModel> walletModelList = walletEntityList.map(walletModelFactory.createFromEntity).toList();
     return walletModelList;
