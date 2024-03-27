@@ -16,6 +16,7 @@ import 'package:snggle/views/widgets/button/square_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/horizontal_list_item.dart';
+import 'package:snggle/views/widgets/generic/loading_container.dart';
 
 @RoutePage()
 class NetworkGroupsPage extends StatefulWidget {
@@ -76,7 +77,12 @@ class _NetworkGroupsPageState extends State<NetworkGroupsPage> {
                   itemCount: listState.loadingBool ? loadingItemsCount : (listState.allItems.length + (listState.searchPattern == null ? 1 : 0)),
                   itemBuilder: (BuildContext context, int index) {
                     if (listState.loadingBool) {
-                      return const SizedBox(height: 100);
+                      return const HorizontalListItem(
+                        iconWidget: LoadingContainer(radius: 26),
+                        titleWidget: LoadingContainer(height: 16, width: 64, radius: 8),
+                        subtitleWidget: LoadingContainer(height: 16, width: 128, radius: 8),
+                        trailingWidget: LoadingContainer(height: 16, width: 64, radius: 8),
+                      );
                     }
 
                     bool buttonItemBool = index == listState.allItems.length;

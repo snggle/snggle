@@ -100,10 +100,8 @@ class _NetworkGroupListItemState extends State<NetworkGroupListItem> {
   }
 
   void _handlePinValueChanged(bool pinnedBool) {
-    print('_handlePinValueChanged1($pinnedBool)');
     actionsPopupController.hideMenu();
     widget.onPinValueChanged(pinnedBool);
-    print('_handlePinValueChanged1 end');
   }
 
   void _handleLockValueChanged(bool lockedBool) {
@@ -126,7 +124,7 @@ class _NetworkGroupListItemState extends State<NetworkGroupListItem> {
       WalletListRoute(
         vaultListItemModel: widget.vaultListItemModel,
         vaultPasswordModel: PasswordModel.defaultPassword(),
-        parentContainerPathModel: widget.networkGroupListItemModel.containerPathModel,
+        parentContainerModel: widget.networkGroupListItemModel.groupModel,
       ),
     );
   }

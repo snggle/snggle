@@ -10,7 +10,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i13;
 import 'package:flutter/material.dart' as _i16;
-import 'package:snggle/shared/models/container_path_model.dart' as _i18;
+import 'package:snggle/shared/models/a_container_model.dart' as _i18;
 import 'package:snggle/shared/models/password_model.dart' as _i15;
 import 'package:snggle/shared/models/vaults/vault_list_item_model.dart' as _i14;
 import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i17;
@@ -120,7 +120,7 @@ abstract class $AppRouter extends _i13.RootStackRouter {
       return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i12.WalletListPage(
-          parentContainerPathModel: args.parentContainerPathModel,
+          parentContainerModel: args.parentContainerModel,
           vaultListItemModel: args.vaultListItemModel,
           vaultPasswordModel: args.vaultPasswordModel,
           key: args.key,
@@ -356,7 +356,7 @@ class WalletDetailsRouteArgs {
 /// [_i12.WalletListPage]
 class WalletListRoute extends _i13.PageRouteInfo<WalletListRouteArgs> {
   WalletListRoute({
-    required _i18.ContainerPathModel parentContainerPathModel,
+    required _i18.AContainerModel parentContainerModel,
     required _i14.VaultListItemModel vaultListItemModel,
     required _i15.PasswordModel vaultPasswordModel,
     _i16.Key? key,
@@ -364,7 +364,7 @@ class WalletListRoute extends _i13.PageRouteInfo<WalletListRouteArgs> {
   }) : super(
           WalletListRoute.name,
           args: WalletListRouteArgs(
-            parentContainerPathModel: parentContainerPathModel,
+            parentContainerModel: parentContainerModel,
             vaultListItemModel: vaultListItemModel,
             vaultPasswordModel: vaultPasswordModel,
             key: key,
@@ -380,13 +380,13 @@ class WalletListRoute extends _i13.PageRouteInfo<WalletListRouteArgs> {
 
 class WalletListRouteArgs {
   const WalletListRouteArgs({
-    required this.parentContainerPathModel,
+    required this.parentContainerModel,
     required this.vaultListItemModel,
     required this.vaultPasswordModel,
     this.key,
   });
 
-  final _i18.ContainerPathModel parentContainerPathModel;
+  final _i18.AContainerModel parentContainerModel;
 
   final _i14.VaultListItemModel vaultListItemModel;
 
@@ -396,6 +396,6 @@ class WalletListRouteArgs {
 
   @override
   String toString() {
-    return 'WalletListRouteArgs{parentContainerPathModel: $parentContainerPathModel, vaultListItemModel: $vaultListItemModel, vaultPasswordModel: $vaultPasswordModel, key: $key}';
+    return 'WalletListRouteArgs{parentContainerModel: $parentContainerModel, vaultListItemModel: $vaultListItemModel, vaultPasswordModel: $vaultPasswordModel, key: $key}';
   }
 }

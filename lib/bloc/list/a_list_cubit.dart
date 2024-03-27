@@ -15,9 +15,14 @@ abstract class AListCubit<T extends AListItem> extends Cubit<ListState<T>> {
   }
 
   Future<void> refreshSingle(T item) async {
-    T newItem = await fetchSingleFromDatabase(item);
-    List<T> newItems = state.allItems.map((T e) => e == item ? newItem : e).toList();
-    emit(state.copyWith(allItems: newItems));
+    T? newItem = await fetchSingleFromDatabase(item);
+    if (newItem == null) {
+      List<T> newItems = state.allItems..remove(item);
+      emit(state.copyWith(allItems: newItems));
+    } else {
+      List<T> newItems = state.allItems.map((T e) => e == item ? newItem : e).toList();
+      emit(state.copyWith(allItems: newItems));
+    }
   }
 
   Future<void> refreshAll() async {
@@ -80,7 +85,7 @@ abstract class AListCubit<T extends AListItem> extends Cubit<ListState<T>> {
 
   Future<void> deleteFromDatabase(T item);
 
-  Future<T> fetchSingleFromDatabase(T item);
+  Future<T?> fetchSingleFromDatabase(T item);
 
   Future<List<T>> fetchAllFromDatabase();
 

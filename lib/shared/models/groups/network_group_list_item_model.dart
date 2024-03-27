@@ -7,11 +7,16 @@ class NetworkGroupListItemModel extends GroupListItemModel {
   NetworkGroupListItemModel({
     required this.networkConfigModel,
     required super.encryptedBool,
-    required super.pinnedBool,
-    required super.containerPathModel,
     required super.walletsPreview,
-  });
+    required super.groupModel,
+  }) : super(pinnedBool: groupModel.pinnedBool);
 
   @override
-  List<Object?> get props => <Object?>[encryptedBool, pinnedBool, containerPathModel, networkConfigModel, walletsPreview];
+  void setPinned({required bool pinnedBool}) {
+    super.setPinned(pinnedBool: pinnedBool);
+    groupModel = groupModel.copyWith(pinnedBool: pinnedBool);
+  }
+
+  @override
+  List<Object?> get props => <Object?>[encryptedBool, pinnedBool, networkConfigModel, groupModel, walletsPreview];
 }

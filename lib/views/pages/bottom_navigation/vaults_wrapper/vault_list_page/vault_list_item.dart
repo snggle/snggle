@@ -86,7 +86,10 @@ class _VaultListItemState extends State<VaultListItem> {
         child: GestureDetector(
           onTap: _navigateToWalletsPage,
           onLongPress: _showActionsTooltip,
-          child: itemWidget,
+          child: Container(
+            color: Colors.transparent,
+            child: itemWidget,
+          ),
         ),
       );
     }

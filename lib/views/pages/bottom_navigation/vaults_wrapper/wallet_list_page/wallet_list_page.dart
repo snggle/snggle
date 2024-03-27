@@ -23,12 +23,12 @@ import 'package:snggle/views/widgets/generic/loading_container.dart';
 
 @RoutePage()
 class WalletListPage extends StatefulWidget {
-  final ContainerPathModel parentContainerPathModel;
+  final AContainerModel parentContainerModel;
   final VaultListItemModel vaultListItemModel;
   final PasswordModel vaultPasswordModel;
 
   const WalletListPage({
-    required this.parentContainerPathModel,
+    required this.parentContainerModel,
     required this.vaultListItemModel,
     required this.vaultPasswordModel,
     super.key,
@@ -42,7 +42,7 @@ class _WalletListPageState extends State<WalletListPage> {
   static const int loadingItemsCount = 24;
 
   late final WalletListPageCubit walletListPageCubit = WalletListPageCubit(
-    containerPathModel: widget.parentContainerPathModel,
+    containerPathModel: widget.parentContainerModel.containerPathModel,
     vaultPasswordModel: widget.vaultPasswordModel,
   );
 

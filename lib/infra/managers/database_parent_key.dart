@@ -3,5 +3,6 @@ enum DatabaseParentKey {
   secrets,
   vaults,
   wallets,
+  groups,
   test,
 }
