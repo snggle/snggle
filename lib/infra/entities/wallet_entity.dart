@@ -4,21 +4,21 @@ import 'package:snggle/shared/models/wallets/wallet_model.dart';
 class WalletEntity extends Equatable {
   final bool pinnedBool;
   final int index;
-  final String uuid;
-  final String accessPath;
-  final String type;
   final String address;
   final String derivationPath;
+  final String network;
+  final String uuid;
+  final String parentPath;
   final String? name;
 
   const WalletEntity({
     required this.pinnedBool,
     required this.index,
-    required this.uuid,
-    required this.accessPath,
-    required this.type,
     required this.address,
     required this.derivationPath,
+    required this.network,
+    required this.uuid,
+    required this.parentPath,
     this.name,
   });
 
@@ -26,11 +26,11 @@ class WalletEntity extends Equatable {
     return WalletEntity(
       pinnedBool: json['pinned'] as bool,
       index: json['index'] as int,
-      uuid: json['uuid'] as String,
-      accessPath: json['access_path'] as String,
-      type: json['type'] as String,
       address: json['address'] as String,
       derivationPath: json['derivation_path'] as String,
+      network: json['network'] as String,
+      uuid: json['uuid'] as String,
+      parentPath: json['parent_path'] as String,
       name: json['name'] as String?,
     );
   }
@@ -39,11 +39,11 @@ class WalletEntity extends Equatable {
     return WalletEntity(
       pinnedBool: walletModel.pinnedBool,
       index: walletModel.index,
-      uuid: walletModel.uuid,
-      accessPath: walletModel.containerPathModel.path,
-      type: walletModel.type,
       address: walletModel.address,
       derivationPath: walletModel.derivationPath,
+      network: walletModel.network,
+      uuid: walletModel.uuid,
+      parentPath: walletModel.containerPathModel.parentPath,
       name: walletModel.name,
     );
   }
@@ -52,15 +52,15 @@ class WalletEntity extends Equatable {
     return <String, dynamic>{
       'pinned': pinnedBool,
       'index': index,
-      'uuid': uuid,
-      'access_path': accessPath,
-      'type': type,
       'address': address,
       'derivation_path': derivationPath,
+      'network': network,
+      'uuid': uuid,
+      'parent_path': parentPath,
       'name': name,
     };
   }
 
   @override
-  List<Object?> get props => <Object?>[pinnedBool, index, uuid, accessPath, type, address, derivationPath, name];
+  List<Object?> get props => <Object?>[pinnedBool, index, address, derivationPath, network, uuid, parentPath, name];
 }

@@ -10,12 +10,14 @@ class ContainerPathModel extends Equatable {
     return ContainerPathModel(pathSegments);
   }
 
-  String deriveChildPath(String childUuid) {
+  ContainerPathModel deriveChildPath(String childUuid) {
     List<String> derivedPathSegments = <String>[...pathSegments, childUuid];
-    return derivedPathSegments.join('/');
+    return ContainerPathModel(derivedPathSegments);
   }
 
-  String get path => pathSegments.join('/');
+  String get fullPath => pathSegments.join('/');
+
+  String get parentPath => pathSegments.sublist(0, pathSegments.length - 1).join('/');
 
   @override
   List<Object?> get props => <Object>[pathSegments];

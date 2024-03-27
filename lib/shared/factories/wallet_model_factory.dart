@@ -15,9 +15,9 @@ class WalletModelFactory {
       uuid: uuid,
       vaultUuid: walletCreationRequestModel.vaultUuid,
       name: walletCreationRequestModel.name,
-      type: walletCreationRequestModel.type,
+      network: walletCreationRequestModel.type,
       address: AtomAddrEncoder().encodeKey(walletCreationRequestModel.publicKey, <String, dynamic>{'hrp': walletCreationRequestModel.type}),
-      containerPathModel: ContainerPathModel.fromString(walletCreationRequestModel.parentContainerPathModel.deriveChildPath(uuid)),
+      parentPath: walletCreationRequestModel.parentContainerPathModel.fullPath,
       derivationPath: walletCreationRequestModel.derivationPath,
     );
   }
@@ -27,11 +27,11 @@ class WalletModelFactory {
       pinnedBool: walletEntity.pinnedBool,
       index: walletEntity.index,
       uuid: walletEntity.uuid,
-      vaultUuid: walletEntity.accessPath,
-      type: walletEntity.type,
+      vaultUuid: walletEntity.parentPath,
+      network: walletEntity.network,
       address: walletEntity.address,
       derivationPath: walletEntity.derivationPath,
-      containerPathModel: ContainerPathModel.fromString(walletEntity.accessPath),
+      parentPath: walletEntity.parentPath,
       name: walletEntity.name,
     );
   }

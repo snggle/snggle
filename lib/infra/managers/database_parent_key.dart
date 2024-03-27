@@ -1,8 +1,8 @@
 enum DatabaseParentKey {
   encryptedMasterKey,
+  groups,
   secrets,
   vaults,
   wallets,
-  groups,
   test,
 }

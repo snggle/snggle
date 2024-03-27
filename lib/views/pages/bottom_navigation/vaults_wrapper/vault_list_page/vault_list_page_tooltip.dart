@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_icons.dart';
-import 'package:snggle/shared/models/vaults/vault_selection_model.dart';
+import 'package:snggle/shared/models/selection_model.dart';
+import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
 import 'package:snggle/views/widgets/custom/custom_agreement_dialog.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_tooltip.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_tooltip_item.dart';
 
 class VaultListPageTooltip extends StatefulWidget {
-  final VaultSelectionModel vaultSelectionModel;
+  final SelectionModel<VaultListItemModel> selectionModel;
   final VoidCallback onSelectAll;
   final VoidCallback? onBackupSelected;
   final VoidCallback? onLockSelected;
   final ValueChanged<bool>? onPinValueChanged;
 
   const VaultListPageTooltip({
-    required this.vaultSelectionModel,
+    required this.selectionModel,
     required this.onSelectAll,
     this.onBackupSelected,
     this.onLockSelected,
@@ -38,17 +39,17 @@ class _VaultListPageTooltipState extends State<VaultListPageTooltip> {
         CustomBottomNavigationBarTooltipItem(
           iconData: AppIcons.pin,
           label: 'Pin',
-          onTap: widget.vaultSelectionModel.canPinAll ? () => _pressPinButton(true) : null,
+          onTap: widget.selectionModel.canPinAll ? () => _pressPinButton(true) : null,
         ),
         CustomBottomNavigationBarTooltipItem(
           iconData: AppIcons.unpin,
           label: 'Unpin',
-          onTap: widget.vaultSelectionModel.canUnpinAll ? () => _pressPinButton(false) : null,
+          onTap: widget.selectionModel.canUnpinAll ? () => _pressPinButton(false) : null,
         ),
         CustomBottomNavigationBarTooltipItem(
           iconData: AppIcons.lock,
           label: 'Lock',
-          onTap: widget.vaultSelectionModel.canLockAll ? _pressLockButton : null,
+          onTap: widget.selectionModel.canLockAll ? _pressLockButton : null,
         ),
         CustomBottomNavigationBarTooltipItem(
           iconData: AppIcons.backup,

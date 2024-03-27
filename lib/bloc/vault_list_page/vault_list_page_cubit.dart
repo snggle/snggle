@@ -14,9 +14,6 @@ import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 
 class VaultListPageCubit extends AListCubit<VaultListItemModel> {
-  // TODO(dominik): Temporary solution to get the vault name. After implementing "create-vault-ui" this method should be removed.
-  final VaultModelFactory _vaultModelFactory = globalLocator<VaultModelFactory>();
-
   final SecretsService _secretsService;
   final VaultsService _vaultsService;
   final WalletsService _walletsService;
@@ -31,14 +28,7 @@ class VaultListPageCubit extends AListCubit<VaultListItemModel> {
 
   @override
   Future<void> deleteFromDatabase(VaultListItemModel item) async {
-    List<WalletModel> vaultWallets = await _walletsService.getWalletList(item.vaultModel.uuid);
-    for (WalletModel walletModel in vaultWallets) {
-      await _walletsService.deleteWalletById(walletModel.uuid);
-      await _secretsService.deleteSecrets(walletModel.containerPathModel);
-    }
-
-    await _vaultsService.deleteVaultById(item.vaultModel.uuid);
-    await _secretsService.deleteSecrets(item.vaultModel.containerPathModel);
+    await _vaultsService.deleteVaultById(item.vaultModel.uuid, recursiveBool: true);
   }
 
   @override
@@ -69,9 +59,32 @@ class VaultListPageCubit extends AListCubit<VaultListItemModel> {
     return _vaultsService.saveVault(item.vaultModel);
   }
 
-  // TODO(dominik): Temporary solution to get the vault name. After implementing "create-vault-ui" this method should be removed.
+  @override
+  Future<List<VaultListItemModel>> filterBySearchPattern(List<VaultListItemModel> allItems, String searchPattern) async {
+    List<VaultListItemModel> filteredItems = allItems.where((VaultListItemModel item) {
+      return item.name.toLowerCase().contains(searchPattern.toLowerCase());
+    }).toList();
+
+    return filteredItems;
+  }
+
+  @override
+  List<VaultListItemModel> sortItems(List<VaultListItemModel> items) {
+    items.sort((VaultListItemModel a, VaultListItemModel b) {
+      return a.vaultModel.index.compareTo(b.vaultModel.index);
+    });
+
+    List<VaultListItemModel> pinnedItems = items.where((VaultListItemModel item) => item.pinnedBool).toList();
+    List<VaultListItemModel> unpinnedItems = items.where((VaultListItemModel item) => item.pinnedBool == false).toList();
+
+    return <VaultListItemModel>[...pinnedItems, ...unpinnedItems];
+  }
+
+  // TODO(dominik): Temporary solution to create new vault. After implementing "create-vault-ui" this method should be removed.
   Future<void> createNewVault() async {
-    VaultModel newVaultModel = await _vaultModelFactory.createNewVault();
+    final VaultModelFactory vaultModelFactory = globalLocator<VaultModelFactory>();
+
+    VaultModel newVaultModel = await vaultModelFactory.createNewVault();
 
     MnemonicModel mnemonicModel = MnemonicModel.generate();
     VaultSecretsModel vaultSecretsModel = VaultSecretsModel(containerPathModel: newVaultModel.containerPathModel, mnemonicModel: mnemonicModel);
@@ -80,7 +93,6 @@ class VaultListPageCubit extends AListCubit<VaultListItemModel> {
     await _secretsService.saveSecrets(vaultSecretsModel, PasswordModel.defaultPassword());
     await refreshAll();
   }
-
 
   Future<VaultListItemModel> _buildVaultListItemModel(VaultModel vaultModel) async {
     bool defaultPasswordBool = await _secretsService.isSecretsPasswordValid(vaultModel.containerPathModel, PasswordModel.defaultPassword());

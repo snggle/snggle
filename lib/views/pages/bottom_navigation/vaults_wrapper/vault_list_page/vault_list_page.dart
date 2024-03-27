@@ -6,7 +6,6 @@ import 'package:snggle/bloc/vault_list_page/vault_list_page_cubit.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
-import 'package:snggle/shared/models/vaults/vault_selection_model.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item.dart';
@@ -14,7 +13,6 @@ import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_p
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page_tooltip.dart';
 import 'package:snggle/views/widgets/button/square_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_agreement_dialog.dart';
-import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/gradient_icon.dart';
 import 'package:snggle/views/widgets/generic/loading_container.dart';
@@ -49,105 +47,96 @@ class _VaultListPageState extends State<VaultListPage> {
     return BlocBuilder<VaultListPageCubit, ListState<VaultListItemModel>>(
       bloc: vaultListPageCubit,
       builder: (BuildContext context, ListState<VaultListItemModel> listState) {
-        bool popAvailableBool = listState.isSelectingEnabled;
         bool addButtonVisibleBool = true;
         if (listState.searchPattern != null || listState.isSelectingEnabled) {
           addButtonVisibleBool = false;
         }
         return CustomScaffold(
-          popAvailableBool: popAvailableBool,
-          customPopCallback: (_) => _cancelSelection(),
-          appBar: CustomAppBar(
-            title: 'Vaults',
-            popButtonVisible: popAvailableBool,
-            leadingPressedCallback: _cancelSelection,
-            onSearch: vaultListPageCubit.search,
-            searchBoxVisible: listState.searchBoxVisibleBool,
+          popAvailableBool: listState.isSelectingEnabled,
+          customPopCallback: _cancelSelection,
+          title: 'Vaults',
+          popButtonVisible: listState.isSelectingEnabled,
+          onSearch: vaultListPageCubit.search,
+          searchBoxVisible: listState.searchPattern != null,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          scrollDisabledBool: listState.isScrollDisabled,
+          boxDecoration: BoxDecoration(
+            border: Border.symmetric(vertical: BorderSide(color: AppColors.lightGrey2)),
           ),
-          body: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              border: Border.symmetric(vertical: BorderSide(color: AppColors.lightGrey2)),
-            ),
-            child: CustomScrollView(
-              shrinkWrap: listState.isScrollDisabled,
-              physics: listState.isScrollDisabled ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
-              slivers: <Widget>[
-                if (listState.isEmpty)
-                  SliverFillRemaining(
-                    child: Center(
-                      child: IconButton(
-                        onPressed: _createNewVault,
-                        icon: GradientIcon(AppIcons.add_circle, size: 54, gradient: AppColors.primaryGradient),
-                      ),
-                    ),
-                  )
-                else ...<Widget>[
-                  SliverPadding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
-                    sliver: SliverGrid.builder(
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 90,
-                        mainAxisExtent: 133,
-                        crossAxisSpacing: 18,
-                      ),
-                      itemCount: listState.loadingBool ? loadingItemsCount : (listState.visibleItems.length + (addButtonVisibleBool ? 1 : 0)),
-                      itemBuilder: (BuildContext context, int index) {
-                        if (listState.loadingBool) {
-                          return const VaultListItemTemplate(
-                            iconWidget: LoadingContainer(radius: 26),
-                            titleWidget: LoadingContainer(height: 16, radius: 8),
-                          );
-                        }
-
-                        bool buttonItemBool = index == listState.visibleItems.length;
-                        if (buttonItemBool) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: SquareOutlinedButton(
-                              icon: Icon(
-                                AppIcons.add,
-                                size: 54,
-                                color: AppColors.middleGrey,
-                              ),
-                              onTap: _createNewVault,
-                            ),
-                          );
-                        }
-
-                        VaultListItemModel vaultListItemModel = listState.visibleItems[index];
-
-                        return VaultListItem(
-                          key: Key(vaultListItemModel.vaultModel.uuid),
-                          onRefreshWallets: () => vaultListPageCubit.refreshSingle(vaultListItemModel),
-                          selectedBool: listState.selectedItems.contains(vaultListItemModel),
-                          selectionEnabledBool: listState.isSelectingEnabled,
-                          vaultListItemModel: vaultListItemModel,
-                          onPinValueChanged: (bool pinnedBool) => vaultListPageCubit.pinSelection(
-                            selectedItems: <VaultListItemModel>[vaultListItemModel],
-                            pinnedBool: pinnedBool,
-                          ),
-                          onRemove: () => _removeVault(vaultListItemModel),
-                          onSelectValueChanged: (bool selectedBool) => _updateVaultSelection(
-                            vaultListItemModel: vaultListItemModel,
-                            selectedBool: selectedBool,
-                          ),
-                          onLockValueChanged: (bool lockedBool) {
-                            if (lockedBool) {
-                              _lockVaults(<VaultListItemModel>[vaultListItemModel]);
-                            } else {
-                              _unlockVault(vaultListItemModel);
-                            }
-                          },
-                        );
-                      },
-                    ),
+          slivers: <Widget>[
+            if (listState.isEmpty)
+              SliverFillRemaining(
+                child: Center(
+                  child: IconButton(
+                    onPressed: _createNewVault,
+                    icon: GradientIcon(AppIcons.add_circle, size: 54, gradient: AppColors.primaryGradient),
                   ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 100)),
-                ],
-              ],
-            ),
-          ),
+                ),
+              )
+            else ...<Widget>[
+              SliverPadding(
+                padding: const EdgeInsets.only(left: 8, right: 8),
+                sliver: SliverGrid.builder(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 90,
+                    mainAxisExtent: 133,
+                    crossAxisSpacing: 18,
+                  ),
+                  itemCount: listState.loadingBool ? loadingItemsCount : (listState.visibleItems.length + (addButtonVisibleBool ? 1 : 0)),
+                  itemBuilder: (BuildContext context, int index) {
+                    if (listState.loadingBool) {
+                      return const VaultListItemTemplate(
+                        iconWidget: LoadingContainer(radius: 26),
+                        titleWidget: LoadingContainer(height: 16, radius: 8),
+                      );
+                    }
+
+                    bool buttonItemBool = index == listState.visibleItems.length;
+                    if (buttonItemBool) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: SquareOutlinedButton(
+                          icon: Icon(
+                            AppIcons.add,
+                            size: 54,
+                            color: AppColors.middleGrey,
+                          ),
+                          onTap: _createNewVault,
+                        ),
+                      );
+                    }
+
+                    VaultListItemModel vaultListItemModel = listState.visibleItems[index];
+
+                    return VaultListItem(
+                      key: Key(vaultListItemModel.vaultModel.uuid),
+                      onRefreshWallets: () => vaultListPageCubit.refreshSingle(vaultListItemModel),
+                      selectedBool: listState.selectedItems.contains(vaultListItemModel),
+                      selectionEnabledBool: listState.isSelectingEnabled,
+                      vaultListItemModel: vaultListItemModel,
+                      onPinValueChanged: (bool pinnedBool) => vaultListPageCubit.pinSelection(
+                        selectedItems: <VaultListItemModel>[vaultListItemModel],
+                        pinnedBool: pinnedBool,
+                      ),
+                      onRemove: () => _removeVault(vaultListItemModel),
+                      onSelectValueChanged: (bool selectedBool) => _updateVaultSelection(
+                        vaultListItemModel: vaultListItemModel,
+                        selectedBool: selectedBool,
+                      ),
+                      onLockValueChanged: (bool lockedBool) {
+                        if (lockedBool) {
+                          _lockVaults(<VaultListItemModel>[vaultListItemModel]);
+                        } else {
+                          _unlockVault(vaultListItemModel);
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 100)),
+            ],
+          ],
         );
       },
     );
@@ -194,7 +183,7 @@ class _VaultListPageState extends State<VaultListPage> {
         bloc: vaultListPageCubit,
         builder: (BuildContext context, ListState<VaultListItemModel> listState) {
           return VaultListPageTooltip(
-            vaultSelectionModel: VaultSelectionModel.fromSelectionModel(listState.selectionModel!),
+            selectionModel: listState.selectionModel!,
             onSelectAll: vaultListPageCubit.selectAll,
             onPinValueChanged: (bool pinBool) {
               vaultListPageCubit.pinSelection(selectedItems: listState.selectedItems, pinnedBool: pinBool);

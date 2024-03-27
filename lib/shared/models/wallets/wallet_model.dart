@@ -7,7 +7,7 @@ class WalletModel extends AContainerModel {
   final String uuid;
   final String vaultUuid;
   final String address;
-  final String type;
+  final String network;
   final String derivationPath;
   final String? name;
 
@@ -17,11 +17,11 @@ class WalletModel extends AContainerModel {
     required this.uuid,
     required this.vaultUuid,
     required this.address,
-    required this.type,
+    required this.network,
     required this.derivationPath,
-    required super.containerPathModel,
+    required String parentPath,
     this.name,
-  });
+  }) : super(containerPathModel: ContainerPathModel.fromString('${parentPath}/${uuid}'));
 
   WalletModel copyWith({
     bool? pinnedBool,
@@ -29,10 +29,10 @@ class WalletModel extends AContainerModel {
     String? uuid,
     String? vaultUuid,
     String? address,
-    String? type,
+    String? network,
     String? derivationPath,
     String? name,
-    ContainerPathModel? containerPathModel,
+    String? parentPath,
   }) {
     return WalletModel(
       pinnedBool: pinnedBool ?? this.pinnedBool,
@@ -40,13 +40,13 @@ class WalletModel extends AContainerModel {
       uuid: uuid ?? this.uuid,
       vaultUuid: vaultUuid ?? this.vaultUuid,
       address: address ?? this.address,
-      type: type ?? this.type,
+      network: network ?? this.network,
       derivationPath: derivationPath ?? this.derivationPath,
       name: name ?? this.name,
-      containerPathModel: containerPathModel ?? super.containerPathModel,
+      parentPath: parentPath ?? containerPathModel.parentPath,
     );
   }
 
   @override
-  List<Object?> get props => <Object?>[pinnedBool, index, uuid, vaultUuid, address, type, derivationPath, containerPathModel, name];
+  List<Object?> get props => <Object?>[pinnedBool, index, uuid, vaultUuid, address, network, derivationPath, containerPathModel, name];
 }

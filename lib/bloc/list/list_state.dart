@@ -5,7 +5,6 @@ import 'package:snggle/shared/models/selection_model.dart';
 class ListState<T extends AListItem> extends Equatable {
   final bool loadingBool;
   final List<T> allItems;
-  final bool searchBoxVisibleBool;
   final String? searchPattern;
   final SelectionModel<T>? selectionModel;
   final List<T> visibleItems;
@@ -13,7 +12,6 @@ class ListState<T extends AListItem> extends Equatable {
   const ListState({
     required this.loadingBool,
     required this.allItems,
-    this.searchBoxVisibleBool = false,
     this.searchPattern,
     this.selectionModel,
     List<T>? visibleItems,
@@ -22,7 +20,6 @@ class ListState<T extends AListItem> extends Equatable {
   ListState.loading()
       : loadingBool = true,
         allItems = <T>[],
-        searchBoxVisibleBool = false,
         searchPattern = null,
         selectionModel = null,
         visibleItems = <T>[];
@@ -30,14 +27,12 @@ class ListState<T extends AListItem> extends Equatable {
   ListState<T> copyWith({
     bool? loadingBool,
     List<T>? allItems,
-    bool? searchBoxVisibleBool,
     String? searchPattern,
     SelectionModel<T>? selectionModel,
   }) {
     return ListState<T>(
       loadingBool: loadingBool ?? this.loadingBool,
       allItems: allItems ?? this.allItems,
-      searchBoxVisibleBool: searchBoxVisibleBool ?? this.searchBoxVisibleBool,
       searchPattern: searchPattern ?? this.searchPattern,
       selectionModel: selectionModel ?? this.selectionModel,
     );
@@ -60,5 +55,5 @@ class ListState<T extends AListItem> extends Equatable {
   }
 
   @override
-  List<Object?> get props => <Object?>[loadingBool, allItems.hashCode, searchBoxVisibleBool, searchPattern, selectionModel];
+  List<Object?> get props => <Object?>[loadingBool, allItems.hashCode, searchPattern, selectionModel];
 }

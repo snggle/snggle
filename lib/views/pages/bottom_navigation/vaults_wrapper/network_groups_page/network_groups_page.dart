@@ -6,14 +6,13 @@ import 'package:snggle/bloc/network_groups_page/network_groups_page_cubit.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/shared/models/groups/network_group_list_item_model.dart';
-import 'package:snggle/shared/models/groups/network_group_selection_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/network_groups_page/network_group_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/network_groups_page/network_groups_page_tooltip.dart';
 import 'package:snggle/views/widgets/button/square_outlined_button.dart';
-import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
+import 'package:snggle/views/widgets/custom/custom_agreement_dialog.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/horizontal_list_item.dart';
 import 'package:snggle/views/widgets/generic/loading_container.dart';
@@ -58,130 +57,131 @@ class _NetworkGroupsPageState extends State<NetworkGroupsPage> {
     return BlocBuilder<NetworkGroupsPageCubit, ListState<NetworkGroupListItemModel>>(
       bloc: networkGroupsPageCubit,
       builder: (BuildContext context, ListState<NetworkGroupListItemModel> listState) {
-        bool popAvailableBool = listState.isSelectingEnabled;
+        bool addButtonVisibleBool = true;
+        if (listState.searchPattern != null || listState.isSelectingEnabled) {
+          addButtonVisibleBool = false;
+        }
 
         return CustomScaffold(
-          popAvailableBool: popAvailableBool,
-          customPopCallback: (_) => _cancelSelection(),
-          appBar: CustomAppBar(
-            title: widget.vaultListItemModel.name,
-            popButtonVisible: true,
-          ),
-          body: CustomScrollView(
-            shrinkWrap: listState.isScrollDisabled,
-            physics: listState.isScrollDisabled ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
-            slivers: <Widget>[
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverList.builder(
-                  itemCount: listState.loadingBool ? loadingItemsCount : (listState.allItems.length + (listState.searchPattern == null ? 1 : 0)),
-                  itemBuilder: (BuildContext context, int index) {
-                    if (listState.loadingBool) {
-                      return const HorizontalListItem(
-                        iconWidget: LoadingContainer(radius: 26),
-                        titleWidget: LoadingContainer(height: 16, width: 64, radius: 8),
-                        subtitleWidget: LoadingContainer(height: 16, width: 128, radius: 8),
-                        trailingWidget: LoadingContainer(height: 16, width: 64, radius: 8),
-                      );
-                    }
-
-                    bool buttonItemBool = index == listState.allItems.length;
-                    if (buttonItemBool) {
-                      return HorizontalListItem(
-                        iconWidget: SquareOutlinedButton(
-                          icon: Icon(AppIcons.add, size: 35, color: AppColors.middleGrey),
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (_) {
-                                return Dialog(
-                                  child: Container(
-                                    width: 200,
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        const Text('Add wallet'),
-                                        const SizedBox(height: 20),
-                                        ElevatedButton(
-                                          onPressed: () => networkGroupsPageCubit.createNewWallet('kira'),
-                                          child: const Text('KIRA'),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () => networkGroupsPageCubit.createNewWallet('ethereum'),
-                                          child: const Text('Ethereum'),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () => networkGroupsPageCubit.createNewWallet('polkadot'),
-                                          child: const Text('Polkadot'),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () => networkGroupsPageCubit.createNewWallet('bitcoin'),
-                                          child: const Text('Bitcoin'),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () => networkGroupsPageCubit.createNewWallet('cosmos'),
-                                          child: const Text('Cosmos'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          radius: 17,
-                        ),
-                      );
-                    }
-
-                    NetworkGroupListItemModel networkGroupListItemModel = listState.allItems[index];
-
-                    return NetworkGroupListItem(
-                      key: Key(networkGroupListItemModel.networkConfigModel.name),
-                      selectedBool: listState.selectedItems.contains(networkGroupListItemModel),
-                      selectionEnabledBool: listState.isSelectingEnabled,
-                      onRemove: () => _removeGroup(networkGroupListItemModel),
-                      onSelectValueChanged: (bool selectedBool) => _updateGroupSelection(
-                        networkGroupListItemModel: networkGroupListItemModel,
-                        selectedBool: selectedBool,
-                      ),
-                      onLockValueChanged: (bool lockedBool) {
-                        if (lockedBool) {
-                          _lockGroups(<NetworkGroupListItemModel>[networkGroupListItemModel]);
-                        } else {
-                          _unlockGroup(networkGroupListItemModel);
-                        }
-                      },
-                      onPinValueChanged: (bool pinnedBool) {
-                        networkGroupsPageCubit.pinSelection(selectedItems: <NetworkGroupListItemModel>[networkGroupListItemModel], pinnedBool: pinnedBool);
-                        _cancelSelection();
-                      },
-                      vaultListItemModel: widget.vaultListItemModel,
-                      networkGroupListItemModel: networkGroupListItemModel,
+          popAvailableBool: listState.isSelectingEnabled,
+          customPopCallback: listState.isSelectingEnabled ? _cancelSelection : null,
+          title: widget.vaultListItemModel.name,
+          onSearch: networkGroupsPageCubit.search,
+          searchBoxVisible: listState.searchPattern != null,
+          expandedSearchbar: true,
+          scrollDisabledBool: listState.isScrollDisabled,
+          popButtonVisible: true,
+          slivers: <Widget>[
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              sliver: SliverList.builder(
+                itemCount: listState.loadingBool ? loadingItemsCount : (listState.visibleItems.length + (addButtonVisibleBool ? 1 : 0)),
+                itemBuilder: (BuildContext context, int index) {
+                  if (listState.loadingBool) {
+                    return const HorizontalListItem(
+                      iconWidget: LoadingContainer(radius: 26),
+                      titleWidget: LoadingContainer(height: 16, width: 64, radius: 8),
+                      subtitleWidget: LoadingContainer(height: 16, width: 128, radius: 8),
+                      trailingWidget: LoadingContainer(height: 16, width: 64, radius: 8),
                     );
-                  },
-                ),
+                  }
+
+                  bool buttonItemBool = index == listState.visibleItems.length;
+                  if (buttonItemBool) {
+                    return HorizontalListItem(
+                      iconWidget: SquareOutlinedButton(
+                        icon: Icon(AppIcons.add, size: 35, color: AppColors.middleGrey),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) {
+                              return Dialog(
+                                child: Container(
+                                  width: 200,
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      const Text('Add wallet'),
+                                      const SizedBox(height: 20),
+                                      ElevatedButton(
+                                        onPressed: () => networkGroupsPageCubit.createNewWallet('kira'),
+                                        child: const Text('KIRA'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () => networkGroupsPageCubit.createNewWallet('ethereum'),
+                                        child: const Text('Ethereum'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () => networkGroupsPageCubit.createNewWallet('polkadot'),
+                                        child: const Text('Polkadot'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () => networkGroupsPageCubit.createNewWallet('bitcoin'),
+                                        child: const Text('Bitcoin'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () => networkGroupsPageCubit.createNewWallet('cosmos'),
+                                        child: const Text('Cosmos'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        radius: 17,
+                      ),
+                    );
+                  }
+
+                  NetworkGroupListItemModel networkGroupListItemModel = listState.visibleItems[index];
+
+                  return NetworkGroupListItem(
+                    key: Key(networkGroupListItemModel.networkConfigModel.name),
+                    selectedBool: listState.selectedItems.contains(networkGroupListItemModel),
+                    selectionEnabledBool: listState.isSelectingEnabled,
+                    onRemove: () => _removeGroup(networkGroupListItemModel),
+                    onSelectValueChanged: (bool selectedBool) => _updateGroupSelection(
+                      networkGroupListItemModel: networkGroupListItemModel,
+                      selectedBool: selectedBool,
+                    ),
+                    onLockValueChanged: (bool lockedBool) {
+                      if (lockedBool) {
+                        _lockGroups(<NetworkGroupListItemModel>[networkGroupListItemModel]);
+                      } else {
+                        _unlockGroup(networkGroupListItemModel);
+                      }
+                    },
+                    onPinValueChanged: (bool pinnedBool) {
+                      networkGroupsPageCubit.pinSelection(selectedItems: <NetworkGroupListItemModel>[networkGroupListItemModel], pinnedBool: pinnedBool);
+                      _cancelSelection();
+                    },
+                    vaultListItemModel: widget.vaultListItemModel,
+                    networkGroupListItemModel: networkGroupListItemModel,
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
   }
 
   void _removeGroup(NetworkGroupListItemModel networkGroupListItemModel) {
-    // showDialog(
-    //   context: context,
-    //   barrierColor: Colors.transparent,
-    //   builder: (BuildContext context) => CustomAgreementDialog(
-    //     title: 'Remove',
-    //     content: 'Are you sure you want to remove selected wallet?',
-    //     onConfirm: () async {
-    //       await walletListPageCubit.delete(walletListItemModel);
-    //     },
-    //   ),
-    // );
+    showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      builder: (BuildContext context) => CustomAgreementDialog(
+        title: 'Remove',
+        content: 'Are you sure you want to remove selected network?',
+        onConfirm: () async {
+          await networkGroupsPageCubit.delete(networkGroupListItemModel);
+        },
+      ),
+    );
   }
 
   void _updateGroupSelection({required NetworkGroupListItemModel networkGroupListItemModel, required bool selectedBool}) {
@@ -201,7 +201,7 @@ class _NetworkGroupsPageState extends State<NetworkGroupsPage> {
         bloc: networkGroupsPageCubit,
         builder: (BuildContext context, ListState<NetworkGroupListItemModel> listState) {
           return NetworkGroupsPageTooltip(
-            networkGroupSelectionModel: NetworkGroupSelectionModel.fromSelectionModel(listState.selectionModel!),
+            selectionModel: listState.selectionModel!,
             onSelectAll: networkGroupsPageCubit.selectAll,
             onPinValueChanged: (bool pinnedBool) {
               networkGroupsPageCubit.pinSelection(selectedItems: networkGroupsPageCubit.state.selectedItems, pinnedBool: pinnedBool);

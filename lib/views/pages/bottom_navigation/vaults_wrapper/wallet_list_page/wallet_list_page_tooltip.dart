@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_icons.dart';
-import 'package:snggle/shared/models/vaults/vault_selection_model.dart';
-import 'package:snggle/shared/models/wallets/wallet_selection_model.dart';
+import 'package:snggle/shared/models/a_list_item.dart';
+import 'package:snggle/shared/models/selection_model.dart';
 import 'package:snggle/views/widgets/custom/custom_agreement_dialog.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_tooltip.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_tooltip_item.dart';
 
 class WalletListPageTooltip extends StatefulWidget {
-  final WalletSelectionModel walletSelectionModel;
+  final SelectionModel<AListItem> selectionModel;
   final VoidCallback onSelectAll;
-  final VoidCallback? onBackupSelected;
+  final VoidCallback? onGroupSelected;
   final VoidCallback? onLockSelected;
   final ValueChanged<bool>? onPinValueChanged;
 
   const WalletListPageTooltip({
-    required this.walletSelectionModel,
+    required this.selectionModel,
     required this.onSelectAll,
-    this.onBackupSelected,
+    this.onGroupSelected,
     this.onLockSelected,
     this.onPinValueChanged,
     super.key,
@@ -39,22 +39,22 @@ class _WalletListPageTooltipState extends State<WalletListPageTooltip> {
         CustomBottomNavigationBarTooltipItem(
           iconData: AppIcons.pin,
           label: 'Pin',
-          onTap: widget.walletSelectionModel.canPinAll ? () => _pressPinButton(true) : null,
+          onTap: widget.selectionModel.canPinAll ? () => _pressPinButton(true) : null,
         ),
         CustomBottomNavigationBarTooltipItem(
           iconData: AppIcons.unpin,
           label: 'Unpin',
-          onTap: widget.walletSelectionModel.canUnpinAll ? () => _pressPinButton(false) : null,
+          onTap: widget.selectionModel.canUnpinAll ? () => _pressPinButton(false) : null,
         ),
         CustomBottomNavigationBarTooltipItem(
           iconData: AppIcons.lock,
           label: 'Lock',
-          onTap: widget.walletSelectionModel.canLockAll ? _pressLockButton : null,
+          onTap: widget.selectionModel.canLockAll ? _pressLockButton : null,
         ),
         CustomBottomNavigationBarTooltipItem(
           iconData: AppIcons.backup,
-          label: 'Backup',
-          onTap: widget.onBackupSelected,
+          label: 'Group',
+          onTap: widget.onGroupSelected,
         ),
       ],
     );

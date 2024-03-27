@@ -224,7 +224,7 @@ void main() {
         VaultListPageState expectedVaultListPageState = VaultListPageState(
           loadingBool: false,
           searchBoxVisibleBool: false,
-          vaultSelectionModel: VaultSelectionModel(
+          selectionModel: VaultSelectionModel(
             <VaultListItemModel>[
               VaultListItemModel(
                 encryptedBool: true,
@@ -265,7 +265,7 @@ void main() {
         VaultListPageState expectedVaultListPageState = VaultListPageState(
           loadingBool: false,
           searchBoxVisibleBool: false,
-          vaultSelectionModel: VaultSelectionModel(<VaultListItemModel>[]),
+          selectionModel: VaultSelectionModel(<VaultListItemModel>[]),
           allVaults: <VaultListItemModel>[
             VaultListItemModel(
               encryptedBool: true,
@@ -299,7 +299,7 @@ void main() {
         VaultListPageState expectedVaultListPageState = VaultListPageState(
           loadingBool: false,
           searchBoxVisibleBool: false,
-          vaultSelectionModel: VaultSelectionModel(
+          selectionModel: VaultSelectionModel(
             <VaultListItemModel>[
               VaultListItemModel(
                 encryptedBool: true,
@@ -341,7 +341,7 @@ void main() {
         VaultListPageState expectedVaultListPageState = VaultListPageState(
           loadingBool: false,
           searchBoxVisibleBool: false,
-          vaultSelectionModel: VaultSelectionModel(<VaultListItemModel>[]),
+          selectionModel: VaultSelectionModel(<VaultListItemModel>[]),
           allVaults: <VaultListItemModel>[
             VaultListItemModel(
               encryptedBool: true,

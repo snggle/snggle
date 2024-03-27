@@ -1,26 +1,25 @@
-import 'package:blockchain_utils/blockchain_utils.dart';
 import 'package:crypto/crypto.dart';
 import 'package:snggle/shared/models/a_secrets_model.dart';
 import 'package:snggle/shared/models/container_path_model.dart';
 import 'package:uuid/uuid.dart';
 
-class GroupSecretsModel extends ASecretsModel {
+class WalletGroupSecretsModel extends ASecretsModel {
   final String challenge;
 
-  const GroupSecretsModel({
+  const WalletGroupSecretsModel({
     required super.containerPathModel,
     required this.challenge,
   });
 
-  factory GroupSecretsModel.fromJson(ContainerPathModel containerPathModel, Map<String, dynamic> json) {
-    return GroupSecretsModel(
+  factory WalletGroupSecretsModel.fromJson(ContainerPathModel containerPathModel, Map<String, dynamic> json) {
+    return WalletGroupSecretsModel(
       containerPathModel: containerPathModel,
       challenge: json['challenge'] as String,
     );
   }
 
-  factory GroupSecretsModel.generate(ContainerPathModel containerPathModel) {
-    return GroupSecretsModel(
+  factory WalletGroupSecretsModel.generate(ContainerPathModel containerPathModel) {
+    return WalletGroupSecretsModel(
       containerPathModel: containerPathModel,
       challenge: sha512.convert(const Uuid().v4().codeUnits).toString()
     );

@@ -14,14 +14,14 @@ class SecretsService {
   }) : _secretsRepository = secretsRepository ?? globalLocator<SecretsRepository>();
 
   Future<T> getSecrets<T extends ASecretsModel>(ContainerPathModel containerPath, PasswordModel passwordModel) async {
-    String encryptedSecrets = await _secretsRepository.getEncryptedSecrets(containerPath.path);
+    String encryptedSecrets = await _secretsRepository.getEncryptedSecrets(containerPath.fullPath);
     String decryptedHash = passwordModel.decrypt(encryptedData: encryptedSecrets);
     Map<String, dynamic> json = jsonDecode(decryptedHash) as Map<String, dynamic>;
     return ASecretsModel.fromJson<T>(containerPath, json);
   }
 
   Future<bool> isSecretsPasswordValid(ContainerPathModel containerPath, PasswordModel passwordModel) async {
-    String encryptedSecrets = await _secretsRepository.getEncryptedSecrets(containerPath.path);
+    String encryptedSecrets = await _secretsRepository.getEncryptedSecrets(containerPath.fullPath);
     return passwordModel.isValidForData(encryptedSecrets);
   }
 
@@ -29,10 +29,16 @@ class SecretsService {
     Map<String, dynamic> secretsJson = secretsModel.toJson();
     String secretsJsonString = jsonEncode(secretsJson);
     String encryptedSecrets = passwordModel.encrypt(decryptedData: secretsJsonString);
-    await _secretsRepository.saveEncryptedSecrets(secretsModel.containerPathModel.path, encryptedSecrets);
+    await _secretsRepository.saveEncryptedSecrets(secretsModel.containerPathModel.fullPath, encryptedSecrets);
+  }
+
+  Future<void> moveSecrets(ContainerPathModel previousContainerPath, ContainerPathModel newContainerPath) async {
+    String encryptedSecrets = await _secretsRepository.getEncryptedSecrets(previousContainerPath.fullPath);
+    await deleteSecrets(previousContainerPath);
+    await _secretsRepository.saveEncryptedSecrets(newContainerPath.fullPath, encryptedSecrets);
   }
 
   Future<void> deleteSecrets(ContainerPathModel containerPath) async {
-    await _secretsRepository.deleteSecrets(containerPath.path);
+    await _secretsRepository.deleteSecrets(containerPath.fullPath);
   }
 }

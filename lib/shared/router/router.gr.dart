@@ -10,9 +10,11 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i13;
 import 'package:flutter/material.dart' as _i16;
-import 'package:snggle/shared/models/a_container_model.dart' as _i18;
+import 'package:snggle/shared/models/a_container_model.dart' as _i20;
+import 'package:snggle/shared/models/network_config_model.dart' as _i19;
 import 'package:snggle/shared/models/password_model.dart' as _i15;
 import 'package:snggle/shared/models/vaults/vault_list_item_model.dart' as _i14;
+import 'package:snggle/shared/models/vaults/vault_model.dart' as _i18;
 import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i17;
 import 'package:snggle/views/pages/app_auth_page.dart' as _i1;
 import 'package:snggle/views/pages/app_setup_pin_page.dart' as _i2;
@@ -120,8 +122,10 @@ abstract class $AppRouter extends _i13.RootStackRouter {
       return _i13.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i12.WalletListPage(
+          pageName: args.pageName,
+          vaultModel: args.vaultModel,
+          networkConfigModel: args.networkConfigModel,
           parentContainerModel: args.parentContainerModel,
-          vaultListItemModel: args.vaultListItemModel,
           vaultPasswordModel: args.vaultPasswordModel,
           key: args.key,
         ),
@@ -356,16 +360,20 @@ class WalletDetailsRouteArgs {
 /// [_i12.WalletListPage]
 class WalletListRoute extends _i13.PageRouteInfo<WalletListRouteArgs> {
   WalletListRoute({
-    required _i18.AContainerModel parentContainerModel,
-    required _i14.VaultListItemModel vaultListItemModel,
+    required String pageName,
+    required _i18.VaultModel vaultModel,
+    required _i19.NetworkConfigModel networkConfigModel,
+    required _i20.AContainerModel parentContainerModel,
     required _i15.PasswordModel vaultPasswordModel,
     _i16.Key? key,
     List<_i13.PageRouteInfo>? children,
   }) : super(
           WalletListRoute.name,
           args: WalletListRouteArgs(
+            pageName: pageName,
+            vaultModel: vaultModel,
+            networkConfigModel: networkConfigModel,
             parentContainerModel: parentContainerModel,
-            vaultListItemModel: vaultListItemModel,
             vaultPasswordModel: vaultPasswordModel,
             key: key,
           ),
@@ -380,15 +388,21 @@ class WalletListRoute extends _i13.PageRouteInfo<WalletListRouteArgs> {
 
 class WalletListRouteArgs {
   const WalletListRouteArgs({
+    required this.pageName,
+    required this.vaultModel,
+    required this.networkConfigModel,
     required this.parentContainerModel,
-    required this.vaultListItemModel,
     required this.vaultPasswordModel,
     this.key,
   });
 
-  final _i18.AContainerModel parentContainerModel;
+  final String pageName;
 
-  final _i14.VaultListItemModel vaultListItemModel;
+  final _i18.VaultModel vaultModel;
+
+  final _i19.NetworkConfigModel networkConfigModel;
+
+  final _i20.AContainerModel parentContainerModel;
 
   final _i15.PasswordModel vaultPasswordModel;
 
@@ -396,6 +410,6 @@ class WalletListRouteArgs {
 
   @override
   String toString() {
-    return 'WalletListRouteArgs{parentContainerModel: $parentContainerModel, vaultListItemModel: $vaultListItemModel, vaultPasswordModel: $vaultPasswordModel, key: $key}';
+    return 'WalletListRouteArgs{pageName: $pageName, vaultModel: $vaultModel, networkConfigModel: $networkConfigModel, parentContainerModel: $parentContainerModel, vaultPasswordModel: $vaultPasswordModel, key: $key}';
   }
 }

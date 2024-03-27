@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/list/list_state.dart';
 import 'package:snggle/shared/models/a_list_item.dart';
@@ -18,25 +19,29 @@ abstract class AListCubit<T extends AListItem> extends Cubit<ListState<T>> {
     T? newItem = await fetchSingleFromDatabase(item);
     if (newItem == null) {
       List<T> newItems = state.allItems..remove(item);
-      emit(state.copyWith(allItems: newItems));
+      emit(state.copyWith(allItems: sortItems(newItems)));
     } else {
       List<T> newItems = state.allItems.map((T e) => e == item ? newItem : e).toList();
-      emit(state.copyWith(allItems: newItems));
+      emit(state.copyWith(allItems: sortItems(newItems)));
     }
   }
 
   Future<void> refreshAll() async {
     List<T> allItems = await fetchAllFromDatabase();
-    emit(ListState<T>(loadingBool: false, allItems: allItems));
+    emit(ListState<T>(loadingBool: false, allItems: sortItems(allItems)));
   }
 
-  void search(String? searchPattern) {
+  Future<void> search(String? searchPattern) async {
+    List<T> visibleItems = state.allItems;
+    if (searchPattern != null) {
+      visibleItems = await filterBySearchPattern(state.allItems, searchPattern);
+    }
     emit(ListState<T>(
       loadingBool: false,
-      searchBoxVisibleBool: searchPattern != null,
+      allItems: sortItems(state.allItems),
       selectionModel: state.selectionModel,
       searchPattern: searchPattern,
-      allItems: state.allItems,
+      visibleItems: sortItems(visibleItems),
     ));
   }
 
@@ -59,7 +64,7 @@ abstract class AListCubit<T extends AListItem> extends Cubit<ListState<T>> {
   }
 
   void disableSelection() {
-    emit(ListState<T>(allItems: state.allItems, loadingBool: false));
+    emit(ListState<T>(allItems: sortItems(state.allItems), loadingBool: false));
   }
 
   Future<void> pinSelection({required List<T> selectedItems, required bool pinnedBool}) async {
@@ -70,7 +75,7 @@ abstract class AListCubit<T extends AListItem> extends Cubit<ListState<T>> {
         unawaited(saveToDatabase(item));
       }
     }
-    emit(ListState<T>(allItems: updatedItems, loadingBool: false));
+    emit(ListState<T>(allItems: sortItems(updatedItems), loadingBool: false));
   }
 
   Future<void> updateEncryptionStatus({required List<T> selectedItems, required bool encryptedBool}) async {
@@ -80,14 +85,25 @@ abstract class AListCubit<T extends AListItem> extends Cubit<ListState<T>> {
         item.setEncrypted(encryptedBool: encryptedBool);
       }
     }
-    emit(ListState<T>(allItems: updatedItems, loadingBool: false));
+    emit(ListState<T>(allItems: sortItems(updatedItems), loadingBool: false));
   }
 
+
+  @protected
+  Future<void> saveToDatabase(T item);
+
+  @protected
   Future<void> deleteFromDatabase(T item);
 
+  @protected
   Future<T?> fetchSingleFromDatabase(T item);
 
+  @protected
   Future<List<T>> fetchAllFromDatabase();
 
-  Future<void> saveToDatabase(T item);
+  @protected
+  Future<List<T>> filterBySearchPattern(List<T> allItems, String searchPattern);
+
+  @protected
+  List<T> sortItems(List<T> items);
 }

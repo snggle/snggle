@@ -4,14 +4,14 @@ import 'dart:typed_data';
 import 'package:hd_wallet/hd_wallet.dart';
 import 'package:snggle/bloc/list/a_list_cubit.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
+import 'package:snggle/infra/services/wallet_groups_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/factories/wallet_model_factory.dart';
 import 'package:snggle/shared/models/container_path_model.dart';
-import 'package:snggle/shared/models/groups/group_model.dart';
-import 'package:snggle/shared/models/groups/group_secrets_model.dart';
 import 'package:snggle/shared/models/groups/network_group_list_item_model.dart';
+import 'package:snggle/shared/models/groups/wallet_group_model.dart';
+import 'package:snggle/shared/models/groups/wallet_group_secrets_model.dart';
 import 'package:snggle/shared/models/network_config_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
@@ -23,19 +23,70 @@ import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 class NetworkGroupsPageCubit extends AListCubit<NetworkGroupListItemModel> {
   final VaultModel vaultModel;
   final PasswordModel vaultPasswordModel;
-  final GroupsService _groupsService;
-  final WalletsService _walletsService;
   final SecretsService _secretsService;
+  final WalletsService _walletsService;
+  final WalletGroupsService _walletGroupsService;
 
   NetworkGroupsPageCubit({
     required this.vaultModel,
     required this.vaultPasswordModel,
-    GroupsService? groupsService,
-    WalletsService? walletsService,
     SecretsService? secretsService,
-  })  : _groupsService = groupsService ?? globalLocator<GroupsService>(),
+    WalletsService? walletsService,
+    WalletGroupsService? walletsGroupsService,
+  })  : _secretsService = secretsService ?? globalLocator<SecretsService>(),
         _walletsService = walletsService ?? globalLocator<WalletsService>(),
-        _secretsService = secretsService ?? globalLocator<SecretsService>();
+        _walletGroupsService = walletsGroupsService ?? globalLocator<WalletGroupsService>();
+
+  @override
+  Future<void> deleteFromDatabase(NetworkGroupListItemModel item) async {
+    await _walletGroupsService.deleteGroupByPath(item.walletGroupModel.containerPathModel.fullPath, recursiveBool: true);
+  }
+
+  @override
+  Future<List<NetworkGroupListItemModel>> fetchAllFromDatabase() async {
+    List<NetworkGroupListItemModel> networkGroupListItemModelList = <NetworkGroupListItemModel>[];
+
+    for (NetworkConfigModel networkConfigModel in NetworkConfigModel.allNetworks) {
+      NetworkGroupListItemModel? networkGroupListItemModel = await _buildNetworkGroupListItemModel(networkConfigModel);
+      if (networkGroupListItemModel != null) {
+        networkGroupListItemModelList.add(networkGroupListItemModel);
+      }
+    }
+
+    return networkGroupListItemModelList;
+  }
+
+  @override
+  Future<NetworkGroupListItemModel?> fetchSingleFromDatabase(NetworkGroupListItemModel item) async {
+    NetworkGroupListItemModel? networkGroupListItemModel = await _buildNetworkGroupListItemModel(item.networkConfigModel);
+    return networkGroupListItemModel;
+  }
+
+  @override
+  Future<void> saveToDatabase(NetworkGroupListItemModel item) async {
+    await _walletGroupsService.saveGroup(item.walletGroupModel);
+  }
+
+  @override
+  Future<List<NetworkGroupListItemModel>> filterBySearchPattern(List<NetworkGroupListItemModel> allItems, String searchPattern) async {
+    List<NetworkGroupListItemModel> filteredItems = allItems.where((NetworkGroupListItemModel item) {
+      return item.walletGroupModel.name.toLowerCase().contains(searchPattern.toLowerCase());
+    }).toList();
+
+    return filteredItems;
+  }
+
+  @override
+  List<NetworkGroupListItemModel> sortItems(List<NetworkGroupListItemModel> items) {
+    items.sort((NetworkGroupListItemModel a, NetworkGroupListItemModel b) {
+      return a.walletGroupModel.name.compareTo(b.walletGroupModel.name);
+    });
+
+    List<NetworkGroupListItemModel> pinnedItems = items.where((NetworkGroupListItemModel item) => item.walletGroupModel.pinnedBool).toList();
+    List<NetworkGroupListItemModel> unpinnedItems = items.where((NetworkGroupListItemModel item) => item.walletGroupModel.pinnedBool == false).toList();
+
+    return <NetworkGroupListItemModel>[...pinnedItems, ...unpinnedItems];
+  }
 
   // TODO(dominik): Temporary solution to get the vault name. After implementing "create-vault-ui" this method should be removed.
   Future<void> createNewWallet(String type) async {
@@ -62,7 +113,7 @@ class NetworkGroupsPageCubit extends AListCubit<NetworkGroupListItemModel> {
         vaultUuid: vaultModel.uuid,
         publicKey: derivedNode.publicKey,
         derivationPath: derivationPath,
-        parentContainerPathModel: ContainerPathModel.fromString(vaultModel.containerPathModel.deriveChildPath(type)),
+        parentContainerPathModel: vaultModel.containerPathModel.deriveChildPath(type),
       ),
     );
 
@@ -76,67 +127,27 @@ class NetworkGroupsPageCubit extends AListCubit<NetworkGroupListItemModel> {
     await refreshAll();
   }
 
-  @override
-  Future<void> deleteFromDatabase(NetworkGroupListItemModel item) async {
-    String parentPath = item.groupModel.containerPathModel.path;
-    List<WalletModel> walletModels = await _walletsService.getWalletList(parentPath, strictBool: false);
-    for (WalletModel walletModel in walletModels) {
-      await _walletsService.deleteWalletById(walletModel.uuid);
-    }
-
-    List<GroupModel> groupModels = await _groupsService.getGroupList(parentPath, strictBool: false);
-    for (GroupModel groupModel in groupModels) {
-      await _groupsService.deleteGroupByPath(groupModel.containerPathModel.path);
-    }
-  }
-
-  @override
-  Future<List<NetworkGroupListItemModel>> fetchAllFromDatabase() async {
-    List<NetworkGroupListItemModel> networkGroupListItemModelList = <NetworkGroupListItemModel>[];
-
-    for (NetworkConfigModel networkConfigModel in NetworkConfigModel.allNetworks) {
-      NetworkGroupListItemModel? networkGroupListItemModel = await _buildNetworkGroupListItemModel(networkConfigModel);
-      if (networkGroupListItemModel != null) {
-        networkGroupListItemModelList.add(networkGroupListItemModel);
-      }
-    }
-
-    return networkGroupListItemModelList;
-  }
-
-  @override
-  Future<NetworkGroupListItemModel?> fetchSingleFromDatabase(NetworkGroupListItemModel item) async {
-    NetworkGroupListItemModel? networkGroupListItemModel = await _buildNetworkGroupListItemModel(item.networkConfigModel);
-    return networkGroupListItemModel;
-  }
-
-  @override
-  Future<void> saveToDatabase(NetworkGroupListItemModel item) async {
-    print('Saving group: ${item.groupModel}');
-    await _groupsService.saveGroup(item.groupModel);
-  }
-
   Future<NetworkGroupListItemModel?> _buildNetworkGroupListItemModel(NetworkConfigModel networkConfigModel) async {
-    String groupPath = vaultModel.containerPathModel.deriveChildPath(networkConfigModel.id);
-    List<WalletModel> walletModels = await _walletsService.getWalletList(groupPath, strictBool: false);
+    ContainerPathModel groupPath = vaultModel.containerPathModel.deriveChildPath(networkConfigModel.id);
+    List<WalletModel> walletModels = await _walletsService.getWalletList(groupPath.fullPath, strictBool: false);
 
     if (walletModels.isEmpty) {
       return null;
     }
 
-    GroupModel? groupModel = await _groupsService.getGroupById(groupPath);
-    if (groupModel == null) {
-      groupModel = GroupModel.fromNetworkConfig(networkConfigModel: networkConfigModel, parentPath: vaultModel.containerPathModel.path);
-      GroupSecretsModel groupSecretsModel = GroupSecretsModel.generate(groupModel.containerPathModel);
+    WalletGroupModel? walletGroupModel = await _walletGroupsService.getGroupByPath(groupPath.fullPath);
+    if (walletGroupModel == null) {
+      walletGroupModel = WalletGroupModel.fromNetworkConfig(networkConfigModel: networkConfigModel, parentPath: vaultModel.containerPathModel.fullPath);
+      WalletGroupSecretsModel walletGroupSecretsModel = WalletGroupSecretsModel.generate(walletGroupModel.containerPathModel);
 
-      await _groupsService.saveGroup(groupModel);
-      await _secretsService.saveSecrets(groupSecretsModel, PasswordModel.defaultPassword());
+      await _walletGroupsService.saveGroup(walletGroupModel);
+      await _secretsService.saveSecrets(walletGroupSecretsModel, PasswordModel.defaultPassword());
     }
 
-    bool defaultPasswordBool = await _secretsService.isSecretsPasswordValid(groupModel.containerPathModel, PasswordModel.defaultPassword());
+    bool defaultPasswordBool = await _secretsService.isSecretsPasswordValid(walletGroupModel.containerPathModel, PasswordModel.defaultPassword());
     NetworkGroupListItemModel networkGroupListItemModel = NetworkGroupListItemModel(
       encryptedBool: defaultPasswordBool == false,
-      groupModel: groupModel,
+      walletGroupModel: walletGroupModel,
       networkConfigModel: networkConfigModel,
       walletsPreview: walletModels,
     );

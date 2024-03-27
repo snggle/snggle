@@ -58,7 +58,7 @@ void main() {
       VaultListPageState actualVaultListPageState = VaultListPageState(
         loadingBool: false,
         allVaults: actualVaultListItemModels,
-        vaultSelectionModel: VaultSelectionModel(<VaultListItemModel>[]),
+        selectionModel: VaultSelectionModel(<VaultListItemModel>[]),
       );
 
       // Assert
@@ -138,7 +138,7 @@ void main() {
       VaultListPageState actualVaultListPageState = VaultListPageState(
         loadingBool: false,
         allVaults: actualVaultListItemModels,
-        vaultSelectionModel: VaultSelectionModel(actualVaultListItemModels),
+        selectionModel: VaultSelectionModel(actualVaultListItemModels),
       );
 
       // Act
@@ -171,7 +171,7 @@ void main() {
       VaultListPageState actualVaultListPageState = VaultListPageState(
         loadingBool: false,
         allVaults: actualVaultListItemModels,
-        vaultSelectionModel: VaultSelectionModel(<VaultListItemModel>[]),
+        selectionModel: VaultSelectionModel(<VaultListItemModel>[]),
       );
 
       // Act
