@@ -14,7 +14,6 @@ class AListItem with EquatableMixin {
   }
   
   void setPinned({required bool pinnedBool}) {
-    print('setPinned');
     this.pinnedBool = pinnedBool;
   }
 

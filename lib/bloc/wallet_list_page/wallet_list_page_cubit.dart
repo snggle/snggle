@@ -119,11 +119,8 @@ class WalletListPageCubit extends AListCubit<AListItem> {
   @override
   Future<AListItem?> fetchSingleFromDatabase(AListItem item) async {
     if (item is WalletListItemModel) {
-      List<WalletModel> walletModelList = await _walletsService.getWalletList(containerPathModel.fullPath);
-
-      WalletModel walletModel = walletModelList.firstWhere((WalletModel element) => element.uuid == item.walletModel.uuid);
+      WalletModel walletModel = await _walletsService.getWalletModel(item.walletModel.uuid);
       WalletListItemModel walletListItemModel = await _buildWalletListItemModel(walletModel);
-
       return walletListItemModel;
     } else if (item is WalletGroupListItemModel) {
       WalletGroupModel? walletGroupModel = await _walletGroupsService.getGroupByPath(item.walletGroupModel.containerPathModel.fullPath);

@@ -90,6 +90,7 @@ class _NetworkGroupsPageState extends State<NetworkGroupsPage> {
                   if (buttonItemBool) {
                     return HorizontalListItem(
                       iconWidget: SquareOutlinedButton(
+                        radius: 17,
                         icon: Icon(AppIcons.add, size: 35, color: AppColors.middleGrey),
                         onTap: () {
                           showDialog(
@@ -131,7 +132,6 @@ class _NetworkGroupsPageState extends State<NetworkGroupsPage> {
                             },
                           );
                         },
-                        radius: 17,
                       ),
                     );
                   }

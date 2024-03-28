@@ -46,11 +46,8 @@ class VaultListPageCubit extends AListCubit<VaultListItemModel> {
 
   @override
   Future<VaultListItemModel> fetchSingleFromDatabase(VaultListItemModel item) async {
-    List<VaultModel> vaultModelList = await _vaultsService.getVaultList();
-
-    VaultModel vaultModel = vaultModelList.firstWhere((VaultModel element) => element.uuid == item.vaultModel.uuid);
+    VaultModel vaultModel = await _vaultsService.getVaultModel(item.vaultModel.uuid);
     VaultListItemModel vaultListItemModel = await _buildVaultListItemModel(vaultModel);
-
     return vaultListItemModel;
   }
 
