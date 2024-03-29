@@ -6,7 +6,7 @@ import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 
 class CustomDialog extends StatelessWidget {
   final String title;
-  final String content;
+  final Widget content;
   final List<CustomDialogOption> options;
 
   const CustomDialog({
@@ -20,7 +20,7 @@ class CustomDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
 
-    Widget seperator = Container(
+    Widget separator = Container(
       height: 24,
       padding: const EdgeInsets.symmetric(horizontal: 7),
       child: VerticalDivider(color: AppColors.middleGrey, width: 1, thickness: 1),
@@ -34,7 +34,7 @@ class CustomDialog extends StatelessWidget {
           <Widget>[],
           (List<Widget> acc, CustomDialogOption option) {
             if (acc.isNotEmpty) {
-              acc.add(seperator);
+              acc.add(separator);
             }
             if (options.length == 1) {
               acc.add(DecoratedBox(
@@ -70,7 +70,7 @@ class CustomDialog extends StatelessWidget {
                   filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(22),
                       border: Border.all(color: AppColors.middleGrey),
                     ),
                     padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
@@ -82,14 +82,7 @@ class CustomDialog extends StatelessWidget {
                           style: textTheme.bodyMedium!.copyWith(color: AppColors.body3),
                         ),
                         const SizedBox(height: 6),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          child: Text(
-                            content,
-                            textAlign: TextAlign.center,
-                            style: textTheme.bodyMedium!.copyWith(color: AppColors.body3),
-                          ),
-                        ),
+                        content,
                         const SizedBox(height: 16),
                         optionButtonsSection
                       ],

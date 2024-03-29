@@ -2,17 +2,26 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/vault_list_page/vault_list_page_cubit.dart';
+import 'package:snggle/bloc/generic/list/list_state.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page_cubit.dart';
+import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/config/app_icons.dart';
+import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
-import 'package:snggle/shared/utils/logger/app_logger.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item.dart';
-import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item_layout.dart';
+import 'package:snggle/views/widgets/button/list_item_creation_button.dart';
+import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
+import 'package:snggle/views/widgets/generic/gradient_icon.dart';
+import 'package:snggle/views/widgets/icons/list_item_icon.dart';
+import 'package:snggle/views/widgets/list/list_item_actions_wrapper.dart';
+import 'package:snggle/views/widgets/list/list_page_scaffold.dart';
+import 'package:snggle/views/widgets/list/sliver_page_grid.dart';
 
 @RoutePage()
 class VaultListPage extends StatefulWidget {
@@ -23,12 +32,13 @@ class VaultListPage extends StatefulWidget {
 }
 
 class _VaultListPageState extends State<VaultListPage> {
-  final VaultListPageCubit vaultListPageCubit = VaultListPageCubit();
+  static const String defaultPageTitle = 'VAULTS';
+  late final VaultListPageCubit vaultListPageCubit = VaultListPageCubit(filesystemPath: const FilesystemPath.empty());
 
   @override
   void initState() {
     super.initState();
-    vaultListPageCubit.refresh();
+    vaultListPageCubit.refreshAll();
   }
 
   @override
@@ -39,67 +49,87 @@ class _VaultListPageState extends State<VaultListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      title: 'Vaults',
-      popButtonVisible: false,
-      body: BlocBuilder<VaultListPageCubit, List<VaultModel>>(
-        bloc: vaultListPageCubit,
-        builder: (BuildContext context, List<VaultModel> vaultModelList) {
-          return ListView.builder(
-            itemCount: vaultModelList.length + 2,
-            itemBuilder: (BuildContext context, int index) {
-              bool paddingItemBool = index == vaultModelList.length + 1;
-              bool buttonItemBool = index == vaultModelList.length;
-              if (paddingItemBool) {
-                return const SizedBox(height: 100);
-              } else if (buttonItemBool) {
-                return Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: InkWell(
-                    onTap: _navigateToVaultCreateRecoverRoute,
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: const Center(
-                        child: Icon(Icons.add),
-                      ),
+    return ListPageScaffold<VaultModel, VaultListPageCubit>(
+      defaultPageTitle: defaultPageTitle,
+      listCubit: vaultListPageCubit,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      boxDecoration: BoxDecoration(
+        border: Border.symmetric(vertical: BorderSide(color: AppColors.lightGrey2)),
+      ),
+      bodyBuilder: (BuildContext context, ListState listState) {
+        return CustomScrollView(
+          shrinkWrap: listState.isScrollDisabled,
+          physics: listState.isScrollDisabled ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
+          slivers: <Widget>[
+            if (listState.isEmpty) ...<Widget>[
+              SliverFillRemaining(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: CustomBottomNavigationBar.height),
+                    child: IconButton(
+                      onPressed: _navigateToVaultCreateRecoverRoute,
+                      icon: GradientIcon(AppIcons.add_circle, size: 54, gradient: AppColors.primaryGradient),
                     ),
                   ),
-                );
-              }
-              VaultModel vaultModel = vaultModelList[index];
-              return VaultListItem(
-                key: Key(vaultModel.uuid),
-                vaultModel: vaultModel,
-                onDelete: () => _deleteVault(vaultModel),
-              );
-            },
-          );
-        },
-      ),
+                ),
+              ),
+            ] else ...<Widget>[
+              SliverPageGrid(
+                listItemSize: VaultListItemLayout.listItemSize,
+                addButtonVisibleBool: listState.isSelectionEnabled == false,
+                loadingBool: listState.loadingBool,
+                items: listState.visibleItems,
+                selectedItems: listState.selectedItems,
+                loadingPlaceholder: VaultListItemLayout.loading(),
+                vaultCreationButton: VaultListItemLayout(
+                  icon: ListItemCreationButton(
+                    size: VaultListItemLayout.listItemIconSize,
+                    onTap: _navigateToVaultCreateRecoverRoute,
+                  ),
+                ),
+                itemBuilder: (AListItemModel listItemModel) {
+                  return ListItemActionsWrapper<VaultModel, VaultListPageCubit>(
+                    key: Key('item${listItemModel.filesystemPath.fullPath}'),
+                    listItemSize: VaultListItemLayout.listItemSize,
+                    listCubit: vaultListPageCubit,
+                    listItemModel: listItemModel,
+                    onNavigate: _navigateToNextPage,
+                    child: VaultListItemLayout(
+                      title: listItemModel.name,
+                      icon: ListItemIcon(
+                        listItemModel: listItemModel,
+                        size: VaultListItemLayout.listItemIconSize,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 100)),
+            ],
+          ],
+        );
+      },
     );
   }
 
   Future<void> _navigateToVaultCreateRecoverRoute() async {
     VaultCreateRecoverStatus? vaultCreateRecoverStatus = await AutoRouter.of(context).push<VaultCreateRecoverStatus?>(
-      VaultCreateRecoverRoute(children: <PageRouteInfo>[
-        VaultInitRoute(parentFilesystemPath: const FilesystemPath.empty()),
-      ]),
+      VaultCreateRecoverRoute(children: <PageRouteInfo>[VaultInitRoute(parentFilesystemPath: const FilesystemPath.empty())]),
     );
     if (vaultCreateRecoverStatus != null) {
-      unawaited(vaultListPageCubit.refresh());
+      unawaited(vaultListPageCubit.refreshAll());
       await showDialog(
         context: context,
         barrierColor: Colors.transparent,
         builder: (BuildContext context) => CustomDialog(
           title: 'Success',
-          content: switch (vaultCreateRecoverStatus) {
-            VaultCreateRecoverStatus.creationSuccessful => 'The vault creation process has been completed',
-            VaultCreateRecoverStatus.recoverySuccessful => 'The vault recovery process has been completed',
-          },
+          content: Text(
+            switch (vaultCreateRecoverStatus) {
+              VaultCreateRecoverStatus.creationSuccessful => 'The vault creation process has been completed',
+              VaultCreateRecoverStatus.recoverySuccessful => 'The vault recovery process has been completed',
+            },
+            textAlign: TextAlign.center,
+          ),
           options: <CustomDialogOption>[
             CustomDialogOption(
               label: 'Done',
@@ -111,12 +141,20 @@ class _VaultListPageState extends State<VaultListPage> {
     }
   }
 
-  Future<void> _deleteVault(VaultModel vaultModel) async {
-    try {
-      await vaultListPageCubit.deleteVault(vaultModel);
-    } catch (e) {
-      AppLogger().log(message: e.toString());
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to delete a vault')));
+  Future<void> _navigateToNextPage(AListItemModel listItemModel) async {
+    if (listItemModel is VaultModel) {
+      PasswordModel? passwordModel;
+      if (listItemModel.encryptedBool) {
+        passwordModel = PasswordModel.fromPlaintext('1111');
+      }
+
+      await AutoRouter.of(context).push<void>(
+        WalletListRoute(
+          vaultModel: listItemModel,
+          vaultPasswordModel: passwordModel ?? PasswordModel.defaultPassword(),
+        ),
+      );
+      await vaultListPageCubit.refreshAll();
     }
   }
 }
