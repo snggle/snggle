@@ -16,7 +16,7 @@ class WalletModelFactory {
       uuid: uuid,
       name: walletCreationRequestModel.name,
       network: walletCreationRequestModel.network,
-      address: AtomAddrEncoder().encodeKey(walletCreationRequestModel.publicKey, <String, dynamic>{'hrp': walletCreationRequestModel.network}),
+      address: EthAddrEncoder().encodeKey(walletCreationRequestModel.publicKey),
       filesystemPath: FilesystemPath(<String>[...walletCreationRequestModel.parentFilesystemPath.pathSegments, uuid]),
       derivationPath: walletCreationRequestModel.derivationPath,
     );

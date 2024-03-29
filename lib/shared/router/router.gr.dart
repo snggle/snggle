@@ -151,7 +151,9 @@ abstract class $AppRouter extends _i16.RootStackRouter {
       return _i16.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i15.WalletListPage(
+          name: args.name,
           vaultModel: args.vaultModel,
+          filesystemPath: args.filesystemPath,
           vaultPasswordModel: args.vaultPasswordModel,
           key: args.key,
         ),
@@ -456,14 +458,18 @@ class WalletDetailsRouteArgs {
 /// [_i15.WalletListPage]
 class WalletListRoute extends _i16.PageRouteInfo<WalletListRouteArgs> {
   WalletListRoute({
+    required String name,
     required _i21.VaultModel vaultModel,
+    required _i18.FilesystemPath filesystemPath,
     required _i22.PasswordModel vaultPasswordModel,
     _i19.Key? key,
     List<_i16.PageRouteInfo>? children,
   }) : super(
           WalletListRoute.name,
           args: WalletListRouteArgs(
+            name: name,
             vaultModel: vaultModel,
+            filesystemPath: filesystemPath,
             vaultPasswordModel: vaultPasswordModel,
             key: key,
           ),
@@ -478,12 +484,18 @@ class WalletListRoute extends _i16.PageRouteInfo<WalletListRouteArgs> {
 
 class WalletListRouteArgs {
   const WalletListRouteArgs({
+    required this.name,
     required this.vaultModel,
+    required this.filesystemPath,
     required this.vaultPasswordModel,
     this.key,
   });
 
+  final String name;
+
   final _i21.VaultModel vaultModel;
+
+  final _i18.FilesystemPath filesystemPath;
 
   final _i22.PasswordModel vaultPasswordModel;
 
@@ -491,6 +503,6 @@ class WalletListRouteArgs {
 
   @override
   String toString() {
-    return 'WalletListRouteArgs{vaultModel: $vaultModel, vaultPasswordModel: $vaultPasswordModel, key: $key}';
+    return 'WalletListRouteArgs{name: $name, vaultModel: $vaultModel, filesystemPath: $filesystemPath, vaultPasswordModel: $vaultPasswordModel, key: $key}';
   }
 }
