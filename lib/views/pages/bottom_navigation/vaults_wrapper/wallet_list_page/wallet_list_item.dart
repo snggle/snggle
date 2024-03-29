@@ -1,22 +1,35 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:blockies_svg/blockies_svg.dart';
+import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:snggle/bloc/wallet_list_item/wallet_list_item_cubit.dart';
-import 'package:snggle/bloc/wallet_list_item/wallet_list_item_state.dart';
+import 'package:flutter/services.dart';
+import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/models/wallets/wallet_model.dart';
-import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
+import 'package:snggle/shared/models/wallets/wallet_list_item_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item_tooltip.dart';
+import 'package:snggle/views/widgets/generic/gradient_text.dart';
+import 'package:snggle/views/widgets/generic/horizontal_list_item/horizontal_list_item.dart';
+import 'package:snggle/views/widgets/generic/horizontal_list_item/horizontal_list_item_animation_type.dart';
+import 'package:snggle/views/widgets/generic/wallet_icon.dart';
+import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_wrapper.dart';
 
 class WalletListItem extends StatefulWidget {
-  final WalletModel walletModel;
+  final bool selectedBool;
+  final bool selectionEnabledBool;
   final VoidCallback onDelete;
+  final ValueChanged<bool> onSelectValueChanged;
+  final ValueChanged<bool> onLockValueChanged;
+  final ValueChanged<bool> onPinValueChanged;
+  final WalletListItemModel walletListItemModel;
 
   const WalletListItem({
-    required this.walletModel,
+    required this.selectedBool,
+    required this.selectionEnabledBool,
     required this.onDelete,
+    required this.onSelectValueChanged,
+    required this.onLockValueChanged,
+    required this.onPinValueChanged,
+    required this.walletListItemModel,
     super.key,
   });
 
@@ -24,169 +37,123 @@ class WalletListItem extends StatefulWidget {
   State<StatefulWidget> createState() => _WalletListItemState();
 }
 
-class _WalletListItemState extends State<WalletListItem> {
+class _WalletListItemState extends State<WalletListItem> with TickerProviderStateMixin {
+  final CustomPopupMenuController actionsPopupController = CustomPopupMenuController();
   final PasswordModel mockedPasswordModel = PasswordModel.fromPlaintext('1111');
-  late final WalletListItemCubit walletListItemCubit = WalletListItemCubit(walletModel: widget.walletModel);
+
+  late final AnimationController fadeAnimationController;
+  late final AnimationController slideAnimationController;
 
   @override
   void initState() {
+    fadeAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    )..forward();
+
+    slideAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 700),
+      vsync: this,
+    )..forward();
+
     super.initState();
-    walletListItemCubit.init();
   }
 
   @override
   void dispose() {
-    walletListItemCubit.close();
+    actionsPopupController.dispose();
+    fadeAnimationController.dispose();
+    slideAnimationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WalletListItemCubit, WalletListItemState>(
-      bloc: walletListItemCubit,
-      builder: (BuildContext context, WalletListItemState walletListItemState) {
-        return Dismissible(
-          background: Container(
-            color: Colors.red,
-            padding: const EdgeInsets.all(15),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Icon(Icons.delete_outline_outlined),
-                Icon(Icons.delete_outline_outlined),
-              ],
-            ),
-          ),
-          key: Key(widget.walletModel.uuid),
-          onDismissed: (_) => widget.onDelete(),
-          child: ListTile(
-            onTap: () => _navigateToWalletDetailsPage(walletListItemState.encryptedBool, walletListItemState.lockedBool),
-            leading: SizedBox(
-              width: 40,
-              height: 40,
-              child: SvgPicture.string(Blockies(seed: widget.walletModel.address).toSvg(size: 40)),
-            ),
-            title: Text('Wallet ${widget.walletModel.index}', style: const TextStyle(fontSize: 14)),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  widget.walletModel.address,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 10),
-                ),
-                Text(widget.walletModel.derivationPath, style: const TextStyle(fontSize: 10)),
-                TextButtonTheme(
-                  data: TextButtonThemeData(
-                    style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: const Size(10, 30),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        alignment: Alignment.centerLeft),
-                  ),
-                  child: Wrap(
-                    children: <Widget>[
-                      if (walletListItemState.encryptedBool) ...<Widget>[
-                        if (walletListItemState.lockedBool)
-                          TextButton(onPressed: _unlock, child: const Text('Unlock'))
-                        else ...<Widget>[
-                          TextButton(onPressed: _lock, child: const Text('Lock')),
-                          const SizedBox(width: 10),
-                          TextButton(onPressed: _removePassword, child: const Text('Remove pass')),
-                          const SizedBox(width: 10),
-                          TextButton(onPressed: _showSecrets, child: const Text('Show Secrets')),
-                          const SizedBox(width: 10),
-                          TextButton(
-                            onPressed: () => _navigateToWalletDetailsPage(walletListItemState.encryptedBool, walletListItemState.lockedBool),
-                            child: const Text('Open'),
-                          ),
-                        ]
-                      ] else
-                        TextButton(onPressed: _setPassword, child: const Text('Set password')),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            trailing: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                RichText(
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: walletListItemState.encryptedBool ? Colors.green : Colors.red,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: <InlineSpan>[
-                      WidgetSpan(
-                        child: Icon(
-                          Icons.lock,
-                          size: 14,
-                          color: walletListItemState.encryptedBool ? Colors.green : Colors.red,
-                        ),
-                      ),
-                      const TextSpan(text: ' '),
-                      TextSpan(text: walletListItemState.encryptedBool ? 'With password' : 'Without password'),
-                    ],
-                  ),
-                ),
-                RichText(
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: walletListItemState.lockedBool ? Colors.green : Colors.red,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: <InlineSpan>[
-                      WidgetSpan(
-                        child: Icon(
-                          Icons.lock,
-                          size: 14,
-                          color: walletListItemState.lockedBool ? Colors.green : Colors.red,
-                        ),
-                      ),
-                      const TextSpan(text: ' '),
-                      TextSpan(text: walletListItemState.lockedBool ? 'Locked' : 'Unlocked'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+    TextTheme textTheme = Theme.of(context).textTheme;
+
+    Widget itemWidget = HorizontalListItem(
+      fadeAnimationController: fadeAnimationController,
+      slideAnimationController: slideAnimationController,
+      horizontalListItemAnimationType: HorizontalListItemAnimationType.slideBottomToUp,
+      selectedBool: widget.selectedBool,
+      selectionEnabledBool: widget.selectionEnabledBool,
+      onSelectValueChanged: widget.onSelectValueChanged,
+      iconWidget: WalletIcon(
+        address: widget.walletListItemModel.walletModel.address,
+        lockedBool: widget.walletListItemModel.encryptedBool,
+        pinnedBool: widget.walletListItemModel.pinnedBool,
+      ),
+      titleWidget: Text(widget.walletListItemModel.name, style: textTheme.bodyMedium),
+      subtitleWidget: GradientText(widget.walletListItemModel.shortenedAddress,
+          textStyle: textTheme.bodyMedium,
+          gradient: RadialGradient(
+            radius: 7,
+            center: const Alignment(-1, 1.5),
+            colors: AppColors.primaryGradient.colors,
+          )),
+      trailingWidget: Text(
+        widget.walletListItemModel.walletModel.derivationPath,
+        style: textTheme.labelMedium?.copyWith(color: AppColors.darkGrey, fontSize: 11),
+      ),
     );
-  }
 
-  Future<void> _navigateToWalletDetailsPage(bool encryptedBool, bool lockedBool) async {
-    if (lockedBool) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wallet is locked. Unlock it first.')));
-      return;
-    } else {
-      await AutoRouter.of(context).push<void>(WalletDetailsRoute(walletModel: widget.walletModel));
+    if (widget.selectionEnabledBool == false) {
+      itemWidget = ContextTooltipWrapper(
+        controller: actionsPopupController,
+        content: WalletListItemTooltip(
+          encryptedBool: widget.walletListItemModel.encryptedBool,
+          pinnedBool: widget.walletListItemModel.pinnedBool,
+          name: widget.walletListItemModel.name,
+          onPinValueChanged: _handlePinValueChanged,
+          onLockValueChanged: _handleLockValueChanged,
+          onSelect: _handleItemSelected,
+          onDelete: _handleItemDeleted,
+        ),
+        child: GestureDetector(
+          onTap: _navigateToWalletDetailsPage,
+          onLongPress: _showActionsTooltip,
+          child: itemWidget,
+        ),
+      );
     }
+
+    if (widget.walletListItemModel.encryptedBool) {
+      itemWidget = Container(
+        color: const Color(0x26DADADA),
+        child: itemWidget,
+      );
+    }
+
+    return itemWidget;
   }
 
-  void _unlock() {
-    walletListItemCubit.unlock(mockedPasswordModel);
+  void _handlePinValueChanged(bool pinnedBool) {
+    actionsPopupController.hideMenu();
+    widget.onPinValueChanged(pinnedBool);
   }
 
-  void _lock() {
-    walletListItemCubit.lock();
+  void _handleLockValueChanged(bool lockedBool) {
+    actionsPopupController.hideMenu();
+    widget.onLockValueChanged(lockedBool);
   }
 
-  void _setPassword() {
-    walletListItemCubit.setPassword(mockedPasswordModel);
+  void _handleItemSelected() {
+    widget.onSelectValueChanged(true);
+    actionsPopupController.hideMenu();
   }
 
-  void _removePassword() {
-    walletListItemCubit.removePassword(mockedPasswordModel);
+  void _handleItemDeleted() {
+    widget.onDelete();
+    actionsPopupController.hideMenu();
   }
 
-  Future<void> _showSecrets() async {
-    WalletSecretsModel walletSecretsModel = await walletListItemCubit.getWalletSecrets(mockedPasswordModel);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(walletSecretsModel.toString())));
+  Future<void> _navigateToWalletDetailsPage() async {
+    await AutoRouter.of(context).push<void>(WalletDetailsRoute(walletModel: widget.walletListItemModel.walletModel));
+  }
+
+  void _showActionsTooltip() {
+    FocusScope.of(context).requestFocus(FocusNode());
+    HapticFeedback.lightImpact();
+    actionsPopupController.showMenu();
   }
 }

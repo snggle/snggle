@@ -9,8 +9,10 @@ import 'package:snggle/infra/managers/database_parent_key.dart';
 import 'package:snggle/infra/managers/filesystem_storage/encrypted_filesystem_storage_manager.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
 import 'package:snggle/infra/repositories/vaults_repository.dart';
+import 'package:snggle/infra/repositories/wallets_repository.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
+import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
@@ -47,7 +49,14 @@ void main() {
     SecretsRepository actualSecretsRepository = SecretsRepository(filesystemStorageManager: actualEncryptedFilesystemStorageManager);
     SecretsService actualSecretsService = SecretsService(secretsRepository: actualSecretsRepository);
 
-    actualVaultsService = VaultsService(vaultsRepository: VaultsRepository(), secretsService: actualSecretsService);
+    WalletsRepository actualWalletsRepository = WalletsRepository();
+    WalletsService actualWalletsService = WalletsService(walletsRepository: actualWalletsRepository, secretsService: actualSecretsService);
+
+    actualVaultsService = VaultsService(
+      vaultsRepository: VaultsRepository(),
+      secretsService: actualSecretsService,
+      walletsService: actualWalletsService,
+    );
   });
 
   Map<String, String> filledChildKeysDatabase = <String, String>{

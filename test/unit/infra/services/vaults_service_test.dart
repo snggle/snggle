@@ -66,7 +66,7 @@ void main() {
     SecretsService actualSecretsService = SecretsService(secretsRepository: actualSecretsRepository);
 
     WalletsRepository actualWalletsRepository = WalletsRepository();
-    WalletsService actualWalletsService = WalletsService(walletsRepository: actualWalletsRepository);
+    WalletsService actualWalletsService = WalletsService(walletsRepository: actualWalletsRepository, secretsService: actualSecretsService);
 
     actualVaultsService = VaultsService(
       vaultsRepository: VaultsRepository(),

@@ -6,23 +6,29 @@ import 'package:uuid/uuid.dart';
 
 class WalletModelFactory {
   Future<WalletModel> createNewWallet(WalletCreationRequestModel walletCreationRequestModel) async {
+    String uuid = const Uuid().v4();
+
     return WalletModel(
+      pinnedBool: false,
       index: walletCreationRequestModel.index,
-      uuid: const Uuid().v4(),
-      vaultUuid: walletCreationRequestModel.vaultUuid,
+      uuid: uuid,
       name: walletCreationRequestModel.name,
-      address: AtomAddrEncoder().encodeKey(walletCreationRequestModel.publicKey, <String, dynamic>{'hrp': 'kira'}),
+      network: walletCreationRequestModel.network,
+      address: AtomAddrEncoder().encodeKey(walletCreationRequestModel.publicKey, <String, dynamic>{'hrp': walletCreationRequestModel.network}),
+      parentPath: walletCreationRequestModel.parentContainerPathModel.fullPath,
       derivationPath: walletCreationRequestModel.derivationPath,
     );
   }
 
   WalletModel createFromEntity(WalletEntity walletEntity) {
     return WalletModel(
+      pinnedBool: walletEntity.pinnedBool,
       index: walletEntity.index,
       uuid: walletEntity.uuid,
-      vaultUuid: walletEntity.vaultUuid,
+      network: walletEntity.network,
       address: walletEntity.address,
       derivationPath: walletEntity.derivationPath,
+      parentPath: walletEntity.parentPath,
       name: walletEntity.name,
     );
   }

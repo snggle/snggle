@@ -10,7 +10,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i12;
 import 'package:flutter/material.dart' as _i13;
-import 'package:snggle/shared/models/password_model.dart' as _i16;
+import 'package:snggle/shared/models/a_container_model.dart' as _i16;
+import 'package:snggle/shared/models/password_model.dart' as _i17;
 import 'package:snggle/shared/models/vaults/vault_model.dart' as _i15;
 import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i14;
 import 'package:snggle/views/pages/app_auth_page.dart' as _i1;
@@ -106,7 +107,9 @@ abstract class $AppRouter extends _i12.RootStackRouter {
       return _i12.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i11.WalletListPage(
+          pageName: args.pageName,
           vaultModel: args.vaultModel,
+          parentContainerModel: args.parentContainerModel,
           vaultPasswordModel: args.vaultPasswordModel,
           key: args.key,
         ),
@@ -298,14 +301,18 @@ class WalletDetailsRouteArgs {
 /// [_i11.WalletListPage]
 class WalletListRoute extends _i12.PageRouteInfo<WalletListRouteArgs> {
   WalletListRoute({
+    required String pageName,
     required _i15.VaultModel vaultModel,
-    required _i16.PasswordModel vaultPasswordModel,
+    required _i16.AContainerModel parentContainerModel,
+    required _i17.PasswordModel vaultPasswordModel,
     _i13.Key? key,
     List<_i12.PageRouteInfo>? children,
   }) : super(
           WalletListRoute.name,
           args: WalletListRouteArgs(
+            pageName: pageName,
             vaultModel: vaultModel,
+            parentContainerModel: parentContainerModel,
             vaultPasswordModel: vaultPasswordModel,
             key: key,
           ),
@@ -320,19 +327,25 @@ class WalletListRoute extends _i12.PageRouteInfo<WalletListRouteArgs> {
 
 class WalletListRouteArgs {
   const WalletListRouteArgs({
+    required this.pageName,
     required this.vaultModel,
+    required this.parentContainerModel,
     required this.vaultPasswordModel,
     this.key,
   });
 
+  final String pageName;
+
   final _i15.VaultModel vaultModel;
 
-  final _i16.PasswordModel vaultPasswordModel;
+  final _i16.AContainerModel parentContainerModel;
+
+  final _i17.PasswordModel vaultPasswordModel;
 
   final _i13.Key? key;
 
   @override
   String toString() {
-    return 'WalletListRouteArgs{vaultModel: $vaultModel, vaultPasswordModel: $vaultPasswordModel, key: $key}';
+    return 'WalletListRouteArgs{pageName: $pageName, vaultModel: $vaultModel, parentContainerModel: $parentContainerModel, vaultPasswordModel: $vaultPasswordModel, key: $key}';
   }
 }
