@@ -2,23 +2,23 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/vault_entity.dart';
 import 'package:snggle/infra/repositories/vaults_repository.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
-import 'package:snggle/infra/services/wallets_service.dart';
+import 'package:snggle/infra/services/wallet_groups_service.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
+import 'package:snggle/shared/models/groups/wallet_group_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
-import 'package:snggle/shared/models/wallets/wallet_model.dart';
 
 class VaultsService {
   final VaultsRepository _vaultsRepository;
   final SecretsService _secretsService;
-  final WalletsService _walletsService;
+  final WalletGroupsService _walletGroupsService;
 
   VaultsService({
     VaultsRepository? vaultsRepository,
     SecretsService? secretsService,
-    WalletsService? walletsService,
+    WalletGroupsService? walletGroupsService,
   })  : _vaultsRepository = vaultsRepository ?? globalLocator<VaultsRepository>(),
         _secretsService = secretsService ?? globalLocator<SecretsService>(),
-        _walletsService = walletsService ?? globalLocator<WalletsService>();
+        _walletGroupsService = walletGroupsService ?? globalLocator<WalletGroupsService>();
 
   Future<int> getLastVaultIndex() async {
     List<VaultEntity> vaultEntityList = await _vaultsRepository.getAll();
@@ -52,9 +52,9 @@ class VaultsService {
   }
 
   Future<void> deleteVaultById(String uuid) async {
-    List<WalletModel> walletModels = await _walletsService.getWalletList(uuid);
-    for (WalletModel walletModel in walletModels) {
-      await _walletsService.deleteWalletById(walletModel.containerPathModel.fullPath);
+    List<WalletGroupModel> walletGroupModelList = await _walletGroupsService.getAll(uuid, strictBool: true);
+    for (WalletGroupModel walletGroupModel in walletGroupModelList) {
+      await _walletGroupsService.deleteByPath(walletGroupModel.containerPathModel.fullPath, recursiveBool: true);
     }
 
     VaultModel vaultModel = await getVaultById(uuid);

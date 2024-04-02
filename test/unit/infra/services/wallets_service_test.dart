@@ -12,6 +12,7 @@ import 'package:snggle/infra/repositories/secrets_repository.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
+import 'package:snggle/shared/models/container_path_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
@@ -439,6 +440,138 @@ void main() {
       // Assert
       expect(
         () => actualWalletsService.deleteWalletById('not_existing_id'),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
+  group('Tests of WalletsService.moveWallet()', () {
+    test('Should [update WalletModel path] if [wallet UUID EXISTS] in collection', () async {
+      // Arrange
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
+
+      // Act
+      String? actualEncryptedWalletsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
+
+      // Output is always a random string because AES changes the initialization vector with Random Secure
+      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
+      String actualDecryptedWalletsKeyValue =
+          actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedWalletsKeyValue!);
+      Map<String, dynamic> actualWalletsMap = jsonDecode(actualDecryptedWalletsKeyValue) as Map<String, dynamic>;
+
+      // Assert
+      Map<String, dynamic> expectedWalletsMap = <String, dynamic>{
+        '4e66ba36-966e-49ed-b639-191388ce38de': <String, dynamic>{
+          'pinned': true,
+          'index': 0,
+          'address': 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
+          'derivation_path': "m/44'/118'/0'/0/0",
+          'network': 'kira',
+          'uuid': '4e66ba36-966e-49ed-b639-191388ce38de',
+          'parent_path': '04b5440e-e398-4520-9f9b-f0eea2d816e6'
+        },
+        '3e7f3547-d78f-4dda-a916-3e9eabd4bfee': <String, dynamic>{
+          'pinned': true,
+          'index': 1,
+          'address': 'kira1skj2f63ztaxk2q43pm2tg7t09r0whf5cadszdn',
+          'derivation_path': "m/44'/118'/0'/0/1",
+          'network': 'kira',
+          'uuid': '3e7f3547-d78f-4dda-a916-3e9eabd4bfee',
+          'parent_path': '04b5440e-e398-4520-9f9b-f0eea2d816e6'
+        },
+        '4d02947e-c838-4a77-bef3-0ffbdb1c7525': <String, dynamic>{
+          'pinned': false,
+          'index': 0,
+          'address': 'kira15808n8vfcf3m88r5jxnq47gjel5lvmxadmsqt5',
+          'derivation_path': "m/44'/118'/0'/0/0",
+          'network': 'kira',
+          'uuid': '4d02947e-c838-4a77-bef3-0ffbdb1c7525',
+          'parent_path': '5f5332fb-37c1-4352-9153-d43692615f0f'
+        },
+        'ef63ccfc-c3da-4212-9dc1-693a9e75e90b': <String, dynamic>{
+          'pinned': false,
+          'index': 1,
+          'address': 'kira1t7lspdwnhjwx23e2r3l04wn6uuhyt60ljkqdgl',
+          'derivation_path': "m/44'/118'/0'/0/1",
+          'network': 'kira',
+          'uuid': 'ef63ccfc-c3da-4212-9dc1-693a9e75e90b',
+          'parent_path': '5f5332fb-37c1-4352-9153-d43692615f0f'
+        }
+      };
+
+      TestUtils.printInfo('Should [return Map of wallets] as ["wallets" key EXISTS] in database');
+      expect(actualWalletsMap, expectedWalletsMap);
+
+      // ************************************************************************************************
+
+      // Act
+      await actualWalletsService.moveWallet(
+        '4e66ba36-966e-49ed-b639-191388ce38de',
+        ContainerPathModel.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6/new/directory'),
+      );
+
+      actualEncryptedWalletsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
+
+      // Output is always a random string because AES changes the initialization vector with Random Secure
+      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
+      actualDecryptedWalletsKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedWalletsKeyValue!);
+      actualWalletsMap = jsonDecode(actualDecryptedWalletsKeyValue) as Map<String, dynamic>;
+
+      // Assert
+      expectedWalletsMap = <String, dynamic>{
+        '4e66ba36-966e-49ed-b639-191388ce38de': <String, dynamic>{
+          'pinned': true,
+          'index': 0,
+          'address': 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
+          'derivation_path': "m/44'/118'/0'/0/0",
+          'network': 'kira',
+          'uuid': '4e66ba36-966e-49ed-b639-191388ce38de',
+          'parent_path': '04b5440e-e398-4520-9f9b-f0eea2d816e6/new/directory',
+          'name': null
+        },
+        '3e7f3547-d78f-4dda-a916-3e9eabd4bfee': <String, dynamic>{
+          'pinned': true,
+          'index': 1,
+          'address': 'kira1skj2f63ztaxk2q43pm2tg7t09r0whf5cadszdn',
+          'derivation_path': "m/44'/118'/0'/0/1",
+          'network': 'kira',
+          'uuid': '3e7f3547-d78f-4dda-a916-3e9eabd4bfee',
+          'parent_path': '04b5440e-e398-4520-9f9b-f0eea2d816e6'
+        },
+        '4d02947e-c838-4a77-bef3-0ffbdb1c7525': <String, dynamic>{
+          'pinned': false,
+          'index': 0,
+          'address': 'kira15808n8vfcf3m88r5jxnq47gjel5lvmxadmsqt5',
+          'derivation_path': "m/44'/118'/0'/0/0",
+          'network': 'kira',
+          'uuid': '4d02947e-c838-4a77-bef3-0ffbdb1c7525',
+          'parent_path': '5f5332fb-37c1-4352-9153-d43692615f0f'
+        },
+        'ef63ccfc-c3da-4212-9dc1-693a9e75e90b': <String, dynamic>{
+          'pinned': false,
+          'index': 1,
+          'address': 'kira1t7lspdwnhjwx23e2r3l04wn6uuhyt60ljkqdgl',
+          'derivation_path': "m/44'/118'/0'/0/1",
+          'network': 'kira',
+          'uuid': 'ef63ccfc-c3da-4212-9dc1-693a9e75e90b',
+          'parent_path': '5f5332fb-37c1-4352-9153-d43692615f0f'
+        }
+      };
+
+      TestUtils.printInfo('Should [return Map of wallets] without removed wallet');
+      expect(actualWalletsMap, expectedWalletsMap);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [wallet UUID NOT EXISTS] in collection', () async {
+      // Arrange
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
+
+      // Assert
+      expect(
+        () => actualWalletsService.moveWallet(
+          'not-existing-uuid',
+          ContainerPathModel.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6/new/directory'),
+        ),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

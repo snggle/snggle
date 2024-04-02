@@ -3,6 +3,7 @@ import 'package:snggle/infra/entities/wallet_entity.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/shared/factories/wallet_model_factory.dart';
+import 'package:snggle/shared/models/container_path_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 
 class WalletsService {
@@ -47,6 +48,14 @@ class WalletsService {
     WalletModel walletModel = await getById(uuid);
     await _secretsService.deleteSecrets(walletModel.containerPathModel);
     await _walletsRepository.deleteById(uuid);
+  }
+
+  Future<void> moveWallet(String uuid, ContainerPathModel newParentPath) async {
+    WalletModel previousWalletModel = await getById(uuid);
+
+    WalletModel movedWalletModel = previousWalletModel.copyWith(parentPath: newParentPath.fullPath);
+    await saveWallet(movedWalletModel);
+    await _secretsService.moveSecrets(previousWalletModel.containerPathModel, movedWalletModel.containerPathModel);
   }
 
   Future<WalletModel> getById(String uuid) async {
