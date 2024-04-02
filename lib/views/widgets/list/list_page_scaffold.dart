@@ -32,15 +32,15 @@ class _ListPageScaffoldState<T extends AListItemModel, C extends AListCubit<T>> 
     return BlocBuilder<C, ListState>(
       bloc: widget.listCubit,
       builder: (BuildContext context, ListState listState) {
-        String pageTitle = listState.loadingBool ? '' : widget.defaultPageTitle;
+        String pageTitle = listState.loadingBool ? '' : listState.groupModel?.name ?? widget.defaultPageTitle;
         return AnimatedSwitcher(
           duration: const Duration(milliseconds: 150),
           child: CustomScaffold(
             key: Key('grid${listState.filesystemPath.fullPath}'),
             title: pageTitle,
-            popAvailableBool: listState.isSelectionEnabled == false,
-            popButtonVisible: listState.isSelectionEnabled,
-            customPopCallback: listState.isSelectionEnabled ? () => _handleCustomPop(listState) : null,
+            popAvailableBool: listState.canPop == false,
+            popButtonVisible: listState.canPop,
+            customPopCallback: listState.canPop ? () => _handleCustomPop(listState) : null,
             padding: widget.padding,
             boxDecoration: widget.boxDecoration,
             body: widget.bodyBuilder(context, listState),
@@ -53,6 +53,8 @@ class _ListPageScaffoldState<T extends AListItemModel, C extends AListCubit<T>> 
   void _handleCustomPop(ListState listState) {
     if (listState.isSelectionEnabled) {
       _cancelSelection();
+    } else if (listState.canPop) {
+      widget.listCubit.navigateBack();
     }
   }
 

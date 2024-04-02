@@ -7,6 +7,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/vault_list_pa
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
@@ -17,6 +18,7 @@ import 'package:snggle/views/widgets/button/list_item_creation_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
+import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
 import 'package:snggle/views/widgets/generic/gradient_icon.dart';
 import 'package:snggle/views/widgets/icons/list_item_icon.dart';
 import 'package:snggle/views/widgets/list/list_item_actions_wrapper.dart';
@@ -33,7 +35,11 @@ class VaultListPage extends StatefulWidget {
 
 class _VaultListPageState extends State<VaultListPage> {
   static const String defaultPageTitle = 'VAULTS';
-  late final VaultListPageCubit vaultListPageCubit = VaultListPageCubit(filesystemPath: const FilesystemPath.empty());
+  final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
+  late final VaultListPageCubit vaultListPageCubit = VaultListPageCubit(
+    depth: 0,
+    filesystemPath: const FilesystemPath.empty(),
+  );
 
   @override
   void initState() {
@@ -90,6 +96,8 @@ class _VaultListPageState extends State<VaultListPage> {
                 itemBuilder: (AListItemModel listItemModel) {
                   return ListItemActionsWrapper<VaultModel, VaultListPageCubit>(
                     key: Key('item${listItemModel.filesystemPath.fullPath}'),
+                    defaultPageTitle: defaultPageTitle,
+                    draggedItemNotifier: draggedItemNotifier,
                     listItemSize: VaultListItemLayout.listItemSize,
                     listCubit: vaultListPageCubit,
                     listItemModel: listItemModel,
@@ -114,7 +122,9 @@ class _VaultListPageState extends State<VaultListPage> {
 
   Future<void> _navigateToVaultCreateRecoverRoute() async {
     VaultCreateRecoverStatus? vaultCreateRecoverStatus = await AutoRouter.of(context).push<VaultCreateRecoverStatus?>(
-      VaultCreateRecoverRoute(children: <PageRouteInfo>[VaultInitRoute(parentFilesystemPath: const FilesystemPath.empty())]),
+      VaultCreateRecoverRoute(children: <PageRouteInfo>[
+        VaultInitRoute(parentFilesystemPath: vaultListPageCubit.state.filesystemPath),
+      ]),
     );
     if (vaultCreateRecoverStatus != null) {
       unawaited(vaultListPageCubit.refreshAll());
@@ -157,6 +167,10 @@ class _VaultListPageState extends State<VaultListPage> {
         ),
       );
       await vaultListPageCubit.refreshAll();
+    } else if (listItemModel is GroupModel) {
+      await vaultListPageCubit.navigateNext(
+        filesystemPath: listItemModel.filesystemPath,
+      );
     }
   }
 }

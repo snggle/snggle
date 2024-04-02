@@ -7,12 +7,14 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/factories/wallet_model_factory.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_creation_request_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class WalletListPageCubit extends AListCubit<WalletModel> {
   final WalletsService _walletsService = globalLocator<WalletsService>();
@@ -21,16 +23,37 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
   final PasswordModel vaultPasswordModel;
 
   WalletListPageCubit({
+    required super.depth,
     required super.filesystemPath,
     required this.vaultModel,
     required this.vaultPasswordModel,
   });
 
   @override
+  Future<void> moveItem(AListItemModel item, FilesystemPath newFilesystemPath) async {
+    if (item is WalletModel) {
+      await _walletsService.move(item, newFilesystemPath);
+    } else if (item is GroupModel) {
+      GroupModel movedGroupModel = await groupsService.move(item, newFilesystemPath);
+
+      await _walletsService.moveByParentPath(item.filesystemPath, movedGroupModel.filesystemPath);
+      await groupsService.moveByParentPath(item.filesystemPath, movedGroupModel.filesystemPath);
+    } else {
+      throw StateError('List item not supported');
+    }
+    await refreshAll();
+  }
+
+  @override
   Future<void> deleteItem(AListItemModel item) async {
     if (item is WalletModel) {
       await _walletsService.deleteById(item.uuid);
+    } else if (item is GroupModel) {
+      await _walletsService.deleteAllByParentPath(item.filesystemPath);
+      await groupsService.deleteAllByParentPath(item.filesystemPath);
+      await groupsService.deleteById(item.uuid);
     }
+
     await refreshAll();
   }
 
@@ -41,14 +64,31 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
   }
 
   @override
+  Future<List<GroupModel>> fetchAllGroups() async {
+    List<GroupModel> groupModelList = await groupsService.getAllByParentPath(state.filesystemPath, firstLevelBool: true);
+    return groupModelList;
+  }
+
+  @override
   Future<WalletModel?> fetchSingleItem(WalletModel item) async {
     WalletModel walletModel = await _walletsService.getById(item.uuid);
     return walletModel;
   }
 
   @override
+  Future<GroupModel?> fetchSingleGroup(GroupModel group) async {
+    GroupModel? groupModel = await groupsService.getById(group.uuid);
+    return groupModel;
+  }
+
+  @override
   Future<void> saveItem(WalletModel item) async {
     await _walletsService.save(item);
+  }
+
+  @override
+  Future<void> saveGroup(GroupModel group) async {
+    await groupsService.save(group);
   }
 
   // TODO(dominik): Temporary solution to create new wallet.

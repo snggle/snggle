@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/views/widgets/custom/custom_flexible_grid.dart';
+import 'package:snggle/views/widgets/icons/group_container_icon.dart';
 import 'package:snggle/views/widgets/icons/vault_container_icon.dart';
 import 'package:snggle/views/widgets/icons/wallet_icon.dart';
 
@@ -39,6 +41,12 @@ class GroupGridIcon extends StatelessWidget {
                   return VaultContainerIcon.fromVaultModel(
                     size: constraints.maxWidth,
                     vaultModel: vaultModel,
+                  );
+                case GroupModel groupModel:
+                  return GroupContainerIcon.fromGroupModel(
+                    size: constraints.maxWidth,
+                    groupModel: groupModel,
+                    strokeBool: true,
                   );
                 case WalletModel walletModel:
                   return WalletIcon(
