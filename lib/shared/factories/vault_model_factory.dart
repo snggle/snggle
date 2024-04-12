@@ -9,11 +9,12 @@ class VaultModelFactory {
 
   VaultModelFactory({VaultsService? vaultsService}) : _vaultsService = vaultsService ?? globalLocator<VaultsService>();
 
-  Future<VaultModel> createNewVault() async {
+  Future<VaultModel> createNewVault([String? name]) async {
     int lastVaultIndex = await _vaultsService.getLastVaultIndex();
     VaultModel vaultModel = VaultModel(
       index: lastVaultIndex + 1,
       uuid: const Uuid().v4(),
+      name: name,
     );
 
     return vaultModel;

@@ -63,7 +63,7 @@ class _VaultListItemState extends State<VaultListItem> {
           child: ListTile(
             onTap: () => _navigateToWalletsPage(vaultListItemState.encryptedBool, vaultListItemState.lockedBool),
             title: Text(
-              'Vault: ${widget.vaultModel.index + 1}',
+              (widget.vaultModel.name != null && widget.vaultModel.name!.isNotEmpty) ? widget.vaultModel.name! : 'Vault: ${widget.vaultModel.index + 1}',
               style: const TextStyle(fontSize: 14),
             ),
             trailing: Column(
