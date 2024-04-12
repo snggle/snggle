@@ -7,6 +7,7 @@ class AppColors {
 
   static Color lightGrey1 = const Color(0xFFF3F3F3);
   static Color lightGrey2 = const Color(0xFFE9E9E9);
+  static Color lightGrey3 = const Color(0xFFFBFBFB);
   static Color middleGrey = const Color(0xFFC7C7C7);
   static Color darkGrey = const Color(0xFF969696);
 
@@ -19,6 +20,17 @@ class AppColors {
     colors: <Color>[
       Color(0xFF000000),
       Color(0xFF42D2FF),
+      Color(0xFF939393),
+      Color(0xFF000000),
+    ],
+  );
+
+  static Gradient validationGradient = const RadialGradient(
+    radius: 1,
+    center: Alignment(-0.6, -0.6),
+    colors: <Color>[
+      Color(0xFF000000),
+      Color(0xFFFF5050),
       Color(0xFF939393),
       Color(0xFF000000),
     ],

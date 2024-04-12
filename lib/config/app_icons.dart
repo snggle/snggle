@@ -11,7 +11,7 @@
 ///      fonts:
 ///       - asset: fonts/IconsFont.ttf
 ///
-/// 
+///
 ///
 import 'package:flutter/widgets.dart';
 
@@ -23,25 +23,25 @@ class AppIcons {
   static const _kFontFam = 'IconsFont';
   static const String? _kFontPkg = null;
 
-  static const IconData access_pin = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData active = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData add = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData alert = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData apps = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData apps_container = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData arrow_left = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData arrow_medium = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData back = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData backup_1 = IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData backup_2 = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData biometric = IconData(0xe80b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData categories = IconData(0xe80c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData check = IconData(0xe80d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData close_1 = IconData(0xe80e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData close_2 = IconData(0xe80f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData continue_icon = IconData(0xe810, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData copy = IconData(0xe811, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData default_icon = IconData(0xe812, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData backup = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData lock = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData select_container_unselected = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData access_pin = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData alert = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData apps = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData hide = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData select_container_selected = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData apps_container = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData checkbox_unselected = IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData show = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData arrow_left = IconData(0xe80b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData recover = IconData(0xe80c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData biometric = IconData(0xe80d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData categories = IconData(0xe80e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData check = IconData(0xe80f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData close_1 = IconData(0xe810, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData collapse = IconData(0xe811, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData continue_icon = IconData(0xe812, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData delete_1 = IconData(0xe813, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData delete_2 = IconData(0xe814, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData display = IconData(0xe815, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -49,22 +49,22 @@ class AppIcons {
   static const IconData empty_page = IconData(0xe817, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData failed = IconData(0xe818, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData file = IconData(0xe819, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData filter = IconData(0xe81a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData copy = IconData(0xe81a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData flash_1 = IconData(0xe81b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData flash_2 = IconData(0xe81c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData general = IconData(0xe81d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData hide = IconData(0xe81e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData default_icon = IconData(0xe81e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData info = IconData(0xe81f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData left = IconData(0xe820, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData lock_1 = IconData(0xe821, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData lock_2 = IconData(0xe822, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData block = IconData(0xe821, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData checkbox_selected = IconData(0xe822, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData minus = IconData(0xe823, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData no_data = IconData(0xe824, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData notifications = IconData(0xe825, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData open = IconData(0xe826, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData panic_mode_1 = IconData(0xe827, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData panic_mode_2 = IconData(0xe828, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData pin = IconData(0xe829, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData filter = IconData(0xe829, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData private_key = IconData(0xe82a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData retry = IconData(0xe82b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData reverse = IconData(0xe82c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -72,9 +72,7 @@ class AppIcons {
   static const IconData save = IconData(0xe82e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData scan = IconData(0xe82f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData search = IconData(0xe830, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData select_container = IconData(0xe831, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData shield = IconData(0xe832, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData show = IconData(0xe833, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData sign = IconData(0xe834, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData sorting = IconData(0xe835, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData success = IconData(0xe836, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -85,9 +83,14 @@ class AppIcons {
   static const IconData token_kira = IconData(0xe83b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData token_polkadot = IconData(0xe83c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData unknown__wallet = IconData(0xe83d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData unpin = IconData(0xe83e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData user = IconData(0xe83f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData vaults = IconData(0xe840, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData wallet = IconData(0xe841, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData wrap = IconData(0xe842, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData add_circle = IconData(0xe843, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData add = IconData(0xe844, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData unlock = IconData(0xe845, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData pin = IconData(0xe846, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData unpin = IconData(0xe847, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData back = IconData(0xe848, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
