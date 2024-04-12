@@ -4,11 +4,11 @@ description: Private keys manager
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.11
+version: 0.0.12
 
 environment:
-  sdk: ">=3.2.2"
-  flutter: "^3.16.2"
+  sdk: "3.2.2"
+  flutter: "3.16.2"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -25,69 +25,69 @@ dependencies:
 
   # AutoRoute is a declarative routing solution, where everything needed for navigation is automatically generated
   # https://pub.dev/packages/auto_route
-  auto_route: ^7.8.4
+  auto_route: 7.8.4
 
   # A Dart package that helps to implement value based equality without needing to explicitly override == and hashCode
   # https://pub.dev/packages/equatable
-  equatable: ^2.0.5
+  equatable: 2.0.5
 
   # Flutter Widgets that make it easy to implement the BLoC (Business Logic Component) design pattern
   # https://pub.dev/packages/flutter_bloc
-  flutter_bloc: ^8.1.3
+  flutter_bloc: 8.1.3
 
   # Accessing Service Objects/View/AppModels/Managers/BLoCs from Flutter Views
   # https://pub.dev/packages/get_it
-  get_it: ^7.6.4
+  get_it: 7.6.4
 
   # Contains code to deal with internationalized/localized messages, date and number formatting and parsing,
   # bidirectional text, and other internationalization issues.
   # https://pub.dev/packages/intl
-  intl: ^0.18.1
+  intl: 0.18.1
 
   # Small, easy to use and extensible logger which prints beautiful logs.
   # https://pub.dev/packages/logger
-  logger: ^2.0.2+1
+  logger: 2.0.2+1
 
   # Flutter Secure Storage provides API to store data in secure storage.
   # Keychain is used in iOS, KeyStore based solution is used in Android.
   # https://pub.dev/packages/flutter_secure_storage
-  flutter_secure_storage: ^9.0.0
+  flutter_secure_storage: 9.0.0
 
   # Implementations of SHA, MD5, and HMAC cryptographic functions.
   # https://pub.dev/packages/crypto
-  crypto: ^3.0.3
+  crypto: 3.0.3
 
   # A set of high-level APIs over PointyCastle for two-way cryptography.
   # https://pub.dev/packages/encrypt
-  encrypt: ^5.0.3
+  encrypt: 5.0.3
 
   # Dart implementation of Bitcoin BIP39 Mnemonic code for generating deterministic keys
   # https://pub.dev/packages/bip39
-  bip39: ^1.0.6
+  bip39: 1.0.6
 
   # RFC4122 (v1, v4, v5) UUID Generator and Parser for all Dart platforms (Web, VM, Flutter)
   # https://pub.dev/packages/uuid
-  uuid: ^3.0.7
+  uuid: 3.0.7
 
   # An SVG rendering and widget library for Flutter, which allows painting and displaying Scalable Vector Graphics 1.1 files.
   # https://pub.dev/packages/flutter_svg
-  flutter_svg: ^2.0.9
+  flutter_svg: 2.0.9
 
   # Etherum Blockies implementation
   # https://pub.dev/packages/blockies_svg
-  blockies_svg: ^1.0.2
+  blockies_svg: 1.0.2
 
   # Comprehensive Crypto & Blockchain Toolkit, Pure Dart, Cross-Platform, Encoding, Cryptography, Addresses, Mnemonics, & More.
   # https://pub.dev/packages/blockchain_utils
-  blockchain_utils: ^1.2.1
+  blockchain_utils: 1.2.1
 
   # A basic toolkit for Cryptocurrency wallet in Dart. This package is used to generate and manage the Hierarchical Deterministic (HD) Wallet application.
   # https://pub.dev/packages/hd_wallet
-  hd_wallet: ^0.0.9
+  hd_wallet: 0.0.9
 
   # Flutter plugin for getting commonly used locations on host platform file systems, such as the temp and app data directories.
   # https://pub.dev/packages/path_provider
-  path_provider: ^2.1.2
+  path_provider: 2.1.2
 
 dev_dependencies:
   flutter_test:
@@ -97,15 +97,15 @@ dev_dependencies:
 
   # AutoRoute is a declarative routing solution, where everything needed for navigation is automatically generated
   # https://pub.dev/packages/auto_route_generator
-  auto_route_generator: ^7.3.2
+  auto_route_generator: 7.3.2
 
   # A testing library which makes it easy to test blocs
   # https://pub.dev/packages/bloc_test
-  bloc_test: ^9.1.5
+  bloc_test: 9.1.5
 
   # A build system for Dart code generation and modular compilation
   # https://pub.dev/packages/build_runner
-  build_runner: ^2.4.7
+  build_runner: 2.4.7
 
 flutter:
   uses-material-design: true

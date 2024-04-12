@@ -1,6 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
+import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 
 @RoutePage()
 class AppsPage extends StatelessWidget {
@@ -8,9 +8,12 @@ class AppsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: CustomAppBar(title: 'Apps'),
-      body: Center(child: Text('Apps Page')),
+    return const CustomScaffold(
+      title: 'Apps',
+      popButtonVisible: false,
+      body: Center(
+        child: Text('Apps Page'),
+      ),
     );
   }
 }

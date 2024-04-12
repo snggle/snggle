@@ -5,7 +5,7 @@ import 'package:snggle/bloc/vault_list_page/vault_list_page_cubit.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item.dart';
-import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
+import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 
 @RoutePage()
 class VaultListPage extends StatefulWidget {
@@ -32,10 +32,9 @@ class _VaultListPageState extends State<VaultListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Vaults',
-      ),
+    return CustomScaffold(
+      title: 'Vaults',
+      popButtonVisible: false,
       body: BlocBuilder<VaultListPageCubit, List<VaultModel>>(
         bloc: vaultListPageCubit,
         builder: (BuildContext context, List<VaultModel> vaultModelList) {
