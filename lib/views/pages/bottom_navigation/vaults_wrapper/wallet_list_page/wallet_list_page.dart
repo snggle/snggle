@@ -15,6 +15,7 @@ import 'package:snggle/shared/models/wallets/wallet_list_item_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
 import 'package:snggle/views/pages/bottom_navigation/secrets_remove_pin_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/secrets_setup_pin_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/timed_pin_confirmation_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_group_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_page_tooltip.dart';
@@ -174,7 +175,16 @@ class _WalletListPageState extends State<WalletListPage> {
   }
 
   Future<void> _deleteWallet(AListItemModel listItemModel) async {
-    await walletListPageCubit.delete(listItemModel);
+    bool? successBool = await showDialog<bool?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return const TimedPinConfirmationPage();
+      },
+    );
+    if (successBool == true) {
+      await walletListPageCubit.delete(listItemModel);
+    }
   }
 
   void _updateWalletSelection({required AListItemModel listItemModel, required bool selectedBool}) {

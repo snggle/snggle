@@ -63,11 +63,12 @@ class _NetworkGroupListItemTooltipState extends State<NetworkGroupListItemToolti
             label: 'Lock',
             onTap: () => widget.onLockValueChanged(true),
           ),
-        ContextTooltipItem(
-          iconData: AppIcons.close_1,
-          label: 'Delete',
-          onTap: _pressDeleteButton,
-        ),
+        if (widget.encryptedBool == false)
+          ContextTooltipItem(
+            iconData: AppIcons.close_1,
+            label: 'Delete',
+            onTap: _pressDeleteButton,
+          ),
       ],
     );
   }

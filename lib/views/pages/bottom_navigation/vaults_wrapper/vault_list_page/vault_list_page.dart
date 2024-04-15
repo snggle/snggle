@@ -10,6 +10,7 @@ import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
 import 'package:snggle/views/pages/bottom_navigation/secrets_remove_pin_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/secrets_setup_pin_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/timed_pin_confirmation_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item_layout.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page_tooltip.dart';
@@ -159,7 +160,16 @@ class _VaultListPageState extends State<VaultListPage> {
   }
 
   Future<void> _deleteVault(VaultListItemModel vaultListItemModel) async {
-    await vaultListPageCubit.delete(vaultListItemModel);
+    bool? successBool = await showDialog<bool?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return const TimedPinConfirmationPage();
+      },
+    );
+    if (successBool == true) {
+      await vaultListPageCubit.delete(vaultListItemModel);
+    }
   }
 
   void _updateVaultSelection({required VaultListItemModel vaultListItemModel, required bool selectedBool}) {

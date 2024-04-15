@@ -11,6 +11,7 @@ import 'package:snggle/shared/models/vaults/vault_list_item_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
 import 'package:snggle/views/pages/bottom_navigation/secrets_remove_pin_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/secrets_setup_pin_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/timed_pin_confirmation_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/network_groups_list_page/network_group_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/network_groups_list_page/network_groups_list_page_tooltip.dart';
 import 'package:snggle/views/widgets/button/square_outlined_button.dart';
@@ -173,7 +174,16 @@ class _NetworkGroupsListPageState extends State<NetworkGroupsListPage> {
   }
 
   Future<void> _deleteGroup(NetworkGroupListItemModel networkGroupListItemModel) async {
-    await networkGroupsListPageCubit.delete(networkGroupListItemModel);
+    bool? successBool = await showDialog<bool?>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return const TimedPinConfirmationPage();
+      },
+    );
+    if (successBool == true) {
+      await networkGroupsListPageCubit.delete(networkGroupListItemModel);
+    }
   }
 
   void _updateGroupSelection({required NetworkGroupListItemModel networkGroupListItemModel, required bool selectedBool}) {
