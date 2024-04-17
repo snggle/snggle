@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.snggle.mobile">
    <application
-        android:label="snggle"
+        android:label="Snggle"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

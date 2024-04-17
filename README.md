@@ -1,13 +1,15 @@
-# snggle
+# Snggle
 Private keys manager
 
+## Usage
+For detailed instructions on the installation process, please refer to the [USAGE.md](./USAGE.md) file.
+
 ## Installation
-Use git clone to download [snggle](https://github.com/snggle) project.
+Use git clone to download [Snggle](https://github.com/snggle) project.
 ```bash
 git clone git@github.com:snggle/snggle.git
 ```
 
-## Usage
 The project runs on flutter version **3.16.2**. You can use [fvm](https://fvm.app/docs/getting_started/installation)
 for easy switching between versions otherwise see [flutter installation](https://docs.flutter.dev/get-started/install)
 ```bash
