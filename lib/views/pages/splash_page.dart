@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:snggle/bloc/splash_page/splash_page_cubit.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_enter_pin_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
@@ -39,12 +40,17 @@ class SplashPage extends StatelessWidget {
         ],
       );
     }
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          CircularProgressIndicator(),
-        ],
+
+    // TODO(dominik): Temporary view to ensure that the splash screen is visible when opening the app. Created for presentation purposes.
+    return Padding(
+      padding: const EdgeInsets.only(top: 36),
+      child: Center(
+        child: SvgPicture.asset(
+          'assets/icons/app_icon.svg',
+          width: 185,
+          height: 185,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
