@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_enter_pin_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_ignore_pin_state.dart';
@@ -9,6 +8,7 @@ import 'package:snggle/bloc/splash_page/states/splash_page_setup_pin_state.dart'
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/app_auth_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
+import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 
@@ -17,7 +17,7 @@ part 'a_splash_page_state.dart';
 class SplashPageCubit extends Cubit<ASplashPageState> {
   final AppAuthService _appAuthService = globalLocator<AppAuthService>();
   final MasterKeyService _masterKeyService = globalLocator<MasterKeyService>();
-  final AuthSingletonCubit _authSingletonCubit = globalLocator<AuthSingletonCubit>();
+  final MasterKeyController _masterKeyController = globalLocator<MasterKeyController>();
 
   SplashPageCubit() : super(SplashPageLoadingState());
 
@@ -40,7 +40,7 @@ class SplashPageCubit extends Cubit<ASplashPageState> {
   }
 
   Future<void> _authenticateWithDefaultPassword() async {
-    _authSingletonCubit.setAppPassword(PasswordModel.defaultPassword());
+    _masterKeyController.setPassword(PasswordModel.defaultPassword());
     emit(SplashPageIgnorePinState());
   }
 }
