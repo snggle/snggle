@@ -46,7 +46,7 @@ void main() async {
       WalletModel actualWalletModel = actualWalletModelFactory.createFromEntity(actualWalletEntity);
 
       // Assert
-      WalletModel expectedWalletModel = const WalletModel(
+      WalletModel expectedWalletModel = WalletModel(
         index: 0,
         uuid: '4e66ba36-966e-49ed-b639-191388ce38de',
         vaultUuid: '04b5440e-e398-4520-9f9b-f0eea2d816e6',

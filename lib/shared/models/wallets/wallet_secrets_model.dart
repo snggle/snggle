@@ -1,38 +1,27 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:blockchain_utils/blockchain_utils.dart';
-import 'package:equatable/equatable.dart';
-import 'package:snggle/shared/models/password_model.dart';
+import 'package:snggle/shared/models/a_secrets_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
-class WalletSecretsModel extends Equatable {
-  final String walletUuid;
+class WalletSecretsModel extends ASecretsModel {
   final Uint8List privateKey;
 
   const WalletSecretsModel({
-    required this.walletUuid,
+    required super.filesystemPath,
     required this.privateKey,
   });
 
-  factory WalletSecretsModel.decrypt({
-    required String walletUuid,
-    required String encryptedSecrets,
-    required PasswordModel passwordModel,
-  }) {
-    String decryptedHash = passwordModel.decrypt(encryptedData: encryptedSecrets);
-    Map<String, dynamic> json = jsonDecode(decryptedHash) as Map<String, dynamic>;
+  factory WalletSecretsModel.fromJson(FilesystemPath filesystemPath, Map<String, dynamic> json) {
     return WalletSecretsModel(
-      walletUuid: walletUuid,
+      filesystemPath: filesystemPath,
       privateKey: Uint8List.fromList(hex.decode(json['private_key'] as String)),
     );
   }
 
-  String encrypt(PasswordModel passwordModel) {
-    Map<String, dynamic> secretsJson = <String, dynamic>{
-      'private_key': hex.encode(privateKey),
-    };
-    String secretsJsonString = jsonEncode(secretsJson);
-    return passwordModel.encrypt(decryptedData: secretsJsonString);
+  @override
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{'private_key': hex.encode(privateKey)};
   }
 
   @override

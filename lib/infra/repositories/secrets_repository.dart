@@ -1,23 +1,24 @@
-import 'package:snggle/infra/managers/database_collection_wrapper.dart';
 import 'package:snggle/infra/managers/database_parent_key.dart';
-import 'package:snggle/infra/managers/encrypted_database_manager.dart';
+import 'package:snggle/infra/managers/filesystem_storage/encrypted_filesystem_storage_manager.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_manager.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class SecretsRepository {
-  final EncryptedDatabaseManager _encryptedDatabaseManager = EncryptedDatabaseManager();
-  late final DatabaseCollectionWrapper<String> _databaseCollectionWrapper = DatabaseCollectionWrapper<String>(
-    databaseManager: _encryptedDatabaseManager,
-    databaseParentKey: DatabaseParentKey.secrets,
-  );
+  final FilesystemStorageManager _filesystemStorageManager;
 
-  Future<String> getEncryptedSecrets(String containerId) async {
-    return _databaseCollectionWrapper.getById(containerId);
+  SecretsRepository({
+    FilesystemStorageManager? filesystemStorageManager,
+  }) : _filesystemStorageManager = filesystemStorageManager ?? EncryptedFilesystemStorageManager(databaseParentKey: DatabaseParentKey.secrets);
+
+  Future<String> getEncrypted(FilesystemPath filesystemPath) async {
+    return _filesystemStorageManager.read(filesystemPath.fullPath);
   }
 
-  Future<void> saveEncryptedSecrets(String containerId, String encryptedSecrets) async {
-    await _databaseCollectionWrapper.saveWithId(containerId, encryptedSecrets);
+  Future<void> saveEncrypted(FilesystemPath filesystemPath, String encryptedSecrets) async {
+    await _filesystemStorageManager.write(filesystemPath.fullPath, encryptedSecrets);
   }
 
-  Future<void> deleteSecrets(String containerId) async {
-    await _databaseCollectionWrapper.deleteById(containerId);
+  Future<void> delete(FilesystemPath filesystemPath) async {
+    await _filesystemStorageManager.delete(filesystemPath.fullPath);
   }
 }
