@@ -7,7 +7,7 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item.dart';
-import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
+import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 
 @RoutePage()
 class WalletListPage extends StatefulWidget {
@@ -41,8 +41,8 @@ class WalletListPageState extends State<WalletListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'Wallets'),
+    return CustomScaffold(
+      title: 'Wallets',
       body: BlocBuilder<WalletListPageCubit, List<WalletModel>>(
         bloc: walletListPageCubit,
         builder: (BuildContext context, List<WalletModel> walletModelList) {

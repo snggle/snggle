@@ -26,9 +26,6 @@ class SplashPageCubit extends Cubit<ASplashPageState> {
       bool masterKeyExistsBool = await _masterKeyService.isMasterKeyExists();
       bool appCustomPasswordSetBool = await _appAuthService.isCustomPasswordSet();
 
-      // TODO(dominik): Temporary delay to ensure that the splash screen is visible when opening the app. Created for presentation purposes.
-      await Future<void>.delayed(const Duration(milliseconds: 500));
-
       if (masterKeyExistsBool == false) {
         emit(SplashPageSetupPinState());
       } else if (appCustomPasswordSetBool) {

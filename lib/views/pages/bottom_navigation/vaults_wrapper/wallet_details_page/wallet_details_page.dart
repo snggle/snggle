@@ -3,7 +3,7 @@ import 'package:blockies_svg/blockies_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
-import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
+import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 
 @RoutePage()
 class WalletDetailsPage extends StatelessWidget {
@@ -16,8 +16,8 @@ class WalletDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'Wallet details'),
+    return CustomScaffold(
+      title: 'Wallet details',
       body: SizedBox(
         width: double.infinity,
         child: Padding(
