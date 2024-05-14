@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/database_parent_key.dart';
 import 'package:snggle/infra/managers/filesystem_storage/encrypted_filesystem_storage_manager.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
+import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/a_secrets_model.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
@@ -25,7 +25,7 @@ void main() {
   DatabaseParentKey actualDatabaseParentKey = DatabaseParentKey.secrets;
 
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
-  globalLocator<AuthSingletonCubit>().setAppPassword(actualAppPasswordModel);
+  globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
 
   // @formatter:off
   MasterKeyVO actualMasterKeyVO = const MasterKeyVO(encryptedMasterKey: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');

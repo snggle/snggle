@@ -1,9 +1,9 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/parent_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/database_parent_key.dart';
 import 'package:snggle/infra/managers/i_database_manager.dart';
+import 'package:snggle/shared/controllers/master_key_controller.dart';
 
 /// Class to store data in database in encrypted form.
 /// Using [DecryptedDatabaseManager] data is stored as a plain text.
@@ -18,11 +18,11 @@ import 'package:snggle/infra/managers/i_database_manager.dart';
 /// }
 class EncryptedDatabaseManager implements IDatabaseManager {
   final FlutterSecureStorage _flutterSecureStorage = const FlutterSecureStorage();
-  final AuthSingletonCubit _authSingletonCubit;
+  final MasterKeyController _masterKeyController;
 
   EncryptedDatabaseManager({
-    AuthSingletonCubit? authSingletonCubit,
-  }) : _authSingletonCubit = authSingletonCubit ?? globalLocator<AuthSingletonCubit>();
+    MasterKeyController? masterKeyController,
+  }) : _masterKeyController = masterKeyController ?? globalLocator<MasterKeyController>();
 
   @override
   Future<bool> containsKey({required DatabaseParentKey databaseParentKey}) async {
@@ -35,12 +35,12 @@ class EncryptedDatabaseManager implements IDatabaseManager {
     if (encryptedValue == null) {
       throw ParentKeyNotFoundException('${databaseParentKey.name} parent key not found in database');
     }
-    return _authSingletonCubit.decrypt(encryptedValue);
+    return _masterKeyController.decrypt(encryptedValue);
   }
 
   @override
   Future<void> write({required DatabaseParentKey databaseParentKey, required String plaintextValue}) async {
-    String encryptedValue = await _authSingletonCubit.encrypt(plaintextValue);
+    String encryptedValue = await _masterKeyController.encrypt(plaintextValue);
     await _flutterSecureStorage.write(key: databaseParentKey.name, value: encryptedValue);
   }
 }

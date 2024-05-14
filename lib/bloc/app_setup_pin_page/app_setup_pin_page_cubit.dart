@@ -6,9 +6,9 @@ import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_init_st
 import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_invalid_state.dart';
 import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_setup_later_state.dart';
 import 'package:snggle/bloc/app_setup_pin_page/states/app_setup_pin_page_success_state.dart';
-import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
+import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
@@ -18,9 +18,8 @@ import 'package:snggle/views/widgets/pinpad/pinpad_controller.dart';
 part 'a_app_setup_pin_page_state.dart';
 
 class AppSetupPinPageCubit extends Cubit<AAppSetupPinPageState> {
-  final AuthSingletonCubit _authSingletonCubit = globalLocator<AuthSingletonCubit>();
   final MasterKeyService _masterKeyService = globalLocator<MasterKeyService>();
-
+  final MasterKeyController _masterKeyController = globalLocator<MasterKeyController>();
   final PinpadController setupPinpadController;
   final PinpadController confirmPinpadController;
 
@@ -38,7 +37,7 @@ class AppSetupPinPageCubit extends Cubit<AAppSetupPinPageState> {
   Future<void> setupLater() async {
     try {
       await _masterKeyService.setDefaultMasterKey();
-      _authSingletonCubit.setAppPassword(PasswordModel.defaultPassword());
+      _masterKeyController.setPassword(PasswordModel.defaultPassword());
       emit(AppSetupPinPageSetupLaterState());
     } catch (e) {
       AppLogger().log(message: e.toString());
@@ -82,7 +81,7 @@ class AppSetupPinPageCubit extends Cubit<AAppSetupPinPageState> {
       MasterKeyVO masterKeyVO = await MasterKeyVO.create(passwordModel: passwordModel, mnemonicModel: mnemonicModel);
       await _masterKeyService.setMasterKey(masterKeyVO);
 
-      _authSingletonCubit.setAppPassword(passwordModel);
+      _masterKeyController.setPassword(passwordModel);
       emit(AppSetupPinPageSuccessState());
     } catch (e) {
       AppLogger().log(message: e.toString());

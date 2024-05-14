@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/database_parent_key.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
+import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
 
@@ -20,7 +20,7 @@ void main() {
   DatabaseParentKey actualDatabaseParentKey = DatabaseParentKey.wallets;
 
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
-  globalLocator<AuthSingletonCubit>().setAppPassword(actualAppPasswordModel);
+  globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
 
   // @formatter:off
   MasterKeyVO actualMasterKeyVO = const MasterKeyVO(

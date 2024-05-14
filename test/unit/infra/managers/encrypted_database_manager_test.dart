@@ -1,10 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/parent_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/database_parent_key.dart';
 import 'package:snggle/infra/managers/encrypted_database_manager.dart';
+import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
 
@@ -18,7 +18,7 @@ void main() {
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
   FlutterSecureStorage actualFlutterSecureStorage = const FlutterSecureStorage();
 
-  globalLocator<AuthSingletonCubit>().setAppPassword(actualAppPasswordModel);
+  globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
 
   // @formatter:off
   MasterKeyVO actualMasterKeyVO = const MasterKeyVO(
@@ -112,7 +112,7 @@ void main() {
     test('Should [throw Exception] if [parent key EXISTS], [master key EXISTS] in database but [app password NOT SET]', () async {
       // Arrange
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledChildKeysDatabase));
-      EncryptedDatabaseManager actualEncryptedDatabaseManager = EncryptedDatabaseManager(authSingletonCubit: AuthSingletonCubit());
+      EncryptedDatabaseManager actualEncryptedDatabaseManager = EncryptedDatabaseManager(masterKeyController: MasterKeyController());
 
       // Assert
       expect(
@@ -194,7 +194,7 @@ void main() {
     test('Should [throw FormatException] if provided [parent key value EMPTY]', () async {
       // Arrange
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(masterKeyOnlyDatabase));
-      EncryptedDatabaseManager actualEncryptedDatabaseManager = EncryptedDatabaseManager(authSingletonCubit: AuthSingletonCubit());
+      EncryptedDatabaseManager actualEncryptedDatabaseManager = EncryptedDatabaseManager();
 
       // Assert
       expect(
@@ -206,7 +206,7 @@ void main() {
     test('Should [throw Exception] if [app password NOT SET]', () async {
       // Arrange
       FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(masterKeyOnlyDatabase));
-      EncryptedDatabaseManager actualEncryptedDatabaseManager = EncryptedDatabaseManager(authSingletonCubit: AuthSingletonCubit());
+      EncryptedDatabaseManager actualEncryptedDatabaseManager = EncryptedDatabaseManager(masterKeyController: MasterKeyController());
 
       // Assert
       expect(

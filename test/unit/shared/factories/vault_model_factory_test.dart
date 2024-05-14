@@ -1,11 +1,11 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/bloc/singletons/auth/auth_singleton_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/vault_entity.dart';
 import 'package:snggle/infra/managers/database_parent_key.dart';
 import 'package:snggle/infra/repositories/vaults_repository.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
+import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
@@ -15,7 +15,7 @@ void main() {
   DatabaseParentKey actualDatabaseParentKey = DatabaseParentKey.vaults;
 
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
-  globalLocator<AuthSingletonCubit>().setAppPassword(actualAppPasswordModel);
+  globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
 
   // @formatter:off
   Map<String, String> filledChildKeysDatabase = <String, String>{
