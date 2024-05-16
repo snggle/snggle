@@ -54,7 +54,7 @@ class _PinpadKeyboardState extends State<PinpadKeyboard> {
                   for (int i = 1; i <= 9; i++)
                     PinpadKeyboardButton.number(
                       number: visibleNumbers[i],
-                      onTap: () => _handleNumberPressed(i),
+                      onTap: () => _handleNumberPressed(visibleNumbers[i]),
                     ),
                   const SizedBox(),
                   PinpadKeyboardButton.number(
