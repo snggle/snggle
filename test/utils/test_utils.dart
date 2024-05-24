@@ -18,6 +18,13 @@ class TestUtils {
     print('\x1B[31m$message\x1B[0m');
   }
 
+  static void clearCache(String testSessionUUID) {
+    Directory cacheDirectory = Directory('${testRootDirectory.path}/$testSessionUUID');
+    if (cacheDirectory.existsSync()) {
+      cacheDirectory.deleteSync(recursive: true);
+    }
+  }
+
   static void setupTmpFilesystemStructureFromJson(Map<String, dynamic> json, {String path = ''}) {
     json.forEach((String key, dynamic value) {
       if (value is Map<String, dynamic>) {

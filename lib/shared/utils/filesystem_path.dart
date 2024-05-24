@@ -5,14 +5,21 @@ class FilesystemPath extends Equatable {
 
   const FilesystemPath(this.pathSegments);
 
+  const FilesystemPath.empty() : pathSegments = const <String>[];
+
   factory FilesystemPath.fromString(String path) {
-    List<String> pathSegments = path.split('/');
+    List<String> pathSegments = path.split('/')..removeWhere((String segment) => segment.isEmpty);
     return FilesystemPath(pathSegments);
   }
 
-  FilesystemPath deriveChildPath(String childUuid) {
-    List<String> derivedPathSegments = <String>[...pathSegments, childUuid];
-    return FilesystemPath(derivedPathSegments);
+  bool isSubPathOf(FilesystemPath filesystemPath, {bool singleLevelBool = false}) {
+    if (singleLevelBool) {
+      // Check if the current path is a direct child of the given path
+      return filesystemPath.fullPath == parentPath;
+    } else {
+      // Check if the current path is a any descendant of the given path
+      return fullPath.startsWith(filesystemPath.fullPath);
+    }
   }
 
   String get fullPath => pathSegments.join('/');

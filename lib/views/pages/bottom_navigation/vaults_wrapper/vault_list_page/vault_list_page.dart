@@ -7,6 +7,7 @@ import 'package:snggle/bloc/vault_list_page/vault_list_page_cubit.dart';
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
@@ -84,7 +85,9 @@ class _VaultListPageState extends State<VaultListPage> {
 
   Future<void> _navigateToVaultCreateRecoverRoute() async {
     VaultCreateRecoverStatus? vaultCreateRecoverStatus = await AutoRouter.of(context).push<VaultCreateRecoverStatus?>(
-      const VaultCreateRecoverRoute(children: <PageRouteInfo>[VaultInitRoute()]),
+      VaultCreateRecoverRoute(children: <PageRouteInfo>[
+        VaultInitRoute(parentFilesystemPath: const FilesystemPath.empty()),
+      ]),
     );
     if (vaultCreateRecoverStatus != null) {
       unawaited(vaultListPageCubit.refresh());

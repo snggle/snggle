@@ -14,24 +14,21 @@ import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
-  final TextEditingController vaultNameTextEditingController = TextEditingController();
+  final VaultModelFactory _vaultModelFactory = globalLocator<VaultModelFactory>();
+  final VaultsService _vaultsService = globalLocator<VaultsService>();
+  final SecretsService _secretsService = globalLocator<SecretsService>();
 
+  final TextEditingController vaultNameTextEditingController = TextEditingController();
+  final FilesystemPath parentFilesystemPath;
   final VoidCallback? creationSuccessfulCallback;
-  final VaultModelFactory _vaultModelFactory;
-  final VaultsService _vaultsService;
-  final SecretsService _secretsService;
 
   VaultRecoverPageCubit({
+    required this.parentFilesystemPath,
     this.creationSuccessfulCallback,
-    VaultModelFactory? vaultModelFactory,
-    VaultsService? vaultsService,
-    SecretsService? secretsService,
-  })  : _vaultModelFactory = vaultModelFactory ?? globalLocator<VaultModelFactory>(),
-        _vaultsService = vaultsService ?? globalLocator<VaultsService>(),
-        _secretsService = secretsService ?? globalLocator<SecretsService>(),
-        super(const VaultRecoverPageState());
+  }) : super(const VaultRecoverPageState());
 
   @override
   Future<void> close() async {
@@ -51,7 +48,7 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
       textEditingController.addListener(_validateMnemonic);
     }
 
-    int lastVaultIndex = await _vaultsService.getLastVaultIndex();
+    int lastVaultIndex = await _vaultsService.getLastIndex();
 
     emit(VaultRecoverPageState(
       confirmPageEnabledBool: true,
@@ -75,12 +72,12 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
     if (mnemonicValidBool) {
       emit(const VaultRecoverPageState.loading());
       String vaultName = vaultNameTextEditingController.text;
-      VaultModel vaultModel = await _vaultModelFactory.createNewVault(vaultName);
+      VaultModel vaultModel = await _vaultModelFactory.createNewVault(parentFilesystemPath, vaultName);
       VaultSecretsModel vaultSecretsModel = VaultSecretsModel(
         filesystemPath: vaultModel.filesystemPath,
         mnemonicModel: MnemonicModel.fromString(mnemonic.toStr()),
       );
-      await _vaultsService.saveVault(vaultModel);
+      await _vaultsService.save(vaultModel);
       await _secretsService.save(vaultSecretsModel, PasswordModel.defaultPassword());
 
       await minimalSavingTime;

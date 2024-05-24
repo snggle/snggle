@@ -2,27 +2,36 @@ import 'package:blockchain_utils/bip/address/encoders.dart';
 import 'package:snggle/infra/entities/wallet_entity.dart';
 import 'package:snggle/shared/models/wallets/wallet_creation_request_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:uuid/uuid.dart';
 
 class WalletModelFactory {
   Future<WalletModel> createNewWallet(WalletCreationRequestModel walletCreationRequestModel) async {
+    String uuid = const Uuid().v4();
+
     return WalletModel(
+      encryptedBool: false,
+      pinnedBool: false,
       index: walletCreationRequestModel.index,
-      uuid: const Uuid().v4(),
-      vaultUuid: walletCreationRequestModel.vaultUuid,
+      uuid: uuid,
       name: walletCreationRequestModel.name,
-      address: AtomAddrEncoder().encodeKey(walletCreationRequestModel.publicKey, <String, dynamic>{'hrp': 'kira'}),
+      network: walletCreationRequestModel.network,
+      address: AtomAddrEncoder().encodeKey(walletCreationRequestModel.publicKey, <String, dynamic>{'hrp': walletCreationRequestModel.network}),
+      filesystemPath: FilesystemPath(<String>[...walletCreationRequestModel.parentFilesystemPath.pathSegments, uuid]),
       derivationPath: walletCreationRequestModel.derivationPath,
     );
   }
 
   WalletModel createFromEntity(WalletEntity walletEntity) {
     return WalletModel(
+      pinnedBool: walletEntity.pinnedBool,
+      encryptedBool: walletEntity.encryptedBool,
       index: walletEntity.index,
       uuid: walletEntity.uuid,
-      vaultUuid: walletEntity.vaultUuid,
+      network: walletEntity.network,
       address: walletEntity.address,
       derivationPath: walletEntity.derivationPath,
+      filesystemPath: walletEntity.filesystemPath,
       name: walletEntity.name,
     );
   }

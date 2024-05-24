@@ -7,11 +7,7 @@ import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class SecretsService {
-  final SecretsRepository _secretsRepository;
-
-  SecretsService({
-    SecretsRepository? secretsRepository,
-  }) : _secretsRepository = secretsRepository ?? globalLocator<SecretsRepository>();
+  final SecretsRepository _secretsRepository = globalLocator<SecretsRepository>();
 
   Future<T> get<T extends ASecretsModel>(FilesystemPath filesystemPath, PasswordModel passwordModel) async {
     String encryptedSecrets = await _secretsRepository.getEncrypted(filesystemPath);

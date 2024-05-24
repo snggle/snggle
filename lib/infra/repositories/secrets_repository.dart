@@ -11,14 +11,14 @@ class SecretsRepository {
   }) : _filesystemStorageManager = filesystemStorageManager ?? EncryptedFilesystemStorageManager(databaseParentKey: DatabaseParentKey.secrets);
 
   Future<String> getEncrypted(FilesystemPath filesystemPath) async {
-    return _filesystemStorageManager.read(filesystemPath.fullPath);
+    return _filesystemStorageManager.read(filesystemPath);
   }
 
   Future<void> saveEncrypted(FilesystemPath filesystemPath, String encryptedSecrets) async {
-    await _filesystemStorageManager.write(filesystemPath.fullPath, encryptedSecrets);
+    await _filesystemStorageManager.write(filesystemPath, encryptedSecrets);
   }
 
   Future<void> delete(FilesystemPath filesystemPath) async {
-    await _filesystemStorageManager.delete(filesystemPath.fullPath);
+    await _filesystemStorageManager.delete(filesystemPath);
   }
 }
