@@ -7,8 +7,12 @@ class MnemonicModel extends Equatable {
 
   const MnemonicModel(this.mnemonicList);
 
-  factory MnemonicModel.generate() {
-    String mnemonicString = bip39.generateMnemonic(strength: 256);
+  factory MnemonicModel.generate([int? mnemonicSize]) {
+    String mnemonicString = bip39.generateMnemonic(
+      // TODO(dominik): Temporary solution to generate mnemonic up to 24 words. It should be improved after 'cryptography_utils' package implementation
+      strength: (mnemonicSize != null && mnemonicSize <= 24) ? (32 * (mnemonicSize / 3)).toInt() : 256,
+    );
+
     return MnemonicModel.fromString(mnemonicString);
   }
 

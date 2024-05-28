@@ -1,11 +1,17 @@
-import 'package:auto_route/annotations.dart';
+import 'dart:async';
+
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/vault_list_page/vault_list_page_cubit.dart';
+import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
+import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_item.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 
 @RoutePage()
 class VaultListPage extends StatefulWidget {
@@ -49,7 +55,7 @@ class _VaultListPageState extends State<VaultListPage> {
                 return Padding(
                   padding: const EdgeInsets.all(15),
                   child: InkWell(
-                    onTap: _createNewVault,
+                    onTap: _navigateToVaultCreateRecoverRoute,
                     child: Container(
                       padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
@@ -76,12 +82,29 @@ class _VaultListPageState extends State<VaultListPage> {
     );
   }
 
-  Future<void> _createNewVault() async {
-    try {
-      await vaultListPageCubit.createNewVault();
-    } catch (e) {
-      AppLogger().log(message: e.toString());
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to create a new vault')));
+  Future<void> _navigateToVaultCreateRecoverRoute() async {
+    VaultCreateRecoverStatus? vaultCreateRecoverStatus = await AutoRouter.of(context).push<VaultCreateRecoverStatus?>(
+      const VaultCreateRecoverRoute(children: <PageRouteInfo>[VaultInitRoute()]),
+    );
+    if (vaultCreateRecoverStatus != null) {
+      unawaited(vaultListPageCubit.refresh());
+      await showDialog(
+        context: context,
+        barrierColor: Colors.transparent,
+        builder: (BuildContext context) => CustomDialog(
+          title: 'Success',
+          content: switch (vaultCreateRecoverStatus) {
+            VaultCreateRecoverStatus.creationSuccessful => 'The vault creation process has been completed',
+            VaultCreateRecoverStatus.recoverySuccessful => 'The vault recovery process has been completed',
+          },
+          options: <CustomDialogOption>[
+            CustomDialogOption(
+              label: 'Done',
+              onPressed: () {},
+            ),
+          ],
+        ),
+      );
     }
   }
 

@@ -1,0 +1,4 @@
+enum VaultCreateRecoverStatus {
+  creationSuccessful,
+  recoverySuccessful,
+}

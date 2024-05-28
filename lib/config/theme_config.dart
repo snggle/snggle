@@ -15,6 +15,8 @@ class ThemeConfig {
 
     return _baseTheme.copyWith(
       appBarTheme: appBarTheme,
+      scaffoldBackgroundColor: AppColors.body2,
+      canvasColor: AppColors.body2,
       textButtonTheme: textButtonTheme,
     );
   }
