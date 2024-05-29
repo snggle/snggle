@@ -256,6 +256,86 @@ void main() {
     });
   });
 
+  group('Tests of SecretsRepository.move()', () {
+    test('Should [UPDATE secrets] if [secrets path EXISTS] in filesystem storage (1st depth)', () async {
+      // Act
+      await actualSecretsRepository.move(
+        FilesystemPath.fromString('694f21c1-c3d8-4f90-9d1c-97ec7b70ddf8'),
+        FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/694f21c1-c3d8-4f90-9d1c-97ec7b70ddf8'),
+      );
+
+      // Output is always a random string because AES changes the initialization vector with Random Secure
+      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
+      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
+        testSessionUUID,
+        actualMasterKeyVO,
+        actualAppPasswordModel,
+      );
+
+      // Assert
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'secrets': <String, dynamic>{
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedSecrets1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
+            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedSecrets2,
+            '694f21c1-c3d8-4f90-9d1c-97ec7b70ddf8.snggle': encryptedSecrets3,
+          },
+        }
+      };
+
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
+    });
+
+    test('Should [UPDATE secrets] if [secrets path EXISTS] in filesystem storage (2nd depth)', () async {
+      // Act
+      await actualSecretsRepository.move(
+        FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/9b282030-4c0f-482e-ba0d-524e10822f65'),
+        FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65'),
+      );
+
+      // Output is always a random string because AES changes the initialization vector with Random Secure
+      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
+      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
+        testSessionUUID,
+        actualMasterKeyVO,
+        actualAppPasswordModel,
+      );
+
+      // Assert
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'secrets': <String, dynamic>{
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedSecrets1,
+          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedSecrets2,
+          '694f21c1-c3d8-4f90-9d1c-97ec7b70ddf8.snggle': encryptedSecrets3,
+        },
+      };
+
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage (1st depth)', () async {
+      // Assert
+      expect(
+        () => actualSecretsRepository.move(
+          FilesystemPath.fromString('7ff2abaa-e943-4b9c-8745-fa7e874d7a6a'),
+          FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/7ff2abaa-e943-4b9c-8745-fa7e874d7a6a'),
+        ),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage (2nd depth)', () async {
+      // Assert
+      expect(
+        () => actualSecretsRepository.move(
+          FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/7ff2abaa-e943-4b9c-8745-fa7e874d7a6a'),
+          FilesystemPath.fromString('7ff2abaa-e943-4b9c-8745-fa7e874d7a6a'),
+        ),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
   group('Tests of SecretsRepository.delete()', () {
     test('Should [REMOVE secrets] if [secrets path EXISTS] in filesystem storage (1st depth)', () async {
       // Arrange

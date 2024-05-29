@@ -29,6 +29,62 @@ void main() {
     });
   });
 
+  group('Tests of FilesystemPath.replace()', () {
+    test('Should [return FilesystemPath] with replaced path segments', () {
+      // Arrange
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('directoryA/directoryB/directoryC');
+
+      // Act
+      FilesystemPath actualReplacedFilesystemPath = actualFilesystemPath.replace('directoryA/directoryB', 'directoryX/directoryY');
+
+      // Assert
+      FilesystemPath expectedReplacedFilesystemPath = FilesystemPath.fromString('directoryX/directoryY/directoryC');
+
+      expect(actualReplacedFilesystemPath, expectedReplacedFilesystemPath);
+    });
+  });
+
+  group('Tests of FilesystemPath.pop()', () {
+    test('Should [return FilesystemPath] with removed last path segment', () {
+      // Arrange
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('directoryA/directoryB/directoryC');
+
+      // Act
+      FilesystemPath actualNewFilesystemPath = actualFilesystemPath.pop();
+
+      // Assert
+      FilesystemPath expectedNewFilesystemPath = FilesystemPath.fromString('directoryA/directoryB');
+
+      expect(actualNewFilesystemPath, expectedNewFilesystemPath);
+    });
+
+    test('Should [return FilesystemPath] with empty path segments if path has only one element', () {
+      // Arrange
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('directoryA');
+
+      // Act
+      FilesystemPath actualNewFilesystemPath = actualFilesystemPath.pop();
+
+      // Assert
+      FilesystemPath expectedNewFilesystemPath = FilesystemPath.fromString('');
+
+      expect(actualNewFilesystemPath, expectedNewFilesystemPath);
+    });
+
+    test('Should [return FilesystemPath] with empty path segments if path is already empty', () {
+      // Arrange
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('');
+
+      // Act
+      FilesystemPath actualNewFilesystemPath = actualFilesystemPath.pop();
+
+      // Assert
+      FilesystemPath expectedNewFilesystemPath = FilesystemPath.fromString('');
+
+      expect(actualNewFilesystemPath, expectedNewFilesystemPath);
+    });
+  });
+
   group('Tests of FilesystemPath.isSubPathOf()', () {
     test('Should [return TRUE] if [FilesystemPath is DIRECT child] of other FilesystemPath (singleLevelBool == false)', () {
       // Arrange

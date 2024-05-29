@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:equatable/equatable.dart';
 
 class FilesystemPath extends Equatable {
@@ -12,13 +14,22 @@ class FilesystemPath extends Equatable {
     return FilesystemPath(pathSegments);
   }
 
+  FilesystemPath replace(String from, String to) {
+    String updatedPath = fullPath.replaceFirst(from, from.isNotEmpty ? to : '$to/');
+    return FilesystemPath.fromString(updatedPath);
+  }
+
+  FilesystemPath pop() {
+    return FilesystemPath(pathSegments.sublist(0, max(pathSegments.length - 1, 0)));
+  }
+
   bool isSubPathOf(FilesystemPath filesystemPath, {bool singleLevelBool = false}) {
     if (singleLevelBool) {
       // Check if the current path is a direct child of the given path
-      return filesystemPath.fullPath == parentPath;
+      return parentPath == filesystemPath.fullPath;
     } else {
       // Check if the current path is a any descendant of the given path
-      return fullPath.startsWith(filesystemPath.fullPath);
+      return parentPath.startsWith(filesystemPath.fullPath);
     }
   }
 

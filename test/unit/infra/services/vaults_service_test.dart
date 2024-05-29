@@ -331,6 +331,116 @@ void main() {
     });
   });
 
+  group('Tests of VaultsService.move()', () {
+    test('Should [MOVE vault] if [vault EXISTS] in collection', () async {
+      // Arrange
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledVaultsDatabase));
+
+      // Act
+      await globalLocator<VaultsService>().move(
+        VaultModel(
+          index: 1,
+          pinnedBool: true,
+          encryptedBool: true,
+          uuid: '92b43ace-5439-4269-8e27-e999907f4379',
+          filesystemPath: FilesystemPath.fromString('92b43ace-5439-4269-8e27-e999907f4379'),
+          name: 'Test Vault 1',
+          listItemsPreview: <AListItemModel>[],
+        ),
+        FilesystemPath.fromString('e527efe1-a05b-49f5-bfe9-d3532f5c9db9'),
+      );
+
+      // Act
+      String? actualEncryptedVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
+
+      // Output is always a random string because AES changes the initialization vector with Random Secure
+      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
+      String actualDecryptedVaultsKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedVaultsKeyValue!);
+      Map<String, dynamic> actualVaultsMap = jsonDecode(actualDecryptedVaultsKeyValue) as Map<String, dynamic>;
+
+      // Assert
+      Map<String, dynamic> expectedVaultsMap = <String, dynamic>{
+        '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{
+          'index': 1,
+          'pinned': true,
+          'encrypted': true,
+          'uuid': '92b43ace-5439-4269-8e27-e999907f4379',
+          'filesystem_path': 'e527efe1-a05b-49f5-bfe9-d3532f5c9db9/92b43ace-5439-4269-8e27-e999907f4379',
+          'name': 'Test Vault 1'
+        },
+        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
+          'index': 2,
+          'pinned': true,
+          'encrypted': true,
+          'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
+          'filesystem_path': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
+          'name': 'Test Vault 2'
+        },
+        '438791a4-b537-4589-af4f-f56b6449a0bb': <String, dynamic>{
+          'index': 3,
+          'pinned': true,
+          'encrypted': true,
+          'uuid': '438791a4-b537-4589-af4f-f56b6449a0bb',
+          'filesystem_path': 'e527efe1-a05b-49f5-bfe9-d3532f5c9db9/438791a4-b537-4589-af4f-f56b6449a0bb',
+          'name': 'Test Vault 3'
+        }
+      };
+
+      expect(actualVaultsMap, expectedVaultsMap);
+    });
+  });
+
+  group('Tests of VaultsService.moveByParentPath()', () {
+    test('Should [MOVE vaults] with provided parent path', () async {
+      // Arrange
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledVaultsDatabase));
+
+      // Act
+      await globalLocator<VaultsService>().moveByParentPath(
+        FilesystemPath.fromString('e527efe1-a05b-49f5-bfe9-d3532f5c9db9'),
+        FilesystemPath.fromString(''),
+      );
+
+      // Act
+      String? actualEncryptedVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
+
+      // Output is always a random string because AES changes the initialization vector with Random Secure
+      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
+      String actualDecryptedVaultsKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedVaultsKeyValue!);
+      Map<String, dynamic> actualVaultsMap = jsonDecode(actualDecryptedVaultsKeyValue) as Map<String, dynamic>;
+
+      // Assert
+      Map<String, dynamic> expectedVaultsMap = <String, dynamic>{
+        '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{
+          'index': 1,
+          'pinned': true,
+          'encrypted': true,
+          'uuid': '92b43ace-5439-4269-8e27-e999907f4379',
+          'filesystem_path': '92b43ace-5439-4269-8e27-e999907f4379',
+          'name': 'Test Vault 1'
+        },
+        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
+          'index': 2,
+          'pinned': true,
+          'encrypted': true,
+          'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
+          'filesystem_path': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
+          'name': 'Test Vault 2'
+        },
+        '438791a4-b537-4589-af4f-f56b6449a0bb': <String, dynamic>{
+          'index': 3,
+          'pinned': true,
+          'encrypted': true,
+          'uuid': '438791a4-b537-4589-af4f-f56b6449a0bb',
+          'filesystem_path': '438791a4-b537-4589-af4f-f56b6449a0bb',
+          'name': 'Test Vault 3'
+        }
+      };
+
+      expect(actualVaultsMap, expectedVaultsMap);
+    });
+  });
+
   group('Tests of VaultsService.save()', () {
     test('Should [UPDATE vault] if [vault UUID EXISTS] in collection', () async {
       // Arrange

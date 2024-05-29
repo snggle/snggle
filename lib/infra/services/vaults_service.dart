@@ -27,7 +27,7 @@ class VaultsService {
     return globalLocator<VaultModelFactory>().createFromEntity(vaultEntity);
   }
 
-  Future<List<VaultModel>> getAllByParentPath(FilesystemPath parentFilesystemPath, {bool firstLevelBool = false}) async {
+  Future<List<VaultModel>> getAllByParentPath(FilesystemPath parentFilesystemPath, {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
     List<VaultEntity> vaultEntityList = await _vaultsRepository.getAll();
 
     vaultEntityList = vaultEntityList.where((VaultEntity vaultEntity) {
@@ -36,10 +36,31 @@ class VaultsService {
 
     List<VaultModel> vaultModelList = <VaultModel>[];
     for (VaultEntity vaultEntity in vaultEntityList) {
-      vaultModelList.add(await globalLocator<VaultModelFactory>().createFromEntity(vaultEntity));
+      vaultModelList.add(await globalLocator<VaultModelFactory>().createFromEntity(vaultEntity, previewEmptyBool: previewEmptyBool));
     }
 
-    return vaultModelList..sort((VaultModel a, VaultModel b) => a.compareTo(b));
+    return vaultModelList;
+  }
+
+  Future<VaultModel> move(VaultModel vaultModel, FilesystemPath newParentFilesystemPath) async {
+    FilesystemPath previousFilesystemPath = vaultModel.filesystemPath;
+    FilesystemPath updatedFilesystemPath = vaultModel.filesystemPath.replace(previousFilesystemPath.parentPath, newParentFilesystemPath.fullPath);
+
+    VaultModel movedVaultModel = vaultModel.copyWith(filesystemPath: updatedFilesystemPath);
+    await save(movedVaultModel);
+    await _secretsService.move(previousFilesystemPath, movedVaultModel.filesystemPath);
+    return movedVaultModel;
+  }
+
+  Future<void> moveByParentPath(FilesystemPath previousFilesystemPath, FilesystemPath newFilesystemPath) async {
+    List<VaultModel> vaultModelsToMove = await getAllByParentPath(previousFilesystemPath, firstLevelBool: false);
+    for (VaultModel vaultModel in vaultModelsToMove) {
+      FilesystemPath updatedFilesystemPath = vaultModel.filesystemPath.replace(previousFilesystemPath.fullPath, newFilesystemPath.fullPath);
+      VaultModel updatedVaultModel = vaultModel.copyWith(filesystemPath: updatedFilesystemPath);
+
+      await save(updatedVaultModel);
+      await _secretsService.move(vaultModel.filesystemPath, updatedFilesystemPath);
+    }
   }
 
   Future<void> save(VaultModel vaultModel) async {

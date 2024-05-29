@@ -143,8 +143,10 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedWalletsKeyValue =
-          actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedWalletsKeyValue!);
+      String actualDecryptedWalletsKeyValue = actualMasterKeyVO.decrypt(
+        appPasswordModel: actualAppPasswordModel,
+        encryptedData: actualEncryptedWalletsKeyValue!,
+      );
       Map<String, dynamic> actualWalletsMap = jsonDecode(actualDecryptedWalletsKeyValue) as Map<String, dynamic>;
 
       // Assert
@@ -345,6 +347,159 @@ void main() {
       List<WalletModel> expectedWalletModelList = <WalletModel>[];
 
       expect(actualWalletModelList, expectedWalletModelList);
+    });
+  });
+
+  group('Tests of WalletsService.move()', () {
+    test('Should [MOVE wallet] if [wallet EXISTS] in collection', () async {
+      // Arrange
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
+
+      // Act
+      await globalLocator<WalletsService>().move(
+        WalletModel(
+          encryptedBool: true,
+          pinnedBool: true,
+          index: 0,
+          address: 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
+          derivationPath: "m/44'/118'/0'/0/0",
+          network: 'kira',
+          uuid: '4e66ba36-966e-49ed-b639-191388ce38de',
+          filesystemPath: FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6/4e66ba36-966e-49ed-b639-191388ce38de'),
+          name: 'WALLET 0',
+        ),
+        FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6/e527efe1-a05b-49f5-bfe9-d3532f5c9db9'),
+      );
+
+      // Act
+      String? actualEncryptedWalletsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
+
+      // Output is always a random string because AES changes the initialization vector with Random Secure
+      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
+      String actualDecryptedWalletsKeyValue = actualMasterKeyVO.decrypt(
+        appPasswordModel: actualAppPasswordModel,
+        encryptedData: actualEncryptedWalletsKeyValue!,
+      );
+      Map<String, dynamic> actualWalletsMap = jsonDecode(actualDecryptedWalletsKeyValue) as Map<String, dynamic>;
+
+      // Assert
+      Map<String, dynamic> expectedWalletsMap = <String, dynamic>{
+        '4e66ba36-966e-49ed-b639-191388ce38de': <String, dynamic>{
+          'encrypted': true,
+          'pinned': true,
+          'index': 0,
+          'address': 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
+          'derivation_path': "m/44'/118'/0'/0/0",
+          'network': 'kira',
+          'uuid': '4e66ba36-966e-49ed-b639-191388ce38de',
+          'filesystem_path': '04b5440e-e398-4520-9f9b-f0eea2d816e6/e527efe1-a05b-49f5-bfe9-d3532f5c9db9/4e66ba36-966e-49ed-b639-191388ce38de',
+          'name': 'WALLET 0'
+        },
+        '3e7f3547-d78f-4dda-a916-3e9eabd4bfee': <String, dynamic>{
+          'pinned': true,
+          'encrypted': false,
+          'index': 1,
+          'address': 'kira1skj2f63ztaxk2q43pm2tg7t09r0whf5cadszdn',
+          'derivation_path': "m/44'/118'/0'/0/1",
+          'network': 'kira',
+          'uuid': '3e7f3547-d78f-4dda-a916-3e9eabd4bfee',
+          'filesystem_path': '04b5440e-e398-4520-9f9b-f0eea2d816e6/3e7f3547-d78f-4dda-a916-3e9eabd4bfee'
+        },
+        '4d02947e-c838-4a77-bef3-0ffbdb1c7525': <String, dynamic>{
+          'pinned': false,
+          'encrypted': true,
+          'index': 0,
+          'address': 'kira15808n8vfcf3m88r5jxnq47gjel5lvmxadmsqt5',
+          'derivation_path': "m/44'/118'/0'/0/0",
+          'network': 'kira',
+          'uuid': '4d02947e-c838-4a77-bef3-0ffbdb1c7525',
+          'filesystem_path': '5f5332fb-37c1-4352-9153-d43692615f0f/4d02947e-c838-4a77-bef3-0ffbdb1c7525'
+        },
+        'ef63ccfc-c3da-4212-9dc1-693a9e75e90b': <String, dynamic>{
+          'pinned': false,
+          'encrypted': false,
+          'index': 1,
+          'address': 'kira1t7lspdwnhjwx23e2r3l04wn6uuhyt60ljkqdgl',
+          'derivation_path': "m/44'/118'/0'/0/1",
+          'network': 'kira',
+          'uuid': 'ef63ccfc-c3da-4212-9dc1-693a9e75e90b',
+          'filesystem_path': '5f5332fb-37c1-4352-9153-d43692615f0f/ef63ccfc-c3da-4212-9dc1-693a9e75e90b'
+        }
+      };
+
+      expect(actualWalletsMap, expectedWalletsMap);
+    });
+  });
+
+  group('Tests of WalletsService.moveByParentPath()', () {
+    test('Should [MOVE wallets] with provided parent path', () async {
+      // Arrange
+      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
+
+      // Act
+      await globalLocator<WalletsService>().moveByParentPath(
+        FilesystemPath.fromString('04b5440e-e398-4520-9f9b-f0eea2d816e6'),
+        FilesystemPath.fromString('5f5332fb-37c1-4352-9153-d43692615f0f'),
+      );
+
+      // Act
+      String? actualEncryptedWalletsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
+
+      // Output is always a random string because AES changes the initialization vector with Random Secure
+      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
+      String actualDecryptedWalletsKeyValue = actualMasterKeyVO.decrypt(
+        appPasswordModel: actualAppPasswordModel,
+        encryptedData: actualEncryptedWalletsKeyValue!,
+      );
+      Map<String, dynamic> actualWalletsMap = jsonDecode(actualDecryptedWalletsKeyValue) as Map<String, dynamic>;
+
+      // Assert
+      Map<String, dynamic> expectedWalletsMap = <String, dynamic>{
+        '4e66ba36-966e-49ed-b639-191388ce38de': <String, dynamic>{
+          'encrypted': true,
+          'pinned': true,
+          'index': 0,
+          'address': 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
+          'derivation_path': "m/44'/118'/0'/0/0",
+          'network': 'kira',
+          'uuid': '4e66ba36-966e-49ed-b639-191388ce38de',
+          'filesystem_path': '5f5332fb-37c1-4352-9153-d43692615f0f/4e66ba36-966e-49ed-b639-191388ce38de',
+          'name': 'WALLET 0'
+        },
+        '3e7f3547-d78f-4dda-a916-3e9eabd4bfee': <String, dynamic>{
+          'encrypted': false,
+          'pinned': true,
+          'index': 1,
+          'address': 'kira1skj2f63ztaxk2q43pm2tg7t09r0whf5cadszdn',
+          'derivation_path': "m/44'/118'/0'/0/1",
+          'network': 'kira',
+          'uuid': '3e7f3547-d78f-4dda-a916-3e9eabd4bfee',
+          'filesystem_path': '5f5332fb-37c1-4352-9153-d43692615f0f/3e7f3547-d78f-4dda-a916-3e9eabd4bfee',
+          'name': 'WALLET 1'
+        },
+        '4d02947e-c838-4a77-bef3-0ffbdb1c7525': <String, dynamic>{
+          'pinned': false,
+          'encrypted': true,
+          'index': 0,
+          'address': 'kira15808n8vfcf3m88r5jxnq47gjel5lvmxadmsqt5',
+          'derivation_path': "m/44'/118'/0'/0/0",
+          'network': 'kira',
+          'uuid': '4d02947e-c838-4a77-bef3-0ffbdb1c7525',
+          'filesystem_path': '5f5332fb-37c1-4352-9153-d43692615f0f/4d02947e-c838-4a77-bef3-0ffbdb1c7525'
+        },
+        'ef63ccfc-c3da-4212-9dc1-693a9e75e90b': <String, dynamic>{
+          'pinned': false,
+          'encrypted': false,
+          'index': 1,
+          'address': 'kira1t7lspdwnhjwx23e2r3l04wn6uuhyt60ljkqdgl',
+          'derivation_path': "m/44'/118'/0'/0/1",
+          'network': 'kira',
+          'uuid': 'ef63ccfc-c3da-4212-9dc1-693a9e75e90b',
+          'filesystem_path': '5f5332fb-37c1-4352-9153-d43692615f0f/ef63ccfc-c3da-4212-9dc1-693a9e75e90b'
+        }
+      };
+
+      expect(actualWalletsMap, expectedWalletsMap);
     });
   });
 

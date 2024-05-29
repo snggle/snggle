@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:snggle/shared/models/groups/group_model.dart';
+import 'package:snggle/shared/models/groups/group_type.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 abstract class AListItemModel with EquatableMixin {
@@ -29,10 +31,17 @@ abstract class AListItemModel with EquatableMixin {
   String? get name => _name;
 
   int compareTo(AListItemModel other) {
-    if (pinnedBool != other.pinnedBool) {
-      return pinnedBool ? -1 : 1;
-    } else {
+    bool currentIsGroupBool = this is GroupModel && (this as GroupModel).groupType == GroupType.group;
+
+    bool typesEqualBool = runtimeType == other.runtimeType;
+    bool pinnedEqualBool = pinnedBool == other.pinnedBool;
+
+    if (typesEqualBool && pinnedEqualBool) {
       return name?.compareTo(other.name ?? '') ?? 0;
+    } else if (pinnedEqualBool) {
+      return currentIsGroupBool ? -1 : 1;
+    } else {
+      return pinnedBool ? -1 : 1;
     }
   }
 

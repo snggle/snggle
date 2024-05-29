@@ -37,7 +37,28 @@ class WalletsService {
     }).toList();
 
     List<WalletModel> walletModelList = walletEntityList.map(globalLocator<WalletModelFactory>().createFromEntity).toList();
-    return walletModelList..sort((WalletModel a, WalletModel b) => a.compareTo(b));
+    return walletModelList;
+  }
+
+  Future<WalletModel> move(WalletModel walletModel, FilesystemPath newParentFilesystemPath) async {
+    FilesystemPath previousFilesystemPath = walletModel.filesystemPath;
+    FilesystemPath updatedFilesystemPath = walletModel.filesystemPath.replace(previousFilesystemPath.parentPath, newParentFilesystemPath.fullPath);
+
+    WalletModel movedWalletModel = walletModel.copyWith(filesystemPath: updatedFilesystemPath);
+    await save(movedWalletModel);
+    await _secretsService.move(previousFilesystemPath, movedWalletModel.filesystemPath);
+    return movedWalletModel;
+  }
+
+  Future<void> moveByParentPath(FilesystemPath previousFilesystemPath, FilesystemPath newFilesystemPath) async {
+    List<WalletModel> walletModelsToMove = await getAllByParentPath(previousFilesystemPath, firstLevelBool: false);
+    for (WalletModel walletModel in walletModelsToMove) {
+      FilesystemPath updatedFilesystemPath = walletModel.filesystemPath.replace(previousFilesystemPath.fullPath, newFilesystemPath.fullPath);
+      WalletModel updatedWalletModel = walletModel.copyWith(filesystemPath: updatedFilesystemPath);
+
+      await save(updatedWalletModel);
+      await _secretsService.move(walletModel.filesystemPath, updatedFilesystemPath);
+    }
   }
 
   Future<void> save(WalletModel walletModel) async {
