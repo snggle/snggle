@@ -5,8 +5,12 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
+import 'package:snggle/shared/models/groups/group_secrets_model.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
+import 'package:snggle/shared/models/network_config_model.dart';
+import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
+import 'package:uuid/uuid.dart';
 
 class NetworkListPageCubit extends AListCubit<NetworkGroupModel> {
   final WalletsService _walletsService = globalLocator<WalletsService>();
@@ -67,5 +71,25 @@ class NetworkListPageCubit extends AListCubit<NetworkGroupModel> {
   @override
   Future<void> saveGroup(GroupModel group) async {
     await groupsService.save(group);
+  }
+
+  // TODO(dominik): Temporary solution to create new network group. After implementing "network-groups-templates" this method should be removed.
+  Future<void> createNewNetworkGroup(NetworkConfigModel networkConfigModel) async {
+    String uuid = const Uuid().v4();
+
+    NetworkGroupModel networkGroupModel = NetworkGroupModel(
+      pinnedBool: false,
+      encryptedBool: false,
+      uuid: uuid,
+      listItemsPreview: <AListItemModel>[],
+      filesystemPath: FilesystemPath(<String>[...state.filesystemPath.pathSegments, uuid]),
+      networkConfigModel: networkConfigModel,
+    );
+    GroupSecretsModel groupSecretsModel = GroupSecretsModel.generate(networkGroupModel.filesystemPath);
+
+    await groupsService.save(networkGroupModel);
+    await secretsService.save(groupSecretsModel, PasswordModel.defaultPassword());
+
+    await refreshAll();
   }
 }
