@@ -7,17 +7,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_state.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
+import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/groups/group_secrets_model.dart';
+import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
+import 'package:snggle/shared/models/network_config_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
+import 'package:uuid/uuid.dart';
 
 class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
   final VaultModelFactory _vaultModelFactory = globalLocator<VaultModelFactory>();
+  final GroupsService _groupsService = globalLocator<GroupsService>();
   final VaultsService _vaultsService = globalLocator<VaultsService>();
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
@@ -71,20 +78,45 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
     if (mnemonicValidBool) {
       emit(const VaultRecoverPageState.loading());
-      String vaultName = vaultNameTextEditingController.text;
-      VaultModel vaultModel = await _vaultModelFactory.createNewVault(parentFilesystemPath, vaultName);
-      VaultSecretsModel vaultSecretsModel = VaultSecretsModel(
-        filesystemPath: vaultModel.filesystemPath,
-        mnemonicModel: MnemonicModel.fromString(mnemonic.toStr()),
-      );
-      await _vaultsService.save(vaultModel);
-      await _secretsService.save(vaultSecretsModel, PasswordModel.defaultPassword());
 
+      await _createVault(mnemonicWords);
       await minimalSavingTime;
       creationSuccessfulCallback?.call();
     } else {
       emit(state.copyWith(mnemonicFilledBool: false));
     }
+  }
+
+  Future<void> _createVault(List<String> mnemonicWords) async {
+    // TODO(dominik): Temporary solution to build and validate mnemonic. It should be improved after 'cryptography_utils' package implementation
+    Mnemonic mnemonic = Mnemonic(mnemonicWords);
+
+    String vaultName = vaultNameTextEditingController.text;
+    VaultModel vaultModel = await _vaultModelFactory.createNewVault(parentFilesystemPath, vaultName);
+    VaultSecretsModel vaultSecretsModel = VaultSecretsModel(filesystemPath: vaultModel.filesystemPath, mnemonicModel: MnemonicModel(mnemonic.toList()));
+
+    await _vaultsService.save(vaultModel);
+    await _secretsService.save(vaultSecretsModel, PasswordModel.defaultPassword());
+
+    await _createNewNetworkGroup(vaultModel.filesystemPath);
+  }
+
+  // TODO(dominik): Temporary solution to create Network Group Model. After implementing Network Templates this method should be removed.
+  Future<void> _createNewNetworkGroup(FilesystemPath filesystemPath) async {
+    String uuid = const Uuid().v4();
+
+    NetworkGroupModel networkGroupModel = NetworkGroupModel(
+      pinnedBool: false,
+      encryptedBool: false,
+      uuid: uuid,
+      listItemsPreview: <AListItemModel>[],
+      filesystemPath: FilesystemPath(<String>[...filesystemPath.pathSegments, uuid]),
+      networkConfigModel: NetworkConfigModel.ethereum,
+    );
+    GroupSecretsModel groupSecretsModel = GroupSecretsModel.generate(networkGroupModel.filesystemPath);
+
+    await _groupsService.save(networkGroupModel);
+    await _secretsService.save(groupSecretsModel, PasswordModel.defaultPassword());
   }
 
   void _disposeControllers() {

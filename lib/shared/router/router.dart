@@ -38,6 +38,7 @@ class AppRouter extends $AppRouter {
             page: VaultsSectionWrapperRoute.page,
             children: <AutoRoute>[
               AutoRoute(page: VaultListRoute.page, initial: true),
+              AutoRoute(page: NetworkListRoute.page),
               AutoRoute(page: WalletListRoute.page),
               AutoRoute(page: WalletDetailsRoute.page),
             ],

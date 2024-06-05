@@ -19,6 +19,7 @@ class ListItemActionsWrapper<T extends AListItemModel, C extends AListCubit<T>> 
   final ValueChanged<AListItemModel> onNavigate;
   final Widget child;
   final DraggedItemNotifier draggedItemNotifier;
+  final bool allowItemDeletionBool;
   final EdgeInsets selectionPadding;
 
   const ListItemActionsWrapper({
@@ -29,6 +30,7 @@ class ListItemActionsWrapper<T extends AListItemModel, C extends AListCubit<T>> 
     required this.onNavigate,
     required this.child,
     required this.draggedItemNotifier,
+    this.allowItemDeletionBool = true,
     this.selectionPadding = EdgeInsets.zero,
     super.key,
   });
@@ -77,6 +79,7 @@ class _ListItemActionsWrapperState<T extends AListItemModel, C extends AListCubi
       child: ContextTooltipWrapper(
         controller: actionsPopupController,
         content: ListItemContextTooltip<T>(
+          allowItemDeletionBool: widget.allowItemDeletionBool,
           listItemModel: listItemModel,
           listCubit: widget.listCubit,
           pageTooltip: ListItemPageTooltip<T, C>(listCubit: widget.listCubit),
