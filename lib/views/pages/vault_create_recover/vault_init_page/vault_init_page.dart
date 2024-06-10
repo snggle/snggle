@@ -33,6 +33,12 @@ class VaultInitPage extends StatelessWidget {
             gifPath: 'assets/gifs/vault_create.gif',
             onPressed: () => AutoRouter.of(context).push(const VaultCreateRoute()),
           ),
+          const Spacer(flex: 30),
+          GifButton(
+            label: 'RECOVER',
+            gifPath: 'assets/gifs/vault_recover.gif',
+            onPressed: () => AutoRouter.of(context).push(const VaultRecoverRoute()),
+          ),
           const Spacer(flex: 200),
         ],
       ),

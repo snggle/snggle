@@ -20,24 +20,23 @@ class PaginatedForm extends StatefulWidget {
 }
 
 class _PaginatedFormState extends State<PaginatedForm> {
-  late int currentPageIndex = widget.pageController.initialPage;
-  bool customPopAvailableBool = true;
+  late ValueNotifier<int> currentPageIndexNotifier = ValueNotifier<int>(widget.pageController.initialPage);
+
+  @override
+  void dispose() {
+    currentPageIndexNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: currentPageIndex == 0,
-      onPopInvoked: (bool didPop) {
-        if (customPopAvailableBool && didPop == false) {
-          FocusManager.instance.primaryFocus?.unfocus();
-          widget.pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
-        }
-      },
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 24,
-            child: Text(
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 24,
+          child: ValueListenableBuilder<int>(
+            valueListenable: currentPageIndexNotifier,
+            builder: (BuildContext context, int currentPageIndex, _) => Text(
               '${currentPageIndex + 1}/${widget.pages.length}',
               style: TextStyle(
                 fontSize: 14,
@@ -45,25 +44,17 @@ class _PaginatedFormState extends State<PaginatedForm> {
               ),
             ),
           ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: widget.pageController,
-              children: widget.pages,
-              onPageChanged: (int index) => setState(() => currentPageIndex = index),
-            ),
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: widget.pageController,
+            children: widget.pages,
+            onPageChanged: (int index) => currentPageIndexNotifier.value = currentPageIndexNotifier.value = index,
           ),
-        ],
-      ),
+        ),
+      ],
     );
-  }
-
-  void disablePop() {
-    customPopAvailableBool = false;
-  }
-
-  void enablePop() {
-    customPopAvailableBool = true;
   }
 }

@@ -43,8 +43,9 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
         }
         return CustomScaffold(
           title: 'Vault creation',
-          popAvailableBool: true,
+          popAvailableBool: false,
           popButtonVisible: true,
+          customPopCallback: _handleCustomPop,
           actions: <Widget>[
             IconButton(
               onPressed: () => AutoRouter.of(context).root.pop(),
@@ -73,6 +74,15 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
         );
       },
     );
+  }
+
+  void _handleCustomPop() {
+    FocusScope.of(context).unfocus();
+    if (pageController.page != 0) {
+      pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
+    } else {
+      AutoRouter.of(context).popForced();
+    }
   }
 
   Future<void> _handleMnemonicSizeSelected(int mnemonicSize) async {

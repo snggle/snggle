@@ -7,9 +7,11 @@ class CustomScaffold extends StatelessWidget {
   final bool closeButtonVisible;
   final bool popAvailableBool;
   final bool popButtonVisible;
+  final bool resizeToAvoidBottomInsetBool;
   final List<Widget>? actions;
   final BoxDecoration? boxDecoration;
   final VoidCallback? customPopCallback;
+  final VoidCallback? customSystemPopCallback;
   final EdgeInsets? padding;
 
   const CustomScaffold({
@@ -18,9 +20,11 @@ class CustomScaffold extends StatelessWidget {
     this.closeButtonVisible = false,
     this.popAvailableBool = true,
     this.popButtonVisible = true,
+    this.resizeToAvoidBottomInsetBool = false,
     this.actions,
     this.boxDecoration,
     this.customPopCallback,
+    this.customSystemPopCallback,
     this.padding,
     super.key,
   });
@@ -29,12 +33,12 @@ class CustomScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: popAvailableBool,
-      onPopInvoked: (_) => customPopCallback?.call(),
+      onPopInvoked: (_) => customSystemPopCallback != null ? customSystemPopCallback?.call() : customPopCallback?.call(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInsetBool,
         body: SafeArea(
           child: GestureDetector(
-            onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+            onTap: () => FocusScope.of(context).unfocus(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
