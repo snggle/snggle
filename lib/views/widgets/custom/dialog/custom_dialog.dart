@@ -8,11 +8,15 @@ class CustomDialog extends StatelessWidget {
   final String title;
   final Widget content;
   final List<CustomDialogOption> options;
+  final Color? backgroundColor;
+  final PopInvokedCallback? onPopInvoked;
 
   const CustomDialog({
     required this.title,
     required this.content,
     required this.options,
+    this.backgroundColor,
+    this.onPopInvoked,
     super.key,
   });
 
@@ -54,43 +58,47 @@ class CustomDialog extends StatelessWidget {
       ),
     );
 
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      child: Dialog(
-        shadowColor: Colors.transparent,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 300),
-          child: Stack(
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(22),
-                      border: Border.all(color: AppColors.middleGrey),
-                    ),
-                    padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          title.toUpperCase(),
-                          style: textTheme.bodyMedium!.copyWith(color: AppColors.body3),
-                        ),
-                        const SizedBox(height: 6),
-                        content,
-                        const SizedBox(height: 16),
-                        optionButtonsSection
-                      ],
+    return PopScope(
+      onPopInvoked: onPopInvoked,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Dialog(
+          shadowColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 300),
+            child: Stack(
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(22),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: backgroundColor,
+                        borderRadius: BorderRadius.circular(22),
+                        border: Border.all(color: AppColors.middleGrey),
+                      ),
+                      padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            title.toUpperCase(),
+                            style: textTheme.bodyMedium!.copyWith(color: AppColors.body3),
+                          ),
+                          const SizedBox(height: 6),
+                          content,
+                          const SizedBox(height: 16),
+                          optionButtonsSection
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

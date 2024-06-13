@@ -1,21 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_item.dart';
-import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_item_model.dart';
+import 'package:snggle/config/app_colors.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   static const double height = 80;
-  final int selectedIndex;
-  final List<CustomBottomNavigationBarItemModel> bottomNavigationBarItems;
-  final ValueChanged<int> onChanged;
-  final Widget? tooltip;
+
+  final List<Widget> bottomNavigationBarItems;
 
   const CustomBottomNavigationBar({
-    required this.selectedIndex,
     required this.bottomNavigationBarItems,
-    required this.onChanged,
-    this.tooltip,
     super.key,
   });
 
@@ -27,17 +21,16 @@ class CustomBottomNavigationBar extends StatelessWidget {
       child: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
-          child: tooltip ??
-              Row(
-                children: <Widget>[
-                  for (int i = 0; i < bottomNavigationBarItems.length; i++)
-                    CustomBottomNavigationBarItem(
-                      selectedBool: i == selectedIndex,
-                      customBottomNavigationBarItemModel: bottomNavigationBarItems[i],
-                      onTap: () => onChanged(i),
-                    ),
-                ],
-              ),
+          child: Container(
+            color: AppColors.body2.withOpacity(0.3),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: bottomNavigationBarItems.map((Widget item) {
+                return Expanded(child: Center(child: item));
+              }).toList(),
+            ),
+          ),
         ),
       ),
     );

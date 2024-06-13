@@ -19,6 +19,7 @@ import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/transaction_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
+import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/factories/group_model_factory.dart';
 import 'package:snggle/shared/factories/network_group_model_factory.dart';
@@ -36,6 +37,7 @@ void initLocator() {
   _initFactories();
 
   globalLocator
+    ..registerLazySingleton<ActiveWalletController>(ActiveWalletController.new)
     ..registerSingleton<RootDirectoryBuilder>(getApplicationSupportDirectory)
     ..registerSingleton<IsarDatabaseManager>(IsarDatabaseManager());
 }

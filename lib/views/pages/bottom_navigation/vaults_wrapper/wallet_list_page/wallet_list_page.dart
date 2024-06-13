@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_page_cubit.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -137,13 +139,18 @@ class _WalletListPageState extends State<WalletListPage> {
   }
 
   Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
+    ActiveWalletController activeWalletController = globalLocator<ActiveWalletController>();
+
     if (listItemModel is WalletModel) {
+      activeWalletController.setActiveWallet(walletModel: listItemModel, walletPasswordModel: passwordModel);
       await AutoRouter.of(context).push<void>(WalletDetailsRoute(walletModel: listItemModel));
-      await walletListPageCubit.refreshAll();
+
+      activeWalletController.clearActiveWallet();
+      if (mounted) {
+        await walletListPageCubit.refreshAll();
+      }
     } else if (listItemModel is GroupModel) {
-      await walletListPageCubit.navigateNext(
-        filesystemPath: listItemModel.filesystemPath,
-      );
+      await walletListPageCubit.navigateNext(filesystemPath: listItemModel.filesystemPath);
     }
   }
 }

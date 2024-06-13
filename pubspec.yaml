@@ -1,7 +1,7 @@
 name: snggle
 description: Private keys manager
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.30
+version: 0.0.31
 
 environment:
   sdk: "3.2.6"
@@ -99,6 +99,22 @@ dependencies:
   # Isar Core binaries for the Isar Database. Needs to be included for Flutter apps.
   # https://pub.dev/packages/isar_flutter_libs
   isar_flutter_libs: 3.1.0+1
+
+  # QR code scanner that can be embedded inside flutter. It uses zxing in Android and MTBBarcode scanner in iOS.
+  # https://pub.dev/packages/qr_code_scanner
+  qr_code_scanner: 1.0.1
+
+  # QR.Flutter is a Flutter library for simple and fast QR code rendering via a Widget or custom painter.
+  # https://pub.dev/packages/qr_flutter
+  qr_flutter: 4.1.0
+
+  # The decimal package allows you to deal with decimal numbers without losing precision.
+  # https://pub.dev/packages/decimal
+  decimal: 2.3.3
+
+  # A set of useful sliver tools that are missing from the flutter framework
+  # https://pub.dev/packages/sliver_tools
+  sliver_tools: 0.2.12
 
   # Dart package containing utility methods for data encoding and decoding.
   codec_utils:

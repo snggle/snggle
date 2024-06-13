@@ -8,20 +8,26 @@ class CustomAppBar extends StatelessWidget {
   final String title;
   final bool closeButtonVisible;
   final bool popButtonVisible;
+  final String? subtitle;
   final List<Widget>? actions;
   final VoidCallback? customPopCallback;
+  final Color? foregroundColor;
 
   const CustomAppBar({
     required this.title,
     this.closeButtonVisible = false,
     this.popButtonVisible = false,
+    this.subtitle,
     this.actions,
     this.customPopCallback,
+    this.foregroundColor,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+
     Widget? leadingWidget;
 
     bool popAvailableBool = ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
@@ -31,8 +37,8 @@ class CustomAppBar extends StatelessWidget {
         child: IconButton(
           onPressed: () => customPopCallback != null ? customPopCallback!() : AutoRouter.of(context).pop(),
           icon: closeButtonVisible
-              ? AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1)
-              : AssetIcon(AppIcons.app_bar_back, size: 24, color: AppColors.body1),
+              ? AssetIcon(AppIcons.app_bar_close, size: 20, color: foregroundColor ?? AppColors.body1)
+              : AssetIcon(AppIcons.app_bar_back, size: 24, color: foregroundColor ?? AppColors.body1),
         ),
       );
     }
@@ -54,7 +60,7 @@ class CustomAppBar extends StatelessWidget {
                   fontSize: 20,
                   letterSpacing: 1.2,
                   height: 1.25,
-                  color: AppColors.body1,
+                  color: foregroundColor ?? AppColors.body1,
                 ),
               ),
             ),
@@ -70,6 +76,12 @@ class CustomAppBar extends StatelessWidget {
             ),
           ],
         ),
+        if (subtitle != null) ...<Widget>[
+          Text(
+            subtitle!,
+            style: textTheme.labelMedium?.copyWith(color: foregroundColor ?? AppColors.body3),
+          ),
+        ],
       ],
     );
 

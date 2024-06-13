@@ -5,6 +5,7 @@ enum DatabaseMock {
   fullDatabaseMockWithPasswords,
   masterKeyOnlyDatabaseMock,
   transactionsDatabaseMock,
+  transactionsDatabaseMockWithPassword,
 
   // Test only database mocks for classes with generic usage
   testSecretsMock,
