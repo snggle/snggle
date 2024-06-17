@@ -9,25 +9,21 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/managers/database_parent_key.dart';
 import 'package:snggle/infra/managers/filesystem_storage/encrypted_filesystem_storage_manager.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
-import 'package:snggle/infra/repositories/vaults_repository.dart';
-import 'package:snggle/infra/services/secrets_service.dart';
-import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
-import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/password_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../../utils/test_utils.dart';
 
+// ignore_for_file: invalid_assignment
 void main() {
-  initLocator();
+  String testSessionUUID = const Uuid().v4();
+
   FlutterSecureStorage actualFlutterSecureStorage = const FlutterSecureStorage();
-
   DatabaseParentKey actualDatabaseParentKey = DatabaseParentKey.vaults;
-
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
-  globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
 
   // @formatter:off
   MasterKeyVO actualMasterKeyVO = const MasterKeyVO(encryptedMasterKey: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');
@@ -41,35 +37,30 @@ void main() {
 
   Map<String, String> filledVaultsDatabase = <String, String>{
     DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    actualDatabaseParentKey.name:'L27Zi2cdyeFRM8YkfmUrOjQfp4VXBZ0hQyY+UolOfqxRKgAoEMLa739ozOibvsFVo8gfOhraL3bv4Qcv9ZWnmONA2myFVvkKsTwG7pkacbcN3epQ9lgQgrbsXmqKx4PI+pWpK3pTdHWVLIJx+rQ68/0lxQ5jGbLe2OcM7CUYxkTjmmb2/JTwzVLV49AlY+fb0o/+X5VVtUdMdsH/+6IxOwwsKuiqQHNdlTZGnVKPyca4UF7dWDP2kLbaVBdAC1basI3v/wDJZlr2TDunPHZNTeUhvNtLIKKT0UGpmqG6wzmswKSnIoLVrg9RKOuy02bkFFQNaBDF5ei4GCqD8aprgjqYKvmNf+xzwtYju0dTvi+NKu1OjCbG8c1xc/YTAQwfQsaXEg==',
+    DatabaseParentKey.vaults.name:'s79EVY1UBK/W+AdjyvBuwCFBUQeNS9aXF9WH5uVxShl5UITBBtOCbG/D80f6Gohw9VhtPPeZQrP6d99zUSYZKF1/sv/eVxLBKIKcY333282bgauXJMjrTMjoSpPBTR4xSlc7hMCqXCViJlggvSjZ8H06DL/NCgljzKf+31mg4cIYUPM5nMw8b2CmLRGsTBYsBg9cgzwpcVU8tyPW11RaxD2Z5x5nvSDZRPfST8qnOlhaHazndVATf092PZ6xJXws9Vq6bYOtju6L//dJZH0bCYCGwgzdjUMNdA0TdTT39AMvJZ/q2VoMS40vEIQ3RALRJtFEUa3UAd0uVuofsMuu7pE77uOaYiC2y/O3SY5XUWRuWWDBdbC5qqruEg3KPNKMYGGO4/Unr1jkzWTI8X86UxPEHbGk7Ki+D7/F0ISpClTUMvvoiZBOWV+M3cK2tV60H4IxsrHcl25wbyNNN5H7ee5Mr+eDKcgoQlivq1+F1gsj7SRUmb26kKIi6/v5oSqjYaCBuq1Bjan+ZJpyWDD9ba5rzE9hqjTx/Jv83fIf7QEsZXtYynZj8VbetpCYR77iOyIAYpc1wP2FDH1DqXb62sDLPLY=',
   };
   // @formatter:on
 
-  late String testSessionUUID;
   late VaultCreatePageCubit actualVaultCreatePageCubit;
 
   setUpAll(() {
-    testSessionUUID = const Uuid().v4();
+    globalLocator.allowReassignment = true;
+    initLocator();
+
     TestUtils.setupTmpFilesystemStructureFromJson(actualFilesystemStructure, path: testSessionUUID);
     FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledVaultsDatabase));
 
     EncryptedFilesystemStorageManager actualEncryptedFilesystemStorageManager = EncryptedFilesystemStorageManager(
-      rootDirectory: () async => Directory('${TestUtils.testRootDirectory.path}/$testSessionUUID'),
+      rootDirectoryBuilder: () async => Directory('${TestUtils.testRootDirectory.path}/$testSessionUUID'),
       databaseParentKey: DatabaseParentKey.secrets,
     );
 
     SecretsRepository actualSecretsRepository = SecretsRepository(filesystemStorageManager: actualEncryptedFilesystemStorageManager);
-    SecretsService actualSecretsService = SecretsService(secretsRepository: actualSecretsRepository);
 
-    VaultsService actualVaultsService = VaultsService(
-      vaultsRepository: VaultsRepository(),
-    );
+    globalLocator.registerLazySingleton(() => actualSecretsRepository);
+    globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
 
-    actualVaultCreatePageCubit = VaultCreatePageCubit(
-      vaultModelFactory: VaultModelFactory(vaultsService: actualVaultsService),
-      vaultsService: actualVaultsService,
-      secretsService: actualSecretsService,
-    );
+    actualVaultCreatePageCubit = VaultCreatePageCubit(parentFilesystemPath: const FilesystemPath.empty());
   });
 
   group('Tests of VaultCreatePageCubit process', () {
@@ -122,9 +113,9 @@ void main() {
 
         // Output is always a random string because AES changes the initialization vector with Random Secure
         // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-        Map<String, dynamic> actualSecretsFilesystemStructure =
-            TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID)['secrets'] as Map<String, dynamic>;
+        Map<String, dynamic> actualSecretsFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID)['secrets'];
 
+        // Assert
         String? actualEncryptedVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
         String actualDecryptedVaultsKeyValue = actualMasterKeyVO.decrypt(
           appPasswordModel: actualAppPasswordModel,
@@ -143,5 +134,9 @@ void main() {
         expect(actualVaultsMap.length, 3);
       });
     });
+  });
+
+  tearDownAll(() {
+    TestUtils.clearCache(testSessionUUID);
   });
 }

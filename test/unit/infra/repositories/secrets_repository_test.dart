@@ -16,20 +16,19 @@ import 'package:uuid/uuid.dart';
 import '../../../utils/test_utils.dart';
 
 void main() {
-  initLocator();
   DatabaseParentKey actualDatabaseParentKey = DatabaseParentKey.secrets;
-
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
-  globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
 
   // @formatter:off
   MasterKeyVO actualMasterKeyVO = const MasterKeyVO(encryptedMasterKey: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');
 
   String encryptedFileContent1 = 'hWEsUfhiLoss2jAySYeMfY8Co/n9o99sAgJQ2+tBUJSOfShhfvdKRG7zTJY4+62vIEgeBSWAT8C0bJyEEx3MlJp1y3c7htnrFVxfh8SkVf5/yeV9LHX2HgMi0agb7Xkiluqsid/OOuI+PIoGO5JAy4J05pNdFh23yRqD44L3IjoQFCmJdEfyQFY2BsqvE7nzh8AKB/lqqpWVZcBT8VUgZR01fWcbYbCVJMXcSnsAfGBFLh9+';
   String encryptedFileContent2 = 'KWAq9P3hNdlRuaO1YngolL1vlHOcaFrEeCdphsn/RcW7NoYgvAo/u9EuBnJWm0tiGVeLLz2kp4NbTAWLauXgPsY8uoXnFEo89sqYqtaauCBTgoqQu2Voz7DplRUAzTd0v7NQf8Bkq9IeO5XIPQZI0ekC5+XtRH8LK+f3O5G14EBe38KvIBT2Zys70Jqjd0woRWVwimRG3u9hoYXRXLdbVXMtxZP0qOmKk0m+EFz4obmSIP1e';
+  String encryptedFileContent3 = 'hWEsUfhiLoss2jAySYeMfY8Co/n9o99sAgJQ2+tBUJSOfShhfvdKRG7zTJY4+62vIEgeBSWAT8C0bJyEEx3MlJp1y3c7htnrFVxfh8SkVf5/yeV9LHX2HgMi0agb7Xkiluqsid/OOuI+PIoGO5JAy4J05pNdFh23yRqD44L3IjoQFCmJdEfyQFY2BsqvE7nzh8AKB/lqqpWVZcBT8VUgZR01fWcbYbCVJMXcSnsAfGBFLh9+';
 
   String encryptedSecrets1 = '6JE+uoVp0BPkg2Kq8Gcs0Ofm4ntvI4K6Xe44nHB2SPM2nOzeQnZp2OVJp2IYAGMgbfUgDSgKVA97fkuP58dF0uU2hCqTpVh8r60zJcLjy7mQTVTZTmf0oph7TVhNCHSvhtMhAmnTupnO7pM7G2t+yzMWkZI=';
   String encryptedSecrets2 = 'Dlc3Noq0nDYlD7kQM2R7v9EiMb5hHUb9vQeylaGiZKN1rxzNxwL6o8x60S9U2MhA/9YUAhV9Ni5bABl1koVI/SKGjV0k0+11Pay1ggrLw2ZUWxBVQd4mMHnHr6voUxGtj44PxzJjbfL2LjPz+DSxHXqSy/A=';
+  String encryptedSecrets3 = '6JE+uoVp0BPkg2Kq8Gcs0Ofm4ntvI4K6Xe44nHB2SPM2nOzeQnZp2OVJp2IYAGMgbfUgDSgKVA97fkuP58dF0uU2hCqTpVh8r60zJcLjy7mQTVTZTmf0oph7TVhNCHSvhtMhAmnTupnO7pM7G2t+yzMWkZI=';
 
   Map<String, dynamic> actualFilesystemStructure = <String, dynamic>{
     'secrets': <String, dynamic>{
@@ -37,6 +36,7 @@ void main() {
       '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
         '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedFileContent2,
       },
+      '694f21c1-c3d8-4f90-9d1c-97ec7b70ddf8.snggle': encryptedFileContent3,
     },
   };
 
@@ -45,20 +45,45 @@ void main() {
   };
   // @formatter:on
 
-  late SecretsRepository actualSecretsRepository;
   late String testSessionUUID;
+  late SecretsRepository actualSecretsRepository;
 
-  setUp(() async {
+  setUp(() {
+    globalLocator.allowReassignment = true;
+    initLocator();
+
     testSessionUUID = const Uuid().v4();
     TestUtils.setupTmpFilesystemStructureFromJson(actualFilesystemStructure, path: testSessionUUID);
 
     FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(masterKeyOnlyDatabase));
     EncryptedFilesystemStorageManager actualEncryptedFilesystemStorageManager = EncryptedFilesystemStorageManager(
-      rootDirectory: () async => Directory('${TestUtils.testRootDirectory.path}/$testSessionUUID'),
+      rootDirectoryBuilder: () async => Directory('${TestUtils.testRootDirectory.path}/$testSessionUUID'),
       databaseParentKey: actualDatabaseParentKey,
     );
 
     actualSecretsRepository = SecretsRepository(filesystemStorageManager: actualEncryptedFilesystemStorageManager);
+    globalLocator.registerLazySingleton(() => actualSecretsRepository);
+    globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
+  });
+
+  group('Test of initial filesystem state', () {
+    test('Should [return Map of files and their content] as [files EXIST] in database', () async {
+      // Act
+      Map<String, dynamic> actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
+
+      // Assert
+      Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
+        'secrets': <String, dynamic>{
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedFileContent1,
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
+            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedFileContent2,
+          },
+          '694f21c1-c3d8-4f90-9d1c-97ec7b70ddf8.snggle': encryptedFileContent3,
+        }
+      };
+
+      expect(actualFilesystemStructure, expectedFilesystemStructure);
+    });
   });
 
   group('Tests of SecretsRepository.getEncrypted()', () {
@@ -113,24 +138,6 @@ void main() {
 
   group('Tests of SecretsRepository.saveEncrypted()', () {
     test('Should [UPDATE secrets] if [secrets path EXISTS] in filesystem storage (1st depth)', () async {
-      // Act
-      Map<String, dynamic> actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
-
-      // Assert
-      Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
-        'secrets': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedFileContent1,
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
-            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedFileContent2,
-          },
-        }
-      };
-
-      TestUtils.printInfo('Should [return filesystem structure] as [secrets path EXISTS] in filesystem storage');
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
-
-      // ************************************************************************************************
-
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8');
 
@@ -139,41 +146,27 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      actualFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(testSessionUUID, actualMasterKeyVO, actualAppPasswordModel);
+      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
+        testSessionUUID,
+        actualMasterKeyVO,
+        actualAppPasswordModel,
+      );
 
       // Assert
-      expectedFilesystemStructure = <String, dynamic>{
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': 'updated_value',
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
             '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedSecrets2,
           },
+          '694f21c1-c3d8-4f90-9d1c-97ec7b70ddf8.snggle': encryptedSecrets3,
         }
       };
 
-      TestUtils.printInfo('Should [return decrypted filesystem structure] with updated value');
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
     });
 
     test('Should [UPDATE secrets] if [secrets path EXISTS] in filesystem storage (2nd depth)', () async {
-      // Act
-      Map<String, dynamic> actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
-
-      // Assert
-      Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
-        'secrets': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedFileContent1,
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
-            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedFileContent2,
-          },
-        }
-      };
-
-      TestUtils.printInfo('Should [return filesystem structure] as [secrets path EXISTS] in filesystem storage');
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
-
-      // ************************************************************************************************
-
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/9b282030-4c0f-482e-ba0d-524e10822f65');
 
@@ -182,41 +175,27 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      actualFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(testSessionUUID, actualMasterKeyVO, actualAppPasswordModel);
+      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
+        testSessionUUID,
+        actualMasterKeyVO,
+        actualAppPasswordModel,
+      );
 
       // Assert
-      expectedFilesystemStructure = <String, dynamic>{
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedSecrets1,
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
             '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'updated_value',
           },
+          '694f21c1-c3d8-4f90-9d1c-97ec7b70ddf8.snggle': encryptedSecrets3,
         }
       };
 
-      TestUtils.printInfo('Should [return decrypted filesystem structure] with updated value');
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
     });
 
     test('Should [SAVE secrets] if [secrets path NOT EXIST] in filesystem storage (1st depth)', () async {
-      // Act
-      Map<String, dynamic> actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
-
-      // Assert
-      Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
-        'secrets': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedFileContent1,
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
-            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedFileContent2,
-          },
-        }
-      };
-
-      TestUtils.printInfo('Should [return filesystem structure] as [secrets path EXISTS] in filesystem storage');
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
-
-      // ************************************************************************************************
-
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('a99531ff-fd45-40c8-8ac1-6d723c305ee5');
 
@@ -225,42 +204,28 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      actualFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(testSessionUUID, actualMasterKeyVO, actualAppPasswordModel);
+      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
+        testSessionUUID,
+        actualMasterKeyVO,
+        actualAppPasswordModel,
+      );
 
       // Assert
-      expectedFilesystemStructure = <String, dynamic>{
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedSecrets1,
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
             '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedSecrets2,
           },
+          '694f21c1-c3d8-4f90-9d1c-97ec7b70ddf8.snggle': encryptedSecrets3,
           'a99531ff-fd45-40c8-8ac1-6d723c305ee5.snggle': 'new_value',
         }
       };
 
-      TestUtils.printInfo('Should [return decrypted filesystem structure] with new value');
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
     });
 
     test('Should [SAVE secrets] if [secrets path NOT EXIST] in filesystem storage (2nd depth)', () async {
-      // Act
-      Map<String, dynamic> actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
-
-      // Assert
-      Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
-        'secrets': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedFileContent1,
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
-            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedFileContent2,
-          },
-        }
-      };
-
-      TestUtils.printInfo('Should [return filesystem structure] as [secrets path EXISTS] in filesystem storage');
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
-
-      // ************************************************************************************************
-
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/a99531ff-fd45-40c8-8ac1-6d723c305ee5');
 
@@ -269,64 +234,39 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      actualFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(testSessionUUID, actualMasterKeyVO, actualAppPasswordModel);
+      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
+        testSessionUUID,
+        actualMasterKeyVO,
+        actualAppPasswordModel,
+      );
 
       // Assert
-      expectedFilesystemStructure = <String, dynamic>{
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedSecrets1,
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
             '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedSecrets2,
             'a99531ff-fd45-40c8-8ac1-6d723c305ee5.snggle': 'new_value',
           },
-        }
+          '694f21c1-c3d8-4f90-9d1c-97ec7b70ddf8.snggle': encryptedSecrets3,
+        },
       };
 
-      TestUtils.printInfo('Should [return decrypted filesystem structure] with new value');
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
     });
   });
 
   group('Tests of SecretsRepository.delete()', () {
     test('Should [REMOVE secrets] if [secrets path EXISTS] in filesystem storage (1st depth)', () async {
-      // Act
-      Map<String, dynamic> actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
-
-      // Assert
-      Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
-        'secrets': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedFileContent1,
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
-            '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedFileContent2,
-          },
-        }
-      };
-
-      TestUtils.printInfo('Should [return filesystem structure] as [secrets path EXISTS] in filesystem storage');
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
-
-      // ************************************************************************************************
-
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('694f21c1-c3d8-4f90-9d1c-97ec7b70ddf8');
 
       // Act
       await actualSecretsRepository.delete(actualFilesystemPath);
-      actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
+      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
 
       // Assert
-      expectedFilesystemStructure = <String, dynamic>{'secrets': <String, dynamic>{}};
-
-      TestUtils.printInfo('Should [return filesystem structure] without removed secret');
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
-    });
-
-    test('Should [REMOVE secrets] if [secrets path EXISTS] in filesystem storage (2nd depth)', () async {
-      // Act
-      Map<String, dynamic> actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
-
-      // Assert
-      Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedFileContent1,
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{
@@ -335,28 +275,26 @@ void main() {
         }
       };
 
-      TestUtils.printInfo('Should [return filesystem structure] as [secrets path EXISTS] in filesystem storage');
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
+    });
 
-      // ************************************************************************************************
-
+    test('Should [REMOVE secrets] if [secrets path EXISTS] in filesystem storage (2nd depth)', () async {
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/9b282030-4c0f-482e-ba0d-524e10822f65');
 
       // Act
       await actualSecretsRepository.delete(actualFilesystemPath);
-      actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
+      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
 
       // Assert
-      expectedFilesystemStructure = <String, dynamic>{
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
         'secrets': <String, dynamic>{
           '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedFileContent1,
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8': <String, dynamic>{},
+          '694f21c1-c3d8-4f90-9d1c-97ec7b70ddf8.snggle': encryptedFileContent3,
         }
       };
 
-      TestUtils.printInfo('Should [return filesystem structure] without removed secret');
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
     });
 
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage (1st depth)', () async {
@@ -382,7 +320,7 @@ void main() {
     });
   });
 
-  tearDownAll(() {
-    TestUtils.testRootDirectory.delete(recursive: true);
+  tearDown(() {
+    TestUtils.clearCache(testSessionUUID);
   });
 }

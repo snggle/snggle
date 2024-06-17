@@ -10,11 +10,12 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i16;
 import 'package:flutter/material.dart' as _i19;
-import 'package:snggle/shared/models/password_model.dart' as _i21;
+import 'package:snggle/shared/models/password_model.dart' as _i22;
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart'
     as _i17;
-import 'package:snggle/shared/models/vaults/vault_model.dart' as _i20;
-import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i18;
+import 'package:snggle/shared/models/vaults/vault_model.dart' as _i21;
+import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i20;
+import 'package:snggle/shared/utils/filesystem_path.dart' as _i18;
 import 'package:snggle/views/pages/app_auth_page.dart' as _i1;
 import 'package:snggle/views/pages/app_setup_pin_page.dart' as _i2;
 import 'package:snggle/views/pages/bottom_navigation/apps_page.dart' as _i3;
@@ -88,9 +89,13 @@ abstract class $AppRouter extends _i16.RootStackRouter {
       );
     },
     VaultCreateRoute.name: (routeData) {
+      final args = routeData.argsAs<VaultCreateRouteArgs>();
       return _i16.AutoRoutePage<_i17.VaultCreateRecoverStatus?>(
         routeData: routeData,
-        child: const _i8.VaultCreatePage(),
+        child: _i8.VaultCreatePage(
+          parentFilesystemPath: args.parentFilesystemPath,
+          key: args.key,
+        ),
       );
     },
     VaultCreateRecoverRoute.name: (routeData) {
@@ -100,9 +105,13 @@ abstract class $AppRouter extends _i16.RootStackRouter {
       );
     },
     VaultInitRoute.name: (routeData) {
+      final args = routeData.argsAs<VaultInitRouteArgs>();
       return _i16.AutoRoutePage<_i17.VaultCreateRecoverStatus?>(
         routeData: routeData,
-        child: const _i10.VaultInitPage(),
+        child: _i10.VaultInitPage(
+          parentFilesystemPath: args.parentFilesystemPath,
+          key: args.key,
+        ),
       );
     },
     VaultListRoute.name: (routeData) {
@@ -112,9 +121,13 @@ abstract class $AppRouter extends _i16.RootStackRouter {
       );
     },
     VaultRecoverRoute.name: (routeData) {
+      final args = routeData.argsAs<VaultRecoverRouteArgs>();
       return _i16.AutoRoutePage<_i17.VaultCreateRecoverStatus?>(
         routeData: routeData,
-        child: const _i12.VaultRecoverPage(),
+        child: _i12.VaultRecoverPage(
+          parentFilesystemPath: args.parentFilesystemPath,
+          key: args.key,
+        ),
       );
     },
     VaultsSectionWrapperRoute.name: (routeData) {
@@ -247,16 +260,40 @@ class SplashRoute extends _i16.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i8.VaultCreatePage]
-class VaultCreateRoute extends _i16.PageRouteInfo<void> {
-  const VaultCreateRoute({List<_i16.PageRouteInfo>? children})
-      : super(
+class VaultCreateRoute extends _i16.PageRouteInfo<VaultCreateRouteArgs> {
+  VaultCreateRoute({
+    required _i18.FilesystemPath parentFilesystemPath,
+    _i19.Key? key,
+    List<_i16.PageRouteInfo>? children,
+  }) : super(
           VaultCreateRoute.name,
+          args: VaultCreateRouteArgs(
+            parentFilesystemPath: parentFilesystemPath,
+            key: key,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'VaultCreateRoute';
 
-  static const _i16.PageInfo<void> page = _i16.PageInfo<void>(name);
+  static const _i16.PageInfo<VaultCreateRouteArgs> page =
+      _i16.PageInfo<VaultCreateRouteArgs>(name);
+}
+
+class VaultCreateRouteArgs {
+  const VaultCreateRouteArgs({
+    required this.parentFilesystemPath,
+    this.key,
+  });
+
+  final _i18.FilesystemPath parentFilesystemPath;
+
+  final _i19.Key? key;
+
+  @override
+  String toString() {
+    return 'VaultCreateRouteArgs{parentFilesystemPath: $parentFilesystemPath, key: $key}';
+  }
 }
 
 /// generated route for
@@ -275,16 +312,40 @@ class VaultCreateRecoverRoute extends _i16.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i10.VaultInitPage]
-class VaultInitRoute extends _i16.PageRouteInfo<void> {
-  const VaultInitRoute({List<_i16.PageRouteInfo>? children})
-      : super(
+class VaultInitRoute extends _i16.PageRouteInfo<VaultInitRouteArgs> {
+  VaultInitRoute({
+    required _i18.FilesystemPath parentFilesystemPath,
+    _i19.Key? key,
+    List<_i16.PageRouteInfo>? children,
+  }) : super(
           VaultInitRoute.name,
+          args: VaultInitRouteArgs(
+            parentFilesystemPath: parentFilesystemPath,
+            key: key,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'VaultInitRoute';
 
-  static const _i16.PageInfo<void> page = _i16.PageInfo<void>(name);
+  static const _i16.PageInfo<VaultInitRouteArgs> page =
+      _i16.PageInfo<VaultInitRouteArgs>(name);
+}
+
+class VaultInitRouteArgs {
+  const VaultInitRouteArgs({
+    required this.parentFilesystemPath,
+    this.key,
+  });
+
+  final _i18.FilesystemPath parentFilesystemPath;
+
+  final _i19.Key? key;
+
+  @override
+  String toString() {
+    return 'VaultInitRouteArgs{parentFilesystemPath: $parentFilesystemPath, key: $key}';
+  }
 }
 
 /// generated route for
@@ -303,16 +364,40 @@ class VaultListRoute extends _i16.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i12.VaultRecoverPage]
-class VaultRecoverRoute extends _i16.PageRouteInfo<void> {
-  const VaultRecoverRoute({List<_i16.PageRouteInfo>? children})
-      : super(
+class VaultRecoverRoute extends _i16.PageRouteInfo<VaultRecoverRouteArgs> {
+  VaultRecoverRoute({
+    required _i18.FilesystemPath parentFilesystemPath,
+    _i19.Key? key,
+    List<_i16.PageRouteInfo>? children,
+  }) : super(
           VaultRecoverRoute.name,
+          args: VaultRecoverRouteArgs(
+            parentFilesystemPath: parentFilesystemPath,
+            key: key,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'VaultRecoverRoute';
 
-  static const _i16.PageInfo<void> page = _i16.PageInfo<void>(name);
+  static const _i16.PageInfo<VaultRecoverRouteArgs> page =
+      _i16.PageInfo<VaultRecoverRouteArgs>(name);
+}
+
+class VaultRecoverRouteArgs {
+  const VaultRecoverRouteArgs({
+    required this.parentFilesystemPath,
+    this.key,
+  });
+
+  final _i18.FilesystemPath parentFilesystemPath;
+
+  final _i19.Key? key;
+
+  @override
+  String toString() {
+    return 'VaultRecoverRouteArgs{parentFilesystemPath: $parentFilesystemPath, key: $key}';
+  }
 }
 
 /// generated route for
@@ -333,7 +418,7 @@ class VaultsSectionWrapperRoute extends _i16.PageRouteInfo<void> {
 /// [_i14.WalletDetailsPage]
 class WalletDetailsRoute extends _i16.PageRouteInfo<WalletDetailsRouteArgs> {
   WalletDetailsRoute({
-    required _i18.WalletModel walletModel,
+    required _i20.WalletModel walletModel,
     _i19.Key? key,
     List<_i16.PageRouteInfo>? children,
   }) : super(
@@ -357,7 +442,7 @@ class WalletDetailsRouteArgs {
     this.key,
   });
 
-  final _i18.WalletModel walletModel;
+  final _i20.WalletModel walletModel;
 
   final _i19.Key? key;
 
@@ -371,8 +456,8 @@ class WalletDetailsRouteArgs {
 /// [_i15.WalletListPage]
 class WalletListRoute extends _i16.PageRouteInfo<WalletListRouteArgs> {
   WalletListRoute({
-    required _i20.VaultModel vaultModel,
-    required _i21.PasswordModel vaultPasswordModel,
+    required _i21.VaultModel vaultModel,
+    required _i22.PasswordModel vaultPasswordModel,
     _i19.Key? key,
     List<_i16.PageRouteInfo>? children,
   }) : super(
@@ -398,9 +483,9 @@ class WalletListRouteArgs {
     this.key,
   });
 
-  final _i20.VaultModel vaultModel;
+  final _i21.VaultModel vaultModel;
 
-  final _i21.PasswordModel vaultPasswordModel;
+  final _i22.PasswordModel vaultPasswordModel;
 
   final _i19.Key? key;
 

@@ -9,6 +9,7 @@ import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
 // TODO(dominik): Temporary cubit implementation. Created for demo purposes.
 // After UI / list implementation responsibility of this cubit may be significantly rebuilt.
@@ -26,7 +27,7 @@ class VaultListItemCubit extends Cubit<VaultListItemState> {
   Future<void> init() async {
     bool defaultPasswordBool = await _secretsService.isPasswordValid(vaultModel.filesystemPath, PasswordModel.defaultPassword());
 
-    List<WalletModel> vaultWalletsAll = await _walletsService.getWalletList(vaultModel.uuid);
+    List<WalletModel> vaultWalletsAll = await _walletsService.getAllByParentPath(FilesystemPath.fromString(vaultModel.uuid));
     List<WalletModel> vaultWalletsPreview = List<WalletModel>.from(vaultWalletsAll.sublist(0, min(9, vaultWalletsAll.length)));
 
     if (defaultPasswordBool == true) {
@@ -37,7 +38,7 @@ class VaultListItemCubit extends Cubit<VaultListItemState> {
   }
 
   Future<void> reload() async {
-    List<WalletModel> vaultWalletsAll = await _walletsService.getWalletList(vaultModel.uuid);
+    List<WalletModel> vaultWalletsAll = await _walletsService.getAllByParentPath(FilesystemPath.fromString(vaultModel.uuid));
     List<WalletModel> vaultWalletsPreview = List<WalletModel>.from(vaultWalletsAll.sublist(0, min(9, vaultWalletsAll.length)));
 
     emit(VaultListItemState(

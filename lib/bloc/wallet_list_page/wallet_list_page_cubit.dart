@@ -12,6 +12,7 @@ import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_creation_request_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
 // TODO(dominik): Temporary cubit implementation. Created for demo purposes.
 // After UI / list implementation responsibility of this cubit may be significantly rebuilt.
@@ -38,7 +39,7 @@ class WalletListPageCubit extends Cubit<List<WalletModel>> {
     // This section is used to determine the next derivation path segment for the new wallet
     // In current demo app, this value is calculated automatically, basing on the last wallet index existing in database
     // In the targeted app this value should be provided (or confirmed) by user an this functionality will be implemented on the next stages
-    int lastWalletIndex = await _walletsService.getLastWalletIndex(vaultModel.uuid);
+    int lastWalletIndex = await _walletsService.getLastIndex(vaultModel.filesystemPath);
     int walletIndex = lastWalletIndex + 1;
     String derivationPath = "m/44'/118'/0'/0/${walletIndex}";
 
@@ -51,7 +52,8 @@ class WalletListPageCubit extends Cubit<List<WalletModel>> {
     WalletModel walletModel = await walletModelFactory.createNewWallet(
       WalletCreationRequestModel(
         index: walletIndex,
-        vaultUuid: vaultModel.uuid,
+        network: 'ethereum',
+        parentFilesystemPath: vaultModel.filesystemPath,
         publicKey: derivedNode.publicKey,
         derivationPath: derivationPath,
       ),
@@ -62,17 +64,17 @@ class WalletListPageCubit extends Cubit<List<WalletModel>> {
       privateKey: derivedNode.privateKey!,
     );
 
-    await _walletsService.saveWallet(walletModel);
+    await _walletsService.save(walletModel);
     await _secretsService.save(walletSecretsModel, PasswordModel.defaultPassword());
     await refresh();
   }
 
   Future<void> deleteVault(WalletModel walletModel) async {
-    await _walletsService.deleteWalletById(walletModel.uuid);
+    await _walletsService.deleteById(walletModel.uuid);
     await refresh();
   }
 
   Future<void> refresh() async {
-    emit(await _walletsService.getWalletList(vaultModel.uuid));
+    emit(await _walletsService.getAllByParentPath(FilesystemPath.fromString(vaultModel.uuid)));
   }
 }

@@ -4,24 +4,28 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/database_parent_key.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
 typedef RootDirectoryBuilder = FutureOr<Directory> Function();
 
 class FilesystemStorageManager {
-  final Completer<Directory> _libraryDirectoryCompleter = Completer<Directory>();
+  static const RootDirectoryBuilder _defaultRootDirectoryBuilder = getApplicationSupportDirectory;
+
   final DatabaseParentKey _databaseParentKey;
   final RootDirectoryBuilder _rootDirectoryBuilder;
+  final Completer<Directory> _rootDirectoryCompleter;
 
   FilesystemStorageManager({
     required DatabaseParentKey databaseParentKey,
-    Future<Directory> Function()? rootDirectory,
+    RootDirectoryBuilder? rootDirectoryBuilder,
   })  : _databaseParentKey = databaseParentKey,
-        _rootDirectoryBuilder = rootDirectory ?? getApplicationSupportDirectory {
+        _rootDirectoryBuilder = rootDirectoryBuilder ?? _defaultRootDirectoryBuilder,
+        _rootDirectoryCompleter = Completer<Directory>() {
     _initStorage();
   }
 
-  Future<String> read(String path) async {
-    File file = await _getFile(path);
+  Future<String> read(FilesystemPath filesystemPath) async {
+    File file = await _getFile(filesystemPath);
     if (await file.exists()) {
       return file.readAsString();
     } else {
@@ -29,42 +33,44 @@ class FilesystemStorageManager {
     }
   }
 
-  Future<void> write(String path, String plaintextValue) async {
-    File file = await _getFile(path);
+  Future<void> write(FilesystemPath filesystemPath, String plainTextValue) async {
+    File file = await _getFile(filesystemPath);
     await file.create(recursive: true);
-    await file.writeAsString(plaintextValue);
+    await file.writeAsString(plainTextValue);
   }
 
-  Future<void> delete(String path) async {
-    File file = await _getFile(path);
-    Directory directory = await _getDirectory(path);
-    if (await directory.exists()) {
-      await directory.delete(recursive: true);
-    }
+  Future<void> delete(FilesystemPath filesystemPath) async {
+    File file = await _getFile(filesystemPath);
     if (await file.exists()) {
       await file.delete();
     } else {
       throw ChildKeyNotFoundException();
     }
+
+    Directory parentDirectory = await _getParentDirectory(filesystemPath);
+    bool parentDirectoryEmptyBool = parentDirectory.listSync().isEmpty;
+    if (parentDirectoryEmptyBool) {
+      await parentDirectory.delete();
+    }
   }
 
   Future<void> _initStorage() async {
     Directory rootDirectory = await _rootDirectoryBuilder();
-    _libraryDirectoryCompleter.complete(rootDirectory);
+    _rootDirectoryCompleter.complete(rootDirectory);
   }
 
-  Future<Directory> _getDirectory(String path) async {
-    String absolutePath = await _buildAbsolutePath(path, extension: '');
-    return Directory(absolutePath);
-  }
-
-  Future<File> _getFile(String path) async {
-    String absolutePath = await _buildAbsolutePath(path);
+  Future<File> _getFile(FilesystemPath filesystemPath) async {
+    String absolutePath = await _buildAbsolutePath(relativePath: '${filesystemPath.fullPath}.snggle');
     return File(absolutePath);
   }
 
-  Future<String> _buildAbsolutePath(String path, {String extension = '.snggle'}) async {
-    Directory directory = await _libraryDirectoryCompleter.future;
-    return '${directory.path}/${_databaseParentKey.name}/$path${extension}';
+  Future<Directory> _getParentDirectory(FilesystemPath filesystemPath) async {
+    String absolutePath = await _buildAbsolutePath(relativePath: filesystemPath.parentPath);
+    return Directory(absolutePath);
+  }
+
+  Future<String> _buildAbsolutePath({required String relativePath}) async {
+    Directory rootDirectory = await _rootDirectoryCompleter.future;
+    return '${rootDirectory.path}/${_databaseParentKey.name}/$relativePath';
   }
 }
