@@ -31,6 +31,18 @@ class WalletsRepository {
     return walletEntities;
   }
 
+  Future<WalletEntity> getByAddress(String address) async {
+    WalletEntity? walletEntity = await isarDatabaseManager.perform((Isar isar) {
+      return isar.wallets.where().filter().addressEqualTo(address, caseSensitive: false).findFirst();
+    });
+
+    if (walletEntity == null) {
+      throw ChildKeyNotFoundException();
+    }
+
+    return walletEntity;
+  }
+
   Future<WalletEntity> getById(Id id) async {
     WalletEntity? walletEntity = await isarDatabaseManager.perform((Isar isar) {
       return isar.wallets.get(id);

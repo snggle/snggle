@@ -12,13 +12,15 @@ void main() {
   final TestDatabase testDatabase = TestDatabase();
 
   // @formatter:off
-  String encryptedFileContent1 = 'hWEsUfhiLoss2jAySYeMfY8Co/n9o99sAgJQ2+tBUJSOfShhfvdKRG7zTJY4+62vIEgeBSWAT8C0bJyEEx3MlJp1y3c7htnrFVxfh8SkVf5/yeV9LHX2HgMi0agb7Xkiluqsid/OOuI+PIoGO5JAy4J05pNdFh23yRqD44L3IjoQFCmJdEfyQFY2BsqvE7nzh8AKB/lqqpWVZcBT8VUgZR01fWcbYbCVJMXcSnsAfGBFLh9+';
-  String encryptedFileContent2 = 'KWAq9P3hNdlRuaO1YngolL1vlHOcaFrEeCdphsn/RcW7NoYgvAo/u9EuBnJWm0tiGVeLLz2kp4NbTAWLauXgPsY8uoXnFEo89sqYqtaauCBTgoqQu2Voz7DplRUAzTd0v7NQf8Bkq9IeO5XIPQZI0ekC5+XtRH8LK+f3O5G14EBe38KvIBT2Zys70Jqjd0woRWVwimRG3u9hoYXRXLdbVXMtxZP0qOmKk0m+EFz4obmSIP1e';
-  String encryptedFileContent3 = 'hWEsUfhiLoss2jAySYeMfY8Co/n9o99sAgJQ2+tBUJSOfShhfvdKRG7zTJY4+62vIEgeBSWAT8C0bJyEEx3MlJp1y3c7htnrFVxfh8SkVf5/yeV9LHX2HgMi0agb7Xkiluqsid/OOuI+PIoGO5JAy4J05pNdFh23yRqD44L3IjoQFCmJdEfyQFY2BsqvE7nzh8AKB/lqqpWVZcBT8VUgZR01fWcbYbCVJMXcSnsAfGBFLh9+';
+  String encryptedSecrets1 = '3bqZheymtcYvUbKASR55Y2kxoD9iXYznIUTjpYxALM820UqAUAQvirWIk1sSTsXBoIX+qQzmrNgLvPkE8rYdnFrRnjl2py9Lql+Xw0NB5PTwPjBsdU+IwZAoPszHmWp/vddUwStzRfq6rFMkCCX8zJ46vm4=';
+  String encryptedSecrets2 = 'OvNnlxduUz14vtjPlu+PYIwkItJSJ7TVpXGeCkwa84ZgeXGaoKLunDk39zNKeDLUD2W4Lz5ii5bARxPoIfYXF4j7eTqCWLqCNYdl64ooearXVU6KU5JLF0m9QtEsgwCKZ/uJJsgcXNlvQq4cTuOmbnNuiqs=';
+  String encryptedSecrets3 = '9Kw28uVK7Hbvdh+58TPzfpDeApW3c91CMdZSMms24eV9S1TAmpobfoCboj/Tv9B+sLKj63ApHycABXM4YiyNXw+PG6PhlxfzMe6bV10XK5fQZh/3OD3Dx+QmijVFWce62WjeVkLVgKUNbd5dcawef7M9KME=';
+  String encryptedSecrets4 = 'YSSiNeFbvtX6afWMus5YwDuHDcKZLQYM00sdkV5y90m/VpmMSqHTNVXIj6CR1sE906vigo17wyjp9tQq7yA9KnAvqL43GzwhMcUkGiUFvuMs0WPHgVLpBHrLF2Ej3HhkZmFAiv5Dny71DTM+oCzO3uk3P8s=';
 
-  String encryptedSecrets1 = '6JE+uoVp0BPkg2Kq8Gcs0Ofm4ntvI4K6Xe44nHB2SPM2nOzeQnZp2OVJp2IYAGMgbfUgDSgKVA97fkuP58dF0uU2hCqTpVh8r60zJcLjy7mQTVTZTmf0oph7TVhNCHSvhtMhAmnTupnO7pM7G2t+yzMWkZI=';
-  String encryptedSecrets2 = 'Dlc3Noq0nDYlD7kQM2R7v9EiMb5hHUb9vQeylaGiZKN1rxzNxwL6o8x60S9U2MhA/9YUAhV9Ni5bABl1koVI/SKGjV0k0+11Pay1ggrLw2ZUWxBVQd4mMHnHr6voUxGtj44PxzJjbfL2LjPz+DSxHXqSy/A=';
-  String encryptedSecrets3 = '6JE+uoVp0BPkg2Kq8Gcs0Ofm4ntvI4K6Xe44nHB2SPM2nOzeQnZp2OVJp2IYAGMgbfUgDSgKVA97fkuP58dF0uU2hCqTpVh8r60zJcLjy7mQTVTZTmf0oph7TVhNCHSvhtMhAmnTupnO7pM7G2t+yzMWkZI=';
+  String encryptedFileContent1 = 'whB2abfEqvhUSoclUD6zEZ2gR78aYA6DYvi6xt1cR9OEtJ+X3j17pfKMoBzTwzAHa0T665Jpwm3Mw/KLvolNsDyEUPweHaV1YSOhBbp3LJ8QBfIzFvoNARNKPQfKUttmpCP/i5F64yNXQLeY47K0vJkbD0/nOrbztCI0Nj3ToO4DBKHn2vupQe6D6EN/zYdHO9dKcQoG/VKhYHKey58lA/z6mSR/u682S1L+yyoIM18TanFe';
+  String encryptedFileContent2 = 'L4H7xI7i1vtIzQrxeo/rcbyaiqLyNCi6jJjB8fGEGhKUqhXy+I7F8BlNQ79V18n+QDFHhFVPdgxVveRxcjnqaAqxOQPmwCG2MplM6VWhtxosNCXYz52ldGuVx3vJHZNkvX7zgqQgn9SuhlD2Wxp6hrojS1zwqJG0e3Fn69ozK1RnlHproIoAAyv3OFo+418z6RN+fs8PMIHQYcida47MMsfeUMOctlck84OpLSU9pr0ziTnB';
+  String encryptedFileContent3 = 'XZLhjzICVmPCeWBGnkfmu97OckmOnRywgrME3dUbR5RDFxKcIEPfPBfg5vWiQ4WpMjMBkYfLN+a+ww4r70IVI6aNOX41+E4evSJxo5o4SN5WePq00SvTqwkHdQ2dG5zo0MgkmWJujW0CKQHQg21KlVnnIenGkesUQezvsAcvsib38Tdw4/XXONvJ/mb6+K3zqwu4CuxDh9yIxXDJpx4cyW744Q6Ea/tuPxDJll4VgbgEnssv';
+  String encryptedFileContent4 = 'QPsq8t6mRaxRaAKtYRMGdtthvJRHZmGZfB4gbYGJ+1lameKepC43YBRKY9lsZI1ZyqNcqrUccRe9SSXqTATboUM0Ppkp+9hUsA+sOy7DnniR/Gnab4e5lE5ACfWZQclwQYRKNO7srYOF4NPsOHycftKhcqOIPdW9iqoMcQK4LP33jadKc7mp+KCAhAzxls1DnZDN93Udr8+th+FwT3kXySDjykPrwfsEdiOGPEpwMFdijgEY';
   // @formatter:on
 
   setUp(() async {
@@ -92,11 +94,10 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id1.snggle': 'updated_value',
-        'id1': <String, dynamic>{
-          'id2.snggle': encryptedSecrets2,
-        },
         'id3.snggle': encryptedSecrets3,
+        'id1.snggle': 'updated_value',
+        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
+        'id1': <String, String>{'id2.snggle': encryptedSecrets2},
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -115,11 +116,10 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id1.snggle': encryptedSecrets1,
-        'id1': <String, dynamic>{
-          'id2.snggle': 'updated_value',
-        },
         'id3.snggle': encryptedSecrets3,
+        'id1.snggle': encryptedSecrets1,
+        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
+        'id1': <String, String>{'id2.snggle': 'updated_value'}
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -127,7 +127,7 @@ void main() {
 
     test('Should [SAVE secrets] if [secrets path NOT EXIST] in filesystem storage (1st depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id4');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id99999');
 
       // Act
       await globalLocator<SecretsRepository>().saveEncrypted(actualFilesystemPath, 'new_value');
@@ -138,12 +138,11 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id1.snggle': encryptedSecrets1,
-        'id1': <String, dynamic>{
-          'id2.snggle': encryptedSecrets2,
-        },
         'id3.snggle': encryptedSecrets3,
-        'id4.snggle': 'new_value',
+        'id1.snggle': encryptedSecrets1,
+        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
+        'id99999.snggle': 'new_value',
+        'id1': <String, String>{'id2.snggle': encryptedSecrets2}
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -151,7 +150,7 @@ void main() {
 
     test('Should [SAVE secrets] if [secrets path NOT EXIST] in filesystem storage (2nd depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/id4');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/id99999');
 
       // Act
       await globalLocator<SecretsRepository>().saveEncrypted(actualFilesystemPath, 'new_value');
@@ -162,12 +161,13 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id1.snggle': encryptedSecrets1,
-        'id1': <String, dynamic>{
-          'id2.snggle': encryptedSecrets2,
-          'id4.snggle': 'new_value',
-        },
         'id3.snggle': encryptedSecrets3,
+        'id1.snggle': encryptedSecrets1,
+        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
+        'id1': <String, String>{
+          'id99999.snggle': 'new_value',
+          'id2.snggle': encryptedSecrets2,
+        }
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -189,10 +189,11 @@ void main() {
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
         'id1.snggle': encryptedSecrets1,
-        'id1': <String, dynamic>{
-          'id2.snggle': encryptedSecrets2,
+        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
+        'id1': <String, String>{
           'id3.snggle': encryptedSecrets3,
-        },
+          'id2.snggle': encryptedSecrets2,
+        }
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -211,9 +212,10 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id1.snggle': encryptedSecrets1,
-        'id2.snggle': encryptedSecrets2,
         'id3.snggle': encryptedSecrets3,
+        'id1.snggle': encryptedSecrets1,
+        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
+        'id2.snggle': encryptedSecrets2,
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -254,9 +256,8 @@ void main() {
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
         'id1.snggle': encryptedFileContent1,
-        'id1': <String, dynamic>{
-          'id2.snggle': encryptedFileContent2,
-        },
+        'id3': <String, String>{'id4.snggle': encryptedFileContent4},
+        'id1': <String, String>{'id2.snggle': encryptedFileContent2}
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -272,8 +273,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id1.snggle': encryptedFileContent1,
         'id3.snggle': encryptedFileContent3,
+        'id1.snggle': encryptedFileContent1,
+        'id3': <String, String>{'id4.snggle': encryptedFileContent4},
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
