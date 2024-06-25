@@ -1,17 +1,19 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_background.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_item.dart';
 
 class ContextTooltipContent extends StatelessWidget {
-  final String title;
   final List<ContextTooltipItem> actions;
+  final String? title;
+  final Widget? titleWidget;
 
   const ContextTooltipContent({
-    required this.title,
     required this.actions,
+    this.title,
+    this.titleWidget,
     super.key,
   });
 
@@ -27,57 +29,44 @@ class ContextTooltipContent extends StatelessWidget {
       maxPopupWidth = screenWidth;
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Container(
-            constraints: BoxConstraints(maxWidth: maxPopupWidth),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              border: Border.all(color: AppColors.middleGrey, width: 1),
-              borderRadius: const BorderRadius.all(Radius.circular(16)),
-            ),
-            child: Column(
+    return ContextTooltipBackground(
+      maxPopupWidth: maxPopupWidth,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: titleWidget ??
+                Text(
+                  title ?? '',
+                  style: TextStyle(
+                    color: AppColors.body3,
+                    fontSize: 14,
+                    letterSpacing: 1.5,
+                    height: 1,
+                  ),
+                ),
+          ),
+          Divider(color: AppColors.middleGrey, height: 1, thickness: 1),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+            child: Row(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      color: AppColors.body3,
-                      fontSize: 14,
-                      letterSpacing: 1.5,
-                      height: 1,
+                for (int i = 0; i < actions.length; i++) ...<Widget>[
+                  if (elementsSizeOverflowBool) Expanded(child: actions[i]) else actions[i],
+                  if (i < actions.length - 1)
+                    Container(
+                      height: 30,
+                      padding: const EdgeInsets.symmetric(horizontal: 3),
+                      child: VerticalDivider(color: AppColors.middleGrey, width: 0.6, thickness: 0.6),
                     ),
-                  ),
-                ),
-                Divider(color: AppColors.middleGrey, height: 1),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      for (int i = 0; i < actions.length; i++) ...<Widget>[
-                        if (elementsSizeOverflowBool) Expanded(child: actions[i]) else actions[i],
-                        if (i < actions.length - 1)
-                          Container(
-                            height: 30,
-                            padding: const EdgeInsets.symmetric(horizontal: 3),
-                            child: VerticalDivider(color: AppColors.middleGrey, width: 0.6, thickness: 0.6),
-                          ),
-                      ]
-                    ],
-                  ),
-                ),
+                ]
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

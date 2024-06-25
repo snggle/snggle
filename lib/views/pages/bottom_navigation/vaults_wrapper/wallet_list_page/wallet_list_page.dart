@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_page_cubit.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/config/locator.dart';
@@ -142,9 +143,19 @@ class _WalletListPageState extends State<WalletListPage> {
     ActiveWalletController activeWalletController = globalLocator<ActiveWalletController>();
 
     if (listItemModel is WalletModel) {
-      activeWalletController.setActiveWallet(walletModel: listItemModel, walletPasswordModel: passwordModel);
-      await AutoRouter.of(context).push<void>(WalletDetailsRoute(walletModel: listItemModel));
+      WalletDetailsPageCubit walletDetailsPageCubit = WalletDetailsPageCubit(walletModel: listItemModel);
 
+      activeWalletController.setActiveWallet(
+        walletModel: listItemModel,
+        walletPasswordModel: passwordModel,
+        transactionSignedCallback: walletDetailsPageCubit.refresh,
+      );
+      await AutoRouter.of(context).push<void>(WalletDetailsRoute(
+        walletModel: listItemModel,
+        walletDetailsPageCubit: walletDetailsPageCubit,
+      ));
+
+      await walletDetailsPageCubit.close();
       activeWalletController.clearActiveWallet();
       if (mounted) {
         await walletListPageCubit.refreshAll();

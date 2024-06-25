@@ -49,6 +49,10 @@ class WalletModel extends AListItemModel {
     return super.name ?? 'Wallet $index'.toUpperCase();
   }
 
+  String getShortAddress(int length) {
+    return '${address.substring(0, length + 2)}...${address.substring(address.length - length)}';
+  }
+
   @override
   List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, index, address, derivationPath, network, name, filesystemPath];
 }

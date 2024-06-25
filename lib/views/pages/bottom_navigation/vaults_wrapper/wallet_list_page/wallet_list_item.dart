@@ -22,7 +22,6 @@ class WalletListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
-    String address = walletModel.address;
 
     return HorizontalListItemLayoutAnimated(
       lockedBool: walletModel.encryptedBool,
@@ -40,7 +39,7 @@ class WalletListItem extends StatelessWidget {
       subtitleWidget: Row(
         children: <Widget>[
           GradientText(
-            '${address.substring(0, 5)}..${address.substring(address.length - 3, address.length)}',
+            walletModel.getShortAddress(4),
             textStyle: textTheme.titleMedium,
             overflow: TextOverflow.ellipsis,
             gradient: RadialGradient(

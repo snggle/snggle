@@ -6,11 +6,15 @@ class ContextTooltipWrapper extends StatelessWidget {
   final Widget child;
   final Widget content;
   final CustomPopupMenuController controller;
+  final double verticalMargin;
+  final PressType pressType;
 
   const ContextTooltipWrapper({
     required this.child,
     required this.content,
     required this.controller,
+    this.verticalMargin = -10,
+    this.pressType = PressType.singleClick,
     super.key,
   });
 
@@ -19,11 +23,11 @@ class ContextTooltipWrapper extends StatelessWidget {
     return CustomPopupMenu(
       controller: controller,
       menuBuilder: () => content,
-      pressType: PressType.singleClick,
+      pressType: pressType,
       barrierColor: Colors.transparent,
       arrowColor: AppColors.middleGrey,
       enablePassEvent: false,
-      verticalMargin: -10,
+      verticalMargin: verticalMargin,
       child: child,
     );
   }

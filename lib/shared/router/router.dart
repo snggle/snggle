@@ -41,6 +41,7 @@ class AppRouter extends $AppRouter {
               AutoRoute(page: NetworkListRoute.page),
               AutoRoute(page: WalletListRoute.page),
               AutoRoute(page: WalletDetailsRoute.page),
+              AutoRoute(page: TransactionDetailsRoute.page),
             ],
           ),
           AutoRoute(page: VaultListRoute.page),
