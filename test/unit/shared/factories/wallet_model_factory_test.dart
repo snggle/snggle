@@ -25,7 +25,7 @@ void main() async {
 
       // Assert
       expect(actualWalletModel.index, 0);
-      expect(actualWalletModel.address, 'kira143q8vxpvuykt9pq50e6hng9s38vmy844n8k9wx');
+      expect(actualWalletModel.address, '0x8556Df7F640632E6f255C439D07663Fc4EB39df1');
       expect(actualWalletModel.derivationPath, "m/44'/118'/0'/0/0");
       expect(actualWalletModel.uuid, isNotNull);
     });
@@ -39,7 +39,7 @@ void main() async {
         pinnedBool: false,
         encryptedBool: true,
         index: 0,
-        address: 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
+        address: '0x8556Df7F640632E6f255C439D07663Fc4EB39df1',
         derivationPath: "m/44'/118'/0'/0/0",
         network: 'kira',
         uuid: '4e66ba36-966e-49ed-b639-191388ce38de',
@@ -54,7 +54,7 @@ void main() async {
         pinnedBool: false,
         encryptedBool: true,
         index: 0,
-        address: 'kira1q4ypasn8pak72h0dsppywd33n5rt66krgdt3np',
+        address: '0x8556Df7F640632E6f255C439D07663Fc4EB39df1',
         derivationPath: "m/44'/118'/0'/0/0",
         network: 'kira',
         uuid: '4e66ba36-966e-49ed-b639-191388ce38de',

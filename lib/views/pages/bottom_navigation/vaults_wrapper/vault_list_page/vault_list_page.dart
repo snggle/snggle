@@ -150,8 +150,10 @@ class _VaultListPageState extends State<VaultListPage> {
 
       await AutoRouter.of(context).push<void>(
         WalletListRoute(
+          name: listItemModel.name,
           vaultModel: listItemModel,
           vaultPasswordModel: passwordModel ?? PasswordModel.defaultPassword(),
+          filesystemPath: listItemModel.filesystemPath,
         ),
       );
       await vaultListPageCubit.refreshAll();

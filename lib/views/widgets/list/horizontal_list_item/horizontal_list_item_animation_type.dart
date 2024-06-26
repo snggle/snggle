@@ -1,0 +1,4 @@
+enum HorizontalListItemAnimationType {
+  slideBottomToUp,
+  slideLeftToRight,
+}
