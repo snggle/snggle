@@ -196,6 +196,47 @@ void main() {
     });
   });
 
+  group('Tests of SecretsService.move()', () {
+    test('Should [UPDATE secrets] if [secrets path EXISTS] in filesystem storage', () async {
+      // Act
+      await globalLocator<SecretsService>().move(
+        FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8'),
+        FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65/5b3fe074-4b3a-49ea-a9f9-cd286df8eed8'),
+      );
+
+      // Output is always a random string because AES changes the initialization vector with Random Secure
+      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
+      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
+        testSessionUUID,
+        actualMasterKeyVO,
+        actualAppPasswordModel,
+      );
+
+      // Assert
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'secrets': <String, dynamic>{
+          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': encryptedSecrets2,
+          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
+            '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': encryptedSecrets1,
+          }
+        },
+      };
+
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage', () async {
+      // Assert
+      expect(
+        () => globalLocator<SecretsService>().move(
+          FilesystemPath.fromString('7ff2abaa-e943-4b9c-8745-fa7e874d7a6a'),
+          FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8/7ff2abaa-e943-4b9c-8745-fa7e874d7a6a'),
+        ),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
   group('Tests of SecretsService.delete()', () {
     test('Should [REMOVE secrets] if [secrets path EXISTS] in collection', () async {
       // Arrange

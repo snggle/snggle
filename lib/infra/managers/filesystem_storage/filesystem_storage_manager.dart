@@ -39,6 +39,24 @@ class FilesystemStorageManager {
     await file.writeAsString(plainTextValue);
   }
 
+  Future<void> move(FilesystemPath previousFilesystemPath, FilesystemPath newFilesystemPath) async {
+    File previousFile = await _getFile(previousFilesystemPath);
+    File newFile = await _getFile(newFilesystemPath);
+    if (await previousFile.exists() == false) {
+      throw ChildKeyNotFoundException();
+    }
+    if (await newFile.exists() == false) {
+      await newFile.create(recursive: true);
+    }
+    await previousFile.rename(newFile.path);
+
+    Directory parentDirectory = await _getParentDirectory(previousFilesystemPath);
+    bool parentDirectoryEmptyBool = parentDirectory.listSync().isEmpty;
+    if (parentDirectoryEmptyBool) {
+      await parentDirectory.delete();
+    }
+  }
+
   Future<void> delete(FilesystemPath filesystemPath) async {
     File file = await _getFile(filesystemPath);
     if (await file.exists()) {

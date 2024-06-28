@@ -23,6 +23,10 @@ class SecretsService {
     await _secretsRepository.saveEncrypted(secretsModel.filesystemPath, encryptedSecrets);
   }
 
+  Future<void> move(FilesystemPath previousFilesystemPath, FilesystemPath newFilesystemPath) async {
+    await _secretsRepository.move(previousFilesystemPath, newFilesystemPath);
+  }
+
   Future<void> delete(FilesystemPath filesystemPath) async {
     await _secretsRepository.delete(filesystemPath);
   }

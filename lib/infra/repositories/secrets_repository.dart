@@ -18,6 +18,10 @@ class SecretsRepository {
     await _filesystemStorageManager.write(filesystemPath, encryptedSecrets);
   }
 
+  Future<void> move(FilesystemPath previousFilesystemPath, FilesystemPath newFilesystemPath) async {
+    await _filesystemStorageManager.move(previousFilesystemPath, newFilesystemPath);
+  }
+
   Future<void> delete(FilesystemPath filesystemPath) async {
     await _filesystemStorageManager.delete(filesystemPath);
   }
