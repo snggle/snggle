@@ -4,29 +4,76 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
+import 'package:snggle/shared/factories/group_model_factory.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/groups/group_model.dart';
+import 'package:snggle/shared/models/groups/group_secrets_model.dart';
+import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/selection_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
+  final GroupsService groupsService = globalLocator<GroupsService>();
   final SecretsService secretsService = globalLocator<SecretsService>();
 
   AListCubit({
     required FilesystemPath filesystemPath,
-  }) : super(ListState.loading(filesystemPath: filesystemPath));
+    required int depth,
+  }) : super(ListState.loading(depth: depth, filesystemPath: filesystemPath));
+
+  Future<void> navigateNext({required FilesystemPath filesystemPath}) async {
+    emit(ListState.loading(filesystemPath: filesystemPath, depth: state.depth + 1));
+    await refreshAll();
+  }
+
+  Future<void> navigateTo({required FilesystemPath filesystemPath, required int depth}) async {
+    emit(ListState.loading(filesystemPath: filesystemPath, depth: depth));
+    await refreshAll();
+  }
+
+  Future<bool> navigateBack() async {
+    if (state.depth > 0) {
+      emit(ListState.loading(filesystemPath: state.filesystemPath.pop(), depth: state.depth - 1));
+      await refreshAll();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> groupItems(AListItemModel a, AListItemModel b, String groupName) async {
+    List<AListItemModel> pathsToGroup = <AListItemModel>[a, b];
+
+    GroupModel groupModel = globalLocator<GroupModelFactory>().createNewGroup(parentFilesystemPath: state.filesystemPath, name: groupName);
+    GroupSecretsModel groupSecretsModel = GroupSecretsModel.generate(groupModel.filesystemPath);
+
+    await groupsService.save(groupModel);
+    await secretsService.save(groupSecretsModel, PasswordModel.defaultPassword());
+
+    for (AListItemModel item in pathsToGroup) {
+      await moveItem(item, groupModel.filesystemPath);
+    }
+
+    await refreshAll();
+  }
 
   Future<void> refreshAll() async {
+    List<GroupModel> allGroups = await fetchAllGroups();
     List<T> allItems = await fetchAllItems();
+    GroupModel? groupModel = await groupsService.getByPath(state.filesystemPath);
 
-    List<AListItemModel> listItems = <AListItemModel>[...allItems];
-    emit(state.copyWith(loadingBool: false, allItems: _sortItems(listItems)));
+    List<AListItemModel> listItems = <AListItemModel>[...allGroups, ...allItems];
+    emit(state.copyWith(loadingBool: false, groupModel: groupModel, allItems: _sortItems(listItems)));
   }
 
   Future<void> refreshSingle(AListItemModel item) async {
     AListItemModel? newItem;
     if (item is T) {
       newItem = await fetchSingleItem(item);
+    } else if (item is GroupModel) {
+      newItem = await fetchSingleGroup(item);
     }
 
     if (newItem == null) {
@@ -69,6 +116,8 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
         updatedItems[i] = updatedItem;
         if (updatedItem is T) {
           unawaited(saveItem(updatedItem));
+        } else if (updatedItem is GroupModel) {
+          unawaited(saveGroup(updatedItem));
         }
       }
     }
@@ -84,6 +133,8 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
         updatedItems[i] = updatedItem;
         if (updatedItem is T) {
           unawaited(saveItem(updatedItem));
+        } else if (updatedItem is GroupModel) {
+          unawaited(saveGroup(updatedItem));
         }
       }
     }
@@ -96,14 +147,25 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
     return items;
   }
 
+  Future<void> moveItem(AListItemModel item, FilesystemPath newFilesystemPath);
+
   Future<void> deleteItem(AListItemModel item);
 
   @protected
   Future<List<T>> fetchAllItems();
 
   @protected
+  Future<List<GroupModel>> fetchAllGroups();
+
+  @protected
   Future<T?> fetchSingleItem(T item);
 
   @protected
+  Future<GroupModel?> fetchSingleGroup(GroupModel group);
+
+  @protected
   Future<void> saveItem(T item);
+
+  @protected
+  Future<void> saveGroup(GroupModel group);
 }

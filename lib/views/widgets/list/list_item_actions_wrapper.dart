@@ -3,25 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
+import 'package:snggle/views/widgets/drag/source/drag_source_gesture_detector.dart';
 import 'package:snggle/views/widgets/generic/selection_wrapper.dart';
+import 'package:snggle/views/widgets/icons/list_item_icon.dart';
 import 'package:snggle/views/widgets/list/list_item_context_tooltip.dart';
 import 'package:snggle/views/widgets/list/list_item_page_tooltip.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_wrapper.dart';
 
 class ListItemActionsWrapper<T extends AListItemModel, C extends AListCubit<T>> extends StatefulWidget {
   final Size listItemSize;
+  final String defaultPageTitle;
   final C listCubit;
   final AListItemModel listItemModel;
   final ValueChanged<AListItemModel> onNavigate;
   final Widget child;
+  final DraggedItemNotifier draggedItemNotifier;
   final EdgeInsets selectionPadding;
 
   const ListItemActionsWrapper({
     required this.listItemSize,
+    required this.defaultPageTitle,
     required this.listCubit,
     required this.listItemModel,
     required this.onNavigate,
     required this.child,
+    required this.draggedItemNotifier,
     this.selectionPadding = EdgeInsets.zero,
     super.key,
   });
@@ -48,9 +55,18 @@ class _ListItemActionsWrapperState<T extends AListItemModel, C extends AListCubi
         child: IgnorePointer(child: widget.child),
       );
     } else {
-      child = GestureDetector(
+      child = DragSourceGestureDetector<T>(
+        defaultPageTitle: widget.defaultPageTitle,
+        draggedItemNotifier: widget.draggedItemNotifier,
+        data: widget.listItemModel,
+        draggedItem: ListItemIcon(
+          listItemModel: listItemModel,
+          size: widget.listItemSize,
+        ),
+        listCubit: widget.listCubit,
         onTap: _handleNavigation,
         onLongPress: _openToolbar,
+        onDragPopupOpen: _closeToolbar,
         child: child,
       );
     }
@@ -63,9 +79,7 @@ class _ListItemActionsWrapperState<T extends AListItemModel, C extends AListCubi
         content: ListItemContextTooltip<T>(
           listItemModel: listItemModel,
           listCubit: widget.listCubit,
-          pageTooltip: ListItemPageTooltip<T, C>(
-            listCubit: widget.listCubit,
-          ),
+          pageTooltip: ListItemPageTooltip<T, C>(listCubit: widget.listCubit),
           onCloseToolbar: _closeToolbar,
         ),
         child: child,

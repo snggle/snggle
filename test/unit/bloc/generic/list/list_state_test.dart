@@ -15,6 +15,7 @@ void main() {
     test('Should [return TRUE] if [SelectionModel EXISTS]', () {
       // Arrange
       ListState actualListState = ListState(
+        depth: 0,
         loadingBool: false,
         allItems: actualTestListItems,
         filesystemPath: const FilesystemPath.empty(),
@@ -28,6 +29,7 @@ void main() {
     test('Should [return FALSE] if [SelectionModel NOT EXISTS]', () {
       // Arrange
       ListState actualListState = ListState(
+        depth: 0,
         loadingBool: false,
         allItems: actualTestListItems,
         filesystemPath: const FilesystemPath.empty(),
@@ -42,6 +44,7 @@ void main() {
     test('Should [return TRUE] if [loadingBool == TRUE]', () {
       // Arrange
       ListState actualListState = ListState(
+        depth: 0,
         loadingBool: true,
         allItems: actualTestListItems,
         filesystemPath: const FilesystemPath.empty(),
@@ -54,6 +57,7 @@ void main() {
     test('Should [return TRUE] if [loadingBool == FALSE] and [items EMPTY]', () {
       // Arrange
       ListState actualListState = const ListState(
+        depth: 0,
         loadingBool: false,
         allItems: <TestListItem>[],
         filesystemPath: FilesystemPath.empty(),
@@ -66,6 +70,7 @@ void main() {
     test('Should [return FALSE] if [loadingBool == FALSE] and [items NOT EMPTY]', () {
       // Arrange
       ListState actualListState = ListState(
+        depth: 0,
         loadingBool: false,
         allItems: actualTestListItems,
         filesystemPath: const FilesystemPath.empty(),
@@ -80,6 +85,7 @@ void main() {
     test('Should [return TRUE] if [loadingBool == FALSE] and [items EMPTY]', () {
       // Arrange
       ListState actualListState = const ListState(
+        depth: 0,
         loadingBool: false,
         allItems: <TestListItem>[],
         filesystemPath: FilesystemPath.empty(),
@@ -92,6 +98,7 @@ void main() {
     test('Should [return FALSE] if [loadingBool == TRUE] and [items EMPTY]', () {
       // Arrange
       ListState actualListState = const ListState(
+        depth: 0,
         loadingBool: true,
         allItems: <TestListItem>[],
         filesystemPath: FilesystemPath.empty(),
@@ -104,6 +111,7 @@ void main() {
     test('Should [return FALSE] if [loadingBool == FALSE] and [items NOT EMPTY]', () {
       // Arrange
       ListState actualListState = ListState(
+        depth: 0,
         loadingBool: false,
         allItems: actualTestListItems,
         filesystemPath: const FilesystemPath.empty(),
@@ -114,10 +122,67 @@ void main() {
     });
   });
 
+  group('Tests of ListState.canPop getter', () {
+    test('Should [return TRUE] if [SelectionModel EXISTS] and [depth > 0]', () {
+      // Arrange
+      ListState actualListState = ListState(
+        depth: 1,
+        loadingBool: false,
+        allItems: actualTestListItems,
+        filesystemPath: FilesystemPath.fromString('4e66ba36-966e-49ed-b639-191388ce38de'),
+        selectionModel: SelectionModel(selectedItems: <TestListItem>[], allItemsCount: 3),
+      );
+
+      // Assert
+      expect(actualListState.canPop, true);
+    });
+
+    test('Should [return TRUE] if [SelectionModel EXISTS] and [depth == 0]', () {
+      // Arrange
+      ListState actualListState = ListState(
+        depth: 0,
+        loadingBool: false,
+        allItems: actualTestListItems,
+        filesystemPath: const FilesystemPath.empty(),
+        selectionModel: SelectionModel(selectedItems: <TestListItem>[], allItemsCount: 3),
+      );
+
+      // Assert
+      expect(actualListState.canPop, true);
+    });
+
+    test('Should [return TRUE] if [SelectionModel NOT EXISTS] and [depth > 0]', () {
+      // Arrange
+      ListState actualListState = ListState(
+        depth: 1,
+        loadingBool: false,
+        allItems: actualTestListItems,
+        filesystemPath: FilesystemPath.fromString('4e66ba36-966e-49ed-b639-191388ce38de'),
+      );
+
+      // Assert
+      expect(actualListState.canPop, true);
+    });
+
+    test('Should [return FALSE] if [SelectionModel NOT EXISTS] and [depth == 0]', () {
+      // Arrange
+      ListState actualListState = ListState(
+        depth: 0,
+        loadingBool: false,
+        allItems: actualTestListItems,
+        filesystemPath: const FilesystemPath.empty(),
+      );
+
+      // Assert
+      expect(actualListState.canPop, false);
+    });
+  });
+
   group('Tests of ListState.selectedItems getter', () {
     test('Should [return selected items] if [SelectionModel EXISTS] and [selected items NOT EMPTY]', () {
       // Arrange
       ListState actualListState = ListState(
+        depth: 0,
         loadingBool: false,
         allItems: actualTestListItems,
         filesystemPath: const FilesystemPath.empty(),
@@ -140,6 +205,7 @@ void main() {
     test('Should [return EMPTY list] if [SelectionModel EXISTS] but [selected items EMPTY]', () {
       // Arrange
       ListState actualListState = ListState(
+        depth: 0,
         loadingBool: false,
         allItems: actualTestListItems,
         filesystemPath: const FilesystemPath.empty(),
@@ -158,6 +224,7 @@ void main() {
     test('Should [return EMPTY list] if [SelectionModel NOT EXISTS]', () {
       // Arrange
       ListState actualListState = ListState(
+        depth: 0,
         loadingBool: false,
         allItems: actualTestListItems,
         filesystemPath: const FilesystemPath.empty(),
