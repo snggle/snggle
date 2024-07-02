@@ -239,7 +239,7 @@ void main() {
 
         // Since vault UUID generation is random, predicting it's value is not possible.
         // For that reason we check if vaults count increased by 1 in database
-        expect(actualSecretsFilesystemStructure.length, 3);
+        expect(actualSecretsFilesystemStructure.length, 4);
         expect(actualVaultsMap.length, 3);
       });
     });

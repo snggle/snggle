@@ -33,6 +33,7 @@ class GroupIcon extends StatelessWidget {
       encryptedBool: encryptedBool,
       size: size,
       child: GroupGridIcon(
+        gap: 1.5,
         padding: EdgeInsets.zero,
         listItemsPreview: listItemsPreview,
       ),

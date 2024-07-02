@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
+import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/views/widgets/custom/custom_flexible_grid.dart';
 import 'package:snggle/views/widgets/icons/group_container_icon.dart';
+import 'package:snggle/views/widgets/icons/network_icon.dart';
 import 'package:snggle/views/widgets/icons/vault_container_icon.dart';
 import 'package:snggle/views/widgets/icons/wallet_icon.dart';
 
 class GroupGridIcon extends StatelessWidget {
   final List<AListItemModel> listItemsPreview;
   final EdgeInsets padding;
+  final double gap;
 
   const GroupGridIcon({
     required this.listItemsPreview,
     required this.padding,
+    this.gap = 3,
     super.key,
   });
 
@@ -24,8 +28,8 @@ class GroupGridIcon extends StatelessWidget {
       padding: padding,
       child: CustomFlexibleGrid.builder(
         columnsCount: 3,
-        verticalGap: 3,
-        horizontalGap: 3,
+        verticalGap: gap,
+        horizontalGap: gap,
         childCount: 9,
         itemBuilder: (BuildContext context, int index) {
           if (index >= listItemsPreview.length) {
@@ -41,6 +45,11 @@ class GroupGridIcon extends StatelessWidget {
                   return VaultContainerIcon.fromVaultModel(
                     size: constraints.maxWidth,
                     vaultModel: vaultModel,
+                  );
+                case NetworkGroupModel networkGroupModel:
+                  return NetworkIcon(
+                    size: constraints.maxWidth,
+                    networkGroupModel: networkGroupModel,
                   );
                 case GroupModel groupModel:
                   return GroupContainerIcon.fromGroupModel(

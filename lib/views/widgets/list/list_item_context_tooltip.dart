@@ -8,12 +8,14 @@ import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_con
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_item.dart';
 
 class ListItemContextTooltip<T extends AListItemModel> extends StatefulWidget {
+  final bool allowItemDeletionBool;
   final AListItemModel listItemModel;
   final AListCubit<T> listCubit;
   final Widget pageTooltip;
   final VoidCallback onCloseToolbar;
 
   const ListItemContextTooltip({
+    required this.allowItemDeletionBool,
     required this.listItemModel,
     required this.listCubit,
     required this.pageTooltip,
@@ -60,11 +62,12 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
             label: 'Lock',
             onTap: () => _handleLockValueChanged(true),
           ),
-        ContextTooltipItem(
-          iconData: AppIcons.close_1,
-          label: 'Delete',
-          onTap: _pressDeleteButton,
-        ),
+        if (widget.allowItemDeletionBool)
+          ContextTooltipItem(
+            iconData: AppIcons.close_1,
+            label: 'Delete',
+            onTap: _pressDeleteButton,
+          ),
       ],
     );
   }
