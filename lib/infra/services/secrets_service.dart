@@ -9,6 +9,15 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 class SecretsService {
   final SecretsRepository _secretsRepository = globalLocator<SecretsRepository>();
 
+  Future<void> changePassword(FilesystemPath filesystemPath, PasswordModel oldPasswordModel, PasswordModel newPasswordModel) async {
+    String secrets = await _secretsRepository.getEncrypted(filesystemPath);
+
+    String decryptedData = oldPasswordModel.decrypt(encryptedData: secrets);
+    String encryptedData = newPasswordModel.encrypt(decryptedData: decryptedData);
+
+    await _secretsRepository.saveEncrypted(filesystemPath, encryptedData);
+  }
+
   Future<T> get<T extends ASecretsModel>(FilesystemPath filesystemPath, PasswordModel passwordModel) async {
     String encryptedSecrets = await _secretsRepository.getEncrypted(filesystemPath);
     String decryptedHash = passwordModel.decrypt(encryptedData: encryptedSecrets);

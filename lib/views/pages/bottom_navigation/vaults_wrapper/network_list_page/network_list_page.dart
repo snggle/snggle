@@ -110,7 +110,7 @@ class _NetworkListPageState extends State<NetworkListPage> {
     );
   }
 
-  Future<void> _navigateToNextPage(AListItemModel listItemModel) async {
+  Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
     if (listItemModel is NetworkGroupModel) {
       await AutoRouter.of(context).push<void>(
         WalletListRoute(

@@ -82,6 +82,66 @@ void main() {
     });
   });
 
+  group('Tests of SecretsService.changePassword()', () {
+    test('Should [UPDATE secrets password] if [secrets path EXISTS] in filesystem storage and [password VALID]', () async {
+      // Act
+      await globalLocator<SecretsService>().changePassword(
+        FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8'),
+        PasswordModel.fromPlaintext('1111'),
+        PasswordModel.defaultPassword(),
+      );
+
+      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
+        testSessionUUID,
+        actualMasterKeyVO,
+        actualAppPasswordModel,
+      );
+
+      // Output is always a random string because AES changes the initialization vector with Random Secure
+      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
+      actualUpdatedFilesystemStructure['secrets']['5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle'] = PasswordModel.defaultPassword().decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['secrets']['5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle'] as String,
+      );
+      actualUpdatedFilesystemStructure['secrets']['9b282030-4c0f-482e-ba0d-524e10822f65.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['secrets']['9b282030-4c0f-482e-ba0d-524e10822f65.snggle'] as String,
+      );
+
+      // Assert
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'secrets': <String, dynamic>{
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '{"mnemonic":"load capable clerk afraid unveil cliff junk motor million leopard beauty chalk"}',
+          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': '{"mnemonic":"shrimp final march bracket have lazy taste govern obey away someone glad"}',
+        },
+      };
+
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
+    });
+
+    test('Should [throw InvalidPasswordException] if [secrets path EXISTS] in filesystem storage and [password INVALID]', () async {
+      // Assert
+      expect(
+        () => globalLocator<SecretsService>().changePassword(
+          FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8'),
+          PasswordModel.fromPlaintext('invalid_password'),
+          PasswordModel.defaultPassword(),
+        ),
+        throwsA(isA<InvalidPasswordException>()),
+      );
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXISTS] in filesystem storage', () async {
+      // Assert
+      expect(
+        () => globalLocator<SecretsService>().changePassword(
+          FilesystemPath.fromString('invalid_path'),
+          PasswordModel.fromPlaintext('1111'),
+          PasswordModel.defaultPassword(),
+        ),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
   group('Tests of SecretsService.get()', () {
     test('Should [return ASecretsModel] if [secrets path EXISTS] in filesystem storage and [password VALID]', () async {
       // Arrange
