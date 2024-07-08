@@ -55,4 +55,5 @@ class AppIcons {
   static const AssetIconData menu_unselect_all = AssetIconData('assets/icons/menu_unselect_all.svg');
   static const AssetIconData page_add_button = AssetIconData('assets/icons/page_add_button.svg');
   static const AssetIconData page_no_data = AssetIconData('assets/icons/page_no_data.svg');
+  static const AssetIconData settings_warning = AssetIconData('assets/icons/settings_warning.svg');
 }

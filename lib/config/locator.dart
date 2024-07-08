@@ -11,7 +11,7 @@ import 'package:snggle/infra/repositories/secrets_repository.dart';
 import 'package:snggle/infra/repositories/transactions_repository.dart';
 import 'package:snggle/infra/repositories/vaults_repository.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
-import 'package:snggle/infra/services/app_auth_service.dart';
+import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/infra/services/network_groups_service.dart';
@@ -59,7 +59,7 @@ void _initRepositories() {
 
 void _initServices() {
   globalLocator
-    ..registerLazySingleton<AppAuthService>(AppAuthService.new)
+    ..registerLazySingleton<AppService>(AppService.new)
     ..registerLazySingleton<NetworkGroupsService>(NetworkGroupsService.new)
     ..registerLazySingleton<MasterKeyService>(MasterKeyService.new)
     ..registerLazySingleton<SecretsService>(SecretsService.new)
