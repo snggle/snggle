@@ -1,78 +1,48 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/database_parent_key.dart';
-import 'package:snggle/infra/managers/filesystem_storage/encrypted_filesystem_storage_manager.dart';
-import 'package:snggle/infra/repositories/secrets_repository.dart';
+import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
-import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
-import 'package:snggle/shared/value_objects/master_key_vo.dart';
-import 'package:uuid/uuid.dart';
 
-import '../../../utils/test_utils.dart';
+import '../../../utils/test_database.dart';
 
 void main() {
-  String testSessionUUID = const Uuid().v4();
+  late TestDatabase testDatabase;
 
-  FlutterSecureStorage actualFlutterSecureStorage = const FlutterSecureStorage();
-  PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
-  DatabaseParentKey actualDatabaseParentKey = DatabaseParentKey.wallets;
+  SecureStorageKey actualSecureStorageKey = SecureStorageKey.wallets;
 
   // @formatter:off
-  MasterKeyVO actualMasterKeyVO = const MasterKeyVO(encryptedMasterKey: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');
-
   Map<String, String> filledWalletsDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    DatabaseParentKey.wallets.name:'7MxmaVCoOM+ZXa52QtwVKCSaajmWAg++MrUpK4Mdevs5Kn3gGwWz+LefennY3RljJl0LhhzlXu1Z/4HdqYo7KyKJ4O0gUpaNLTvVhQk30zm8HW6bJIOUuYGaDz8m9/tIWbax2soWYuNkIyV1Ej8BQAiDxrMaT1muW5HERhF/3WlFBW9CsH1+CYmO26wpqXFcOEL5VBzYl84g28o2Xo/imtTAhCYkaIYpUfqBwjSrtEcuMcCQFcJVAEJbD7PjiMgWnj/NwF8nDM3kOl8veJpS3klEywfyOsuWrsqSMF6mzmF+6pMwzTMTNr4GLwDUwB+mSDl/AX3kc0SiJfN5ypa/NEEsRGdHX0kcOPw76TIGwC+qHbgFS7IiC+YK1pKdwLPQuBNHHScih1UlgSW3wkEQjyWoWBEA/TtccsNYoo4na2H+ph28GQQBZrV+r5Lok2ShjFYnSwPoMQztjnzTiWRcmMbU832fApYO5ctG63QNqzQYU+ZlExU4F56hKCKzzRuhWL4PcFIm9qaqY4gthHY6vPG8jhTCQ0RTrDwibUU9Mb/nn9jqvbvJKVlz5ZtWXjoJ6BVOsS5ULilrBjE+aXFsihNgX7JoJzm9bupkJ3N3I1Vo9pPKxZxw6FGtVokKC5l1ehGJe7baXmlgGgwyGdCyfR7zO66rzsmOxH/qL71ts0aVCtjJYA24xW79v0fzZyF12U+GTxhsnvyDRpeWVUQcqOn4+Z9h8kedaKrMaERoHmWTgL+ugdXAha9V04ETNvi5nt552mwzET9BJUNWKURPd29VnOzaYC4mMbHP904RB8nDDv3ssNPaaebo54ltkW04JVW8XHklUeDW5PVGe7PFfs81MreZ8zPkraXG2Bf6Wif71BLm/HYfJ/hbzCxdjTR9eWZFuGrq0E12uUtIVc0mk1pGa1Z+pEzAQ0jY5pCfUgVtFr8BHnkcrMxswbtuPAtwboY23amvQH7Mf5yhYlrpW3OE1s2bXR3H1LmBeiLDfhA/0YppfxlteN+sr6W0wF8PCEFCjco3/6ibqwW+33SEeJ5VAD4ApZB60JV7xAiP8NLQG8TMI76oZ+mQVlEtMSzD2n+XFQ/GM33xl1n8xq8CPw/TPfaDZol32/HAEWi+vJ0o8sjzLWm2Wr2X5GQ0iHfinEWbBVVyx2d3Zw0ddRmg8LbJ+GibareycdHffSFJnqN56Cfm6OCDwPVW25qrYngGXHY4JMuXAPzukrfeVI0tG9QlSyDN+dzgvH9A2mpTpDARMh2hvx77/5p2AoVQ3yKtMF51cgFAF4KjRzkbFLreGzp13dJozxmJxMOOwnCSRhFxzXbnqllx7AOh9MC8RKuOG7oWy9TJ/fDLIsyTLPF119RxUgU7hDxafsUl2Jr90wg/83j1l1cAW3Tkz28+bljGAsJpJzi86fAIl3jyE9c/vyKs2Q1XUxK9y3TFPy0IVEBsKVMbPj3chp283gIXFXOliZaiPhYyv4NUhROuZUWBDmvNoJiToQEfd9w02sQ8eId02wgEHr8wjQjGV4x7tcexHPCHvUKcLyX0q8lH7XPOrBZA0pqdGkdgofCzN6joCtHcAF3FXUUXyrsZK3qNrfMDkICoRiT9vAkebBzhj6gph1fgVyam65DqALovvM5FdXwtvKmXAKJDPVxkhahBRD4ONvBkSXV7Sdi5d5hTcBD3qCj4rjQobb7MkM77mjaMfcTa5C1YPyDhmhzIJqX6aj2pNyKw8TTpgFf3aY2q/Ktb43Phz+jfwMVR3g221tvKNyH/JtwbKUAR2SYo+ti6I/LRDZCVDMawkCPVUgitTfBEDEbi10M=',
+    SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    SecureStorageKey.wallets.name:'7MxmaVCoOM+ZXa52QtwVKCSaajmWAg++MrUpK4Mdevs5Kn3gGwWz+LefennY3RljJl0LhhzlXu1Z/4HdqYo7KyKJ4O0gUpaNLTvVhQk30zm8HW6bJIOUuYGaDz8m9/tIWbax2soWYuNkIyV1Ej8BQAiDxrMaT1muW5HERhF/3WlFBW9CsH1+CYmO26wpqXFcOEL5VBzYl84g28o2Xo/imtTAhCYkaIYpUfqBwjSrtEcuMcCQFcJVAEJbD7PjiMgWnj/NwF8nDM3kOl8veJpS3klEywfyOsuWrsqSMF6mzmF+6pMwzTMTNr4GLwDUwB+mSDl/AX3kc0SiJfN5ypa/NEEsRGdHX0kcOPw76TIGwC+qHbgFS7IiC+YK1pKdwLPQuBNHHScih1UlgSW3wkEQjyWoWBEA/TtccsNYoo4na2H+ph28GQQBZrV+r5Lok2ShjFYnSwPoMQztjnzTiWRcmMbU832fApYO5ctG63QNqzQYU+ZlExU4F56hKCKzzRuhWL4PcFIm9qaqY4gthHY6vPG8jhTCQ0RTrDwibUU9Mb/nn9jqvbvJKVlz5ZtWXjoJ6BVOsS5ULilrBjE+aXFsihNgX7JoJzm9bupkJ3N3I1Vo9pPKxZxw6FGtVokKC5l1ehGJe7baXmlgGgwyGdCyfR7zO66rzsmOxH/qL71ts0aVCtjJYA24xW79v0fzZyF12U+GTxhsnvyDRpeWVUQcqOn4+Z9h8kedaKrMaERoHmWTgL+ugdXAha9V04ETNvi5nt552mwzET9BJUNWKURPd29VnOzaYC4mMbHP904RB8nDDv3ssNPaaebo54ltkW04JVW8XHklUeDW5PVGe7PFfs81MreZ8zPkraXG2Bf6Wif71BLm/HYfJ/hbzCxdjTR9eWZFuGrq0E12uUtIVc0mk1pGa1Z+pEzAQ0jY5pCfUgVtFr8BHnkcrMxswbtuPAtwboY23amvQH7Mf5yhYlrpW3OE1s2bXR3H1LmBeiLDfhA/0YppfxlteN+sr6W0wF8PCEFCjco3/6ibqwW+33SEeJ5VAD4ApZB60JV7xAiP8NLQG8TMI76oZ+mQVlEtMSzD2n+XFQ/GM33xl1n8xq8CPw/TPfaDZol32/HAEWi+vJ0o8sjzLWm2Wr2X5GQ0iHfinEWbBVVyx2d3Zw0ddRmg8LbJ+GibareycdHffSFJnqN56Cfm6OCDwPVW25qrYngGXHY4JMuXAPzukrfeVI0tG9QlSyDN+dzgvH9A2mpTpDARMh2hvx77/5p2AoVQ3yKtMF51cgFAF4KjRzkbFLreGzp13dJozxmJxMOOwnCSRhFxzXbnqllx7AOh9MC8RKuOG7oWy9TJ/fDLIsyTLPF119RxUgU7hDxafsUl2Jr90wg/83j1l1cAW3Tkz28+bljGAsJpJzi86fAIl3jyE9c/vyKs2Q1XUxK9y3TFPy0IVEBsKVMbPj3chp283gIXFXOliZaiPhYyv4NUhROuZUWBDmvNoJiToQEfd9w02sQ8eId02wgEHr8wjQjGV4x7tcexHPCHvUKcLyX0q8lH7XPOrBZA0pqdGkdgofCzN6joCtHcAF3FXUUXyrsZK3qNrfMDkICoRiT9vAkebBzhj6gph1fgVyam65DqALovvM5FdXwtvKmXAKJDPVxkhahBRD4ONvBkSXV7Sdi5d5hTcBD3qCj4rjQobb7MkM77mjaMfcTa5C1YPyDhmhzIJqX6aj2pNyKw8TTpgFf3aY2q/Ktb43Phz+jfwMVR3g221tvKNyH/JtwbKUAR2SYo+ti6I/LRDZCVDMawkCPVUgitTfBEDEbi10M=',
   };
 
   Map<String, String> emptyWalletsDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    DatabaseParentKey.wallets.name: 'L8uo+Q4teE3WrID1Cnhcopjcv9XJnZFFUBK6X/GfhuW2IFAm',
+    SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    SecureStorageKey.wallets.name: 'L8uo+Q4teE3WrID1Cnhcopjcv9XJnZFFUBK6X/GfhuW2IFAm',
   };
 
   Map<String, String> masterKeyOnlyDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
   };
   // @formatter:on
 
   setUp(() {
-    globalLocator.allowReassignment = true;
-    initLocator();
-
-    EncryptedFilesystemStorageManager actualEncryptedFilesystemStorageManager = EncryptedFilesystemStorageManager(
-      rootDirectoryBuilder: () async => Directory('${TestUtils.testRootDirectory.path}/$testSessionUUID'),
-      databaseParentKey: DatabaseParentKey.secrets,
-    );
-
-    SecretsRepository actualSecretsRepository = SecretsRepository(filesystemStorageManager: actualEncryptedFilesystemStorageManager);
-
-    globalLocator.registerLazySingleton(() => actualSecretsRepository);
-    globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
+    testDatabase = TestDatabase(appPasswordModel: PasswordModel.fromPlaintext('1111'));
   });
 
   group('Tests of initial database state', () {
     test('Should [return Map of wallets] as ["wallets" key value EXISTS] in database', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
+      testDatabase.updateSecureStorage(filledWalletsDatabase);
 
       // Act
-      String? actualEncryptedWalletsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
-
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedWalletsKeyValue = actualMasterKeyVO.decrypt(
-        appPasswordModel: actualAppPasswordModel,
-        encryptedData: actualEncryptedWalletsKeyValue!,
-      );
-      Map<String, dynamic> actualWalletsMap = jsonDecode(actualDecryptedWalletsKeyValue) as Map<String, dynamic>;
+      Map<String, dynamic> actualWalletsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
 
       // Assert
       Map<String, dynamic> expectedWalletsMap = <String, dynamic>{
@@ -123,34 +93,27 @@ void main() {
 
     test('Should [return EMPTY map] as ["wallets" key value is EMPTY]', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyWalletsDatabase));
+      testDatabase.updateSecureStorage(emptyWalletsDatabase);
 
       // Act
-      String? actualEncryptedVaultsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
-
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedVaultsKeyValue = actualMasterKeyVO.decrypt(
-        appPasswordModel: actualAppPasswordModel,
-        encryptedData: actualEncryptedVaultsKeyValue!,
-      );
-      Map<String, dynamic> actualVaultsMap = jsonDecode(actualDecryptedVaultsKeyValue) as Map<String, dynamic>;
+      Map<String, dynamic> actualWalletsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
 
       // Assert
       Map<String, dynamic> expectedVaultsMap = <String, dynamic>{};
 
-      expect(actualVaultsMap, expectedVaultsMap);
+      expect(actualWalletsMap, expectedVaultsMap);
     });
   });
 
   group('Tests of WalletsRepository.getAll()', () {
     test('Should [return List of WalletEntity] if ["wallets" key EXISTS] in database and [HAS VALUES]', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
-      WalletsRepository actualWalletsRepository = WalletsRepository();
+      testDatabase.updateSecureStorage(filledWalletsDatabase);
 
       // Act
-      List<WalletEntity> actualWalletEntityList = await actualWalletsRepository.getAll();
+      List<WalletEntity> actualWalletEntityList = await globalLocator<WalletsRepository>().getAll();
 
       // Assert
       List<WalletEntity> expectedWalletEntityList = <WalletEntity>[
@@ -201,11 +164,10 @@ void main() {
 
     test('Should [return EMPTY list] if ["wallets" key EXISTS] in database and [value EMPTY]', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyWalletsDatabase));
-      WalletsRepository actualWalletsRepository = WalletsRepository();
+      testDatabase.updateSecureStorage(emptyWalletsDatabase);
 
       // Act
-      List<WalletEntity> actualWalletEntityList = await actualWalletsRepository.getAll();
+      List<WalletEntity> actualWalletEntityList = await globalLocator<WalletsRepository>().getAll();
 
       // Assert
       List<WalletEntity> expectedWalletEntityList = <WalletEntity>[];
@@ -215,11 +177,10 @@ void main() {
 
     test('Should [return EMPTY list] if ["wallets" key NOT EXISTS] in database', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(masterKeyOnlyDatabase));
-      WalletsRepository actualWalletsRepository = WalletsRepository();
+      testDatabase.updateSecureStorage(masterKeyOnlyDatabase);
 
       // Act
-      List<WalletEntity> actualWalletEntityList = await actualWalletsRepository.getAll();
+      List<WalletEntity> actualWalletEntityList = await globalLocator<WalletsRepository>().getAll();
 
       // Assert
       List<WalletEntity> expectedWalletEntityList = <WalletEntity>[];
@@ -231,11 +192,10 @@ void main() {
   group('Tests of WalletsRepository.getById()', () {
     test('Should [return WalletEntity] if [wallet UUID EXISTS] in collection', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
-      WalletsRepository actualWalletsRepository = WalletsRepository();
+      testDatabase.updateSecureStorage(filledWalletsDatabase);
 
       // Act
-      WalletEntity actualWalletEntity = await actualWalletsRepository.getById('4e66ba36-966e-49ed-b639-191388ce38de');
+      WalletEntity actualWalletEntity = await globalLocator<WalletsRepository>().getById('4e66ba36-966e-49ed-b639-191388ce38de');
 
       // Assert
       WalletEntity expectedWalletEntity = WalletEntity(
@@ -254,12 +214,11 @@ void main() {
 
     test('Should [throw ChildKeyNotFoundException] if [wallet UUID NOT EXISTS] in collection', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
-      WalletsRepository actualWalletsRepository = WalletsRepository();
+      testDatabase.updateSecureStorage(filledWalletsDatabase);
 
       // Assert
       expect(
-        () => actualWalletsRepository.getById('not_existing_id'),
+        () => globalLocator<WalletsRepository>().getById('not_existing_id'),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -268,7 +227,8 @@ void main() {
   group('Tests of WalletsRepository.save()', () {
     test('Should [UPDATE wallet] if [wallet UUID EXISTS] in collection', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
+      testDatabase.updateSecureStorage(filledWalletsDatabase);
+
       WalletEntity actualUpdatedWalletEntity = WalletEntity(
         pinnedBool: true,
         encryptedBool: false,
@@ -283,15 +243,10 @@ void main() {
 
       // Act
       await globalLocator<WalletsRepository>().save(actualUpdatedWalletEntity);
-      String? actualEncryptedWalletsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedWalletsKeyValue = actualMasterKeyVO.decrypt(
-        appPasswordModel: actualAppPasswordModel,
-        encryptedData: actualEncryptedWalletsKeyValue!,
-      );
-      Map<String, dynamic> actualWalletsMap = jsonDecode(actualDecryptedWalletsKeyValue) as Map<String, dynamic>;
+      Map<String, dynamic> actualWalletsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
 
       // Assert
       Map<String, dynamic> expectedWalletsMap = <String, dynamic>{
@@ -343,7 +298,7 @@ void main() {
 
     test('Should [SAVE wallet] if [wallet UUID NOT EXISTS] in collection', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyWalletsDatabase));
+      testDatabase.updateSecureStorage(emptyWalletsDatabase);
 
       WalletEntity actualNewWalletEntity = WalletEntity(
           pinnedBool: true,
@@ -358,15 +313,10 @@ void main() {
 
       // Act
       await globalLocator<WalletsRepository>().save(actualNewWalletEntity);
-      String? actualEncryptedWalletsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedWalletsKeyValue = actualMasterKeyVO.decrypt(
-        appPasswordModel: actualAppPasswordModel,
-        encryptedData: actualEncryptedWalletsKeyValue!,
-      );
-      Map<String, dynamic> actualWalletsMap = jsonDecode(actualDecryptedWalletsKeyValue) as Map<String, dynamic>;
+      Map<String, dynamic> actualWalletsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
 
       // Assert
       Map<String, dynamic> expectedWalletsMap = <String, dynamic>{
@@ -388,7 +338,8 @@ void main() {
 
     test('Should [SAVE wallet] if ["wallets" key NOT EXISTS] in database', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(masterKeyOnlyDatabase));
+      testDatabase.updateSecureStorage(masterKeyOnlyDatabase);
+
       WalletEntity actualNewWalletEntity = WalletEntity(
         pinnedBool: true,
         encryptedBool: false,
@@ -402,15 +353,10 @@ void main() {
 
       // Act
       await globalLocator<WalletsRepository>().save(actualNewWalletEntity);
-      String? actualEncryptedWalletsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String actualDecryptedWalletsKeyValue = actualMasterKeyVO.decrypt(
-        appPasswordModel: actualAppPasswordModel,
-        encryptedData: actualEncryptedWalletsKeyValue!,
-      );
-      Map<String, dynamic> actualWalletsMap = jsonDecode(actualDecryptedWalletsKeyValue) as Map<String, dynamic>;
+      Map<String, dynamic> actualWalletsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
 
       // Assert
       Map<String, dynamic> expectedWalletsMap = <String, dynamic>{
@@ -434,19 +380,14 @@ void main() {
   group('Tests of WalletsRepository.deleteById()', () {
     test('Should [REMOVE wallet] if [wallet UUID EXISTS] in collection', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
+      testDatabase.updateSecureStorage(filledWalletsDatabase);
 
       // Act
       await globalLocator<WalletsRepository>().deleteById('4e66ba36-966e-49ed-b639-191388ce38de');
-      String? actualEncryptedWalletsKeyValue = await actualFlutterSecureStorage.read(key: actualDatabaseParentKey.name);
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      String? actualDecryptedWalletsKeyValue = actualMasterKeyVO.decrypt(
-        appPasswordModel: actualAppPasswordModel,
-        encryptedData: actualEncryptedWalletsKeyValue!,
-      );
-      Map<String, dynamic> actualWalletsMap = jsonDecode(actualDecryptedWalletsKeyValue) as Map<String, dynamic>;
+      Map<String, dynamic> actualWalletsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
 
       // Assert
       Map<String, dynamic> expectedWalletsMap = <String, dynamic>{
@@ -487,18 +428,17 @@ void main() {
 
     test('Should [throw ChildKeyNotFoundException] if [wallet UUID NOT EXISTS] in collection', () async {
       // Arrange
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(emptyWalletsDatabase));
-      WalletsRepository actualWalletsRepository = WalletsRepository();
+      testDatabase.updateSecureStorage(emptyWalletsDatabase);
 
       // Assert
       expect(
-        () => actualWalletsRepository.deleteById('not_existing_id'),
+        () => globalLocator<WalletsRepository>().deleteById('not_existing_id'),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
   });
 
   tearDownAll(() {
-    TestUtils.clearCache(testSessionUUID);
+    testDatabase.close();
   });
 }

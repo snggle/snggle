@@ -1,21 +1,21 @@
-import 'package:snggle/infra/managers/database_parent_key.dart';
-import 'package:snggle/infra/managers/decrypted_database_manager.dart';
+import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
+import 'package:snggle/infra/managers/secure_storage/secure_storage_manager.dart';
 
 class MasterKeyRepository {
-  final DatabaseParentKey _databaseParentKey = DatabaseParentKey.encryptedMasterKey;
-  final DecryptedDatabaseManager _decryptedDatabaseManager = DecryptedDatabaseManager();
+  final SecureStorageKey _secureStorageKey = SecureStorageKey.encryptedMasterKey;
+  final SecureStorageManager _secureStorageManager = SecureStorageManager();
 
   Future<bool> isMasterKeyExists() async {
-    bool masterKeyExistsBool = await _decryptedDatabaseManager.containsKey(databaseParentKey: _databaseParentKey);
+    bool masterKeyExistsBool = await _secureStorageManager.containsKey(secureStorageKey: _secureStorageKey);
     return masterKeyExistsBool;
   }
 
   Future<String> getMasterKey() async {
-    String encryptedMasterKey = await _decryptedDatabaseManager.read(databaseParentKey: _databaseParentKey);
+    String encryptedMasterKey = await _secureStorageManager.read(secureStorageKey: _secureStorageKey);
     return encryptedMasterKey;
   }
 
   Future<void> setMasterKey(String encryptedMasterKey) async {
-    await _decryptedDatabaseManager.write(databaseParentKey: _databaseParentKey, plaintextValue: encryptedMasterKey);
+    await _secureStorageManager.write(secureStorageKey: _secureStorageKey, plaintextValue: encryptedMasterKey);
   }
 }

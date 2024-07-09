@@ -7,7 +7,7 @@ import 'package:snggle/bloc/splash_page/states/splash_page_ignore_pin_state.dart
 import 'package:snggle/bloc/splash_page/states/splash_page_loading_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_setup_pin_state.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/managers/database_parent_key.dart';
+import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 
 void main() {
   initLocator();
@@ -60,7 +60,7 @@ void main() {
       build: () {
         // @formatter:off
         FlutterSecureStorage.setMockInitialValues(<String, String>{
-          DatabaseParentKey.encryptedMasterKey.name: 'Hr7afkeYIZeUWGvYsFEMorVcFSpr2ehXJ8ncwa1XTL71Q39Dl2LLciHKmaqs4YZqMiceOG3uBSHSyt6JP0F4yKJTWh2Ykrc00aHN/Ui58aNaXkyi7FLYbThHj0t2and/25D3XA==',
+          SecureStorageKey.encryptedMasterKey.name: 'Hr7afkeYIZeUWGvYsFEMorVcFSpr2ehXJ8ncwa1XTL71Q39Dl2LLciHKmaqs4YZqMiceOG3uBSHSyt6JP0F4yKJTWh2Ykrc00aHN/Ui58aNaXkyi7FLYbThHj0t2and/25D3XA==',
         });
         // @formatter:on
         return SplashPageCubit();

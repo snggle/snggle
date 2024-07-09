@@ -10,11 +10,9 @@ import 'package:snggle/shared/models/password_model.dart';
 
 class AppAuthPageCubit extends Cubit<AAppAuthPageState> {
   final AppAuthService _appAuthService = globalLocator<AppAuthService>();
-  final MasterKeyController _masterKeyController;
+  final MasterKeyController _masterKeyController = globalLocator<MasterKeyController>();
 
-  AppAuthPageCubit({MasterKeyController? masterKeyController})
-      : _masterKeyController = masterKeyController ?? globalLocator<MasterKeyController>(),
-        super(const AppAuthPageEnterPinState.empty());
+  AppAuthPageCubit() : super(const AppAuthPageEnterPinState.empty());
 
   void updatePinNumbers(List<int> pinNumbers) {
     emit(AppAuthPageEnterPinState(pinNumbers: pinNumbers));

@@ -1,64 +1,44 @@
-import 'dart:io';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/database_parent_key.dart';
 import 'package:snggle/infra/managers/filesystem_storage/encrypted_filesystem_storage_manager.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_manager.dart';
-import 'package:snggle/shared/controllers/master_key_controller.dart';
+import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
-import 'package:snggle/shared/value_objects/master_key_vo.dart';
-import 'package:uuid/uuid.dart';
 
-import '../../../../utils/test_utils.dart';
+import '../../../../utils/test_database.dart';
 
 void main() {
-  PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
-
-  // @formatter:off
-  MasterKeyVO actualMasterKeyVO = const MasterKeyVO(encryptedMasterKey: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');
-  Map<String, dynamic> actualFilesystemStructure = <String, dynamic>{
-    'test': <String, dynamic>{
-      '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-      '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-      '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-        'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
-      }
-    },
-  };
-
-  Map<String, String> masterKeyOnlyDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-  };
-  // @formatter:on
-
-  late String testSessionUUID;
+  late TestDatabase testDatabase;
   late FilesystemStorageManager actualFilesystemStorageManager;
 
   setUp(() async {
-    globalLocator.allowReassignment = true;
-    initLocator();
-
-    testSessionUUID = const Uuid().v4();
-
-    TestUtils.setupTmpFilesystemStructureFromJson(actualFilesystemStructure, path: testSessionUUID);
-
-    FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(masterKeyOnlyDatabase));
-    actualFilesystemStorageManager = EncryptedFilesystemStorageManager(
-      rootDirectoryBuilder: () async => Directory('${TestUtils.testRootDirectory.path}/$testSessionUUID'),
-      databaseParentKey: DatabaseParentKey.test,
+    // @formatter:off
+    testDatabase = TestDatabase(
+      appPasswordModel: PasswordModel.fromPlaintext('1111'),
+      secureStorageContent: <String, String>{
+        SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+      },
+      filesystemStorageContent: <String, dynamic>{
+        'test': <String, dynamic>{
+          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
+          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
+          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
+            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
+          }
+        },
+      },
     );
+    // @formatter:on
 
-    globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
+    actualFilesystemStorageManager = EncryptedFilesystemStorageManager(filesystemStorageKey: FilesystemStorageKey.test);
   });
 
   group('Test of initial filesystem state', () {
     test('Should [return Map of files and their content] as [files EXIST] in database', () async {
       // Act
-      Map<String, dynamic> actualFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
+      Map<String, dynamic> actualFilesystemStructure = testDatabase.readRawFilesystem();
 
       // Assert
       Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
@@ -124,11 +104,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
-        testSessionUUID,
-        actualMasterKeyVO,
-        actualAppPasswordModel,
-      );
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem();
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -153,11 +129,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
-        testSessionUUID,
-        actualMasterKeyVO,
-        actualAppPasswordModel,
-      );
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem();
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -182,11 +154,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
-        testSessionUUID,
-        actualMasterKeyVO,
-        actualAppPasswordModel,
-      );
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem();
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -212,8 +180,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure =
-          TestUtils.readDecryptedTmpFilesystemStructureAsJson(testSessionUUID, actualMasterKeyVO, actualAppPasswordModel);
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem();
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -241,11 +208,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
-        testSessionUUID,
-        actualMasterKeyVO,
-        actualAppPasswordModel,
-      );
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem();
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -270,11 +233,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readDecryptedTmpFilesystemStructureAsJson(
-        testSessionUUID,
-        actualMasterKeyVO,
-        actualAppPasswordModel,
-      );
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem();
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -316,7 +275,7 @@ void main() {
       // Act
       await actualFilesystemStorageManager.delete(FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8'));
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem();
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -335,7 +294,7 @@ void main() {
       // Act
       await actualFilesystemStorageManager.delete(FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65/b1c2f688-85fc-43ba-9af1-52db40fa3093'));
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = TestUtils.readTmpFilesystemStructureAsJson(path: testSessionUUID);
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem();
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -366,6 +325,6 @@ void main() {
   });
 
   tearDown(() {
-    TestUtils.clearCache(testSessionUUID);
+    testDatabase.close();
   });
 }

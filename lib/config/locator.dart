@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:get_it/get_it.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:snggle/infra/repositories/groups_repository.dart';
 import 'package:snggle/infra/repositories/master_key_repository.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
@@ -17,11 +21,15 @@ import 'package:snggle/shared/factories/wallet_model_factory.dart';
 
 final GetIt globalLocator = GetIt.I;
 
+typedef RootDirectoryBuilder = FutureOr<Directory> Function();
+
 void initLocator() {
   _initControllers();
   _initRepositories();
   _initServices();
   _initFactories();
+
+  globalLocator.registerSingleton<RootDirectoryBuilder>(getApplicationSupportDirectory);
 }
 
 void _initControllers() {

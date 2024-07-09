@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/pages/app_setup_pin_page/a_app_setup_pin_page_state.dart';
 import 'package:snggle/bloc/pages/app_setup_pin_page/app_setup_pin_page_cubit.dart';
@@ -7,23 +5,19 @@ import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_c
 import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_enter_pin_state.dart';
 import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_invalid_pin_state.dart';
 import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_loading_state.dart';
-import 'package:snggle/config/locator.dart';
-import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  FlutterSecureStorage.setMockInitialValues(<String, String>{});
-  initLocator();
+import '../../../../utils/test_database.dart';
 
-  late MasterKeyController masterKeyController;
+Future<void> main() async {
+  late TestDatabase testDatabase;
   late AppSetupPinPageCubit actualAppSetupPinPageCubit;
 
   group('Tests of [AppSetupPinPageCubit]', () {
     group('Tests of a successful password setting process', () {
       setUpAll(() {
-        masterKeyController = MasterKeyController();
-        actualAppSetupPinPageCubit = AppSetupPinPageCubit(masterKeyController: masterKeyController);
+        testDatabase = TestDatabase();
+        actualAppSetupPinPageCubit = AppSetupPinPageCubit();
       });
 
       test('Should [emit AppSetupPinPageEnterPinState] with [EMPTY firstPinNumbers] as initial state', () async {
@@ -78,12 +72,16 @@ Future<void> main() async {
 
         expect(actualAppSetupPinPageCubit.state, expectedAppSetupPinPageState);
       });
+
+      tearDownAll(() {
+        testDatabase.close();
+      });
     });
 
     group('Tests of a successful default password setting process', () {
       setUpAll(() {
-        masterKeyController = MasterKeyController();
-        actualAppSetupPinPageCubit = AppSetupPinPageCubit(masterKeyController: masterKeyController);
+        testDatabase = TestDatabase();
+        actualAppSetupPinPageCubit = AppSetupPinPageCubit();
       });
 
       test('Should [emit AppSetupPinPageEnterPinState] with [EMPTY firstPinNumbers] as initial state', () async {
@@ -102,12 +100,16 @@ Future<void> main() async {
 
         expect(actualAppSetupPinPageCubit.state, expectedAppSetupPinPageState);
       });
+
+      tearDownAll(() {
+        testDatabase.close();
+      });
     });
 
     group('Tests of a password setting process with wrong confirm password provided', () {
       setUpAll(() {
-        masterKeyController = MasterKeyController();
-        actualAppSetupPinPageCubit = AppSetupPinPageCubit(masterKeyController: masterKeyController);
+        testDatabase = TestDatabase();
+        actualAppSetupPinPageCubit = AppSetupPinPageCubit();
       });
 
       test('Should [emit AppSetupPinPageEnterPinState] with [EMPTY firstPinNumbers] as initial state', () async {
@@ -177,6 +179,10 @@ Future<void> main() async {
         AAppSetupPinPageState expectedAppSetupPinPageState = const AppSetupPinPageEnterPinState.empty();
 
         expect(actualAppSetupPinPageCubit.state, expectedAppSetupPinPageState);
+      });
+
+      tearDownAll(() {
+        testDatabase.close();
       });
     });
   });
