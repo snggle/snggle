@@ -6,17 +6,22 @@ import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_e
 import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_invalid_pin_state.dart';
 import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_loading_state.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
+import 'package:snggle/shared/models/password_model.dart';
 
+import '../../../../utils/database_mock.dart';
 import '../../../../utils/test_database.dart';
 
 Future<void> main() async {
-  late TestDatabase testDatabase;
+  final TestDatabase testDatabase = TestDatabase();
   late AppSetupPinPageCubit actualAppSetupPinPageCubit;
 
   group('Tests of [AppSetupPinPageCubit]', () {
     group('Tests of a successful password setting process', () {
-      setUpAll(() {
-        testDatabase = TestDatabase();
+      setUpAll(() async {
+        await testDatabase.init(
+          databaseMock: DatabaseMock.emptyDatabaseMock,
+          appPasswordModel: PasswordModel.defaultPassword(),
+        );
         actualAppSetupPinPageCubit = AppSetupPinPageCubit();
       });
 
@@ -73,14 +78,15 @@ Future<void> main() async {
         expect(actualAppSetupPinPageCubit.state, expectedAppSetupPinPageState);
       });
 
-      tearDownAll(() {
-        testDatabase.close();
-      });
+      tearDownAll(testDatabase.close);
     });
 
     group('Tests of a successful default password setting process', () {
-      setUpAll(() {
-        testDatabase = TestDatabase();
+      setUpAll(() async {
+        await testDatabase.init(
+          databaseMock: DatabaseMock.emptyDatabaseMock,
+          appPasswordModel: PasswordModel.defaultPassword(),
+        );
         actualAppSetupPinPageCubit = AppSetupPinPageCubit();
       });
 
@@ -101,14 +107,15 @@ Future<void> main() async {
         expect(actualAppSetupPinPageCubit.state, expectedAppSetupPinPageState);
       });
 
-      tearDownAll(() {
-        testDatabase.close();
-      });
+      tearDownAll(testDatabase.close);
     });
 
     group('Tests of a password setting process with wrong confirm password provided', () {
-      setUpAll(() {
-        testDatabase = TestDatabase();
+      setUpAll(() async {
+        await testDatabase.init(
+          databaseMock: DatabaseMock.emptyDatabaseMock,
+          appPasswordModel: PasswordModel.defaultPassword(),
+        );
         actualAppSetupPinPageCubit = AppSetupPinPageCubit();
       });
 
@@ -181,9 +188,7 @@ Future<void> main() async {
         expect(actualAppSetupPinPageCubit.state, expectedAppSetupPinPageState);
       });
 
-      tearDownAll(() {
-        testDatabase.close();
-      });
+      tearDownAll(testDatabase.close);
     });
   });
 }

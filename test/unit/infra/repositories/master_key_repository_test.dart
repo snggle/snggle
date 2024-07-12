@@ -6,65 +6,22 @@ import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 import 'package:snggle/infra/repositories/master_key_repository.dart';
 import 'package:snggle/shared/models/password_model.dart';
 
+import '../../../utils/database_mock.dart';
 import '../../../utils/test_database.dart';
 
 void main() {
-  late TestDatabase testDatabase;
+  final TestDatabase testDatabase = TestDatabase();
+  const SecureStorageKey actualSecureStorageKey = SecureStorageKey.encryptedMasterKey;
+  const FlutterSecureStorage actualFlutterSecureStorage = FlutterSecureStorage();
 
-  SecureStorageKey actualSecureStorageKey = SecureStorageKey.encryptedMasterKey;
-  FlutterSecureStorage actualFlutterSecureStorage = const FlutterSecureStorage();
-
-  // @formatter:off
-  Map<String, String> filledMasterKeyDatabase = <String, String>{
-    actualSecureStorageKey.name: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-  };
-
-  Map<String, String> emptyDatabase = <String, String>{};
-  // @formatter:on
-
-  setUp(() {
-    testDatabase = TestDatabase(appPasswordModel: PasswordModel.fromPlaintext('1111'));
-  });
-
-  group('Tests of initial database state', () {
-    test('Should [return encrypted master key] as ["encryptedMasterKey" key value EXISTS] in database', () async {
-      // Arrange
-      testDatabase.updateSecureStorage(filledMasterKeyDatabase);
-
-      // Act
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualGroupsMap = await const FlutterSecureStorage().readAll();
-
-      // Assert
-      Map<String, dynamic> expectedGroupsMap = <String, dynamic>{
-        'encryptedMasterKey':
-            '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-      };
-
-      expect(actualGroupsMap, expectedGroupsMap);
-    });
-
-    test('Should [return EMPTY map] as ["encryptedMasterKey" key value is EMPTY]', () async {
-      // Arrange
-      testDatabase.updateSecureStorage(emptyDatabase);
-
-      // Act
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualGroupsMap = await const FlutterSecureStorage().readAll();
-
-      // Assert
-      Map<String, dynamic> expectedGroupsMap = <String, dynamic>{};
-
-      expect(actualGroupsMap, expectedGroupsMap);
-    });
+  setUp(() async {
+    await testDatabase.init(appPasswordModel: PasswordModel.fromPlaintext('1111'));
   });
 
   group('Tests of MasterKeyRepository.isMasterKeyExists()', () {
-    test('Should [return TRUE] if [master key EXISTS] in database', () async {
+    test('Should [return TRUE] if [master key EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledMasterKeyDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
       bool actualSaltExistValue = await globalLocator<MasterKeyRepository>().isMasterKeyExists();
@@ -73,9 +30,9 @@ void main() {
       expect(actualSaltExistValue, true);
     });
 
-    test('Should [return FALSE] if [master key NOT EXISTS] in database', () async {
+    test('Should [return FALSE] if [master key NOT EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
 
       //  Act
       bool actualIsSaltExists = await globalLocator<MasterKeyRepository>().isMasterKeyExists();
@@ -86,23 +43,22 @@ void main() {
   });
 
   group('Tests of MasterKeyRepository.getMasterKey()', () {
-    test('Should [return hash] if [master key EXISTS] in database', () async {
+    test('Should [return hash] if [master key EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledMasterKeyDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
       String actualMasterKey = await globalLocator<MasterKeyRepository>().getMasterKey();
 
       // Assert
-      String expectedMasterKey =
-          '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==';
+      String expectedMasterKey = 'FhSf0rK3enK3orHHM4McWIYhZ8YiT0V3mn6rTyWScdPYgaO+McvLXYtcGAX2CGNFQYLdYsEzwXO/DcMGjSICqa0nFdE=';
 
       expect(actualMasterKey, expectedMasterKey);
     });
 
-    test('Should [throw ParentKeyNotFoundException] if [master key NOT EXISTS] in database', () async {
+    test('Should [throw ParentKeyNotFoundException] if [master key NOT EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
 
       // Assert
       expect(
@@ -113,9 +69,9 @@ void main() {
   });
 
   group('Tests of MasterKeyRepository.setMasterKey()', () {
-    test('Should [UPDATE hash] if [master key EXISTS] in database', () async {
+    test('Should [UPDATE hash] if [master key EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledMasterKeyDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
       await globalLocator<MasterKeyRepository>().setMasterKey(
@@ -130,9 +86,9 @@ void main() {
       expect(actualMasterKey, expectedMasterKey);
     });
 
-    test('Should [SAVE hash] if [master key NOT EXISTS] in database', () async {
+    test('Should [SAVE hash] if [master key NOT EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
 
       // Act
       await globalLocator<MasterKeyRepository>().setMasterKey(
@@ -148,7 +104,5 @@ void main() {
     });
   });
 
-  tearDown(() {
-    testDatabase.close();
-  });
+  tearDown(testDatabase.close);
 }

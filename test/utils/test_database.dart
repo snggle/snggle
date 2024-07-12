@@ -3,12 +3,16 @@ import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
 import 'package:uuid/uuid.dart';
+
+import 'database_mock.dart';
 
 class TestDatabase {
   static Directory testRootDirectory = Directory('${Directory.systemTemp.path}/snggle/test');
@@ -18,27 +22,37 @@ class TestDatabase {
   late PasswordModel? appPasswordModel;
   late String testSessionUUID;
   late MasterKeyVO? masterKeyVO;
+  bool testInitializedBool = false;
 
-  TestDatabase({
-    this.appPasswordModel,
-    Map<String, dynamic>? secureStorageContent,
-    Map<String, dynamic>? filesystemStorageContent,
-  }) {
-    TestWidgetsFlutterBinding.ensureInitialized();
+  TestDatabase();
 
-    globalLocator.allowReassignment = true;
-    initLocator();
-    globalLocator.registerLazySingleton<RootDirectoryBuilder>(() => () => Directory('${testRootDirectory.path}/$testSessionUUID'));
+  Future<void> init({
+    required PasswordModel appPasswordModel,
+    DatabaseMock? databaseMock,
+  }) async {
+    await Isar.initializeIsarCore(download: true);
 
     testSessionUUID = const Uuid().v4();
+    this.appPasswordModel = appPasswordModel;
 
-    updateSecureStorage(secureStorageContent ?? <String, dynamic>{});
+    Directory rootDirectory = Directory('${testRootDirectory.path}/$testSessionUUID')..createSync(recursive: true);
 
-    _setupFilesystemStorage(filesystemStorageContent ?? <String, dynamic>{}, path: testSessionUUID);
+    initLocator();
+    globalLocator.allowReassignment = true;
+    globalLocator.registerLazySingleton<RootDirectoryBuilder>(() => () => rootDirectory);
 
-    if (appPasswordModel != null) {
-      globalLocator<MasterKeyController>().setPassword(appPasswordModel!);
+    if (databaseMock != null) {
+      await updateDatabaseMock(databaseMock);
     }
+    globalLocator<MasterKeyController>().setPassword(appPasswordModel);
+
+    testInitializedBool = true;
+  }
+
+  Future<void> updateDatabaseMock(DatabaseMock databaseMock) async {
+    await _setupFilesystemStorage(databaseMock);
+    await _setupIsarDatabase(databaseMock);
+    _setupSecureStorage(databaseMock);
   }
 
   void updateSecureStorage(Map<String, dynamic> secureStorageContent) {
@@ -49,7 +63,9 @@ class TestDatabase {
     }
   }
 
-  void close() {
+  Future<void> close() async {
+    await globalLocator<IsarDatabaseManager>().close();
+
     Directory cacheDirectory = Directory('${testRootDirectory.path}/$testSessionUUID');
     if (cacheDirectory.existsSync()) {
       cacheDirectory.deleteSync(recursive: true);
@@ -99,14 +115,51 @@ class TestDatabase {
     return actualVaultsMap;
   }
 
-  void _setupFilesystemStorage(Map<String, dynamic> json, {String path = ''}) {
-    json.forEach((String key, dynamic value) {
-      if (value is Map<String, dynamic>) {
-        _setupFilesystemStorage(value, path: '$path/$key');
-      } else if (value is String) {
-        File('${testRootDirectory.path}/$path/$key')
-          ..createSync(recursive: true)
-          ..writeAsStringSync(value);
+  Future<void> _setupIsarDatabase(DatabaseMock databaseMock) async {
+    if (testInitializedBool) {
+      await globalLocator<IsarDatabaseManager>().close();
+    }
+
+    Directory rootDirectory = await globalLocator<RootDirectoryBuilder>().call();
+    File databaseMockFile = File('test/mocks/${databaseMock.name}/isar_mock.isar');
+    if (databaseMockFile.existsSync()) {
+      await databaseMockFile.copy('${rootDirectory.path}/$testSessionUUID.isar');
+    }
+    await globalLocator<IsarDatabaseManager>().initDatabase(name: testSessionUUID);
+  }
+
+  void _setupSecureStorage(DatabaseMock databaseMock) {
+    File secureStorageMockFile = File('test/mocks/${databaseMock.name}/secure_storage_mock.json');
+    if (secureStorageMockFile.existsSync()) {
+      Map<String, dynamic> secureStorageContent = jsonDecode(secureStorageMockFile.readAsStringSync()) as Map<String, dynamic>;
+
+      updateSecureStorage(secureStorageContent);
+    }
+  }
+
+  Future<void> _setupFilesystemStorage(DatabaseMock databaseMock) async {
+    Directory rootDirectory = await globalLocator<RootDirectoryBuilder>().call();
+    Directory filesystemMockDirectory = Directory('test/mocks/${databaseMock.name}/filesystem_mock');
+    if (filesystemMockDirectory.existsSync()) {
+      _copyDirectory(
+        filesystemMockDirectory,
+        rootDirectory,
+      );
+    }
+  }
+
+  void _copyDirectory(Directory source, Directory destination) {
+    if (destination.existsSync() == false) {
+      destination.createSync(recursive: true);
+    }
+
+    source.listSync().forEach((FileSystemEntity entity) {
+      if (entity is Directory) {
+        Directory newDirectory = Directory('${destination.path}/${entity.path.split('/').last}');
+        _copyDirectory(entity, newDirectory);
+      } else if (entity is File) {
+        File newFile = File('${destination.path}/${entity.uri.pathSegments.last}');
+        entity.copySync(newFile.path);
       }
     });
   }

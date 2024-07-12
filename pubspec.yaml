@@ -4,7 +4,7 @@ description: Private keys manager
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.25
+version: 0.0.26
 
 environment:
   sdk: "3.2.2"
@@ -101,6 +101,14 @@ dependencies:
   # https://pub.dev/packages/custom_pop_up_menu
   custom_pop_up_menu: 1.2.4
 
+  # Extremely fast, easy to use, and fully async NoSQL database for Flutter.
+  # https://pub.dev/packages/isar
+  isar: ^3.1.0+1
+
+  # Isar Core binaries for the Isar Database. Needs to be included for Flutter apps.
+  # https://pub.dev/packages/isar_flutter_libs
+  isar_flutter_libs: ^3.1.0+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -118,6 +126,10 @@ dev_dependencies:
   # A build system for Dart code generation and modular compilation
   # https://pub.dev/packages/build_runner
   build_runner: 2.4.7
+
+  # Code generator for the Isar Database. Finds classes annotated with @Collection.
+  # https://pub.dev/packages/isar_generator
+  isar_generator: ^3.1.0+1
 
 flutter:
   uses-material-design: true

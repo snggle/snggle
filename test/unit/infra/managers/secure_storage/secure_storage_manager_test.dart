@@ -8,29 +8,26 @@ import 'package:snggle/shared/models/password_model.dart';
 import '../../../../utils/test_database.dart';
 
 void main() {
-  late TestDatabase testDatabase;
-  late SecureStorageManager actualSecureStorageManager;
-
+  final TestDatabase testDatabase = TestDatabase();
   SecureStorageKey actualSecureStorageKey = SecureStorageKey.test;
 
   // @formatter:off
-  Map<String, String> filledChildKeysDatabase = <String, String>{
+  Map<String, String> filledSecureStorage = <String, String>{
     SecureStorageKey.test.name: 'test_value',
   };
 
-  Map<String, String> emptyDatabase = <String, String>{};
+  Map<String, String> emptySecureStorage = <String, String>{};
   // @formatter:on
 
-  setUp(() {
-    testDatabase = TestDatabase(appPasswordModel: PasswordModel.fromPlaintext('1111'));
-
-    actualSecureStorageManager = SecureStorageManager();
+  setUp(() async {
+    await testDatabase.init(appPasswordModel: PasswordModel.fromPlaintext('1111'));
   });
 
   group('Tests of SecureStorageManager.containsKey()', () {
-    test('Should [return TRUE] if [parent key EXISTS] in database', () async {
+    test('Should [return TRUE] if [key EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledChildKeysDatabase);
+      testDatabase.updateSecureStorage(filledSecureStorage);
+      SecureStorageManager actualSecureStorageManager = SecureStorageManager();
 
       // Act
       bool actualParentKeyExistsBool = await actualSecureStorageManager.containsKey(secureStorageKey: actualSecureStorageKey);
@@ -39,9 +36,10 @@ void main() {
       expect(actualParentKeyExistsBool, true);
     });
 
-    test('Should [return FALSE] if [parent key NOT EXISTS] in database', () async {
+    test('Should [return FALSE] if [key NOT EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyDatabase);
+      testDatabase.updateSecureStorage(emptySecureStorage);
+      SecureStorageManager actualSecureStorageManager = SecureStorageManager();
 
       // Act
       bool actualParentKeyExistsBool = await actualSecureStorageManager.containsKey(secureStorageKey: actualSecureStorageKey);
@@ -52,9 +50,10 @@ void main() {
   });
 
   group('Tests of SecureStorageManager.read()', () {
-    test('Should [return parent key value] if [parent key EXISTS] in database', () async {
+    test('Should [return value] if [key EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledChildKeysDatabase);
+      testDatabase.updateSecureStorage(filledSecureStorage);
+      SecureStorageManager actualSecureStorageManager = SecureStorageManager();
 
       // Act
       String actualParentKeyValue = await actualSecureStorageManager.read(secureStorageKey: actualSecureStorageKey);
@@ -64,9 +63,10 @@ void main() {
       expect(actualParentKeyValue, expectedParentKeyValue);
     });
 
-    test('Should [throw ParentKeyNotFoundException] if [parent key NOT EXISTS] in database', () async {
+    test('Should [throw ParentKeyNotFoundException] if [key NOT EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyDatabase);
+      testDatabase.updateSecureStorage(emptySecureStorage);
+      SecureStorageManager actualSecureStorageManager = SecureStorageManager();
 
       // Assert
       expect(
@@ -77,9 +77,10 @@ void main() {
   });
 
   group('Tests of SecureStorageManager.write()', () {
-    test('Should [UPDATE parent key value] if [parent key EXISTS] in database', () async {
+    test('Should [UPDATE value] if [key EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledChildKeysDatabase);
+      testDatabase.updateSecureStorage(filledSecureStorage);
+      SecureStorageManager actualSecureStorageManager = SecureStorageManager();
 
       // Act
       await actualSecureStorageManager.write(secureStorageKey: actualSecureStorageKey, plaintextValue: 'updated_test_value');
@@ -92,9 +93,10 @@ void main() {
       expect(actualParentKeyValue, expectedParentKeyValue);
     });
 
-    test('Should [SAVE parent key value] if [parent key NOT EXISTS] in database', () async {
+    test('Should [SAVE value] if [key NOT EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyDatabase);
+      testDatabase.updateSecureStorage(emptySecureStorage);
+      SecureStorageManager actualSecureStorageManager = SecureStorageManager();
 
       // Act
       await actualSecureStorageManager.write(secureStorageKey: actualSecureStorageKey, plaintextValue: 'saved_test_value');
@@ -108,7 +110,5 @@ void main() {
     });
   });
 
-  tearDown(() {
-    testDatabase.close();
-  });
+  tearDown(testDatabase.close);
 }

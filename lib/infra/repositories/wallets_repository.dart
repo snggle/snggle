@@ -1,32 +1,73 @@
-import 'package:snggle/infra/entities/wallet_entity.dart';
-import 'package:snggle/infra/managers/secure_storage/encrypted_secure_storage_manager.dart';
-import 'package:snggle/infra/managers/secure_storage/secure_storage_collection_wrapper.dart';
-import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
+import 'dart:async';
+import 'package:isar/isar.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
+import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
+import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class WalletsRepository {
-  final EncryptedSecureStorageManager _encryptedSecureStorageManager = EncryptedSecureStorageManager();
-  late final SecureStorageCollectionWrapper<Map<String, dynamic>> _secureStorageCollectionWrapper = SecureStorageCollectionWrapper<Map<String, dynamic>>(
-    secureStorageManager: _encryptedSecureStorageManager,
-    secureStorageKey: SecureStorageKey.wallets,
-  );
+  final IsarDatabaseManager isarDatabaseManager = globalLocator<IsarDatabaseManager>();
 
-  Future<List<WalletEntity>> getAll() async {
-    List<Map<String, dynamic>> allWalletsJson = await _secureStorageCollectionWrapper.getAll();
-    List<WalletEntity> allWallets = allWalletsJson.map(WalletEntity.fromJson).toList();
-    return allWallets;
+  Future<int?> getLastIndex(FilesystemPath parentFilesystemPath) async {
+    int? lastIndex = await isarDatabaseManager.perform((Isar isar) {
+      return isar.wallets.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).sortByIndexDesc().indexProperty().findFirst();
+    });
+    return lastIndex;
   }
 
-  Future<WalletEntity> getById(String id) async {
-    Map<String, dynamic> walletJson = await _secureStorageCollectionWrapper.getById(id);
-    WalletEntity walletEntity = WalletEntity.fromJson(walletJson);
+  Future<List<WalletEntity>> getAll() async {
+    List<WalletEntity> walletEntities = await isarDatabaseManager.perform((Isar isar) {
+      return isar.wallets.where().findAll();
+    });
+
+    return walletEntities;
+  }
+
+  Future<List<WalletEntity>> getAllByParentPath(FilesystemPath parentFilesystemPath) async {
+    List<WalletEntity> walletEntities = await isarDatabaseManager.perform((Isar isar) {
+      return isar.wallets.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).findAll();
+    });
+    return walletEntities;
+  }
+
+  Future<WalletEntity> getById(Id id) async {
+    WalletEntity? walletEntity = await isarDatabaseManager.perform((Isar isar) {
+      return isar.wallets.get(id);
+    });
+
+    if (walletEntity == null) {
+      throw ChildKeyNotFoundException();
+    }
     return walletEntity;
   }
 
-  Future<void> save(WalletEntity walletEntity) async {
-    await _secureStorageCollectionWrapper.saveWithId(walletEntity.uuid, walletEntity.toJson());
+  Future<Id> save(WalletEntity walletEntity) async {
+    return isarDatabaseManager.perform((Isar isar) async {
+      Id createdId = await isar.writeTxn(() async {
+        return isar.wallets.put(walletEntity);
+      });
+      return createdId;
+    });
   }
 
-  Future<void> deleteById(String id) async {
-    await _secureStorageCollectionWrapper.deleteById(id);
+  Future<List<Id>> saveAll(List<WalletEntity> walletEntityList) async {
+    return isarDatabaseManager.perform((Isar isar) async {
+      List<Id> createdIds = await isar.writeTxn(() async {
+        return isar.wallets.putAll(walletEntityList);
+      });
+      return createdIds;
+    });
+  }
+
+  Future<void> deleteById(Id id) async {
+    await isarDatabaseManager.perform((Isar isar) async {
+      bool deletedBool = await isar.writeTxn(() async {
+        return isar.wallets.delete(id);
+      });
+      if (deletedBool == false) {
+        throw ChildKeyNotFoundException();
+      }
+    });
   }
 }

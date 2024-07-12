@@ -10,7 +10,7 @@ import 'package:snggle/shared/value_objects/master_key_vo.dart';
 import '../../../utils/test_database.dart';
 
 void main() {
-  late TestDatabase testDatabase;
+  final TestDatabase testDatabase = TestDatabase();
 
   SecureStorageKey actualSecureStorageKey = SecureStorageKey.encryptedMasterKey;
 
@@ -22,8 +22,8 @@ void main() {
   Map<String, String> emptyDatabase = <String, String>{};
   // @formatter:on
 
-  setUp(() {
-    testDatabase = TestDatabase(appPasswordModel: PasswordModel.fromPlaintext('1111'));
+  setUp(() async {
+    await testDatabase.init(appPasswordModel: PasswordModel.fromPlaintext('1111'));
   });
 
   group('Tests of MasterKeyService.getMasterKey()', () {
@@ -140,7 +140,5 @@ void main() {
     });
   });
 
-  tearDown(() {
-    testDatabase.close();
-  });
+  tearDown(testDatabase.close);
 }

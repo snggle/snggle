@@ -1,139 +1,72 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/entities/vault_entity.dart';
+import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
+import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/repositories/vaults_repository.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
+import '../../../utils/database_mock.dart';
 import '../../../utils/test_database.dart';
 
 void main() {
-  late TestDatabase testDatabase;
+  final TestDatabase testDatabase = TestDatabase();
 
-  SecureStorageKey actualSecureStorageKey = SecureStorageKey.vaults;
-
-  // @formatter:off
-  Map<String, String> filledVaultsDatabase = <String, String>{
-    SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    SecureStorageKey.vaults.name:'HrSAuzL39JquAN92Hq+TidSF6T4RaXf5TX8++/LNiUp6AjprjtjphbmRZkJ8XV0Gtu3ToaG7W9NIUuwAadgcJuk/1mjJM1Fi2kHI4czI7Ljg9wAARGIUpnSb5CZniFRymA9JujPoea8SkaVhSM9YL/xUa8K7lanwRn21IiOMQJ++ljk+LfbMRi0ebEPMTGnayCj2hDrOKcSYAehHrZ6ECYFDSUthhDrUZEmxbUqNVBHUJiJqW/etEgZYckKRfQxzFB2qhriBRutYhAWK4HGTBAIPjcZT7ydWAOp5v5MkbHkCE+ic9KdJk1aOoj+5BBLuEkXF2ao1zHqwBXq3jb/pgu2ZI0DyhNPY4lCQw7dnFT6ZflP3FNitnbGzWAu8FlP0Pll6gcuxRiV8H/R4QDdMOCxZZfWuIMJmLZbYGq2TClC/duRR/3oa7tPLHNYRN6tDszJfzQC/pldijozd8pW5NBElodHGjPFdLSgM+iG/lChwqMQ74iGxHOr9zLHCF6ldB4wXIUMdDGVOx255A1YtzI9uqilGshjhYPL6OXhkEspKuTqBZuABoEWQA2MCOmWO7jQdgTOB0xa6B438w95XaTpb1mH09rrjjYEspk18jLH0GsYabWrW/2kWh2xnwVHGtW9uMpkDPqFAYMpbVWliQhTbexUrOBwjV6GWFCCJ3eDRdkNH97FGoEmxOYTVYTVJEWQeBDNZUBLCyvN0IBpiLKFtDAc8grgLjtLpZZt0Jv090Aoh/VCrrhTHuN5oSNQtEUUULha/ZoDF7bqtFCF6boANi6hjAmjKaGz3pN/jKKCkDdoar9T1SU6yFFUS9YUIWHbhesOXrILEiPcpyHmg4t31wpaOZtnR3Tc7dkHIyr3iID//7i/DVPxws0wMV+nEsi48LL/SbkUJwXEK/dM2BIVDK1Y=',
-    SecureStorageKey.wallets.name: 'rGYdF3j8KhnKg/BL+8ss82On/2WHDui2Vsof+R4246/wLjWhb6rHWPh2r/ddeyYzFgYfXDsV3ewAkXJ0vyoXf4UvAg1rUixEyAWhY8dfLJl2KT2EagbxBb8TyaDV9JDMnyi+TwvFuKN76eP9ZXG7tTiIYa9p+n3kmM0XfSQzTQk5qinlSReoEn19aaa4c57KTgSSmZmR8sDJpbt59a9Rhq9y7CDfhbQuR8Xu1ma1b4Wd6gfnx7XYYepGCWHYi3ZQadI5p7QuIv/52S/fRsvQ6vM2564u5dnxyHXwxHncmJqQgl4z9XKwkmwo1rO5mmrYQ62VDpRhxiCsViYpOqsLRwmgwhf3dcclm1IG2rGsn9t5sxrSFJZLdCJTJlYviQEbod/8cI974znkvwayScDlJNJ9Ku6pzbMnharaoOQB8pm2O8om79gBUu3ZiA09H1jIvxX2bPj4q3MnB+OnAhmY/Hk6T4u3bR0dk9PBRQ1uM5VbY4eobNvfo3fSBdjhx6h9jPosJyNJQOFBhFLbvKwcoeaPeMCclWLX6Zd5PlxeP143i/hvBYvAzzSQKoKEHjczcSylV2o5QFGFMFzV+dUT9vXk2Z+98htYJuwecUPPqih7Fx9OU4Qn8WN2bRwjdXNDwaebD081Esk9LKnIQy8W0TeXAP7rs4326xWc2tZCg0O2dSi1K7lv2erb32ZNbT5Ys173TqHOryKxvE8OsP/NtpwWkqRbb5H6SEVtbERnK6D1ljx0CDEsNgFMzLezp6o2NtVzhETTWRxYJMksD9iHCNp4MZ9Mocrn7iipX+vMGUsdCdUpdljTeYfBPsklaxnQ+v9J6tgI+aOfdAhTYA1yfgxK8Sxxmp3NLyjGdG6RIHmOjrqFeAjLN+haZF7C501KTETmYSynfYGJjOLgF1zy1/TR+kg9y8Lly76WL2xWx7RFvBopfPeaaeSTym1xwxumKdmfIbms/AxaPGz7NmYbGMk8w2Y=',
-  };
-
-  Map<String, String> emptyVaultsDatabase = <String, String>{
-    SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    SecureStorageKey.vaults.name: 'L8uo+Q4teE3WrID1Cnhcopjcv9XJnZFFUBK6X/GfhuW2IFAm',
-  };
-
-  Map<String, String> masterKeyOnlyDatabase = <String, String>{
-    SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-  };
-  // @formatter:on
-
-  setUp(() {
-    testDatabase = TestDatabase(appPasswordModel: PasswordModel.fromPlaintext('1111'));
+  setUp(() async {
+    await testDatabase.init(appPasswordModel: PasswordModel.fromPlaintext('1111'));
   });
 
-  group('Tests of initial database state', () {
-    test('Should [return Map of vaults] as ["vaults" key value EXISTS] in database', () async {
+  group('Tests of VaultsRepository.getLastIndex()', () {
+    test('Should [return last vault index] if [database NOT EMPTY]', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledVaultsDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualVaultsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
+      int? actualLastIndex = await globalLocator<VaultsRepository>().getLastIndex();
 
       // Assert
-      Map<String, dynamic> expectedVaultsMap = <String, dynamic>{
-        '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{
-          'index': 1,
-          'pinned': true,
-          'encrypted': true,
-          'uuid': '92b43ace-5439-4269-8e27-e999907f4379',
-          'filesystem_path': '92b43ace-5439-4269-8e27-e999907f4379',
-          'name': 'Test Vault 1'
-        },
-        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
-          'index': 2,
-          'pinned': true,
-          'encrypted': true,
-          'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-          'filesystem_path': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-          'name': 'Test Vault 2'
-        },
-        '438791a4-b537-4589-af4f-f56b6449a0bb': <String, dynamic>{
-          'index': 3,
-          'pinned': true,
-          'encrypted': true,
-          'uuid': '438791a4-b537-4589-af4f-f56b6449a0bb',
-          'filesystem_path': 'e527efe1-a05b-49f5-bfe9-d3532f5c9db9/438791a4-b537-4589-af4f-f56b6449a0bb',
-          'name': 'Test Vault 3'
-        }
-      };
+      int expectedLastIndex = 4;
 
-      expect(actualVaultsMap, expectedVaultsMap);
+      expect(actualLastIndex, expectedLastIndex);
     });
 
-    test('Should [return EMPTY map] as ["vaults" key value is EMPTY]', () async {
+    test('Should [return NULL] if [database EMPTY]', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyVaultsDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
 
       // Act
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualVaultsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
+      int? actualLastIndex = await globalLocator<VaultsRepository>().getLastIndex();
 
       // Assert
-      Map<String, dynamic> expectedVaultsMap = <String, dynamic>{};
-
-      expect(actualVaultsMap, expectedVaultsMap);
+      expect(actualLastIndex, null);
     });
   });
 
   group('Tests of VaultsRepository.getAll()', () {
-    test('Should [return List of VaultEntity] if ["vaults" key EXISTS] in database and [HAS VALUES]', () async {
+    test('Should [return List of VaultEntity] if [database NOT EMPTY]', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledVaultsDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
       List<VaultEntity> actualVaultEntityList = await globalLocator<VaultsRepository>().getAll();
 
       // Assert
       List<VaultEntity> expectedVaultEntityList = <VaultEntity>[
-        VaultEntity(
-          pinnedBool: true,
-          encryptedBool: true,
-          index: 1,
-          uuid: '92b43ace-5439-4269-8e27-e999907f4379',
-          name: 'Test Vault 1',
-          filesystemPath: FilesystemPath.fromString('92b43ace-5439-4269-8e27-e999907f4379'),
-        ),
-        VaultEntity(
-          pinnedBool: true,
-          encryptedBool: true,
-          index: 2,
-          uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-          name: 'Test Vault 2',
-          filesystemPath: FilesystemPath.fromString('b1c2f688-85fc-43ba-9af1-52db40fa3093'),
-        ),
-        VaultEntity(
-          pinnedBool: true,
-          encryptedBool: true,
-          index: 3,
-          uuid: '438791a4-b537-4589-af4f-f56b6449a0bb',
-          name: 'Test Vault 3',
-          filesystemPath: FilesystemPath.fromString('e527efe1-a05b-49f5-bfe9-d3532f5c9db9/438791a4-b537-4589-af4f-f56b6449a0bb'),
-        ),
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5')
       ];
 
       expect(actualVaultEntityList, expectedVaultEntityList);
     });
 
-    test('Should [return EMPTY list] if ["vaults" key EXISTS] in database and [value EMPTY]', () async {
+    test('Should [return EMPTY list] if [database EMPTY]', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyVaultsDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
 
       // Act
       List<VaultEntity> actualVaultEntityList = await globalLocator<VaultsRepository>().getAll();
@@ -143,13 +76,31 @@ void main() {
 
       expect(actualVaultEntityList, expectedVaultEntityList);
     });
+  });
 
-    test('Should [return EMPTY list] if ["vaults" key NOT EXISTS] in database', () async {
+  group('Tests of VaultsRepository.getAllByParentPath()', () {
+    test('Should [return List of VaultEntity] if [vaults with specified path NOT EMPTY]', () async {
       // Arrange
-      testDatabase.updateSecureStorage(masterKeyOnlyDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      List<VaultEntity> actualVaultEntityList = await globalLocator<VaultsRepository>().getAll();
+      List<VaultEntity> actualVaultEntityList = await globalLocator<VaultsRepository>().getAllByParentPath(FilesystemPath.fromString('group1'));
+
+      // Assert
+      List<VaultEntity> expectedVaultEntityList = <VaultEntity>[
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5')
+      ];
+
+      expect(actualVaultEntityList, expectedVaultEntityList);
+    });
+
+    test('Should [return EMPTY list] if [vaults with specified path EMPTY]', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
+
+      // Act
+      List<VaultEntity> actualVaultEntityList = await globalLocator<VaultsRepository>().getAllByParentPath(FilesystemPath.fromString('group1'));
 
       // Assert
       List<VaultEntity> expectedVaultEntityList = <VaultEntity>[];
@@ -159,209 +110,199 @@ void main() {
   });
 
   group('Tests of VaultsRepository.getById()', () {
-    test('Should [return VaultEntity] if [vault UUID EXISTS] in collection', () async {
+    test('Should [return VaultEntity] if [vault EXISTS] in database', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledVaultsDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      VaultEntity actualVaultEntity = await globalLocator<VaultsRepository>().getById('92b43ace-5439-4269-8e27-e999907f4379');
+      VaultEntity actualVaultEntity = await globalLocator<VaultsRepository>().getById(1);
 
       // Assert
-      VaultEntity expectedVaultEntity = VaultEntity(
-        pinnedBool: true,
-        encryptedBool: true,
-        index: 1,
-        uuid: '92b43ace-5439-4269-8e27-e999907f4379',
-        name: 'Test Vault 1',
-        filesystemPath: FilesystemPath.fromString('92b43ace-5439-4269-8e27-e999907f4379'),
+      VaultEntity expectedVaultEntity = const VaultEntity(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        index: 0,
+        filesystemPathString: 'vault1',
+        name: 'VAULT 1',
       );
 
       expect(actualVaultEntity, expectedVaultEntity);
     });
 
-    test('Should [throw ChildKeyNotFoundException] if [vault UUID NOT EXISTS] in collection', () async {
+    test('Should [throw ChildKeyNotFoundException] if [vault NOT EXISTS] in database', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledVaultsDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
 
       // Assert
       expect(
-        () => globalLocator<VaultsRepository>().getById('06fd9092-96d6-4c34-bc6d-8fb3d2f05415'),
+        () => globalLocator<VaultsRepository>().getById(99999999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
   });
 
   group('Tests of VaultsRepository.save()', () {
-    test('Should [UPDATE vault] if [vault UUID EXISTS] in collection', () async {
+    test('Should [UPDATE vault] if [vault EXISTS] in database', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledVaultsDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      VaultEntity actualUpdatedVaultEntity = VaultEntity(
+      VaultEntity actualUpdatedVaultEntity = const VaultEntity(
+        id: 1,
+        encryptedBool: true,
         pinnedBool: true,
-        encryptedBool: false,
-        index: 2,
-        uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-        name: 'Updated name',
-        filesystemPath: FilesystemPath.fromString('b1c2f688-85fc-43ba-9af1-52db40fa3093'),
+        index: 0,
+        filesystemPathString: 'vault1',
+        name: 'UPDATED VAULT 1',
       );
 
       // Act
       await globalLocator<VaultsRepository>().save(actualUpdatedVaultEntity);
 
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualVaultsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
+      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
+        return isar.vaults.where().findAll();
+      });
 
       // Assert
-      Map<String, dynamic> expectedVaultsMap = <String, dynamic>{
-        '92b43ace-5439-4269-8e27-e999907f4379': <String, dynamic>{
-          'index': 1,
-          'pinned': true,
-          'encrypted': true,
-          'uuid': '92b43ace-5439-4269-8e27-e999907f4379',
-          'filesystem_path': '92b43ace-5439-4269-8e27-e999907f4379',
-          'name': 'Test Vault 1'
-        },
-        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
-          'index': 2,
-          'pinned': true,
-          'encrypted': false,
-          'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-          'filesystem_path': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-          'name': 'Updated name'
-        },
-        '438791a4-b537-4589-af4f-f56b6449a0bb': <String, dynamic>{
-          'index': 3,
-          'pinned': true,
-          'encrypted': true,
-          'uuid': '438791a4-b537-4589-af4f-f56b6449a0bb',
-          'filesystem_path': 'e527efe1-a05b-49f5-bfe9-d3532f5c9db9/438791a4-b537-4589-af4f-f56b6449a0bb',
-          'name': 'Test Vault 3'
-        }
-      };
+      List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
+        const VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', name: 'UPDATED VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5')
+      ];
 
-      expect(actualVaultsMap, expectedVaultsMap);
+      expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
     });
 
-    test('Should [SAVE vault] if [vault UUID NOT EXISTS] in collection', () async {
+    test('Should [SAVE vault] if [vault NOT EXISTS] in database', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyVaultsDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      VaultEntity actualNewVaultEntity = VaultEntity(
+      VaultEntity actualNewVaultEntity = const VaultEntity(
+        id: 999999,
         encryptedBool: true,
-        pinnedBool: false,
-        index: 1,
-        uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-        name: 'NEW VAULT',
-        filesystemPath: FilesystemPath.fromString('b1c2f688-85fc-43ba-9af1-52db40fa3093'),
+        pinnedBool: true,
+        index: 999999,
+        filesystemPathString: 'vault999999',
+        name: 'NEW VAULT 1',
       );
 
       // Act
       await globalLocator<VaultsRepository>().save(actualNewVaultEntity);
 
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualVaultsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
+      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
+        return isar.vaults.where().findAll();
+      });
 
       // Assert
-      Map<String, dynamic> expectedVaultsMap = <String, dynamic>{
-        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
-          'index': 1,
-          'pinned': false,
-          'encrypted': true,
-          'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-          'filesystem_path': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-          'name': 'NEW VAULT'
-        }
-      };
+      List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5'),
+        const VaultEntity(id: 999999, encryptedBool: true, pinnedBool: true, index: 999999, filesystemPathString: 'vault999999', name: 'NEW VAULT 1')
+      ];
 
-      expect(actualVaultsMap, expectedVaultsMap);
+      expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
+    });
+  });
+
+  group('Tests of VaultsRepository.saveAll()', () {
+    test('Should [UPDATE vaults] if [vaults EXIST] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      List<VaultEntity> actualVaultsToUpdate = <VaultEntity>[
+        const VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', name: 'UPDATED VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: true, pinnedBool: true, index: 1, filesystemPathString: 'vault2', name: 'UPDATED VAULT 2'),
+      ];
+
+      // Act
+      await globalLocator<VaultsRepository>().saveAll(actualVaultsToUpdate);
+
+      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
+        return isar.vaults.where().findAll();
+      });
+
+      // Assert
+      List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
+        const VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', name: 'UPDATED VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: true, pinnedBool: true, index: 1, filesystemPathString: 'vault2', name: 'UPDATED VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5')
+      ];
+
+      expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
     });
 
-    test('Should [SAVE vault] if ["vaults" key NOT EXISTS] in database', () async {
+    test('Should [SAVE vaults] if [vaults NOT EXIST] in database', () async {
       // Arrange
-      testDatabase.updateSecureStorage(masterKeyOnlyDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      VaultEntity actualNewVaultEntity = VaultEntity(
-        pinnedBool: true,
-        encryptedBool: false,
-        index: 1,
-        uuid: 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-        name: 'NEW VAULT',
-        filesystemPath: FilesystemPath.fromString('b1c2f688-85fc-43ba-9af1-52db40fa3093'),
-      );
+      List<VaultEntity> actualVaultsToUpdate = <VaultEntity>[
+        const VaultEntity(id: 999998, encryptedBool: true, pinnedBool: true, index: 999998, filesystemPathString: 'vault999998', name: 'NEW VAULT 1'),
+        const VaultEntity(id: 999999, encryptedBool: true, pinnedBool: true, index: 999999, filesystemPathString: 'vault999999', name: 'NEW VAULT 2'),
+      ];
 
       // Act
-      await globalLocator<VaultsRepository>().save(actualNewVaultEntity);
+      await globalLocator<VaultsRepository>().saveAll(actualVaultsToUpdate);
 
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualVaultsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
+      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
+        return isar.vaults.where().findAll();
+      });
 
       // Assert
-      Map<String, dynamic> expectedVaultsMap = <String, dynamic>{
-        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
-          'index': 1,
-          'pinned': true,
-          'encrypted': false,
-          'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-          'filesystem_path': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-          'name': 'NEW VAULT'
-        }
-      };
+      List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5'),
+        const VaultEntity(id: 999998, encryptedBool: true, pinnedBool: true, index: 999998, filesystemPathString: 'vault999998', name: 'NEW VAULT 1'),
+        const VaultEntity(id: 999999, encryptedBool: true, pinnedBool: true, index: 999999, filesystemPathString: 'vault999999', name: 'NEW VAULT 2'),
+      ];
 
-      expect(actualVaultsMap, expectedVaultsMap);
+      expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
     });
   });
 
   group('Tests of VaultsRepository.deleteById()', () {
-    test('Should [REMOVE vault] if [vault UUID EXISTS] in collection', () async {
+    test('Should [REMOVE vault] if [vault EXISTS] in database', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledVaultsDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      await globalLocator<VaultsRepository>().deleteById('92b43ace-5439-4269-8e27-e999907f4379');
+      await globalLocator<VaultsRepository>().deleteById(1);
 
-      // Output is always a random string because AES changes the initialization vector with Random Secure
-      // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualVaultsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
+      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
+        return isar.vaults.where().findAll();
+      });
 
       // Assert
-      Map<String, dynamic> expectedVaultsMap = <String, dynamic>{
-        'b1c2f688-85fc-43ba-9af1-52db40fa3093': <String, dynamic>{
-          'index': 2,
-          'pinned': true,
-          'encrypted': true,
-          'uuid': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-          'filesystem_path': 'b1c2f688-85fc-43ba-9af1-52db40fa3093',
-          'name': 'Test Vault 2'
-        },
-        '438791a4-b537-4589-af4f-f56b6449a0bb': <String, dynamic>{
-          'index': 3,
-          'pinned': true,
-          'encrypted': true,
-          'uuid': '438791a4-b537-4589-af4f-f56b6449a0bb',
-          'filesystem_path': 'e527efe1-a05b-49f5-bfe9-d3532f5c9db9/438791a4-b537-4589-af4f-f56b6449a0bb',
-          'name': 'Test Vault 3'
-        }
-      };
+      List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5')
+      ];
 
-      expect(actualVaultsMap, expectedVaultsMap);
+      expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
     });
 
-    test('Should [throw ChildKeyNotFoundException] if [vault UUID NOT EXISTS] in collection', () async {
+    test('Should [throw ChildKeyNotFoundException] if [vault NOT EXISTS] in database', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyVaultsDatabase);
+      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
 
       // Assert
       expect(
-        () => globalLocator<VaultsRepository>().deleteById('06fd9092-96d6-4c34-bc6d-8fb3d2f05415'),
+        () => globalLocator<VaultsRepository>().deleteById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
   });
 
-  tearDown(() {
-    testDatabase.close();
-  });
+  tearDown(testDatabase.close);
 }

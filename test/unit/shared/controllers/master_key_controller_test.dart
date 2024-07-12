@@ -7,7 +7,7 @@ import 'package:snggle/shared/value_objects/master_key_vo.dart';
 import '../../../utils/test_database.dart';
 
 void main() {
-  late TestDatabase testDatabase;
+  final TestDatabase testDatabase = TestDatabase();
   late MasterKeyController actualMasterKeyController;
 
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
@@ -16,20 +16,17 @@ void main() {
         '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
   );
 
-  setUpAll(() {
-    // @formatter:off
-    testDatabase = TestDatabase(
-      appPasswordModel: actualAppPasswordModel,
-      secureStorageContent: <String, String>{
-        SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-      },
-    );
-    // @formatter:on
+  setUpAll(() async {
+    await testDatabase.init(appPasswordModel: actualAppPasswordModel);
   });
 
   group('Tests of MasterKeyController.encrypt()', () {
     setUpAll(() {
       actualMasterKeyController = MasterKeyController();
+      testDatabase.updateSecureStorage(<String, String>{
+        SecureStorageKey.encryptedMasterKey.name:
+            '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+      });
     });
 
     test('Should [throw Exception] if [password NOT SET]', () {
@@ -71,6 +68,10 @@ void main() {
   group('Tests of MasterKeyController.decrypt()', () {
     setUpAll(() {
       actualMasterKeyController = MasterKeyController();
+      testDatabase.updateSecureStorage(<String, String>{
+        SecureStorageKey.encryptedMasterKey.name:
+            '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+      });
     });
 
     test('Should [throw Exception] if [password NOT SET]', () {
@@ -105,7 +106,5 @@ void main() {
     });
   });
 
-  tearDownAll(() {
-    testDatabase.close();
-  });
+  tearDownAll(testDatabase.close);
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/services/network_groups_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
@@ -12,6 +13,7 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 class VaultListPageCubit extends AListCubit<VaultModel> {
   final VaultsService _vaultsService = globalLocator<VaultsService>();
   final WalletsService _walletsService = globalLocator<WalletsService>();
+  final NetworkGroupsService _networkGroupsService = globalLocator<NetworkGroupsService>();
 
   VaultListPageCubit({
     required super.depth,
@@ -20,20 +22,21 @@ class VaultListPageCubit extends AListCubit<VaultModel> {
 
   @override
   Future<void> moveItem(AListItemModel item, FilesystemPath newFilesystemPath) async {
-    late FilesystemPath newChildrenParentPath;
+    FilesystemPath movedFilesystemPath = item.filesystemPath.replace(item.filesystemPath.parentPath, newFilesystemPath.fullPath);
+
+    await _walletsService.moveByParentPath(item.filesystemPath, movedFilesystemPath);
+    await _networkGroupsService.moveByParentPath(item.filesystemPath, movedFilesystemPath);
+    await _vaultsService.moveByParentPath(item.filesystemPath, movedFilesystemPath);
+    await groupsService.moveByParentPath(item.filesystemPath, movedFilesystemPath);
+
     if (item is VaultModel) {
-      VaultModel movedVaultModel = await _vaultsService.move(item, newFilesystemPath);
-      newChildrenParentPath = movedVaultModel.filesystemPath;
+      await _vaultsService.move(item, movedFilesystemPath);
     } else if (item is GroupModel) {
-      GroupModel movedGroupModel = await groupsService.move(item, newFilesystemPath);
-      newChildrenParentPath = movedGroupModel.filesystemPath;
+      await groupsService.move(item, movedFilesystemPath);
     } else {
-      throw StateError('List item not supported');
+      throw UnsupportedError('Unsupported item type: ${item.runtimeType}');
     }
 
-    await _walletsService.moveByParentPath(item.filesystemPath, newChildrenParentPath);
-    await _vaultsService.moveByParentPath(item.filesystemPath, newChildrenParentPath);
-    await groupsService.moveByParentPath(item.filesystemPath, newChildrenParentPath);
     await refreshAll();
   }
 
@@ -41,13 +44,19 @@ class VaultListPageCubit extends AListCubit<VaultModel> {
   Future<void> deleteItem(AListItemModel item) async {
     if (item is VaultModel) {
       await _walletsService.deleteAllByParentPath(item.filesystemPath);
-      await _vaultsService.deleteById(item.uuid);
+      await _networkGroupsService.deleteAllByParentPath(item.filesystemPath);
+      await groupsService.deleteAllByParentPath(item.filesystemPath);
+      await _vaultsService.deleteById(item.id);
     } else if (item is GroupModel) {
       await _walletsService.deleteAllByParentPath(item.filesystemPath);
+      await _networkGroupsService.deleteAllByParentPath(item.filesystemPath);
       await _vaultsService.deleteAllByParentPath(item.filesystemPath);
       await groupsService.deleteAllByParentPath(item.filesystemPath);
-      await groupsService.deleteById(item.uuid);
+      await groupsService.deleteById(item.id);
+    } else {
+      throw UnsupportedError('Unsupported item type: ${item.runtimeType}');
     }
+
     await refreshAll();
   }
 
@@ -64,14 +73,14 @@ class VaultListPageCubit extends AListCubit<VaultModel> {
   }
 
   @override
-  Future<VaultModel?> fetchSingleItem(VaultModel item) async {
-    VaultModel vaultModel = await _vaultsService.getById(item.uuid);
+  Future<VaultModel> fetchSingleItem(VaultModel item) async {
+    VaultModel vaultModel = await _vaultsService.getById(item.id);
     return vaultModel;
   }
 
   @override
-  Future<GroupModel?> fetchSingleGroup(GroupModel group) async {
-    GroupModel? groupModel = await groupsService.getById(group.uuid);
+  Future<GroupModel> fetchSingleGroup(GroupModel group) async {
+    GroupModel groupModel = await groupsService.getById(group.id);
     return groupModel;
   }
 

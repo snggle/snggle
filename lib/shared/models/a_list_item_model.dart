@@ -1,19 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
-import 'package:snggle/shared/models/groups/group_type.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 abstract class AListItemModel with EquatableMixin {
+  final int id;
   final bool encryptedBool;
   final bool pinnedBool;
-  final String uuid;
   final FilesystemPath filesystemPath;
   final String? _name;
 
   AListItemModel({
+    required this.id,
     required this.encryptedBool,
     required this.pinnedBool,
-    required this.uuid,
     required this.filesystemPath,
     String? name,
   }) : _name = name;
@@ -31,7 +30,7 @@ abstract class AListItemModel with EquatableMixin {
   String? get name => _name;
 
   int compareTo(AListItemModel other) {
-    bool currentIsGroupBool = this is GroupModel && (this as GroupModel).groupType == GroupType.group;
+    bool currentIsGroupBool = this is GroupModel;
 
     bool typesEqualBool = runtimeType == other.runtimeType;
     bool pinnedEqualBool = pinnedBool == other.pinnedBool;
@@ -46,5 +45,5 @@ abstract class AListItemModel with EquatableMixin {
   }
 
   @override
-  List<Object?> get props => <Object?>[encryptedBool, pinnedBool, uuid, filesystemPath];
+  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, filesystemPath];
 }
