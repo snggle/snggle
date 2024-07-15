@@ -1,0 +1,4 @@
+enum FilesystemStorageKey {
+  secrets,
+  test,
+}

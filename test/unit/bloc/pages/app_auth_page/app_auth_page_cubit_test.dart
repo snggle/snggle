@@ -1,32 +1,31 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/pages/app_auth_page/a_app_auth_page_state.dart';
 import 'package:snggle/bloc/pages/app_auth_page/app_auth_page_cubit.dart';
 import 'package:snggle/bloc/pages/app_auth_page/states/app_auth_page_enter_pin_state.dart';
 import 'package:snggle/bloc/pages/app_auth_page/states/app_auth_page_invalid_pin_state.dart';
-import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/managers/database_parent_key.dart';
-import 'package:snggle/shared/controllers/master_key_controller.dart';
+import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
+import 'package:snggle/shared/models/password_model.dart';
+
+import '../../../../utils/test_database.dart';
 
 Future<void> main() async {
-  initLocator();
-
+  late TestDatabase testDatabase;
   late AppAuthPageCubit actualAppAuthPageCubit;
-  late MasterKeyController masterKeyController;
-
-  // @formatter:off
-  Map<String, String> filledMasterKeyDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-  };
-  // @formatter:on
 
   group('Tests of [AppAuthPageCubit]', () {
     group('Tests of [AppAuthPageCubit] when [pin CORRECT]', () {
       setUpAll(() {
-        masterKeyController = MasterKeyController();
-        actualAppAuthPageCubit = AppAuthPageCubit(masterKeyController: masterKeyController);
-        FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledMasterKeyDatabase));
+        // @formatter:off
+        testDatabase = TestDatabase(
+          appPasswordModel: PasswordModel.fromPlaintext('1111'),
+          secureStorageContent: <String, String>{
+            SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+          },
+        );
+
+        actualAppAuthPageCubit = AppAuthPageCubit();
+        // @formatter:on
       });
 
       test('Should [emit AppAuthPageEnterPinState] with [EMPTY pinNumbers] as initial state', () async {
@@ -55,13 +54,24 @@ Future<void> main() async {
 
         expect(actualAppAuthPageCubit.state, expectedAppAuthPageState);
       });
+
+      tearDownAll(() {
+        testDatabase.close();
+      });
     });
 
     group('Tests of [AppAuthPageCubit] when [pin INCORRECT]', () {
       setUpAll(() {
-        masterKeyController = MasterKeyController();
-        actualAppAuthPageCubit = AppAuthPageCubit(masterKeyController: masterKeyController);
-        FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledMasterKeyDatabase));
+        // @formatter:off
+        testDatabase = TestDatabase(
+          appPasswordModel: PasswordModel.fromPlaintext('1111'),
+          secureStorageContent: <String, String>{
+            SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+          },
+        );
+
+        actualAppAuthPageCubit = AppAuthPageCubit();
+        // @formatter:on
       });
 
       test('Should [emit AppAuthPageEnterPinState] with [EMPTY pinNumbers] as initial state', () async {
@@ -92,6 +102,10 @@ Future<void> main() async {
           expect(actualException, isA<InvalidPasswordException>());
           expect(actualAppAuthPageCubit.state, expectedAppAuthPageState);
         }
+      });
+
+      tearDownAll(() {
+        testDatabase.close();
       });
     });
   });

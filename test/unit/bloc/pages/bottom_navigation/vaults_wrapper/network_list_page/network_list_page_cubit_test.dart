@@ -1,15 +1,9 @@
-import 'dart:io';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/network_list_page/network_list_page_cubit.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/managers/database_parent_key.dart';
-import 'package:snggle/infra/managers/filesystem_storage/encrypted_filesystem_storage_manager.dart';
-import 'package:snggle/infra/repositories/secrets_repository.dart';
+import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 import 'package:snggle/infra/services/groups_service.dart';
-import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
@@ -17,13 +11,12 @@ import 'package:snggle/shared/models/network_config_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/selection_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
-import 'package:uuid/uuid.dart';
 
-import '../../../../../../utils/test_utils.dart';
+import '../../../../../../utils/test_database.dart';
 
 void main() {
-  String testSessionUUID = const Uuid().v4();
-  PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
+  late TestDatabase testDatabase;
+  late NetworkListPageCubit actualNetworkListPageCubit;
 
   // @formatter:off
   Map<String, dynamic> actualFilesystemStructure = <String, dynamic>{
@@ -41,9 +34,9 @@ void main() {
     },
   };
 
-  Map<String, String> filledWalletsDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-    DatabaseParentKey.groups.name:'T+nA200ad4AB1ifG5L5vbs5kJ7vwGTep/RTz6hxnbCnih6dXacLPejKiU8laVeBlgFI0iGIk5YeMZe4gUMYeoAPbdV/AqsXGRCgkt4AdVFGYjUa4hn+LK+D63Ma8Pl/M2+zNzZdG9bA4PGzT/7Dr3RsDn6ZbLUizdHxnC4NLo9nXtjZxRXc/aX0BOv84PJ/2bp2y3DTXbUr0KMkjjc6wQW8ZRGFTtDl7TMX7JLkahJEepMMnzv6OZQ+AJgI63o9zx59WMrXCmiq3yCg6U1yadfDZcviTXL9kP4QKwn8w+DxGxbaz3YEie68HB6T0mfKrk1paShRhfcWbyIur33+rO6xcY+oZ4KJ+xOT8+d7pZrPrd+wasWeKfjMDvjyi48lbXTVPFPKmRh/jhVuLj6kSpi+MsTiyHSQH4drY2qgFoYIFLuwZnxzuNchMvELvrPr1RRAt/tBW6feQF+ITXDVU102ry9F3QfKMcnTuZop08ZY/248gwkXKJj45wLL1K97dGo/FmftJmrT3UjCPLNXpl/yd+v1etukoo7e4WxW8PMtlrYChWC5cS32C+gNQ+XXREOaNILZfllekVuTLa75yw48ZGMVx4+jMeX3N5WU5bB+SAJrkQPAJsLzpq4S2DVtIDXrOszk7s5o5gd860lsNo3+olx+r/dCKrQbGF62sPXjBX86yL5uIeH6/MgLSJVLgA74zjGpB5zOba5wndhjC/7A6HqB1CoJ5tzOCnV/ojf05xxYH66jShDGMLOkRa73UQBgsIEeErfBI9PEGIGqYZaMG6oRpNGk01TJIMqf5R8E2e15CynuGmTjwNN3zv6tQTo0iE9CAvWq2QLngpZebJLnHIiy3flsd5x7hxcVZkA3DOnc+VDnLi/YWq6mkeYEeh0429wj8NPZXw9usw9AY6ewPzQYKuBKLN9HxdJiCvzE9hymWgkZOCLr+0RtiTiMF8Ons8vMGnWE6hR/qwoLVlsrqmBFeyqfizhitCZcXBdQ9N+pNClJ/CAEgqGXN5s08qJJ1zcE8gzbt8yE8fhBk8mNguldj5cxyU+69/xwzR80IZpJb8LJyOnIbOuoDeg81swzGiEuxKI+02DDFwNONzGENG9qMceXTw1F094QBpvS1Y3vXQ2Zmrak6g9IsbnwJ738ECqJG+jaBTEXqEuU1SMm7IfC18kJd807RVoAIVxy7VFeRq7IvKMS1l2j3wFEVmImMHx08VUc/N46ALPhFqHqGLy0xjadQ/5UKL9bXXKUW2NYVJ/WrDQhJkJhqY6IaTZbvOrCi4WfeNepUbCXtDQs/k0ARrrweSN8gV8TYyL1d4831I9U4CBwzWcs1UvqZ6HijZf02o/OeLfxuPo9yU5ak4kHGEiYShq5bT0l8D4lRwGofvUa3i5r4ZZ7OGIm32p5AzryQ+E9h9nEq8RaHwuFMCahngTFM8bHOqDSE0xEFaY/4opgiRuBEck/L1tXOuc3y9QRvMd2IlqWSHUkDS9FNZKfOklCXqhQuPL4L+RZHy4zWXPu0ui2ltCekbONgOQKLNv68ohwx8cIwiLbdSJsyOJiFYetkfwbSobv0eNmhYCjwb8/KjXsZKrdMkDuHQf+a5sx9F94uN4bAIo6E0/QO4pbxob0slFFURjaFRVBV5K3pLWJ4qMW0L3UiqXdwKn4KldZWVkrz3bvlE9EyO5ev+4sDg9AoeBOvk7syDMpAglIPtROl+f9xxwG9LKJokdUd+JGemO4a9wqhaImx/yr7+D//d3mTagzTNxPoKfX6Lo3SKjlGFqF3NQzIL9uRyrZoU2V1PibMU2AwJuj7AlED2HIHv/omKt4E4qdTDaSzX3C5AcgU4GcsebU2Gbw8pecSig==',
+  Map<String, String> actualDatabaseContent = <String, String>{
+    SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+    SecureStorageKey.groups.name:'T+nA200ad4AB1ifG5L5vbs5kJ7vwGTep/RTz6hxnbCnih6dXacLPejKiU8laVeBlgFI0iGIk5YeMZe4gUMYeoAPbdV/AqsXGRCgkt4AdVFGYjUa4hn+LK+D63Ma8Pl/M2+zNzZdG9bA4PGzT/7Dr3RsDn6ZbLUizdHxnC4NLo9nXtjZxRXc/aX0BOv84PJ/2bp2y3DTXbUr0KMkjjc6wQW8ZRGFTtDl7TMX7JLkahJEepMMnzv6OZQ+AJgI63o9zx59WMrXCmiq3yCg6U1yadfDZcviTXL9kP4QKwn8w+DxGxbaz3YEie68HB6T0mfKrk1paShRhfcWbyIur33+rO6xcY+oZ4KJ+xOT8+d7pZrPrd+wasWeKfjMDvjyi48lbXTVPFPKmRh/jhVuLj6kSpi+MsTiyHSQH4drY2qgFoYIFLuwZnxzuNchMvELvrPr1RRAt/tBW6feQF+ITXDVU102ry9F3QfKMcnTuZop08ZY/248gwkXKJj45wLL1K97dGo/FmftJmrT3UjCPLNXpl/yd+v1etukoo7e4WxW8PMtlrYChWC5cS32C+gNQ+XXREOaNILZfllekVuTLa75yw48ZGMVx4+jMeX3N5WU5bB+SAJrkQPAJsLzpq4S2DVtIDXrOszk7s5o5gd860lsNo3+olx+r/dCKrQbGF62sPXjBX86yL5uIeH6/MgLSJVLgA74zjGpB5zOba5wndhjC/7A6HqB1CoJ5tzOCnV/ojf05xxYH66jShDGMLOkRa73UQBgsIEeErfBI9PEGIGqYZaMG6oRpNGk01TJIMqf5R8E2e15CynuGmTjwNN3zv6tQTo0iE9CAvWq2QLngpZebJLnHIiy3flsd5x7hxcVZkA3DOnc+VDnLi/YWq6mkeYEeh0429wj8NPZXw9usw9AY6ewPzQYKuBKLN9HxdJiCvzE9hymWgkZOCLr+0RtiTiMF8Ons8vMGnWE6hR/qwoLVlsrqmBFeyqfizhitCZcXBdQ9N+pNClJ/CAEgqGXN5s08qJJ1zcE8gzbt8yE8fhBk8mNguldj5cxyU+69/xwzR80IZpJb8LJyOnIbOuoDeg81swzGiEuxKI+02DDFwNONzGENG9qMceXTw1F094QBpvS1Y3vXQ2Zmrak6g9IsbnwJ738ECqJG+jaBTEXqEuU1SMm7IfC18kJd807RVoAIVxy7VFeRq7IvKMS1l2j3wFEVmImMHx08VUc/N46ALPhFqHqGLy0xjadQ/5UKL9bXXKUW2NYVJ/WrDQhJkJhqY6IaTZbvOrCi4WfeNepUbCXtDQs/k0ARrrweSN8gV8TYyL1d4831I9U4CBwzWcs1UvqZ6HijZf02o/OeLfxuPo9yU5ak4kHGEiYShq5bT0l8D4lRwGofvUa3i5r4ZZ7OGIm32p5AzryQ+E9h9nEq8RaHwuFMCahngTFM8bHOqDSE0xEFaY/4opgiRuBEck/L1tXOuc3y9QRvMd2IlqWSHUkDS9FNZKfOklCXqhQuPL4L+RZHy4zWXPu0ui2ltCekbONgOQKLNv68ohwx8cIwiLbdSJsyOJiFYetkfwbSobv0eNmhYCjwb8/KjXsZKrdMkDuHQf+a5sx9F94uN4bAIo6E0/QO4pbxob0slFFURjaFRVBV5K3pLWJ4qMW0L3UiqXdwKn4KldZWVkrz3bvlE9EyO5ev+4sDg9AoeBOvk7syDMpAglIPtROl+f9xxwG9LKJokdUd+JGemO4a9wqhaImx/yr7+D//d3mTagzTNxPoKfX6Lo3SKjlGFqF3NQzIL9uRyrZoU2V1PibMU2AwJuj7AlED2HIHv/omKt4E4qdTDaSzX3C5AcgU4GcsebU2Gbw8pecSig==',
   };
   // @formatter:on
 
@@ -112,25 +105,13 @@ void main() {
     listItemsPreview: <AListItemModel>[networkGroupModel3],
   );
 
-  late NetworkListPageCubit actualNetworkListPageCubit;
-
   group('Tests of NetworkListPageCubit process', () {
     setUpAll(() {
-      globalLocator.allowReassignment = true;
-      initLocator();
-
-      TestUtils.setupTmpFilesystemStructureFromJson(actualFilesystemStructure, path: testSessionUUID);
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
-
-      EncryptedFilesystemStorageManager actualEncryptedFilesystemStorageManager = EncryptedFilesystemStorageManager(
-        rootDirectoryBuilder: () async => Directory('${TestUtils.testRootDirectory.path}/$testSessionUUID'),
-        databaseParentKey: DatabaseParentKey.secrets,
+      testDatabase = TestDatabase(
+        appPasswordModel: PasswordModel.fromPlaintext('1111'),
+        secureStorageContent: actualDatabaseContent,
+        filesystemStorageContent: actualFilesystemStructure,
       );
-
-      SecretsRepository actualSecretsRepository = SecretsRepository(filesystemStorageManager: actualEncryptedFilesystemStorageManager);
-
-      globalLocator.registerLazySingleton(() => actualSecretsRepository);
-      globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
 
       actualNetworkListPageCubit = NetworkListPageCubit(
         depth: 0,
@@ -534,27 +515,17 @@ void main() {
     });
 
     tearDownAll(() {
-      TestUtils.clearCache(testSessionUUID);
+      testDatabase.close();
     });
   });
 
   group('Tests of NetworkListPageCubit groups process', () {
     setUpAll(() {
-      globalLocator.allowReassignment = true;
-      initLocator();
-
-      TestUtils.setupTmpFilesystemStructureFromJson(actualFilesystemStructure, path: testSessionUUID);
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
-
-      EncryptedFilesystemStorageManager actualEncryptedFilesystemStorageManager = EncryptedFilesystemStorageManager(
-        rootDirectoryBuilder: () async => Directory('${TestUtils.testRootDirectory.path}/$testSessionUUID'),
-        databaseParentKey: DatabaseParentKey.secrets,
+      testDatabase = TestDatabase(
+        appPasswordModel: PasswordModel.fromPlaintext('1111'),
+        secureStorageContent: actualDatabaseContent,
+        filesystemStorageContent: actualFilesystemStructure,
       );
-
-      SecretsRepository actualSecretsRepository = SecretsRepository(filesystemStorageManager: actualEncryptedFilesystemStorageManager);
-
-      globalLocator.registerLazySingleton(() => actualSecretsRepository);
-      globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
 
       actualNetworkListPageCubit = NetworkListPageCubit(
         depth: 0,
@@ -636,27 +607,17 @@ void main() {
     });
 
     tearDownAll(() {
-      TestUtils.clearCache(testSessionUUID);
+      testDatabase.close();
     });
   });
 
   group('Tests of NetworkListPageCubit navigation process', () {
     setUpAll(() {
-      globalLocator.allowReassignment = true;
-      initLocator();
-
-      TestUtils.setupTmpFilesystemStructureFromJson(actualFilesystemStructure, path: testSessionUUID);
-      FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(filledWalletsDatabase));
-
-      EncryptedFilesystemStorageManager actualEncryptedFilesystemStorageManager = EncryptedFilesystemStorageManager(
-        rootDirectoryBuilder: () async => Directory('${TestUtils.testRootDirectory.path}/$testSessionUUID'),
-        databaseParentKey: DatabaseParentKey.secrets,
+      testDatabase = TestDatabase(
+        appPasswordModel: PasswordModel.fromPlaintext('1111'),
+        secureStorageContent: actualDatabaseContent,
+        filesystemStorageContent: actualFilesystemStructure,
       );
-
-      SecretsRepository actualSecretsRepository = SecretsRepository(filesystemStorageManager: actualEncryptedFilesystemStorageManager);
-
-      globalLocator.registerLazySingleton(() => actualSecretsRepository);
-      globalLocator<MasterKeyController>().setPassword(actualAppPasswordModel);
 
       actualNetworkListPageCubit = NetworkListPageCubit(
         depth: 0,
@@ -749,7 +710,7 @@ void main() {
     });
 
     tearDownAll(() {
-      TestUtils.clearCache(testSessionUUID);
+      testDatabase.close();
     });
   });
 }

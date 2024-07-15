@@ -15,11 +15,9 @@ import 'package:snggle/shared/value_objects/master_key_vo.dart';
 
 class AppSetupPinPageCubit extends Cubit<AAppSetupPinPageState> {
   final MasterKeyService _masterKeyService = globalLocator<MasterKeyService>();
-  final MasterKeyController _masterKeyController;
+  final MasterKeyController _masterKeyController = globalLocator<MasterKeyController>();
 
-  AppSetupPinPageCubit({MasterKeyController? masterKeyController})
-      : _masterKeyController = masterKeyController ?? globalLocator<MasterKeyController>(),
-        super(const AppSetupPinPageEnterPinState.empty());
+  AppSetupPinPageCubit() : super(const AppSetupPinPageEnterPinState.empty());
 
   void updateFirstPin(List<int> firstPinNumbers) {
     emit(AppSetupPinPageEnterPinState(firstPinNumbers: firstPinNumbers));

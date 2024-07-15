@@ -1,25 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:path_provider/path_provider.dart';
+import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/database_parent_key.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
-typedef RootDirectoryBuilder = FutureOr<Directory> Function();
-
 class FilesystemStorageManager {
-  static const RootDirectoryBuilder _defaultRootDirectoryBuilder = getApplicationSupportDirectory;
-
-  final DatabaseParentKey _databaseParentKey;
-  final RootDirectoryBuilder _rootDirectoryBuilder;
+  final RootDirectoryBuilder _rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
+  final FilesystemStorageKey _filesystemStorageKey;
   final Completer<Directory> _rootDirectoryCompleter;
 
   FilesystemStorageManager({
-    required DatabaseParentKey databaseParentKey,
-    RootDirectoryBuilder? rootDirectoryBuilder,
-  })  : _databaseParentKey = databaseParentKey,
-        _rootDirectoryBuilder = rootDirectoryBuilder ?? _defaultRootDirectoryBuilder,
+    required FilesystemStorageKey filesystemStorageKey,
+  })  : _filesystemStorageKey = filesystemStorageKey,
         _rootDirectoryCompleter = Completer<Directory>() {
     _initStorage();
   }
@@ -89,6 +83,6 @@ class FilesystemStorageManager {
 
   Future<String> _buildAbsolutePath({required String relativePath}) async {
     Directory rootDirectory = await _rootDirectoryCompleter.future;
-    return '${rootDirectory.path}/${_databaseParentKey.name}/$relativePath';
+    return '${rootDirectory.path}/${_filesystemStorageKey.name}/$relativePath';
   }
 }

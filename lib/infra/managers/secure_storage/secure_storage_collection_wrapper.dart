@@ -5,41 +5,39 @@ import 'package:flutter/cupertino.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
 import 'package:snggle/infra/exceptions/invalid_collection_exception.dart';
 import 'package:snggle/infra/exceptions/parent_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/database_parent_key.dart';
-import 'package:snggle/infra/managers/encrypted_database_manager.dart';
-import 'package:snggle/infra/managers/i_database_manager.dart';
+import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
+import 'package:snggle/infra/managers/secure_storage/secure_storage_manager.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/shared/utils/logger/log_level.dart';
 
-/// [DatabaseCollectionWrapper] is a class used to store and read collections (such as [List], [Set] or [Map]) in the database.
+/// [SecureStorageCollectionWrapper] is a class used to store and read collections (such as [List], [Set] or [Map]) in the secure storage.
 /// It stores collections as a key-value map, where key is a identification [String] and value is a [T] (which must be json serializable and deserializable)
 ///
-/// [FlutterSecureStorage] stores database as a Map<String, String> which is problematic for complex types (e.g. Objects, Lists, Sets or Maps).
-/// They must be deserialized/serialized before reading or saving them in database (when using [EncryptedDatabaseManager], they are also encrypted/decrypted).
-/// By default those operations are performed every time when accessing the database which may reduce the application performance and make the development more complicated.
-/// [DatabaseCollectionWrapper] was created to reduce the number of conversions for collections, by using cache.
+/// [FlutterSecureStorage] stores data as a Map<String, String> which is problematic for complex types (e.g. Objects, Lists, Sets or Maps).
+/// They must be deserialized/serialized before reading or saving them in secure storage (when using [EncryptedSecureStorageManager], they are also encrypted/decrypted).
+/// By default those operations are performed every time when accessing the secure storage which may reduce the application performance and make the development more complicated.
+/// [SecureStorageCollectionWrapper] was created to reduce the number of conversions for collections, by using cache.
 ///
-class DatabaseCollectionWrapper<T> {
-  /// Key representing the collection in the database
-  final DatabaseParentKey databaseParentKey;
+class SecureStorageCollectionWrapper<T> {
+  /// Key representing the collection in the secure storage
+  final SecureStorageKey secureStorageKey;
 
-  /// [IDatabaseManager] used to read and write data
-  /// - [DecryptedDatabaseManager] for values that don't need to be encrypted
-  /// - [EncryptedDatabaseManager] for values that need to be encrypted
-  final IDatabaseManager databaseManager;
+  /// - [SecureStorageManager] for values that don't need to be encrypted
+  /// - [EncryptedSecureStorageManager] for values that need to be encrypted
+  final SecureStorageManager secureStorageManager;
 
   /// Completer used to ensure that the cache is initialized before performing any operation
   @visibleForTesting
   final Completer<void> collectionCacheInitCompleter = Completer<void>();
 
   /// Cache used to store the collection
-  /// We use the cache to avoid decoding, encoding, encrypting and decrypting every time on each access to database
+  /// We use the cache to avoid decoding, encoding, encrypting and decrypting every time on each access to secure storage
   @visibleForTesting
   Map<String, T> collectionCacheMap = <String, T>{};
 
-  DatabaseCollectionWrapper({
-    required this.databaseParentKey,
-    required this.databaseManager,
+  SecureStorageCollectionWrapper({
+    required this.secureStorageKey,
+    required this.secureStorageManager,
   }) {
     _initCollectionCache();
   }
@@ -58,7 +56,7 @@ class DatabaseCollectionWrapper<T> {
     await collectionCacheInitCompleter.future;
     T? value = collectionCacheMap[id];
     if (value == null) {
-      throw ChildKeyNotFoundException('[${id}] child key not found in [${databaseParentKey.name}] parent key');
+      throw ChildKeyNotFoundException('[${id}] child key not found in [${secureStorageKey.name}] parent key');
     }
     return value;
   }
@@ -72,7 +70,7 @@ class DatabaseCollectionWrapper<T> {
   Future<void> deleteById(String id) async {
     await collectionCacheInitCompleter.future;
     if (collectionCacheMap.containsKey(id) == false) {
-      throw ChildKeyNotFoundException('[${id}] child key not found in [${databaseParentKey.name}] parent key');
+      throw ChildKeyNotFoundException('[${id}] child key not found in [${secureStorageKey.name}] parent key');
     }
     collectionCacheMap.remove(id);
     await _saveCollectionCacheInDatabase();
@@ -82,7 +80,7 @@ class DatabaseCollectionWrapper<T> {
     try {
       collectionCacheMap = await _getCollectionFromDatabase();
     } catch (e) {
-      AppLogger().log(message: 'Cannot read value for [${databaseParentKey.name}] parent key: $e', logLevel: LogLevel.warning);
+      AppLogger().log(message: 'Cannot read value for [${secureStorageKey.name}] parent key: $e', logLevel: LogLevel.warning);
       collectionCacheMap = <String, T>{};
     } finally {
       collectionCacheInitCompleter.complete();
@@ -90,12 +88,12 @@ class DatabaseCollectionWrapper<T> {
   }
 
   Future<Map<String, T>> _getCollectionFromDatabase() async {
-    bool collectionExistBool = await databaseManager.containsKey(databaseParentKey: databaseParentKey);
+    bool collectionExistBool = await secureStorageManager.containsKey(secureStorageKey: secureStorageKey);
     if (collectionExistBool == false) {
-      throw ParentKeyNotFoundException('[${databaseParentKey.name}] parent key not found in database');
+      throw ParentKeyNotFoundException('[${secureStorageKey.name}] parent key not found in secure storage');
     }
 
-    String collectionString = await databaseManager.read(databaseParentKey: databaseParentKey);
+    String collectionString = await secureStorageManager.read(secureStorageKey: secureStorageKey);
     Map<String, T> collectionCacheMap = _deserializeCollection(collectionString);
     return collectionCacheMap;
   }
@@ -112,6 +110,6 @@ class DatabaseCollectionWrapper<T> {
 
   Future<void> _saveCollectionCacheInDatabase() async {
     String cacheJsonString = jsonEncode(collectionCacheMap);
-    await databaseManager.write(databaseParentKey: databaseParentKey, plaintextValue: cacheJsonString);
+    await secureStorageManager.write(secureStorageKey: secureStorageKey, plaintextValue: cacheJsonString);
   }
 }

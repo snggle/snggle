@@ -1,29 +1,36 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/managers/database_parent_key.dart';
+import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
 
+import '../../../utils/test_database.dart';
+
 void main() {
-  initLocator();
+  late TestDatabase testDatabase;
+  late MasterKeyController actualMasterKeyController;
 
-  // @formatter:off
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
-  MasterKeyVO actualMasterKeyVO = const MasterKeyVO(encryptedMasterKey: '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');
+  MasterKeyVO actualMasterKeyVO = const MasterKeyVO(
+    encryptedMasterKey:
+        '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+  );
 
-  Map<String, String> masterKeyOnlyDatabase = <String, String>{
-    DatabaseParentKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-  };
-  // @formatter:off
-
-  setUp(() async {
-    FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(masterKeyOnlyDatabase));
+  setUpAll(() {
+    // @formatter:off
+    testDatabase = TestDatabase(
+      appPasswordModel: actualAppPasswordModel,
+      secureStorageContent: <String, String>{
+        SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
+      },
+    );
+    // @formatter:on
   });
 
   group('Tests of MasterKeyController.encrypt()', () {
-    MasterKeyController actualMasterKeyController = MasterKeyController();
+    setUpAll(() {
+      actualMasterKeyController = MasterKeyController();
+    });
 
     test('Should [throw Exception] if [password NOT SET]', () {
       // Arrange
@@ -62,7 +69,9 @@ void main() {
   });
 
   group('Tests of MasterKeyController.decrypt()', () {
-    MasterKeyController actualMasterKeyController = MasterKeyController();
+    setUpAll(() {
+      actualMasterKeyController = MasterKeyController();
+    });
 
     test('Should [throw Exception] if [password NOT SET]', () {
       // Arrange
@@ -94,5 +103,9 @@ void main() {
 
       expect(actualDecryptedValue, expectedDecryptedValue);
     });
+  });
+
+  tearDownAll(() {
+    testDatabase.close();
   });
 }

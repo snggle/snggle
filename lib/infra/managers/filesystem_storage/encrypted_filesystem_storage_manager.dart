@@ -9,8 +9,7 @@ class EncryptedFilesystemStorageManager extends FilesystemStorageManager {
   final MasterKeyController _masterKeyController = globalLocator<MasterKeyController>();
 
   EncryptedFilesystemStorageManager({
-    required super.databaseParentKey,
-    super.rootDirectoryBuilder,
+    required super.filesystemStorageKey,
   });
 
   @override

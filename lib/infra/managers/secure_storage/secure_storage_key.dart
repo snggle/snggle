@@ -1,7 +1,6 @@
-enum DatabaseParentKey {
+enum SecureStorageKey {
   encryptedMasterKey,
   groups,
-  secrets,
   vaults,
   wallets,
   test,
