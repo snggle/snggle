@@ -8,9 +8,9 @@ class WalletModel extends AListItemModel {
   final String network;
 
   WalletModel({
+    required super.id,
     required super.encryptedBool,
     required super.pinnedBool,
-    required super.uuid,
     required super.filesystemPath,
     required super.name,
     required this.index,
@@ -21,24 +21,24 @@ class WalletModel extends AListItemModel {
 
   @override
   WalletModel copyWith({
+    int? id,
     bool? encryptedBool,
     bool? pinnedBool,
     int? index,
     String? address,
     String? derivationPath,
     String? network,
-    String? uuid,
     FilesystemPath? filesystemPath,
     String? name,
   }) {
     return WalletModel(
+      id: id ?? this.id,
       encryptedBool: encryptedBool ?? this.encryptedBool,
       pinnedBool: pinnedBool ?? this.pinnedBool,
       index: index ?? this.index,
       address: address ?? this.address,
       derivationPath: derivationPath ?? this.derivationPath,
       network: network ?? this.network,
-      uuid: uuid ?? this.uuid,
       filesystemPath: filesystemPath ?? this.filesystemPath,
       name: name ?? this.name,
     );
@@ -50,5 +50,5 @@ class WalletModel extends AListItemModel {
   }
 
   @override
-  List<Object?> get props => <Object?>[encryptedBool, pinnedBool, index, address, derivationPath, network, uuid, name, filesystemPath];
+  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, index, address, derivationPath, network, name, filesystemPath];
 }

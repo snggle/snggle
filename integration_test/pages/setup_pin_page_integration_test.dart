@@ -10,7 +10,7 @@ void main() {
 
   group('Tests of hiding pinpadTextFields by clicking Obscure Icon Button:', () {
     testWidgets('Should return true, after showing and hiding PinpadTextFields [which changes icons]', (WidgetTester widgetTester) async {
-      app.main();
+      await app.main();
       await widgetTester.pumpAndSettle();
 
       PinpadTextFieldsRobot pinpadTextFieldsRobot = PinpadTextFieldsRobot(widgetTester);

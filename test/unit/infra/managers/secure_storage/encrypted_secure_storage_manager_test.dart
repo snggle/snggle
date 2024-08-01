@@ -1,56 +1,47 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/infra/exceptions/parent_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/secure_storage/encrypted_secure_storage_manager.dart';
 import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
+import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/value_objects/master_key_vo.dart';
 
 import '../../../../utils/test_database.dart';
 
 void main() {
-  late TestDatabase testDatabase;
-  late EncryptedSecureStorageManager actualEncryptedSecureStorageManager;
-
+  final TestDatabase testDatabase = TestDatabase();
   SecureStorageKey actualSecureStorageKey = SecureStorageKey.test;
-  PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
-  MasterKeyVO actualMasterKeyVO = const MasterKeyVO(
-    encryptedMasterKey:
-        '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-  );
 
   // @formatter:off
-  Map<String, String> filledChildKeysDatabase = <String, String>{
+  Map<String, String> filledSecureStorage = <String, String>{
     SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
     actualSecureStorageKey.name:'OWkmZ2+DccpOdfFHb8ZZQyreGhwj3LEuUViDzTYky9WsbHxQPd8gGfk4nkW/OfFrKHEqsiWaaVh9x0l76h/LbIHcpcT6F2ifeHIoywYwfPeYs2a9',
   };
 
-  Map<String, String> filledChildKeysWithoutMasterKeyDatabase = <String, String>{
+  Map<String, String> filledWithoutMasterKeySecureStorage = <String, String>{
     actualSecureStorageKey.name:'OWkmZ2+DccpOdfFHb8ZZQyreGhwj3LEuUViDzTYky9WsbHxQPd8gGfk4nkW/OfFrKHEqsiWaaVh9x0l76h/LbIHcpcT6F2ifeHIoywYwfPeYs2a9',
   };
 
-  Map<String, String> emptyStringChildKeyDatabaseJson = <String, String>{
+  Map<String, String> emptyStringSecureStorage = <String, String>{
     SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
     actualSecureStorageKey.name: '',
   };
 
-  Map<String, String> masterKeyOnlyDatabase = <String, String>{
+  Map<String, String> masterKeyOnlySecureStorage = <String, String>{
     SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
   };
 
-  Map<String, String> emptyDatabase = <String, String>{};
+  Map<String, String> emptySecureStorage = <String, String>{};
   // @formatter:on
 
-  setUp(() {
-    testDatabase = TestDatabase(appPasswordModel: PasswordModel.fromPlaintext('1111'));
-
-    actualEncryptedSecureStorageManager = EncryptedSecureStorageManager();
+  setUp(() async {
+    await testDatabase.init(appPasswordModel: PasswordModel.fromPlaintext('1111'));
   });
 
   group('Tests of EncryptedSecureStorageManager.containsKey()', () {
-    test('Should [return TRUE] if [parent key EXISTS] in database', () async {
+    test('Should [return TRUE] if [key EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledChildKeysDatabase);
+      testDatabase.updateSecureStorage(filledSecureStorage);
+      EncryptedSecureStorageManager actualEncryptedSecureStorageManager = EncryptedSecureStorageManager();
 
       // Act
       bool actualParentKeyExistsBool = await actualEncryptedSecureStorageManager.containsKey(secureStorageKey: actualSecureStorageKey);
@@ -59,9 +50,10 @@ void main() {
       expect(actualParentKeyExistsBool, true);
     });
 
-    test('Should [return FALSE] if [parent key NOT EXISTS] in database', () async {
+    test('Should [return FALSE] if [key NOT EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyDatabase);
+      testDatabase.updateSecureStorage(emptySecureStorage);
+      EncryptedSecureStorageManager actualEncryptedSecureStorageManager = EncryptedSecureStorageManager();
 
       // Act
       bool actualParentKeyExistsBool = await actualEncryptedSecureStorageManager.containsKey(secureStorageKey: actualSecureStorageKey);
@@ -72,9 +64,10 @@ void main() {
   });
 
   group('Tests of EncryptedSecureStorageManager.read()', () {
-    test('Should [return decrypted parent key value] if [parent key EXISTS], [master key EXISTS] in database and [app password SET]', () async {
+    test('Should [return decrypted value] if [key EXISTS], [master key EXISTS] in secure storage and [app password SET]', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledChildKeysDatabase);
+      testDatabase.updateSecureStorage(filledSecureStorage);
+      EncryptedSecureStorageManager actualEncryptedSecureStorageManager = EncryptedSecureStorageManager();
 
       // Act
       String actualDecryptedParentKeyValue = await actualEncryptedSecureStorageManager.read(secureStorageKey: actualSecureStorageKey);
@@ -84,9 +77,10 @@ void main() {
       expect(actualDecryptedParentKeyValue, expectedDecryptedParentKeyValue);
     });
 
-    test('Should [throw ParentKeyNotFoundException] if [parent key NOT EXISTS] in database', () async {
+    test('Should [throw ParentKeyNotFoundException] if [key NOT EXISTS] in secure storage', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyDatabase);
+      testDatabase.updateSecureStorage(emptySecureStorage);
+      EncryptedSecureStorageManager actualEncryptedSecureStorageManager = EncryptedSecureStorageManager();
 
       // Assert
       expect(
@@ -95,9 +89,10 @@ void main() {
       );
     });
 
-    test('Should [throw FormatException] if [parent key EXISTS] in database but its [value EMPTY]', () async {
+    test('Should [throw FormatException] if [key EXISTS] in secure storage but its [value EMPTY]', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyStringChildKeyDatabaseJson);
+      testDatabase.updateSecureStorage(emptyStringSecureStorage);
+      EncryptedSecureStorageManager actualEncryptedSecureStorageManager = EncryptedSecureStorageManager();
 
       // Assert
       expect(
@@ -106,9 +101,22 @@ void main() {
       );
     });
 
-    test('Should [throw ParentKeyKeyNotFoundException] if [parent key EXISTS], [master key NOT EXISTS] in database', () async {
+    test('Should [throw Exception] if [key EXISTS], [master key EXISTS] in secure storage but [app password NOT SET]', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledChildKeysWithoutMasterKeyDatabase);
+      testDatabase.updateSecureStorage(filledSecureStorage);
+      EncryptedSecureStorageManager actualEncryptedSecureStorageManager = EncryptedSecureStorageManager(masterKeyController: MasterKeyController());
+
+      // Assert
+      expect(
+        () => actualEncryptedSecureStorageManager.read(secureStorageKey: actualSecureStorageKey),
+        throwsA(isA<Exception>()),
+      );
+    });
+
+    test('Should [throw ParentKeyKeyNotFoundException] if [key EXISTS], [master key NOT EXISTS] in secure storage', () async {
+      // Arrange
+      testDatabase.updateSecureStorage(filledWithoutMasterKeySecureStorage);
+      EncryptedSecureStorageManager actualEncryptedSecureStorageManager = EncryptedSecureStorageManager();
 
       // Assert
       expect(
@@ -119,44 +127,50 @@ void main() {
   });
 
   group('Tests of EncryptedSecureStorageManager.write()', () {
-    test('Should [UPDATE parent key value] if [parent key EXISTS], [master key EXISTS] in database and [app password SET]', () async {
+    test('Should [UPDATE value] if [key EXISTS], [master key EXISTS] in secure storage and [app password SET]', () async {
       // Arrange
-      testDatabase.updateSecureStorage(filledChildKeysDatabase);
+      testDatabase.updateSecureStorage(filledSecureStorage);
+      EncryptedSecureStorageManager actualEncryptedSecureStorageManager = EncryptedSecureStorageManager();
 
       // Act
-      await actualEncryptedSecureStorageManager.write(secureStorageKey: actualSecureStorageKey, plaintextValue: 'updated_test_value');
+      await actualEncryptedSecureStorageManager.write(secureStorageKey: actualSecureStorageKey, plaintextValue: '{"test_key":"test value"}');
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. Because of that we need to get the actual result and check if we can decrypt it.
-      String? actualEncryptedParentKeyValue = await const FlutterSecureStorage().read(key: actualSecureStorageKey.name);
-      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedParentKeyValue!);
+      Map<String, dynamic>? actualDecryptedParentKeyValue = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
 
       // Assert
-      String expectedDecryptedParentKeyValue = 'updated_test_value';
+      Map<String, dynamic> expectedDecryptedParentKeyValue = <String, dynamic>{
+        'test_key': 'test value',
+      };
 
       expect(actualDecryptedParentKeyValue, expectedDecryptedParentKeyValue);
     });
 
-    test('Should [SAVE parent key value] if [parent key NOT EXISTS], [master key EXISTS] in database and [app password SET]', () async {
+    test('Should [SAVE value] if [key NOT EXISTS], [master key EXISTS] in secure storage and [app password SET]', () async {
       // Arrange
-      testDatabase.updateSecureStorage(masterKeyOnlyDatabase);
+      testDatabase.updateSecureStorage(masterKeyOnlySecureStorage);
+      EncryptedSecureStorageManager actualEncryptedSecureStorageManager = EncryptedSecureStorageManager();
 
       // Act
-      await actualEncryptedSecureStorageManager.write(secureStorageKey: actualSecureStorageKey, plaintextValue: 'saved_test_value');
+      await actualEncryptedSecureStorageManager.write(secureStorageKey: actualSecureStorageKey, plaintextValue: '{"test_key":"test value"}');
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. Because of that we need to get the actual result and check if we can decrypt it.
-      String? actualEncryptedParentKeyValue = await const FlutterSecureStorage().read(key: actualSecureStorageKey.name);
-      String actualDecryptedParentKeyValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedParentKeyValue!);
+      Map<String, dynamic>? actualDecryptedParentKeyValue = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
 
       // Assert
-      String expectedDecryptedParentKeyValue = 'saved_test_value';
+      Map<String, dynamic> expectedDecryptedParentKeyValue = <String, dynamic>{
+        'test_key': 'test value',
+      };
+
       expect(actualDecryptedParentKeyValue, expectedDecryptedParentKeyValue);
     });
 
-    test('Should [throw FormatException] if provided [parent key value EMPTY]', () async {
+    test('Should [throw FormatException] if provided [key value EMPTY]', () async {
       // Arrange
-      testDatabase.updateSecureStorage(masterKeyOnlyDatabase);
+      testDatabase.updateSecureStorage(masterKeyOnlySecureStorage);
+      EncryptedSecureStorageManager actualEncryptedSecureStorageManager = EncryptedSecureStorageManager();
 
       // Assert
       expect(
@@ -165,9 +179,22 @@ void main() {
       );
     });
 
-    test('Should [throw ParentKeyNotFoundException] if [master key NOT EXISTS] in database', () async {
+    test('Should [throw Exception] if [app password NOT SET]', () async {
       // Arrange
-      testDatabase.updateSecureStorage(emptyDatabase);
+      testDatabase.updateSecureStorage(masterKeyOnlySecureStorage);
+      EncryptedSecureStorageManager actualEncryptedSecureStorageManager = EncryptedSecureStorageManager(masterKeyController: MasterKeyController());
+
+      // Assert
+      expect(
+        () => actualEncryptedSecureStorageManager.write(secureStorageKey: actualSecureStorageKey, plaintextValue: 'Test data'),
+        throwsA(isA<Exception>()),
+      );
+    });
+
+    test('Should [throw ParentKeyNotFoundException] if [master key NOT EXISTS] in secure storage', () async {
+      // Arrange
+      testDatabase.updateSecureStorage(emptySecureStorage);
+      EncryptedSecureStorageManager actualEncryptedSecureStorageManager = EncryptedSecureStorageManager();
 
       // Assert
       expect(
@@ -177,7 +204,5 @@ void main() {
     });
   });
 
-  tearDown(() {
-    testDatabase.close();
-  });
+  tearDown(testDatabase.close);
 }

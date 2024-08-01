@@ -6,9 +6,9 @@ class VaultModel extends AListItemModel {
   final List<AListItemModel> listItemsPreview;
 
   VaultModel({
+    required super.id,
     required super.encryptedBool,
     required super.pinnedBool,
-    required super.uuid,
     required super.filesystemPath,
     required super.name,
     required this.index,
@@ -17,19 +17,19 @@ class VaultModel extends AListItemModel {
 
   @override
   VaultModel copyWith({
+    int? id,
     bool? encryptedBool,
     bool? pinnedBool,
     int? index,
-    String? uuid,
     FilesystemPath? filesystemPath,
     String? name,
     List<AListItemModel>? listItemsPreview,
   }) {
     return VaultModel(
+      id: id ?? this.id,
       encryptedBool: encryptedBool ?? this.encryptedBool,
       pinnedBool: pinnedBool ?? this.pinnedBool,
       index: index ?? this.index,
-      uuid: uuid ?? this.uuid,
       filesystemPath: filesystemPath ?? this.filesystemPath,
       name: name ?? this.name,
       listItemsPreview: listItemsPreview ?? this.listItemsPreview,
@@ -42,5 +42,5 @@ class VaultModel extends AListItemModel {
   }
 
   @override
-  List<Object?> get props => <Object?>[encryptedBool, pinnedBool, index, uuid, name, filesystemPath, listItemsPreview];
+  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, index, name, filesystemPath, listItemsPreview];
 }

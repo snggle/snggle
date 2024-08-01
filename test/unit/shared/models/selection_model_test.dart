@@ -225,7 +225,7 @@ class TestListItem extends AListItemModel {
   TestListItem({
     required super.encryptedBool,
     required super.pinnedBool,
-  }) : super(uuid: '123', filesystemPath: const FilesystemPath.empty());
+  }) : super(id: 1, filesystemPath: const FilesystemPath.empty());
 
   @override
   AListItemModel copyWith({bool? encryptedBool, bool? pinnedBool}) {

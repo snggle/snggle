@@ -13,7 +13,6 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_creation_request_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
-import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class WalletListPageCubit extends AListCubit<WalletModel> {
@@ -31,15 +30,16 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
 
   @override
   Future<void> moveItem(AListItemModel item, FilesystemPath newFilesystemPath) async {
-    if (item is WalletModel) {
-      await _walletsService.move(item, newFilesystemPath);
-    } else if (item is GroupModel) {
-      GroupModel movedGroupModel = await groupsService.move(item, newFilesystemPath);
+    FilesystemPath movedFilesystemPath = item.filesystemPath.replace(item.filesystemPath.parentPath, newFilesystemPath.fullPath);
 
-      await _walletsService.moveByParentPath(item.filesystemPath, movedGroupModel.filesystemPath);
-      await groupsService.moveByParentPath(item.filesystemPath, movedGroupModel.filesystemPath);
+    if (item is WalletModel) {
+      await _walletsService.move(item, movedFilesystemPath);
+    } else if (item is GroupModel) {
+      await _walletsService.moveByParentPath(item.filesystemPath, movedFilesystemPath);
+      await groupsService.moveByParentPath(item.filesystemPath, movedFilesystemPath);
+      await groupsService.move(item, movedFilesystemPath);
     } else {
-      throw StateError('List item not supported');
+      throw UnsupportedError('Unsupported item type: ${item.runtimeType}');
     }
     await refreshAll();
   }
@@ -47,11 +47,13 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
   @override
   Future<void> deleteItem(AListItemModel item) async {
     if (item is WalletModel) {
-      await _walletsService.deleteById(item.uuid);
+      await _walletsService.deleteById(item.id);
     } else if (item is GroupModel) {
       await _walletsService.deleteAllByParentPath(item.filesystemPath);
       await groupsService.deleteAllByParentPath(item.filesystemPath);
-      await groupsService.deleteById(item.uuid);
+      await groupsService.deleteById(item.id);
+    } else {
+      throw UnsupportedError('Unsupported item type: ${item.runtimeType}');
     }
 
     await refreshAll();
@@ -70,14 +72,14 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
   }
 
   @override
-  Future<WalletModel?> fetchSingleItem(WalletModel item) async {
-    WalletModel walletModel = await _walletsService.getById(item.uuid);
+  Future<WalletModel> fetchSingleItem(WalletModel item) async {
+    WalletModel walletModel = await _walletsService.getById(item.id);
     return walletModel;
   }
 
   @override
-  Future<GroupModel?> fetchSingleGroup(GroupModel group) async {
-    GroupModel? groupModel = await groupsService.getById(group.uuid);
+  Future<GroupModel> fetchSingleGroup(GroupModel group) async {
+    GroupModel groupModel = await groupsService.getById(group.id);
     return groupModel;
   }
 
@@ -110,23 +112,17 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
     BIP32 rootNode = BIP32.fromSeed(seed);
     BIP32 derivedNode = rootNode.derivePath(derivationPath);
 
-    WalletModel walletModel = await walletModelFactory.createNewWallet(
+    await walletModelFactory.createNewWallet(
       WalletCreationRequestModel(
         index: walletIndex,
         derivationPath: derivationPath,
         network: 'ethereum',
         publicKey: derivedNode.publicKey,
+        privateKey: derivedNode.privateKey!,
         parentFilesystemPath: state.filesystemPath,
       ),
     );
 
-    WalletSecretsModel walletSecretsModel = WalletSecretsModel(
-      filesystemPath: walletModel.filesystemPath,
-      privateKey: derivedNode.privateKey!,
-    );
-
-    await _walletsService.save(walletModel);
-    await secretsService.save(walletSecretsModel, PasswordModel.defaultPassword());
     await refreshAll();
   }
 }

@@ -1,43 +1,77 @@
-import 'package:snggle/infra/entities/group_entity.dart';
-import 'package:snggle/infra/entities/network_group_entity.dart';
-import 'package:snggle/infra/managers/secure_storage/encrypted_secure_storage_manager.dart';
-import 'package:snggle/infra/managers/secure_storage/secure_storage_collection_wrapper.dart';
-import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
-import 'package:snggle/shared/models/groups/group_type.dart';
+import 'package:isar/isar.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/entities/group_entity/group_entity.dart';
+import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
+import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class GroupsRepository {
-  final EncryptedSecureStorageManager _encryptedSecureStorageManager = EncryptedSecureStorageManager();
-  late final SecureStorageCollectionWrapper<Map<String, dynamic>> _secureStorageCollectionWrapper = SecureStorageCollectionWrapper<Map<String, dynamic>>(
-    secureStorageManager: _encryptedSecureStorageManager,
-    secureStorageKey: SecureStorageKey.groups,
-  );
+  final IsarDatabaseManager isarDatabaseManager = globalLocator<IsarDatabaseManager>();
 
   Future<List<GroupEntity>> getAll() async {
-    List<Map<String, dynamic>> allGroupsJson = await _secureStorageCollectionWrapper.getAll();
-    List<GroupEntity> allGroups = allGroupsJson.map((Map<String, dynamic> json) {
-      if (json['type'] == GroupType.network.name) {
-        return NetworkGroupEntity.fromJson(json);
-      } else {
-        return GroupEntity.fromJson(json);
-      }
-    }).toList();
-    return allGroups;
+    List<GroupEntity> groupEntities = await isarDatabaseManager.perform((Isar isar) {
+      return isar.groups.where().findAll();
+    });
+
+    return groupEntities;
   }
 
-  Future<GroupEntity> getById(String id) async {
-    Map<String, dynamic> groupJson = await _secureStorageCollectionWrapper.getById(id);
-    if (groupJson['type'] == GroupType.network.name) {
-      return NetworkGroupEntity.fromJson(groupJson);
-    } else {
-      return GroupEntity.fromJson(groupJson);
+  Future<List<GroupEntity>> getAllByParentPath(FilesystemPath parentFilesystemPath) async {
+    List<GroupEntity> groupEntities = await isarDatabaseManager.perform((Isar isar) {
+      return isar.groups.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).findAll();
+    });
+
+    return groupEntities;
+  }
+
+  Future<GroupEntity> getById(Id id) async {
+    GroupEntity? groupEntity = await isarDatabaseManager.perform((Isar isar) {
+      return isar.groups.get(id);
+    });
+
+    if (groupEntity == null) {
+      throw ChildKeyNotFoundException();
     }
+    return groupEntity;
   }
 
-  Future<void> save(GroupEntity groupEntity) async {
-    await _secureStorageCollectionWrapper.saveWithId(groupEntity.uuid, groupEntity.toJson());
+  Future<GroupEntity> getByPath(FilesystemPath filesystemPath) async {
+    GroupEntity? groupEntity = await isarDatabaseManager.perform((Isar isar) {
+      return isar.groups.where().filesystemPathStringEqualTo(filesystemPath.fullPath).findFirst();
+    });
+
+    if (groupEntity == null) {
+      throw ChildKeyNotFoundException();
+    }
+    return groupEntity;
   }
 
-  Future<void> deleteById(String id) async {
-    await _secureStorageCollectionWrapper.deleteById(id);
+  Future<Id> save(GroupEntity groupEntity) async {
+    return isarDatabaseManager.perform((Isar isar) async {
+      Id createdId = await isar.writeTxn(() async {
+        return isar.groups.put(groupEntity);
+      });
+      return createdId;
+    });
+  }
+
+  Future<List<Id>> saveAll(List<GroupEntity> groupEntityList) async {
+    return isarDatabaseManager.perform((Isar isar) async {
+      List<Id> createdIds = await isar.writeTxn(() async {
+        return isar.groups.putAll(groupEntityList);
+      });
+      return createdIds;
+    });
+  }
+
+  Future<void> deleteById(Id id) async {
+    await isarDatabaseManager.perform((Isar isar) async {
+      bool deletedBool = await isar.writeTxn(() async {
+        return isar.groups.delete(id);
+      });
+      if (deletedBool == false) {
+        throw ChildKeyNotFoundException();
+      }
+    });
   }
 }

@@ -85,74 +85,102 @@ void main() {
     });
   });
 
+  group('Tests of FilesystemPath.add()', () {
+    test('Should [return FilesystemPath] with added new path segment', () {
+      // Arrange
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('directoryA/directoryB/directoryC');
+
+      // Act
+      FilesystemPath actualNewFilesystemPath = actualFilesystemPath.add('directoryD');
+
+      // Assert
+      FilesystemPath expectedNewFilesystemPath = FilesystemPath.fromString('directoryA/directoryB/directoryC/directoryD');
+
+      expect(actualNewFilesystemPath, expectedNewFilesystemPath);
+    });
+
+    test('Should [return FilesystemPath] with single path segment if path is empty', () {
+      // Arrange
+      FilesystemPath actualFilesystemPath = const FilesystemPath.empty();
+
+      // Act
+      FilesystemPath actualNewFilesystemPath = actualFilesystemPath.add('directoryA');
+
+      // Assert
+      FilesystemPath expectedNewFilesystemPath = FilesystemPath.fromString('directoryA');
+
+      expect(actualNewFilesystemPath, expectedNewFilesystemPath);
+    });
+  });
+
   group('Tests of FilesystemPath.isSubPathOf()', () {
-    test('Should [return TRUE] if [FilesystemPath is DIRECT child] of other FilesystemPath (singleLevelBool == false)', () {
+    test('Should [return TRUE] if [FilesystemPath is DIRECT child] of other FilesystemPath (firstLevelBool == false)', () {
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('directoryA/directoryB/directoryC');
       FilesystemPath actualParentFilesystemPath = FilesystemPath.fromString('directoryA/directoryB');
 
       // Act
-      bool actualSubPathBool = actualFilesystemPath.isSubPathOf(actualParentFilesystemPath, singleLevelBool: false);
+      bool actualSubPathBool = actualFilesystemPath.isSubPathOf(actualParentFilesystemPath, firstLevelBool: false);
 
       // Assert
       expect(actualSubPathBool, true);
     });
 
-    test('Should [return TRUE] if [FilesystemPath is NESTED child] of other FilesystemPath (singleLevelBool == false)', () {
+    test('Should [return TRUE] if [FilesystemPath is NESTED child] of other FilesystemPath (firstLevelBool == false)', () {
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('directoryA/directoryB/directoryC/directoryD/directoryE');
       FilesystemPath actualParentFilesystemPath = FilesystemPath.fromString('directoryA/directoryB');
 
       // Act
-      bool actualSubPathBool = actualFilesystemPath.isSubPathOf(actualParentFilesystemPath, singleLevelBool: false);
+      bool actualSubPathBool = actualFilesystemPath.isSubPathOf(actualParentFilesystemPath, firstLevelBool: false);
 
       // Assert
       expect(actualSubPathBool, true);
     });
 
-    test('Should [return FALSE] if [FilesystemPath NOT BELONGS] to other FilesystemPath (singleLevelBool == false)', () {
+    test('Should [return FALSE] if [FilesystemPath NOT BELONGS] to other FilesystemPath (firstLevelBool == false)', () {
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('directoryA/directoryB/');
       FilesystemPath actualParentFilesystemPath = FilesystemPath.fromString('directoryC/directoryD');
 
       // Act
-      bool actualSubPathBool = actualFilesystemPath.isSubPathOf(actualParentFilesystemPath, singleLevelBool: false);
+      bool actualSubPathBool = actualFilesystemPath.isSubPathOf(actualParentFilesystemPath, firstLevelBool: false);
 
       // Assert
       expect(actualSubPathBool, false);
     });
 
-    test('Should [return TRUE] if [FilesystemPath is DIRECT child] of other FilesystemPath (singleLevelBool == true)', () {
+    test('Should [return TRUE] if [FilesystemPath is DIRECT child] of other FilesystemPath (firstLevelBool == true)', () {
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('directoryA/directoryB/directoryC');
       FilesystemPath actualParentFilesystemPath = FilesystemPath.fromString('directoryA/directoryB');
 
       // Act
-      bool actualSubPathBool = actualFilesystemPath.isSubPathOf(actualParentFilesystemPath, singleLevelBool: true);
+      bool actualSubPathBool = actualFilesystemPath.isSubPathOf(actualParentFilesystemPath, firstLevelBool: true);
 
       // Assert
       expect(actualSubPathBool, true);
     });
 
-    test('Should [return FALSE] if [FilesystemPath is NESTED child] of other FilesystemPath (singleLevelBool == true)', () {
+    test('Should [return FALSE] if [FilesystemPath is NESTED child] of other FilesystemPath (firstLevelBool == true)', () {
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('directoryA/directoryB/directoryC/directoryD/directoryE');
       FilesystemPath actualParentFilesystemPath = FilesystemPath.fromString('directoryA/directoryB');
 
       // Act
-      bool actualSubPathBool = actualFilesystemPath.isSubPathOf(actualParentFilesystemPath, singleLevelBool: true);
+      bool actualSubPathBool = actualFilesystemPath.isSubPathOf(actualParentFilesystemPath, firstLevelBool: true);
 
       // Assert
       expect(actualSubPathBool, false);
     });
 
-    test('Should [return FALSE] if [FilesystemPath NOT BELONGS] to other FilesystemPath (singleLevelBool == true)', () {
+    test('Should [return FALSE] if [FilesystemPath NOT BELONGS] to other FilesystemPath (firstLevelBool == true)', () {
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('directoryA/directoryB/');
       FilesystemPath actualParentFilesystemPath = FilesystemPath.fromString('directoryC/directoryD');
 
       // Act
-      bool actualSubPathBool = actualFilesystemPath.isSubPathOf(actualParentFilesystemPath, singleLevelBool: true);
+      bool actualSubPathBool = actualFilesystemPath.isSubPathOf(actualParentFilesystemPath, firstLevelBool: true);
 
       // Assert
       expect(actualSubPathBool, false);

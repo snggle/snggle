@@ -1,34 +1,25 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:isar/isar.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_cubit.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_state.dart';
-import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
+import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
+import '../../../../../utils/database_mock.dart';
 import '../../../../../utils/test_database.dart';
 
 void main() {
-  SecureStorageKey actualSecureStorageKey = SecureStorageKey.vaults;
-
-  late TestDatabase testDatabase;
+  final TestDatabase testDatabase = TestDatabase();
   late VaultCreatePageCubit actualVaultCreatePageCubit;
 
-  setUpAll(() {
-    // @formatter:off
-    testDatabase = TestDatabase(
+  setUpAll(() async {
+    await testDatabase.init(
+      databaseMock: DatabaseMock.fullDatabaseMock,
       appPasswordModel: PasswordModel.fromPlaintext('1111'),
-      secureStorageContent: <String, String>{
-        SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-        SecureStorageKey.vaults.name:'s79EVY1UBK/W+AdjyvBuwCFBUQeNS9aXF9WH5uVxShl5UITBBtOCbG/D80f6Gohw9VhtPPeZQrP6d99zUSYZKF1/sv/eVxLBKIKcY333282bgauXJMjrTMjoSpPBTR4xSlc7hMCqXCViJlggvSjZ8H06DL/NCgljzKf+31mg4cIYUPM5nMw8b2CmLRGsTBYsBg9cgzwpcVU8tyPW11RaxD2Z5x5nvSDZRPfST8qnOlhaHazndVATf092PZ6xJXws9Vq6bYOtju6L//dJZH0bCYCGwgzdjUMNdA0TdTT39AMvJZ/q2VoMS40vEIQ3RALRJtFEUa3UAd0uVuofsMuu7pE77uOaYiC2y/O3SY5XUWRuWWDBdbC5qqruEg3KPNKMYGGO4/Unr1jkzWTI8X86UxPEHbGk7Ki+D7/F0ISpClTUMvvoiZBOWV+M3cK2tV60H4IxsrHcl25wbyNNN5H7ee5Mr+eDKcgoQlivq1+F1gsj7SRUmb26kKIi6/v5oSqjYaCBuq1Bjan+ZJpyWDD9ba5rzE9hqjTx/Jv83fIf7QEsZXtYynZj8VbetpCYR77iOyIAYpc1wP2FDH1DqXb62sDLPLY=',
-      },
-      filesystemStorageContent: <String, dynamic>{
-        'secrets': <String, dynamic>{
-          '92b43ace-5439-4269-8e27-e999907f4379.snggle': 'BrQcp0cakbIn31EdbLCnfzdlUQfwXPj/w7uVoHB6hxkP/SA6Q2vhXQuBJ+TLASlz6FFHTW4OQCqvjQ19RkO+l8F5LSPkQLQcOyOPAaouuUQ8CrbomTzlRr/qz0AoEZB8AyiXvLOghxJoRPPJ6xwux7cTmgSWOKtOPh9sqzJA0dyWVhstI+nfMNnVlXOCgqEMPpwp61xSQ/CvRrFYqht44zJPfWkvBVPd5NBeGd2TtNFBFs9J',
-          'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6TNCjwOyJDwsxtO9Ni3LPeVISyNd8NUElmdu/s7jmACJ4xtcsRdqNEtoHj7lpj5aaBa89EQbraXo83uhm4w0YDalnxtyCCPhXSZPJWQdEXD1Ov/uEDR6BAEV4wifjCR+dP3YH7F5eM3GCCGmgtj84lqHnYCQQXSrk7hv6UWR3sL8bmGGgx5HZtg0WJJcFMt1kfuHRaYScO4eOp08hJr8BMuNVPYQ4spkl0bWmdLPDHItqmfe',
-        },
-      },
     );
-    // @formatter:on
 
     actualVaultCreatePageCubit = VaultCreatePageCubit(parentFilesystemPath: const FilesystemPath.empty());
   });
@@ -53,7 +44,7 @@ void main() {
         // For that reason values from [VaultCreatePageState] are checked one by one.
         expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
         expect(actualVaultCreatePageCubit.state.loadingBool, false);
-        expect(actualVaultCreatePageCubit.state.lastVaultIndex, 2);
+        expect(actualVaultCreatePageCubit.state.lastVaultIndex, 4);
         expect(actualVaultCreatePageCubit.state.mnemonicSize, 12);
         expect(actualVaultCreatePageCubit.state.mnemonic!.length, 12);
       });
@@ -67,7 +58,7 @@ void main() {
         // For that reason values from [VaultCreatePageState] are checked one by one.
         expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
         expect(actualVaultCreatePageCubit.state.loadingBool, false);
-        expect(actualVaultCreatePageCubit.state.lastVaultIndex, 2);
+        expect(actualVaultCreatePageCubit.state.lastVaultIndex, 4);
         expect(actualVaultCreatePageCubit.state.mnemonicSize, 24);
         expect(actualVaultCreatePageCubit.state.mnemonic!.length, 24);
       });
@@ -83,23 +74,31 @@ void main() {
 
         // Output is always a random string because AES changes the initialization vector with Random Secure
         // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-        Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem()['secrets'] as Map<String, dynamic>;
-        Map<String, dynamic> actualVaultsMap = await testDatabase.readEncryptedSecureStorage(actualSecureStorageKey);
+        Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem(path: 'secrets');
+
+        List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
+          return isar.vaults.where().findAll();
+        });
+
+        // Assert
+        List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
+          const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', name: 'VAULT 1'),
+          const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
+          const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
+          const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
+          const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5'),
+          const VaultEntity(id: 6, encryptedBool: false, pinnedBool: false, index: 5, filesystemPathString: 'vault6', name: 'Test vault')
+        ];
 
         // Assert
         VaultCreatePageState expectedVaultCreatePageState = const VaultCreatePageState.loading();
 
         expect(actualVaultCreatePageCubit.state, expectedVaultCreatePageState);
-
-        // Since vault UUID generation is random, predicting it's value is not possible.
-        // For that reason we check if vaults count increased by 1 in database
-        expect(actualSecretsFilesystemStructure.length, 4);
-        expect(actualVaultsMap.length, 3);
+        expect(actualSecretsFilesystemStructure.length, 10);
+        expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
       });
     });
   });
 
-  tearDownAll(() {
-    testDatabase.close();
-  });
+  tearDownAll(testDatabase.close);
 }

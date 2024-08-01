@@ -3,65 +3,32 @@ import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/filesystem_storage/encrypted_filesystem_storage_manager.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_manager.dart';
-import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
+import '../../../../utils/database_mock.dart';
 import '../../../../utils/test_database.dart';
 
 void main() {
-  late TestDatabase testDatabase;
+  final TestDatabase testDatabase = TestDatabase();
   late FilesystemStorageManager actualFilesystemStorageManager;
 
   setUp(() async {
-    // @formatter:off
-    testDatabase = TestDatabase(
+    await testDatabase.init(
+      databaseMock: DatabaseMock.testEncryptedFilesystemMock,
       appPasswordModel: PasswordModel.fromPlaintext('1111'),
-      secureStorageContent: <String, String>{
-        SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-      },
-      filesystemStorageContent: <String, dynamic>{
-        'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
-          }
-        },
-      },
     );
-    // @formatter:on
 
     actualFilesystemStorageManager = EncryptedFilesystemStorageManager(filesystemStorageKey: FilesystemStorageKey.test);
-  });
-
-  group('Test of initial filesystem state', () {
-    test('Should [return Map of files and their content] as [files EXIST] in database', () async {
-      // Act
-      Map<String, dynamic> actualFilesystemStructure = testDatabase.readRawFilesystem();
-
-      // Assert
-      Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{
-        'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
-          }
-        }
-      };
-
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
-    });
   });
 
   group('Tests of EncryptedFilesystemStorageManager.read()', () {
     test('Should [return decrypted file content] if [file path EXISTS] (1st depth)', () async {
       // Act
-      String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8'));
+      String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString('id3'));
 
       // Assert
-      String expectedFileContent = 'test1';
+      String expectedFileContent = 'odszyfrowanawartoscdlasecretowwplikuid3.snggle';
 
       expect(actualFileContent, expectedFileContent);
     });
@@ -69,11 +36,11 @@ void main() {
     test('Should [return decrypted file content] if [file path EXISTS] (2nd depth)', () async {
       // Act
       String actualFileContent = await actualFilesystemStorageManager.read(
-        FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65/b1c2f688-85fc-43ba-9af1-52db40fa3093'),
+        FilesystemPath.fromString('id1/id2'),
       );
 
       // Assert
-      String expectedFileContent = 'test3';
+      String expectedFileContent = 'odszyfrowanawartoscdlasecretowwplikuid2.snggle';
 
       expect(actualFileContent, expectedFileContent);
     });
@@ -91,7 +58,7 @@ void main() {
       // Assert
 
       expect(
-        () => actualFilesystemStorageManager.read(FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65/not_exists')),
+        () => actualFilesystemStorageManager.read(FilesystemPath.fromString('id1/not_exists')),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -100,20 +67,18 @@ void main() {
   group('Tests of EncryptedFilesystemStorageManager.write()', () {
     test('Should [UPDATE file content] if [file path EXISTS] in filesystem storage (1st depth)', () async {
       // Act
-      await actualFilesystemStorageManager.write(FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65'), 'updated_value');
+      await actualFilesystemStorageManager.write(FilesystemPath.fromString('id1'), 'updated_value');
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem();
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'test');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': 'test1',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'updated_value',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': 'test3',
-          }
+        'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
+        'id1.snggle': 'updated_value',
+        'id1': <String, dynamic>{
+          'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
         }
       };
 
@@ -123,22 +88,20 @@ void main() {
     test('Should [UPDATE file content] if [file path EXISTS] in filesystem storage (2nd depth)', () async {
       // Act
       await actualFilesystemStorageManager.write(
-        FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65/b1c2f688-85fc-43ba-9af1-52db40fa3093'),
+        FilesystemPath.fromString('id1/id2'),
         'updated_value',
       );
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem();
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'test');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': 'test1',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'test2',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': 'updated_value',
-          }
+        'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
+        'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
+        'id1': <String, dynamic>{
+          'id2.snggle': 'updated_value',
         }
       };
 
@@ -148,24 +111,22 @@ void main() {
     test('Should [SAVE file] if [file path NOT EXIST] in filesystem storage (1st depth)', () async {
       // Act
       await actualFilesystemStorageManager.write(
-        FilesystemPath.fromString('a99531ff-fd45-40c8-8ac1-6d723c305ee5'),
+        FilesystemPath.fromString('id4'),
         'new_value',
       );
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem();
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'test');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': 'test1',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'test2',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': 'test3',
-          },
-          'a99531ff-fd45-40c8-8ac1-6d723c305ee5.snggle': 'new_value',
-        }
+        'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
+        'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
+        'id1': <String, dynamic>{
+          'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
+        },
+        'id4.snggle': 'new_value',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -174,23 +135,21 @@ void main() {
     test('Should [SAVE file] if [file path NOT EXIST] in filesystem storage (2nd depth)', () async {
       // Act
       await actualFilesystemStorageManager.write(
-        FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65/a99531ff-fd45-40c8-8ac1-6d723c305ee5'),
+        FilesystemPath.fromString('id1/id4'),
         'new_value',
       );
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem();
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'test');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': 'test1',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'test2',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': 'test3',
-            'a99531ff-fd45-40c8-8ac1-6d723c305ee5.snggle': 'new_value',
-          },
+        'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
+        'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
+        'id1': <String, dynamic>{
+          'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
+          'id4.snggle': 'new_value',
         }
       };
 
@@ -202,22 +161,20 @@ void main() {
     test('Should [UPDATE file path] if [file path EXISTS] in filesystem storage (1st depth)', () async {
       // Act
       await actualFilesystemStorageManager.move(
-        FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8'),
-        FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65/5b3fe074-4b3a-49ea-a9f9-cd286df8eed8'),
+        FilesystemPath.fromString('id3'),
+        FilesystemPath.fromString('id1/id3'),
       );
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem();
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'test');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'test': <String, dynamic>{
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'test2',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': 'test1',
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': 'test3',
-          }
+        'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
+        'id1': <String, dynamic>{
+          'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
+          'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
         }
       };
 
@@ -227,21 +184,19 @@ void main() {
     test('Should [UPDATE file path] if [file path EXISTS] in filesystem storage (2nd depth)', () async {
       // Act
       await actualFilesystemStorageManager.move(
-        FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65/b1c2f688-85fc-43ba-9af1-52db40fa3093'),
-        FilesystemPath.fromString('b1c2f688-85fc-43ba-9af1-52db40fa3093'),
+        FilesystemPath.fromString('id1/id2'),
+        FilesystemPath.fromString('id2'),
       );
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem();
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'test');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': 'test1',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'test2',
-          'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': 'test3',
-        }
+        'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
+        'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
+        'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -251,8 +206,8 @@ void main() {
       // Assert
       expect(
         () => actualFilesystemStorageManager.move(
-          FilesystemPath.fromString('7ff2abaa-e943-4b9c-8745-fa7e874d7a6a'),
-          FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65/7ff2abaa-e943-4b9c-8745-fa7e874d7a6a'),
+          FilesystemPath.fromString('not_existing_path'),
+          FilesystemPath.fromString('id1/not_existing_path'),
         ),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
@@ -262,8 +217,8 @@ void main() {
       // Assert
       expect(
         () => actualFilesystemStorageManager.move(
-          FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65/7ff2abaa-e943-4b9c-8745-fa7e874d7a6a'),
-          FilesystemPath.fromString('7ff2abaa-e943-4b9c-8745-fa7e874d7a6a'),
+          FilesystemPath.fromString('id1/not_existing_path'),
+          FilesystemPath.fromString('not_existing_path'),
         ),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
@@ -273,17 +228,15 @@ void main() {
   group('Tests of EncryptedFilesystemStorageManager.delete()', () {
     test('Should [DELETE file] if [file path EXISTS] in filesystem storage (1st depth)', () async {
       // Act
-      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('5b3fe074-4b3a-49ea-a9f9-cd286df8eed8'));
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('id3'));
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem();
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'test');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'test': <String, dynamic>{
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-          '9b282030-4c0f-482e-ba0d-524e10822f65': <String, dynamic>{
-            'b1c2f688-85fc-43ba-9af1-52db40fa3093.snggle': '6SxGDIYRoR5DKvfelch6pS6GP24oczjWxdc0pr8bHmDhOwFC',
-          }
+        'id1.snggle': 'ivLwwKeSXHFPJ0zn6Ho+p/GguNDqgiCY06q+m6yQtimC950HvCErT0Co2qvO883nlj63Sdtw3tZ+sPMmuAaxjuE0jTI=',
+        'id1': <String, dynamic>{
+          'id2.snggle': '+VFi5MHH4LjniKnYOVdUtB7Nqi+qMvAkn+X30T/L/WH/Co1WICQ4qSg9Hn2xKbl6AAzSAYY3/u+hXLbcVk/xLyFxzxs=',
         }
       };
 
@@ -292,16 +245,14 @@ void main() {
 
     test('Should [DELETE file] if [file path EXISTS] in filesystem storage (2nd depth)', () async {
       // Act
-      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65/b1c2f688-85fc-43ba-9af1-52db40fa3093'));
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('id1/id2'));
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem();
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'test');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'test': <String, dynamic>{
-          '5b3fe074-4b3a-49ea-a9f9-cd286df8eed8.snggle': '4yE/SeaiUvmzYUFGAX2zkLOSwyq5cMdb2pHVlxtWWIYQQ88O',
-          '9b282030-4c0f-482e-ba0d-524e10822f65.snggle': 'G4ctbkp3/9nYdDKCj+UfuHTnXPYK6B2qUFOB2eTZOeVwoJR+',
-        }
+        'id3.snggle': 'ArG/y8mC0fAq4oB8bJrrLdiHhIJm+kv5JFueWL5+u2bc0YUb1QLlDKDkDPjwpSopHJOahBgqd8Z+ACAoiCusIQoQIE4=',
+        'id1.snggle': 'ivLwwKeSXHFPJ0zn6Ho+p/GguNDqgiCY06q+m6yQtimC950HvCErT0Co2qvO883nlj63Sdtw3tZ+sPMmuAaxjuE0jTI=',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -318,13 +269,11 @@ void main() {
     test('Should [throw ChildKeyNotFoundException] if [file path NOT EXIST] in filesystem storage (2nd depth)', () async {
       // Assert
       expect(
-        () => actualFilesystemStorageManager.delete(FilesystemPath.fromString('9b282030-4c0f-482e-ba0d-524e10822f65/7ff2abaa-e943-4b9c-8745-fa7e874d7a6a')),
+        () => actualFilesystemStorageManager.delete(FilesystemPath.fromString('id1/7ff2abaa-e943-4b9c-8745-fa7e874d7a6a')),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
   });
 
-  tearDown(() {
-    testDatabase.close();
-  });
+  tearDown(testDatabase.close);
 }

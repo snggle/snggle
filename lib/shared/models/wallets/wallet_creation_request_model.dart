@@ -8,6 +8,7 @@ class WalletCreationRequestModel extends Equatable {
   final String derivationPath;
   final String network;
   final Uint8List publicKey;
+  final Uint8List privateKey;
   final FilesystemPath parentFilesystemPath;
   final String? name;
 
@@ -16,6 +17,7 @@ class WalletCreationRequestModel extends Equatable {
     required this.derivationPath,
     required this.network,
     required this.publicKey,
+    required this.privateKey,
     required this.parentFilesystemPath,
     this.name,
   });

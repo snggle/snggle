@@ -9,7 +9,6 @@ import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/shared/factories/group_model_factory.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
-import 'package:snggle/shared/models/groups/group_secrets_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/selection_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
@@ -46,11 +45,7 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
   Future<void> groupItems(AListItemModel a, AListItemModel b, String groupName) async {
     List<AListItemModel> pathsToGroup = <AListItemModel>[a, b];
 
-    GroupModel groupModel = globalLocator<GroupModelFactory>().createNewGroup(parentFilesystemPath: state.filesystemPath, name: groupName);
-    GroupSecretsModel groupSecretsModel = GroupSecretsModel.generate(groupModel.filesystemPath);
-
-    await groupsService.save(groupModel);
-    await secretsService.save(groupSecretsModel, PasswordModel.defaultPassword());
+    GroupModel groupModel = await globalLocator<GroupModelFactory>().createNewGroup(parentFilesystemPath: state.filesystemPath, name: groupName);
 
     for (AListItemModel item in pathsToGroup) {
       await moveItem(item, groupModel.filesystemPath);
@@ -69,20 +64,15 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
   }
 
   Future<void> refreshSingle(AListItemModel item) async {
-    AListItemModel? newItem;
+    late AListItemModel newItem;
     if (item is T) {
       newItem = await fetchSingleItem(item);
     } else if (item is GroupModel) {
       newItem = await fetchSingleGroup(item);
     }
 
-    if (newItem == null) {
-      List<AListItemModel> newItems = state.allItems..remove(item);
-      emit(state.copyWith(allItems: _sortItems(newItems)));
-    } else {
-      List<AListItemModel> newItems = state.allItems.map((AListItemModel e) => e == item ? newItem! : e).toList();
-      emit(state.copyWith(allItems: _sortItems(newItems)));
-    }
+    List<AListItemModel> newItems = state.allItems.map((AListItemModel e) => e == item ? newItem : e).toList();
+    emit(state.copyWith(allItems: _sortItems(newItems)));
   }
 
   void selectSingle(AListItemModel item) {
@@ -182,10 +172,10 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
   Future<List<GroupModel>> fetchAllGroups();
 
   @protected
-  Future<T?> fetchSingleItem(T item);
+  Future<T> fetchSingleItem(T item);
 
   @protected
-  Future<GroupModel?> fetchSingleGroup(GroupModel group);
+  Future<GroupModel> fetchSingleGroup(GroupModel group);
 
   @protected
   Future<void> saveItem(T item);

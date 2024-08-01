@@ -23,8 +23,12 @@ class FilesystemPath extends Equatable {
     return FilesystemPath(pathSegments.sublist(0, max(pathSegments.length - 1, 0)));
   }
 
-  bool isSubPathOf(FilesystemPath filesystemPath, {bool singleLevelBool = false}) {
-    if (singleLevelBool) {
+  FilesystemPath add(String segment) {
+    return FilesystemPath(<String>[...pathSegments, segment]);
+  }
+
+  bool isSubPathOf(FilesystemPath filesystemPath, {bool firstLevelBool = false}) {
+    if (firstLevelBool) {
       // Check if the current path is a direct child of the given path
       return parentPath == filesystemPath.fullPath;
     } else {

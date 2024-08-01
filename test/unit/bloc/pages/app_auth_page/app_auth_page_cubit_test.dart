@@ -3,29 +3,25 @@ import 'package:snggle/bloc/pages/app_auth_page/a_app_auth_page_state.dart';
 import 'package:snggle/bloc/pages/app_auth_page/app_auth_page_cubit.dart';
 import 'package:snggle/bloc/pages/app_auth_page/states/app_auth_page_enter_pin_state.dart';
 import 'package:snggle/bloc/pages/app_auth_page/states/app_auth_page_invalid_pin_state.dart';
-import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/password_model.dart';
 
+import '../../../../utils/database_mock.dart';
 import '../../../../utils/test_database.dart';
 
 Future<void> main() async {
-  late TestDatabase testDatabase;
+  final TestDatabase testDatabase = TestDatabase();
   late AppAuthPageCubit actualAppAuthPageCubit;
 
   group('Tests of [AppAuthPageCubit]', () {
     group('Tests of [AppAuthPageCubit] when [pin CORRECT]', () {
-      setUpAll(() {
-        // @formatter:off
-        testDatabase = TestDatabase(
+      setUpAll(() async {
+        await testDatabase.init(
+          databaseMock: DatabaseMock.masterKeyOnlyDatabaseMock,
           appPasswordModel: PasswordModel.fromPlaintext('1111'),
-          secureStorageContent: <String, String>{
-            SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-          },
         );
 
         actualAppAuthPageCubit = AppAuthPageCubit();
-        // @formatter:on
       });
 
       test('Should [emit AppAuthPageEnterPinState] with [EMPTY pinNumbers] as initial state', () async {
@@ -55,23 +51,17 @@ Future<void> main() async {
         expect(actualAppAuthPageCubit.state, expectedAppAuthPageState);
       });
 
-      tearDownAll(() {
-        testDatabase.close();
-      });
+      tearDownAll(testDatabase.close);
     });
 
     group('Tests of [AppAuthPageCubit] when [pin INCORRECT]', () {
-      setUpAll(() {
-        // @formatter:off
-        testDatabase = TestDatabase(
+      setUpAll(() async {
+        await testDatabase.init(
+          databaseMock: DatabaseMock.masterKeyOnlyDatabaseMock,
           appPasswordModel: PasswordModel.fromPlaintext('1111'),
-          secureStorageContent: <String, String>{
-            SecureStorageKey.encryptedMasterKey.name:'49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-          },
         );
 
         actualAppAuthPageCubit = AppAuthPageCubit();
-        // @formatter:on
       });
 
       test('Should [emit AppAuthPageEnterPinState] with [EMPTY pinNumbers] as initial state', () async {
@@ -104,9 +94,7 @@ Future<void> main() async {
         }
       });
 
-      tearDownAll(() {
-        testDatabase.close();
-      });
+      tearDownAll(testDatabase.close);
     });
   });
 }

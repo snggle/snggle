@@ -1,32 +1,74 @@
-import 'package:snggle/infra/entities/vault_entity.dart';
-import 'package:snggle/infra/managers/secure_storage/encrypted_secure_storage_manager.dart';
-import 'package:snggle/infra/managers/secure_storage/secure_storage_collection_wrapper.dart';
-import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
+import 'dart:async';
+import 'package:isar/isar.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
+import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
+import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class VaultsRepository {
-  final EncryptedSecureStorageManager _encryptedSecureStorageManager = EncryptedSecureStorageManager();
-  late final SecureStorageCollectionWrapper<Map<String, dynamic>> _secureStorageCollectionWrapper = SecureStorageCollectionWrapper<Map<String, dynamic>>(
-    secureStorageManager: _encryptedSecureStorageManager,
-    secureStorageKey: SecureStorageKey.vaults,
-  );
+  final IsarDatabaseManager isarDatabaseManager = globalLocator<IsarDatabaseManager>();
 
-  Future<List<VaultEntity>> getAll() async {
-    List<Map<String, dynamic>> allVaultsJson = await _secureStorageCollectionWrapper.getAll();
-    List<VaultEntity> allVaults = allVaultsJson.map(VaultEntity.fromJson).toList();
-    return allVaults;
+  Future<int?> getLastIndex() async {
+    int? lastIndex = await isarDatabaseManager.perform((Isar isar) {
+      return isar.vaults.where().sortByIndexDesc().indexProperty().findFirst();
+    });
+    return lastIndex;
   }
 
-  Future<VaultEntity> getById(String id) async {
-    Map<String, dynamic> vaultJson = await _secureStorageCollectionWrapper.getById(id);
-    VaultEntity vaultEntity = VaultEntity.fromJson(vaultJson);
+  Future<List<VaultEntity>> getAll() async {
+    List<VaultEntity> vaultEntities = await isarDatabaseManager.perform((Isar isar) {
+      return isar.vaults.where().findAll();
+    });
+
+    return vaultEntities;
+  }
+
+  Future<List<VaultEntity>> getAllByParentPath(FilesystemPath parentFilesystemPath) async {
+    List<VaultEntity> vaultEntities = await isarDatabaseManager.perform((Isar isar) {
+      return isar.vaults.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).findAll();
+    });
+
+    return vaultEntities;
+  }
+
+  Future<VaultEntity> getById(Id id) async {
+    VaultEntity? vaultEntity = await isarDatabaseManager.perform((Isar isar) {
+      return isar.vaults.get(id);
+    });
+
+    if (vaultEntity == null) {
+      throw ChildKeyNotFoundException();
+    }
     return vaultEntity;
   }
 
-  Future<void> save(VaultEntity vaultEntity) async {
-    await _secureStorageCollectionWrapper.saveWithId(vaultEntity.uuid, vaultEntity.toJson());
+  Future<Id> save(VaultEntity vaultEntity) async {
+    return isarDatabaseManager.perform((Isar isar) async {
+      Id createdId = await isar.writeTxn(() async {
+        return isar.vaults.put(vaultEntity);
+      });
+      return createdId;
+    });
   }
 
-  Future<void> deleteById(String id) async {
-    await _secureStorageCollectionWrapper.deleteById(id);
+  Future<List<Id>> saveAll(List<VaultEntity> vaultEntityList) async {
+    return isarDatabaseManager.perform((Isar isar) async {
+      List<Id> createdIds = await isar.writeTxn(() async {
+        return isar.vaults.putAll(vaultEntityList);
+      });
+      return createdIds;
+    });
+  }
+
+  Future<void> deleteById(Id id) async {
+    await isarDatabaseManager.perform((Isar isar) async {
+      bool deletedBool = await isar.writeTxn(() async {
+        return isar.vaults.delete(id);
+      });
+      if (deletedBool == false) {
+        throw ChildKeyNotFoundException();
+      }
+    });
   }
 }

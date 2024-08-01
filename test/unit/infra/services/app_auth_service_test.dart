@@ -8,7 +8,7 @@ import 'package:snggle/shared/models/password_model.dart';
 import '../../../utils/test_database.dart';
 
 void main() {
-  late TestDatabase testDatabase;
+  final TestDatabase testDatabase = TestDatabase();
 
   PasswordModel actualPasswordModel1111 = PasswordModel.fromPlaintext('1111');
   PasswordModel actualPasswordModel9999 = PasswordModel.fromPlaintext('9999');
@@ -21,8 +21,8 @@ void main() {
   Map<String, String> emptyDatabase = <String, String>{};
   // @formatter:on
 
-  setUp(() {
-    testDatabase = TestDatabase(appPasswordModel: PasswordModel.fromPlaintext('1111'));
+  setUp(() async {
+    await testDatabase.init(appPasswordModel: PasswordModel.fromPlaintext('1111'));
   });
 
   group('Tests of AppAuthService.isCustomPasswordSet()', () {
@@ -95,7 +95,5 @@ void main() {
     });
   });
 
-  tearDown(() {
-    testDatabase.close();
-  });
+  tearDown(testDatabase.close);
 }

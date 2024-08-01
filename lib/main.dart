@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/theme_config.dart';
+import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/shared/router/router.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
   ));
 
   initLocator();
+  await globalLocator<IsarDatabaseManager>().initDatabase();
+
   runApp(const AppCore());
 }
 

@@ -1,54 +1,75 @@
+import 'package:blockchain_utils/bip/mnemonic/mnemonic.dart';
+import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/entities/vault_entity.dart';
+import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
 import 'package:snggle/infra/services/groups_service.dart';
+import 'package:snggle/infra/services/network_groups_service.dart';
+import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
-import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
+import 'package:snggle/shared/models/groups/network_group_model.dart';
+import 'package:snggle/shared/models/mnemonic_model.dart';
+import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
-import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
-import 'package:uuid/uuid.dart';
 
 class VaultModelFactory {
   final VaultsService _vaultsService = globalLocator<VaultsService>();
-  final WalletsService _walletsService = globalLocator<WalletsService>();
   final GroupsService _groupsService = globalLocator<GroupsService>();
+  final SecretsService _secretsService = globalLocator<SecretsService>();
+  final NetworkGroupsService _networkGroupsService = globalLocator<NetworkGroupsService>();
 
-  Future<VaultModel> createNewVault(FilesystemPath parentFilesystemPath, [String? name]) async {
+  Future<VaultModel> createNewVault(FilesystemPath parentFilesystemPath, Mnemonic mnemonic, [String? name]) async {
     int lastVaultIndex = await _vaultsService.getLastIndex();
-    String uuid = const Uuid().v4();
 
     VaultModel vaultModel = VaultModel(
+      id: Isar.autoIncrement,
       index: lastVaultIndex + 1,
       pinnedBool: false,
       encryptedBool: false,
-      uuid: uuid,
-      filesystemPath: FilesystemPath(<String>[...parentFilesystemPath.pathSegments, uuid]),
+      filesystemPath: const FilesystemPath.empty(),
       name: name,
       listItemsPreview: <VaultModel>[],
     );
+    int vaultId = await _vaultsService.save(vaultModel);
+    vaultModel = await _vaultsService.updateFilesystemPath(vaultId, parentFilesystemPath);
 
+    VaultSecretsModel vaultSecretsModel = VaultSecretsModel(
+      filesystemPath: vaultModel.filesystemPath,
+      mnemonicModel: MnemonicModel(mnemonic.toList()),
+    );
+
+    await _secretsService.save(vaultSecretsModel, PasswordModel.defaultPassword());
     return vaultModel;
+  }
+
+  Future<List<VaultModel>> createFromEntities(List<VaultEntity> vaultEntityList, {bool previewEmptyBool = false}) async {
+    List<VaultModel> vaultModelList = <VaultModel>[];
+    for (VaultEntity vaultEntity in vaultEntityList) {
+      vaultModelList.add(await createFromEntity(vaultEntity, previewEmptyBool: previewEmptyBool));
+    }
+    return vaultModelList;
   }
 
   Future<VaultModel> createFromEntity(VaultEntity vaultEntity, {bool previewEmptyBool = false}) async {
     List<GroupModel> groupsPreview = <GroupModel>[];
-    List<WalletModel> walletsPreview = <WalletModel>[];
+    List<NetworkGroupModel> networkGroupsPreview = <NetworkGroupModel>[];
 
     if (previewEmptyBool == false) {
       groupsPreview = await _groupsService.getAllByParentPath(vaultEntity.filesystemPath, firstLevelBool: true, previewEmptyBool: true);
-      walletsPreview = await _walletsService.getAllByParentPath(vaultEntity.filesystemPath, firstLevelBool: true);
+      networkGroupsPreview = await _networkGroupsService.getAllByParentPath(vaultEntity.filesystemPath, firstLevelBool: true, previewEmptyBool: true);
     }
 
     List<AListItemModel> listItemsPreview = <AListItemModel>[
       ...groupsPreview,
-      ...walletsPreview,
+      ...networkGroupsPreview,
     ]..sort((AListItemModel a, AListItemModel b) => a.compareTo(b));
 
     return VaultModel(
       index: vaultEntity.index,
-      uuid: vaultEntity.uuid,
+      id: vaultEntity.id,
       pinnedBool: vaultEntity.pinnedBool,
       encryptedBool: vaultEntity.encryptedBool,
       filesystemPath: vaultEntity.filesystemPath,
