@@ -11,11 +11,13 @@ import 'package:snggle/views/widgets/icons/list_item_icon.dart';
 typedef GroupAcceptedCallback = void Function(AListItemModel a, AListItemModel b);
 
 class DragTargetItem extends StatefulWidget {
+  final int depth;
   final AListItemModel listItemModel;
   final GroupAcceptedCallback groupAcceptedCallback;
   final Duration delayBeforeAction;
 
   const DragTargetItem({
+    required this.depth,
     required this.listItemModel,
     required this.groupAcceptedCallback,
     required this.delayBeforeAction,
@@ -57,21 +59,31 @@ class _DragTargetItemState extends State<DragTargetItem> {
       );
     }
 
-    return DragTargetWrapper(
-      listItemModel: widget.listItemModel,
-      onAccept: (DragConfig? item) {
-        widget.groupAcceptedCallback(widget.listItemModel, item!.data);
-      },
-      onEnter: _handleItemHover,
-      onLeave: _disposeAnimationTimer,
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 200),
-        child: child,
-      ),
-    );
+    if (widget.depth != 0) {
+      return child;
+    } else {
+      return DragTargetWrapper(
+        listItemModel: widget.listItemModel,
+        onAccept: _handleDrop,
+        onEnter: _handleItemHover,
+        onLeave: _disposeAnimationTimer,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: child,
+        ),
+      );
+    }
   }
 
-  void _handleItemHover(AListItemModel listItemModel) {
+  void _handleDrop(DragConfig? item) {
+    widget.groupAcceptedCallback(widget.listItemModel, item!.data);
+  }
+
+  void _handleItemHover(DragConfig dragConfig) {
+    _showGroupAnimation(dragConfig.data);
+  }
+
+  void _showGroupAnimation(AListItemModel listItemModel) {
     animationTimer ??= Timer(widget.delayBeforeAction, () => _setDraggedItem(listItemModel));
   }
 

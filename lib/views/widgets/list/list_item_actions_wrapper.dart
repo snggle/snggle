@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/secrets_auth_page.dart';
 import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
@@ -59,6 +60,12 @@ class _ListItemActionsWrapperState<T extends AListItemModel, C extends AListCubi
         selectedBool: widget.listCubit.state.selectedItems.contains(listItemModel),
         onSelectValueChanged: _handleSelectValueChanged,
         child: IgnorePointer(child: widget.child),
+      );
+    } else if (widget.listItemModel is GroupModel) {
+      child = GestureDetector(
+        onTap: _handleNavigation,
+        onLongPress: _openToolbar,
+        child: child,
       );
     } else {
       child = DragSourceGestureDetector<T>(

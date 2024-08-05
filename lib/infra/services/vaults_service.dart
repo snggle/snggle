@@ -1,32 +1,17 @@
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
 import 'package:snggle/infra/repositories/vaults_repository.dart';
+import 'package:snggle/infra/services/i_list_items_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
-class VaultsService {
+class VaultsService implements IListItemsService<VaultModel> {
   final VaultsRepository _vaultsRepository = globalLocator<VaultsRepository>();
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
-  Future<VaultModel> updateFilesystemPath(int id, FilesystemPath parentFilesystemPath) async {
-    VaultEntity vaultEntity = await _vaultsRepository.getById(id);
-    vaultEntity = vaultEntity.copyWith(filesystemPathString: parentFilesystemPath.add('vault$id').fullPath);
-    await _vaultsRepository.save(vaultEntity);
-    return globalLocator<VaultModelFactory>().createFromEntity(vaultEntity);
-  }
-
-  Future<int> getLastIndex() async {
-    int? lastIndex = await _vaultsRepository.getLastIndex();
-    return lastIndex ?? -1;
-  }
-
-  Future<VaultModel> getById(int id) async {
-    VaultEntity vaultEntity = await _vaultsRepository.getById(id);
-    return globalLocator<VaultModelFactory>().createFromEntity(vaultEntity);
-  }
-
+  @override
   Future<List<VaultModel>> getAllByParentPath(FilesystemPath parentFilesystemPath, {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
     VaultModelFactory vaultModelFactory = globalLocator<VaultModelFactory>();
 
@@ -39,13 +24,21 @@ class VaultsService {
     return vaultModelList;
   }
 
-  Future<void> move(VaultModel vaultModel, FilesystemPath newFilesystemPath) async {
-    VaultModel movedVaultModel = vaultModel.copyWith(filesystemPath: newFilesystemPath);
-    await save(movedVaultModel);
-    await _secretsService.move(vaultModel.filesystemPath, movedVaultModel.filesystemPath);
+  @override
+  Future<VaultModel> getById(int id) async {
+    VaultEntity vaultEntity = await _vaultsRepository.getById(id);
+    return globalLocator<VaultModelFactory>().createFromEntity(vaultEntity);
   }
 
-  Future<void> moveByParentPath(FilesystemPath previousFilesystemPath, FilesystemPath newFilesystemPath) async {
+  @override
+  Future<void> move(VaultModel listItem, FilesystemPath newFilesystemPath) async {
+    VaultModel movedVaultModel = listItem.copyWith(filesystemPath: newFilesystemPath);
+    await save(movedVaultModel);
+    await _secretsService.move(listItem.filesystemPath, movedVaultModel.filesystemPath);
+  }
+
+  @override
+  Future<void> moveAllByParentPath(FilesystemPath previousFilesystemPath, FilesystemPath newFilesystemPath) async {
     List<VaultModel> vaultModelsToMove = await getAllByParentPath(previousFilesystemPath, firstLevelBool: false, previewEmptyBool: true);
     for (int i = 0; i < vaultModelsToMove.length; i++) {
       VaultModel vaultModel = vaultModelsToMove[i];
@@ -60,16 +53,21 @@ class VaultsService {
     await saveAll(vaultModelsToMove);
   }
 
-  Future<int> save(VaultModel vaultModel) async {
-    return _vaultsRepository.save(VaultEntity.fromVaultModel(vaultModel));
+  @override
+  Future<int> save(VaultModel listItem) async {
+    return _vaultsRepository.save(VaultEntity.fromVaultModel(listItem));
   }
 
-  Future<List<int>> saveAll(List<VaultModel> vaultModelList) async {
-    return _vaultsRepository.saveAll(vaultModelList.map(VaultEntity.fromVaultModel).toList());
+  @override
+  Future<List<int>> saveAll(List<VaultModel> listItems) async {
+    return _vaultsRepository.saveAll(listItems.map(VaultEntity.fromVaultModel).toList());
   }
 
+  @override
   Future<void> deleteAllByParentPath(FilesystemPath parentFilesystemPath) async {
     List<VaultModel> vaultModelList = await getAllByParentPath(parentFilesystemPath, firstLevelBool: false);
+
+    // Sort vaults by the length of their paths, ensuring the deepest vault is deleted first
     vaultModelList.sort((VaultModel a, VaultModel b) => b.filesystemPath.fullPath.length.compareTo(a.filesystemPath.fullPath.length));
 
     for (VaultModel vaultModel in vaultModelList) {
@@ -78,10 +76,23 @@ class VaultsService {
     }
   }
 
+  @override
   Future<void> deleteById(int id) async {
     VaultModel vaultModel = await getById(id);
 
     await _secretsService.delete(vaultModel.filesystemPath);
     await _vaultsRepository.deleteById(id);
+  }
+
+  Future<int> getLastIndex() async {
+    int? lastIndex = await _vaultsRepository.getLastIndex();
+    return lastIndex ?? -1;
+  }
+
+  Future<VaultModel> updateFilesystemPath(int id, FilesystemPath parentFilesystemPath) async {
+    VaultEntity vaultEntity = await _vaultsRepository.getById(id);
+    vaultEntity = vaultEntity.copyWith(filesystemPathString: parentFilesystemPath.add('vault$id').fullPath);
+    await _vaultsRepository.save(vaultEntity);
+    return globalLocator<VaultModelFactory>().createFromEntity(vaultEntity);
   }
 }

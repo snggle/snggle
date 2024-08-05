@@ -25,79 +25,6 @@ void main() {
     );
   });
 
-  group('Tests of NetworkGroupsService.updateFilesystemPath()', () {
-    test('Should [return updated NetworkGroupModel] if [network EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Act
-      NetworkGroupModel? actualNetworkGroupModel =
-          await globalLocator<NetworkGroupsService>().updateFilesystemPath(1, FilesystemPath.fromString('new/network/path'));
-
-      // Assert
-      NetworkGroupModel expectedNetworkGroupModel = NetworkGroupModel(
-          pinnedBool: false,
-          encryptedBool: false,
-          id: 1,
-          filesystemPath: FilesystemPath.fromString('new/network/path/network1'),
-          listItemsPreview: <AListItemModel>[],
-          networkConfigModel: NetworkConfigModel.ethereum);
-
-      expect(actualNetworkGroupModel, expectedNetworkGroupModel);
-    });
-
-    test('Should [throw ChildKeyNotFoundException] if [network NOT EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Assert
-      expect(
-        globalLocator<NetworkGroupsService>().updateFilesystemPath(99999, FilesystemPath.fromString('new/network/path')),
-        throwsA(isA<ChildKeyNotFoundException>()),
-      );
-    });
-  });
-
-  group('Tests of NetworkGroupsService.getById()', () {
-    test('Should [return NetworkGroupModel] if [network EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Act
-      NetworkGroupModel? actualNetworkGroupModel = await globalLocator<NetworkGroupsService>().getById(1);
-
-      // Assert
-      NetworkGroupModel expectedNetworkGroupModel = NetworkGroupModel(
-        pinnedBool: false,
-        encryptedBool: false,
-        id: 1,
-        filesystemPath: FilesystemPath.fromString('vault1/network1'),
-        networkConfigModel: NetworkConfigModel.ethereum,
-        listItemsPreview: <AListItemModel>[
-          // @formatter:off
-          GroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1/group3'), name: 'WALLETS GROUP 1', listItemsPreview: <AListItemModel>[]),
-          WalletModel(id: 1, encryptedBool: false, pinnedBool: false, index: 0, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", network: 'ethereum', name: 'WALLET 0', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1')),
-          WalletModel(id: 2, encryptedBool: false, pinnedBool: false, index: 1, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", network: 'ethereum', name: 'WALLET 1', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet2')),
-          WalletModel(id: 3, encryptedBool: false, pinnedBool: false, index: 2, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", network: 'ethereum', name: 'WALLET 2', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet3')),
-          // @formatter:on
-        ],
-      );
-
-      expect(actualNetworkGroupModel, expectedNetworkGroupModel);
-    });
-
-    test('Should [throw ChildKeyNotFoundException] if [network NOT EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Assert
-      expect(
-        () => globalLocator<NetworkGroupsService>().getById(99999),
-        throwsA(isA<ChildKeyNotFoundException>()),
-      );
-    });
-  });
-
   group('Tests of NetworkGroupsService.getAllByParentPath()', () {
     test('Should [return List of NetworkGroupModel] if [given path HAS VALUES] (firstLevelBool == TRUE)', () async {
       // Arrange
@@ -270,6 +197,46 @@ void main() {
     });
   });
 
+  group('Tests of NetworkGroupsService.getById()', () {
+    test('Should [return NetworkGroupModel] if [network EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      NetworkGroupModel? actualNetworkGroupModel = await globalLocator<NetworkGroupsService>().getById(1);
+
+      // Assert
+      NetworkGroupModel expectedNetworkGroupModel = NetworkGroupModel(
+        pinnedBool: false,
+        encryptedBool: false,
+        id: 1,
+        filesystemPath: FilesystemPath.fromString('vault1/network1'),
+        networkConfigModel: NetworkConfigModel.ethereum,
+        listItemsPreview: <AListItemModel>[
+          // @formatter:off
+          GroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1/group3'), name: 'WALLETS GROUP 1', listItemsPreview: <AListItemModel>[]),
+          WalletModel(id: 1, encryptedBool: false, pinnedBool: false, index: 0, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", network: 'ethereum', name: 'WALLET 0', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1')),
+          WalletModel(id: 2, encryptedBool: false, pinnedBool: false, index: 1, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", network: 'ethereum', name: 'WALLET 1', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet2')),
+          WalletModel(id: 3, encryptedBool: false, pinnedBool: false, index: 2, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", network: 'ethereum', name: 'WALLET 2', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet3')),
+          // @formatter:on
+        ],
+      );
+
+      expect(actualNetworkGroupModel, expectedNetworkGroupModel);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [network NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Assert
+      expect(
+        () => globalLocator<NetworkGroupsService>().getById(99999),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
   group('Tests of NetworkGroupsService.move()', () {
     test('Should [MOVE network] if [network EXISTS] in database', () async {
       // Arrange
@@ -311,13 +278,13 @@ void main() {
     });
   });
 
-  group('Tests of NetworkGroupsService.moveByParentPath()', () {
+  group('Tests of NetworkGroupsService.moveAllByParentPath()', () {
     test('Should [MOVE networks] with provided parent path', () async {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      await globalLocator<NetworkGroupsService>().moveByParentPath(
+      await globalLocator<NetworkGroupsService>().moveAllByParentPath(
         FilesystemPath.fromString('vault1'),
         FilesystemPath.fromString('new/network/path/vault1'),
       );
@@ -579,6 +546,39 @@ void main() {
       // Assert
       expect(
         () => globalLocator<NetworkGroupsService>().deleteById(99999),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
+  group('Tests of NetworkGroupsService.updateFilesystemPath()', () {
+    test('Should [return updated NetworkGroupModel] if [network EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      NetworkGroupModel? actualNetworkGroupModel =
+          await globalLocator<NetworkGroupsService>().updateFilesystemPath(1, FilesystemPath.fromString('new/network/path'));
+
+      // Assert
+      NetworkGroupModel expectedNetworkGroupModel = NetworkGroupModel(
+          pinnedBool: false,
+          encryptedBool: false,
+          id: 1,
+          filesystemPath: FilesystemPath.fromString('new/network/path/network1'),
+          listItemsPreview: <AListItemModel>[],
+          networkConfigModel: NetworkConfigModel.ethereum);
+
+      expect(actualNetworkGroupModel, expectedNetworkGroupModel);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [network NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Assert
+      expect(
+        globalLocator<NetworkGroupsService>().updateFilesystemPath(99999, FilesystemPath.fromString('new/network/path')),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
