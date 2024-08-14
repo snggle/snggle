@@ -1,7 +1,6 @@
 import 'package:bip39/bip39.dart';
 import 'package:blockchain_utils/bip/bip/bip.dart';
 import 'package:blockchain_utils/bip/mnemonic/mnemonic.dart';
-import 'package:blockchain_utils/bip/mnemonic/mnemonic_decoder_base.dart';
 import 'package:blockchain_utils/bip/mnemonic/mnemonic_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,8 +62,8 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
     // TODO(dominik): Temporary solution to build and validate mnemonic. It should be improved after 'cryptography_utils' package implementation
     Mnemonic mnemonic = Mnemonic(mnemonicWords);
-    MnemonicDecoderBase decoder = Bip39MnemonicDecoder();
-    bool mnemonicValidBool = MnemonicValidator(decoder).isValid(mnemonic.toStr());
+    Bip39MnemonicDecoder decoder = Bip39MnemonicDecoder();
+    bool mnemonicValidBool = MnemonicValidator<Bip39MnemonicDecoder>(decoder).isValid(mnemonic.toStr());
 
     if (mnemonicValidBool) {
       emit(const VaultRecoverPageState.loading());

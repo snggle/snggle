@@ -1,21 +1,12 @@
 name: snggle
 description: Private keys manager
-
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.26
+version: 0.0.27
 
 environment:
-  sdk: "3.2.2"
-  flutter: "3.16.2"
+  sdk: "3.2.6"
+  flutter: "3.16.9"
 
-# Dependencies specify other packages that your package needs in order to work.
-# To automatically upgrade your package dependencies to the latest versions
-# consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
-# the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
@@ -33,11 +24,11 @@ dependencies:
 
   # Flutter Widgets that make it easy to implement the BLoC (Business Logic Component) design pattern
   # https://pub.dev/packages/flutter_bloc
-  flutter_bloc: 8.1.3
+  flutter_bloc: 8.1.6
 
   # Accessing Service Objects/View/AppModels/Managers/BLoCs from Flutter Views
   # https://pub.dev/packages/get_it
-  get_it: 7.6.4
+  get_it: 7.6.7
 
   # Contains code to deal with internationalized/localized messages, date and number formatting and parsing,
   # bidirectional text, and other internationalization issues.
@@ -46,12 +37,12 @@ dependencies:
 
   # Small, easy to use and extensible logger which prints beautiful logs.
   # https://pub.dev/packages/logger
-  logger: 2.0.2+1
+  logger: 2.4.0
 
   # Flutter Secure Storage provides API to store data in secure storage.
   # Keychain is used in iOS, KeyStore based solution is used in Android.
   # https://pub.dev/packages/flutter_secure_storage
-  flutter_secure_storage: 9.0.0
+  flutter_secure_storage: 9.2.2
 
   # Implementations of SHA, MD5, and HMAC cryptographic functions.
   # https://pub.dev/packages/crypto
@@ -67,11 +58,11 @@ dependencies:
 
   # RFC4122 (v1, v4, v5) UUID Generator and Parser for all Dart platforms (Web, VM, Flutter)
   # https://pub.dev/packages/uuid
-  uuid: 3.0.7
+  uuid: 4.4.2
 
   # An SVG rendering and widget library for Flutter, which allows painting and displaying Scalable Vector Graphics 1.1 files.
   # https://pub.dev/packages/flutter_svg
-  flutter_svg: 2.0.9
+  flutter_svg: 2.0.10+1
 
   # Etherum Blockies implementation
   # https://pub.dev/packages/blockies_svg
@@ -79,7 +70,7 @@ dependencies:
 
   # Comprehensive Crypto & Blockchain Toolkit, Pure Dart, Cross-Platform, Encoding, Cryptography, Addresses, Mnemonics, & More.
   # https://pub.dev/packages/blockchain_utils
-  blockchain_utils: 1.2.1
+  blockchain_utils: 3.3.0
 
   # A basic toolkit for Cryptocurrency wallet in Dart. This package is used to generate and manage the Hierarchical Deterministic (HD) Wallet application.
   # https://pub.dev/packages/hd_wallet
@@ -87,7 +78,7 @@ dependencies:
 
   # Flutter plugin for getting commonly used locations on host platform file systems, such as the temp and app data directories.
   # https://pub.dev/packages/path_provider
-  path_provider: 2.1.2
+  path_provider: 2.1.4
 
   # Spring curves for Flutter animations. Based on real physics equations with three damping curves.
   # https://pub.dev/packages/sprung
@@ -95,7 +86,7 @@ dependencies:
 
   # Gradient borders for inputs and containers. Borders package integrated with a basic flutter widgets as a container and input decorations. Easy in use, platform independent.
   # https://pub.dev/packages/gradient_borders
-  gradient_borders: 1.0.0
+  gradient_borders: 1.0.1
 
   # Wrap a widget with CustomPopupMenu, Tap or Long Press this widget, a popup menu would display in a suitable position.
   # https://pub.dev/packages/custom_pop_up_menu
@@ -103,11 +94,11 @@ dependencies:
 
   # Extremely fast, easy to use, and fully async NoSQL database for Flutter.
   # https://pub.dev/packages/isar
-  isar: ^3.1.0+1
+  isar: 3.1.0+1
 
   # Isar Core binaries for the Isar Database. Needs to be included for Flutter apps.
   # https://pub.dev/packages/isar_flutter_libs
-  isar_flutter_libs: ^3.1.0+1
+  isar_flutter_libs: 3.1.0+1
 
 dev_dependencies:
   flutter_test:
@@ -121,15 +112,15 @@ dev_dependencies:
 
   # A testing library which makes it easy to test blocs
   # https://pub.dev/packages/bloc_test
-  bloc_test: 9.1.5
+  bloc_test: 9.1.7
 
   # A build system for Dart code generation and modular compilation
   # https://pub.dev/packages/build_runner
-  build_runner: 2.4.7
+  build_runner: 2.4.9
 
   # Code generator for the Isar Database. Finds classes annotated with @Collection.
   # https://pub.dev/packages/isar_generator
-  isar_generator: ^3.1.0+1
+  isar_generator: 3.1.0+1
 
 flutter:
   uses-material-design: true
