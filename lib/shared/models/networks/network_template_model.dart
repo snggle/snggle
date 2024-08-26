@@ -4,6 +4,9 @@ import 'package:snggle/infra/entities/network_template_entity/network_template_e
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
 
 class NetworkTemplateModel extends Equatable {
+  static final RegExp _derivationPathRegExp = RegExp(r"^(?<static_part>m(?:/(?<segment>\d+'?))+)/?(?<dynamic_part>(?:{{\w+}}.*)?)$");
+  static const String _defaultDerivationPath = 'm';
+
   final String name;
   final String derivationPathTemplate;
   final ABlockchainAddressEncoder<ABip32PublicKey> addressEncoder;
@@ -62,6 +65,14 @@ class NetworkTemplateModel extends Equatable {
       predefinedNetworkTemplateId: predefinedNetworkTemplateId ?? this.predefinedNetworkTemplateId,
       derivationPathName: derivationPathName,
     );
+  }
+
+  int get id => name.hashCode;
+
+  String get baseDerivationPath {
+    RegExpMatch? match = _derivationPathRegExp.firstMatch(derivationPathTemplate);
+    String? staticPart = match?.namedGroup('static_part');
+    return staticPart ?? _defaultDerivationPath;
   }
 
   @override

@@ -1,17 +1,15 @@
 import 'package:blockchain_utils/bip/bip/bip39/bip39.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_cubit.dart';
-import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
-import 'package:snggle/views/pages/vault_create_recover/mnemonic_form_layout.dart';
 import 'package:snggle/views/widgets/custom/custom_grid.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
+import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
+import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_visibility_builder.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_wrapper.dart';
-import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
-import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_wrapper.dart';
 
 class MnemonicFormEditable extends StatefulWidget {
   final bool mnemonicValidBool;
@@ -71,12 +69,13 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
       builder: ({required bool customKeyboardVisibleBool, required bool nativeKeyboardVisibleBool}) {
         bool anyKeyboardVisibleBool = customKeyboardVisibleBool || nativeKeyboardVisibleBool;
 
-        return BottomTooltipWrapper(
-          tooltipVisibleBool: anyKeyboardVisibleBool == false,
-          blurBackgroundBool: false,
-          tooltip: BottomTooltip(
-            backgroundColor: AppColors.body2,
-            actions: <Widget>[
+        return KeyboardWrapper(
+          keyboardValueNotifier: widget.keyboardValueNotifier,
+          availableHints: bip39WordList(Bip39Languages.english),
+          child: ScrollableLayout(
+            tooltipVisibleBool: anyKeyboardVisibleBool == false,
+            scrollController: scrollController,
+            tooltipItems: <BottomTooltipItem>[
               if (obscureTextBool)
                 BottomTooltipItem(
                   label: 'Show',
@@ -95,22 +94,21 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
                 onTap: widget.recoverButtonActiveBool ? null : () => widget.vaultRecoverPageCubit.saveMnemonic(),
               ),
             ],
-          ),
-          child: KeyboardWrapper(
-            keyboardValueNotifier: widget.keyboardValueNotifier,
-            availableHints: bip39WordList(Bip39Languages.english),
-            child: MnemonicFormLayout(
-              scrollController: scrollController,
-              bottomMarginVisibleBool: anyKeyboardVisibleBool == false,
+            bottomMarginVisibleBool: anyKeyboardVisibleBool == false,
+            child: SingleChildScrollView(
+              controller: scrollController,
               child: Column(
                 children: <Widget>[
                   const SizedBox(height: 8),
-                  CustomTextField(
+                  LabelWrapperVertical.textField(
                     label: 'Name',
-                    initialValue: 'New_Vault_${widget.lastVaultIndex + 1}',
-                    keyboardType: TextInputType.text,
-                    enableInteractiveSelection: true,
-                    textEditingController: widget.vaultRecoverPageCubit.vaultNameTextEditingController,
+                    bottomBorderVisibleBool: false,
+                    child: CustomTextField(
+                      initialValue: 'New_Vault_${widget.lastVaultIndex + 1}',
+                      keyboardType: TextInputType.text,
+                      enableInteractiveSelectionBool: true,
+                      textEditingController: widget.vaultRecoverPageCubit.vaultNameTextEditingController,
+                    ),
                   ),
                   const SizedBox(height: 14),
                   CustomGrid.builder(
@@ -119,16 +117,19 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
                     itemBuilder: (BuildContext context, int index) {
                       bool errorVisibleBool = _isErrorVisible(index, widget.textControllers[index].text);
 
-                      return CustomTextField(
-                        key: mnemonicWordKeys[index],
-                        autofocusBool: false,
-                        customKeyboardBool: true,
-                        obscureTextBool: obscureTextBool && focusNodes[index].hasFocus == false,
+                      return LabelWrapperVertical.textField(
                         label: '${index + 1}',
-                        onFocusChanged: (bool hasFocus) => _handleTextFieldFocusChange(hasFocus, index),
-                        textEditingController: widget.textControllers[index],
-                        focusNode: focusNodes[index],
-                        errorExistsBool: errorVisibleBool,
+                        bottomBorderVisibleBool: false,
+                        child: CustomTextField(
+                          key: mnemonicWordKeys[index],
+                          autofocusBool: false,
+                          customKeyboardBool: true,
+                          obscureTextBool: obscureTextBool && focusNodes[index].hasFocus == false,
+                          onFocusChanged: (bool hasFocus) => _handleTextFieldFocusChange(hasFocus, index),
+                          textEditingController: widget.textControllers[index],
+                          focusNode: focusNodes[index],
+                          errorExistsBool: errorVisibleBool,
+                        ),
                       );
                     },
                   ),

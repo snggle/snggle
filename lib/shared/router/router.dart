@@ -31,6 +31,14 @@ class AppRouter extends $AppRouter {
         ],
       ),
       AutoRoute(
+        page: NetworkCreateRoute.page,
+        children: <AutoRoute>[
+          AutoRoute(page: NetworkTemplateSelectRoute.page, initial: true),
+          AutoRoute(page: NetworkGroupCreateRoute.page),
+          AutoRoute(page: NetworkTemplateCreateRoute.page),
+        ],
+      ),
+      AutoRoute(
         page: BottomNavigationRoute.page,
         maintainState: true,
         children: <AutoRoute>[

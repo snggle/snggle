@@ -100,6 +100,10 @@ dependencies:
   # https://pub.dev/packages/isar_flutter_libs
   isar_flutter_libs: 3.1.0+1
 
+  # A set of useful sliver tools that are missing from the flutter framework
+  # https://pub.dev/packages/sliver_tools
+  sliver_tools: 0.2.12
+
   # Dart package containing utility methods for common cryptographic and blockchain-specific operations.
   cryptography_utils:
     path: ../cryptography_utils

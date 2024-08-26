@@ -8,6 +8,8 @@ class CustomScaffold extends StatelessWidget {
   final bool popAvailableBool;
   final bool popButtonVisible;
   final bool resizeToAvoidBottomInsetBool;
+  final String? subtitle;
+  final Widget? floatingActionButton;
   final List<Widget>? actions;
   final BoxDecoration? boxDecoration;
   final VoidCallback? customPopCallback;
@@ -21,6 +23,8 @@ class CustomScaffold extends StatelessWidget {
     this.popAvailableBool = true,
     this.popButtonVisible = true,
     this.resizeToAvoidBottomInsetBool = false,
+    this.subtitle,
+    this.floatingActionButton,
     this.actions,
     this.boxDecoration,
     this.customPopCallback,
@@ -36,27 +40,32 @@ class CustomScaffold extends StatelessWidget {
       onPopInvoked: (_) => customSystemPopCallback != null ? customSystemPopCallback?.call() : customPopCallback?.call(),
       child: Scaffold(
         resizeToAvoidBottomInset: resizeToAvoidBottomInsetBool,
+        floatingActionButton: floatingActionButton,
         body: SafeArea(
           child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () => FocusScope.of(context).unfocus(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                CustomAppBar(
-                  title: title,
-                  actions: actions,
-                  closeButtonVisible: closeButtonVisible,
-                  popButtonVisible: popButtonVisible,
-                  customPopCallback: customPopCallback,
-                ),
-                Expanded(
-                  child: Container(
-                    margin: padding,
-                    decoration: boxDecoration,
-                    child: body,
+            child: SizedBox.expand(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  CustomAppBar(
+                    title: title,
+                    subtitle: subtitle,
+                    actions: actions,
+                    closeButtonVisible: closeButtonVisible,
+                    popButtonVisible: popButtonVisible,
+                    customPopCallback: customPopCallback,
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: Container(
+                      margin: padding,
+                      decoration: boxDecoration,
+                      child: body,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

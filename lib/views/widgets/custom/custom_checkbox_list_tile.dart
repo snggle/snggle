@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/config/app_icons.dart';
-import 'package:snggle/views/widgets/generic/gradient_icon.dart';
+import 'package:snggle/views/widgets/custom/custom_checkbox.dart';
 
 class CustomCheckboxListTile extends StatefulWidget {
   final bool initialValue;
@@ -43,15 +42,7 @@ class CustomCheckboxListTileState extends State<CustomCheckboxListTile> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 5),
-              child: AnimatedOpacity(
-                duration: const Duration(milliseconds: 100),
-                opacity: selectedBool ? 1 : 0.2,
-                child: GradientIcon(
-                  selectedBool ? AppIcons.checkbox_selected : AppIcons.checkbox_unselected,
-                  size: 14,
-                  gradient: AppColors.primaryGradient,
-                ),
-              ),
+              child: CustomCheckbox(selectedBool: selectedBool),
             ),
             const SizedBox(width: 8),
             Expanded(

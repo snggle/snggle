@@ -7,6 +7,7 @@ class CustomAppBar extends StatelessWidget {
   final String title;
   final bool closeButtonVisible;
   final bool popButtonVisible;
+  final String? subtitle;
   final List<Widget>? actions;
   final VoidCallback? customPopCallback;
 
@@ -14,6 +15,7 @@ class CustomAppBar extends StatelessWidget {
     required this.title,
     this.closeButtonVisible = false,
     this.popButtonVisible = false,
+    this.subtitle,
     this.actions,
     this.customPopCallback,
     super.key,
@@ -21,6 +23,8 @@ class CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+
     Widget? leadingWidget;
 
     bool popAvailableBool = ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
@@ -39,37 +43,48 @@ class CustomAppBar extends StatelessWidget {
       );
     }
 
-    Widget appBarWidget = Row(
+    Widget appBarWidget = Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        SizedBox(
-          width: 50,
-          height: 40,
-          child: leadingWidget,
-        ),
-        Expanded(
-          child: Text(
-            title.toUpperCase(),
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 20,
-              letterSpacing: 1.2,
-              color: AppColors.body1,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              width: 50,
+              height: 40,
+              child: leadingWidget,
             ),
-          ),
+            Expanded(
+              child: Text(
+                title.toUpperCase(),
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                  letterSpacing: 1.2,
+                  color: AppColors.body1,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 50,
+              height: 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  ...?actions?.map((Widget action) => action).toList(),
+                ],
+              ),
+            ),
+          ],
         ),
-        SizedBox(
-          width: 50,
-          height: 40,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              ...?actions?.map((Widget action) => action).toList(),
-            ],
+        if (subtitle != null) ...<Widget>[
+          Text(
+            subtitle!,
+            style: textTheme.labelMedium?.copyWith(color: AppColors.body3),
           ),
-        ),
+        ],
       ],
     );
 
