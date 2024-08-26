@@ -94,7 +94,7 @@ void main() {
         VaultCreatePageState expectedVaultCreatePageState = const VaultCreatePageState.loading();
 
         expect(actualVaultCreatePageCubit.state, expectedVaultCreatePageState);
-        expect(actualSecretsFilesystemStructure.length, 10);
+        expect(actualSecretsFilesystemStructure.length, 9);
         expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
       });
     });

@@ -38,10 +38,11 @@ class _GradientScrollbarState extends State<GradientScrollbar> {
                 builder: (BuildContext context, _) {
                   return LayoutBuilder(
                     builder: (BuildContext context, BoxConstraints constraints) {
-                      ScrollPosition scrollPosition = widget.scrollController.position;
-                      if (scrollPosition.maxScrollExtent == 0.0) {
+                      if (widget.scrollController.positions.length != 1 || widget.scrollController.position.maxScrollExtent == 0.0) {
                         return const SizedBox();
                       }
+
+                      ScrollPosition scrollPosition = widget.scrollController.position;
 
                       double viewportDimension = scrollPosition.viewportDimension;
                       double maxScrollExtent = scrollPosition.maxScrollExtent;

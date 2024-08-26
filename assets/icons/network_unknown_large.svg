@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<svg fill="none" height="114" viewBox="0 0 114 114" width="114">
+<svg width="114" height="114" viewBox="0 0 114 114" fill="none">
 <g clip-path="url(#clip0_11223_8365)">
-<mask height="114" id="mask0_11223_8365" maskUnits="userSpaceOnUse" style="mask-type:luminance" width="114" x="0" y="0">
+<mask id="mask0_11223_8365" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="114" height="114">
 <path d="M114 0H0V114H114V0Z" fill="white" />
 </mask>
 <g mask="url(#mask0_11223_8365)">
@@ -10,20 +10,20 @@
 </g>
 </g>
 <defs>
-<radialGradient cx="0" cy="0" gradientTransform="translate(19.1181 36.3273) rotate(35.1664) scale(102.692 97.0029)" gradientUnits="userSpaceOnUse" id="paint0_radial_11223_8365" r="1">
+<radialGradient id="paint0_radial_11223_8365" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(19.1181 36.3273) rotate(35.1664) scale(102.692 97.0029)">
 <stop offset="0.0760668" />
 <stop offset="0.380208" stop-color="#42D2FF" />
 <stop offset="0.666667" stop-color="#939393" />
 <stop offset="1" />
 </radialGradient>
-<radialGradient cx="0" cy="0" gradientTransform="translate(19.1186 36.3272) rotate(35.1664) scale(102.692 97.0029)" gradientUnits="userSpaceOnUse" id="paint1_radial_11223_8365" r="1">
+<radialGradient id="paint1_radial_11223_8365" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(19.1186 36.3272) rotate(35.1664) scale(102.692 97.0029)">
 <stop offset="0.0760668" />
 <stop offset="0.380208" stop-color="#42D2FF" />
 <stop offset="0.666667" stop-color="#939393" />
 <stop offset="1" />
 </radialGradient>
 <clipPath id="clip0_11223_8365">
-<rect fill="white" height="114" width="114" />
+<rect width="114" height="114" fill="white" />
 </clipPath>
 </defs>
 </svg>

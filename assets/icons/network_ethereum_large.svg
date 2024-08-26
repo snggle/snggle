@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
-<svg fill="none" height="114" viewBox="0 0 114 114" width="114">
-<path d="M57.4118 72.1543L30.1484 56.5752L57.4118 11.7852L84.6754 56.5752L57.4118 72.1543Z" stroke="url(#paint0_radial_11223_8345)" stroke-linecap="round" stroke-width="2.38" />
-<path d="M56.8236 80.745L57.4127 81.0817L58.002 80.745L82.3138 66.8525L57.4127 102.426L32.5117 66.8525L56.8236 80.745Z" stroke="url(#paint1_radial_11223_8345)" stroke-linecap="round" stroke-width="2.38" />
+<svg width="114" height="114" viewBox="0 0 114 114" fill="none">
+<path d="M57.4118 72.1543L30.1484 56.5752L57.4118 11.7852L84.6754 56.5752L57.4118 72.1543Z" stroke="url(#paint0_radial_11223_8345)" stroke-width="2.38" stroke-linecap="round" />
+<path d="M56.8236 80.745L57.4127 81.0817L58.002 80.745L82.3138 66.8525L57.4127 102.426L32.5117 66.8525L56.8236 80.745Z" stroke="url(#paint1_radial_11223_8345)" stroke-width="2.38" stroke-linecap="round" />
 <defs>
-<radialGradient cx="0" cy="0" gradientTransform="translate(34.3426 27.5817) rotate(37.9553) scale(64.8053 63.052)" gradientUnits="userSpaceOnUse" id="paint0_radial_11223_8345" r="1">
+<radialGradient id="paint0_radial_11223_8345" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(34.3426 27.5817) rotate(37.9553) scale(64.8053 63.052)">
 <stop offset="0.0760668" />
 <stop offset="0.380208" stop-color="#42D2FF" />
 <stop offset="0.666667" stop-color="#939393" />
 <stop offset="1" />
 </radialGradient>
-<radialGradient cx="0" cy="0" gradientTransform="translate(34.3436 74.8573) rotate(26.7136) scale(57.2041 46.0841)" gradientUnits="userSpaceOnUse" id="paint1_radial_11223_8345" r="1">
+<radialGradient id="paint1_radial_11223_8345" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(34.3436 74.8573) rotate(26.7136) scale(57.2041 46.0841)">
 <stop offset="0.0760668" />
 <stop offset="0.380208" stop-color="#42D2FF" />
 <stop offset="0.666667" stop-color="#939393" />

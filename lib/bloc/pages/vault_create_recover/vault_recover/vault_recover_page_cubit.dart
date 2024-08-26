@@ -16,6 +16,7 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
   final NetworkGroupModelFactory _networkGroupsModelFactory = globalLocator<NetworkGroupModelFactory>();
+
   final VaultModelFactory _vaultModelFactory = globalLocator<VaultModelFactory>();
   final VaultsService _vaultsService = globalLocator<VaultsService>();
 

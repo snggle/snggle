@@ -180,7 +180,7 @@ void main() {
         VaultRecoverPageState expectedVaultRecoverPageState = const VaultRecoverPageState.loading();
 
         expect(actualVaultRecoverPageCubit.state, expectedVaultRecoverPageState);
-        expect(actualSecretsFilesystemStructure.length, 10);
+        expect(actualSecretsFilesystemStructure.length, 9);
         expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
       });
     });
