@@ -22,7 +22,7 @@ class NetworkIcon extends StatelessWidget {
       size: size,
       child: Center(
         child: GradientIcon(
-          networkGroupModel.networkConfigModel.iconData,
+          networkGroupModel.networkTemplateModel.networkIconType.iconData,
           size: size * 0.6,
           gradient: AppColors.primaryGradient,
         ),

@@ -2,11 +2,13 @@ import 'package:blockchain_utils/bip/mnemonic/mnemonic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_state.dart';
+import 'package:snggle/config/default_network_templates.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/shared/factories/network_group_model_factory.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
+import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
@@ -65,6 +67,9 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
 
     String vaultName = vaultNameTextEditingController.text;
     VaultModel vaultModel = await _vaultModelFactory.createNewVault(parentFilesystemPath, mnemonic, vaultName);
-    await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath);
+
+    // TODO(dominik): Temporary solution to use network template. It'll be fetched from database and selected by user in the future
+    NetworkTemplateModel networkTemplateModel = DefaultNetworkTemplates.ethereum.copyWith(predefinedNetworkTemplateId: 817800260);
+    await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath, networkTemplateModel.name, networkTemplateModel);
   }
 }

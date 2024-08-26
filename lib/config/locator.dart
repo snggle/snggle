@@ -7,6 +7,7 @@ import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/repositories/groups_repository.dart';
 import 'package:snggle/infra/repositories/master_key_repository.dart';
 import 'package:snggle/infra/repositories/network_groups_repository.dart';
+import 'package:snggle/infra/repositories/network_templates_repository.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
 import 'package:snggle/infra/repositories/vaults_repository.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
@@ -14,6 +15,7 @@ import 'package:snggle/infra/services/app_auth_service.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/infra/services/network_groups_service.dart';
+import 'package:snggle/infra/services/network_templates_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
@@ -45,6 +47,7 @@ void _initControllers() {
 void _initRepositories() {
   globalLocator
     ..registerLazySingleton<NetworkGroupsRepository>(NetworkGroupsRepository.new)
+    ..registerLazySingleton<NetworkTemplatesRepository>(NetworkTemplatesRepository.new)
     ..registerLazySingleton<MasterKeyRepository>(MasterKeyRepository.new)
     ..registerLazySingleton<SecretsRepository>(SecretsRepository.new)
     ..registerLazySingleton<VaultsRepository>(VaultsRepository.new)
@@ -56,6 +59,7 @@ void _initServices() {
   globalLocator
     ..registerLazySingleton<AppAuthService>(AppAuthService.new)
     ..registerLazySingleton<NetworkGroupsService>(NetworkGroupsService.new)
+    ..registerLazySingleton<NetworkTemplatesService>(NetworkTemplatesService.new)
     ..registerLazySingleton<MasterKeyService>(MasterKeyService.new)
     ..registerLazySingleton<SecretsService>(SecretsService.new)
     ..registerLazySingleton<VaultsService>(VaultsService.new)

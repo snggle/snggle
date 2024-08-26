@@ -38,7 +38,7 @@ class NetworkListItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           GradientIcon(
-            networkGroupModel.networkConfigModel.iconData,
+            networkGroupModel.networkTemplateModel.networkIconType.iconData,
             size: 18,
             gradient: AppColors.primaryGradient,
           ),
