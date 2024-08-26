@@ -10,7 +10,7 @@ import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/groups/group_secrets_model.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
-import 'package:snggle/shared/models/network_config_model.dart';
+import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
@@ -23,14 +23,15 @@ class NetworkGroupModelFactory {
   final SecretsService _secretsService = globalLocator<SecretsService>();
   final NetworkGroupsService _networkGroupsService = globalLocator<NetworkGroupsService>();
 
-  Future<NetworkGroupModel> createNewNetworkGroup(FilesystemPath parentFilesystemPath) async {
+  Future<NetworkGroupModel> createNewNetworkGroup(FilesystemPath parentFilesystemPath, String name, NetworkTemplateModel networkTemplateModel) async {
     NetworkGroupModel networkGroupModel = NetworkGroupModel(
+      id: Isar.autoIncrement,
       pinnedBool: false,
       encryptedBool: false,
-      id: Isar.autoIncrement,
-      listItemsPreview: <AListItemModel>[],
       filesystemPath: const FilesystemPath.empty(),
-      networkConfigModel: NetworkConfigModel.ethereum,
+      name: name,
+      networkTemplateModel: networkTemplateModel,
+      listItemsPreview: <AListItemModel>[],
     );
 
     int networkGroupId = await _networkGroupsService.save(networkGroupModel);
@@ -68,12 +69,13 @@ class NetworkGroupModelFactory {
     ]..sort((AListItemModel a, AListItemModel b) => a.compareTo(b));
 
     return NetworkGroupModel(
+      id: networkGroupEntity.id,
       pinnedBool: networkGroupEntity.pinnedBool,
       encryptedBool: networkGroupEntity.encryptedBool,
-      id: networkGroupEntity.id,
       filesystemPath: networkGroupEntity.filesystemPath,
+      name: networkGroupEntity.name,
+      networkTemplateModel: NetworkTemplateModel.fromEntity(networkGroupEntity.networkTemplateEntity),
       listItemsPreview: listItemsPreview,
-      networkConfigModel: NetworkConfigModel.getByNetworkId(networkGroupEntity.networkId),
     );
   }
 }

@@ -1,7 +1,7 @@
 name: snggle
 description: Private keys manager
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.33
+version: 0.0.34
 
 environment:
   sdk: "3.2.6"
@@ -126,7 +126,7 @@ dependencies:
   cryptography_utils:
     git:
       url: https://github.com/snggle/cryptography_utils.git
-      ref: master
+      ref: dp-feature/legacy-wallet-config-serialization
 
 dev_dependencies:
   flutter_test:

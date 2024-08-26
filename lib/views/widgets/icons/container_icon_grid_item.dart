@@ -68,7 +68,7 @@ class ContainerIconGridItem extends StatelessWidget {
         pinnedBackground = AppIcons.icon_container_vault_pinned_medium_background,
         unpinnedBorder = AppIcons.icon_container_vault_unpinned_medium,
         unpinnedBackground = AppIcons.icon_container_vault_unpinned_medium_background,
-        icon = networkGroupModel.networkConfigModel.networkIconType.listSmallIcon;
+        icon = networkGroupModel.networkTemplateModel.networkIconType.listSmallIcon;
 
   @override
   Widget build(BuildContext context) {

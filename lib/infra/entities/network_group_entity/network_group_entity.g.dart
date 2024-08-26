@@ -17,24 +17,25 @@ const NetworkGroupEntitySchema = CollectionSchema(
   name: r'NetworkGroupEntity',
   id: -1011980203888109847,
   properties: {
-    r'encryptedBool': PropertySchema(
+    r'embeddedNetworkTemplate': PropertySchema(
       id: 0,
+      name: r'embeddedNetworkTemplate',
+      type: IsarType.object,
+      target: r'EmbeddedNetworkTemplateEntity',
+    ),
+    r'encryptedBool': PropertySchema(
+      id: 1,
       name: r'encryptedBool',
       type: IsarType.bool,
     ),
     r'filesystemPathString': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'filesystemPathString',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 2,
-      name: r'name',
-      type: IsarType.string,
-    ),
-    r'networkId': PropertySchema(
       id: 3,
-      name: r'networkId',
+      name: r'name',
       type: IsarType.string,
     ),
     r'pinnedBool': PropertySchema(
@@ -64,7 +65,9 @@ const NetworkGroupEntitySchema = CollectionSchema(
     )
   },
   links: {},
-  embeddedSchemas: {},
+  embeddedSchemas: {
+    r'EmbeddedNetworkTemplateEntity': EmbeddedNetworkTemplateEntitySchema
+  },
   getId: _networkGroupEntityGetId,
   getLinks: _networkGroupEntityGetLinks,
   attach: _networkGroupEntityAttach,
@@ -77,9 +80,13 @@ int _networkGroupEntityEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 +
+      EmbeddedNetworkTemplateEntitySchema.estimateSize(
+          object.embeddedNetworkTemplate,
+          allOffsets[EmbeddedNetworkTemplateEntity]!,
+          allOffsets);
   bytesCount += 3 + object.filesystemPathString.length * 3;
   bytesCount += 3 + object.name.length * 3;
-  bytesCount += 3 + object.networkId.length * 3;
   return bytesCount;
 }
 
@@ -89,10 +96,15 @@ void _networkGroupEntitySerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeBool(offsets[0], object.encryptedBool);
-  writer.writeString(offsets[1], object.filesystemPathString);
-  writer.writeString(offsets[2], object.name);
-  writer.writeString(offsets[3], object.networkId);
+  writer.writeObject<EmbeddedNetworkTemplateEntity>(
+    offsets[0],
+    allOffsets,
+    EmbeddedNetworkTemplateEntitySchema.serialize,
+    object.embeddedNetworkTemplate,
+  );
+  writer.writeBool(offsets[1], object.encryptedBool);
+  writer.writeString(offsets[2], object.filesystemPathString);
+  writer.writeString(offsets[3], object.name);
   writer.writeBool(offsets[4], object.pinnedBool);
 }
 
@@ -103,11 +115,17 @@ NetworkGroupEntity _networkGroupEntityDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = NetworkGroupEntity(
-    encryptedBool: reader.readBool(offsets[0]),
-    filesystemPathString: reader.readString(offsets[1]),
+    embeddedNetworkTemplate:
+        reader.readObjectOrNull<EmbeddedNetworkTemplateEntity>(
+              offsets[0],
+              EmbeddedNetworkTemplateEntitySchema.deserialize,
+              allOffsets,
+            ) ??
+            EmbeddedNetworkTemplateEntity(),
+    encryptedBool: reader.readBool(offsets[1]),
+    filesystemPathString: reader.readString(offsets[2]),
     id: id,
-    name: reader.readString(offsets[2]),
-    networkId: reader.readString(offsets[3]),
+    name: reader.readString(offsets[3]),
     pinnedBool: reader.readBool(offsets[4]),
   );
   return object;
@@ -121,9 +139,14 @@ P _networkGroupEntityDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readBool(offset)) as P;
+      return (reader.readObjectOrNull<EmbeddedNetworkTemplateEntity>(
+            offset,
+            EmbeddedNetworkTemplateEntitySchema.deserialize,
+            allOffsets,
+          ) ??
+          EmbeddedNetworkTemplateEntity()) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
@@ -613,142 +636,6 @@ extension NetworkGroupEntityQueryFilter
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      networkIdEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'networkId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      networkIdGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'networkId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      networkIdLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'networkId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      networkIdBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'networkId',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      networkIdStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'networkId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      networkIdEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'networkId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      networkIdContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'networkId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      networkIdMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'networkId',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      networkIdIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'networkId',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      networkIdIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'networkId',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
       pinnedBoolEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -760,7 +647,14 @@ extension NetworkGroupEntityQueryFilter
 }
 
 extension NetworkGroupEntityQueryObject
-    on QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QFilterCondition> {}
+    on QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QFilterCondition> {
+  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
+      embeddedNetworkTemplate(FilterQuery<EmbeddedNetworkTemplateEntity> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'embeddedNetworkTemplate');
+    });
+  }
+}
 
 extension NetworkGroupEntityQueryLinks
     on QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QFilterCondition> {}
@@ -806,20 +700,6 @@ extension NetworkGroupEntityQuerySortBy
       sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      sortByNetworkId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'networkId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      sortByNetworkIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'networkId', Sort.desc);
     });
   }
 
@@ -897,20 +777,6 @@ extension NetworkGroupEntityQuerySortThenBy
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      thenByNetworkId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'networkId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      thenByNetworkIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'networkId', Sort.desc);
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
       thenByPinnedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinnedBool', Sort.asc);
@@ -950,13 +816,6 @@ extension NetworkGroupEntityQueryWhereDistinct
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QDistinct>
-      distinctByNetworkId({bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'networkId', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QDistinct>
       distinctByPinnedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'pinnedBool');
@@ -969,6 +828,13 @@ extension NetworkGroupEntityQueryProperty
   QueryBuilder<NetworkGroupEntity, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<NetworkGroupEntity, EmbeddedNetworkTemplateEntity,
+      QQueryOperations> embeddedNetworkTemplateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'embeddedNetworkTemplate');
     });
   }
 
@@ -989,13 +855,6 @@ extension NetworkGroupEntityQueryProperty
   QueryBuilder<NetworkGroupEntity, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, String, QQueryOperations>
-      networkIdProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'networkId');
     });
   }
 
