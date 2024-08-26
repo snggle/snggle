@@ -38,7 +38,7 @@ class NetworkListItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           AssetIcon(
-            networkGroupModel.networkConfigModel.networkIconType.horizontalTileIcon,
+            networkGroupModel.networkTemplateModel.networkIconType.horizontalTileIcon,
             size: 20,
             color: AppColors.darkGrey,
           ),

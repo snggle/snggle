@@ -1,5 +1,9 @@
-# Flutter Version Management
+# FVM Version Cache
 .fvm/flutter_sdk
+.fvm/versions
+.fvm/version
+.fvm/release
+.fvmrc
 
 # Miscellaneous
 *.class

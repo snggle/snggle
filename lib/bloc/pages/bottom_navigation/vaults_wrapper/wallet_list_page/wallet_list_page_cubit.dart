@@ -53,7 +53,6 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
       WalletCreationRequestModel(
         index: walletIndex,
         derivationPath: derivationPath,
-        network: 'ethereum',
         publicKey: derivedNode.publicKey,
         privateKey: derivedNode.privateKey!,
         parentFilesystemPath: state.filesystemPath,
