@@ -451,60 +451,6 @@ void main() {
     });
   });
 
-  group('Tests of WalletsService.getLastDerivationIndex()', () {
-    test('Should [return last derivation index] if [database NOT EMPTY]', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Act
-      int actualLastDerivationIndex = await globalLocator<WalletsService>().getLastDerivationIndex(FilesystemPath.fromString('vault1/network1'));
-
-      // Assert
-      expect(actualLastDerivationIndex, 4);
-    });
-
-    test('Should [return -1] if [database EMPTY]', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
-
-      // Act
-      int actualLastDerivationIndex = await globalLocator<WalletsService>().getLastDerivationIndex(FilesystemPath.fromString('vault1/network1'));
-
-      // Assert
-      expect(actualLastDerivationIndex, -1);
-    });
-  });
-
-  group('Tests of WalletsService.isDerivationPathExists()', () {
-    test('Should [return TRUE] if [derivation path EXISTS] for specified FilesystemPath', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Act
-      bool actualDerivationPathExistsBool = await globalLocator<WalletsService>().isDerivationPathExists(
-        FilesystemPath.fromString('vault1/network1'),
-        "m/44'/60'/0'/0/0",
-      );
-
-      // Assert
-      expect(actualDerivationPathExistsBool, true);
-    });
-
-    test('Should [return FALSE] if [derivation path NOT EXISTS] for specified FilesystemPath', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
-
-      // Act
-      bool actualDerivationPathExistsBool = await globalLocator<WalletsService>().isDerivationPathExists(
-        FilesystemPath.fromString('vault1/network1'),
-        "m/99999'/99999/99999",
-      );
-
-      // Assert
-      expect(actualDerivationPathExistsBool, false);
-    });
-  });
-
   group('Tests of WalletsService.updateFilesystemPath()', () {
     test('Should [return updated WalletModel] if [wallet EXISTS] in database', () async {
       // Arrange

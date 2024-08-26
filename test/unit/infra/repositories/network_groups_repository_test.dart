@@ -20,10 +20,12 @@ void main() {
   EmbeddedNetworkTemplateEntity embeddedNetworkTemplateEntity = const EmbeddedNetworkTemplateEntity(
     addressEncoderType: 'ethereum(false)',
     curveType: CurveType.secp256k1,
-    derivationPathTemplate: "m/44'/60'/0'/0/{{i}}",
+    derivationPathName: null,
+    derivationPathTemplate: "m/44'/60'/0'/{{y}}/{{i}}",
     derivatorType: 'secp256k1',
     networkIconType: NetworkIconType.ethereum,
     name: 'Ethereum',
+    predefinedNetworkTemplateId: 817800260,
     walletType: WalletType.legacy,
   );
 

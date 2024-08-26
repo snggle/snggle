@@ -2,7 +2,6 @@ import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
 import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
@@ -18,6 +17,7 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 
 import '../../../utils/database_mock.dart';
 import '../../../utils/test_database.dart';
+import '../../../utils/test_network_templates.dart';
 
 void main() {
   final TestDatabase testDatabase = TestDatabase();
@@ -25,10 +25,12 @@ void main() {
   EmbeddedNetworkTemplateEntity embeddedNetworkTemplateEntity = const EmbeddedNetworkTemplateEntity(
     addressEncoderType: 'ethereum(false)',
     curveType: CurveType.secp256k1,
-    derivationPathTemplate: "m/44'/60'/0'/0/{{i}}",
+    derivationPathName: null,
+    derivationPathTemplate: "m/44'/60'/0'/{{y}}/{{i}}",
     derivatorType: 'secp256k1',
     networkIconType: NetworkIconType.ethereum,
     name: 'Ethereum',
+    predefinedNetworkTemplateId: 817800260,
     walletType: WalletType.legacy,
   );
 
@@ -56,7 +58,7 @@ void main() {
           encryptedBool: false,
           id: 1,
           filesystemPath: FilesystemPath.fromString('vault1/network1'),
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           listItemsPreview: <AListItemModel>[
             // @formatter:off
             GroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1/group3'), name: 'WALLETS GROUP 1', listItemsPreview: <AListItemModel>[]),
@@ -71,7 +73,7 @@ void main() {
           id: 7,
           encryptedBool: false,
           pinnedBool: false,
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           filesystemPath: FilesystemPath.fromString('vault1/network7'),
           listItemsPreview: <AListItemModel>[],
           name: 'Ethereum7',
@@ -80,7 +82,7 @@ void main() {
           id: 9,
           encryptedBool: false,
           pinnedBool: false,
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           filesystemPath: FilesystemPath.fromString('vault1/network9'),
           listItemsPreview: <AListItemModel>[],
           name: 'Ethereum9',
@@ -107,7 +109,7 @@ void main() {
           encryptedBool: false,
           id: 1,
           filesystemPath: FilesystemPath.fromString('vault1/network1'),
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           listItemsPreview: <AListItemModel>[
             // @formatter:off
             GroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1/group3'), name: 'WALLETS GROUP 1', listItemsPreview: <AListItemModel>[]),
@@ -122,7 +124,7 @@ void main() {
           id: 2,
           encryptedBool: false,
           pinnedBool: false,
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           filesystemPath: FilesystemPath.fromString('vault2/network2'),
           listItemsPreview: <AListItemModel>[],
           name: 'Ethereum2',
@@ -131,7 +133,7 @@ void main() {
           id: 3,
           encryptedBool: false,
           pinnedBool: false,
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           filesystemPath: FilesystemPath.fromString('vault3/network3'),
           listItemsPreview: <AListItemModel>[],
           name: 'Ethereum3',
@@ -140,7 +142,7 @@ void main() {
           id: 4,
           encryptedBool: false,
           pinnedBool: false,
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           filesystemPath: FilesystemPath.fromString('group1/vault4/network4'),
           listItemsPreview: <AListItemModel>[],
           name: 'Ethereum4',
@@ -149,7 +151,7 @@ void main() {
           id: 5,
           encryptedBool: false,
           pinnedBool: false,
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           filesystemPath: FilesystemPath.fromString('group1/vault5/network5'),
           listItemsPreview: <AListItemModel>[],
           name: 'Ethereum5',
@@ -158,7 +160,7 @@ void main() {
           id: 6,
           encryptedBool: false,
           pinnedBool: false,
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           filesystemPath: FilesystemPath.fromString('vault1/group2/network6'),
           listItemsPreview: <AListItemModel>[],
           name: 'Ethereum6',
@@ -167,7 +169,7 @@ void main() {
           id: 7,
           encryptedBool: false,
           pinnedBool: false,
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           filesystemPath: FilesystemPath.fromString('vault1/network7'),
           listItemsPreview: <AListItemModel>[],
           name: 'Ethereum7',
@@ -176,7 +178,7 @@ void main() {
           id: 8,
           encryptedBool: false,
           pinnedBool: false,
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           filesystemPath: FilesystemPath.fromString('vault1/group2/network8'),
           listItemsPreview: <AListItemModel>[],
           name: 'Ethereum8',
@@ -185,7 +187,7 @@ void main() {
           id: 9,
           encryptedBool: false,
           pinnedBool: false,
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           filesystemPath: FilesystemPath.fromString('vault1/network9'),
           listItemsPreview: <AListItemModel>[],
           name: 'Ethereum9',
@@ -246,7 +248,7 @@ void main() {
         encryptedBool: false,
         id: 1,
         filesystemPath: FilesystemPath.fromString('vault1/network1'),
-        networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+        networkTemplateModel: TestNetworkTemplates.ethereum,
         listItemsPreview: <AListItemModel>[
           // @formatter:off
           GroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1/group3'), name: 'WALLETS GROUP 1', listItemsPreview: <AListItemModel>[]),
@@ -285,7 +287,7 @@ void main() {
           encryptedBool: false,
           id: 1,
           filesystemPath: FilesystemPath.fromString('vault1/network1'),
-          networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+          networkTemplateModel: TestNetworkTemplates.ethereum,
           listItemsPreview: <AListItemModel>[],
           name: 'Ethereum1',
         ),
@@ -359,7 +361,7 @@ void main() {
         pinnedBool: true,
         encryptedBool: true,
         filesystemPath: FilesystemPath.fromString('vault1/network1'),
-        networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+        networkTemplateModel: TestNetworkTemplates.ethereum,
         listItemsPreview: <AListItemModel>[],
         name: 'Ethereum1',
       );
@@ -398,7 +400,7 @@ void main() {
         pinnedBool: true,
         encryptedBool: true,
         filesystemPath: FilesystemPath.fromString('vault1/network99999'),
-        networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+        networkTemplateModel: TestNetworkTemplates.ethereum,
         listItemsPreview: <AListItemModel>[],
         name: 'Ethereum99999',
       );
@@ -437,8 +439,8 @@ void main() {
 
       List<NetworkGroupModel> actualGroupsToUpdate = <NetworkGroupModel>[
         // @formatter:off
-        NetworkGroupModel(id: 1, encryptedBool: true, pinnedBool: true, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], name: 'Ethereum1'),
-        NetworkGroupModel(id: 7, encryptedBool: true, pinnedBool: true, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], name: 'Ethereum7'),
+        NetworkGroupModel(id: 1, encryptedBool: true, pinnedBool: true, networkTemplateModel: TestNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], name: 'Ethereum1'),
+        NetworkGroupModel(id: 7, encryptedBool: true, pinnedBool: true, networkTemplateModel: TestNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], name: 'Ethereum7'),
         // @formatter:on
       ];
 
@@ -473,8 +475,8 @@ void main() {
 
       List<NetworkGroupModel> actualGroupsToUpdate = <NetworkGroupModel>[
         // @formatter:off
-        NetworkGroupModel(id: 99998, encryptedBool: true, pinnedBool: true, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network99998'), listItemsPreview: <AListItemModel>[], name: 'Ethereum99998'),
-        NetworkGroupModel(id: 99999, encryptedBool: true, pinnedBool: true, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network99999'), listItemsPreview: <AListItemModel>[], name: 'Ethereum99999'),
+        NetworkGroupModel(id: 99998, encryptedBool: true, pinnedBool: true, networkTemplateModel: TestNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network99998'), listItemsPreview: <AListItemModel>[], name: 'Ethereum99998'),
+        NetworkGroupModel(id: 99999, encryptedBool: true, pinnedBool: true, networkTemplateModel: TestNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network99999'), listItemsPreview: <AListItemModel>[], name: 'Ethereum99999'),
         // @formatter:on
       ];
 
@@ -606,7 +608,7 @@ void main() {
         id: 1,
         filesystemPath: FilesystemPath.fromString('new/network/path/network1'),
         listItemsPreview: <AListItemModel>[],
-        networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+        networkTemplateModel: TestNetworkTemplates.ethereum,
         name: 'Ethereum1',
       );
 

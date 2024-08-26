@@ -126,7 +126,7 @@ dependencies:
   cryptography_utils:
     git:
       url: https://github.com/snggle/cryptography_utils.git
-      ref: master
+      ref: dp-feature/legacy-wallet-config-serialization
 
 dev_dependencies:
   flutter_test:

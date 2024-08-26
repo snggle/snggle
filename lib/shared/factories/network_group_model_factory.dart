@@ -74,7 +74,7 @@ class NetworkGroupModelFactory {
       encryptedBool: networkGroupEntity.encryptedBool,
       filesystemPath: networkGroupEntity.filesystemPath,
       name: networkGroupEntity.name,
-      networkTemplateModel: NetworkTemplateModel.fromEntity(networkGroupEntity.embeddedNetworkTemplate),
+      networkTemplateModel: NetworkTemplateModel.fromEntity(networkGroupEntity.networkTemplateEntity),
       listItemsPreview: listItemsPreview,
     );
   }
