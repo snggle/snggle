@@ -10,24 +10,20 @@ class WalletEntity extends Equatable {
   final Id id;
   final bool encryptedBool;
   final bool pinnedBool;
-  final int index;
   final String address;
   final String derivationPath;
-  final String network;
   @Index()
   final String filesystemPathString;
-  final String? name;
+  final String name;
 
   const WalletEntity({
     required this.id,
     required this.encryptedBool,
     required this.pinnedBool,
-    required this.index,
     required this.address,
     required this.derivationPath,
-    required this.network,
     required this.filesystemPathString,
-    this.name,
+    required this.name,
   });
 
   factory WalletEntity.fromWalletModel(WalletModel walletModel) {
@@ -35,10 +31,8 @@ class WalletEntity extends Equatable {
       id: walletModel.id,
       encryptedBool: walletModel.encryptedBool,
       pinnedBool: walletModel.pinnedBool,
-      index: walletModel.index,
       address: walletModel.address,
       derivationPath: walletModel.derivationPath,
-      network: walletModel.network,
       filesystemPathString: walletModel.filesystemPath.fullPath,
       name: walletModel.name,
     );
@@ -48,10 +42,8 @@ class WalletEntity extends Equatable {
     Id? id,
     bool? encryptedBool,
     bool? pinnedBool,
-    int? index,
     String? address,
     String? derivationPath,
-    String? network,
     String? filesystemPathString,
     String? name,
   }) {
@@ -59,10 +51,8 @@ class WalletEntity extends Equatable {
       id: id ?? this.id,
       encryptedBool: encryptedBool ?? this.encryptedBool,
       pinnedBool: pinnedBool ?? this.pinnedBool,
-      index: index ?? this.index,
       address: address ?? this.address,
       derivationPath: derivationPath ?? this.derivationPath,
-      network: network ?? this.network,
       filesystemPathString: filesystemPathString ?? this.filesystemPathString,
       name: name ?? this.name,
     );
@@ -72,5 +62,5 @@ class WalletEntity extends Equatable {
   FilesystemPath get filesystemPath => FilesystemPath.fromString(filesystemPathString);
 
   @override
-  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, index, address, derivationPath, network, filesystemPathString, name];
+  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, address, derivationPath, filesystemPathString, name];
 }
