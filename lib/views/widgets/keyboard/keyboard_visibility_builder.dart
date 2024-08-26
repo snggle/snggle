@@ -7,11 +7,11 @@ typedef KeyboardVisibilityChildBuilder = Widget Function({required bool customKe
 
 class KeyboardVisibilityBuilder extends StatefulWidget {
   final KeyboardVisibilityChildBuilder builder;
-  final KeyboardValueNotifier keyboardValueNotifier;
+  final KeyboardValueNotifier? keyboardValueNotifier;
 
   const KeyboardVisibilityBuilder({
     required this.builder,
-    required this.keyboardValueNotifier,
+    this.keyboardValueNotifier,
     super.key,
   });
 
@@ -56,14 +56,21 @@ class KeyboardVisibilityBuilderState extends State<KeyboardVisibilityBuilder> wi
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: widget.keyboardValueNotifier,
-      builder: (BuildContext context, bool customKeyboardVisibleBool, _) {
-        return widget.builder(
-          customKeyboardVisibleBool: customKeyboardVisibleBool,
-          nativeKeyboardVisibleBool: keyboardVisibleBool,
-        );
-      },
-    );
+    if (widget.keyboardValueNotifier == null) {
+      return widget.builder(
+        customKeyboardVisibleBool: false,
+        nativeKeyboardVisibleBool: keyboardVisibleBool,
+      );
+    } else {
+      return ValueListenableBuilder<bool>(
+        valueListenable: widget.keyboardValueNotifier!,
+        builder: (BuildContext context, bool customKeyboardVisibleBool, _) {
+          return widget.builder(
+            customKeyboardVisibleBool: customKeyboardVisibleBool,
+            nativeKeyboardVisibleBool: keyboardVisibleBool,
+          );
+        },
+      );
+    }
   }
 }

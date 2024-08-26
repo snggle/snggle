@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<svg fill="none" height="20" viewBox="0 0 20 20" width="20">
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
 <path d="M9.26186 15.1868C12.5346 15.1868 15.1878 12.5337 15.1878 9.26088C15.1878 5.98808 12.5346 3.33496 9.26186 3.33496C5.98906 3.33496 3.33594 5.98808 3.33594 9.26088C3.33594 12.5337 5.98906 15.1868 9.26186 15.1868Z" stroke="#C7C7C7" stroke-linecap="round" stroke-linejoin="round" />
 <path d="M16.6675 16.6675L13.4453 13.4453" stroke="#C7C7C7" stroke-linecap="round" stroke-linejoin="round" />
 </svg>

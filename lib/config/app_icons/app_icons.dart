@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 part 'asset_icon_data.dart';
 
 class AppIcons {
+  static const AssetIconData alert_small = AssetIconData('assets/icons/alert_small.svg');
   static const AssetIconData app_bar_back = AssetIconData('assets/icons/app_bar_back.svg');
   static const AssetIconData app_bar_close = AssetIconData('assets/icons/app_bar_close.svg');
   static const AssetIconData bottom_navigation_apps = AssetIconData('assets/icons/bottom_navigation_apps.svg');
@@ -53,7 +54,17 @@ class AppIcons {
   static const AssetIconData menu_unlock = AssetIconData('assets/icons/menu_unlock.svg');
   static const AssetIconData menu_unpin = AssetIconData('assets/icons/menu_unpin.svg');
   static const AssetIconData menu_unselect_all = AssetIconData('assets/icons/menu_unselect_all.svg');
+  static const AssetIconData network_bitcoin_large = AssetIconData('assets/icons/network_bitcoin_large.svg');
+  static const AssetIconData network_cosmos_large = AssetIconData('assets/icons/network_cosmos_large.svg');
+  static const AssetIconData network_ethereum_large = AssetIconData('assets/icons/network_ethereum_large.svg');
+  static const AssetIconData network_templates_list_bitcoin = AssetIconData('assets/icons/network_templates_list_bitcoin.svg');
+  static const AssetIconData network_templates_list_cosmos = AssetIconData('assets/icons/network_templates_list_cosmos.svg');
+  static const AssetIconData network_templates_list_ethereum = AssetIconData('assets/icons/network_templates_list_ethereum.svg');
+  static const AssetIconData network_templates_list_recent = AssetIconData('assets/icons/network_templates_list_recent.svg');
+  static const AssetIconData network_templates_list_unknown = AssetIconData('assets/icons/network_templates_list_unknown.svg');
+  static const AssetIconData network_unknown_large = AssetIconData('assets/icons/network_unknown_large.svg');
   static const AssetIconData page_add_button = AssetIconData('assets/icons/page_add_button.svg');
   static const AssetIconData page_no_data = AssetIconData('assets/icons/page_no_data.svg');
+  static const AssetIconData search = AssetIconData('assets/icons/search.svg');
   static const AssetIconData settings_warning = AssetIconData('assets/icons/settings_warning.svg');
 }
