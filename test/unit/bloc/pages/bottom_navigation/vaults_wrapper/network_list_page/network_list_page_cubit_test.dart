@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/network_list_page/network_list_page_cubit.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/network_groups_service.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
@@ -15,6 +14,7 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 
 import '../../../../../../utils/database_mock.dart';
 import '../../../../../../utils/test_database.dart';
+import '../../../../../../utils/test_network_templates.dart';
 
 void main() async {
   final TestDatabase testDatabase = TestDatabase();
@@ -28,8 +28,8 @@ void main() async {
     filesystemPath: FilesystemPath.fromString('vault1/group2'),
     name: 'NETWORKS GROUP 1',
     listItemsPreview: <AListItemModel>[
-      NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
-      NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
+      NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), networkTemplateModel: TestNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
+      NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkTemplateModel: TestNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
     ],
   );
   GroupModel updatedGroupModel = GroupModel(
@@ -39,8 +39,8 @@ void main() async {
     filesystemPath: FilesystemPath.fromString('vault1/group2'),
     name: 'UPDATED NETWORKS GROUP 1',
     listItemsPreview: <AListItemModel>[
-      NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
-      NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
+      NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), networkTemplateModel: TestNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
+      NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkTemplateModel: TestNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
     ],
   );
   NetworkGroupModel networkGroupModel1 = NetworkGroupModel(
@@ -48,7 +48,7 @@ void main() async {
     encryptedBool: false,
     id: 1,
     filesystemPath: FilesystemPath.fromString('vault1/network1'),
-    networkTemplateModel: PredefinedNetworkTemplates.ethereum,
+    networkTemplateModel: TestNetworkTemplates.ethereum,
     listItemsPreview: <AListItemModel>[
       GroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1/group3'), name: 'WALLETS GROUP 1', listItemsPreview: <AListItemModel>[]),
       WalletModel(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", name: 'WALLET 0', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1')),
@@ -57,9 +57,9 @@ void main() async {
     ],
     name: 'Ethereum1',
   );
-  NetworkGroupModel networkGroupModel2 = NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], name: 'Ethereum7');
-  NetworkGroupModel networkGroupModel3 = NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], name: 'Ethereum9');
-  NetworkGroupModel updatedNetworkGroupModel3 =  NetworkGroupModel(id: 9, encryptedBool: true, pinnedBool: true, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], name: 'Ethereum9-UPDATED');
+  NetworkGroupModel networkGroupModel2 = NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, networkTemplateModel: TestNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], name: 'Ethereum7');
+  NetworkGroupModel networkGroupModel3 = NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, networkTemplateModel: TestNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], name: 'Ethereum9');
+  NetworkGroupModel updatedNetworkGroupModel3 =  NetworkGroupModel(id: 9, encryptedBool: true, pinnedBool: true, networkTemplateModel: TestNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], name: 'Ethereum9-UPDATED');
   // @formatter:on
 
   group('Tests of NetworkListPageCubit process', () {
@@ -629,8 +629,8 @@ void main() async {
           groupModel: groupModel,
           allItems: <AListItemModel>[
             // @formatter:off
-            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
-            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
+            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, networkTemplateModel: TestNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
+            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, networkTemplateModel: TestNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
             // @formatter:off
           ],
           filesystemPath: FilesystemPath.fromString('vault1/group2'),
@@ -672,8 +672,8 @@ void main() async {
           groupModel: groupModel,
           allItems: <AListItemModel>[
             // @formatter:off
-            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
-            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
+            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, networkTemplateModel: TestNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
+            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, networkTemplateModel: TestNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
             // @formatter:off
           ],
           filesystemPath: FilesystemPath.fromString('vault1/group2'),

@@ -4,41 +4,43 @@ import 'package:isar/isar.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
 
-part 'embedded_network_template_entity.g.dart';
+part 'network_template_entity.g.dart';
 
-@Embedded(ignore: <String>{'props', 'stringify', 'hashCode'})
-class EmbeddedNetworkTemplateEntity extends Equatable {
-  final String? name;
-  final String? addressEncoderType;
-  final String? derivationPathTemplate;
-  final String? derivatorType;
+@Collection(accessor: 'networkTemplates', ignore: <String>{'props', 'stringify', 'hashCode'})
+class NetworkTemplateEntity extends Equatable {
+  @Index(unique: true)
+  final String name;
 
-  @Enumerated(EnumType.name)
-  final CurveType? curveType;
-
-  @Enumerated(EnumType.name)
-  final NetworkIconType? networkIconType;
+  final String addressEncoderType;
+  final String derivationPathTemplate;
+  final String derivatorType;
 
   @Enumerated(EnumType.name)
-  final WalletType? walletType;
+  final CurveType curveType;
+
+  @Enumerated(EnumType.name)
+  final NetworkIconType networkIconType;
+
+  @Enumerated(EnumType.name)
+  final WalletType walletType;
 
   final int? predefinedNetworkTemplateId;
   final String? derivationPathName;
 
-  const EmbeddedNetworkTemplateEntity({
-    this.name,
-    this.addressEncoderType,
-    this.derivationPathTemplate,
-    this.derivatorType,
-    this.curveType,
-    this.networkIconType,
-    this.walletType,
+  const NetworkTemplateEntity({
+    required this.name,
+    required this.addressEncoderType,
+    required this.derivationPathTemplate,
+    required this.derivatorType,
+    required this.curveType,
+    required this.networkIconType,
+    required this.walletType,
     this.predefinedNetworkTemplateId,
     this.derivationPathName,
   });
 
-  factory EmbeddedNetworkTemplateEntity.fromNetworkTemplateModel(NetworkTemplateModel networkTemplateModel) {
-    return EmbeddedNetworkTemplateEntity(
+  factory NetworkTemplateEntity.fromNetworkTemplateModel(NetworkTemplateModel networkTemplateModel) {
+    return NetworkTemplateEntity(
       name: networkTemplateModel.name,
       addressEncoderType: networkTemplateModel.addressEncoder.serializeType(),
       derivationPathTemplate: networkTemplateModel.derivationPathTemplate,
@@ -50,6 +52,8 @@ class EmbeddedNetworkTemplateEntity extends Equatable {
       derivationPathName: networkTemplateModel.derivationPathName,
     );
   }
+
+  Id get id => name.hashCode;
 
   @override
   List<Object?> get props => <Object?>[

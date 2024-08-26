@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/group_entity/group_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
@@ -16,6 +15,7 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 
 import '../../../utils/database_mock.dart';
 import '../../../utils/test_database.dart';
+import '../../../utils/test_network_templates.dart';
 
 void main() {
   final TestDatabase testDatabase = TestDatabase();
@@ -84,8 +84,8 @@ void main() {
           name: 'NETWORKS GROUP 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
-            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
+            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), networkTemplateModel: TestNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
+            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkTemplateModel: TestNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
             // @formatter:on
           ],
         ),

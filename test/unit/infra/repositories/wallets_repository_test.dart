@@ -68,6 +68,7 @@ void main() {
     });
   });
 
+
   group('Tests of WalletsRepository.getAll()', () {
     test('Should [return List of WalletEntity] if [database NOT EMPTY]', () async {
       // Arrange
@@ -167,7 +168,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<WalletsRepository>().getById(99999999),
+            () => globalLocator<WalletsRepository>().getById(99999999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -345,7 +346,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<WalletsRepository>().deleteById(99999),
+            () => globalLocator<WalletsRepository>().deleteById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

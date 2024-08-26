@@ -1,6 +1,6 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
-import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
+import 'package:snggle/infra/entities/network_template_entity/network_template_entity.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
 
 class NetworkTemplateModel extends Equatable {
@@ -14,6 +14,8 @@ class NetworkTemplateModel extends Equatable {
   final CurveType curveType;
   final NetworkIconType networkIconType;
   final WalletType walletType;
+  final int? predefinedNetworkTemplateId;
+  final String? derivationPathName;
 
   const NetworkTemplateModel({
     required this.name,
@@ -23,17 +25,21 @@ class NetworkTemplateModel extends Equatable {
     required this.curveType,
     required this.networkIconType,
     required this.walletType,
+    this.predefinedNetworkTemplateId,
+    this.derivationPathName,
   });
 
-  factory NetworkTemplateModel.fromEntity(EmbeddedNetworkTemplateEntity embeddedNetworkTemplateEntity) {
+  factory NetworkTemplateModel.fromEntity(NetworkTemplateEntity networkTemplateEntity) {
     return NetworkTemplateModel(
-      name: embeddedNetworkTemplateEntity.name!,
-      derivationPathTemplate: embeddedNetworkTemplateEntity.derivationPathTemplate!,
-      addressEncoder: ABlockchainAddressEncoder.fromSerializedType(embeddedNetworkTemplateEntity.addressEncoderType!),
-      derivator: ADerivator.fromSerializedType(embeddedNetworkTemplateEntity.derivatorType!),
-      curveType: embeddedNetworkTemplateEntity.curveType!,
-      networkIconType: embeddedNetworkTemplateEntity.networkIconType!,
-      walletType: embeddedNetworkTemplateEntity.walletType!,
+      name: networkTemplateEntity.name,
+      derivationPathTemplate: networkTemplateEntity.derivationPathTemplate,
+      addressEncoder: ABlockchainAddressEncoder.fromSerializedType(networkTemplateEntity.addressEncoderType),
+      derivator: ADerivator.fromSerializedType(networkTemplateEntity.derivatorType),
+      curveType: networkTemplateEntity.curveType,
+      networkIconType: networkTemplateEntity.networkIconType,
+      walletType: networkTemplateEntity.walletType,
+      predefinedNetworkTemplateId: networkTemplateEntity.predefinedNetworkTemplateId,
+      derivationPathName: networkTemplateEntity.derivationPathName,
     );
   }
 
@@ -45,6 +51,8 @@ class NetworkTemplateModel extends Equatable {
     CurveType? curveType,
     NetworkIconType? networkIconType,
     WalletType? walletType,
+    int? predefinedNetworkTemplateId,
+    String? derivationPathName,
   }) {
     return NetworkTemplateModel(
       name: name ?? this.name,
@@ -54,6 +62,8 @@ class NetworkTemplateModel extends Equatable {
       curveType: curveType ?? this.curveType,
       networkIconType: networkIconType ?? this.networkIconType,
       walletType: walletType ?? this.walletType,
+      predefinedNetworkTemplateId: predefinedNetworkTemplateId ?? this.predefinedNetworkTemplateId,
+      derivationPathName: derivationPathName,
     );
   }
 
@@ -128,5 +138,7 @@ class NetworkTemplateModel extends Equatable {
         curveType.name,
         networkIconType.name,
         walletType.name,
+        predefinedNetworkTemplateId,
+        derivationPathName,
       ];
 }

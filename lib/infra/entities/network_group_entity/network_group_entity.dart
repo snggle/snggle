@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:isar/isar.dart';
 import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
+import 'package:snggle/infra/entities/network_template_entity/network_template_entity.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
@@ -33,6 +34,20 @@ class NetworkGroupEntity extends Equatable {
       embeddedNetworkTemplate: EmbeddedNetworkTemplateEntity.fromNetworkTemplateModel(networkGroupModel.networkTemplateModel),
       filesystemPathString: networkGroupModel.filesystemPath.fullPath,
       name: networkGroupModel.name,
+    );
+  }
+
+  NetworkTemplateEntity get networkTemplateEntity {
+    return NetworkTemplateEntity(
+      name: embeddedNetworkTemplate.name!,
+      addressEncoderType: embeddedNetworkTemplate.addressEncoderType!,
+      derivationPathTemplate: embeddedNetworkTemplate.derivationPathTemplate!,
+      derivatorType: embeddedNetworkTemplate.derivatorType!,
+      curveType: embeddedNetworkTemplate.curveType!,
+      networkIconType: embeddedNetworkTemplate.networkIconType!,
+      walletType: embeddedNetworkTemplate.walletType!,
+      predefinedNetworkTemplateId: embeddedNetworkTemplate.predefinedNetworkTemplateId,
+      derivationPathName: embeddedNetworkTemplate.derivationPathName,
     );
   }
 
