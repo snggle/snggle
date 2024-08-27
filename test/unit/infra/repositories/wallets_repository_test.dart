@@ -44,6 +44,56 @@ void main() {
     });
   });
 
+  group('Tests of WalletsRepository.getAllDerivationPaths()', () {
+    test('Should [return List of all derivation paths] if [database NOT EMPTY] and [FilesystemPath EMPTY]', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      List<String> actualDerivationPaths = await globalLocator<WalletsRepository>().getAllDerivationPaths(const FilesystemPath.empty());
+
+      // Assert
+      List<String> expectedDerivationPaths = <String>[
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2",
+        "m/44'/60'/0'/0/3",
+        "m/44'/60'/0'/0/4",
+      ];
+
+      expect(actualDerivationPaths, expectedDerivationPaths);
+    });
+
+    test('Should [return List of derivation paths] if [database NOT EMPTY] and [FilesystemPath NOT EMPTY]', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      List<String> actualDerivationPaths = await globalLocator<WalletsRepository>().getAllDerivationPaths(FilesystemPath.fromString('vault1/network1/group3/'));
+
+      // Assert
+      List<String> expectedDerivationPaths = <String>[
+        "m/44'/60'/0'/0/3",
+        "m/44'/60'/0'/0/4",
+      ];
+
+      expect(actualDerivationPaths, expectedDerivationPaths);
+    });
+
+    test('Should [return EMPTY list] if [database EMPTY]', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
+
+      // Act
+      List<String> actualDerivationPaths = await globalLocator<WalletsRepository>().getAllDerivationPaths(const FilesystemPath.empty());
+
+      // Assert
+      List<String> expectedDerivationPaths = <String>[];
+
+      expect(actualDerivationPaths, expectedDerivationPaths);
+    });
+  });
+
   group('Tests of WalletsRepository.getAll()', () {
     test('Should [return List of WalletEntity] if [database NOT EMPTY]', () async {
       // Arrange

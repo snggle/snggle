@@ -149,6 +149,7 @@ class _NetworkListPageState extends State<NetworkListPage> {
           vaultModel: widget.vaultModel,
           vaultPasswordModel: widget.vaultPasswordModel,
           filesystemPath: listItemModel.filesystemPath,
+          networkGroupModel: listItemModel,
         ),
       );
       await networkListPageCubit.refreshAll();

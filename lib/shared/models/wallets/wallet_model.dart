@@ -22,21 +22,21 @@ class WalletModel extends AListItemModel {
     int? id,
     bool? encryptedBool,
     bool? pinnedBool,
+    FilesystemPath? filesystemPath,
+    String? name,
     int? index,
     String? address,
     String? derivationPath,
-    FilesystemPath? filesystemPath,
-    String? name,
   }) {
     return WalletModel(
       id: id ?? this.id,
       encryptedBool: encryptedBool ?? this.encryptedBool,
       pinnedBool: pinnedBool ?? this.pinnedBool,
+      filesystemPath: filesystemPath ?? this.filesystemPath,
+      name: name ?? this.name,
       index: index ?? this.index,
       address: address ?? this.address,
       derivationPath: derivationPath ?? this.derivationPath,
-      filesystemPath: filesystemPath ?? this.filesystemPath,
-      name: name ?? this.name,
     );
   }
 
@@ -50,5 +50,5 @@ class WalletModel extends AListItemModel {
   }
 
   @override
-  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, index, address, derivationPath, name, filesystemPath];
+  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, filesystemPath, name, index, address, derivationPath];
 }

@@ -8,7 +8,6 @@ import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/selection_model.dart';
-import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
@@ -57,17 +56,7 @@ void main() {
 
       actualWalletListPageCubit = WalletListPageCubit(
         depth: 0,
-        vaultModel: VaultModel(
-          id: 1,
-          encryptedBool: false,
-          pinnedBool: false,
-          index: 0,
-          filesystemPath: FilesystemPath.fromString('vault1'),
-          name: 'VAULT 1',
-          listItemsPreview: <AListItemModel>[],
-        ),
         filesystemPath: FilesystemPath.fromString('vault1/network1'),
-        vaultPasswordModel: PasswordModel.defaultPassword(),
       );
     });
 
@@ -478,17 +467,7 @@ void main() {
 
       actualWalletListPageCubit = WalletListPageCubit(
         depth: 0,
-        vaultModel: VaultModel(
-          id: 1,
-          encryptedBool: false,
-          pinnedBool: false,
-          index: 0,
-          filesystemPath: FilesystemPath.fromString('vault1'),
-          name: 'VAULT 1',
-          listItemsPreview: <AListItemModel>[],
-        ),
         filesystemPath: FilesystemPath.fromString('vault1/network1'),
-        vaultPasswordModel: PasswordModel.defaultPassword(),
       );
     });
 
@@ -594,17 +573,7 @@ void main() {
 
       actualWalletListPageCubit = WalletListPageCubit(
         depth: 0,
-        vaultModel: VaultModel(
-          id: 1,
-          encryptedBool: false,
-          pinnedBool: false,
-          index: 0,
-          filesystemPath: FilesystemPath.fromString('vault1'),
-          name: 'VAULT 1',
-          listItemsPreview: <AListItemModel>[],
-        ),
         filesystemPath: FilesystemPath.fromString('vault1/network1'),
-        vaultPasswordModel: PasswordModel.defaultPassword(),
       );
     });
 
