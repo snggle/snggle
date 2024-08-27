@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 part 'asset_icon_data.dart';
 
 class AppIcons {
+  static const AssetIconData alert_small = AssetIconData('assets/icons/alert_small.svg');
   static const AssetIconData app_bar_back = AssetIconData('assets/icons/app_bar_back.svg');
   static const AssetIconData app_bar_close = AssetIconData('assets/icons/app_bar_close.svg');
   static const AssetIconData bottom_navigation_apps = AssetIconData('assets/icons/bottom_navigation_apps.svg');
