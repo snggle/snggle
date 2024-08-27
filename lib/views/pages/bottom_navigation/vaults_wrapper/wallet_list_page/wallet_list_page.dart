@@ -6,6 +6,7 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
+import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
@@ -29,12 +30,14 @@ class WalletListPage extends StatefulWidget {
   final VaultModel vaultModel;
   final FilesystemPath filesystemPath;
   final PasswordModel vaultPasswordModel;
+  final NetworkGroupModel networkGroupModel;
 
   const WalletListPage({
     required this.name,
     required this.vaultModel,
     required this.filesystemPath,
     required this.vaultPasswordModel,
+    required this.networkGroupModel,
     super.key,
   });
 
@@ -44,12 +47,7 @@ class WalletListPage extends StatefulWidget {
 
 class _WalletListPageState extends State<WalletListPage> {
   final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
-  late final WalletListPageCubit walletListPageCubit = WalletListPageCubit(
-    depth: 0,
-    filesystemPath: widget.filesystemPath,
-    vaultModel: widget.vaultModel,
-    vaultPasswordModel: widget.vaultPasswordModel,
-  );
+  late final WalletListPageCubit walletListPageCubit = WalletListPageCubit(depth: 0, filesystemPath: widget.filesystemPath);
 
   @override
   void initState() {
@@ -80,7 +78,7 @@ class _WalletListPageState extends State<WalletListPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: CustomBottomNavigationBar.height),
                     child: IconButton(
-                      onPressed: walletListPageCubit.createNewWallet,
+                      onPressed: _navigateToWalletCreatePage,
                       icon: GradientIcon(AppIcons.add_circle, size: 54, gradient: AppColors.primaryGradient),
                     ),
                   ),
@@ -96,7 +94,7 @@ class _WalletListPageState extends State<WalletListPage> {
                 creationButton: HorizontalListItemLayout(
                   iconWidget: ListItemCreationButton(
                     size: HorizontalListItemLayout.listItemIconSize,
-                    onTap: walletListPageCubit.createNewWallet,
+                    onTap: _navigateToWalletCreatePage,
                   ),
                 ),
                 itemBuilder: (AListItemModel listItemModel) {
@@ -135,6 +133,16 @@ class _WalletListPageState extends State<WalletListPage> {
         );
       },
     );
+  }
+
+  Future<void> _navigateToWalletCreatePage() async {
+    await AutoRouter.of(context).push<void>(WalletCreateRoute(
+      vaultModel: widget.vaultModel,
+      vaultPasswordModel: widget.vaultPasswordModel,
+      networkGroupModel: widget.networkGroupModel,
+      parentFilesystemPath: walletListPageCubit.state.filesystemPath,
+    ));
+    await walletListPageCubit.refreshAll();
   }
 
   Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {

@@ -69,10 +69,66 @@ class NetworkTemplateModel extends Equatable {
 
   int get id => name.hashCode;
 
+  Future<AHDWallet> deriveWallet(Mnemonic mnemonic, String derivationPathString) async {
+    switch (walletType) {
+      case WalletType.legacy:
+        return _deriveLegacyHDWallet(mnemonic, derivationPathString);
+    }
+  }
+
+  String getCustomizableDerivationPath({
+    int accountIndex = 0,
+    int changeIndex = 0,
+    int addressIndex = 0,
+  }) {
+    RegExpMatch? match = _derivationPathRegExp.firstMatch(derivationPathTemplate);
+    String? dynamicPart = match?.namedGroup('dynamic_part');
+
+    String customizableDerivationPath = dynamicPart ?? '';
+    if (customizableDerivationPath.contains('{{i}}') == false) {
+      customizableDerivationPath += '{{i}}';
+    }
+    customizableDerivationPath = customizableDerivationPath.replaceAll('{{a}}', '$accountIndex');
+    customizableDerivationPath = customizableDerivationPath.replaceAll('{{y}}', '$changeIndex');
+    customizableDerivationPath = customizableDerivationPath.replaceAll('{{i}}', '$addressIndex');
+
+    return customizableDerivationPath;
+  }
+
+  String mergeCustomDerivationPath(String customDerivationPath) {
+    String updatedCustomDerivationPath = customDerivationPath;
+    if (updatedCustomDerivationPath.startsWith('/')) {
+      updatedCustomDerivationPath = updatedCustomDerivationPath.substring(1);
+    }
+    if (updatedCustomDerivationPath.endsWith('/')) {
+      updatedCustomDerivationPath = updatedCustomDerivationPath.substring(0, customDerivationPath.length - 1);
+    }
+
+    if (customDerivationPath.isEmpty) {
+      return baseDerivationPath;
+    } else {
+      return '$baseDerivationPath/$updatedCustomDerivationPath';
+    }
+  }
+
   String get baseDerivationPath {
     RegExpMatch? match = _derivationPathRegExp.firstMatch(derivationPathTemplate);
     String? staticPart = match?.namedGroup('static_part');
     return staticPart ?? _defaultDerivationPath;
+  }
+
+  Future<LegacyHDWallet> _deriveLegacyHDWallet(Mnemonic mnemonic, String derivationPathString) async {
+    LegacyDerivationPath legacyDerivationPath = LegacyDerivationPath.parse(derivationPathString);
+    LegacyWalletConfig<ABip32PrivateKey> legacyWalletConfig = LegacyWalletConfig<ABip32PrivateKey>(
+      derivator: derivator as ALegacyDerivator<ABip32PrivateKey>,
+      addressEncoder: addressEncoder,
+      curveType: curveType,
+    );
+    return LegacyHDWallet.fromMnemonic(
+      derivationPath: legacyDerivationPath,
+      mnemonic: mnemonic,
+      walletConfig: legacyWalletConfig,
+    );
   }
 
   @override

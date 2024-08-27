@@ -42,16 +42,23 @@ class WalletListItem extends StatelessWidget {
           GradientText(
             '${address.substring(0, 6)}..${address.substring(address.length - 6, address.length)}',
             textStyle: textTheme.bodyMedium,
+            overflow: TextOverflow.ellipsis,
             gradient: RadialGradient(
               radius: 7,
               center: const Alignment(-1, 1.5),
               colors: AppColors.primaryGradient.colors,
             ),
           ),
-          const Spacer(),
-          Text(
-            walletModel.derivationPath,
-            style: textTheme.labelMedium?.copyWith(color: AppColors.darkGrey, fontSize: 11),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                walletModel.derivationPath,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.labelMedium?.copyWith(color: AppColors.darkGrey, fontSize: 11),
+              ),
+            ),
           ),
         ],
       ),
