@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:blockchain_utils/hex/hex.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
@@ -30,9 +31,12 @@ void main() async {
       // Act
       WalletModel actualWalletModel = await globalLocator<WalletModelFactory>().createNewWallet(WalletCreationRequestModel(
         parentFilesystemPath: FilesystemPath.fromString('vault1/network1'),
-        derivationPath: "m/44'/118'/0'/0/0",
-        publicKey: Uint8List.fromList(hex.decode('0252dab3c089ea59b9c9927c87453942ef67cd5be0bec9201ee5113c1de3bd4c7c')),
-        privateKey: Uint8List.fromList(hex.decode('c7c4db3ed1c3115ee1029ceb0eb5dc76fe24935478c7299c9b95ae980c3bad2520')),
+        derivationPathString: "m/44'/118'/0'/0/0",
+        hdWallet: LegacyHDWallet.fromPrivateKey(
+          privateKey: Secp256k1PrivateKey.fromBytes(Uint8List.fromList(hex.decode('cb117433161949b796277c78edf536af02a606435004203e141047faeef1ff3b'))),
+          derivationPath: LegacyDerivationPath.parse("m/44'/118'/0'/0/0"),
+          walletConfig: Bip44WalletsConfig.ethereum,
+        ),
         name: 'NEW WALLET',
       ));
 
@@ -43,7 +47,7 @@ void main() async {
         pinnedBool: false,
         filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
         name: 'NEW WALLET',
-        address: '0x8556Df7F640632E6f255C439D07663Fc4EB39df1',
+        address: '0x50e10257924889818aA729c6EDfa02524b32Edb9',
         derivationPath: "m/44'/118'/0'/0/0",
       );
 
@@ -57,9 +61,12 @@ void main() async {
       // Act
       WalletModel actualWalletModel = await globalLocator<WalletModelFactory>().createNewWallet(WalletCreationRequestModel(
         parentFilesystemPath: FilesystemPath.fromString('vault1/network1'),
-        derivationPath: "m/44'/118'/0'/0/0",
-        publicKey: Uint8List.fromList(hex.decode('0252dab3c089ea59b9c9927c87453942ef67cd5be0bec9201ee5113c1de3bd4c7c')),
-        privateKey: Uint8List.fromList(hex.decode('c7c4db3ed1c3115ee1029ceb0eb5dc76fe24935478c7299c9b95ae980c3bad2520')),
+        derivationPathString: "m/44'/118'/0'/0/0",
+        hdWallet: LegacyHDWallet.fromPrivateKey(
+          privateKey: Secp256k1PrivateKey.fromBytes(Uint8List.fromList(hex.decode('cb117433161949b796277c78edf536af02a606435004203e141047faeef1ff3b'))),
+          derivationPath: LegacyDerivationPath.parse("m/44'/118'/0'/0/0"),
+          walletConfig: Bip44WalletsConfig.ethereum,
+        ),
         name: 'NEW WALLET',
       ));
 
@@ -70,7 +77,7 @@ void main() async {
         pinnedBool: false,
         filesystemPath: FilesystemPath.fromString('vault1/network1/wallet6'),
         name: 'NEW WALLET',
-        address: '0x8556Df7F640632E6f255C439D07663Fc4EB39df1',
+        address: '0x50e10257924889818aA729c6EDfa02524b32Edb9',
         derivationPath: "m/44'/118'/0'/0/0",
       );
 

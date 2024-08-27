@@ -86,6 +86,15 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                     ),
                   ),
                 ),
+                const SliverToBoxAdapter(child: SizedBox(height: 8)),
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: Text(
+                      widget.walletModel.derivationPath,
+                      style: textTheme.labelMedium?.copyWith(letterSpacing: 2.5, color: AppColors.darkGrey),
+                    ),
+                  ),
+                ),
                 const SliverToBoxAdapter(child: SizedBox(height: 30)),
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -128,6 +137,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
         return QRResultScaffold.fromPlaintext(
           title: widget.walletModel.name,
           plaintext: widget.walletModel.address,
+          qrCodeGap: 0,
           tooltip: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -136,6 +146,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
           ),
           child: LabelWrapperVertical(
             label: '',
+            bottomBorderVisibleBool: false,
             child: ETHAddressPreview(
               address: widget.walletModel.address,
               textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),

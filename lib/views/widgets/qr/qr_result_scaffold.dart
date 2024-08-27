@@ -14,6 +14,7 @@ class QRResultScaffold extends StatefulWidget {
   final Widget tooltip;
   final bool closeButtonVisible;
   final bool popButtonVisible;
+  final double qrCodeGap;
   final VoidCallback? customPopCallback;
   final List<Widget>? actions;
   final UR? ur;
@@ -26,6 +27,7 @@ class QRResultScaffold extends StatefulWidget {
     required this.tooltip,
     this.closeButtonVisible = false,
     this.popButtonVisible = true,
+    this.qrCodeGap = 14,
     this.customPopCallback,
     this.actions,
     super.key,
@@ -38,6 +40,7 @@ class QRResultScaffold extends StatefulWidget {
     required this.tooltip,
     this.closeButtonVisible = false,
     this.popButtonVisible = true,
+    this.qrCodeGap = 14,
     this.customPopCallback,
     this.actions,
     super.key,
@@ -108,7 +111,7 @@ class _QRResultScaffoldState extends State<QRResultScaffold> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 14),
+                  SizedBox(height: widget.qrCodeGap),
                   widget.child,
                   const SizedBox(height: 50),
                 ],

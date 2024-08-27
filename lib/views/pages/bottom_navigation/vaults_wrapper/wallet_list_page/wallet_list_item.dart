@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
+import 'package:snggle/views/widgets/generic/legacy_derivation_path_overflow_text.dart';
 import 'package:snggle/views/widgets/icons/list_item_icon.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_animation_type.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_layout.dart';
@@ -39,7 +40,7 @@ class WalletListItem extends StatelessWidget {
       subtitleWidget: Row(
         children: <Widget>[
           GradientText(
-            walletModel.getShortAddress(4),
+            walletModel.getShortAddress(3),
             textStyle: textTheme.titleMedium,
             overflow: TextOverflow.ellipsis,
             gradient: RadialGradient(
@@ -52,10 +53,10 @@ class WalletListItem extends StatelessWidget {
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Text(
-                walletModel.derivationPath,
-                overflow: TextOverflow.ellipsis,
-                style: textTheme.labelMedium?.copyWith(color: AppColors.darkGrey),
+              child: LegacyDerivationPathOverflowText(
+                derivationPath: walletModel.derivationPath,
+                textAlign: TextAlign.end,
+                textStyle: textTheme.labelMedium!.copyWith(color: AppColors.darkGrey),
               ),
             ),
           ),

@@ -30,6 +30,7 @@ class AppRouter extends $AppRouter {
           AutoRoute(page: VaultRecoverRoute.page),
         ],
       ),
+      AutoRoute(page: WalletCreateRoute.page),
       AutoRoute(
         page: BottomNavigationRoute.page,
         maintainState: true,

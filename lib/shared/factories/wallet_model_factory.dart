@@ -1,4 +1,3 @@
-import 'package:blockchain_utils/bip/address/encoders.dart';
 import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
@@ -20,9 +19,9 @@ class WalletModelFactory {
       encryptedBool: false,
       pinnedBool: false,
       name: walletCreationRequestModel.name,
-      address: EthAddrEncoder().encodeKey(walletCreationRequestModel.publicKey),
+      address: walletCreationRequestModel.hdWallet.address,
       filesystemPath: const FilesystemPath.empty(),
-      derivationPath: walletCreationRequestModel.derivationPath,
+      derivationPath: walletCreationRequestModel.derivationPathString,
     );
 
     int walletId = await _walletsService.save(walletModel);
@@ -30,7 +29,7 @@ class WalletModelFactory {
 
     WalletSecretsModel walletSecretsModel = WalletSecretsModel(
       filesystemPath: walletModel.filesystemPath,
-      privateKey: walletCreationRequestModel.privateKey,
+      privateKey: walletCreationRequestModel.hdWallet.privateKey.bytes,
     );
     await _secretsService.save(walletSecretsModel, PasswordModel.defaultPassword());
 
