@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:snggle/config/default_network_templates.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
+import 'package:snggle/views/pages/network_create/network_template_create_page/form/networks/create_bitcoin_template_form.dart';
+import 'package:snggle/views/pages/network_create/network_template_create_page/form/networks/create_cosmos_template_form.dart';
 import 'package:snggle/views/pages/network_create/network_template_create_page/form/networks/create_ethereum_template_form.dart';
 
 abstract class CreateNetworkTemplateForm extends StatefulWidget {
@@ -17,6 +19,10 @@ abstract class CreateNetworkTemplateForm extends StatefulWidget {
   }) {
     if (networkTemplateModel.name == DefaultNetworkTemplates.ethereum.name) {
       return CreateEthereumTemplateForm(key: key, onErrorValueChanged: onErrorValueChanged);
+    } else if (networkTemplateModel.name == DefaultNetworkTemplates.cosmos.name) {
+      return CreateCosmosTemplateForm(key: key, onErrorValueChanged: onErrorValueChanged);
+    } else if (networkTemplateModel.name == DefaultNetworkTemplates.bitcoin.name) {
+      return CreateBitcoinTemplateForm(key: key, onErrorValueChanged: onErrorValueChanged);
     } else {
       throw UnimplementedError();
     }
