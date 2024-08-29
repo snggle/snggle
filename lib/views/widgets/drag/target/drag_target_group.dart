@@ -13,6 +13,7 @@ import 'package:snggle/views/widgets/icons/list_item_icon.dart';
 typedef GroupAcceptedCallback = void Function(AListItemModel listItemModel, FilesystemPath groupFilesystemPath);
 
 class DragTargetGroup extends StatefulWidget {
+  final int depth;
   final AListItemModel listItemModel;
   final GlobalKey gridLayoutKey;
   final ValueChanged<GroupModel> onFilesystemPathUpdate;
@@ -20,6 +21,7 @@ class DragTargetGroup extends StatefulWidget {
   final Duration delayBeforeAction;
 
   const DragTargetGroup({
+    required this.depth,
     required this.listItemModel,
     required this.gridLayoutKey,
     required this.onFilesystemPathUpdate,
@@ -38,24 +40,30 @@ class _DragTargetGroupState extends State<DragTargetGroup> {
 
   @override
   Widget build(BuildContext context) {
-    return DragTargetWrapper(
-      listItemModel: widget.listItemModel,
-      onAccept: (DragConfig? item) => widget.groupAcceptedCallback(item!.data, widget.listItemModel.filesystemPath),
-      onEnter: (_) => _handleGroupHover(),
-      onLeave: _disposeNavigationTimer,
-      child: DragTargetLayout(
-        icon: ListItemIcon(
-          listItemModel: widget.listItemModel,
-          size: DragTargetLayout.listItemIconSize,
-        ),
-        title: widget.listItemModel.name ?? '',
+    Widget child = DragTargetLayout(
+      icon: ListItemIcon(
+        listItemModel: widget.listItemModel,
+        size: DragTargetLayout.listItemIconSize,
       ),
+      title: widget.listItemModel.name ?? '',
     );
+
+    if (widget.depth != 0) {
+      return child;
+    } else {
+      return DragTargetWrapper(
+        listItemModel: widget.listItemModel,
+        onAccept: (DragConfig? item) => widget.groupAcceptedCallback(item!.data, widget.listItemModel.filesystemPath),
+        onEnter: _handleGroupHover,
+        onLeave: _disposeNavigationTimer,
+        child: child,
+      );
+    }
   }
 
-  void _handleGroupHover() {
+  void _handleGroupHover(DragConfig dragConfig) {
     if (widget.listItemModel.encryptedBool == false) {
-      navigationTimer ??= Timer(const Duration(milliseconds: 1000), _navigateToGroup);
+      navigationTimer ??= Timer(const Duration(milliseconds: 1000), () => _navigateToGroup(dragConfig));
     }
   }
 
@@ -64,15 +72,15 @@ class _DragTargetGroupState extends State<DragTargetGroup> {
     navigationTimer = null;
   }
 
-  void _navigateToGroup() {
+  void _navigateToGroup(DragConfig dragConfig) {
     if (mounted) {
-      _showFolderNavigationAnimation(context);
+      _showFolderNavigationAnimation(context, dragConfig);
       GroupModel groupModel = widget.listItemModel as GroupModel;
       widget.onFilesystemPathUpdate(groupModel);
     }
   }
 
-  void _showFolderNavigationAnimation(BuildContext context) {
+  void _showFolderNavigationAnimation(BuildContext context, DragConfig dragConfig) {
     RenderBox? gridRenderBox = widget.gridLayoutKey.currentContext?.findRenderObject() as RenderBox?;
     if (gridRenderBox == null) {
       return;
@@ -85,7 +93,7 @@ class _DragTargetGroupState extends State<DragTargetGroup> {
     Size tileSize = tileRenderBox.size;
 
     OverlayState? overlayState = Overlay.of(context);
-
+    dragConfig.draggedItem.draggedItemNotifier.notifyTargetLeft();
     _overlayEntry = OverlayEntry(
       builder: (BuildContext context) {
         return DragTargetWrapper(

@@ -23,107 +23,6 @@ void main() {
     await testDatabase.init(appPasswordModel: PasswordModel.fromPlaintext('1111'));
   });
 
-  group('Tests of VaultsService.updateFilesystemPath()', () {
-    test('Should [return updated VaultModel] if [vault EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Act
-      VaultModel? actualVaultModel = await globalLocator<VaultsService>().updateFilesystemPath(1, FilesystemPath.fromString('new/vault/path'));
-
-      // Assert
-      VaultModel expectedVaultModel = VaultModel(
-        id: 1,
-        encryptedBool: false,
-        pinnedBool: false,
-        index: 0,
-        filesystemPath: FilesystemPath.fromString('new/vault/path/vault1'),
-        name: 'VAULT 1',
-        listItemsPreview: <AListItemModel>[],
-      );
-
-      expect(actualVaultModel, expectedVaultModel);
-    });
-
-    test('Should [throw ChildKeyNotFoundException] if [vault NOT EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Assert
-      expect(
-        globalLocator<VaultsService>().updateFilesystemPath(99999, FilesystemPath.fromString('new/vault/path')),
-        throwsA(isA<ChildKeyNotFoundException>()),
-      );
-    });
-  });
-
-  group('Tests of VaultsService.getLastIndex()', () {
-    test('Should [return last vault index] if [database NOT EMPTY]', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Act
-      int? actualLastIndex = await globalLocator<VaultsService>().getLastIndex();
-
-      // Assert
-      int expectedLastIndex = 4;
-
-      expect(actualLastIndex, expectedLastIndex);
-    });
-
-    test('Should [return -1] if [database EMPTY]', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
-
-      // Act
-      int? actualLastIndex = await globalLocator<VaultsService>().getLastIndex();
-
-      // Assert
-      expect(actualLastIndex, -1);
-    });
-  });
-
-  group('Tests of VaultsService.getById()', () {
-    test('Should [return VaultModel] if [vault EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Act
-      VaultModel actualVaultModel = await globalLocator<VaultsService>().getById(1);
-
-      // Assert
-      VaultModel expectedVaultModel = VaultModel(
-        id: 1,
-        encryptedBool: false,
-        pinnedBool: false,
-        index: 0,
-        filesystemPath: FilesystemPath.fromString('vault1'),
-        name: 'VAULT 1',
-        listItemsPreview: <AListItemModel>[
-          // @formatter:off
-          GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
-          NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkConfigModel: NetworkConfigModel.bitcoin),
-          NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkConfigModel: NetworkConfigModel.cosmos),
-          NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkConfigModel: NetworkConfigModel.ethereum),
-          // @formatter:on
-        ],
-      );
-
-      expect(actualVaultModel, expectedVaultModel);
-    });
-
-    test('Should [throw ChildKeyNotFoundException] if [vault NOT EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Assert
-      expect(
-        () => globalLocator<VaultsService>().getById(99999),
-        throwsA(isA<ChildKeyNotFoundException>()),
-      );
-    });
-  });
-
   group('Tests of VaultsService.getAllByParentPath()', () {
     test('Should [return List of VaultModel] if [given path HAS VALUES] (firstLevelBool == TRUE)', () async {
       // Arrange
@@ -292,6 +191,47 @@ void main() {
     });
   });
 
+  group('Tests of VaultsService.getById()', () {
+    test('Should [return VaultModel] if [vault EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      VaultModel actualVaultModel = await globalLocator<VaultsService>().getById(1);
+
+      // Assert
+      VaultModel expectedVaultModel = VaultModel(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        index: 0,
+        filesystemPath: FilesystemPath.fromString('vault1'),
+        name: 'VAULT 1',
+        listItemsPreview: <AListItemModel>[
+          // @formatter:off
+          GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
+          NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkConfigModel: NetworkConfigModel.bitcoin),
+          NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkConfigModel: NetworkConfigModel.cosmos),
+          NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkConfigModel: NetworkConfigModel.ethereum),
+          // @formatter:on
+        ],
+      );
+
+      expect(actualVaultModel, expectedVaultModel);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [vault NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Assert
+      expect(
+        () => globalLocator<VaultsService>().getById(99999),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
   group('Tests of VaultsService.move()', () {
     test('Should [MOVE vault] if [vault EXISTS] in database', () async {
       // Arrange
@@ -327,13 +267,13 @@ void main() {
     });
   });
 
-  group('Tests of VaultsService.moveByParentPath()', () {
+  group('Tests of VaultsService.moveAllByParentPath()', () {
     test('Should [MOVE vaults] starting with given path', () async {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      await globalLocator<VaultsService>().moveByParentPath(
+      await globalLocator<VaultsService>().moveAllByParentPath(
         FilesystemPath.fromString('group1'),
         FilesystemPath.fromString('new/path/group1'),
       );
@@ -558,6 +498,66 @@ void main() {
       // Assert
       expect(
         () => globalLocator<VaultsService>().deleteById(99999),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
+  group('Tests of VaultsService.getLastIndex()', () {
+    test('Should [return last vault index] if [database NOT EMPTY]', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      int? actualLastIndex = await globalLocator<VaultsService>().getLastIndex();
+
+      // Assert
+      int expectedLastIndex = 4;
+
+      expect(actualLastIndex, expectedLastIndex);
+    });
+
+    test('Should [return -1] if [database EMPTY]', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
+
+      // Act
+      int? actualLastIndex = await globalLocator<VaultsService>().getLastIndex();
+
+      // Assert
+      expect(actualLastIndex, -1);
+    });
+  });
+
+  group('Tests of VaultsService.updateFilesystemPath()', () {
+    test('Should [return updated VaultModel] if [vault EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      VaultModel? actualVaultModel = await globalLocator<VaultsService>().updateFilesystemPath(1, FilesystemPath.fromString('new/vault/path'));
+
+      // Assert
+      VaultModel expectedVaultModel = VaultModel(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        index: 0,
+        filesystemPath: FilesystemPath.fromString('new/vault/path/vault1'),
+        name: 'VAULT 1',
+        listItemsPreview: <AListItemModel>[],
+      );
+
+      expect(actualVaultModel, expectedVaultModel);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [vault NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Assert
+      expect(
+        globalLocator<VaultsService>().updateFilesystemPath(99999, FilesystemPath.fromString('new/vault/path')),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

@@ -36,6 +36,8 @@ class GroupModel extends AListItemModel {
   @override
   String get name => _name;
 
+  bool get hasSingleItem => listItemsPreview.length == 1;
+
   @override
   List<Object?> get props => <Object?>[id, pinnedBool, encryptedBool, listItemsPreview, filesystemPath, name];
 }

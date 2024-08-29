@@ -26,119 +26,6 @@ void main() {
     );
   });
 
-  group('Tests of GroupsService.updateFilesystemPath()', () {
-    test('Should [return updated GroupModel] if [group EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Act
-      GroupModel? actualGroupModel = await globalLocator<GroupsService>().updateFilesystemPath(1, FilesystemPath.fromString('new/group/path'));
-
-      // Assert
-      GroupModel expectedGroupModel = GroupModel(
-        pinnedBool: false,
-        encryptedBool: false,
-        id: 1,
-        filesystemPath: FilesystemPath.fromString('new/group/path/group1'),
-        name: 'VAULTS GROUP 1',
-        listItemsPreview: <AListItemModel>[],
-      );
-
-      expect(actualGroupModel, expectedGroupModel);
-    });
-
-    test('Should [throw ChildKeyNotFoundException] if [group NOT EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Assert
-      expect(
-        globalLocator<GroupsService>().updateFilesystemPath(99999, FilesystemPath.fromString('new/group/path')),
-        throwsA(isA<ChildKeyNotFoundException>()),
-      );
-    });
-  });
-
-  group('Tests of GroupsService.getById()', () {
-    test('Should [return GroupModel] if [group EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Act
-      GroupModel? actualGroupModel = await globalLocator<GroupsService>().getById(1);
-
-      // Assert
-      GroupModel expectedGroupModel = GroupModel(
-        pinnedBool: false,
-        encryptedBool: false,
-        id: 1,
-        filesystemPath: FilesystemPath.fromString('group1'),
-        name: 'VAULTS GROUP 1',
-        listItemsPreview: <AListItemModel>[
-          // @formatter:off
-          VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-          VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
-          // @formatter:on
-        ],
-      );
-
-      expect(actualGroupModel, expectedGroupModel);
-    });
-
-    test('Should [throw ChildKeyNotFoundException] if [group NOT EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Assert
-      expect(
-        () => globalLocator<GroupsService>().getById(99999),
-        throwsA(isA<ChildKeyNotFoundException>()),
-      );
-    });
-  });
-
-  group('Tests of GroupsService.getByPath()', () {
-    test('Should [return GroupModel] if [group path EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1/network1/group3');
-
-      // Act
-      GroupModel? actualGroupModel = await globalLocator<GroupsService>().getByPath(actualFilesystemPath);
-
-      // Assert
-      GroupModel expectedGroupModel = GroupModel(
-        id: 3,
-        encryptedBool: false,
-        pinnedBool: false,
-        filesystemPath: FilesystemPath.fromString('vault1/network1/group3'),
-        name: 'WALLETS GROUP 1',
-        listItemsPreview: <AListItemModel>[
-          // @formatter:off
-          WalletModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", network: 'ethereum', filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3'),
-          WalletModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", network: 'ethereum', filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4')
-          // @formatter:on
-        ],
-      );
-
-      expect(actualGroupModel, expectedGroupModel);
-    });
-
-    test('Should [return NULL] if [group NOT EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
-
-      // Act
-      GroupModel? actualGroupModel = await globalLocator<GroupsService>().getByPath(actualFilesystemPath);
-
-      // Assert
-      expect(actualGroupModel, null);
-    });
-  });
-
   group('Tests of GroupsService.getAllByParentPath()', () {
     test('Should [return List of GroupModel] if [given path HAS VALUES] (firstLevelBool == TRUE)', () async {
       // Arrange
@@ -184,8 +71,8 @@ void main() {
           name: 'VAULTS GROUP 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-              VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-              VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+            VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+            VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
             // @formatter:on
           ],
         ),
@@ -197,8 +84,8 @@ void main() {
           name: 'NETWORKS GROUP 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-              NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkConfigModel: NetworkConfigModel.kira, listItemsPreview: <AListItemModel>[]),
-              NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), networkConfigModel: NetworkConfigModel.polkadot, listItemsPreview: <AListItemModel>[]),
+            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkConfigModel: NetworkConfigModel.kira, listItemsPreview: <AListItemModel>[]),
+            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), networkConfigModel: NetworkConfigModel.polkadot, listItemsPreview: <AListItemModel>[]),
             // @formatter:on
           ],
         ),
@@ -251,6 +138,44 @@ void main() {
     });
   });
 
+  group('Tests of GroupsService.getById()', () {
+    test('Should [return GroupModel] if [group EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      GroupModel? actualGroupModel = await globalLocator<GroupsService>().getById(1);
+
+      // Assert
+      GroupModel expectedGroupModel = GroupModel(
+        pinnedBool: false,
+        encryptedBool: false,
+        id: 1,
+        filesystemPath: FilesystemPath.fromString('group1'),
+        name: 'VAULTS GROUP 1',
+        listItemsPreview: <AListItemModel>[
+          // @formatter:off
+          VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+          VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+          // @formatter:on
+        ],
+      );
+
+      expect(actualGroupModel, expectedGroupModel);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [group NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Assert
+      expect(
+        () => globalLocator<GroupsService>().getById(99999),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
   group('Tests of GroupsService.move()', () {
     test('Should [MOVE group] if [group EXISTS] in database', () async {
       // Arrange
@@ -284,13 +209,13 @@ void main() {
     });
   });
 
-  group('Tests of GroupsService.moveByParentPath()', () {
+  group('Tests of GroupsService.moveAllByParentPath()', () {
     test('Should [MOVE groups] with provided parent path', () async {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      await globalLocator<GroupsService>().moveByParentPath(
+      await globalLocator<GroupsService>().moveAllByParentPath(
         FilesystemPath.fromString('vault1'),
         FilesystemPath.fromString('new/path/vault1'),
       );
@@ -499,6 +424,81 @@ void main() {
       // Assert
       expect(
         () => globalLocator<GroupsService>().deleteById(99999),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
+  group('Tests of GroupsService.getByPath()', () {
+    test('Should [return GroupModel] if [group path EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1/network1/group3');
+
+      // Act
+      GroupModel? actualGroupModel = await globalLocator<GroupsService>().getByPath(actualFilesystemPath);
+
+      // Assert
+      GroupModel expectedGroupModel = GroupModel(
+        id: 3,
+        encryptedBool: false,
+        pinnedBool: false,
+        filesystemPath: FilesystemPath.fromString('vault1/network1/group3'),
+        name: 'WALLETS GROUP 1',
+        listItemsPreview: <AListItemModel>[
+          // @formatter:off
+          WalletModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", network: 'ethereum', filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3'),
+          WalletModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", network: 'ethereum', filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4')
+          // @formatter:on
+        ],
+      );
+
+      expect(actualGroupModel, expectedGroupModel);
+    });
+
+    test('Should [return NULL] if [group NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+
+      // Act
+      GroupModel? actualGroupModel = await globalLocator<GroupsService>().getByPath(actualFilesystemPath);
+
+      // Assert
+      expect(actualGroupModel, null);
+    });
+  });
+
+  group('Tests of GroupsService.updateFilesystemPath()', () {
+    test('Should [return updated GroupModel] if [group EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      GroupModel? actualGroupModel = await globalLocator<GroupsService>().updateFilesystemPath(1, FilesystemPath.fromString('new/group/path'));
+
+      // Assert
+      GroupModel expectedGroupModel = GroupModel(
+        pinnedBool: false,
+        encryptedBool: false,
+        id: 1,
+        filesystemPath: FilesystemPath.fromString('new/group/path/group1'),
+        name: 'VAULTS GROUP 1',
+        listItemsPreview: <AListItemModel>[],
+      );
+
+      expect(actualGroupModel, expectedGroupModel);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [group NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Assert
+      expect(
+        globalLocator<GroupsService>().updateFilesystemPath(99999, FilesystemPath.fromString('new/group/path')),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

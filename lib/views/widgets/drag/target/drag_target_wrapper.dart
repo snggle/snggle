@@ -7,7 +7,7 @@ import 'package:snggle/views/widgets/drag/source/custom_draggable.dart';
 class DragTargetWrapper extends StatefulWidget {
   final AListItemModel listItemModel;
   final Widget child;
-  final ValueChanged<AListItemModel> onEnter;
+  final ValueChanged<DragConfig> onEnter;
   final VoidCallback onLeave;
   final DragTargetAccept<DragConfig>? onAccept;
 
@@ -28,7 +28,7 @@ class _DragTargetWrapperState extends State<DragTargetWrapper> {
   @override
   Widget build(BuildContext context) {
     return CustomDragTarget<DragConfig>(
-      onAccept: widget.onAccept,
+      onAccept: _handleTargetDrop,
       onMove: _handleTargetHovered,
       onLeave: _handleTargetLeft,
       builder: (_, __, ___) {
@@ -37,17 +37,29 @@ class _DragTargetWrapperState extends State<DragTargetWrapper> {
     );
   }
 
+  void _handleTargetDrop(DragConfig data) {
+    if (_isDropEnabled) {
+      widget.onAccept?.call(data);
+    }
+  }
+
   void _handleTargetHovered(DragTargetDetails<DragConfig> item) {
-    if (widget.listItemModel.encryptedBool == false) {
+    if (_isDropEnabled) {
       item.data.draggedItem.draggedItemNotifier.notifyTargetHovered();
-      widget.onEnter(item.data.data);
+      widget.onEnter(item.data);
+    } else {
+      item.data.draggedItem.draggedItemNotifier.notifyTargetLeft();
     }
   }
 
   void _handleTargetLeft(DragConfig? item) {
-    if (widget.listItemModel.encryptedBool == false) {
+    if (_isDropEnabled) {
       item?.draggedItem.draggedItemNotifier.notifyTargetLeft();
       widget.onLeave();
+    } else {
+      item?.draggedItem.draggedItemNotifier.notifyTargetLeft();
     }
   }
+
+  bool get _isDropEnabled => widget.listItemModel.encryptedBool == false;
 }

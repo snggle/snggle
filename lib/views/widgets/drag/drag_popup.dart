@@ -90,6 +90,7 @@ class _DragPopupState<T extends AListItemModel> extends State<DragPopup<T>> {
 
                   if (listItemModel is T) {
                     child = DragTargetItem(
+                      depth: listState.depth,
                       listItemModel: listItemModel,
                       groupAcceptedCallback: _createGroup,
                       delayBeforeAction: widget.delayBeforeAction,
@@ -97,6 +98,7 @@ class _DragPopupState<T extends AListItemModel> extends State<DragPopup<T>> {
                     );
                   } else if (listItemModel is GroupModel) {
                     child = DragTargetGroup(
+                      depth: listState.depth,
                       listItemModel: listItemModel,
                       gridLayoutKey: gridLayoutKey,
                       onFilesystemPathUpdate: _navigateTo,
