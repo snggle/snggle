@@ -52,7 +52,7 @@ class FolderNameDialogState extends State<FolderNameDialog> {
               controller: textEditingController,
               autofocus: true,
               keyboardType: TextInputType.text,
-              style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+              style: textTheme.bodyMedium?.copyWith(color: AppColors.body3, height: 1),
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
@@ -60,7 +60,7 @@ class FolderNameDialogState extends State<FolderNameDialog> {
                 enabledBorder: inputBorder,
                 focusedBorder: inputBorder,
                 hintText: defaultName,
-                hintStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
+                hintStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey, height: 1),
               ),
             ),
           ],

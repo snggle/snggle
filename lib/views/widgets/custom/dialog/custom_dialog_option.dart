@@ -32,7 +32,7 @@ class CustomDialogOption extends StatelessWidget {
           Navigator.of(context).pop();
           onPressed();
         },
-        child: Text(label, style: textTheme.bodyMedium!.copyWith(color: AppColors.body3)),
+        child: Text(label, style: textTheme.bodyMedium!.copyWith(color: AppColors.body3, height: 1)),
       ),
     );
   }

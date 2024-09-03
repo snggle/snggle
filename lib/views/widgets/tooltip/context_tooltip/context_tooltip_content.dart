@@ -37,7 +37,7 @@ class ContextTooltipContent extends StatelessWidget {
             constraints: BoxConstraints(maxWidth: maxPopupWidth),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.2),
-              border: Border.all(color: AppColors.middleGrey),
+              border: Border.all(color: AppColors.middleGrey, width: 1),
               borderRadius: const BorderRadius.all(Radius.circular(16)),
             ),
             child: Column(
@@ -50,6 +50,8 @@ class ContextTooltipContent extends StatelessWidget {
                     style: TextStyle(
                       color: AppColors.body3,
                       fontSize: 14,
+                      letterSpacing: 1.5,
+                      height: 1,
                     ),
                   ),
                 ),
@@ -66,7 +68,7 @@ class ContextTooltipContent extends StatelessWidget {
                           Container(
                             height: 30,
                             padding: const EdgeInsets.symmetric(horizontal: 3),
-                            child: VerticalDivider(color: AppColors.middleGrey, width: 1, thickness: 1),
+                            child: VerticalDivider(color: AppColors.middleGrey, width: 0.6, thickness: 0.6),
                           ),
                       ]
                     ],

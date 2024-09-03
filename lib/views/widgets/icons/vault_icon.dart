@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
-import 'package:snggle/views/widgets/icons/group_grid_icon.dart';
+import 'package:snggle/views/widgets/icons/container_icon_grid.dart';
 import 'package:snggle/views/widgets/icons/vault_container_icon.dart';
 
 class VaultIcon extends StatelessWidget {
@@ -18,8 +18,8 @@ class VaultIcon extends StatelessWidget {
     return VaultContainerIcon.fromVaultModel(
       size: size,
       vaultModel: vaultModel,
-      child: GroupGridIcon(
-        padding: EdgeInsets.all(size * 0.15),
+      child: ContainerIconGrid(
+        padding: EdgeInsets.all(size * 0.14),
         listItemsPreview: vaultModel.listItemsPreview,
       ),
     );

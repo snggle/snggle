@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:snggle/config/app_icons/app_animated_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
@@ -36,13 +37,13 @@ class VaultInitPage extends StatelessWidget {
           const Spacer(flex: 60),
           GifButton(
             label: 'CREATE',
-            gifPath: 'assets/gifs/vault_create.gif',
+            assetAnimatedIconData: AppAnimatedIcons.vault_create,
             onPressed: () => AutoRouter.of(context).push(VaultCreateRoute(parentFilesystemPath: parentFilesystemPath)),
           ),
           const Spacer(flex: 30),
           GifButton(
             label: 'RECOVER',
-            gifPath: 'assets/gifs/vault_recover.gif',
+            assetAnimatedIconData: AppAnimatedIcons.vault_recover,
             onPressed: () => AutoRouter.of(context).push(VaultRecoverRoute(parentFilesystemPath: parentFilesystemPath)),
           ),
           const Spacer(flex: 200),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
-import 'package:snggle/config/app_icons.dart';
+import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
@@ -37,37 +37,37 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
       title: widget.listItemModel.name ?? '',
       actions: <ContextTooltipItem>[
         ContextTooltipItem(
-          iconData: AppIcons.select_container_unselected,
+          assetIconData: AppIcons.menu_select,
           label: 'Select',
           onTap: () => _handleSelectValueChanged(true),
         ),
         if (widget.listItemModel.pinnedBool)
           ContextTooltipItem(
-            iconData: AppIcons.unpin,
+            assetIconData: AppIcons.menu_unpin,
             label: 'Unpin',
             onTap: () => _handlePinValueChanged(false),
           )
         else
           ContextTooltipItem(
-            iconData: AppIcons.pin,
+            assetIconData: AppIcons.menu_pin,
             label: 'Pin',
             onTap: () => _handlePinValueChanged(true),
           ),
         if (widget.listItemModel.encryptedBool)
           ContextTooltipItem(
-            iconData: AppIcons.unlock,
+            assetIconData: AppIcons.menu_unlock,
             label: 'Unlock',
             onTap: _unlockItem,
           )
         else
           ContextTooltipItem(
-            iconData: AppIcons.lock,
+            assetIconData: AppIcons.menu_lock,
             label: 'Lock',
             onTap: _lockItem,
           ),
         if (widget.allowItemDeletionBool)
           ContextTooltipItem(
-            iconData: AppIcons.close_1,
+            assetIconData: AppIcons.menu_delete,
             label: 'Delete',
             onTap: _pressDeleteButton,
           ),

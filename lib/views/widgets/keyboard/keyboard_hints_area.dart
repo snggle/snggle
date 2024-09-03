@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/config/app_icons.dart';
+import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class KeyboardHintsArea extends StatefulWidget {
   final ValueChanged<String> onHintSelected;
@@ -27,6 +28,8 @@ class _KeyboardHintsAreaState extends State<KeyboardHintsArea> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
     return Row(
       children: <Widget>[
         IconButton(
@@ -35,7 +38,7 @@ class _KeyboardHintsAreaState extends State<KeyboardHintsArea> {
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
           ),
-          icon: const Icon(AppIcons.left),
+          icon: const AssetIcon(AppIcons.keyboard_arrow_left, size: 24),
         ),
         Expanded(
           child: Center(
@@ -52,7 +55,10 @@ class _KeyboardHintsAreaState extends State<KeyboardHintsArea> {
                     borderRadius: BorderRadius.circular(9.5),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
-                      child: Text(widget.hints[index]),
+                      child: Text(
+                        widget.hints[index],
+                        style: theme.textTheme.bodyMedium,
+                      ),
                     ),
                   ),
                 );
@@ -63,7 +69,7 @@ class _KeyboardHintsAreaState extends State<KeyboardHintsArea> {
                   child: Container(
                     height: 16,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-                    child: VerticalDivider(color: AppColors.middleGrey, width: 1, thickness: 1),
+                    child: VerticalDivider(color: AppColors.middleGrey, width: 0.6, thickness: 0.6),
                   ),
                 );
               },
@@ -76,7 +82,7 @@ class _KeyboardHintsAreaState extends State<KeyboardHintsArea> {
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
           ),
-          icon: const Icon(AppIcons.right),
+          icon: const AssetIcon(AppIcons.keyboard_arrow_right, size: 24),
         ),
       ],
     );

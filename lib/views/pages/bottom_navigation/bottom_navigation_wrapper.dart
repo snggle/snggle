@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_item_model.dart';
@@ -54,22 +55,11 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
                       tooltip: tooltipWidget,
                       onChanged: _tapNavigationItem,
                       bottomNavigationBarItems: const <CustomBottomNavigationBarItemModel>[
-                        CustomBottomNavigationBarItemModel(
-                          iconPath: 'assets/icons/menu_vaults.svg',
-                        ),
-                        CustomBottomNavigationBarItemModel(
-                          iconPath: 'assets/icons/menu_secrets.svg',
-                        ),
-                        CustomBottomNavigationBarItemModel(
-                          iconPath: 'assets/icons/menu_scan.svg',
-                          largeBool: true,
-                        ),
-                        CustomBottomNavigationBarItemModel(
-                          iconPath: 'assets/icons/menu_apps.svg',
-                        ),
-                        CustomBottomNavigationBarItemModel(
-                          iconPath: 'assets/icons/menu_other.svg',
-                        ),
+                        CustomBottomNavigationBarItemModel(assetIconData: AppIcons.bottom_navigation_crypto),
+                        CustomBottomNavigationBarItemModel(assetIconData: AppIcons.bottom_navigation_secrets),
+                        CustomBottomNavigationBarItemModel(assetIconData: AppIcons.bottom_navigation_scan, largeBool: true),
+                        CustomBottomNavigationBarItemModel(assetIconData: AppIcons.bottom_navigation_apps),
+                        CustomBottomNavigationBarItemModel(assetIconData: AppIcons.bottom_navigation_menu),
                       ],
                     );
                   },

@@ -1,7 +1,7 @@
 name: snggle
 description: Private keys manager
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.28
+version: 0.0.29
 
 environment:
   sdk: "3.2.6"
@@ -129,9 +129,8 @@ flutter:
     - assets/
     - assets/fonts/
     - assets/fonts/bauhaus/
-    - assets/fonts/icons/
     - assets/icons/
-    - assets/gifs/
+    - assets/icons_animated/
   fonts:
     - family: Bauhaus
       fonts:
@@ -145,9 +144,6 @@ flutter:
           weight: 800
         - asset: assets/fonts/bauhaus/BauhausHeavy.ttf
           weight: 900
-    - family: IconsFont
-      fonts:
-        - asset: assets/fonts/icons/IconsFont.ttf
 
 flutter_intl:
   enabled: true

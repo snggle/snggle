@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:snggle/config/app_icons/app_animated_icons.dart';
+import 'package:snggle/views/widgets/icons/asset_animated_icon.dart';
 
 class GifButton extends StatelessWidget {
   final String label;
-  final String gifPath;
+  final AssetAnimatedIconData assetAnimatedIconData;
   final VoidCallback onPressed;
 
   const GifButton({
     required this.label,
-    required this.gifPath,
+    required this.assetAnimatedIconData,
     required this.onPressed,
     super.key,
   });
@@ -20,7 +22,7 @@ class GifButton extends StatelessWidget {
         onTap: onPressed,
         child: Column(
           children: <Widget>[
-            Image.asset(gifPath, width: 124, height: 124),
+            AssetAnimatedIcon(assetAnimatedIconData, size: 124),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: Text(

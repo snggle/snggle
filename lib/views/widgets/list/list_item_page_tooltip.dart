@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
-import 'package:snggle/config/app_icons.dart';
+import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/selection_model.dart';
@@ -38,22 +38,22 @@ class _ListItemPageTooltipState<T extends AListItemModel, C extends AListCubit<T
         return BottomTooltip(
           actions: <BottomTooltipItem>[
             BottomTooltipItem(
-              iconData: selectionModel.areAllItemsSelected ? AppIcons.close_1 : AppIcons.check,
+              assetIconData: selectionModel.areAllItemsSelected ? AppIcons.menu_unselect_all : AppIcons.menu_select_all,
               label: selectionModel.areAllItemsSelected ? 'Clear' : 'All',
               onTap: _pressSelectAllButton,
             ),
             BottomTooltipItem(
-              iconData: AppIcons.pin,
+              assetIconData: AppIcons.menu_pin,
               label: 'Pin',
               onTap: selectionModel.canPinAll ? () => _pressPinButton(selectionModel, true) : null,
             ),
             BottomTooltipItem(
-              iconData: AppIcons.unpin,
+              assetIconData: AppIcons.menu_unpin,
               label: 'Unpin',
               onTap: selectionModel.canUnpinAll ? () => _pressPinButton(selectionModel, false) : null,
             ),
             BottomTooltipItem(
-              iconData: AppIcons.lock,
+              assetIconData: AppIcons.menu_lock,
               label: 'Lock',
               onTap: selectionModel.canLockAll ? () => _pressLockButton(selectionModel) : null,
             ),

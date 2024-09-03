@@ -30,7 +30,7 @@ class BottomTooltip extends StatelessWidget {
               Container(
                 height: 30,
                 padding: const EdgeInsets.symmetric(horizontal: 3),
-                child: VerticalDivider(color: AppColors.middleGrey, width: 1, thickness: 1),
+                child: VerticalDivider(color: AppColors.middleGrey, width: 0.6, thickness: 0.6),
               ),
           ]
         ],

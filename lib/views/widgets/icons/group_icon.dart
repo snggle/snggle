@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
+import 'package:snggle/views/widgets/icons/container_icon_grid.dart';
 import 'package:snggle/views/widgets/icons/group_container_icon.dart';
-import 'package:snggle/views/widgets/icons/group_grid_icon.dart';
 
 class GroupIcon extends StatelessWidget {
   final bool pinnedBool;
@@ -32,9 +32,8 @@ class GroupIcon extends StatelessWidget {
       pinnedBool: pinnedBool,
       encryptedBool: encryptedBool,
       size: size,
-      child: GroupGridIcon(
-        gap: 1.5,
-        padding: EdgeInsets.zero,
+      child: ContainerIconGrid(
+        padding: EdgeInsets.only(left: size * 0.14, right: size * 0.14, top: size * 0.23, bottom: size * 0.096),
         listItemsPreview: listItemsPreview,
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_item_model.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class CustomBottomNavigationBarItem extends StatelessWidget {
   final bool selectedBool;
@@ -17,31 +17,17 @@ class CustomBottomNavigationBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget icon = SvgPicture.asset(
-      customBottomNavigationBarItemModel.iconPath,
-      fit: BoxFit.fitHeight,
-      theme: SvgTheme(currentColor: AppColors.darkGrey),
-    );
-
-    if (selectedBool) {
-      icon = ShaderMask(
-        blendMode: BlendMode.srcIn,
-        shaderCallback: (Rect bounds) {
-          return AppColors.primaryGradient.createShader(
-            Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-          );
-        },
-        child: icon,
-      );
-    }
+    double size = customBottomNavigationBarItemModel.largeBool ? 46 : 34;
 
     return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          height: 64,
-          padding: customBottomNavigationBarItemModel.largeBool ? const EdgeInsets.all(9) : const EdgeInsets.all(15),
-          child: icon,
+      child: Center(
+        child: IconButton(
+          onPressed: onTap,
+          icon: SizedBox(
+            width: size,
+            height: size,
+            child: AssetIcon(customBottomNavigationBarItemModel.assetIconData, color: selectedBool ? null : AppColors.darkGrey),
+          ),
         ),
       ),
     );

@@ -41,6 +41,8 @@ class _PaginatedFormState extends State<PaginatedForm> {
               style: TextStyle(
                 fontSize: 14,
                 color: AppColors.darkGrey,
+                height: 1.1,
+                letterSpacing: 0,
               ),
             ),
           ),

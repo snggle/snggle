@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/config/app_icons.dart';
+import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class ListItemCreationButton extends StatelessWidget {
   final Size size;
@@ -33,8 +34,8 @@ class ListItemCreationButton extends StatelessWidget {
               ),
             ),
             Center(
-              child: Icon(
-                AppIcons.add,
+              child: AssetIcon(
+                AppIcons.list_item_plus,
                 color: AppColors.middleGrey,
                 size: size.height * 0.8,
               ),

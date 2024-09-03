@@ -1,17 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_cubit.dart';
 import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/config/app_icons.dart';
-import 'package:snggle/views/pages/vault_create_recover/mnemonic_form_layout.dart';
+import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/views/widgets/custom/custom_checkbox_list_tile.dart';
 import 'package:snggle/views/widgets/custom/custom_grid.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
-import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip.dart';
+import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
+import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
-import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_wrapper.dart';
 
 class MnemonicFormGenerated extends StatefulWidget {
   final int lastVaultIndex;
@@ -55,61 +53,71 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomTooltipWrapper(
-      blurBackgroundBool: false,
-      tooltip: BottomTooltip(
-        backgroundColor: AppColors.body2,
-        actions: <Widget>[
-          if (obscureTextBool)
-            BottomTooltipItem(
-              label: 'Show',
-              iconData: AppIcons.show,
-              onTap: () => setState(() => obscureTextBool = false),
-            )
-          else
-            BottomTooltipItem(
-              label: 'Hide',
-              iconData: AppIcons.hide,
-              onTap: () => setState(() => obscureTextBool = true),
-            ),
-          ValueListenableBuilder<bool>(
-            valueListenable: scrolledBottomNotifier,
-            builder: (BuildContext context, bool scrolledBottomBool, _) {
-              return BottomTooltipItem(
-                label: scrolledBottomBool ? 'Finish' : 'Continue',
-                iconData: AppIcons.continue_icon,
-                onTap: scrolledBottomBool
-                    ? statementAcceptedBool
-                        ? _pressFinishButton
-                        : null
-                    : _pressContinueButton,
-              );
-            },
+    ThemeData theme = Theme.of(context);
+
+    return ScrollableLayout(
+      scrollController: scrollController,
+      tooltipItems: <Widget>[
+        if (obscureTextBool)
+          BottomTooltipItem(
+            label: 'Show',
+            assetIconData: AppIcons.menu_eye_open,
+            onTap: () => setState(() => obscureTextBool = false),
+          )
+        else
+          BottomTooltipItem(
+            label: 'Hide',
+            assetIconData: AppIcons.menu_eye_closed,
+            onTap: () => setState(() => obscureTextBool = true),
           ),
-        ],
-      ),
-      child: MnemonicFormLayout(
-        scrollController: scrollController,
+        ValueListenableBuilder<bool>(
+          valueListenable: scrolledBottomNotifier,
+          builder: (BuildContext context, bool scrolledBottomBool, _) {
+            return BottomTooltipItem(
+              label: scrolledBottomBool ? 'Finish' : 'Continue',
+              assetIconData: scrolledBottomBool ? AppIcons.menu_save : AppIcons.menu_finish,
+              onTap: scrolledBottomBool
+                  ? statementAcceptedBool
+                      ? _pressFinishButton
+                      : null
+                  : _pressContinueButton,
+            );
+          },
+        ),
+      ],
+      child: SingleChildScrollView(
+        controller: scrollController,
         child: Column(
           children: <Widget>[
-            CustomTextField(
+            LabelWrapperVertical.textField(
               label: 'Name',
-              initialValue: 'New_Vault_${widget.lastVaultIndex + 1}',
-              keyboardType: TextInputType.text,
-              enableInteractiveSelection: true,
-              textEditingController: widget.vaultCreatePageCubit.vaultNameTextEditingController,
+              labelPadding: const EdgeInsets.symmetric(horizontal: 10),
+              bottomBorderVisibleBool: false,
+              child: CustomTextField(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                initialValue: 'New Vault ${widget.lastVaultIndex + 1}',
+                keyboardType: TextInputType.text,
+                enableInteractiveSelectionBool: true,
+                textEditingController: widget.vaultCreatePageCubit.vaultNameTextEditingController,
+              ),
             ),
             const SizedBox(height: 14),
             CustomGrid.builder(
               columnsCount: 3,
               childCount: widget.mnemonicSize,
               itemBuilder: (BuildContext context, int index) {
-                return CustomTextField(
-                  readOnlyBool: true,
+                return LabelWrapperVertical.textField(
                   label: '${index + 1}',
-                  textEditingController: TextEditingController(text: widget.mnemonic[index]),
-                  autofocusBool: index == 0,
-                  obscureTextBool: obscureTextBool,
+                  labelPadding: const EdgeInsets.symmetric(horizontal: 10),
+                  bottomBorderVisibleBool: false,
+                  child: CustomTextField(
+                    readOnlyBool: true,
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                    textStyle: theme.textTheme.bodyMedium,
+                    textEditingController: TextEditingController(text: widget.mnemonic[index]),
+                    autofocusBool: index == 0,
+                    obscureTextBool: obscureTextBool,
+                  ),
                 );
               },
             ),

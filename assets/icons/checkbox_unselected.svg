@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg fill="none" height="16" viewBox="0 0 17 16" width="17">
+<g filter="url(#filter0_b_11212_497646)">
+<rect fill="white" fill-opacity="0.29" height="16" rx="8" width="16" x="0.5" />
+<rect height="15" rx="7.5" stroke="url(#paint0_radial_11212_497646)" stroke-opacity="0.22" width="15" x="1" y="0.5" />
+</g>
+<defs>
+<filter color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" height="25.1429" id="filter0_b_11212_497646" width="25.1429" x="-4.07143" y="-4.57143">
+<feFlood flood-opacity="0" result="BackgroundImageFix" />
+<feGaussianBlur in="BackgroundImageFix" stdDeviation="2.28571" />
+<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_11212_497646" />
+<feBlend in="SourceGraphic" in2="effect1_backgroundBlur_11212_497646" mode="normal" result="shape" />
+</filter>
+<radialGradient cx="0" cy="0" gradientTransform="translate(2.11682 4.51865) rotate(35.1664) scale(17.2954 16.3373)" gradientUnits="userSpaceOnUse" id="paint0_radial_11212_497646" r="1">
+<stop offset="0.0760668" />
+<stop offset="0.380208" stop-color="#42D2FF" />
+<stop offset="0.666667" stop-color="#939393" />
+<stop offset="1" />
+</radialGradient>
+</defs>
+</svg>

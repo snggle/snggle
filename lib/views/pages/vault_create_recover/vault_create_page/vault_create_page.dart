@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_cubit.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/config/app_icons.dart';
+import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/vault_create_recover/mnemonic_size_picker.dart';
@@ -12,6 +12,7 @@ import 'package:snggle/views/pages/vault_create_recover/vault_create_page/mnemon
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/loading_scaffold.dart';
 import 'package:snggle/views/widgets/generic/paginated_form/paginated_form.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 @RoutePage<VaultCreateRecoverStatus?>()
 class VaultCreatePage extends StatefulWidget {
@@ -56,11 +57,7 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
           actions: <Widget>[
             IconButton(
               onPressed: () => AutoRouter.of(context).root.pop(),
-              icon: Icon(
-                AppIcons.close_1,
-                size: 20,
-                color: AppColors.body1,
-              ),
+              icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
             ),
           ],
           body: PaginatedForm(

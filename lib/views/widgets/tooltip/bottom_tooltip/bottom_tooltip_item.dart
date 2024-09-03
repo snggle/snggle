@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:sprung/sprung.dart';
 
 class BottomTooltipItem extends StatelessWidget {
-  final IconData iconData;
+  final AssetIconData assetIconData;
   final String label;
   final VoidCallback? onTap;
 
   const BottomTooltipItem({
-    required this.iconData,
+    required this.assetIconData,
     required this.label,
     required this.onTap,
     super.key,
@@ -31,9 +33,9 @@ class BottomTooltipItem extends StatelessWidget {
           children: <Widget>[
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 100),
-              child: Icon(
-                iconData,
-                key: Key(iconData.codePoint.toString()),
+              child: AssetIcon(
+                assetIconData,
+                key: Key(assetIconData.assetName),
                 size: 16,
                 color: AppColors.body3,
               ),

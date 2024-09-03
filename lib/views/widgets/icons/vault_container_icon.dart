@@ -3,20 +3,22 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/config/app_icons.dart';
+import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
-import 'package:snggle/views/widgets/generic/gradient_icon.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class VaultContainerIcon extends StatelessWidget {
   final bool pinnedBool;
   final bool encryptedBool;
   final double size;
+  final Color? backgroundColor;
   final Widget? child;
 
   const VaultContainerIcon({
     required this.pinnedBool,
     required this.encryptedBool,
     required this.size,
+    this.backgroundColor,
     this.child,
     super.key,
   });
@@ -24,6 +26,7 @@ class VaultContainerIcon extends StatelessWidget {
   VaultContainerIcon.fromVaultModel({
     required VaultModel vaultModel,
     required this.size,
+    this.backgroundColor,
     this.child,
     super.key,
   })  : pinnedBool = vaultModel.pinnedBool,
@@ -52,7 +55,7 @@ class VaultContainerIcon extends StatelessWidget {
         children: <Widget>[
           Positioned.fill(
             child: Container(
-              decoration: BoxDecoration(borderRadius: borderRadius, color: AppColors.body2),
+              decoration: BoxDecoration(borderRadius: borderRadius, color: backgroundColor ?? AppColors.body2),
             ),
           ),
           if (child != null) Positioned.fill(child: child!),
@@ -79,11 +82,7 @@ class VaultContainerIcon extends StatelessWidget {
           if (encryptedBool)
             Positioned.fill(
               child: Center(
-                child: GradientIcon(
-                  AppIcons.lock,
-                  size: size * 0.5,
-                  gradient: AppColors.primaryGradient,
-                ),
+                child: AssetIcon(AppIcons.icon_container_lock_big, size: size * 0.5),
               ),
             ),
         ],
