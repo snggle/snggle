@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
-import 'package:snggle/views/widgets/generic/gradient_icon.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/icons/list_item_icon.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_animation_type.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_layout.dart';
@@ -32,21 +32,28 @@ class NetworkListItem extends StatelessWidget {
         size: HorizontalListItemLayout.listItemIconSize,
         listItemModel: networkGroupModel,
       ),
-      titleWidget: Text(networkGroupModel.name, style: textTheme.bodyMedium),
+      titleWidget: Text(networkGroupModel.name, style: textTheme.titleMedium),
       trailingWidget: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          GradientIcon(
-            networkGroupModel.networkTemplateModel.networkIconType.iconData,
-            size: 18,
-            gradient: AppColors.primaryGradient,
+          AssetIcon(
+            networkGroupModel.networkTemplateModel.networkIconType.horizontalTileIcon,
+            size: 20,
+            color: AppColors.darkGrey,
           ),
           const SizedBox(height: 3),
           Padding(
-            padding: const EdgeInsets.only(right: 5),
+            padding: EdgeInsets.only(
+              right: switch (networkGroupModel.listItemsPreview.length) {
+                < 10 => 6,
+                < 100 => 3,
+                (_) => 0,
+              },
+            ),
             child: Text(
               networkGroupModel.listItemsPreview.length.toString(),
+              textAlign: TextAlign.end,
               style: textTheme.labelMedium?.copyWith(color: AppColors.darkGrey, fontSize: 11),
             ),
           ),

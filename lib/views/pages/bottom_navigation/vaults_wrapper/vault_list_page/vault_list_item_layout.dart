@@ -24,6 +24,8 @@ class VaultListItemLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
       color: Colors.transparent,
@@ -41,10 +43,7 @@ class VaultListItemLayout extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.body1,
-                  fontSize: 13,
-                ),
+                style: theme.textTheme.titleSmall?.copyWith(color: AppColors.body1),
               ),
         ],
       ),

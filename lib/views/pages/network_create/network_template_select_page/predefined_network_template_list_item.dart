@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
-import 'package:snggle/views/widgets/generic/gradient_icon.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class PredefinedNetworkTemplateListItem extends StatelessWidget {
   final NetworkTemplateModel networkTemplateModel;
@@ -23,20 +23,13 @@ class PredefinedNetworkTemplateListItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         child: Row(
           children: <Widget>[
-            SizedBox(
-              width: 14,
-              height: 14,
-              child: GradientIcon(
-                networkTemplateModel.networkIconType.iconData,
-                size: 14,
-                gradient: AppColors.primaryGradient,
-              ),
-            ),
-            const SizedBox(width: 5),
+            AssetIcon(networkTemplateModel.networkIconType.networkTemplatesListIcon, size: 14),
+            const SizedBox(width: 4),
             Expanded(
               child: Text(
                 networkTemplateModel.name,
                 style: textTheme.labelMedium?.copyWith(
+                  letterSpacing: 1.5,
                   color: AppColors.body3,
                 ),
               ),

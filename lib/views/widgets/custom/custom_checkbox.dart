@@ -1,9 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
-import 'package:snggle/views/widgets/generic/gradient_icon.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:sprung/sprung.dart';
 
 class CustomCheckbox extends StatelessWidget {
@@ -40,16 +39,7 @@ class CustomCheckbox extends StatelessWidget {
               duration: const Duration(milliseconds: 800),
               switchInCurve: Sprung.custom(mass: 1, stiffness: 100, damping: 15),
               switchOutCurve: Sprung.custom(mass: 1, stiffness: 100, damping: 15),
-              child: selectedBool
-                  ? GradientIcon(
-                      AppIcons.select_container_selected,
-                      size: size,
-                      gradient: AppColors.primaryGradient,
-                    )
-                  : Opacity(
-                      opacity: 0.3,
-                      child: GradientIcon(AppIcons.select_container_unselected, size: size, gradient: AppColors.primaryGradient),
-                    ),
+              child: selectedBool ? AssetIcon(AppIcons.checkbox_selected, size: size) : AssetIcon(AppIcons.checkbox_unselected, size: size),
             ),
           ),
         ],

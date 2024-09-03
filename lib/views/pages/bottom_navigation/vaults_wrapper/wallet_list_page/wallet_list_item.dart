@@ -35,13 +35,13 @@ class WalletListItem extends StatelessWidget {
       ),
       titleWidget: Text(
         walletModel.name,
-        style: textTheme.bodyMedium?.copyWith(color: AppColors.body1),
+        style: textTheme.titleMedium?.copyWith(color: AppColors.body1),
       ),
       subtitleWidget: Row(
         children: <Widget>[
           GradientText(
-            '${address.substring(0, 6)}..${address.substring(address.length - 6, address.length)}',
-            textStyle: textTheme.bodyMedium,
+            '${address.substring(0, 5)}..${address.substring(address.length - 3, address.length)}',
+            textStyle: textTheme.titleMedium,
             overflow: TextOverflow.ellipsis,
             gradient: RadialGradient(
               radius: 7,

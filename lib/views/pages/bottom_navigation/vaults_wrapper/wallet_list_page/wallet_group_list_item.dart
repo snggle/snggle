@@ -30,7 +30,7 @@ class WalletGroupListItem extends StatelessWidget {
         size: HorizontalListItemLayout.listItemIconSize,
         listItemModel: groupModel,
       ),
-      titleWidget: Text(groupModel.name, style: textTheme.bodyMedium),
+      titleWidget: Text(groupModel.name, style: textTheme.titleMedium),
     );
   }
 }

@@ -60,13 +60,13 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
         if (obscureTextBool)
           BottomTooltipItem(
             label: 'Show',
-            iconData: AppIcons.show,
+            assetIconData: AppIcons.menu_eye_open,
             onTap: () => setState(() => obscureTextBool = false),
           )
         else
           BottomTooltipItem(
             label: 'Hide',
-            iconData: AppIcons.hide,
+            assetIconData: AppIcons.menu_eye_closed,
             onTap: () => setState(() => obscureTextBool = true),
           ),
         ValueListenableBuilder<bool>(
@@ -74,7 +74,7 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
           builder: (BuildContext context, bool scrolledBottomBool, _) {
             return BottomTooltipItem(
               label: scrolledBottomBool ? 'Finish' : 'Continue',
-              iconData: AppIcons.continue_icon,
+              assetIconData: AppIcons.menu_finish,
               onTap: scrolledBottomBool
                   ? statementAcceptedBool
                       ? _pressFinishButton

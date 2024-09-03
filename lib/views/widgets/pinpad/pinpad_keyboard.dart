@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_cubit.dart';
 import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/views/widgets/button/shuffle_button.dart';
 import 'package:snggle/views/widgets/custom/custom_flexible_grid.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_keyboard_button.dart';
 
 class PinpadKeyboard extends StatefulWidget {
@@ -62,7 +64,7 @@ class _PinpadKeyboardState extends State<PinpadKeyboard> {
                     onTap: () => _handleNumberPressed(visibleNumbers[0]),
                   ),
                   PinpadKeyboardButton.icon(
-                    icon: Icon(AppIcons.delete_1, color: AppColors.middleGrey, size: 26),
+                    icon: AssetIcon(AppIcons.keyboard_delete, color: AppColors.middleGrey, size: 26),
                     onTap: widget.onBackspacePressed,
                   ),
                 ],

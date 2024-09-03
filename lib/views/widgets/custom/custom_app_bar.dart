@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String title;
@@ -29,16 +31,13 @@ class CustomAppBar extends StatelessWidget {
 
     bool popAvailableBool = ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
     if (popButtonVisible || popAvailableBool) {
-      leadingWidget = SizedBox(
-        width: 40,
-        height: 40,
-        child: Center(
-          child: IconButton(
-            visualDensity: VisualDensity.compact,
-            padding: EdgeInsets.zero,
-            onPressed: () => customPopCallback != null ? customPopCallback!() : AutoRouter.of(context).pop(),
-            icon: Icon(closeButtonVisible ? AppIcons.close_1 : AppIcons.back, size: 20, color: AppColors.body1),
-          ),
+      leadingWidget = Align(
+        alignment: Alignment.centerLeft,
+        child: IconButton(
+          onPressed: () => customPopCallback != null ? customPopCallback!() : AutoRouter.of(context).pop(),
+          icon: closeButtonVisible
+              ? AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1)
+              : AssetIcon(AppIcons.app_bar_back, size: 24, color: AppColors.body1),
         ),
       );
     }
@@ -49,11 +48,7 @@ class CustomAppBar extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              width: 50,
-              height: 40,
-              child: leadingWidget,
-            ),
+            SizedBox(width: 50, height: 40, child: leadingWidget),
             Expanded(
               child: Text(
                 title.toUpperCase(),
@@ -63,6 +58,7 @@ class CustomAppBar extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                   fontSize: 20,
                   letterSpacing: 1.2,
+                  height: 1.25,
                   color: AppColors.body1,
                 ),
               ),

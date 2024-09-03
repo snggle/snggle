@@ -1,16 +1,34 @@
-import 'package:flutter/material.dart';
 import 'package:snggle/config/app_icons.dart';
 
 enum NetworkIconType {
-  bitcoin(iconData: AppIcons.token_eth, thinIconData: AppIcons.eth_thin),
-  cosmos(iconData: AppIcons.token_eth, thinIconData: AppIcons.cosmos_thin),
-  ethereum(iconData: AppIcons.token_eth, thinIconData: AppIcons.eth_thin);
+  bitcoin(
+    containerIcon: AppIcons.icon_container_network_bitcoin,
+    largeIcon: AppIcons.network_bitcoin_large,
+    horizontalTileIcon: AppIcons.horizontal_tile_network_bitcoin,
+    networkTemplatesListIcon: AppIcons.network_templates_list_bitcoin,
+  ),
+  cosmos(
+    containerIcon: AppIcons.icon_container_network_cosmos,
+    largeIcon: AppIcons.network_cosmos_large,
+    horizontalTileIcon: AppIcons.horizontal_tile_network_cosmos,
+    networkTemplatesListIcon: AppIcons.network_templates_list_cosmos,
+  ),
+  ethereum(
+    containerIcon: AppIcons.icon_container_network_ethereum,
+    largeIcon: AppIcons.network_ethereum_large,
+    horizontalTileIcon: AppIcons.horizontal_tile_network_ethereum,
+    networkTemplatesListIcon: AppIcons.network_templates_list_ethereum,
+  );
 
-  final IconData iconData;
-  final IconData thinIconData;
+  final AssetIconData containerIcon;
+  final AssetIconData largeIcon;
+  final AssetIconData horizontalTileIcon;
+  final AssetIconData networkTemplatesListIcon;
 
   const NetworkIconType({
-    required this.iconData,
-    required this.thinIconData,
+    required this.containerIcon,
+    required this.largeIcon,
+    required this.horizontalTileIcon,
+    required this.networkTemplatesListIcon,
   });
 }

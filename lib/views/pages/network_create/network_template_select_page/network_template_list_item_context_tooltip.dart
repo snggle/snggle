@@ -28,7 +28,7 @@ class _ListItemContextTooltipState extends State<NetworkTemplateListItemContextT
       title: widget.networkTemplateModel.name,
       actions: <ContextTooltipItem>[
         ContextTooltipItem(
-          iconData: AppIcons.select_container_unselected,
+          assetIconData: AppIcons.menu_select,
           label: 'Select',
           onTap: _selectTransaction,
         ),

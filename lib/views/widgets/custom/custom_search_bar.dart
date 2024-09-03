@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
@@ -25,7 +26,7 @@ class CustomSearchBar extends StatelessWidget {
           width: 30,
           child: Align(
             alignment: Alignment.centerLeft,
-            child: Icon(AppIcons.search, size: 16, color: AppColors.middleGrey),
+            child: SvgPicture.asset(AppIcons.search.assetName, width: 16, height: 16, color: AppColors.middleGrey),
           ),
         ),
         prefixIconConstraints: const BoxConstraints(maxHeight: 20, maxWidth: 30),

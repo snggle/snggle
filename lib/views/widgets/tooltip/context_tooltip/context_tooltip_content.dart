@@ -50,6 +50,8 @@ class ContextTooltipContent extends StatelessWidget {
                     style: TextStyle(
                       color: AppColors.body3,
                       fontSize: 14,
+                      letterSpacing: 1.5,
+                      height: 1,
                     ),
                   ),
                 ),

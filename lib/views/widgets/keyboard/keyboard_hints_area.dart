@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class KeyboardHintsArea extends StatefulWidget {
   final ValueChanged<String> onHintSelected;
@@ -35,7 +37,7 @@ class _KeyboardHintsAreaState extends State<KeyboardHintsArea> {
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
           ),
-          icon: const Icon(AppIcons.left),
+          icon: const AssetIcon(AppIcons.keyboard_arrow_left, size: 24),
         ),
         Expanded(
           child: Center(
@@ -76,7 +78,7 @@ class _KeyboardHintsAreaState extends State<KeyboardHintsArea> {
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
           ),
-          icon: const Icon(AppIcons.right),
+          icon: const AssetIcon(AppIcons.keyboard_arrow_right, size: 24),
         ),
       ],
     );

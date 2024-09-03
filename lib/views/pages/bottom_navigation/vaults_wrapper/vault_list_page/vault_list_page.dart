@@ -19,7 +19,7 @@ import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
-import 'package:snggle/views/widgets/generic/gradient_icon.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/icons/list_item_icon.dart';
 import 'package:snggle/views/widgets/list/list_item_actions_wrapper.dart';
 import 'package:snggle/views/widgets/list/list_page_scaffold.dart';
@@ -74,7 +74,7 @@ class _VaultListPageState extends State<VaultListPage> {
                     padding: const EdgeInsets.only(bottom: CustomBottomNavigationBar.height),
                     child: IconButton(
                       onPressed: _navigateToVaultCreateRecoverRoute,
-                      icon: GradientIcon(AppIcons.add_circle, size: 54, gradient: AppColors.primaryGradient),
+                      icon: const AssetIcon(AppIcons.page_add_button, size: 54),
                     ),
                   ),
                 ),

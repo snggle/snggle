@@ -1,9 +1,11 @@
+import 'package:snggle/config/app_icons.dart';
+
 class CustomBottomNavigationBarItemModel {
-  final String iconPath;
+  final AssetIconData assetIconData;
   final bool largeBool;
 
   const CustomBottomNavigationBarItemModel({
-    required this.iconPath,
+    required this.assetIconData,
     this.largeBool = false,
   });
 }

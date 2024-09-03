@@ -10,11 +10,11 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
-import 'package:snggle/views/widgets/generic/gradient_icon.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_horizontal.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_visibility_builder.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
 
@@ -70,7 +70,7 @@ class _NetworkGroupCreatePageState extends State<NetworkGroupCreatePage> {
             tooltipItems: <BottomTooltipItem>[
               BottomTooltipItem(
                 label: 'Save',
-                iconData: AppIcons.check,
+                assetIconData: AppIcons.menu_save,
                 onTap: _saveNetworkGroup,
               ),
             ],
@@ -78,7 +78,7 @@ class _NetworkGroupCreatePageState extends State<NetworkGroupCreatePage> {
               controller: scrollController,
               child: Column(
                 children: <Widget>[
-                  GradientIcon(widget.networkTemplateModel.networkIconType.thinIconData, size: 114, gradient: AppColors.primaryGradient),
+                  AssetIcon(widget.networkTemplateModel.networkIconType.largeIcon, size: 114),
                   const SizedBox(height: 20),
                   LabelWrapperHorizontal(
                     label: 'Network Type',

@@ -79,18 +79,18 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
               if (obscureTextBool)
                 BottomTooltipItem(
                   label: 'Show',
-                  iconData: AppIcons.show,
+                  assetIconData: AppIcons.menu_eye_open,
                   onTap: () => setState(() => obscureTextBool = false),
                 )
               else
                 BottomTooltipItem(
                   label: 'Hide',
-                  iconData: AppIcons.hide,
+                  assetIconData: AppIcons.menu_eye_closed,
                   onTap: () => setState(() => obscureTextBool = true),
                 ),
               BottomTooltipItem(
                 label: 'Finish',
-                iconData: AppIcons.continue_icon,
+                assetIconData: AppIcons.menu_finish,
                 onTap: widget.recoverButtonActiveBool ? null : () => widget.vaultRecoverPageCubit.saveMnemonic(),
               ),
             ],

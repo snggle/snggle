@@ -11,9 +11,9 @@ import 'package:snggle/views/pages/network_create/network_template_create_page/f
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_single_select_menu.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
-import 'package:snggle/views/widgets/generic/gradient_icon.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_visibility_builder.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
 
@@ -62,7 +62,7 @@ class _NetworkTemplateCreatePageState extends State<NetworkTemplateCreatePage> {
                 builder: (BuildContext context, bool finishButtonActiveBool, _) {
                   return BottomTooltipItem(
                     label: 'Save',
-                    iconData: AppIcons.check,
+                    assetIconData: AppIcons.menu_save,
                     onTap: finishButtonActiveBool ? _saveNetworkTemplate : null,
                   );
                 },
@@ -75,11 +75,7 @@ class _NetworkTemplateCreatePageState extends State<NetworkTemplateCreatePage> {
                   ValueListenableBuilder<NetworkTemplateModel>(
                     valueListenable: baseNetworkTemplateNotifier,
                     builder: (BuildContext context, NetworkTemplateModel selectedNetworkTemplateModel, _) {
-                      return GradientIcon(
-                        size: 114,
-                        selectedNetworkTemplateModel.networkIconType.thinIconData,
-                        gradient: AppColors.primaryGradient,
-                      );
+                      return AssetIcon(size: 114, selectedNetworkTemplateModel.networkIconType.largeIcon);
                     },
                   ),
                   const SizedBox(height: 20),

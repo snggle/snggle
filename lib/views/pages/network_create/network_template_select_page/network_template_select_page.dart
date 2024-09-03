@@ -66,17 +66,17 @@ class _NetworkTemplateSelectPageState extends State<NetworkTemplateSelectPage> {
             tooltipItems: selectionModel != null
                 ? <Widget>[
                     BottomTooltipItem(
-                      iconData: AppIcons.check,
+                      assetIconData: AppIcons.menu_select_all,
                       label: 'All',
                       onTap: selectionModel.areAllItemsSelected ? null : networkTemplateSelectPageCubit.selectAll,
                     ),
                     BottomTooltipItem(
-                      iconData: AppIcons.close_1,
+                      assetIconData: AppIcons.menu_unselect_all,
                       label: 'Clear',
                       onTap: selectionModel.selectedItems.isEmpty ? null : networkTemplateSelectPageCubit.unselectAll,
                     ),
                     BottomTooltipItem(
-                      iconData: AppIcons.delete_2,
+                      assetIconData: AppIcons.menu_delete,
                       label: 'Delete',
                       onTap: selectionModel.selectedItems.isEmpty ? null : _pressDeleteButton,
                     ),

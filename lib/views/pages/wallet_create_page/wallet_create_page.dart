@@ -80,7 +80,7 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
             tooltipItems: <Widget>[
               BottomTooltipItem(
                 label: 'Finish',
-                iconData: AppIcons.check,
+                assetIconData: AppIcons.menu_save,
                 onTap: walletCreatePageState.walletExistsErrorBool ? null : _createNewWallet,
               ),
             ],

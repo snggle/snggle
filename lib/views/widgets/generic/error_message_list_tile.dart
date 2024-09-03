@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
-import 'package:snggle/views/widgets/generic/gradient_icon.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class ErrorMessageListTile extends StatefulWidget {
   final String message;
@@ -39,11 +39,7 @@ class _ErrorMessageListTileState extends State<ErrorMessageListTile> with Ticker
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            GradientIcon(
-              AppIcons.alert,
-              gradient: AppColors.validationGradient,
-              size: 14.0,
-            ),
+            const AssetIcon(AppIcons.alert_small, size: 14.0),
             const SizedBox(width: 6),
             Expanded(
               child: GradientText(

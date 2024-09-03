@@ -3,18 +3,19 @@ import 'dart:ui';
 import 'package:blockies_svg/blockies_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
-import 'package:snggle/views/widgets/generic/gradient_icon.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class WalletIcon extends StatelessWidget {
   final double size;
   final WalletModel walletModel;
+  final bool smallBool;
 
   const WalletIcon({
     required this.size,
     required this.walletModel,
+    this.smallBool = false,
     super.key,
   });
 
@@ -54,15 +55,16 @@ class WalletIcon extends StatelessWidget {
       width: size,
       height: size,
       child: Stack(
+        fit: StackFit.expand,
+        alignment: Alignment.center,
         children: <Widget>[
           iconWidget,
           if (walletModel.encryptedBool) backdropFilterWidget,
           if (walletModel.encryptedBool)
             Center(
-              child: GradientIcon(
-                AppIcons.lock,
+              child: AssetIcon(
+                smallBool ? AppIcons.icon_container_lock_small : AppIcons.icon_container_lock_big,
                 size: size * 0.5,
-                gradient: AppColors.primaryGradient,
               ),
             ),
         ],

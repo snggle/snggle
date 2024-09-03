@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/network_list_page/network_list_page_cubit.dart';
-import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
@@ -16,7 +15,7 @@ import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/network_list
 import 'package:snggle/views/widgets/button/list_item_creation_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
-import 'package:snggle/views/widgets/generic/gradient_icon.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_animation_wrapper.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_layout.dart';
 import 'package:snggle/views/widgets/list/list_item_actions_wrapper.dart';
@@ -79,7 +78,7 @@ class _NetworkListPageState extends State<NetworkListPage> {
                     padding: const EdgeInsets.only(bottom: CustomBottomNavigationBar.height),
                     child: IconButton(
                       onPressed: _openNetworkGroupCreatePage,
-                      icon: GradientIcon(AppIcons.add_circle, size: 54, gradient: AppColors.primaryGradient),
+                      icon: const AssetIcon(AppIcons.page_add_button, size: 54),
                     ),
                   ),
                 ),

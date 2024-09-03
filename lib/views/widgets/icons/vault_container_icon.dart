@@ -5,7 +5,7 @@ import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
-import 'package:snggle/views/widgets/generic/gradient_icon.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class VaultContainerIcon extends StatelessWidget {
   final bool pinnedBool;
@@ -79,11 +79,7 @@ class VaultContainerIcon extends StatelessWidget {
           if (encryptedBool)
             Positioned.fill(
               child: Center(
-                child: GradientIcon(
-                  AppIcons.lock,
-                  size: size * 0.5,
-                  gradient: AppColors.primaryGradient,
-                ),
+                child: AssetIcon(AppIcons.icon_container_lock_big, size: size * 0.5),
               ),
             ),
         ],

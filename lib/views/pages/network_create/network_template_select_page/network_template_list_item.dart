@@ -5,6 +5,7 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/views/pages/network_create/network_template_select_page/network_template_list_item_context_tooltip.dart';
 import 'package:snggle/views/widgets/custom/custom_checkbox.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_wrapper.dart';
 
 class NetworkTemplateListItem extends StatefulWidget {
@@ -41,24 +42,21 @@ class _NetworkTemplateListItemState extends State<NetworkTemplateListItem> {
       child: Row(
         children: <Widget>[
           if (widget.selectionEnabledBool) ...<Widget>[
-            CustomCheckbox(selectedBool: widget.selectedBool, size: 14),
+            CustomCheckbox(selectedBool: widget.selectedBool, size: 13),
             const SizedBox(width: 10),
           ],
-          SizedBox(
-            width: 14,
-            height: 14,
-            child: Icon(
-              widget.networkTemplateModel.networkIconType.iconData,
-              size: 14,
-              color: AppColors.darkGrey,
-            ),
+          AssetIcon(
+            widget.networkTemplateModel.networkIconType.networkTemplatesListIcon,
+            color: AppColors.darkGrey,
+            size: 15,
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 2),
           Expanded(
             child: Text(
               widget.networkTemplateModel.name,
               style: textTheme.labelMedium?.copyWith(
                 color: AppColors.darkGrey,
+                letterSpacing: 1.5,
               ),
             ),
           ),

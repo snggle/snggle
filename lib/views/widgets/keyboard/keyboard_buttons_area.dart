@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons.dart';
 import 'package:snggle/views/widgets/custom/custom_flexible_grid.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_button.dart';
 
 class KeyboardButtonsArea extends StatelessWidget {
@@ -44,14 +46,14 @@ class KeyboardButtonsArea extends StatelessWidget {
           return KeyboardButton(
             disabledBool: false,
             onTap: onHideKeyboardTap,
-            child: Icon(AppIcons.collapse, color: AppColors.body1, size: 23),
+            child: AssetIcon(AppIcons.keyboard_collapse, color: AppColors.body1, size: 23),
           );
         } else if (backspaceButtonBool) {
           return KeyboardButton(
             disabledBool: false,
             onTap: onBackspaceTap,
             onLongPress: onBackspaceLongPress,
-            child: Icon(AppIcons.delete_1, color: AppColors.body1, size: 23),
+            child: AssetIcon(AppIcons.keyboard_delete, color: AppColors.body1, size: 23),
           );
         } else if (letterButtonBool) {
           int currentLetterIndex = letterIndex++;

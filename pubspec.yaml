@@ -137,7 +137,6 @@ flutter:
     - assets/
     - assets/fonts/
     - assets/fonts/bauhaus/
-    - assets/fonts/icons/
     - assets/icons/
     - assets/gifs/
   fonts:
@@ -153,9 +152,6 @@ flutter:
           weight: 800
         - asset: assets/fonts/bauhaus/BauhausHeavy.ttf
           weight: 900
-    - family: IconsFont
-      fonts:
-        - asset: assets/fonts/icons/IconsFont.ttf
 
 flutter_intl:
   enabled: true

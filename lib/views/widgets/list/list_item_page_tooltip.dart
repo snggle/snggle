@@ -38,22 +38,22 @@ class _ListItemPageTooltipState<T extends AListItemModel, C extends AListCubit<T
         return BottomTooltip(
           actions: <BottomTooltipItem>[
             BottomTooltipItem(
-              iconData: selectionModel.areAllItemsSelected ? AppIcons.close_1 : AppIcons.check,
+              assetIconData: selectionModel.areAllItemsSelected ? AppIcons.menu_unselect_all : AppIcons.menu_select_all,
               label: selectionModel.areAllItemsSelected ? 'Clear' : 'All',
               onTap: _pressSelectAllButton,
             ),
             BottomTooltipItem(
-              iconData: AppIcons.pin,
+              assetIconData: AppIcons.menu_pin,
               label: 'Pin',
               onTap: selectionModel.canPinAll ? () => _pressPinButton(selectionModel, true) : null,
             ),
             BottomTooltipItem(
-              iconData: AppIcons.unpin,
+              assetIconData: AppIcons.menu_unpin,
               label: 'Unpin',
               onTap: selectionModel.canUnpinAll ? () => _pressPinButton(selectionModel, false) : null,
             ),
             BottomTooltipItem(
-              iconData: AppIcons.lock,
+              assetIconData: AppIcons.menu_lock,
               label: 'Lock',
               onTap: selectionModel.canLockAll ? () => _pressLockButton(selectionModel) : null,
             ),
