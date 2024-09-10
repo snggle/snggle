@@ -11,12 +11,14 @@ class VaultContainerIcon extends StatelessWidget {
   final bool pinnedBool;
   final bool encryptedBool;
   final double size;
+  final Color? backgroundColor;
   final Widget? child;
 
   const VaultContainerIcon({
     required this.pinnedBool,
     required this.encryptedBool,
     required this.size,
+    this.backgroundColor,
     this.child,
     super.key,
   });
@@ -24,6 +26,7 @@ class VaultContainerIcon extends StatelessWidget {
   VaultContainerIcon.fromVaultModel({
     required VaultModel vaultModel,
     required this.size,
+    this.backgroundColor,
     this.child,
     super.key,
   })  : pinnedBool = vaultModel.pinnedBool,
@@ -52,7 +55,7 @@ class VaultContainerIcon extends StatelessWidget {
         children: <Widget>[
           Positioned.fill(
             child: Container(
-              decoration: BoxDecoration(borderRadius: borderRadius, color: AppColors.body2),
+              decoration: BoxDecoration(borderRadius: borderRadius, color: backgroundColor ?? const Color(0xffffeded)),
             ),
           ),
           if (child != null) Positioned.fill(child: child!),

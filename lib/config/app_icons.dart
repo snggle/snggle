@@ -18,6 +18,7 @@ class AppIcons {
   static const AssetIconData horizontal_tile_network_unknown = AssetIconData('assets/icons/horizontal_tile_network_unknown.svg');
   static const AssetIconData icon_container_folder_pinned_medium = AssetIconData('assets/icons/icon_container_folder_pinned_medium.svg');
   static const AssetIconData icon_container_folder_unpinned_medium = AssetIconData('assets/icons/icon_container_folder_unpinned_medium.svg');
+  static const AssetIconData icon_container_folder_medium_background = AssetIconData('assets/icons/icon_container_folder_medium_background.svg');
   static const AssetIconData icon_container_lock_big = AssetIconData('assets/icons/icon_container_lock_big.svg');
   static const AssetIconData icon_container_lock_small = AssetIconData('assets/icons/icon_container_lock_small.svg');
   static const AssetIconData icon_container_network_bitcoin = AssetIconData('assets/icons/icon_container_network_bitcoin.svg');
@@ -25,7 +26,9 @@ class AppIcons {
   static const AssetIconData icon_container_network_ethereum = AssetIconData('assets/icons/icon_container_network_ethereum.svg');
   static const AssetIconData icon_container_network_unknown = AssetIconData('assets/icons/icon_container_network_unknown.svg');
   static const AssetIconData icon_container_vault_pinned_medium = AssetIconData('assets/icons/icon_container_vault_pinned_medium.svg');
+  static const AssetIconData icon_container_vault_pinned_medium_background = AssetIconData('assets/icons/icon_container_vault_pinned_medium_background.svg');
   static const AssetIconData icon_container_vault_unpinned_medium = AssetIconData('assets/icons/icon_container_vault_unpinned_medium.svg');
+  static const AssetIconData icon_container_vault_unpinned_medium_background = AssetIconData('assets/icons/icon_container_vault_unpinned_medium_background.svg');
   static const AssetIconData keyboard_arrow_left = AssetIconData('assets/icons/keyboard_arrow_left.svg');
   static const AssetIconData keyboard_arrow_right = AssetIconData('assets/icons/keyboard_arrow_right.svg');
   static const AssetIconData keyboard_collapse = AssetIconData('assets/icons/keyboard_collapse.svg');

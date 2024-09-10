@@ -12,7 +12,9 @@ class ContainerIconGridItem extends StatelessWidget {
   final bool encryptedBool;
   final double size;
   final AssetIconData pinnedBorder;
+  final AssetIconData pinnedBackground;
   final AssetIconData unpinnedBorder;
+  final AssetIconData unpinnedBackground;
   final AssetIconData? icon;
 
   const ContainerIconGridItem({
@@ -20,7 +22,9 @@ class ContainerIconGridItem extends StatelessWidget {
     required this.encryptedBool,
     required this.size,
     required this.pinnedBorder,
+    required this.pinnedBackground,
     required this.unpinnedBorder,
+    required this.unpinnedBackground,
     this.icon,
     super.key,
   });
@@ -32,7 +36,9 @@ class ContainerIconGridItem extends StatelessWidget {
   })  : pinnedBool = vaultModel.pinnedBool,
         encryptedBool = vaultModel.encryptedBool,
         pinnedBorder = AppIcons.icon_container_vault_pinned_medium,
+        pinnedBackground = AppIcons.icon_container_vault_pinned_medium_background,
         unpinnedBorder = AppIcons.icon_container_vault_unpinned_medium,
+        unpinnedBackground = AppIcons.icon_container_vault_unpinned_medium_background,
         icon = null;
 
   ContainerIconGridItem.fromGroupModel({
@@ -42,7 +48,9 @@ class ContainerIconGridItem extends StatelessWidget {
   })  : pinnedBool = groupModel.pinnedBool,
         encryptedBool = groupModel.encryptedBool,
         pinnedBorder = AppIcons.icon_container_folder_pinned_medium,
+        pinnedBackground = AppIcons.icon_container_folder_medium_background,
         unpinnedBorder = AppIcons.icon_container_folder_unpinned_medium,
+        unpinnedBackground = AppIcons.icon_container_folder_medium_background,
         icon = null;
 
   ContainerIconGridItem.fromNetworkGroupModel({
@@ -52,7 +60,9 @@ class ContainerIconGridItem extends StatelessWidget {
   })  : pinnedBool = networkGroupModel.pinnedBool,
         encryptedBool = networkGroupModel.encryptedBool,
         pinnedBorder = AppIcons.icon_container_vault_pinned_medium,
+        pinnedBackground = AppIcons.icon_container_vault_pinned_medium_background,
         unpinnedBorder = AppIcons.icon_container_vault_unpinned_medium,
+        unpinnedBackground = AppIcons.icon_container_vault_unpinned_medium_background,
         icon = networkGroupModel.networkTemplateModel.networkIconType.containerIcon;
 
   @override
@@ -61,6 +71,7 @@ class ContainerIconGridItem extends StatelessWidget {
         fit: StackFit.expand,
         alignment: Alignment.center,
         children: <Widget>[
+          AssetIcon(pinnedBool ? pinnedBackground : unpinnedBackground, size: size, color: const Color(0xfffffaef)),
           AssetIcon(pinnedBool ? pinnedBorder : unpinnedBorder, size: size),
           if (encryptedBool) ...<Widget>[
             AssetIcon(AppIcons.icon_container_lock_small, size: size, color: AppColors.body3),

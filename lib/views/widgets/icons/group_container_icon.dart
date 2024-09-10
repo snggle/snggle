@@ -10,6 +10,7 @@ class GroupContainerIcon extends StatelessWidget {
   final bool encryptedBool;
   final double size;
   final bool strokeBool;
+  final Color? backgroundColor;
   final Widget? child;
 
   const GroupContainerIcon({
@@ -17,6 +18,7 @@ class GroupContainerIcon extends StatelessWidget {
     required this.encryptedBool,
     required this.size,
     this.strokeBool = false,
+    this.backgroundColor,
     this.child,
     super.key,
   });
@@ -25,6 +27,7 @@ class GroupContainerIcon extends StatelessWidget {
     required GroupModel groupModel,
     required this.size,
     this.strokeBool = false,
+    this.backgroundColor,
     this.child,
     super.key,
   })  : pinnedBool = groupModel.pinnedBool,
@@ -44,7 +47,7 @@ class GroupContainerIcon extends StatelessWidget {
               width: size,
               height: size,
               decoration: ShapeDecoration(
-                color: AppColors.body2,
+                color: backgroundColor ?? const Color(0xffebfbff),
                 shape: FolderShapeBorder(
                   pinnedBool: pinnedBool,
                   borderColor: AppColors.middleGrey,
