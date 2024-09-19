@@ -23,7 +23,7 @@ class CustomDialog extends StatelessWidget {
     Widget separator = Container(
       height: 24,
       padding: const EdgeInsets.symmetric(horizontal: 7),
-      child: VerticalDivider(color: AppColors.middleGrey, width: 1, thickness: 1),
+      child: VerticalDivider(color: AppColors.middleGrey, width: 0.6, thickness: 0.6),
     );
 
     Widget optionButtonsSection = Padding(

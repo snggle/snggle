@@ -43,10 +43,13 @@ class ThemeConfig {
 
   TextTheme get textTheme {
     TextTheme baseTheme = _baseTheme.textTheme.apply(fontFamily: 'Bauhaus', bodyColor: AppColors.body1);
+    TextStyle? baseTextStyle = baseTheme.bodyMedium?.copyWith(letterSpacing: 1.5, height: 1.1, fontWeight: FontWeight.w400);
+
     baseTheme = baseTheme.copyWith(
-      labelMedium: baseTheme.labelMedium?.copyWith(fontSize: 12),
-      bodyMedium: baseTheme.bodyMedium?.copyWith(fontSize: 14),
-      bodyLarge: baseTheme.bodyMedium?.copyWith(fontSize: 16),
+      titleMedium: baseTextStyle?.copyWith(fontSize: 14, letterSpacing: 2.18, height: 1.1),
+      titleSmall: baseTextStyle?.copyWith(fontSize: 13.05, letterSpacing: 2.18, height: 1.1),
+      labelMedium: baseTextStyle?.copyWith(fontSize: 12, letterSpacing: 0.72, height: 1),
+      bodyMedium: baseTextStyle?.copyWith(fontSize: 14, letterSpacing: 1.5, height: 1.1),
     );
     return baseTheme;
   }

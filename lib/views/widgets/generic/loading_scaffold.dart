@@ -1,36 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:snggle/config/app_icons/app_animated_icons.dart';
+import 'package:snggle/views/widgets/icons/asset_animated_icon.dart';
 
 class LoadingScaffold extends StatelessWidget {
   const LoadingScaffold({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Center(
-            child: SizedBox(
-              width: 91,
-              child: Column(
-                children: <Widget>[
-                  Image.asset('assets/gifs/logo_animation.gif'),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'LOADING',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 4,
-                      fontSize: 16,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
+    return const Scaffold(
+      body: SizedBox.expand(
+        child: Center(
+          child: AssetAnimatedIcon(AppAnimatedIcons.snggle_face, size: 92),
+        ),
       ),
     );
   }

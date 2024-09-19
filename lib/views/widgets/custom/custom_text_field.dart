@@ -1,33 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:snggle/config/app_colors.dart';
 
 class CustomTextField extends StatefulWidget {
-  final String label;
+  final bool enabledBool;
   final bool autofocusBool;
   final bool customKeyboardBool;
-  final bool enableInteractiveSelection;
+  final bool enableInteractiveSelectionBool;
   final bool errorExistsBool;
-  final bool? readOnlyBool;
+  final bool readOnlyBool;
   final bool obscureTextBool;
   final String? initialValue;
+  final String? prefixText;
+  final TextStyle? textStyle;
+  final TextStyle? prefixStyle;
+  final Widget? prefix;
+  final Widget? prefixIcon;
+  final BoxConstraints? prefixIconConstraints;
+  final ValueChanged<String>? onChanged;
+  final ValueChanged<bool>? onFocusChanged;
   final FocusNode? focusNode;
   final TextInputType keyboardType;
-  final ValueChanged<bool>? onFocusChanged;
   final TextEditingController? textEditingController;
+  final InputBorder? inputBorder;
+  final List<TextInputFormatter>? inputFormatters;
+  final EdgeInsets? padding;
 
   const CustomTextField({
-    required this.label,
+    this.enabledBool = true,
     this.autofocusBool = false,
     this.customKeyboardBool = false,
-    this.enableInteractiveSelection = false,
+    this.enableInteractiveSelectionBool = false,
     this.errorExistsBool = false,
-    this.readOnlyBool,
+    this.readOnlyBool = false,
     this.obscureTextBool = false,
     this.initialValue,
-    this.focusNode,
+    this.prefixText,
+    this.textStyle,
+    this.prefixStyle,
+    this.prefix,
+    this.prefixIcon,
+    this.prefixIconConstraints,
+    this.onChanged,
     this.onFocusChanged,
+    this.focusNode,
     this.keyboardType = TextInputType.none,
     this.textEditingController,
+    this.inputBorder,
+    this.inputFormatters,
+    this.padding,
     super.key,
   });
 
@@ -53,6 +74,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
     Paint errorPainter = Paint()
       ..shader = const LinearGradient(
         begin: Alignment.bottomLeft,
@@ -63,44 +86,42 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ],
       ).createShader(Rect.fromLTWH(0, 0, (widget.textEditingController?.text.length ?? 0) * 15, 70));
 
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            widget.label,
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.darkGrey,
-            ),
-          ),
-          TextField(
-            readOnly: widget.readOnlyBool ?? widget.focusNode?.hasFocus == false,
-            obscureText: widget.obscureTextBool,
-            enableInteractiveSelection: widget.enableInteractiveSelection,
-            enableSuggestions: false,
-            autocorrect: false,
-            controller: widget.textEditingController,
-            focusNode: widget.focusNode,
-            autofocus: widget.autofocusBool,
-            keyboardType: widget.keyboardType,
-            cursorColor: AppColors.body1,
-            cursorWidth: 1.5,
-            obscuringCharacter: '*',
-            style: TextStyle(
-              fontSize: 14,
+    TextStyle? textStyle = widget.textStyle ?? theme.textTheme.bodyMedium;
+    TextStyle? prefixStyle = widget.prefixStyle ?? textStyle ?? theme.textTheme.bodyMedium;
+
+    return TextField(
+      enabled: widget.enabledBool,
+      readOnly: widget.readOnlyBool,
+      obscureText: widget.obscureTextBool,
+      enableInteractiveSelection: widget.enableInteractiveSelectionBool,
+      enableSuggestions: false,
+      autocorrect: false,
+      controller: widget.textEditingController,
+      focusNode: widget.focusNode,
+      autofocus: widget.autofocusBool,
+      keyboardType: widget.keyboardType,
+      cursorColor: AppColors.body1,
+      cursorWidth: 1.5,
+      obscuringCharacter: '*',
+      onChanged: widget.onChanged?.call,
+      style: widget.enabledBool
+          ? textStyle?.copyWith(
               color: widget.errorExistsBool ? null : AppColors.body3,
               foreground: widget.errorExistsBool ? errorPainter : null,
-            ),
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.middleGrey)),
-              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.middleGrey)),
-            ),
-          ),
-        ],
+            )
+          : textStyle?.copyWith(color: AppColors.middleGrey),
+      inputFormatters: widget.inputFormatters,
+      decoration: InputDecoration(
+        isDense: true,
+        prefix: widget.prefix,
+        prefixText: widget.prefixText,
+        prefixStyle: prefixStyle?.copyWith(color: AppColors.middleGrey),
+        prefixIcon: widget.prefixIcon,
+        prefixIconConstraints: widget.prefixIconConstraints,
+        contentPadding: widget.padding ?? const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+        enabledBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
+        focusedBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
+        disabledBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
       ),
     );
   }

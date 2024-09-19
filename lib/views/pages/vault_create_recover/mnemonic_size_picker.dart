@@ -30,6 +30,8 @@ class _MnemonicSizePickerState extends State<MnemonicSizePicker> {
             style: TextStyle(
               fontSize: 16,
               color: AppColors.body3,
+              letterSpacing: 1,
+              height: 1,
             ),
           ),
           const SizedBox(height: 24),

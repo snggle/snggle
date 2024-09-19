@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class ContextTooltipItem extends StatelessWidget {
-  final IconData iconData;
+  final AssetIconData assetIconData;
   final String label;
   final VoidCallback? onTap;
 
   const ContextTooltipItem({
-    required this.iconData,
+    required this.assetIconData,
     required this.label,
     required this.onTap,
     super.key,
@@ -21,11 +23,11 @@ class ContextTooltipItem extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(iconData, size: 16, color: AppColors.body3),
+          AssetIcon(assetIconData, size: 16, color: AppColors.body3),
           const SizedBox(height: 3),
           Text(
             label,
-            style: TextStyle(fontSize: 12, color: AppColors.body3, letterSpacing: 0),
+            style: TextStyle(fontSize: 12, color: AppColors.body3, height: 1, letterSpacing: 0),
           ),
         ],
       ),

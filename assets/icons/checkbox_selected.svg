@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg fill="none" height="16" viewBox="0 0 17 16" width="17">
+<g filter="url(#filter0_b_11212_212884)">
+<rect fill="white" fill-opacity="0.29" height="16" rx="8" width="16" x="0.5" />
+<rect height="15.125" rx="7.5625" stroke="url(#paint0_radial_11212_212884)" stroke-width="0.875" width="15.125" x="0.9375" y="0.4375" />
+<path d="M11.5949 6.03418L7.33894 10.2901L5.40442 8.35561" stroke="#535353" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.916667" />
+</g>
+<defs>
+<filter color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" height="24" id="filter0_b_11212_212884" width="24" x="-3.5" y="-4">
+<feFlood flood-opacity="0" result="BackgroundImageFix" />
+<feGaussianBlur in="BackgroundImageFix" stdDeviation="2" />
+<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_11212_212884" />
+<feBlend in="SourceGraphic" in2="effect1_backgroundBlur_11212_212884" mode="normal" result="shape" />
+</filter>
+<radialGradient cx="0" cy="0" gradientTransform="translate(2.11682 4.51865) rotate(35.1664) scale(17.2954 16.3373)" gradientUnits="userSpaceOnUse" id="paint0_radial_11212_212884" r="1">
+<stop offset="0.0760668" />
+<stop offset="0.380208" stop-color="#42D2FF" />
+<stop offset="0.666667" stop-color="#939393" />
+<stop offset="1" />
+</radialGradient>
+</defs>
+</svg>

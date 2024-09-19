@@ -3,12 +3,16 @@ import 'package:flutter/cupertino.dart';
 class GradientText extends StatelessWidget {
   final String text;
   final Gradient gradient;
+  final int? maxLines;
   final TextStyle? textStyle;
+  final TextOverflow? overflow;
 
   const GradientText(
     this.text, {
     required this.gradient,
-    required this.textStyle,
+    this.maxLines,
+    this.textStyle,
+    this.overflow,
     super.key,
   });
 
@@ -17,7 +21,12 @@ class GradientText extends StatelessWidget {
     return ShaderMask(
       blendMode: BlendMode.srcIn,
       shaderCallback: gradient.createShader,
-      child: Text(text, style: textStyle),
+      child: Text(
+        text,
+        maxLines: maxLines,
+        overflow: overflow,
+        style: textStyle,
+      ),
     );
   }
 }
