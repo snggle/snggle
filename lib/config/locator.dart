@@ -8,6 +8,7 @@ import 'package:snggle/infra/repositories/groups_repository.dart';
 import 'package:snggle/infra/repositories/master_key_repository.dart';
 import 'package:snggle/infra/repositories/network_groups_repository.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
+import 'package:snggle/infra/repositories/transactions_repository.dart';
 import 'package:snggle/infra/repositories/vaults_repository.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
 import 'package:snggle/infra/services/app_auth_service.dart';
@@ -15,6 +16,7 @@ import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/infra/services/network_groups_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
+import 'package:snggle/infra/services/transaction_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
@@ -49,6 +51,7 @@ void _initRepositories() {
     ..registerLazySingleton<SecretsRepository>(SecretsRepository.new)
     ..registerLazySingleton<VaultsRepository>(VaultsRepository.new)
     ..registerLazySingleton<WalletsRepository>(WalletsRepository.new)
+    ..registerLazySingleton<TransactionsRepository>(TransactionsRepository.new)
     ..registerLazySingleton<GroupsRepository>(GroupsRepository.new);
 }
 
@@ -60,6 +63,7 @@ void _initServices() {
     ..registerLazySingleton<SecretsService>(SecretsService.new)
     ..registerLazySingleton<VaultsService>(VaultsService.new)
     ..registerLazySingleton<WalletsService>(WalletsService.new)
+    ..registerLazySingleton<TransactionsService>(TransactionsService.new)
     ..registerLazySingleton<GroupsService>(GroupsService.new);
 }
 

@@ -27,7 +27,7 @@ Future<void> main() async {
     setUpAll(() {
       actualSecretsAuthPageCubit = SecretsAuthPageCubit(
         listItemModel: TestListItem(
-          id: 1,
+          id: 3,
           encryptedBool: false,
           pinnedBool: false,
         ),

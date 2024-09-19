@@ -425,6 +425,42 @@ void main() {
     });
   });
 
+  group('Tests of WalletsService.getByAddress()', () {
+    test('Should [return WalletModel] if [wallet address EXISTS] in collection', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      WalletModel? actualWalletModel = await globalLocator<WalletsService>().getByAddress('0x4BD51C77E08Ac696789464A079cEBeE203963Dce');
+
+      // Assert
+      WalletModel expectedWalletModel = WalletModel(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        index: 0,
+        address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce',
+        derivationPath: "m/44'/60'/0'/0/0",
+        network: 'ethereum',
+        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
+        name: 'WALLET 0',
+      );
+
+      expect(actualWalletModel, expectedWalletModel);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [wallet address NOT EXISTS] in collection', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Assert
+      expect(
+        () => globalLocator<WalletsService>().getByAddress('0x000000000000000000000000000000000000dEaD'),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
   group('Tests of WalletsService.getLastIndex()', () {
     test('Should [return last wallet index] if [database NOT EMPTY]', () async {
       // Arrange

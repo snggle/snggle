@@ -1,7 +1,7 @@
 name: snggle
 description: Private keys manager
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.29
+version: 0.0.30
 
 environment:
   sdk: "3.2.6"
@@ -99,6 +99,18 @@ dependencies:
   # Isar Core binaries for the Isar Database. Needs to be included for Flutter apps.
   # https://pub.dev/packages/isar_flutter_libs
   isar_flutter_libs: 3.1.0+1
+
+  # Dart package containing utility methods for data encoding and decoding.
+  codec_utils:
+    git:
+      url: https://github.com/snggle/codec_utils.git
+      ref: master
+
+  # Dart package containing utility methods for common cryptographic and blockchain-specific operations.
+  cryptography_utils:
+    git:
+      url: https://github.com/snggle/cryptography_utils.git
+      ref: master
 
 dev_dependencies:
   flutter_test:
