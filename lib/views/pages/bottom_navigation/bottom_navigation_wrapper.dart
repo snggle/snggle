@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
-import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_item_model.dart';
+import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_item.dart';
+import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_scan_icon.dart';
 
 @RoutePage(name: 'BottomNavigationRoute')
 class BottomNavigationWrapper extends StatefulWidget {
@@ -47,23 +48,37 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                child: ValueListenableBuilder<int>(
-                  valueListenable: activeIndexNotifier,
-                  builder: (BuildContext context, int activeIndex, _) {
-                    return CustomBottomNavigationBar(
-                      selectedIndex: activeIndex,
-                      tooltip: tooltipWidget,
-                      onChanged: _tapNavigationItem,
-                      bottomNavigationBarItems: const <CustomBottomNavigationBarItemModel>[
-                        CustomBottomNavigationBarItemModel(assetIconData: AppIcons.bottom_navigation_crypto),
-                        CustomBottomNavigationBarItemModel(assetIconData: AppIcons.bottom_navigation_secrets),
-                        CustomBottomNavigationBarItemModel(assetIconData: AppIcons.bottom_navigation_scan, largeBool: true),
-                        CustomBottomNavigationBarItemModel(assetIconData: AppIcons.bottom_navigation_apps),
-                        CustomBottomNavigationBarItemModel(assetIconData: AppIcons.bottom_navigation_menu),
-                      ],
-                    );
-                  },
-                ),
+                child: tooltipWidget ??
+                    ValueListenableBuilder<int>(
+                      valueListenable: activeIndexNotifier,
+                      builder: (BuildContext context, int activeIndex, _) {
+                        return CustomBottomNavigationBar(
+                          bottomNavigationBarItems: <Widget>[
+                            CustomBottomNavigationBarItem(
+                              selectedBool: activeIndex == 0,
+                              assetIconData: AppIcons.bottom_navigation_crypto,
+                              onTap: () => _tapNavigationItem(0),
+                            ),
+                            CustomBottomNavigationBarItem(
+                              selectedBool: activeIndex == 1,
+                              assetIconData: AppIcons.bottom_navigation_secrets,
+                              onTap: () => _tapNavigationItem(1),
+                            ),
+                            const CustomBottomNavigationBarScanIcon(),
+                            CustomBottomNavigationBarItem(
+                              selectedBool: activeIndex == 3,
+                              assetIconData: AppIcons.bottom_navigation_apps,
+                              onTap: () => _tapNavigationItem(3),
+                            ),
+                            CustomBottomNavigationBarItem(
+                              selectedBool: activeIndex == 4,
+                              assetIconData: AppIcons.bottom_navigation_menu,
+                              onTap: () => _tapNavigationItem(4),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
               ),
             ],
           ),

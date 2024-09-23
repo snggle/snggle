@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
+import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -36,6 +37,7 @@ class _ListItemPageTooltipState<T extends AListItemModel, C extends AListCubit<T
         }
 
         return BottomTooltip(
+          backgroundColor: AppColors.body2,
           actions: <BottomTooltipItem>[
             BottomTooltipItem(
               assetIconData: selectionModel.areAllItemsSelected ? AppIcons.menu_unselect_all : AppIcons.menu_select_all,
