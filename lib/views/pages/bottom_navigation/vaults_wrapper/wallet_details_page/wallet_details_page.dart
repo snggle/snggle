@@ -1,13 +1,18 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/shared/models/networks/network_template_model.dart';
+import 'package:snggle/shared/models/password_model.dart';
+import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_transaction_list.dart';
+import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_scan_icon.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
@@ -20,12 +25,18 @@ import 'package:snggle/views/widgets/qr/qr_result_scaffold.dart';
 
 @RoutePage<void>()
 class WalletDetailsPage extends StatefulWidget {
+  final VaultModel vaultModel;
   final WalletModel walletModel;
+  final PasswordModel vaultPasswordModel;
   final WalletDetailsPageCubit walletDetailsPageCubit;
+  final NetworkTemplateModel networkTemplateModel;
 
   const WalletDetailsPage({
+    required this.vaultModel,
     required this.walletModel,
+    required this.vaultPasswordModel,
     required this.walletDetailsPageCubit,
+    required this.networkTemplateModel,
     super.key,
   });
 
@@ -78,7 +89,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                           QrImageView(data: widget.walletModel.address, size: 136),
                           GradientText(
                             widget.walletModel.getShortAddress(8),
-                            gradient: AppColors.primaryGradient,
+                            gradient: LinearGradient(colors: AppColors.primaryGradient.colors),
                             textStyle: textTheme.bodyMedium?.copyWith(letterSpacing: 2.5),
                           ),
                         ],
@@ -86,7 +97,33 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                     ),
                   ),
                 ),
-                const SliverToBoxAdapter(child: SizedBox(height: 30)),
+                const SliverToBoxAdapter(child: SizedBox(height: 8)),
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: GradientOutlinedButton.small(
+                      label: 'Connect Wallet',
+                      onPressed: () {
+                        AutoRouter.of(context).navigate(WalletConnectRoute(
+                          walletModel: widget.walletModel,
+                          vaultModel: widget.vaultModel,
+                          vaultPasswordModel: widget.vaultPasswordModel,
+                          networkTemplateModel: widget.networkTemplateModel,
+                        ));
+                      },
+                    ),
+                  ),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 42)),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 6),
+                  sliver: SliverToBoxAdapter(
+                    child: Text(
+                      'Transaction History',
+                      style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+                    ),
+                  ),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 4)),
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   sliver: WalletDetailsTransactionList(

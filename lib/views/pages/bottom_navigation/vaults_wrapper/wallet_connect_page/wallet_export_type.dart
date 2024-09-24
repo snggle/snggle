@@ -1,0 +1,4 @@
+enum WalletExportType {
+  qr,
+  hardware,
+}
