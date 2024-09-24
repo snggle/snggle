@@ -39,7 +39,7 @@ class _MnemonicSizePickerState extends State<MnemonicSizePicker> {
             (int size) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: GradientOutlinedButton(
+                child: GradientOutlinedButton.large(
                   onPressed: () => widget.onSizeSelected(size),
                   label: size.toString(),
                 ),

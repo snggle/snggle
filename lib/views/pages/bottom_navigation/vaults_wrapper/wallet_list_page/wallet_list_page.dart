@@ -159,6 +159,9 @@ class _WalletListPageState extends State<WalletListPage> {
         transactionSignedCallback: walletDetailsPageCubit.refresh,
       );
       await AutoRouter.of(context).push<void>(WalletDetailsRoute(
+        vaultPasswordModel: widget.vaultPasswordModel,
+        vaultModel: widget.vaultModel,
+        networkGroupModel: widget.networkGroupModel,
         walletModel: listItemModel,
         walletDetailsPageCubit: walletDetailsPageCubit,
       ));
