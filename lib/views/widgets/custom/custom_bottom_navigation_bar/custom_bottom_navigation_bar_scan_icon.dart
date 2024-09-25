@@ -70,5 +70,7 @@ class _CustomBottomNavigationBarScanIconState extends State<CustomBottomNavigati
         return const ScanQRPage();
       },
     );
+
+    activeWalletController.notifyTransactionSigned();
   }
 }

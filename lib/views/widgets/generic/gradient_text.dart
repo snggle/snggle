@@ -4,6 +4,7 @@ class GradientText extends StatelessWidget {
   final String text;
   final Gradient gradient;
   final int? maxLines;
+  final TextAlign? textAlign;
   final TextStyle? textStyle;
   final TextOverflow? overflow;
 
@@ -11,6 +12,7 @@ class GradientText extends StatelessWidget {
     this.text, {
     required this.gradient,
     this.maxLines,
+    this.textAlign,
     this.textStyle,
     this.overflow,
     super.key,
@@ -24,6 +26,7 @@ class GradientText extends StatelessWidget {
       child: Text(
         text,
         maxLines: maxLines,
+        textAlign: textAlign,
         overflow: overflow,
         style: textStyle,
       ),

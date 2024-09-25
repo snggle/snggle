@@ -47,10 +47,12 @@ class AppIcons {
   static const AssetIconData menu_lock = AssetIconData('assets/icons/menu_lock.svg');
   static const AssetIconData menu_pin = AssetIconData('assets/icons/menu_pin.svg');
   static const AssetIconData menu_save = AssetIconData('assets/icons/menu_save.svg');
+  static const AssetIconData menu_search = AssetIconData('assets/icons/menu_search.svg');
   static const AssetIconData menu_select = AssetIconData('assets/icons/menu_select.svg');
   static const AssetIconData menu_select_all = AssetIconData('assets/icons/menu_select_all.svg');
   static const AssetIconData menu_unlock = AssetIconData('assets/icons/menu_unlock.svg');
   static const AssetIconData menu_unpin = AssetIconData('assets/icons/menu_unpin.svg');
   static const AssetIconData menu_unselect_all = AssetIconData('assets/icons/menu_unselect_all.svg');
   static const AssetIconData page_add_button = AssetIconData('assets/icons/page_add_button.svg');
+  static const AssetIconData page_no_data = AssetIconData('assets/icons/page_no_data.svg');
 }
