@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/simple_selection_model.dart';
 import 'package:snggle/shared/models/transactions/transaction_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/transaction_list_item/transaction_list_item.dart';
@@ -18,6 +19,7 @@ class WalletDetailsTransactionList extends StatelessWidget {
   final List<TransactionModel> transactions;
   final SimpleSelectionModel<TransactionModel>? selectionModel;
   final WalletDetailsPageCubit walletDetailsPageCubit;
+  final NetworkGroupModel networkGroupModel;
 
   const WalletDetailsTransactionList({
     required this.emptyBool,
@@ -26,6 +28,7 @@ class WalletDetailsTransactionList extends StatelessWidget {
     required this.transactions,
     required this.selectionModel,
     required this.walletDetailsPageCubit,
+    required this.networkGroupModel,
     super.key,
   });
 
@@ -62,6 +65,7 @@ class WalletDetailsTransactionList extends StatelessWidget {
                 selectionEnabledBool: selectionEnabledBool,
                 transactionModel: transactionModel,
                 walletDetailsPageCubit: walletDetailsPageCubit,
+                networkTemplateModel: networkGroupModel.networkTemplateModel,
               );
             },
           ),

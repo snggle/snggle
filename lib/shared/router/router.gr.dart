@@ -14,14 +14,14 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_detail
     as _i31;
 import 'package:snggle/shared/models/groups/network_group_model.dart' as _i30;
 import 'package:snggle/shared/models/networks/network_template_model.dart'
-    as _i29;
+    as _i28;
 import 'package:snggle/shared/models/password_model.dart' as _i25;
 import 'package:snggle/shared/models/transactions/transaction_model.dart'
     as _i27;
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart'
     as _i22;
 import 'package:snggle/shared/models/vaults/vault_model.dart' as _i23;
-import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i28;
+import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i29;
 import 'package:snggle/shared/utils/filesystem_path.dart' as _i24;
 import 'package:snggle/views/pages/app_auth_page.dart' as _i1;
 import 'package:snggle/views/pages/app_setup_pin_page.dart' as _i2;
@@ -125,6 +125,7 @@ abstract class $AppRouter extends _i21.RootStackRouter {
         routeData: routeData,
         child: _i9.TransactionDetailsPage(
           transactionModel: args.transactionModel,
+          networkTemplateModel: args.networkTemplateModel,
           key: args.key,
         ),
       );
@@ -397,12 +398,14 @@ class TransactionDetailsRoute
     extends _i21.PageRouteInfo<TransactionDetailsRouteArgs> {
   TransactionDetailsRoute({
     required _i27.TransactionModel transactionModel,
+    required _i28.NetworkTemplateModel networkTemplateModel,
     _i26.Key? key,
     List<_i21.PageRouteInfo>? children,
   }) : super(
           TransactionDetailsRoute.name,
           args: TransactionDetailsRouteArgs(
             transactionModel: transactionModel,
+            networkTemplateModel: networkTemplateModel,
             key: key,
           ),
           initialChildren: children,
@@ -417,16 +420,19 @@ class TransactionDetailsRoute
 class TransactionDetailsRouteArgs {
   const TransactionDetailsRouteArgs({
     required this.transactionModel,
+    required this.networkTemplateModel,
     this.key,
   });
 
   final _i27.TransactionModel transactionModel;
 
+  final _i28.NetworkTemplateModel networkTemplateModel;
+
   final _i26.Key? key;
 
   @override
   String toString() {
-    return 'TransactionDetailsRouteArgs{transactionModel: $transactionModel, key: $key}';
+    return 'TransactionDetailsRouteArgs{transactionModel: $transactionModel, networkTemplateModel: $networkTemplateModel, key: $key}';
   }
 }
 
@@ -606,8 +612,8 @@ class WalletConnectRoute extends _i21.PageRouteInfo<WalletConnectRouteArgs> {
   WalletConnectRoute({
     required _i23.VaultModel vaultModel,
     required _i25.PasswordModel vaultPasswordModel,
-    required _i28.WalletModel walletModel,
-    required _i29.NetworkTemplateModel networkTemplateModel,
+    required _i29.WalletModel walletModel,
+    required _i28.NetworkTemplateModel networkTemplateModel,
     _i26.Key? key,
     List<_i21.PageRouteInfo>? children,
   }) : super(
@@ -641,9 +647,9 @@ class WalletConnectRouteArgs {
 
   final _i25.PasswordModel vaultPasswordModel;
 
-  final _i28.WalletModel walletModel;
+  final _i29.WalletModel walletModel;
 
-  final _i29.NetworkTemplateModel networkTemplateModel;
+  final _i28.NetworkTemplateModel networkTemplateModel;
 
   final _i26.Key? key;
 
@@ -713,7 +719,7 @@ class WalletDetailsRoute extends _i21.PageRouteInfo<WalletDetailsRouteArgs> {
     required _i25.PasswordModel vaultPasswordModel,
     required _i23.VaultModel vaultModel,
     required _i30.NetworkGroupModel networkGroupModel,
-    required _i28.WalletModel walletModel,
+    required _i29.WalletModel walletModel,
     required _i31.WalletDetailsPageCubit walletDetailsPageCubit,
     _i26.Key? key,
     List<_i21.PageRouteInfo>? children,
@@ -752,7 +758,7 @@ class WalletDetailsRouteArgs {
 
   final _i30.NetworkGroupModel networkGroupModel;
 
-  final _i28.WalletModel walletModel;
+  final _i29.WalletModel walletModel;
 
   final _i31.WalletDetailsPageCubit walletDetailsPageCubit;
 
