@@ -65,6 +65,11 @@ class AppIcons {
   static const AssetIconData settings_warning = AssetIconData('assets/icons/settings_warning.svg');
   static const AssetIconData switch_border = AssetIconData('assets/icons/switch_border.svg');
   static const AssetIconData switch_dot = AssetIconData('assets/icons/switch_dot.svg');
+  static const AssetIconData text_display_mode = AssetIconData('assets/icons/text_display_mode.svg');
+  static const AssetIconData text_new_line = AssetIconData('assets/icons/text_new_line.svg');
+  static const AssetIconData text_space = AssetIconData('assets/icons/text_space.svg');
+  static const AssetIconData text_tab = AssetIconData('assets/icons/text_tab.svg');
+  static const AssetIconData text_wrap = AssetIconData('assets/icons/text_wrap.svg');
   static const AssetIconData wallet_metamask = AssetIconData('assets/icons/wallet_metamask.svg');
   static const AssetIconData wallet_trezor = AssetIconData('assets/icons/wallet_trezor.svg');
 }

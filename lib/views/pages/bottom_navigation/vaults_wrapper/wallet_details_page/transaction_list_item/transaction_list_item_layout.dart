@@ -20,7 +20,6 @@ class TransactionListItemLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 14),
       decoration: BoxDecoration(
         color: const Color(0xFFFAFAFA).withOpacity(backgroundOpacity),
       ),
@@ -38,7 +37,6 @@ class TransactionListItemLayout extends StatelessWidget {
               child: expansionWidget,
             ),
           ),
-          const SizedBox(height: 14),
           Divider(color: AppColors.lightGrey1, height: 1, thickness: 1),
         ],
       ),

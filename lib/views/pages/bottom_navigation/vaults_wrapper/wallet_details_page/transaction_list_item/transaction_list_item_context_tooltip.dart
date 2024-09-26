@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/transactions/transaction_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
@@ -16,12 +17,14 @@ class TransactionListItemContextTooltip extends StatefulWidget {
   final WalletDetailsPageCubit walletDetailsPageCubit;
   final Widget pageTooltip;
   final VoidCallback onCloseToolbar;
+  final NetworkTemplateModel networkTemplateModel;
 
   const TransactionListItemContextTooltip({
     required this.transactionModel,
     required this.walletDetailsPageCubit,
     required this.pageTooltip,
     required this.onCloseToolbar,
+    required this.networkTemplateModel,
     super.key,
   });
 
@@ -68,7 +71,7 @@ class _ListItemContextTooltipState extends State<TransactionListItemContextToolt
 
   void _navigateToTransactionDetails() {
     widget.onCloseToolbar();
-    AutoRouter.of(context).push(TransactionDetailsRoute(transactionModel: widget.transactionModel));
+    AutoRouter.of(context).push(TransactionDetailsRoute(transactionModel: widget.transactionModel, networkTemplateModel: widget.networkTemplateModel));
   }
 
   void _selectTransaction() {
