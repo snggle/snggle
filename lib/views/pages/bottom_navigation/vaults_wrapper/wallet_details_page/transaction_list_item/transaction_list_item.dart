@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart';
+import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/transactions/transaction_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/transaction_list_item/transaction_list_item_context_tooltip.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/transaction_list_item/transaction_list_item_expansion.dart';
@@ -16,12 +17,14 @@ class TransactionListItem extends StatefulWidget {
   final bool selectionEnabledBool;
   final TransactionModel transactionModel;
   final WalletDetailsPageCubit walletDetailsPageCubit;
+  final NetworkTemplateModel networkTemplateModel;
 
   const TransactionListItem({
     required this.selectedBool,
     required this.selectionEnabledBool,
     required this.transactionModel,
     required this.walletDetailsPageCubit,
+    required this.networkTemplateModel,
     super.key,
   });
 
@@ -66,11 +69,29 @@ class _TransactionListItemState extends State<TransactionListItem> with SingleTi
           backgroundOpacity: 1 - opacityFactor.value,
           expansionHeight: heightFactor.value,
           animationController: animationController,
-          titleWidget: TransactionListItemTitle(
-            selectedBool: widget.selectedBool,
-            selectionEnabledBool: widget.selectionEnabledBool,
-            detailsOpacity: opacityFactor.value,
-            transactionModel: widget.transactionModel,
+          titleWidget: Builder(
+            builder: (BuildContext context) {
+              Widget child = TransactionListItemTitle(
+                selectedBool: widget.selectedBool,
+                selectionEnabledBool: widget.selectionEnabledBool,
+                detailsOpacity: opacityFactor.value,
+                transactionModel: widget.transactionModel,
+              );
+
+              if (widget.selectionEnabledBool) {
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: _toggleSelection,
+                  child: child,
+                );
+              } else {
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: _toggleExpansion,
+                  child: child,
+                );
+              }
+            },
           ),
           expansionWidget: TransactionListItemExpansion(transactionModel: widget.transactionModel),
         );
@@ -78,26 +99,21 @@ class _TransactionListItemState extends State<TransactionListItem> with SingleTi
     );
 
     if (widget.selectionEnabledBool) {
-      return GestureDetector(
-        onTap: _toggleSelection,
-        child: child,
-      );
+      return child;
     } else {
       return ContextTooltipWrapper(
+        pressType: PressType.longPress,
         controller: actionsPopupController,
         content: TransactionListItemContextTooltip(
           transactionModel: widget.transactionModel,
           walletDetailsPageCubit: widget.walletDetailsPageCubit,
+          networkTemplateModel: widget.networkTemplateModel,
           pageTooltip: TransactionListItemPageTooltip(
             walletDetailsPageCubit: widget.walletDetailsPageCubit,
           ),
           onCloseToolbar: _closeToolbar,
         ),
-        child: GestureDetector(
-          onTap: _toggleExpansion,
-          onLongPress: _openToolbar,
-          child: child,
-        ),
+        child: child,
       );
     }
   }
@@ -122,9 +138,5 @@ class _TransactionListItemState extends State<TransactionListItem> with SingleTi
 
   void _closeToolbar() {
     actionsPopupController.hideMenu();
-  }
-
-  void _openToolbar() {
-    actionsPopupController.showMenu();
   }
 }

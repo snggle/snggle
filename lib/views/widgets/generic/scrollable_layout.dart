@@ -10,6 +10,7 @@ class ScrollableLayout extends StatelessWidget {
   final bool bottomMarginVisibleBool;
   final bool tooltipVisibleBool;
   final List<Widget>? tooltipItems;
+  final Widget? tooltip;
 
   const ScrollableLayout({
     required this.child,
@@ -17,6 +18,7 @@ class ScrollableLayout extends StatelessWidget {
     this.bottomMarginVisibleBool = true,
     this.tooltipVisibleBool = true,
     this.tooltipItems,
+    this.tooltip,
     super.key,
   });
 
@@ -33,6 +35,14 @@ class ScrollableLayout extends StatelessWidget {
         ),
       ),
     );
+
+    if (tooltip != null) {
+      return BottomTooltipWrapper(
+        tooltipVisibleBool: tooltipVisibleBool,
+        tooltip: tooltip!,
+        child: formChild,
+      );
+    }
 
     if (tooltipItems != null && tooltipItems!.isNotEmpty) {
       return BottomTooltipWrapper(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/transactions/transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
+import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
 import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 
@@ -29,60 +30,89 @@ class TransactionListItemExpansion extends StatelessWidget {
       letterSpacing: 0.5,
     );
 
+    String? senderAddress = transactionModel.senderAddress;
+    String? recipientAddress = transactionModel.recipientAddress;
+    String? contractAddress = transactionModel.contractAddress;
+    String? amount = transactionModel.amount?.toString();
+    String? fee = transactionModel.fee?.toString();
+    String? message = transactionModel.message;
+    String? signature = transactionModel.signature;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         const SizedBox(height: 16),
-        if (transactionModel.senderAddress != null) ...<Widget>[
-          LabelWrapperVertical(
-            label: 'From',
-            labelStyle: labelTextStyle,
-            child: ETHAddressPreview(address: transactionModel.senderAddress!, textStyle: valueTextStyle),
+        if (senderAddress != null) ...<Widget>[
+          CopyWrapper(
+            value: senderAddress,
+            child: LabelWrapperVertical(
+              label: 'From',
+              labelStyle: labelTextStyle,
+              child: ETHAddressPreview(address: senderAddress, textStyle: valueTextStyle),
+            ),
           ),
         ],
-        if (transactionModel.recipientAddress != null) ...<Widget>[
-          LabelWrapperVertical(
-            label: 'To',
-            labelStyle: labelTextStyle,
-            child: ETHAddressPreview(address: transactionModel.recipientAddress!, textStyle: valueTextStyle),
+        if (recipientAddress != null) ...<Widget>[
+          CopyWrapper(
+            value: recipientAddress,
+            child: LabelWrapperVertical(
+              label: 'To',
+              labelStyle: labelTextStyle,
+              child: ETHAddressPreview(address: recipientAddress, textStyle: valueTextStyle),
+            ),
           ),
         ],
-        if (transactionModel.contractAddress != null) ...<Widget>[
-          LabelWrapperVertical(
-            label: 'Contract',
-            labelStyle: labelTextStyle,
-            child: ETHAddressPreview(address: transactionModel.contractAddress!, textStyle: valueTextStyle),
+        if (contractAddress != null) ...<Widget>[
+          CopyWrapper(
+            value: contractAddress,
+            child: LabelWrapperVertical(
+              label: 'Contract',
+              labelStyle: labelTextStyle,
+              child: ETHAddressPreview(address: contractAddress, textStyle: valueTextStyle),
+            ),
           ),
         ],
-        if (transactionModel.amount != null) ...<Widget>[
-          LabelWrapperVertical(
-            label: 'Amount',
-            labelStyle: labelTextStyle,
-            child: Text(transactionModel.amount.toString(), style: valueTextStyle),
+        if (amount != null) ...<Widget>[
+          CopyWrapper(
+            value: amount,
+            child: LabelWrapperVertical(
+              label: 'Amount',
+              labelStyle: labelTextStyle,
+              child: Text(amount, style: valueTextStyle),
+            ),
           ),
         ],
-        if (transactionModel.fee != null) ...<Widget>[
-          LabelWrapperVertical(
-            label: 'Fee',
-            labelStyle: labelTextStyle,
-            child: Text(transactionModel.fee.toString(), style: valueTextStyle),
+        if (fee != null) ...<Widget>[
+          CopyWrapper(
+            value: fee,
+            child: LabelWrapperVertical(
+              label: 'Fee',
+              labelStyle: labelTextStyle,
+              child: Text(fee, style: valueTextStyle),
+            ),
           ),
         ],
-        if (transactionModel.message != null) ...<Widget>[
-          LabelWrapperVertical(
-            label: 'Message',
-            labelStyle: labelTextStyle,
-            child: Text(transactionModel.message!, style: valueTextStyle),
+        if (message != null) ...<Widget>[
+          CopyWrapper(
+            value: message,
+            child: LabelWrapperVertical(
+              label: 'Message',
+              labelStyle: labelTextStyle,
+              child: Text(message, style: valueTextStyle),
+            ),
           ),
           const SizedBox(height: 16),
         ],
-        if (transactionModel.signature != null) ...<Widget>[
-          LabelWrapperVertical(
-            label: 'Signature',
-            bottomBorderVisibleBool: false,
-            labelStyle: labelTextStyle,
-            child: Text(StringUtils.getShortHex(transactionModel.signature!, 4), style: valueTextStyle),
+        if (signature != null) ...<Widget>[
+          CopyWrapper(
+            value: signature,
+            child: LabelWrapperVertical(
+              label: 'Signature',
+              bottomBorderVisibleBool: false,
+              labelStyle: labelTextStyle,
+              child: Text(StringUtils.getShortHex(signature, 4), style: valueTextStyle),
+            ),
           ),
         ],
       ],

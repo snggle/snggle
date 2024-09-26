@@ -1,0 +1,4 @@
+enum TextDisplayModeType {
+  text,
+  hex,
+}

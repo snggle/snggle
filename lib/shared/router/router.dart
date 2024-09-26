@@ -31,6 +31,7 @@ class AppRouter extends $AppRouter {
         ],
       ),
       AutoRoute(page: WalletCreateRoute.page),
+      AutoRoute(page: TransactionDetailsRoute.page),
       AutoRoute(
         page: BottomNavigationRoute.page,
         maintainState: true,

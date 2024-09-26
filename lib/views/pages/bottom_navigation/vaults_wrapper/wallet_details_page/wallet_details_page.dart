@@ -142,6 +142,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                     transactions: walletDetailsPageState.transactions,
                     selectionModel: walletDetailsPageState.selectionModel,
                     walletDetailsPageCubit: widget.walletDetailsPageCubit,
+                    networkGroupModel: widget.networkGroupModel,
                   ),
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: CustomBottomNavigationBar.height)),

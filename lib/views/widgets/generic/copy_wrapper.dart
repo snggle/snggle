@@ -40,13 +40,11 @@ class _CopyWrapperState extends State<CopyWrapper> {
           child: Text('Copied', style: textTheme.labelMedium?.copyWith(color: AppColors.body3)),
         ),
       ),
-      child: Container(
-        color: Colors.transparent,
-        child: GestureDetector(
-          onTap: widget.onTap,
-          onLongPress: _copy,
-          child: widget.child,
-        ),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: widget.onTap,
+        onLongPress: _copy,
+        child: widget.child,
       ),
     );
   }

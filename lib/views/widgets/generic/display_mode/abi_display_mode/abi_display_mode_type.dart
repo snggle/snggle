@@ -1,0 +1,4 @@
+enum AbiDisplayModeType {
+  abi,
+  hex,
+}
