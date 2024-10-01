@@ -4,6 +4,7 @@ enum DatabaseMock {
   fullDatabaseMock,
   fullDatabaseMockWithPasswords,
   masterKeyOnlyDatabaseMock,
+  defaultMasterKeyOnlyDatabaseMock,
   transactionsDatabaseMock,
   transactionsDatabaseMockWithPassword,
 

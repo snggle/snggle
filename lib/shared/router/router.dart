@@ -48,7 +48,12 @@ class AppRouter extends $AppRouter {
           AutoRoute(page: WalletListRoute.page),
           AutoRoute(page: SecretsRoute.page),
           AutoRoute(page: AppsRoute.page),
-          AutoRoute(page: SettingsRoute.page),
+          AutoRoute(
+            page: SettingsSectionWrapperRoute.page,
+            children: <AutoRoute>[
+              AutoRoute(page: SettingsRoute.page, initial: true),
+            ],
+          ),
         ],
       ),
     ];
