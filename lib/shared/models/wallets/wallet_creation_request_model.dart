@@ -4,24 +4,20 @@ import 'package:equatable/equatable.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class WalletCreationRequestModel extends Equatable {
-  final int index;
   final String derivationPath;
-  final String network;
+  final String name;
   final Uint8List publicKey;
   final Uint8List privateKey;
   final FilesystemPath parentFilesystemPath;
-  final String? name;
 
   const WalletCreationRequestModel({
-    required this.index,
     required this.derivationPath,
-    required this.network,
+    required this.name,
     required this.publicKey,
     required this.privateKey,
     required this.parentFilesystemPath,
-    this.name,
   });
 
   @override
-  List<Object?> get props => <Object?>[index, derivationPath, network, publicKey, parentFilesystemPath, name];
+  List<Object?> get props => <Object?>[derivationPath, name, publicKey, parentFilesystemPath];
 }

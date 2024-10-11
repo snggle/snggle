@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_state.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/shared/factories/network_group_model_factory.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
+import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
@@ -16,13 +18,15 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
   final VaultsService _vaultsService = globalLocator<VaultsService>();
 
   final TextEditingController vaultNameTextEditingController = TextEditingController();
-  final FilesystemPath parentFilesystemPath;
-  final VoidCallback? creationSuccessfulCallback;
+  final FilesystemPath _parentFilesystemPath;
+  final VoidCallback? _creationSuccessfulCallback;
 
   VaultCreatePageCubit({
-    required this.parentFilesystemPath,
-    this.creationSuccessfulCallback,
-  }) : super(const VaultCreatePageState());
+    required FilesystemPath parentFilesystemPath,
+    void Function()? creationSuccessfulCallback,
+  })  : _creationSuccessfulCallback = creationSuccessfulCallback,
+        _parentFilesystemPath = parentFilesystemPath,
+        super(const VaultCreatePageState());
 
   @override
   Future<void> close() async {
@@ -56,7 +60,7 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
     await _createVault(mnemonicWords);
     await minimalSavingTime;
 
-    creationSuccessfulCallback?.call();
+    _creationSuccessfulCallback?.call();
   }
 
   Future<void> _createVault(List<String> mnemonicWords) async {
@@ -64,7 +68,10 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
     Mnemonic mnemonic = Mnemonic(mnemonicWords);
 
     String vaultName = vaultNameTextEditingController.text;
-    VaultModel vaultModel = await _vaultModelFactory.createNewVault(parentFilesystemPath, mnemonic, vaultName);
-    await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath);
+    VaultModel vaultModel = await _vaultModelFactory.createNewVault(_parentFilesystemPath, mnemonic, vaultName);
+
+    // TODO(dominik): Temporary solution to use network template. In the future, there will be dedicated page to create network template
+    NetworkTemplateModel networkTemplateModel = PredefinedNetworkTemplates.ethereum;
+    await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath, networkTemplateModel.name, networkTemplateModel);
   }
 }

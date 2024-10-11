@@ -9,11 +9,11 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 class WalletsRepository {
   final IsarDatabaseManager isarDatabaseManager = globalLocator<IsarDatabaseManager>();
 
-  Future<int?> getLastIndex(FilesystemPath parentFilesystemPath) async {
-    int? lastIndex = await isarDatabaseManager.perform((Isar isar) {
-      return isar.wallets.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).sortByIndexDesc().indexProperty().findFirst();
+  Future<List<String>> getAllDerivationPaths(FilesystemPath parentFilesystemPath) async {
+    List<String> derivationPaths = await isarDatabaseManager.perform((Isar isar) {
+      return isar.wallets.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).derivationPathProperty().findAll();
     });
-    return lastIndex;
+    return derivationPaths;
   }
 
   Future<List<WalletEntity>> getAll() async {

@@ -39,7 +39,7 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
     // This section is used to determine the next derivation path segment for the new wallet
     // In current demo app, this value is calculated automatically, basing on the last wallet index existing in database
     // In the targeted app this value should be provided (or confirmed) by user an this functionality will be implemented on the next stages
-    int lastWalletIndex = await _walletsService.getLastIndex(state.filesystemPath);
+    int lastWalletIndex = await _walletsService.getLastDerivationIndex(state.filesystemPath);
     int walletIndex = lastWalletIndex + 1;
     String derivationPath = "m/44'/60'/0'/0/${walletIndex}";
 
@@ -51,12 +51,11 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
 
     await walletModelFactory.createNewWallet(
       WalletCreationRequestModel(
-        index: walletIndex,
         derivationPath: derivationPath,
-        network: 'ethereum',
         publicKey: derivedNode.publicKey,
         privateKey: derivedNode.privateKey!,
         parentFilesystemPath: state.filesystemPath,
+        name: 'Wallet ${walletIndex}',
       ),
     );
 

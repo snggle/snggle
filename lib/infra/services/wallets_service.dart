@@ -89,9 +89,19 @@ class WalletsService implements IListItemsService<WalletModel> {
     return globalLocator<WalletModelFactory>().createFromEntity(walletEntity);
   }
 
-  Future<int> getLastIndex(FilesystemPath parentFilesystemPath) async {
-    int? lastIndex = await _walletsRepository.getLastIndex(parentFilesystemPath);
-    return lastIndex ?? -1;
+  Future<int> getLastDerivationIndex(FilesystemPath parentFilesystemPath) async {
+    List<String> derivationPaths = await _walletsRepository.getAllDerivationPaths(parentFilesystemPath);
+    List<int> derivationIndexes = derivationPaths.map((String derivationPath) {
+      return int.parse(derivationPath.replaceAll("''", '').split('/').last);
+    }).toList()
+      ..sort();
+
+    return derivationIndexes.isEmpty ? -1 : derivationIndexes.last;
+  }
+
+  Future<bool> isDerivationPathExists(FilesystemPath parentFilesystemPath, String derivationPathString) async {
+    List<String> derivationPaths = await _walletsRepository.getAllDerivationPaths(parentFilesystemPath);
+    return derivationPaths.contains(derivationPathString);
   }
 
   Future<WalletModel> updateFilesystemPath(int id, FilesystemPath parentFilesystemPath) async {
