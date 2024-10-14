@@ -1,4 +1,4 @@
-import 'package:blockchain_utils/bip/mnemonic/mnemonic.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_state.dart';
@@ -10,7 +10,10 @@ import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
+import 'package:snggle/shared/utils/crypto/mnemonic_fingerprint_calculator.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
+import 'package:snggle/shared/utils/logger/app_logger.dart';
+import 'package:snggle/shared/utils/logger/log_level.dart';
 
 class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
   final NetworkGroupModelFactory _networkGroupsModelFactory = globalLocator<NetworkGroupModelFactory>();
@@ -19,13 +22,10 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
 
   final TextEditingController vaultNameTextEditingController = TextEditingController();
   final FilesystemPath _parentFilesystemPath;
-  final VoidCallback? _creationSuccessfulCallback;
 
   VaultCreatePageCubit({
     required FilesystemPath parentFilesystemPath,
-    void Function()? creationSuccessfulCallback,
-  })  : _creationSuccessfulCallback = creationSuccessfulCallback,
-        _parentFilesystemPath = parentFilesystemPath,
+  })  : _parentFilesystemPath = parentFilesystemPath,
         super(const VaultCreatePageState());
 
   @override
@@ -40,6 +40,12 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
     int lastVaultIndex = await _vaultsService.getLastIndex();
     List<String> mnemonic = MnemonicModel.generate(mnemonicSize).mnemonicList;
 
+    if (lastVaultIndex == -1) {
+      vaultNameTextEditingController.text = 'Vault';
+    } else {
+      vaultNameTextEditingController.text = 'Vault ${lastVaultIndex + 1}';
+    }
+
     emit(state.copyWith(
       confirmPageEnabledBool: true,
       lastVaultIndex: lastVaultIndex,
@@ -51,16 +57,20 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
   Future<void> saveMnemonic() async {
     assert(state.mnemonic != null, 'Method saveMnemonic() can be called only when mnemonic is set');
 
-    // To avoid flickering of loading indicator, wait at least 1 second before completing saving operation
-    Future<void> minimalSavingTime = Future<void>.delayed(const Duration(seconds: 1));
-
     List<String> mnemonicWords = state.mnemonic!;
-    emit(const VaultCreatePageState.loading());
+    Mnemonic mnemonic = Mnemonic(mnemonicWords);
+    String fingerprint = await MnemonicFingerprintCalculator.calc(mnemonic);
 
-    await _createVault(mnemonicWords);
-    await minimalSavingTime;
-
-    _creationSuccessfulCallback?.call();
+    try {
+      VaultModel repeatedVaultModel = await _vaultsService.getDuplicateVault(fingerprint);
+      emit(state.copyWith(repeatedVaultModel: repeatedVaultModel));
+    } catch (e) {
+      AppLogger().log(
+        message: 'Did not find the repeated vault, proceeded with vault creation',
+        logLevel: LogLevel.info,
+      );
+      await _createVault(mnemonicWords);
+    }
   }
 
   Future<void> _createVault(List<String> mnemonicWords) async {

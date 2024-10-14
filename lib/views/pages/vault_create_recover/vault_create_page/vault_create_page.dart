@@ -10,7 +10,6 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/vault_create_recover/mnemonic_size_picker.dart';
 import 'package:snggle/views/pages/vault_create_recover/vault_create_page/mnemonic_form_generated.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
-import 'package:snggle/views/widgets/generic/loading_scaffold.dart';
 import 'package:snggle/views/widgets/generic/paginated_form/paginated_form.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
@@ -31,7 +30,6 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
   final PageController pageController = PageController(keepPage: false);
   late final VaultCreatePageCubit vaultCreatePageCubit = VaultCreatePageCubit(
     parentFilesystemPath: widget.parentFilesystemPath,
-    creationSuccessfulCallback: _popPageWithResult,
   );
 
   @override
@@ -46,9 +44,6 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
     return BlocBuilder<VaultCreatePageCubit, VaultCreatePageState>(
       bloc: vaultCreatePageCubit,
       builder: (BuildContext context, VaultCreatePageState vaultCreatePageState) {
-        if (vaultCreatePageState.loadingBool) {
-          return const LoadingScaffold();
-        }
         return CustomScaffold(
           title: 'Vault creation',
           popAvailableBool: false,
@@ -66,10 +61,10 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
               MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected),
               if (vaultCreatePageState.confirmPageEnabledBool)
                 MnemonicFormGenerated(
-                  lastVaultIndex: vaultCreatePageState.lastVaultIndex!,
                   mnemonicSize: vaultCreatePageState.mnemonicSize!,
                   mnemonic: vaultCreatePageState.mnemonic!,
                   vaultCreatePageCubit: vaultCreatePageCubit,
+                  repeatedVaultModel: vaultCreatePageState.repeatedVaultModel,
                 )
               else
                 const SizedBox(),
@@ -92,9 +87,5 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
   Future<void> _handleMnemonicSizeSelected(int mnemonicSize) async {
     await vaultCreatePageCubit.init(mnemonicSize);
     await pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
-  }
-
-  void _popPageWithResult() {
-    AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.creationSuccessful);
   }
 }

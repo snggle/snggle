@@ -3,6 +3,7 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class VaultModel extends AListItemModel {
   final int index;
+  final String fingerprint;
   final List<AListItemModel> listItemsPreview;
 
   VaultModel({
@@ -12,6 +13,7 @@ class VaultModel extends AListItemModel {
     required super.filesystemPath,
     required super.name,
     required this.index,
+    required this.fingerprint,
     required this.listItemsPreview,
   });
 
@@ -22,6 +24,7 @@ class VaultModel extends AListItemModel {
     bool? pinnedBool,
     int? index,
     FilesystemPath? filesystemPath,
+    String? fingerprint,
     String? name,
     List<AListItemModel>? listItemsPreview,
   }) {
@@ -31,6 +34,7 @@ class VaultModel extends AListItemModel {
       pinnedBool: pinnedBool ?? this.pinnedBool,
       index: index ?? this.index,
       filesystemPath: filesystemPath ?? this.filesystemPath,
+      fingerprint: fingerprint ?? this.fingerprint,
       name: name ?? this.name,
       listItemsPreview: listItemsPreview ?? this.listItemsPreview,
     );
@@ -42,5 +46,5 @@ class VaultModel extends AListItemModel {
   }
 
   @override
-  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, index, name, filesystemPath, listItemsPreview];
+  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, index, filesystemPath, fingerprint, name, listItemsPreview];
 }

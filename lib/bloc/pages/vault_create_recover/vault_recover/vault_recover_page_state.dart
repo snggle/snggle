@@ -1,23 +1,24 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:snggle/shared/models/vaults/vault_model.dart';
 
 class VaultRecoverPageState extends Equatable {
   final bool confirmPageEnabledBool;
   final bool loadingBool;
   final bool mnemonicValidBool;
   final bool mnemonicFilledBool;
-  final int? lastVaultIndex;
   final int? mnemonicSize;
   final List<TextEditingController>? textControllers;
+  final VaultModel? repeatedVaultModel;
 
   const VaultRecoverPageState({
     this.confirmPageEnabledBool = false,
     this.loadingBool = false,
     this.mnemonicValidBool = false,
     this.mnemonicFilledBool = false,
-    this.lastVaultIndex,
     this.mnemonicSize,
     this.textControllers,
+    this.repeatedVaultModel,
   });
 
   const VaultRecoverPageState.loading() : this(loadingBool: true);
@@ -30,17 +31,19 @@ class VaultRecoverPageState extends Equatable {
     int? mnemonicSize,
     List<FocusNode>? focusNodes,
     List<TextEditingController>? textControllers,
+    VaultModel? repeatedVaultModel,
+    bool clearRepeatedVaultModelBool = false,
   }) {
     return VaultRecoverPageState(
       confirmPageEnabledBool: confirmPageEnabledBool ?? this.confirmPageEnabledBool,
       mnemonicValidBool: mnemonicValidBool ?? this.mnemonicValidBool,
       mnemonicFilledBool: mnemonicFilledBool ?? this.mnemonicFilledBool,
-      lastVaultIndex: lastVaultIndex ?? this.lastVaultIndex,
       mnemonicSize: mnemonicSize ?? this.mnemonicSize,
       textControllers: textControllers ?? this.textControllers,
+      repeatedVaultModel: clearRepeatedVaultModelBool ? null : repeatedVaultModel ?? this.repeatedVaultModel,
     );
   }
 
   @override
-  List<Object?> get props => <Object?>[confirmPageEnabledBool, mnemonicValidBool, mnemonicFilledBool, lastVaultIndex, mnemonicSize, textControllers];
+  List<Object?> get props => <Object?>[confirmPageEnabledBool, mnemonicValidBool, mnemonicFilledBool, mnemonicSize, textControllers, repeatedVaultModel];
 }

@@ -43,6 +43,17 @@ class VaultsRepository {
     return vaultEntity;
   }
 
+  Future<VaultEntity> getByFingerprint(String fingerprint) async {
+    VaultEntity? vaultEntity = await isarDatabaseManager.perform((Isar isar) {
+      return isar.vaults.where().filter().fingerprintEqualTo(fingerprint).findFirst();
+    });
+
+    if (vaultEntity == null) {
+      throw ChildKeyNotFoundException();
+    }
+    return vaultEntity;
+  }
+
   Future<Id> save(VaultEntity vaultEntity) async {
     return isarDatabaseManager.perform((Isar isar) async {
       Id createdId = await isar.writeTxn(() async {
