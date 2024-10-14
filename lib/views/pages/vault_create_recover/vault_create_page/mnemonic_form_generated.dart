@@ -54,6 +54,7 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    bool firstVaultBool = widget.lastVaultIndex == -1;
 
     return ScrollableLayout(
       scrollController: scrollController,
@@ -61,13 +62,13 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
         if (obscureTextBool)
           BottomTooltipItem(
             label: 'Show',
-            assetIconData: AppIcons.menu_eye_open,
+            assetIconData: AppIcons.menu_eye_closed,
             onTap: () => setState(() => obscureTextBool = false),
           )
         else
           BottomTooltipItem(
             label: 'Hide',
-            assetIconData: AppIcons.menu_eye_closed,
+            assetIconData: AppIcons.menu_eye_open,
             onTap: () => setState(() => obscureTextBool = true),
           ),
         ValueListenableBuilder<bool>(
@@ -95,7 +96,7 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
               bottomBorderVisibleBool: false,
               child: CustomTextField(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                initialValue: 'New Vault ${widget.lastVaultIndex + 1}',
+                initialValue: firstVaultBool ? 'New Vault' : 'New Vault ${widget.lastVaultIndex + 1}',
                 keyboardType: TextInputType.text,
                 enableInteractiveSelectionBool: true,
                 textEditingController: widget.vaultCreatePageCubit.vaultNameTextEditingController,

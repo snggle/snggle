@@ -1,4 +1,4 @@
-import 'package:blockchain_utils/bip/mnemonic/mnemonic.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
@@ -27,7 +27,7 @@ void main() {
     test('Should [return VaultModel] with initial values (database EMPTY)', () async {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.masterKeyOnlyDatabaseMock);
-      Mnemonic actualMnemonic = Mnemonic.fromString('practice bundle birth birth invite route loop spy weapon suffer truck bounce');
+      Mnemonic actualMnemonic = Mnemonic(const <String>['practice', 'bundle', 'birth', 'birth', 'invite', 'route', 'loop', 'spy', 'weapon', 'suffer', 'truck', 'bounce']);
 
       // Act
       VaultModel actualVaultModel = await globalLocator<VaultModelFactory>().createNewVault(const FilesystemPath.empty(), actualMnemonic, 'NEW VAULT');
@@ -38,6 +38,7 @@ void main() {
         encryptedBool: false,
         pinnedBool: false,
         filesystemPath: FilesystemPath.fromString('vault1'),
+        fingerprint: 'rbPUWRXeYnqrxPsuYsDGprj7esbf1bAqDJIFbS5L77M=',
         name: 'NEW VAULT',
         index: 0,
         listItemsPreview: <AListItemModel>[],
@@ -49,7 +50,7 @@ void main() {
     test('Should [return VaultModel] with initial values (database NOT EMPTY)', () async {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-      Mnemonic actualMnemonic = Mnemonic.fromString('practice bundle birth birth invite route loop spy weapon suffer truck bounce');
+      Mnemonic actualMnemonic = Mnemonic(const <String>['practice', 'bundle', 'birth', 'birth', 'invite', 'route', 'loop', 'spy', 'weapon', 'suffer', 'truck', 'bounce']);
 
       // Act
       VaultModel actualVaultModel = await globalLocator<VaultModelFactory>().createNewVault(const FilesystemPath.empty(), actualMnemonic, 'NEW VAULT');
@@ -60,6 +61,7 @@ void main() {
         encryptedBool: false,
         pinnedBool: false,
         filesystemPath: FilesystemPath.fromString('vault6'),
+        fingerprint: 'rbPUWRXeYnqrxPsuYsDGprj7esbf1bAqDJIFbS5L77M=',
         name: 'NEW VAULT',
         index: 5,
         listItemsPreview: <AListItemModel>[],
@@ -75,11 +77,11 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       List<VaultEntity> actualVaultEntityList = <VaultEntity>[
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5')
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '', name: 'VAULT 5')
       ];
 
       // Act
@@ -93,6 +95,7 @@ void main() {
           pinnedBool: false,
           index: 0,
           filesystemPath: FilesystemPath.fromString('vault1'),
+          fingerprint: '',
           name: 'VAULT 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -109,6 +112,7 @@ void main() {
           pinnedBool: false,
           index: 1,
           filesystemPath: FilesystemPath.fromString('vault2'),
+          fingerprint: '',
           name: 'VAULT 2',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -122,6 +126,7 @@ void main() {
           pinnedBool: false,
           index: 2,
           filesystemPath: FilesystemPath.fromString('vault3'),
+          fingerprint: '',
           name: 'VAULT 3',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -135,6 +140,7 @@ void main() {
           pinnedBool: false,
           index: 3,
           filesystemPath: FilesystemPath.fromString('group1/vault4'),
+          fingerprint: '',
           name: 'VAULT 4',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -148,6 +154,7 @@ void main() {
           pinnedBool: false,
           index: 4,
           filesystemPath: FilesystemPath.fromString('group1/vault5'),
+          fingerprint: '',
           name: 'VAULT 5',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -165,11 +172,11 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       List<VaultEntity> actualVaultEntityList = <VaultEntity>[
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5')
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '', name: 'VAULT 5')
       ];
 
       // Act
@@ -178,11 +185,11 @@ void main() {
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[
         // @formatter:off
-        VaultModel(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPath: FilesystemPath.fromString('vault1'), name: 'VAULT 1', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPath: FilesystemPath.fromString('vault2'), name: 'VAULT 2', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPath: FilesystemPath.fromString('vault3'), name: 'VAULT 3', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+        VaultModel(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPath: FilesystemPath.fromString('vault1'), fingerprint: '', name: 'VAULT 1', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPath: FilesystemPath.fromString('vault2'), fingerprint: '', name: 'VAULT 2', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPath: FilesystemPath.fromString('vault3'), fingerprint: '', name: 'VAULT 3', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: '', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: '', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
         // @formatter:on
       ];
 
@@ -200,6 +207,7 @@ void main() {
         encryptedBool: false,
         pinnedBool: false,
         index: 0,
+        fingerprint: '',
         name: 'VAULT 1',
         filesystemPathString: 'vault1',
       );
@@ -214,6 +222,7 @@ void main() {
         pinnedBool: false,
         index: 0,
         filesystemPath: FilesystemPath.fromString('vault1'),
+        fingerprint: '',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[
           // @formatter:off
@@ -237,6 +246,7 @@ void main() {
         encryptedBool: false,
         pinnedBool: false,
         index: 0,
+        fingerprint: '',
         name: 'VAULT 1',
         filesystemPathString: 'vault1',
       );
@@ -251,6 +261,7 @@ void main() {
         pinnedBool: false,
         index: 0,
         filesystemPath: FilesystemPath.fromString('vault1'),
+        fingerprint: '',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[],
       );

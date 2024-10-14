@@ -1,4 +1,8 @@
-import 'package:blockchain_utils/bip/mnemonic/mnemonic.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:crypto/crypto.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_state.dart';
@@ -20,11 +24,14 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
   final TextEditingController vaultNameTextEditingController = TextEditingController();
   final FilesystemPath _parentFilesystemPath;
   final VoidCallback? _creationSuccessfulCallback;
+  final VoidCallback? _vaultRepeatedCallBack;
 
   VaultCreatePageCubit({
     required FilesystemPath parentFilesystemPath,
     void Function()? creationSuccessfulCallback,
+    void Function()? vaultRepeatedCallBack,
   })  : _creationSuccessfulCallback = creationSuccessfulCallback,
+        _vaultRepeatedCallBack = vaultRepeatedCallBack,
         _parentFilesystemPath = parentFilesystemPath,
         super(const VaultCreatePageState());
 
@@ -51,16 +58,25 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
   Future<void> saveMnemonic() async {
     assert(state.mnemonic != null, 'Method saveMnemonic() can be called only when mnemonic is set');
 
+    List<String> mnemonicWords = state.mnemonic!;
+    Mnemonic mnemonic = Mnemonic(mnemonicWords);
+    bool mnemonicRepeatedBool = await _isFingerprintRepeated(mnemonic);
+
     // To avoid flickering of loading indicator, wait at least 1 second before completing saving operation
     Future<void> minimalSavingTime = Future<void>.delayed(const Duration(seconds: 1));
 
-    List<String> mnemonicWords = state.mnemonic!;
-    emit(const VaultCreatePageState.loading());
+    if (mnemonicRepeatedBool) {
+      emit(const VaultCreatePageState.loading());
 
-    await _createVault(mnemonicWords);
-    await minimalSavingTime;
+      _vaultRepeatedCallBack?.call();
+    } else {
+      emit(const VaultCreatePageState.loading());
 
-    _creationSuccessfulCallback?.call();
+      await _createVault(mnemonicWords);
+      await minimalSavingTime;
+
+      _creationSuccessfulCallback?.call();
+    }
   }
 
   Future<void> _createVault(List<String> mnemonicWords) async {
@@ -73,5 +89,22 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
     // TODO(dominik): Temporary solution to use network template. In the future, there will be dedicated page to create network template
     NetworkTemplateModel networkTemplateModel = PredefinedNetworkTemplates.ethereum;
     await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath, networkTemplateModel.name, networkTemplateModel);
+  }
+
+  Future<bool> _isFingerprintRepeated(Mnemonic mnemonic) async {
+    LegacyMnemonicSeedGenerator legacyMnemonicSeedGenerator = LegacyMnemonicSeedGenerator();
+    Uint8List seed = await legacyMnemonicSeedGenerator.generateSeed(mnemonic);
+    String fingerprint = base64Encode(sha256.convert(seed).bytes);
+
+    List<VaultModel> allVaultModels = await _vaultsService.getAllByParentPath(const FilesystemPath.empty());
+    List<String> allFingerprints = allVaultModels.map((VaultModel e) => e.fingerprint).toList();
+
+    bool fingerprintRepeatedBool = false;
+    for (String savedFingerprint in allFingerprints) {
+      if (savedFingerprint == fingerprint) {
+        fingerprintRepeatedBool = true;
+      }
+    }
+    return fingerprintRepeatedBool;
   }
 }

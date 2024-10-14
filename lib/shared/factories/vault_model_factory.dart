@@ -1,4 +1,8 @@
-import 'package:blockchain_utils/bip/mnemonic/mnemonic.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:crypto/crypto.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
@@ -24,6 +28,10 @@ class VaultModelFactory {
   Future<VaultModel> createNewVault(FilesystemPath parentFilesystemPath, Mnemonic mnemonic, [String? name]) async {
     int lastVaultIndex = await _vaultsService.getLastIndex();
 
+    LegacyMnemonicSeedGenerator legacyMnemonicSeedGenerator = LegacyMnemonicSeedGenerator();
+
+    Uint8List seed = await legacyMnemonicSeedGenerator.generateSeed(mnemonic);
+
     VaultModel vaultModel = VaultModel(
       id: Isar.autoIncrement,
       index: lastVaultIndex + 1,
@@ -32,13 +40,14 @@ class VaultModelFactory {
       filesystemPath: const FilesystemPath.empty(),
       name: name,
       listItemsPreview: <VaultModel>[],
+      fingerprint: base64Encode(sha256.convert(seed).bytes),
     );
     int vaultId = await _vaultsService.save(vaultModel);
     vaultModel = await _vaultsService.updateFilesystemPath(vaultId, parentFilesystemPath);
 
     VaultSecretsModel vaultSecretsModel = VaultSecretsModel(
       filesystemPath: vaultModel.filesystemPath,
-      mnemonicModel: MnemonicModel(mnemonic.toList()),
+      mnemonicModel: MnemonicModel(mnemonic.mnemonicList),
     );
 
     await _secretsService.save(vaultSecretsModel, PasswordModel.defaultPassword());
@@ -71,6 +80,7 @@ class VaultModelFactory {
       index: vaultEntity.index,
       id: vaultEntity.id,
       pinnedBool: vaultEntity.pinnedBool,
+      fingerprint: vaultEntity.fingerprint,
       encryptedBool: vaultEntity.encryptedBool,
       filesystemPath: vaultEntity.filesystemPath,
       name: vaultEntity.name,

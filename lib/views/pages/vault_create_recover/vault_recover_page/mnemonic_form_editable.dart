@@ -70,6 +70,7 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
       keyboardValueNotifier: widget.keyboardValueNotifier,
       builder: ({required bool customKeyboardVisibleBool, required bool nativeKeyboardVisibleBool}) {
         bool anyKeyboardVisibleBool = customKeyboardVisibleBool || nativeKeyboardVisibleBool;
+        bool firstVaultBool = widget.lastVaultIndex == -1;
 
         return KeyboardWrapper(
           keyboardValueNotifier: widget.keyboardValueNotifier,
@@ -81,13 +82,13 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
               if (obscureTextBool)
                 BottomTooltipItem(
                   label: 'Show',
-                  assetIconData: AppIcons.menu_eye_open,
+                  assetIconData: AppIcons.menu_eye_closed,
                   onTap: () => setState(() => obscureTextBool = false),
                 )
               else
                 BottomTooltipItem(
                   label: 'Hide',
-                  assetIconData: AppIcons.menu_eye_closed,
+                  assetIconData: AppIcons.menu_eye_open,
                   onTap: () => setState(() => obscureTextBool = true),
                 ),
               BottomTooltipItem(
@@ -108,7 +109,7 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
                     bottomBorderVisibleBool: false,
                     child: CustomTextField(
                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                      initialValue: 'New Vault ${widget.lastVaultIndex + 1}',
+                      initialValue: firstVaultBool ? 'New Vault' : 'New Vault ${widget.lastVaultIndex + 1}',
                       keyboardType: TextInputType.text,
                       enableInteractiveSelectionBool: true,
                       textEditingController: widget.vaultRecoverPageCubit.vaultNameTextEditingController,

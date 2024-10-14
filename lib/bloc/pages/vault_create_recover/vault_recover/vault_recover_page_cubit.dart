@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:bip39/bip39.dart';
 import 'package:blockchain_utils/bip/bip/bip.dart';
-import 'package:blockchain_utils/bip/mnemonic/mnemonic.dart';
 import 'package:blockchain_utils/bip/mnemonic/mnemonic_validator.dart';
+import 'package:crypto/crypto.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_state.dart';
@@ -22,11 +26,14 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
   final TextEditingController vaultNameTextEditingController = TextEditingController();
   final FilesystemPath _parentFilesystemPath;
   final VoidCallback? _creationSuccessfulCallback;
+  final VoidCallback? _vaultRepeatedCallBack;
 
   VaultRecoverPageCubit({
     required FilesystemPath parentFilesystemPath,
     void Function()? creationSuccessfulCallback,
+    void Function()? vaultRepeatedCallBack,
   })  : _creationSuccessfulCallback = creationSuccessfulCallback,
+        _vaultRepeatedCallBack = vaultRepeatedCallBack,
         _parentFilesystemPath = parentFilesystemPath,
         super(const VaultRecoverPageState());
 
@@ -67,9 +74,16 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
     // TODO(dominik): Temporary solution to build and validate mnemonic. It should be improved after 'cryptography_utils' package implementation
     Mnemonic mnemonic = Mnemonic(mnemonicWords);
     Bip39MnemonicDecoder decoder = Bip39MnemonicDecoder();
-    bool mnemonicValidBool = MnemonicValidator<Bip39MnemonicDecoder>(decoder).isValid(mnemonic.toStr());
+    bool mnemonicValidBool = MnemonicValidator<Bip39MnemonicDecoder>(decoder).isValid(mnemonic.toString());
 
-    if (mnemonicValidBool) {
+    bool mnemonicRepeatedBool = await _isFingerprintRepeated(mnemonic);
+    mnemonicValidBool = mnemonicValidBool && (mnemonicRepeatedBool == false);
+
+    if (mnemonicRepeatedBool) {
+      emit(const VaultRecoverPageState.loading());
+
+      _vaultRepeatedCallBack?.call();
+    } else if (mnemonicValidBool) {
       emit(const VaultRecoverPageState.loading());
 
       await _createVault(mnemonicWords);
@@ -105,5 +119,22 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
     // TODO(dominik): Temporary solution to use network template. In the future, there will be dedicated page to create network template
     NetworkTemplateModel networkTemplateModel = PredefinedNetworkTemplates.ethereum;
     await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath, networkTemplateModel.name, networkTemplateModel);
+  }
+
+  Future<bool> _isFingerprintRepeated(Mnemonic mnemonic) async {
+    LegacyMnemonicSeedGenerator legacyMnemonicSeedGenerator = LegacyMnemonicSeedGenerator();
+    Uint8List seed = await legacyMnemonicSeedGenerator.generateSeed(mnemonic);
+    String fingerprint = base64Encode(sha256.convert(seed).bytes);
+
+    List<VaultModel> allVaultModels = await _vaultsService.getAllByParentPath(const FilesystemPath.empty());
+    List<String> allFingerprints = allVaultModels.map((VaultModel e) => e.fingerprint).toList();
+
+    bool fingerprintRepeatedBool = false;
+    for (String savedFingerprint in allFingerprints) {
+      if (savedFingerprint == fingerprint) {
+        fingerprintRepeatedBool = true;
+      }
+    }
+    return fingerprintRepeatedBool;
   }
 }
