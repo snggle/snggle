@@ -68,8 +68,8 @@ void main() {
           name: 'VAULTS GROUP 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-            VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-            VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+            VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+            VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
             // @formatter:on
           ],
         ),
@@ -151,8 +151,8 @@ void main() {
         name: 'ETHEREUM BASED',
         listItemsPreview: <AListItemModel>[
           // @formatter:off
-          VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, name: 'VAULT 4', filesystemPath: FilesystemPath.fromString('group1/vault4'), listItemsPreview: <AListItemModel>[]),
-          VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, name: 'VAULT 5', filesystemPath: FilesystemPath.fromString('group1/vault5'), listItemsPreview: <AListItemModel>[]),
+          VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 4', filesystemPath: FilesystemPath.fromString('group1/vault4'), listItemsPreview: <AListItemModel>[]),
+          VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 5', filesystemPath: FilesystemPath.fromString('group1/vault5'), listItemsPreview: <AListItemModel>[]),
           // @formatter:on
         ],
       );

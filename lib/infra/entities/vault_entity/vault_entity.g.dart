@@ -41,6 +41,11 @@ const VaultEntitySchema = CollectionSchema(
       id: 4,
       name: r'pinnedBool',
       type: IsarType.bool,
+    ),
+    r'seedHash': PropertySchema(
+      id: 5,
+      name: r'seedHash',
+      type: IsarType.string,
     )
   },
   estimateSize: _vaultEntityEstimateSize,
@@ -97,6 +102,7 @@ int _vaultEntityEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.seedHash.length * 3;
   return bytesCount;
 }
 
@@ -111,6 +117,7 @@ void _vaultEntitySerialize(
   writer.writeLong(offsets[2], object.index);
   writer.writeString(offsets[3], object.name);
   writer.writeBool(offsets[4], object.pinnedBool);
+  writer.writeString(offsets[5], object.seedHash);
 }
 
 VaultEntity _vaultEntityDeserialize(
@@ -126,6 +133,7 @@ VaultEntity _vaultEntityDeserialize(
     index: reader.readLong(offsets[2]),
     name: reader.readStringOrNull(offsets[3]),
     pinnedBool: reader.readBool(offsets[4]),
+    seedHash: reader.readString(offsets[5]),
   );
   return object;
 }
@@ -147,6 +155,8 @@ P _vaultEntityDeserializeProp<P>(
       return (reader.readStringOrNull(offset)) as P;
     case 4:
       return (reader.readBool(offset)) as P;
+    case 5:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -796,6 +806,141 @@ extension VaultEntityQueryFilter
       ));
     });
   }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> seedHashEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'seedHash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
+      seedHashGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'seedHash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
+      seedHashLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'seedHash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> seedHashBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'seedHash',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
+      seedHashStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'seedHash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
+      seedHashEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'seedHash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
+      seedHashContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'seedHash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> seedHashMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'seedHash',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
+      seedHashIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'seedHash',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
+      seedHashIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'seedHash',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension VaultEntityQueryObject
@@ -866,6 +1011,18 @@ extension VaultEntityQuerySortBy
   QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> sortByPinnedBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinnedBool', Sort.desc);
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> sortBySeedHash() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'seedHash', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> sortBySeedHashDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'seedHash', Sort.desc);
     });
   }
 }
@@ -946,6 +1103,18 @@ extension VaultEntityQuerySortThenBy
       return query.addSortBy(r'pinnedBool', Sort.desc);
     });
   }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> thenBySeedHash() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'seedHash', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> thenBySeedHashDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'seedHash', Sort.desc);
+    });
+  }
 }
 
 extension VaultEntityQueryWhereDistinct
@@ -980,6 +1149,13 @@ extension VaultEntityQueryWhereDistinct
   QueryBuilder<VaultEntity, VaultEntity, QDistinct> distinctByPinnedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'pinnedBool');
+    });
+  }
+
+  QueryBuilder<VaultEntity, VaultEntity, QDistinct> distinctBySeedHash(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'seedHash', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1020,6 +1196,12 @@ extension VaultEntityQueryProperty
   QueryBuilder<VaultEntity, bool, QQueryOperations> pinnedBoolProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pinnedBool');
+    });
+  }
+
+  QueryBuilder<VaultEntity, String, QQueryOperations> seedHashProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'seedHash');
     });
   }
 }

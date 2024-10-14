@@ -1,4 +1,8 @@
-import 'package:blockchain_utils/bip/mnemonic/mnemonic.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:crypto/crypto.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_state.dart';
@@ -50,6 +54,24 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
 
   Future<void> saveMnemonic() async {
     assert(state.mnemonic != null, 'Method saveMnemonic() can be called only when mnemonic is set');
+
+    // get all seed hashes from existing vaults
+    List<VaultModel> allVaultModels = await _vaultsService.getAllByParentPath(const FilesystemPath.empty());
+    List<String> allSeedHashes = allVaultModels.map((VaultModel e) => e.seedHash).toList();
+
+    //get seed hash of new vault
+    LegacyMnemonicSeedGenerator legacyMnemonicSeedGenerator = LegacyMnemonicSeedGenerator();
+    Uint8List seed = await legacyMnemonicSeedGenerator.generateSeed(Mnemonic(state.mnemonic!));
+    String seedHash = base64Encode(sha256.convert(seed).bytes);
+
+    //compare
+    bool mnemonicRepeatedBool = false;
+    for (String savedSeedHash in allSeedHashes) {
+      if (savedSeedHash == seedHash) {
+        mnemonicRepeatedBool = true;
+      }
+    }
+    print(mnemonicRepeatedBool);
 
     // To avoid flickering of loading indicator, wait at least 1 second before completing saving operation
     Future<void> minimalSavingTime = Future<void>.delayed(const Duration(seconds: 1));

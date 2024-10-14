@@ -34,6 +34,7 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
   late final VaultRecoverPageCubit vaultRecoverPageCubit = VaultRecoverPageCubit(
     parentFilesystemPath: widget.parentFilesystemPath,
     creationSuccessfulCallback: _handleVaultCreationSuccessful,
+    vaultRepeatedCallBack: _handleVaultRepeated,
   );
 
   @override
@@ -90,6 +91,10 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
 
   void _handleVaultCreationSuccessful() {
     AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.recoverySuccessful);
+  }
+
+  void _handleVaultRepeated() {
+    AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.recoveryVaultRepeated);
   }
 
   void _handleCustomPop() {

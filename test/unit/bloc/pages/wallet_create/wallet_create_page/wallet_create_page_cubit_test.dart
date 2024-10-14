@@ -31,6 +31,7 @@ void main() {
         pinnedBool: false,
         index: 0,
         filesystemPath: FilesystemPath.fromString('vault1'),
+        seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[],
       ),

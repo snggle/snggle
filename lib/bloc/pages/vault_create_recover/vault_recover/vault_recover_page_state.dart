@@ -6,6 +6,7 @@ class VaultRecoverPageState extends Equatable {
   final bool loadingBool;
   final bool mnemonicValidBool;
   final bool mnemonicFilledBool;
+  final bool mnemonicRepeatedBool;
   final int? lastVaultIndex;
   final int? mnemonicSize;
   final List<TextEditingController>? textControllers;
@@ -15,6 +16,7 @@ class VaultRecoverPageState extends Equatable {
     this.loadingBool = false,
     this.mnemonicValidBool = false,
     this.mnemonicFilledBool = false,
+    this.mnemonicRepeatedBool = false,
     this.lastVaultIndex,
     this.mnemonicSize,
     this.textControllers,
@@ -26,6 +28,7 @@ class VaultRecoverPageState extends Equatable {
     bool? confirmPageEnabledBool,
     bool? mnemonicValidBool,
     bool? mnemonicFilledBool,
+    bool? mnemonicRepeatedBool,
     int? lastVaultIndex,
     int? mnemonicSize,
     List<FocusNode>? focusNodes,
@@ -35,6 +38,7 @@ class VaultRecoverPageState extends Equatable {
       confirmPageEnabledBool: confirmPageEnabledBool ?? this.confirmPageEnabledBool,
       mnemonicValidBool: mnemonicValidBool ?? this.mnemonicValidBool,
       mnemonicFilledBool: mnemonicFilledBool ?? this.mnemonicFilledBool,
+      mnemonicRepeatedBool: mnemonicRepeatedBool ?? this.mnemonicRepeatedBool,
       lastVaultIndex: lastVaultIndex ?? this.lastVaultIndex,
       mnemonicSize: mnemonicSize ?? this.mnemonicSize,
       textControllers: textControllers ?? this.textControllers,
@@ -42,5 +46,5 @@ class VaultRecoverPageState extends Equatable {
   }
 
   @override
-  List<Object?> get props => <Object?>[confirmPageEnabledBool, mnemonicValidBool, mnemonicFilledBool, lastVaultIndex, mnemonicSize, textControllers];
+  List<Object?> get props => <Object?>[confirmPageEnabledBool, mnemonicValidBool, mnemonicFilledBool, mnemonicRepeatedBool, lastVaultIndex, mnemonicSize, textControllers];
 }
