@@ -19,24 +19,20 @@ class ETHAddressPreview extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
     TextStyle? finalTextStyle = (textStyle ?? textTheme.bodyMedium)?.copyWith(height: 1);
 
+    double iconSize = (finalTextStyle?.fontSize ?? 16) * 2;
+
     return CopyWrapper(
       value: address,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          SizedBox(
-            width: finalTextStyle?.fontSize,
-            height: finalTextStyle?.fontSize,
-            child: Center(
-              child: ClipOval(
-                child: SvgPicture.string(
-                  Blockies(seed: address).toSvg(size: 13),
-                  fit: BoxFit.cover,
-                  width: 16,
-                  height: 16,
-                ),
-              ),
+          ClipOval(
+            child: SvgPicture.string(
+              Blockies(seed: address).toSvg(size: iconSize.toInt()),
+              fit: BoxFit.cover,
+              width: iconSize,
+              height: iconSize,
             ),
           ),
           const SizedBox(width: 10),

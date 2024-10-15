@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
 
@@ -27,6 +28,36 @@ void main() {
       String expectedShortHex = 'Hello, World!';
 
       expect(actualShortHex, expectedShortHex);
+    });
+  });
+
+  group('Tests of StringUtils.getTextSize()', () {
+    test('Should [return text size] if [text EMPTY]', () {
+      // Arrange
+      String actualText = '';
+      TextStyle actualTextStyle = const TextStyle(fontSize: 16);
+
+      // Act
+      Size actualTextSize = StringUtils.getTextSize(actualText, actualTextStyle);
+
+      // Assert
+      Size expectedTextSize = const Size(0, 16);
+
+      expect(actualTextSize, expectedTextSize);
+    });
+
+    test('Should [return text size] if [text NOT EMPTY]', () {
+      // Arrange
+      String actualText = 'Hello World!';
+      TextStyle actualTextStyle = const TextStyle(fontSize: 16);
+
+      // Act
+      Size actualTextSize = StringUtils.getTextSize(actualText, actualTextStyle);
+
+      // Assert
+      Size expectedTextSize = const Size(192, 16);
+
+      expect(actualTextSize, expectedTextSize);
     });
   });
 }
