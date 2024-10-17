@@ -22,22 +22,22 @@ class WalletExportTypeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
+    Color? iconColor = selectedBool ? null : AppColors.darkGrey;
+    Color? textColor = selectedBool ? AppColors.body3 : AppColors.darkGrey;
+
     return GestureDetector(
       onTap: onTap,
       child: Stack(
         children: <Widget>[
-          Opacity(
-            opacity: selectedBool ? 1 : 0.3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                AssetIcon(icon, size: 100),
-                Text(
-                  label,
-                  style: theme.textTheme.labelMedium?.copyWith(color: AppColors.body3),
-                )
-              ],
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              AssetIcon(icon, size: 100, color: iconColor),
+              Text(
+                label,
+                style: theme.textTheme.labelMedium?.copyWith(color: textColor),
+              )
+            ],
           ),
           Positioned(
             top: 0,
