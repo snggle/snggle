@@ -28,8 +28,8 @@ void main() {
     name: 'VAULTS GROUP 1',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
-      VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-      VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+      VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+      VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
       // @formatter:on
     ],
   );
@@ -41,8 +41,8 @@ void main() {
     name: 'UPDATED VAULTS GROUP 1',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
-      VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-      VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+      VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+      VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
       // @formatter:on
     ],
   );
@@ -52,7 +52,7 @@ void main() {
     pinnedBool: false,
     index: 0,
     filesystemPath: FilesystemPath.fromString('vault1'),
-    seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=',
+    fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
     name: 'VAULT 1',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
@@ -69,7 +69,7 @@ void main() {
     pinnedBool: false,
     index: 1,
     filesystemPath: FilesystemPath.fromString('vault2'),
-    seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=',
+    fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=',
     name: 'VAULT 2',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
@@ -83,7 +83,7 @@ void main() {
     pinnedBool: false,
     index: 2,
     filesystemPath: FilesystemPath.fromString('vault3'),
-    seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=',
+    fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=',
     name: 'VAULT 3',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
@@ -97,7 +97,7 @@ void main() {
     pinnedBool: true,
     index: 2,
     filesystemPath: FilesystemPath.fromString('vault3'),
-    seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=',
+    fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=',
     name: 'UPDATED VAULT 3',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
@@ -672,7 +672,7 @@ void main() {
               pinnedBool: false,
               index: 3,
               filesystemPath: FilesystemPath.fromString('group1/vault4'),
-              seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=',
+              fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=',
               name: 'VAULT 4',
               listItemsPreview: <AListItemModel>[
                 // @formatter:off
@@ -686,7 +686,7 @@ void main() {
               pinnedBool: false,
               index: 4,
               filesystemPath: FilesystemPath.fromString('group1/vault5'),
-              seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=',
+              fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=',
               name: 'VAULT 5',
               listItemsPreview: <AListItemModel>[
                 // @formatter:off
@@ -740,7 +740,7 @@ void main() {
               pinnedBool: false,
               index: 3,
               filesystemPath: FilesystemPath.fromString('group1/vault4'),
-              seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=',
+              fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=',
               name: 'VAULT 4',
               listItemsPreview: <AListItemModel>[
                 // @formatter:off
@@ -754,7 +754,7 @@ void main() {
               pinnedBool: false,
               index: 4,
               filesystemPath: FilesystemPath.fromString('group1/vault5'),
-              seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=',
+              fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=',
               name: 'VAULT 5',
               listItemsPreview: <AListItemModel>[
                 // @formatter:off

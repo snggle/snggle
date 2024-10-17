@@ -40,7 +40,7 @@ class VaultModelFactory {
       filesystemPath: const FilesystemPath.empty(),
       name: name,
       listItemsPreview: <VaultModel>[],
-      seedHash: base64Encode(sha256.convert(seed).bytes),
+      fingerprint: base64Encode(sha256.convert(seed).bytes),
     );
     int vaultId = await _vaultsService.save(vaultModel);
     vaultModel = await _vaultsService.updateFilesystemPath(vaultId, parentFilesystemPath);
@@ -80,7 +80,7 @@ class VaultModelFactory {
       index: vaultEntity.index,
       id: vaultEntity.id,
       pinnedBool: vaultEntity.pinnedBool,
-      seedHash: vaultEntity.seedHash,
+      fingerprint: vaultEntity.fingerprint,
       encryptedBool: vaultEntity.encryptedBool,
       filesystemPath: vaultEntity.filesystemPath,
       name: vaultEntity.name,

@@ -138,6 +138,7 @@ class _VaultListPageState extends State<VaultListPage> {
               VaultCreateRecoverStatus.creationSuccessful => 'The vault creation process has been completed',
               VaultCreateRecoverStatus.recoverySuccessful => 'The vault recovery process has been completed',
               VaultCreateRecoverStatus.recoveryVaultRepeated => 'The vault already exists',
+              VaultCreateRecoverStatus.creationVaultRepeated => 'The vault already exists. The randomization algorithm on your device may be compromised.',
             },
             textAlign: TextAlign.center,
           ),

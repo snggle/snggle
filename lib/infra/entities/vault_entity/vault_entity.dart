@@ -10,7 +10,7 @@ class VaultEntity extends Equatable {
   final Id id;
   final bool encryptedBool;
   final bool pinnedBool;
-  final String seedHash;
+  final String fingerprint;
 
   @Index()
   final int index;
@@ -23,7 +23,7 @@ class VaultEntity extends Equatable {
     required this.id,
     required this.encryptedBool,
     required this.pinnedBool,
-    required this.seedHash,
+    required this.fingerprint,
     required this.index,
     required this.filesystemPathString,
     this.name,
@@ -34,7 +34,7 @@ class VaultEntity extends Equatable {
       id: vaultModel.id,
       encryptedBool: vaultModel.encryptedBool,
       pinnedBool: vaultModel.pinnedBool,
-      seedHash: vaultModel.seedHash,
+      fingerprint: vaultModel.fingerprint,
       index: vaultModel.index,
       filesystemPathString: vaultModel.filesystemPath.fullPath,
       name: vaultModel.name,
@@ -45,7 +45,7 @@ class VaultEntity extends Equatable {
     int? id,
     bool? encryptedBool,
     bool? pinnedBool,
-    String? seedHash,
+    String? fingerprint,
     int? index,
     String? filesystemPathString,
     String? name,
@@ -54,7 +54,7 @@ class VaultEntity extends Equatable {
       id: id ?? this.id,
       encryptedBool: encryptedBool ?? this.encryptedBool,
       pinnedBool: pinnedBool ?? this.pinnedBool,
-      seedHash: seedHash ?? this.seedHash,
+      fingerprint: fingerprint ?? this.fingerprint,
       index: index ?? this.index,
       filesystemPathString: filesystemPathString ?? this.filesystemPathString,
       name: name ?? this.name,

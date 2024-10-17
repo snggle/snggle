@@ -1,6 +1,7 @@
 enum VaultCreateRecoverStatus {
   creationSuccessful,
   recoverySuccessful,
+  creationVaultRepeated,
   recoveryVaultRepeated,
 }
 

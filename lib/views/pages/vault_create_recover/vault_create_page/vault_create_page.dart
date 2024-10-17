@@ -32,6 +32,7 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
   late final VaultCreatePageCubit vaultCreatePageCubit = VaultCreatePageCubit(
     parentFilesystemPath: widget.parentFilesystemPath,
     creationSuccessfulCallback: _popPageWithResult,
+    vaultRepeatedCallBack: _handleVaultRepeated,
   );
 
   @override
@@ -92,6 +93,10 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
   Future<void> _handleMnemonicSizeSelected(int mnemonicSize) async {
     await vaultCreatePageCubit.init(mnemonicSize);
     await pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
+  }
+
+  void _handleVaultRepeated() {
+    AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.creationVaultRepeated);
   }
 
   void _popPageWithResult() {

@@ -24,11 +24,14 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
   final TextEditingController vaultNameTextEditingController = TextEditingController();
   final FilesystemPath _parentFilesystemPath;
   final VoidCallback? _creationSuccessfulCallback;
+  final VoidCallback? _vaultRepeatedCallBack;
 
   VaultCreatePageCubit({
     required FilesystemPath parentFilesystemPath,
     void Function()? creationSuccessfulCallback,
+    void Function()? vaultRepeatedCallBack,
   })  : _creationSuccessfulCallback = creationSuccessfulCallback,
+        _vaultRepeatedCallBack = vaultRepeatedCallBack,
         _parentFilesystemPath = parentFilesystemPath,
         super(const VaultCreatePageState());
 
@@ -55,34 +58,26 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
   Future<void> saveMnemonic() async {
     assert(state.mnemonic != null, 'Method saveMnemonic() can be called only when mnemonic is set');
 
-    // get all seed hashes from existing vaults
-    List<VaultModel> allVaultModels = await _vaultsService.getAllByParentPath(const FilesystemPath.empty());
-    List<String> allSeedHashes = allVaultModels.map((VaultModel e) => e.seedHash).toList();
-
-    //get seed hash of new vault
-    LegacyMnemonicSeedGenerator legacyMnemonicSeedGenerator = LegacyMnemonicSeedGenerator();
-    Uint8List seed = await legacyMnemonicSeedGenerator.generateSeed(Mnemonic(state.mnemonic!));
-    String seedHash = base64Encode(sha256.convert(seed).bytes);
-
-    //compare
-    bool mnemonicRepeatedBool = false;
-    for (String savedSeedHash in allSeedHashes) {
-      if (savedSeedHash == seedHash) {
-        mnemonicRepeatedBool = true;
-      }
-    }
-    print(mnemonicRepeatedBool);
+    List<String> mnemonicWords = state.mnemonic!;
+    Mnemonic mnemonic = Mnemonic(mnemonicWords);
+    // Mnemonic mnemonic = Mnemonic(const <String>['exile', 'narrow', 'attract', 'fly', 'work', 'glide', 'pupil', 'raccoon', 'cabin', 'digital', 'pull', 'topple']);
+    bool mnemonicRepeatedBool = await _isFingerprintRepeated(mnemonic);
 
     // To avoid flickering of loading indicator, wait at least 1 second before completing saving operation
     Future<void> minimalSavingTime = Future<void>.delayed(const Duration(seconds: 1));
 
-    List<String> mnemonicWords = state.mnemonic!;
-    emit(const VaultCreatePageState.loading());
+    if (mnemonicRepeatedBool) {
+      emit(const VaultCreatePageState.loading());
 
-    await _createVault(mnemonicWords);
-    await minimalSavingTime;
+      _vaultRepeatedCallBack?.call();
+    } else {
+      emit(const VaultCreatePageState.loading());
 
-    _creationSuccessfulCallback?.call();
+      await _createVault(mnemonicWords);
+      await minimalSavingTime;
+
+      _creationSuccessfulCallback?.call();
+    }
   }
 
   Future<void> _createVault(List<String> mnemonicWords) async {
@@ -95,5 +90,22 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
     // TODO(dominik): Temporary solution to use network template. In the future, there will be dedicated page to create network template
     NetworkTemplateModel networkTemplateModel = PredefinedNetworkTemplates.ethereum;
     await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath, networkTemplateModel.name, networkTemplateModel);
+  }
+
+  Future<bool> _isFingerprintRepeated(Mnemonic mnemonic) async {
+    LegacyMnemonicSeedGenerator legacyMnemonicSeedGenerator = LegacyMnemonicSeedGenerator();
+    Uint8List seed = await legacyMnemonicSeedGenerator.generateSeed(mnemonic);
+    String fingerprint = base64Encode(sha256.convert(seed).bytes);
+
+    List<VaultModel> allVaultModels = await _vaultsService.getAllByParentPath(const FilesystemPath.empty());
+    List<String> allFingerprints = allVaultModels.map((VaultModel e) => e.fingerprint).toList();
+
+    bool fingerprintRepeatedBool = false;
+    for (String savedFingerprint in allFingerprints) {
+      if (savedFingerprint == fingerprint) {
+        fingerprintRepeatedBool = true;
+      }
+    }
+    return fingerprintRepeatedBool;
   }
 }

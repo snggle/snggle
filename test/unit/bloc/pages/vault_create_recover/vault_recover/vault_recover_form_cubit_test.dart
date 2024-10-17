@@ -117,7 +117,6 @@ void main() {
         }
 
         // Assert
-
         expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, true);
         expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, true);
       });
@@ -136,10 +135,11 @@ void main() {
           actualVaultRecoverPageCubit.state.textControllers![i].notifyListeners();
         }
 
-        await actualVaultRecoverPageCubit.saveMnemonic();
-
         // Assert
-        expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
+        expect(
+          () async => actualVaultRecoverPageCubit.saveMnemonic(),
+          throwsA(isA<Exception>()),
+        );
       });
 
       test('Should [return VaultRecoverPageState.loading] and save vault in database', () async {
@@ -168,12 +168,14 @@ void main() {
 
         // Assert
         List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
-          const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 1'),
-          const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 2'),
-          const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 3'),
-          const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 4'),
-          const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'VAULT 5'),
-          const VaultEntity(id: 6, encryptedBool: false, pinnedBool: false, index: 5, filesystemPathString: 'vault6', seedHash: 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=', name: 'Test vault')
+          // @formatter:off
+          const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'VAULT 1'),
+          const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
+          const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
+          const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
+          const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5'),
+          const VaultEntity(id: 6, encryptedBool: false, pinnedBool: false, index: 5, filesystemPathString: 'vault6', fingerprint: '', name: 'Test vault')
+          // @formatter:on
         ];
 
         // Assert

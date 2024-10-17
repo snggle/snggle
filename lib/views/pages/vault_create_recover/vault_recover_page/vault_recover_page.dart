@@ -94,7 +94,7 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
   }
 
   void _handleVaultRepeated() {
-    AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.recoveryVaultRepeated);
+    AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.creationVaultRepeated);
   }
 
   void _handleCustomPop() {

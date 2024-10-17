@@ -76,7 +76,7 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
     Bip39MnemonicDecoder decoder = Bip39MnemonicDecoder();
     bool mnemonicValidBool = MnemonicValidator<Bip39MnemonicDecoder>(decoder).isValid(mnemonic.toString());
 
-    bool mnemonicRepeatedBool = await _isSeedHashRepeated(mnemonic);
+    bool mnemonicRepeatedBool = await _isFingerprintRepeated(mnemonic);
     mnemonicValidBool = mnemonicValidBool && (mnemonicRepeatedBool == false);
 
     if (mnemonicRepeatedBool) {
@@ -121,20 +121,20 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
     await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath, networkTemplateModel.name, networkTemplateModel);
   }
 
-  Future<bool> _isSeedHashRepeated(Mnemonic mnemonic) async {
+  Future<bool> _isFingerprintRepeated(Mnemonic mnemonic) async {
     LegacyMnemonicSeedGenerator legacyMnemonicSeedGenerator = LegacyMnemonicSeedGenerator();
     Uint8List seed = await legacyMnemonicSeedGenerator.generateSeed(mnemonic);
-    String seedHash = base64Encode(sha256.convert(seed).bytes);
+    String fingerprint = base64Encode(sha256.convert(seed).bytes);
 
     List<VaultModel> allVaultModels = await _vaultsService.getAllByParentPath(const FilesystemPath.empty());
-    List<String> allSeedHashes = allVaultModels.map((VaultModel e) => e.seedHash).toList();
+    List<String> allFingerprints = allVaultModels.map((VaultModel e) => e.fingerprint).toList();
 
-    bool seedHashRepeatedBool = false;
-    for (String savedSeedHash in allSeedHashes) {
-      if (savedSeedHash == seedHash) {
-        seedHashRepeatedBool = true;
+    bool fingerprintRepeatedBool = false;
+    for (String savedFingerprint in allFingerprints) {
+      if (savedFingerprint == fingerprint) {
+        fingerprintRepeatedBool = true;
       }
     }
-    return seedHashRepeatedBool;
+    return fingerprintRepeatedBool;
   }
 }
