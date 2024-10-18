@@ -18,6 +18,8 @@ class AppIcons {
   static const AssetIconData camera_reverse = AssetIconData('assets/icons/camera_reverse.svg');
   static const AssetIconData checkbox_selected = AssetIconData('assets/icons/checkbox_selected.svg');
   static const AssetIconData checkbox_unselected = AssetIconData('assets/icons/checkbox_unselected.svg');
+  static const AssetIconData connect_wallet_hardware = AssetIconData('assets/icons/connect_wallet_hardware.svg');
+  static const AssetIconData connect_wallet_qr = AssetIconData('assets/icons/connect_wallet_qr.svg');
   static const AssetIconData horizontal_tile_network_bitcoin = AssetIconData('assets/icons/horizontal_tile_network_bitcoin.svg');
   static const AssetIconData horizontal_tile_network_cosmos = AssetIconData('assets/icons/horizontal_tile_network_cosmos.svg');
   static const AssetIconData horizontal_tile_network_ethereum = AssetIconData('assets/icons/horizontal_tile_network_ethereum.svg');
@@ -54,7 +56,15 @@ class AppIcons {
   static const AssetIconData menu_unlock = AssetIconData('assets/icons/menu_unlock.svg');
   static const AssetIconData menu_unpin = AssetIconData('assets/icons/menu_unpin.svg');
   static const AssetIconData menu_unselect_all = AssetIconData('assets/icons/menu_unselect_all.svg');
+  static const AssetIconData network_bitcoin_large = AssetIconData('assets/icons/network_bitcoin_large.svg');
+  static const AssetIconData network_cosmos_large = AssetIconData('assets/icons/network_cosmos_large.svg');
+  static const AssetIconData network_ethereum_large = AssetIconData('assets/icons/network_ethereum_large.svg');
+  static const AssetIconData network_unknown_large = AssetIconData('assets/icons/network_unknown_large.svg');
   static const AssetIconData page_add_button = AssetIconData('assets/icons/page_add_button.svg');
   static const AssetIconData page_no_data = AssetIconData('assets/icons/page_no_data.svg');
   static const AssetIconData settings_warning = AssetIconData('assets/icons/settings_warning.svg');
+  static const AssetIconData switch_border = AssetIconData('assets/icons/switch_border.svg');
+  static const AssetIconData switch_dot = AssetIconData('assets/icons/switch_dot.svg');
+  static const AssetIconData wallet_metamask = AssetIconData('assets/icons/wallet_metamask.svg');
+  static const AssetIconData wallet_trezor = AssetIconData('assets/icons/wallet_trezor.svg');
 }

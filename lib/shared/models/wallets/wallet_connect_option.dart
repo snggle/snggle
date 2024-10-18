@@ -1,0 +1,4 @@
+enum WalletConnectOption {
+  qr,
+  hardware,
+}
