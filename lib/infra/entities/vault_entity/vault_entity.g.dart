@@ -170,11 +170,9 @@ List<IsarLinkBase<dynamic>> _vaultEntityGetLinks(VaultEntity object) {
   return [];
 }
 
-void _vaultEntityAttach(
-    IsarCollection<dynamic> col, Id id, VaultEntity object) {}
+void _vaultEntityAttach(IsarCollection<dynamic> col, Id id, VaultEntity object) {}
 
-extension VaultEntityQueryWhereSort
-    on QueryBuilder<VaultEntity, VaultEntity, QWhere> {
+extension VaultEntityQueryWhereSort on QueryBuilder<VaultEntity, VaultEntity, QWhere> {
   QueryBuilder<VaultEntity, VaultEntity, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
@@ -190,8 +188,7 @@ extension VaultEntityQueryWhereSort
   }
 }
 
-extension VaultEntityQueryWhere
-    on QueryBuilder<VaultEntity, VaultEntity, QWhereClause> {
+extension VaultEntityQueryWhere on QueryBuilder<VaultEntity, VaultEntity, QWhereClause> {
   QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
@@ -201,8 +198,7 @@ extension VaultEntityQueryWhere
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> idNotEqualTo(
-      Id id) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -224,8 +220,7 @@ extension VaultEntityQueryWhere
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> idGreaterThan(Id id,
-      {bool include = false}) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -233,8 +228,7 @@ extension VaultEntityQueryWhere
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> idLessThan(Id id,
-      {bool include = false}) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -258,8 +252,7 @@ extension VaultEntityQueryWhere
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> indexEqualTo(
-      int index) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> indexEqualTo(int index) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'index',
@@ -268,8 +261,7 @@ extension VaultEntityQueryWhere
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> indexNotEqualTo(
-      int index) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> indexNotEqualTo(int index) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -348,8 +340,7 @@ extension VaultEntityQueryWhere
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause>
-      filesystemPathStringEqualTo(String filesystemPathString) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> filesystemPathStringEqualTo(String filesystemPathString) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'filesystemPathString',
@@ -358,8 +349,7 @@ extension VaultEntityQueryWhere
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause>
-      filesystemPathStringNotEqualTo(String filesystemPathString) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterWhereClause> filesystemPathStringNotEqualTo(String filesystemPathString) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -394,10 +384,8 @@ extension VaultEntityQueryWhere
   }
 }
 
-extension VaultEntityQueryFilter
-    on QueryBuilder<VaultEntity, VaultEntity, QFilterCondition> {
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      encryptedBoolEqualTo(bool value) {
+extension VaultEntityQueryFilter on QueryBuilder<VaultEntity, VaultEntity, QFilterCondition> {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> encryptedBoolEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'encryptedBool',
@@ -406,8 +394,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      filesystemPathStringEqualTo(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> filesystemPathStringEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -420,8 +407,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      filesystemPathStringGreaterThan(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> filesystemPathStringGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -436,8 +422,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      filesystemPathStringLessThan(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> filesystemPathStringLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -452,8 +437,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      filesystemPathStringBetween(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> filesystemPathStringBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -472,8 +456,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      filesystemPathStringStartsWith(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> filesystemPathStringStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -486,8 +469,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      filesystemPathStringEndsWith(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> filesystemPathStringEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -500,8 +482,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      filesystemPathStringContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> filesystemPathStringContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'filesystemPathString',
@@ -511,8 +492,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      filesystemPathStringMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> filesystemPathStringMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'filesystemPathString',
@@ -522,8 +502,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      filesystemPathStringIsEmpty() {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> filesystemPathStringIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'filesystemPathString',
@@ -532,8 +511,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      filesystemPathStringIsNotEmpty() {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> filesystemPathStringIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'filesystemPathString',
@@ -542,8 +520,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      fingerprintEqualTo(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> fingerprintEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -556,8 +533,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      fingerprintGreaterThan(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> fingerprintGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -572,8 +548,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      fingerprintLessThan(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> fingerprintLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -588,8 +563,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      fingerprintBetween(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> fingerprintBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -608,8 +582,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      fingerprintStartsWith(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> fingerprintStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -622,8 +595,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      fingerprintEndsWith(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> fingerprintEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -636,8 +608,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      fingerprintContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> fingerprintContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'fingerprint',
@@ -647,8 +618,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      fingerprintMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> fingerprintMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'fingerprint',
@@ -658,8 +628,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      fingerprintIsEmpty() {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> fingerprintIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'fingerprint',
@@ -668,8 +637,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      fingerprintIsNotEmpty() {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> fingerprintIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'fingerprint',
@@ -678,8 +646,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> idEqualTo(
-      Id value) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -731,8 +698,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> indexEqualTo(
-      int value) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> indexEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'index',
@@ -741,8 +707,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      indexGreaterThan(
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> indexGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -793,8 +758,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      nameIsNotNull() {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> nameIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'name',
@@ -890,9 +854,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> nameContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> nameContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'name',
@@ -902,9 +864,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> nameMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> nameMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'name',
@@ -923,8 +883,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      nameIsNotEmpty() {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'name',
@@ -933,8 +892,7 @@ extension VaultEntityQueryFilter
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition>
-      pinnedBoolEqualTo(bool value) {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterFilterCondition> pinnedBoolEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'pinnedBool',
@@ -944,36 +902,30 @@ extension VaultEntityQueryFilter
   }
 }
 
-extension VaultEntityQueryObject
-    on QueryBuilder<VaultEntity, VaultEntity, QFilterCondition> {}
+extension VaultEntityQueryObject on QueryBuilder<VaultEntity, VaultEntity, QFilterCondition> {}
 
-extension VaultEntityQueryLinks
-    on QueryBuilder<VaultEntity, VaultEntity, QFilterCondition> {}
+extension VaultEntityQueryLinks on QueryBuilder<VaultEntity, VaultEntity, QFilterCondition> {}
 
-extension VaultEntityQuerySortBy
-    on QueryBuilder<VaultEntity, VaultEntity, QSortBy> {
+extension VaultEntityQuerySortBy on QueryBuilder<VaultEntity, VaultEntity, QSortBy> {
   QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> sortByEncryptedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'encryptedBool', Sort.asc);
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy>
-      sortByEncryptedBoolDesc() {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> sortByEncryptedBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'encryptedBool', Sort.desc);
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy>
-      sortByFilesystemPathString() {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> sortByFilesystemPathString() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filesystemPathString', Sort.asc);
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy>
-      sortByFilesystemPathStringDesc() {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> sortByFilesystemPathStringDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filesystemPathString', Sort.desc);
     });
@@ -1028,30 +980,26 @@ extension VaultEntityQuerySortBy
   }
 }
 
-extension VaultEntityQuerySortThenBy
-    on QueryBuilder<VaultEntity, VaultEntity, QSortThenBy> {
+extension VaultEntityQuerySortThenBy on QueryBuilder<VaultEntity, VaultEntity, QSortThenBy> {
   QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> thenByEncryptedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'encryptedBool', Sort.asc);
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy>
-      thenByEncryptedBoolDesc() {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> thenByEncryptedBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'encryptedBool', Sort.desc);
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy>
-      thenByFilesystemPathString() {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> thenByFilesystemPathString() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filesystemPathString', Sort.asc);
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy>
-      thenByFilesystemPathStringDesc() {
+  QueryBuilder<VaultEntity, VaultEntity, QAfterSortBy> thenByFilesystemPathStringDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filesystemPathString', Sort.desc);
     });
@@ -1118,24 +1066,20 @@ extension VaultEntityQuerySortThenBy
   }
 }
 
-extension VaultEntityQueryWhereDistinct
-    on QueryBuilder<VaultEntity, VaultEntity, QDistinct> {
+extension VaultEntityQueryWhereDistinct on QueryBuilder<VaultEntity, VaultEntity, QDistinct> {
   QueryBuilder<VaultEntity, VaultEntity, QDistinct> distinctByEncryptedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'encryptedBool');
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QDistinct>
-      distinctByFilesystemPathString({bool caseSensitive = true}) {
+  QueryBuilder<VaultEntity, VaultEntity, QDistinct> distinctByFilesystemPathString({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'filesystemPathString',
-          caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'filesystemPathString', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QDistinct> distinctByFingerprint(
-      {bool caseSensitive = true}) {
+  QueryBuilder<VaultEntity, VaultEntity, QDistinct> distinctByFingerprint({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'fingerprint', caseSensitive: caseSensitive);
     });
@@ -1147,8 +1091,7 @@ extension VaultEntityQueryWhereDistinct
     });
   }
 
-  QueryBuilder<VaultEntity, VaultEntity, QDistinct> distinctByName(
-      {bool caseSensitive = true}) {
+  QueryBuilder<VaultEntity, VaultEntity, QDistinct> distinctByName({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
@@ -1161,8 +1104,7 @@ extension VaultEntityQueryWhereDistinct
   }
 }
 
-extension VaultEntityQueryProperty
-    on QueryBuilder<VaultEntity, VaultEntity, QQueryProperty> {
+extension VaultEntityQueryProperty on QueryBuilder<VaultEntity, VaultEntity, QQueryProperty> {
   QueryBuilder<VaultEntity, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
@@ -1175,8 +1117,7 @@ extension VaultEntityQueryProperty
     });
   }
 
-  QueryBuilder<VaultEntity, String, QQueryOperations>
-      filesystemPathStringProperty() {
+  QueryBuilder<VaultEntity, String, QQueryOperations> filesystemPathStringProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'filesystemPathString');
     });

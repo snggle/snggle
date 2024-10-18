@@ -31,8 +31,6 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
   final PageController pageController = PageController(keepPage: false);
   late final VaultCreatePageCubit vaultCreatePageCubit = VaultCreatePageCubit(
     parentFilesystemPath: widget.parentFilesystemPath,
-    creationSuccessfulCallback: _popPageWithResult,
-    vaultRepeatedCallBack: _popPageWithException,
   );
 
   @override
@@ -66,7 +64,7 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
                   MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected),
                   if (vaultCreatePageState.confirmPageEnabledBool)
                     MnemonicFormGenerated(
-                      lastVaultIndex: vaultCreatePageState.lastVaultIndex!,
+                      mnemonicRepeatedBool: vaultCreatePageState.mnemonicRepeatedBool,
                       mnemonicSize: vaultCreatePageState.mnemonicSize!,
                       mnemonic: vaultCreatePageState.mnemonic!,
                       vaultCreatePageCubit: vaultCreatePageCubit,
@@ -98,13 +96,5 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
   Future<void> _handleMnemonicSizeSelected(int mnemonicSize) async {
     await vaultCreatePageCubit.init(mnemonicSize);
     await pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
-  }
-
-  void _popPageWithException() {
-    AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.creationVaultRepeated);
-  }
-
-  void _popPageWithResult() {
-    AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.creationSuccessful);
   }
 }

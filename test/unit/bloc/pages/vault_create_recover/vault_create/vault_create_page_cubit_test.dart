@@ -44,7 +44,6 @@ void main() {
         // For that reason values from [VaultCreatePageState] are checked one by one.
         expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
         expect(actualVaultCreatePageCubit.state.loadingBool, false);
-        expect(actualVaultCreatePageCubit.state.lastVaultIndex, 4);
         expect(actualVaultCreatePageCubit.state.mnemonicSize, 12);
         expect(actualVaultCreatePageCubit.state.mnemonic!.length, 12);
       });
@@ -58,14 +57,13 @@ void main() {
         // For that reason values from [VaultCreatePageState] are checked one by one.
         expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
         expect(actualVaultCreatePageCubit.state.loadingBool, false);
-        expect(actualVaultCreatePageCubit.state.lastVaultIndex, 4);
         expect(actualVaultCreatePageCubit.state.mnemonicSize, 24);
         expect(actualVaultCreatePageCubit.state.mnemonic!.length, 24);
       });
     });
 
     group('Tests of VaultCreatePageCubit.saveMnemonic() method', () {
-      test('Should [return VaultCreatePageState.loading] and save vault in database', () async {
+      test('Should [return VaultCreatePageState] with new vault in database', () async {
         // Arrange
         actualVaultCreatePageCubit.vaultNameTextEditingController.text = 'Test vault';
 
@@ -90,10 +88,18 @@ void main() {
           const VaultEntity(id: 6, encryptedBool: false, pinnedBool: false, index: 5, filesystemPathString: 'vault6', fingerprint: '', name: 'Test vault')
         ];
 
-        // Assert
-        VaultCreatePageState expectedVaultCreatePageState = const VaultCreatePageState.loading();
+        VaultCreatePageState expectedVaultCreatePageState = const VaultCreatePageState(
+          confirmPageEnabledBool: true,
+          loadingBool: false,
+          mnemonicRepeatedBool: false,
+          mnemonicSize: 24,
+        // not included expected mnemonic because of random value
+        );
 
-        expect(actualVaultCreatePageCubit.state, expectedVaultCreatePageState);
+        expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, expectedVaultCreatePageState.confirmPageEnabledBool);
+        expect(actualVaultCreatePageCubit.state.loadingBool, expectedVaultCreatePageState.loadingBool);
+        expect(actualVaultCreatePageCubit.state.mnemonicRepeatedBool, expectedVaultCreatePageState.mnemonicRepeatedBool);
+        expect(actualVaultCreatePageCubit.state.mnemonicSize, expectedVaultCreatePageState.mnemonicSize);
         expect(actualSecretsFilesystemStructure.length, 10);
         expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
       });

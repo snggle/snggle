@@ -46,7 +46,6 @@ void main() {
         expect(actualVaultRecoverPageCubit.state.loadingBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
-        expect(actualVaultRecoverPageCubit.state.lastVaultIndex, 4);
         expect(actualVaultRecoverPageCubit.state.mnemonicSize, 24);
         expect(actualVaultRecoverPageCubit.state.textControllers?.length, 24);
       });
@@ -62,7 +61,6 @@ void main() {
         expect(actualVaultRecoverPageCubit.state.loadingBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
-        expect(actualVaultRecoverPageCubit.state.lastVaultIndex, 4);
         expect(actualVaultRecoverPageCubit.state.mnemonicSize, 12);
         expect(actualVaultRecoverPageCubit.state.textControllers?.length, 12);
       });
@@ -142,65 +140,20 @@ void main() {
         );
       });
 
-      test('Should [return VaultRecoverPageState.loading] and NOT save vault in database if it [already exists in database]', () async {
-        // Arrange
-        // @formatter:off
-        List<String> actualMnemonic = <String>[
-          'square', 'old', 'choose', 'soon', 'radar', 'used', 'index', 'wrong', 'cancel', 'frame', 'isolate', 'library'
-        ];
-        actualVaultRecoverPageCubit.vaultNameTextEditingController.text = 'Test vault';
-        // @formatter:on
-
-        // Act
-        // Imitate entering mnemonic words
-        for (int i = 0; i < 12; i++) {
-          actualVaultRecoverPageCubit.state.textControllers![i].text = actualMnemonic[i];
-          actualVaultRecoverPageCubit.state.textControllers![i].notifyListeners();
-        }
-
-        await actualVaultRecoverPageCubit.saveMnemonic();
-
-        // Output is always a random string because AES changes the initialization vector with Random Secure
-        // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-        Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem(path: 'secrets');
-
-        List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-          return isar.vaults.where().findAll();
-        });
-
-        // Assert
-        List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
-          // @formatter:off
-          const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'VAULT 1'),
-          const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
-          const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
-          const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
-          const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5'),
-          // @formatter:on
-        ];
-
-        // Assert
-        VaultRecoverPageState expectedVaultRecoverPageState = const VaultRecoverPageState.loading();
-
-        expect(actualVaultRecoverPageCubit.state, expectedVaultRecoverPageState);
-        expect(actualSecretsFilesystemStructure.length, 8);
-        expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
-      });
-
-      test('Should [return VaultRecoverPageState.loading] and save vault in database', () async {
+      test('Should [return VaultRecoverPageState] with new vault in database', () async {
         // Arrange
         // @formatter:off
         List<String> actualMnemonic = <String>['require','point','property','company','tongue','busy','bench','burden','caution','gadget','knee','glance','thought','bulk','assist','month','cereal','report','quarter','tool','section','often','require','shield'];
-        actualVaultRecoverPageCubit.vaultNameTextEditingController.text = 'Test vault';
 
         await actualVaultRecoverPageCubit.init(24);
+
+        actualVaultRecoverPageCubit.vaultNameTextEditingController.text = 'Test vault';
 
         // Assert
         expect(actualVaultRecoverPageCubit.state.confirmPageEnabledBool, true);
         expect(actualVaultRecoverPageCubit.state.loadingBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
-        expect(actualVaultRecoverPageCubit.state.lastVaultIndex, 4);
         expect(actualVaultRecoverPageCubit.state.mnemonicSize, 24);
         expect(actualVaultRecoverPageCubit.state.textControllers?.length, 24);
         // @formatter:on
@@ -234,10 +187,77 @@ void main() {
           // @formatter:on
         ];
 
-        // Assert
-        VaultRecoverPageState expectedVaultRecoverPageState = const VaultRecoverPageState.loading();
+        VaultRecoverPageState expectedVaultRecoverPageState = const VaultRecoverPageState(
+          confirmPageEnabledBool: true,
+          mnemonicValidBool: true,
+          mnemonicFilledBool: false,
+          mnemonicRepeatedBool: false,
+          mnemonicSize: 24,
+          // not included expected mnemonic because of random value
+        );
 
-        expect(actualVaultRecoverPageCubit.state, expectedVaultRecoverPageState);
+        expect(actualVaultRecoverPageCubit.state.confirmPageEnabledBool, expectedVaultRecoverPageState.confirmPageEnabledBool);
+        expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, expectedVaultRecoverPageState.mnemonicValidBool);
+        expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, expectedVaultRecoverPageState.mnemonicFilledBool);
+        expect(actualVaultRecoverPageCubit.state.mnemonicRepeatedBool, expectedVaultRecoverPageState.mnemonicRepeatedBool);
+        expect(actualVaultRecoverPageCubit.state.mnemonicSize, expectedVaultRecoverPageState.mnemonicSize);
+        expect(actualSecretsFilesystemStructure.length, 10);
+        expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
+      });
+
+      test('Should [return VaultRecoverPageState.loading] and NOT save vault in database if it [already exists in database]', () async {
+        // Arrange
+        // @formatter:off
+        List<String> actualMnemonic = <String>['square', 'old', 'choose', 'soon', 'radar', 'used', 'index', 'wrong', 'cancel', 'frame', 'isolate', 'library'];
+        // @formatter:on
+
+        await actualVaultRecoverPageCubit.init(12);
+
+        actualVaultRecoverPageCubit.vaultNameTextEditingController.text = 'Test vault';
+
+        // Act
+        // Imitate entering mnemonic words
+        for (int i = 0; i < 12; i++) {
+          actualVaultRecoverPageCubit.state.textControllers![i].text = actualMnemonic[i];
+          actualVaultRecoverPageCubit.state.textControllers![i].notifyListeners();
+        }
+
+        await actualVaultRecoverPageCubit.saveMnemonic();
+
+        // Output is always a random string because AES changes the initialization vector with Random Secure
+        // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
+        Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem(path: 'secrets');
+
+        List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
+          return isar.vaults.where().findAll();
+        });
+
+        // Assert
+        List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
+          // @formatter:off
+          const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'VAULT 1'),
+          const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
+          const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
+          const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
+          const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5'),
+          const VaultEntity(id: 6, encryptedBool: false, pinnedBool: false, index: 5, filesystemPathString: 'vault6', fingerprint: '', name: 'Test vault')
+          // @formatter:on
+        ];
+
+        VaultRecoverPageState expectedVaultRecoverPageState = const VaultRecoverPageState(
+          confirmPageEnabledBool: true,
+          mnemonicValidBool: false,
+          mnemonicFilledBool: true,
+          mnemonicRepeatedBool: true,
+          mnemonicSize: 12,
+          // not included expected mnemonic because of random value
+        );
+
+        expect(actualVaultRecoverPageCubit.state.confirmPageEnabledBool, expectedVaultRecoverPageState.confirmPageEnabledBool);
+        expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, expectedVaultRecoverPageState.mnemonicValidBool);
+        expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, expectedVaultRecoverPageState.mnemonicFilledBool);
+        expect(actualVaultRecoverPageCubit.state.mnemonicRepeatedBool, expectedVaultRecoverPageState.mnemonicRepeatedBool);
+        expect(actualVaultRecoverPageCubit.state.mnemonicSize, expectedVaultRecoverPageState.mnemonicSize);
         expect(actualSecretsFilesystemStructure.length, 10);
         expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
       });

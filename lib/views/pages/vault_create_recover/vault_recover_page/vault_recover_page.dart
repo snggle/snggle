@@ -10,7 +10,6 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/vault_create_recover/mnemonic_size_picker.dart';
 import 'package:snggle/views/pages/vault_create_recover/vault_recover_page/mnemonic_form_editable.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
-import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
 import 'package:snggle/views/widgets/generic/paginated_form/paginated_form.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
@@ -33,8 +32,6 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
   final KeyboardValueNotifier keyboardValueNotifier = KeyboardValueNotifier();
   late final VaultRecoverPageCubit vaultRecoverPageCubit = VaultRecoverPageCubit(
     parentFilesystemPath: widget.parentFilesystemPath,
-    creationSuccessfulCallback: _popPageWithResult,
-    vaultRepeatedCallBack: _popPageWithException,
   );
 
   @override
@@ -50,45 +47,36 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
     return BlocBuilder<VaultRecoverPageCubit, VaultRecoverPageState>(
       bloc: vaultRecoverPageCubit,
       builder: (BuildContext context, VaultRecoverPageState vaultRecoverPageState) {
-        return Stack(
-          children: <Widget>[
-            CustomScaffold(
-              title: 'Vault recovery',
-              popAvailableBool: false,
-              popButtonVisible: true,
-              resizeToAvoidBottomInsetBool: true,
-              customPopCallback: _handleCustomPop,
-              customSystemPopCallback: _handleSystemPop,
-              actions: <Widget>[
-                IconButton(
-                  onPressed: () => AutoRouter.of(context).root.pop(),
-                  icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
-                ),
-              ],
-              body: PaginatedForm(
-                pageController: pageController,
-                pages: <Widget>[
-                  MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected),
-                  if (vaultRecoverPageState.confirmPageEnabledBool)
-                    MnemonicFormEditable(
-                      lastVaultIndex: vaultRecoverPageState.lastVaultIndex!,
-                      mnemonicSize: vaultRecoverPageState.mnemonicSize!,
-                      keyboardValueNotifier: keyboardValueNotifier,
-                      textControllers: vaultRecoverPageState.textControllers!,
-                      mnemonicValidBool: vaultRecoverPageState.mnemonicValidBool,
-                      mnemonicFilledBool: vaultRecoverPageState.mnemonicFilledBool,
-                      vaultRecoverPageCubit: vaultRecoverPageCubit,
-                    )
-                  else
-                    const SizedBox()
-                ],
-              ),
+        return CustomScaffold(
+          title: 'Vault recovery',
+          popAvailableBool: false,
+          popButtonVisible: true,
+          resizeToAvoidBottomInsetBool: true,
+          customPopCallback: _handleCustomPop,
+          customSystemPopCallback: _handleSystemPop,
+          actions: <Widget>[
+            IconButton(
+              onPressed: () => AutoRouter.of(context).root.pop(),
+              icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
             ),
-            if (vaultRecoverPageState.loadingBool)
-              const CustomLoadingDialog(
-                title: 'Saving...',
-              ),
           ],
+          body: PaginatedForm(
+            pageController: pageController,
+            pages: <Widget>[
+              MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected),
+              if (vaultRecoverPageState.confirmPageEnabledBool)
+                MnemonicFormEditable(
+                  mnemonicSize: vaultRecoverPageState.mnemonicSize!,
+                  keyboardValueNotifier: keyboardValueNotifier,
+                  textControllers: vaultRecoverPageState.textControllers!,
+                  mnemonicValidBool: vaultRecoverPageState.mnemonicValidBool,
+                  mnemonicFilledBool: vaultRecoverPageState.mnemonicFilledBool,
+                  vaultRecoverPageCubit: vaultRecoverPageCubit,
+                )
+              else
+                const SizedBox()
+            ],
+          ),
         );
       },
     );
@@ -117,13 +105,5 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
   void _handleMnemonicSizeSelected(int mnemonicSize) {
     vaultRecoverPageCubit.init(mnemonicSize);
     pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
-  }
-
-  void _popPageWithException() {
-    AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.recoveryVaultRepeated);
-  }
-
-  void _popPageWithResult() {
-    AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.recoverySuccessful);
   }
 }

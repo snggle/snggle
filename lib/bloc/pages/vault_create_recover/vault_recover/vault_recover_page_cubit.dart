@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:bip39/bip39.dart';
 import 'package:blockchain_utils/bip/bip/bip.dart';
 import 'package:blockchain_utils/bip/mnemonic/mnemonic_validator.dart';
-import 'package:crypto/crypto.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +14,7 @@ import 'package:snggle/shared/factories/network_group_model_factory.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
+import 'package:snggle/shared/utils/crypto/fingerprinter.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
@@ -25,16 +24,10 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
   final TextEditingController vaultNameTextEditingController = TextEditingController();
   final FilesystemPath _parentFilesystemPath;
-  final VoidCallback? _creationSuccessfulCallback;
-  final VoidCallback? _vaultRepeatedCallBack;
 
   VaultRecoverPageCubit({
     required FilesystemPath parentFilesystemPath,
-    void Function()? creationSuccessfulCallback,
-    void Function()? vaultRepeatedCallBack,
-  })  : _creationSuccessfulCallback = creationSuccessfulCallback,
-        _vaultRepeatedCallBack = vaultRepeatedCallBack,
-        _parentFilesystemPath = parentFilesystemPath,
+  })  : _parentFilesystemPath = parentFilesystemPath,
         super(const VaultRecoverPageState());
 
   @override
@@ -57,9 +50,14 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
     int lastVaultIndex = await _vaultsService.getLastIndex();
 
+    if (lastVaultIndex == -1) {
+      vaultNameTextEditingController.text = 'Vault';
+    } else {
+      vaultNameTextEditingController.text = 'Vault ${lastVaultIndex + 1}';
+    }
+
     emit(VaultRecoverPageState(
       confirmPageEnabledBool: true,
-      lastVaultIndex: lastVaultIndex,
       mnemonicSize: mnemonicSize,
       textControllers: textControllers,
     ));
@@ -79,18 +77,13 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
     bool mnemonicRepeatedBool = await _isFingerprintRepeated(mnemonic);
     mnemonicValidBool = mnemonicValidBool && (mnemonicRepeatedBool == false);
 
-    if (mnemonicRepeatedBool) {
-      emit(const VaultRecoverPageState.loading());
-
-      _vaultRepeatedCallBack?.call();
-    } else if (mnemonicValidBool) {
-      emit(const VaultRecoverPageState.loading());
-
+    if (mnemonicValidBool) {
       await _createVault(mnemonicWords);
       await minimalSavingTime;
-      _creationSuccessfulCallback?.call();
+
+      emit(state.copyWith(mnemonicFilledBool: false, mnemonicValidBool: mnemonicValidBool, mnemonicRepeatedBool: mnemonicRepeatedBool));
     } else {
-      emit(state.copyWith(mnemonicFilledBool: false));
+      emit(state.copyWith(mnemonicValidBool: mnemonicValidBool, mnemonicRepeatedBool: mnemonicRepeatedBool));
     }
   }
 
@@ -105,7 +98,7 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
     } else {
       // TODO(dominik): Temporary solution to validate mnemonic phrase. After 'cryptography_utils' package implementation it should be improved
       bool mnemonicValidBool = validateMnemonic(mnemonicWords.join(' '));
-      emit(state.copyWith(mnemonicFilledBool: true, mnemonicValidBool: mnemonicValidBool));
+      emit(state.copyWith(mnemonicFilledBool: true, mnemonicValidBool: mnemonicValidBool, mnemonicRepeatedBool: false));
     }
   }
 
@@ -124,7 +117,7 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
   Future<bool> _isFingerprintRepeated(Mnemonic mnemonic) async {
     LegacyMnemonicSeedGenerator legacyMnemonicSeedGenerator = LegacyMnemonicSeedGenerator();
     Uint8List seed = await legacyMnemonicSeedGenerator.generateSeed(mnemonic);
-    String fingerprint = base64Encode(sha256.convert(seed).bytes);
+    String fingerprint = Fingerprinter.createFingerprint(seed);
 
     List<VaultModel> allVaultModels = await _vaultsService.getAllByParentPath(const FilesystemPath.empty());
     List<String> allFingerprints = allVaultModels.map((VaultModel e) => e.fingerprint).toList();

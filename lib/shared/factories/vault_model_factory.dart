@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:crypto/crypto.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
@@ -17,6 +15,7 @@ import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
+import 'package:snggle/shared/utils/crypto/fingerprinter.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class VaultModelFactory {
@@ -40,7 +39,7 @@ class VaultModelFactory {
       filesystemPath: const FilesystemPath.empty(),
       name: name,
       listItemsPreview: <VaultModel>[],
-      fingerprint: base64Encode(sha256.convert(seed).bytes),
+      fingerprint: Fingerprinter.createFingerprint(seed),
     );
     int vaultId = await _vaultsService.save(vaultModel);
     vaultModel = await _vaultsService.updateFilesystemPath(vaultId, parentFilesystemPath);

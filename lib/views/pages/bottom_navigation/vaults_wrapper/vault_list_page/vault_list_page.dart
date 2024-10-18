@@ -132,13 +132,11 @@ class _VaultListPageState extends State<VaultListPage> {
         context: context,
         barrierColor: Colors.transparent,
         builder: (BuildContext context) => CustomDialog(
-          title: vaultCreateRecoverStatus.isSuccessful ? 'Success' : 'Exception',
+          title: 'Success',
           content: Text(
             switch (vaultCreateRecoverStatus) {
               VaultCreateRecoverStatus.creationSuccessful => 'The vault creation process has been completed',
               VaultCreateRecoverStatus.recoverySuccessful => 'The vault recovery process has been completed',
-              VaultCreateRecoverStatus.recoveryVaultRepeated => 'The vault already exists',
-              VaultCreateRecoverStatus.creationVaultRepeated => 'The vault already exists. The randomization algorithm on your device may be compromised.',
             },
             textAlign: TextAlign.center,
           ),
