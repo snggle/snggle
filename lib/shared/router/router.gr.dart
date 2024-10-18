@@ -10,50 +10,33 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i20;
 import 'package:flutter/material.dart' as _i25;
-import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart'
-    as _i29;
+import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart' as _i29;
 import 'package:snggle/shared/models/groups/network_group_model.dart' as _i27;
 import 'package:snggle/shared/models/password_model.dart' as _i24;
-import 'package:snggle/shared/models/transactions/transaction_model.dart'
-    as _i26;
-import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart'
-    as _i21;
+import 'package:snggle/shared/models/transactions/transaction_model.dart' as _i26;
+import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart' as _i21;
 import 'package:snggle/shared/models/vaults/vault_model.dart' as _i22;
 import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i28;
 import 'package:snggle/shared/utils/filesystem_path.dart' as _i23;
 import 'package:snggle/views/pages/app_auth_page.dart' as _i1;
 import 'package:snggle/views/pages/app_setup_pin_page.dart' as _i2;
 import 'package:snggle/views/pages/bottom_navigation/apps_page.dart' as _i3;
-import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart'
-    as _i4;
+import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart' as _i4;
 import 'package:snggle/views/pages/bottom_navigation/secrets_page.dart' as _i6;
-import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/settings_page.dart'
-    as _i7;
-import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_section_wrapper.dart'
-    as _i15;
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/network_list_page/network_list_page.dart'
-    as _i5;
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/transaction_details_page/transaction_details_page.dart'
-    as _i9;
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page.dart'
-    as _i13;
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vaults_section_wrapper.dart'
-    as _i16;
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page.dart'
-    as _i18;
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_page.dart'
-    as _i19;
+import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/settings_page.dart' as _i7;
+import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_section_wrapper.dart' as _i15;
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/network_list_page/network_list_page.dart' as _i5;
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/transaction_details_page/transaction_details_page.dart' as _i9;
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page.dart' as _i13;
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vaults_section_wrapper.dart' as _i16;
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page.dart' as _i18;
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_page.dart' as _i19;
 import 'package:snggle/views/pages/splash_page.dart' as _i8;
-import 'package:snggle/views/pages/vault_create_recover/vault_create_page/vault_create_page.dart'
-    as _i10;
-import 'package:snggle/views/pages/vault_create_recover/vault_create_recover_wrapper.dart'
-    as _i11;
-import 'package:snggle/views/pages/vault_create_recover/vault_init_page/vault_init_page.dart'
-    as _i12;
-import 'package:snggle/views/pages/vault_create_recover/vault_recover_page/vault_recover_page.dart'
-    as _i14;
-import 'package:snggle/views/pages/wallet_create_page/wallet_create_page.dart'
-    as _i17;
+import 'package:snggle/views/pages/vault_create_recover/vault_create_page/vault_create_page.dart' as _i10;
+import 'package:snggle/views/pages/vault_create_recover/vault_create_recover_wrapper.dart' as _i11;
+import 'package:snggle/views/pages/vault_create_recover/vault_init_page/vault_init_page.dart' as _i12;
+import 'package:snggle/views/pages/vault_create_recover/vault_recover_page/vault_recover_page.dart' as _i14;
+import 'package:snggle/views/pages/wallet_create_page/wallet_create_page.dart' as _i17;
 
 abstract class $AppRouter extends _i20.RootStackRouter {
   $AppRouter({super.navigatorKey});
@@ -300,8 +283,7 @@ class NetworkListRoute extends _i20.PageRouteInfo<NetworkListRouteArgs> {
 
   static const String name = 'NetworkListRoute';
 
-  static const _i20.PageInfo<NetworkListRouteArgs> page =
-      _i20.PageInfo<NetworkListRouteArgs>(name);
+  static const _i20.PageInfo<NetworkListRouteArgs> page = _i20.PageInfo<NetworkListRouteArgs>(name);
 }
 
 class NetworkListRouteArgs {
@@ -373,8 +355,7 @@ class SplashRoute extends _i20.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i9.TransactionDetailsPage]
-class TransactionDetailsRoute
-    extends _i20.PageRouteInfo<TransactionDetailsRouteArgs> {
+class TransactionDetailsRoute extends _i20.PageRouteInfo<TransactionDetailsRouteArgs> {
   TransactionDetailsRoute({
     required _i26.TransactionModel transactionModel,
     _i25.Key? key,
@@ -390,8 +371,7 @@ class TransactionDetailsRoute
 
   static const String name = 'TransactionDetailsRoute';
 
-  static const _i20.PageInfo<TransactionDetailsRouteArgs> page =
-      _i20.PageInfo<TransactionDetailsRouteArgs>(name);
+  static const _i20.PageInfo<TransactionDetailsRouteArgs> page = _i20.PageInfo<TransactionDetailsRouteArgs>(name);
 }
 
 class TransactionDetailsRouteArgs {
@@ -428,8 +408,7 @@ class VaultCreateRoute extends _i20.PageRouteInfo<VaultCreateRouteArgs> {
 
   static const String name = 'VaultCreateRoute';
 
-  static const _i20.PageInfo<VaultCreateRouteArgs> page =
-      _i20.PageInfo<VaultCreateRouteArgs>(name);
+  static const _i20.PageInfo<VaultCreateRouteArgs> page = _i20.PageInfo<VaultCreateRouteArgs>(name);
 }
 
 class VaultCreateRouteArgs {
@@ -480,8 +459,7 @@ class VaultInitRoute extends _i20.PageRouteInfo<VaultInitRouteArgs> {
 
   static const String name = 'VaultInitRoute';
 
-  static const _i20.PageInfo<VaultInitRouteArgs> page =
-      _i20.PageInfo<VaultInitRouteArgs>(name);
+  static const _i20.PageInfo<VaultInitRouteArgs> page = _i20.PageInfo<VaultInitRouteArgs>(name);
 }
 
 class VaultInitRouteArgs {
@@ -532,8 +510,7 @@ class VaultRecoverRoute extends _i20.PageRouteInfo<VaultRecoverRouteArgs> {
 
   static const String name = 'VaultRecoverRoute';
 
-  static const _i20.PageInfo<VaultRecoverRouteArgs> page =
-      _i20.PageInfo<VaultRecoverRouteArgs>(name);
+  static const _i20.PageInfo<VaultRecoverRouteArgs> page = _i20.PageInfo<VaultRecoverRouteArgs>(name);
 }
 
 class VaultRecoverRouteArgs {
@@ -604,8 +581,7 @@ class WalletCreateRoute extends _i20.PageRouteInfo<WalletCreateRouteArgs> {
 
   static const String name = 'WalletCreateRoute';
 
-  static const _i20.PageInfo<WalletCreateRouteArgs> page =
-      _i20.PageInfo<WalletCreateRouteArgs>(name);
+  static const _i20.PageInfo<WalletCreateRouteArgs> page = _i20.PageInfo<WalletCreateRouteArgs>(name);
 }
 
 class WalletCreateRouteArgs {
@@ -653,8 +629,7 @@ class WalletDetailsRoute extends _i20.PageRouteInfo<WalletDetailsRouteArgs> {
 
   static const String name = 'WalletDetailsRoute';
 
-  static const _i20.PageInfo<WalletDetailsRouteArgs> page =
-      _i20.PageInfo<WalletDetailsRouteArgs>(name);
+  static const _i20.PageInfo<WalletDetailsRouteArgs> page = _i20.PageInfo<WalletDetailsRouteArgs>(name);
 }
 
 class WalletDetailsRouteArgs {
@@ -702,8 +677,7 @@ class WalletListRoute extends _i20.PageRouteInfo<WalletListRouteArgs> {
 
   static const String name = 'WalletListRoute';
 
-  static const _i20.PageInfo<WalletListRouteArgs> page =
-      _i20.PageInfo<WalletListRouteArgs>(name);
+  static const _i20.PageInfo<WalletListRouteArgs> page = _i20.PageInfo<WalletListRouteArgs>(name);
 }
 
 class WalletListRouteArgs {

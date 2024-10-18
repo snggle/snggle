@@ -96,7 +96,7 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
               bottomBorderVisibleBool: false,
               child: CustomTextField(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                initialValue: firstVaultBool ? 'New Vault' : 'New Vault ${widget.lastVaultIndex + 1}',
+                initialValue: firstVaultBool ? 'Vault' : 'Vault ${widget.lastVaultIndex + 1}',
                 keyboardType: TextInputType.text,
                 enableInteractiveSelectionBool: true,
                 textEditingController: widget.vaultCreatePageCubit.vaultNameTextEditingController,

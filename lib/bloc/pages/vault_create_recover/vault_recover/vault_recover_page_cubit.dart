@@ -26,14 +26,11 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
   final TextEditingController vaultNameTextEditingController = TextEditingController();
   final FilesystemPath _parentFilesystemPath;
   final VoidCallback? _creationSuccessfulCallback;
-  final VoidCallback? _vaultRepeatedCallBack;
 
   VaultRecoverPageCubit({
     required FilesystemPath parentFilesystemPath,
     void Function()? creationSuccessfulCallback,
-    void Function()? vaultRepeatedCallBack,
   })  : _creationSuccessfulCallback = creationSuccessfulCallback,
-        _vaultRepeatedCallBack = vaultRepeatedCallBack,
         _parentFilesystemPath = parentFilesystemPath,
         super(const VaultRecoverPageState());
 
@@ -79,18 +76,14 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
     bool mnemonicRepeatedBool = await _isFingerprintRepeated(mnemonic);
     mnemonicValidBool = mnemonicValidBool && (mnemonicRepeatedBool == false);
 
-    if (mnemonicRepeatedBool) {
-      emit(const VaultRecoverPageState.loading());
-
-      _vaultRepeatedCallBack?.call();
-    } else if (mnemonicValidBool) {
+    if (mnemonicValidBool) {
       emit(const VaultRecoverPageState.loading());
 
       await _createVault(mnemonicWords);
       await minimalSavingTime;
       _creationSuccessfulCallback?.call();
     } else {
-      emit(state.copyWith(mnemonicFilledBool: false));
+      emit(state.copyWith(mnemonicFilledBool: false, mnemonicRepeatedBool: mnemonicRepeatedBool));
     }
   }
 
