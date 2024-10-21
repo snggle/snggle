@@ -3,11 +3,11 @@ import 'dart:typed_data';
 import 'package:codec_utils/codec_utils.dart';
 import 'package:flutter/material.dart';
 
-class HexDisplayMode extends StatelessWidget {
+class HexText extends StatelessWidget {
   final Uint8List bytes;
   final TextStyle? textStyle;
 
-  const HexDisplayMode({
+  const HexText({
     required this.bytes,
     required this.textStyle,
     super.key,

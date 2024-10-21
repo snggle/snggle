@@ -206,7 +206,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                 ),
                 CopyWrapper(
                   value: HexCodec.encode(functionData, includePrefixBool: true),
-                  child: AbiDisplayMode(
+                  child: AbiDisplayModeSelector(
                     label: 'Data',
                     labelTextStyle: labelTextStyle,
                     textStyle: verticalValueTextStyle,
@@ -230,7 +230,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                 ),
                 CopyWrapper(
                   value: message,
-                  child: TextDisplayMode(
+                  child: TextDisplayModeSelector(
                     label: 'Message',
                     labelTextStyle: labelTextStyle,
                     textStyle: verticalValueTextStyle,

@@ -5,15 +5,15 @@ import 'package:snggle/views/widgets/generic/display_mode/abi_display_mode/abi_c
 import 'package:snggle/views/widgets/generic/display_mode/abi_display_mode/abi_display_mode_config_dialog.dart';
 import 'package:snggle/views/widgets/generic/display_mode/abi_display_mode/abi_display_mode_type.dart';
 import 'package:snggle/views/widgets/generic/display_mode/diaplay_mode_layout.dart';
-import 'package:snggle/views/widgets/generic/display_mode/hex_display_mode/hex_display_mode.dart';
+import 'package:snggle/views/widgets/generic/hex_text.dart';
 
-class AbiDisplayMode extends StatefulWidget {
+class AbiDisplayModeSelector extends StatefulWidget {
   final String label;
   final Uint8List functionBytes;
   final TextStyle? textStyle;
   final TextStyle? labelTextStyle;
 
-  const AbiDisplayMode({
+  const AbiDisplayModeSelector({
     required this.label,
     required this.functionBytes,
     this.textStyle,
@@ -22,10 +22,10 @@ class AbiDisplayMode extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _AbiDisplayModeState();
+  State<StatefulWidget> createState() => _AbiDisplayModeSelectorState();
 }
 
-class _AbiDisplayModeState extends State<AbiDisplayMode> {
+class _AbiDisplayModeSelectorState extends State<AbiDisplayModeSelector> {
   AbiDisplayModeType abiDisplayModeType = AbiDisplayModeType.hex;
 
   @override
@@ -35,14 +35,8 @@ class _AbiDisplayModeState extends State<AbiDisplayMode> {
       labelTextStyle: widget.labelTextStyle,
       onShowDialogPressed: _showOptionsDialog,
       child: switch (abiDisplayModeType) {
-        AbiDisplayModeType.abi => AbiChunksList(
-            functionBytes: widget.functionBytes,
-            textStyle: widget.textStyle,
-          ),
-        AbiDisplayModeType.hex => HexDisplayMode(
-            bytes: widget.functionBytes,
-            textStyle: widget.textStyle,
-          ),
+        AbiDisplayModeType.abi => AbiChunksList(functionBytes: widget.functionBytes, textStyle: widget.textStyle),
+        AbiDisplayModeType.hex => HexText(bytes: widget.functionBytes, textStyle: widget.textStyle),
       },
     );
   }

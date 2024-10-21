@@ -2,19 +2,19 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:snggle/views/widgets/generic/display_mode/diaplay_mode_layout.dart';
-import 'package:snggle/views/widgets/generic/display_mode/hex_display_mode/hex_display_mode.dart';
 import 'package:snggle/views/widgets/generic/display_mode/text_display_mode/text_display_mode_config.dart';
 import 'package:snggle/views/widgets/generic/display_mode/text_display_mode/text_display_mode_config_dialog.dart';
 import 'package:snggle/views/widgets/generic/display_mode/text_display_mode/text_display_mode_type.dart';
 import 'package:snggle/views/widgets/generic/display_mode/text_display_mode/text_lines_list/text_lines_list.dart';
+import 'package:snggle/views/widgets/generic/hex_text.dart';
 
-class TextDisplayMode extends StatefulWidget {
+class TextDisplayModeSelector extends StatefulWidget {
   final String label;
   final String value;
   final TextStyle? textStyle;
   final TextStyle? labelTextStyle;
 
-  const TextDisplayMode({
+  const TextDisplayModeSelector({
     required this.label,
     required this.value,
     required this.textStyle,
@@ -23,10 +23,10 @@ class TextDisplayMode extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _TextDisplayModeState();
+  State<StatefulWidget> createState() => _TextDisplayModeSelectorState();
 }
 
-class _TextDisplayModeState extends State<TextDisplayMode> {
+class _TextDisplayModeSelectorState extends State<TextDisplayModeSelector> {
   TextDisplayModeConfig textDisplayModeConfig = TextDisplayModeConfig();
 
   @override
@@ -36,15 +36,8 @@ class _TextDisplayModeState extends State<TextDisplayMode> {
       labelTextStyle: widget.labelTextStyle,
       onShowDialogPressed: _showOptionsDialog,
       child: switch (textDisplayModeConfig.textDisplayModeType) {
-        TextDisplayModeType.text => TextLinesList(
-            inputText: widget.value,
-            textStyle: widget.textStyle,
-            textDisplayModeConfig: textDisplayModeConfig,
-          ),
-        TextDisplayModeType.hex => HexDisplayMode(
-            bytes: utf8.encode(widget.value),
-            textStyle: widget.textStyle,
-          ),
+        TextDisplayModeType.text => TextLinesList(inputText: widget.value, textStyle: widget.textStyle, textDisplayModeConfig: textDisplayModeConfig),
+        TextDisplayModeType.hex => HexText(bytes: utf8.encode(widget.value), textStyle: widget.textStyle),
       },
     );
   }
