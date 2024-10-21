@@ -75,7 +75,10 @@ class _TransactionListItemState extends State<TransactionListItem> with SingleTi
             detailsOpacity: opacityFactor.value,
             transactionModel: widget.transactionModel,
           ),
-          expansionWidget: TransactionListItemExpansion(transactionModel: widget.transactionModel),
+          expansionWidget: TransactionListItemExpansion(
+            transactionModel: widget.transactionModel,
+            toggleExpansionCallback: _toggleExpansion,
+          ),
         );
       },
     );

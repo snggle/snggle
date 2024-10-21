@@ -7,10 +7,12 @@ import 'package:snggle/views/widgets/generic/gradient_text.dart';
 class ETHAddressPreview extends StatelessWidget {
   final String address;
   final TextStyle? textStyle;
+  final VoidCallback? onTap;
 
   const ETHAddressPreview({
     required this.address,
     this.textStyle,
+    this.onTap,
     super.key,
   });
 
@@ -23,6 +25,7 @@ class ETHAddressPreview extends StatelessWidget {
 
     return CopyWrapper(
       value: address,
+      onTap: onTap,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,

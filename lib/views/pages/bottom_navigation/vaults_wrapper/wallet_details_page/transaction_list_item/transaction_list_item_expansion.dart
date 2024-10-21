@@ -7,9 +7,11 @@ import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 
 class TransactionListItemExpansion extends StatelessWidget {
   final TransactionModel transactionModel;
+  final VoidCallback toggleExpansionCallback;
 
   const TransactionListItemExpansion({
     required this.transactionModel,
+    required this.toggleExpansionCallback,
     super.key,
   });
 
@@ -38,21 +40,33 @@ class TransactionListItemExpansion extends StatelessWidget {
           LabelWrapperVertical(
             label: 'From',
             labelStyle: labelTextStyle,
-            child: ETHAddressPreview(address: transactionModel.senderAddress!, textStyle: valueTextStyle),
+            child: ETHAddressPreview(
+              address: transactionModel.senderAddress!,
+              textStyle: valueTextStyle,
+              onTap: toggleExpansionCallback,
+            ),
           ),
         ],
         if (transactionModel.recipientAddress != null) ...<Widget>[
           LabelWrapperVertical(
             label: 'To',
             labelStyle: labelTextStyle,
-            child: ETHAddressPreview(address: transactionModel.recipientAddress!, textStyle: valueTextStyle),
+            child: ETHAddressPreview(
+              address: transactionModel.recipientAddress!,
+              textStyle: valueTextStyle,
+              onTap: toggleExpansionCallback,
+            ),
           ),
         ],
         if (transactionModel.contractAddress != null) ...<Widget>[
           LabelWrapperVertical(
             label: 'Contract',
             labelStyle: labelTextStyle,
-            child: ETHAddressPreview(address: transactionModel.contractAddress!, textStyle: valueTextStyle),
+            child: ETHAddressPreview(
+              address: transactionModel.contractAddress!,
+              textStyle: valueTextStyle,
+              onTap: toggleExpansionCallback,
+            ),
           ),
         ],
         if (transactionModel.amount != null) ...<Widget>[
