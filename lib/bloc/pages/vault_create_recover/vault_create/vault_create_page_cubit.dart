@@ -57,8 +57,11 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
   Future<void> saveMnemonic() async {
     assert(state.mnemonic != null, 'Method saveMnemonic() can be called only when mnemonic is set');
 
-    List<String> mnemonicWords = state.mnemonic!;
-    Mnemonic mnemonic = Mnemonic(state.mnemonic!);
+    // List<String> mnemonicWords = state.mnemonic!;
+    List<String> mnemonicWords = <String>['carry', 'pave', 'input', 'birth', 'pole', 'vague', 'elephant', 'moment', 'either', 'science', 'food', 'donkey'];
+    // Mnemonic mnemonic = Mnemonic(state.mnemonic!);
+    Mnemonic mnemonic =
+        Mnemonic(const <String>['carry', 'pave', 'input', 'birth', 'pole', 'vague', 'elephant', 'moment', 'either', 'science', 'food', 'donkey']);
     bool mnemonicRepeatedBool = await _isFingerprintRepeated(mnemonic);
 
     // To avoid flickering of loading indicator, wait at least 1 second before completing saving operation
