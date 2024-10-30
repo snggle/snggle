@@ -1,6 +1,22 @@
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/shared/controllers/password_controller.dart';
+import 'package:snggle/shared/models/password_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
+
 const String kEmptyString = '';
 
 class TestUtils {
+  static void mockDefaultPasswords(FilesystemPath filesystemPath) {
+    List<String> parts = filesystemPath.pathSegments;
+    for (int i = parts.length; i > 0; i--) {
+      String subPath = parts.sublist(0, i).join('/');
+      globalLocator<PasswordController>().addPassword(
+        PasswordModel.defaultPassword(),
+        FilesystemPath.fromString(subPath),
+      );
+    }
+  }
+
   static void printInfo(String message) {
     // ignore: avoid_print
     print('\x1B[34m$message\x1B[0m');

@@ -5,13 +5,27 @@ import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class PasswordController {
-  // TODO(Marcin): This class will be storing PasswordModels according to FilesystemPaths, to manage the PasswordModel flow through the application
   final List<ListItemAccessModel> _listItemAccessModelList = List<ListItemAccessModel>.empty(growable: true);
 
   void addPassword(PasswordModel passwordModel, FilesystemPath filesystemPath) {
     _listItemAccessModelList.add(ListItemAccessModel(
       filesystemPath: filesystemPath,
+      passwordModel: passwordModel,
     ));
+  }
+
+  Future<PasswordModel> getPasswordByFilesystemPath(FilesystemPath filesystemPath) async {
+    for (ListItemAccessModel accessInfo in _listItemAccessModelList) {
+      if (accessInfo.filesystemPath == filesystemPath) {
+        return accessInfo.passwordModel;
+      }
+    }
+    bool elementUnlockedBool = await checkIfUnlocked(filesystemPath);
+    if (elementUnlockedBool) {
+      return PasswordModel.defaultPassword();
+    } else {
+      throw Exception('The provided FilesystemPath is locked, and the password was not entered.');
+    }
   }
 
   Future<bool> checkIfUnlocked(FilesystemPath filesystemPath) async {

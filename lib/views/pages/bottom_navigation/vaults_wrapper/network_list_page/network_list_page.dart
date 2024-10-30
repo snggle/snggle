@@ -25,19 +25,16 @@ class NetworkListPage extends StatefulWidget {
   final String name;
   final VaultModel vaultModel;
   final FilesystemPath filesystemPath;
-  final PasswordModel vaultPasswordModel;
 
   const NetworkListPage({
     required this.name,
     required this.vaultModel,
     required this.filesystemPath,
-    required this.vaultPasswordModel,
     super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => _NetworkListPageState();
-}
+  State<StatefulWidget> createState() => _NetworkListPageState();}
 
 class _NetworkListPageState extends State<NetworkListPage> {
   final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
@@ -87,7 +84,7 @@ class _NetworkListPageState extends State<NetworkListPage> {
                       listItemSize: HorizontalListItemLayout.listItemSize,
                       listCubit: networkListPageCubit,
                       listItemModel: listItemModel,
-                      onNavigate: _navigateToNextPage,
+                      onNavigate: navigateToNextPage,
                       selectionPadding: const EdgeInsets.all(5),
                       child: switch (listItemModel) {
                         NetworkGroupModel networkGroupModel => NetworkListItem(
@@ -114,7 +111,7 @@ class _NetworkListPageState extends State<NetworkListPage> {
     );
   }
 
-  Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
+  Future<void> navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
     globalLocator<PasswordController>().addPassword(passwordModel, listItemModel.filesystemPath);
 
     if (listItemModel is NetworkGroupModel) {
@@ -122,7 +119,6 @@ class _NetworkListPageState extends State<NetworkListPage> {
         WalletListRoute(
           name: listItemModel.name,
           vaultModel: widget.vaultModel,
-          vaultPasswordModel: widget.vaultPasswordModel,
           filesystemPath: listItemModel.filesystemPath,
           networkGroupModel: listItemModel,
         ),

@@ -162,7 +162,6 @@ class _VaultListPageState extends State<VaultListPage> {
         NetworkListRoute(
           name: listItemModel.name,
           vaultModel: listItemModel,
-          vaultPasswordModel: passwordModel,
           filesystemPath: listItemModel.filesystemPath,
         ),
       );

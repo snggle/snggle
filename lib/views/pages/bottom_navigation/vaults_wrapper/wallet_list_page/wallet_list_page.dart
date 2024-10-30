@@ -32,14 +32,12 @@ class WalletListPage extends StatefulWidget {
   final String name;
   final VaultModel vaultModel;
   final FilesystemPath filesystemPath;
-  final PasswordModel vaultPasswordModel;
   final NetworkGroupModel networkGroupModel;
 
   const WalletListPage({
     required this.name,
     required this.vaultModel,
     required this.filesystemPath,
-    required this.vaultPasswordModel,
     required this.networkGroupModel,
     super.key,
   });
@@ -55,6 +53,7 @@ class _WalletListPageState extends State<WalletListPage> {
     filesystemPath: widget.filesystemPath,
     onBackFromGroup: globalLocator<PasswordController>().removeByFilesystemPath,
   );
+
   @override
   void initState() {
     walletListPageCubit.refreshAll();
@@ -145,7 +144,6 @@ class _WalletListPageState extends State<WalletListPage> {
   Future<void> _navigateToWalletCreatePage() async {
     await AutoRouter.of(context).push<void>(WalletCreateRoute(
       vaultModel: widget.vaultModel,
-      vaultPasswordModel: widget.vaultPasswordModel,
       networkGroupModel: widget.networkGroupModel,
       parentFilesystemPath: walletListPageCubit.state.filesystemPath,
     ));
@@ -161,11 +159,9 @@ class _WalletListPageState extends State<WalletListPage> {
 
       activeWalletController.setActiveWallet(
         walletModel: listItemModel,
-        walletPasswordModel: passwordModel,
         transactionSignedCallback: walletDetailsPageCubit.refresh,
       );
       await AutoRouter.of(context).push<void>(WalletDetailsRoute(
-        vaultPasswordModel: widget.vaultPasswordModel,
         vaultModel: widget.vaultModel,
         networkGroupModel: widget.networkGroupModel,
         walletModel: listItemModel,

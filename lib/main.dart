@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/theme_config.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
@@ -15,6 +16,11 @@ Future<void> main() async {
 
   initLocator();
   await globalLocator<IsarDatabaseManager>().initDatabase();
+
+  await const FlutterSecureStorage().deleteAll();
+
+// For each key in "snggle/test/mocks/fullDatabaseMock/secure_storage_mock.json"
+  await const FlutterSecureStorage().write(key: 'encryptedMasterKey', value: 'FhSf0rK3enK3orHHM4McWIYhZ8YiT0V3mn6rTyWScdPYgaO+McvLXYtcGAX2CGNFQYLdYsEzwXO/DcMGjSICqa0nFdE=');
 
   runApp(const AppCore());
 }

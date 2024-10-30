@@ -5,6 +5,7 @@ import 'package:snggle/bloc/pages/wallet_create/wallet_create_page/wallet_create
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
+import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/factories/wallet_model_factory.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
@@ -24,19 +25,16 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
   final TextEditingController derivationPathTextEditingController = TextEditingController();
 
   final VaultModel _vaultModel;
-  final PasswordModel _vaultPasswordModel;
   final NetworkGroupModel _networkGroupModel;
   final NetworkTemplateModel _networkTemplateModel;
   final FilesystemPath _parentFilesystemPath;
 
   WalletCreatePageCubit({
     required VaultModel vaultModel,
-    required PasswordModel vaultPasswordModel,
     required NetworkGroupModel networkGroupModel,
     required FilesystemPath parentFilesystemPath,
   })  : _parentFilesystemPath = parentFilesystemPath,
         _networkGroupModel = networkGroupModel,
-        _vaultPasswordModel = vaultPasswordModel,
         _vaultModel = vaultModel,
         _networkTemplateModel = networkGroupModel.networkTemplateModel,
         super(const WalletCreatePageState());
@@ -77,7 +75,8 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
       return null;
     }
 
-    VaultSecretsModel vaultSecretsModel = await secretsService.get(_vaultModel.filesystemPath, _vaultPasswordModel);
+    PasswordModel vaultPasswordModel = await globalLocator<PasswordController>().getPasswordByFilesystemPath(_vaultModel.filesystemPath);
+    VaultSecretsModel vaultSecretsModel = await secretsService.get(_vaultModel.filesystemPath, vaultPasswordModel);
     Mnemonic mnemonic = Mnemonic(vaultSecretsModel.mnemonicModel.mnemonicList);
     AHDWallet hdWallet = await _networkTemplateModel.deriveWallet(mnemonic, derivationPathString);
 

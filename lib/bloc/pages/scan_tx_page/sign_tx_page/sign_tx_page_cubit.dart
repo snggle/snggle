@@ -11,7 +11,6 @@ import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/transaction_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
-import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
@@ -19,10 +18,8 @@ import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/transactions/transaction_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
-import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class SignTxPageCubit extends Cubit<ASignTxPageState> {
-  final ActiveWalletController _activeWalletController = globalLocator<ActiveWalletController>();
   final SecretsService _secretsService = globalLocator<SecretsService>();
   final TransactionsService _transactionsService = globalLocator<TransactionsService>();
   final WalletsService _walletsService = globalLocator<WalletsService>();
@@ -64,20 +61,14 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
   }
 
   Future<void> _setupSignWallet() async {
-    String? activeWalletAddress = _activeWalletController.walletModel?.address.toLowerCase();
     String? receivedWalletAddress = _cborEthSignRequest.address?.toLowerCase();
 
     if (receivedWalletAddress == null) {
       throw const ScanQrException(ScanQrExceptionType.receivedAddressEmpty);
     }
 
-    if (_activeWalletController.hasActiveWallet && activeWalletAddress == receivedWalletAddress) {
-      signWalletModel = _activeWalletController.walletModel!;
-      _signWalletPasswordModel = _activeWalletController.walletPasswordModel!;
-    } else {
-      signWalletModel = await _getWalletFromDatabase(receivedWalletAddress);
-      _signWalletPasswordModel = await _getPasswordForWallet(signWalletModel);
-    }
+    signWalletModel = await _getWalletFromDatabase(receivedWalletAddress);
+    _signWalletPasswordModel = await _getPasswordForWallet(signWalletModel);
   }
 
   Future<WalletModel> _getWalletFromDatabase(String signWalletAddress) async {
@@ -89,20 +80,13 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
   }
 
   Future<PasswordModel> _getPasswordForWallet(WalletModel walletModel) async {
-    FilesystemPath encryptedParents = await _secretsService.getEncryptedPath(walletModel.filesystemPath);
+    bool walletPathUnlockedBool = await globalLocator<PasswordController>().checkIfUnlocked(walletModel.filesystemPath);
 
-    bool walletUnlockedBool;
-    if (encryptedParents.pathSegments.isEmpty) {
-      walletUnlockedBool = true;
+    if (walletPathUnlockedBool) {
+      return globalLocator<PasswordController>().getPasswordByFilesystemPath(walletModel.filesystemPath);
     } else {
-      walletUnlockedBool = await globalLocator<PasswordController>().checkIfUnlocked(encryptedParents);
-    }
-
-    if (walletUnlockedBool == false) {
       // TODO(dominik): Exception may be replaced with a UI dialog to enter the password
       throw const ScanQrException(ScanQrExceptionType.walletWithEncryptedParents);
     }
-
-    return PasswordModel.defaultPassword();
   }
 }

@@ -7,7 +7,6 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_connec
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
-import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_connect_option.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
@@ -21,13 +20,11 @@ import 'package:snggle/views/widgets/icons/asset_icon.dart';
 @RoutePage()
 class WalletConnectPage extends StatefulWidget {
   final VaultModel vaultModel;
-  final PasswordModel vaultPasswordModel;
   final WalletModel walletModel;
   final NetworkTemplateModel networkTemplateModel;
 
   const WalletConnectPage({
     required this.vaultModel,
-    required this.vaultPasswordModel,
     required this.walletModel,
     required this.networkTemplateModel,
     super.key,
@@ -40,9 +37,14 @@ class WalletConnectPage extends StatefulWidget {
 class _WalletConnectPageState extends State<WalletConnectPage> {
   late final WalletConnectPageCubit walletConnectPageCubit = WalletConnectPageCubit(
     vaultModel: widget.vaultModel,
-    vaultPasswordModel: widget.vaultPasswordModel,
     walletModel: widget.walletModel,
   );
+
+  @override
+  void dispose() {
+    walletConnectPageCubit.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

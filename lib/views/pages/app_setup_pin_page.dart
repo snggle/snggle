@@ -44,7 +44,7 @@ class _AppSetupPinPageState extends State<AppSetupPinPage> {
         if (appSetupPinPageState is AppSetupPinPageEnterPinState) {
           child = PinpadScaffold(
             errorBool: false,
-            title: 'Setup Access PIN',
+            title: ' Setup Access PIN',
             initialPinNumbers: appSetupPinPageState.firstPinNumbers,
             onChanged: _handleFirstPinChange,
             actionButtons: <Widget>[

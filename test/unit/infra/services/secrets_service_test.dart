@@ -138,6 +138,45 @@ void main() {
     });
   });
 
+  group('Tests of SecretsService.getEncryptedParent()', () {
+    test('Should [return encrypted parents] if [secrets path has ENCRYPTED parents]', () async {
+      // Arrange
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id3/id4');
+
+      // Act
+      FilesystemPath actualEncryptedParents = await globalLocator<SecretsService>().getEncryptedPath(actualFilesystemPath);
+
+      // Assert
+      FilesystemPath expectedEncryptedParents = const FilesystemPath(<String>['id3', 'id4']);
+
+      expect(actualEncryptedParents, expectedEncryptedParents);
+    });
+
+    test('Should [return empty FilesystemPath] if [secrets path has DECRYPTED parents]', () async {
+      // Arrange
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/id2');
+
+      // Act
+      FilesystemPath actualEncryptedParents = await globalLocator<SecretsService>().getEncryptedPath(actualFilesystemPath);
+
+      // Assert
+      FilesystemPath expectedEncryptedParents = const FilesystemPath(<String>[]);
+
+      expect(actualEncryptedParents, expectedEncryptedParents);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage', () async {
+      // Arrange
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+
+      // Assert
+      expect(
+            () => globalLocator<SecretsService>().get(actualFilesystemPath, PasswordModel.fromPlaintext('1111')),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
   group('Tests of SecretsService.save()', () {
     test('Should [UPDATE secrets] if [secrets path EXISTS] in collection', () async {
       // Arrange

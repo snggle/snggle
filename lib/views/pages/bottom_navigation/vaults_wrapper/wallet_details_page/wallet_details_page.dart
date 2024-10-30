@@ -8,7 +8,6 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
-import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
@@ -27,14 +26,12 @@ import 'package:snggle/views/widgets/qr/qr_result_scaffold.dart';
 
 @RoutePage<void>()
 class WalletDetailsPage extends StatefulWidget {
-  final PasswordModel vaultPasswordModel;
   final VaultModel vaultModel;
   final NetworkGroupModel networkGroupModel;
   final WalletModel walletModel;
   final WalletDetailsPageCubit walletDetailsPageCubit;
 
   const WalletDetailsPage({
-    required this.vaultPasswordModel,
     required this.vaultModel,
     required this.networkGroupModel,
     required this.walletModel,
@@ -118,7 +115,6 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                         AutoRouter.of(context).navigate(WalletConnectRoute(
                           walletModel: widget.walletModel,
                           vaultModel: widget.vaultModel,
-                          vaultPasswordModel: widget.vaultPasswordModel,
                           networkTemplateModel: widget.networkGroupModel.networkTemplateModel,
                         ));
                       },
