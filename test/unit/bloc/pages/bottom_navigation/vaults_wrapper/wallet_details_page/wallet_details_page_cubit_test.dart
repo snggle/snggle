@@ -41,7 +41,7 @@ void main() {
     );
 
     actualWalletDetailsPageCubit = WalletDetailsPageCubit(walletModel: actualWalletModel);
-    globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel, walletPasswordModel: PasswordModel.defaultPassword());
+    globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel);
   });
 
   group('Tests of WalletDetailsPageCubit process', () {

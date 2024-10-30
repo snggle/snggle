@@ -110,7 +110,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
               ScanQrExceptionType.walletNotFound =>
                 'Scanned transaction contains an address that does not exist in the application. Please check if you are using the correct wallet.',
               ScanQrExceptionType.walletWithEncryptedParents =>
-                'Wallet is in a Vault or Group that is password protected. Please open the wallet directly to sign the transaction.',
+                "The wallet is in the password protected path. Please unlock the protected elements on the wallet's path to continue.",
             },
             textAlign: TextAlign.center,
           ),

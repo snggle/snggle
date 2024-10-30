@@ -13,6 +13,7 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 
 import '../../../../../../utils/database_mock.dart';
 import '../../../../../../utils/test_database.dart';
+import '../../../../../../utils/test_utils.dart';
 
 void main() {
   final TestDatabase testDatabase = TestDatabase();
@@ -25,7 +26,6 @@ void main() {
     );
 
     actualWalletConnectPageCubit = WalletConnectPageCubit(
-      vaultPasswordModel: PasswordModel.defaultPassword(),
       vaultModel: VaultModel(
         id: 1,
         encryptedBool: false,
@@ -82,6 +82,12 @@ void main() {
     });
 
     test('Should [return CborCryptoHDKey] with extended public key for all wallets', () async {
+      // Arrange
+      TestUtils.mockPasswords(
+        FilesystemPath.fromString('vault1/network1/wallet1'),
+        List<PasswordModel>.generate(3, (_) => PasswordModel.defaultPassword()),
+      );
+
       // Act
       CborCryptoHDKey actualCborCryptoHDKey = await actualWalletConnectPageCubit.getCborCryptoHDKey(connectAllBool: true);
 
@@ -104,6 +110,12 @@ void main() {
     });
 
     test('Should [return CborCryptoHDKey] with extended public key for single wallet', () async {
+      // Arrange
+      TestUtils.mockPasswords(
+        FilesystemPath.fromString('vault1/network1/wallet1'),
+        List<PasswordModel>.generate(3, (_) => PasswordModel.defaultPassword()),
+      );
+
       // Act
       CborCryptoHDKey actualCborCryptoHDKey = await actualWalletConnectPageCubit.getCborCryptoHDKey(connectAllBool: false);
 
