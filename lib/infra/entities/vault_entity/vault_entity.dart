@@ -12,6 +12,9 @@ class VaultEntity extends Equatable {
   final bool pinnedBool;
 
   @Index()
+  final String fingerprint;
+
+  @Index()
   final int index;
 
   @Index()
@@ -22,6 +25,7 @@ class VaultEntity extends Equatable {
     required this.id,
     required this.encryptedBool,
     required this.pinnedBool,
+    required this.fingerprint,
     required this.index,
     required this.filesystemPathString,
     this.name,
@@ -32,6 +36,7 @@ class VaultEntity extends Equatable {
       id: vaultModel.id,
       encryptedBool: vaultModel.encryptedBool,
       pinnedBool: vaultModel.pinnedBool,
+      fingerprint: vaultModel.fingerprint,
       index: vaultModel.index,
       filesystemPathString: vaultModel.filesystemPath.fullPath,
       name: vaultModel.name,
@@ -42,6 +47,7 @@ class VaultEntity extends Equatable {
     int? id,
     bool? encryptedBool,
     bool? pinnedBool,
+    String? fingerprint,
     int? index,
     String? filesystemPathString,
     String? name,
@@ -50,6 +56,7 @@ class VaultEntity extends Equatable {
       id: id ?? this.id,
       encryptedBool: encryptedBool ?? this.encryptedBool,
       pinnedBool: pinnedBool ?? this.pinnedBool,
+      fingerprint: fingerprint ?? this.fingerprint,
       index: index ?? this.index,
       filesystemPathString: filesystemPathString ?? this.filesystemPathString,
       name: name ?? this.name,
@@ -60,5 +67,5 @@ class VaultEntity extends Equatable {
   FilesystemPath get filesystemPath => FilesystemPath.fromString(filesystemPathString);
 
   @override
-  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, index, filesystemPathString, name];
+  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, fingerprint, index, filesystemPathString, name];
 }

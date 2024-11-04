@@ -1,7 +1,5 @@
 import 'package:bip39/bip39.dart';
-import 'package:blockchain_utils/bip/bip/bip.dart';
-import 'package:blockchain_utils/bip/mnemonic/mnemonic.dart';
-import 'package:blockchain_utils/bip/mnemonic/mnemonic_validator.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_state.dart';
@@ -12,7 +10,10 @@ import 'package:snggle/shared/factories/network_group_model_factory.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
+import 'package:snggle/shared/utils/crypto/mnemonic_fingerprint_calculator.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
+import 'package:snggle/shared/utils/logger/app_logger.dart';
+import 'package:snggle/shared/utils/logger/log_level.dart';
 
 class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
   final NetworkGroupModelFactory _networkGroupsModelFactory = globalLocator<NetworkGroupModelFactory>();
@@ -21,13 +22,10 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
   final TextEditingController vaultNameTextEditingController = TextEditingController();
   final FilesystemPath _parentFilesystemPath;
-  final VoidCallback? _creationSuccessfulCallback;
 
   VaultRecoverPageCubit({
     required FilesystemPath parentFilesystemPath,
-    void Function()? creationSuccessfulCallback,
-  })  : _creationSuccessfulCallback = creationSuccessfulCallback,
-        _parentFilesystemPath = parentFilesystemPath,
+  })  : _parentFilesystemPath = parentFilesystemPath,
         super(const VaultRecoverPageState());
 
   @override
@@ -50,32 +48,36 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
     int lastVaultIndex = await _vaultsService.getLastIndex();
 
+    if (lastVaultIndex == -1) {
+      vaultNameTextEditingController.text = 'Vault';
+    } else {
+      vaultNameTextEditingController.text = 'Vault ${lastVaultIndex + 1}';
+    }
+
     emit(VaultRecoverPageState(
       confirmPageEnabledBool: true,
-      lastVaultIndex: lastVaultIndex,
       mnemonicSize: mnemonicSize,
       textControllers: textControllers,
     ));
   }
 
   Future<void> saveMnemonic() async {
-    // To avoid flickering of loading indicator, wait at least 1 second before completing saving operation
-    Future<void> minimalSavingTime = Future<void>.delayed(const Duration(seconds: 1));
-
     List<String> mnemonicWords = state.textControllers!.map((TextEditingController textController) => textController.text).toList();
 
     // TODO(dominik): Temporary solution to build and validate mnemonic. It should be improved after 'cryptography_utils' package implementation
     Mnemonic mnemonic = Mnemonic(mnemonicWords);
-    Bip39MnemonicDecoder decoder = Bip39MnemonicDecoder();
-    bool mnemonicValidBool = MnemonicValidator<Bip39MnemonicDecoder>(decoder).isValid(mnemonic.toStr());
 
-    if (mnemonicValidBool) {
-      emit(const VaultRecoverPageState.loading());
+    String fingerprint = await MnemonicFingerprintCalculator.calc(mnemonic);
 
+    try {
+      VaultModel repeatedVaultModel = await _vaultsService.getDuplicateVault(fingerprint);
+      emit(state.copyWith(repeatedVaultModel: repeatedVaultModel));
+    } catch (e) {
+      AppLogger().log(
+        message: 'Did not find the repeated vault, proceeded with vault recovery',
+        logLevel: LogLevel.info,
+      );
       await _createVault(mnemonicWords);
-      await minimalSavingTime;
-      _creationSuccessfulCallback?.call();
-    } else {
       emit(state.copyWith(mnemonicFilledBool: false));
     }
   }
@@ -91,7 +93,7 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
     } else {
       // TODO(dominik): Temporary solution to validate mnemonic phrase. After 'cryptography_utils' package implementation it should be improved
       bool mnemonicValidBool = validateMnemonic(mnemonicWords.join(' '));
-      emit(state.copyWith(mnemonicFilledBool: true, mnemonicValidBool: mnemonicValidBool));
+      emit(state.copyWith(mnemonicFilledBool: true, mnemonicValidBool: mnemonicValidBool, clearRepeatedVaultModelBool: true));
     }
   }
 

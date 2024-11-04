@@ -39,6 +39,7 @@ void main() {
           pinnedBool: false,
           index: 0,
           filesystemPath: FilesystemPath.fromString('vault1'),
+          fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
           name: 'VAULT 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -55,6 +56,7 @@ void main() {
           pinnedBool: false,
           index: 1,
           filesystemPath: FilesystemPath.fromString('vault2'),
+          fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=',
           name: 'VAULT 2',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -68,6 +70,7 @@ void main() {
           pinnedBool: false,
           index: 2,
           filesystemPath: FilesystemPath.fromString('vault3'),
+          fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=',
           name: 'VAULT 3',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -95,6 +98,7 @@ void main() {
           pinnedBool: false,
           index: 0,
           filesystemPath: FilesystemPath.fromString('vault1'),
+          fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
           name: 'VAULT 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -111,6 +115,7 @@ void main() {
           pinnedBool: false,
           index: 1,
           filesystemPath: FilesystemPath.fromString('vault2'),
+          fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=',
           name: 'VAULT 2',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -124,6 +129,7 @@ void main() {
           pinnedBool: false,
           index: 2,
           filesystemPath: FilesystemPath.fromString('vault3'),
+          fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=',
           name: 'VAULT 3',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -137,6 +143,7 @@ void main() {
           pinnedBool: false,
           index: 3,
           filesystemPath: FilesystemPath.fromString('group1/vault4'),
+          fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=',
           name: 'VAULT 4',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -150,6 +157,7 @@ void main() {
           pinnedBool: false,
           index: 4,
           filesystemPath: FilesystemPath.fromString('group1/vault5'),
+          fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=',
           name: 'VAULT 5',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -206,6 +214,7 @@ void main() {
         pinnedBool: false,
         index: 0,
         filesystemPath: FilesystemPath.fromString('vault1'),
+        fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[
           // @formatter:off
@@ -240,13 +249,15 @@ void main() {
       // Act
       await globalLocator<VaultsService>().move(
         VaultModel(
-            id: 1,
-            encryptedBool: false,
-            pinnedBool: false,
-            index: 0,
-            filesystemPath: FilesystemPath.fromString('vault1'),
-            name: 'VAULT 1',
-            listItemsPreview: <AListItemModel>[]),
+          id: 1,
+          encryptedBool: false,
+          pinnedBool: false,
+          index: 0,
+          filesystemPath: FilesystemPath.fromString('vault1'),
+          fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
+          name: 'VAULT 1',
+          listItemsPreview: <AListItemModel>[],
+        ),
         FilesystemPath.fromString('new/path/vault1'),
       );
 
@@ -256,11 +267,13 @@ void main() {
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'new/path/vault1', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5')
+        // @formatter:off
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'new/path/vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5')
+        // @formatter:on
       ];
 
       expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
@@ -284,11 +297,13 @@ void main() {
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'new/path/group1/vault4', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'new/path/group1/vault5', name: 'VAULT 5')
+        // @formatter:off
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'new/path/group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'new/path/group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5')
+        // @formatter:on
       ];
 
       expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
@@ -306,6 +321,7 @@ void main() {
         pinnedBool: true,
         index: 0,
         filesystemPath: FilesystemPath.fromString('vault1'),
+        fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
         name: 'UPDATED VAULT 1',
         listItemsPreview: <AListItemModel>[],
       );
@@ -319,11 +335,13 @@ void main() {
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
-        const VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', name: 'UPDATED VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5')
+        // @formatter:off
+        const VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'UPDATED VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5')
+        // @formatter:on
       ];
 
       expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
@@ -339,6 +357,7 @@ void main() {
         pinnedBool: true,
         index: 999999,
         filesystemPath: FilesystemPath.fromString('vault999999'),
+        fingerprint: 'NEW_FINGERPRINT',
         name: 'NEW VAULT 1',
         listItemsPreview: <AListItemModel>[],
       );
@@ -352,12 +371,14 @@ void main() {
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5'),
-        const VaultEntity(id: 999999, encryptedBool: true, pinnedBool: true, index: 999999, filesystemPathString: 'vault999999', name: 'NEW VAULT 1')
+        // @formatter:off
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5'),
+        const VaultEntity(id: 999999, encryptedBool: true, pinnedBool: true, index: 999999, filesystemPathString: 'vault999999', fingerprint: 'NEW_FINGERPRINT', name: 'NEW VAULT 1')
+        // @formatter:on
       ];
 
       expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
@@ -371,8 +392,8 @@ void main() {
 
       List<VaultModel> actualVaultsToUpdate = <VaultModel>[
         // @formatter:off
-        VaultModel(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPath: FilesystemPath.fromString('vault1'), name: 'UPDATED VAULT 1', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 2, encryptedBool: true, pinnedBool: true, index: 1, filesystemPath: FilesystemPath.fromString('vault2'), name: 'UPDATED VAULT 2', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPath: FilesystemPath.fromString('vault1'), fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'UPDATED VAULT 1', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 2, encryptedBool: true, pinnedBool: true, index: 1, filesystemPath: FilesystemPath.fromString('vault2'), fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'UPDATED VAULT 2', listItemsPreview: <AListItemModel>[]),
         // @formatter:on
       ];
 
@@ -385,11 +406,13 @@ void main() {
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
-        const VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', name: 'UPDATED VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: true, pinnedBool: true, index: 1, filesystemPathString: 'vault2', name: 'UPDATED VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5')
+        // @formatter:off
+        const VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'UPDATED VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: true, pinnedBool: true, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'UPDATED VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5')
+        // @formatter:on
       ];
 
       expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
@@ -401,8 +424,8 @@ void main() {
 
       List<VaultModel> actualVaultsToUpdate = <VaultModel>[
         // @formatter:off
-        VaultModel(id: 99998, encryptedBool: true, pinnedBool: true, index: 99998, filesystemPath: FilesystemPath.fromString('vault99998'), name: 'NEW VAULT 1', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 99999, encryptedBool: true, pinnedBool: true, index: 99999, filesystemPath: FilesystemPath.fromString('vault99999'), name: 'NEW VAULT 2', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 99998, encryptedBool: true, pinnedBool: true, index: 99998, filesystemPath: FilesystemPath.fromString('vault99998'), fingerprint: '', name: 'NEW VAULT 1', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 99999, encryptedBool: true, pinnedBool: true, index: 99999, filesystemPath: FilesystemPath.fromString('vault99999'), fingerprint: '', name: 'NEW VAULT 2', listItemsPreview: <AListItemModel>[]),
         // @formatter:on
       ];
 
@@ -415,13 +438,15 @@ void main() {
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5'),
-        const VaultEntity(id: 99998, encryptedBool: true, pinnedBool: true, index: 99998, filesystemPathString: 'vault99998', name: 'NEW VAULT 1'),
-        const VaultEntity(id: 99999, encryptedBool: true, pinnedBool: true, index: 99999, filesystemPathString: 'vault99999', name: 'NEW VAULT 2'),
+        // @formatter:off
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5'),
+        const VaultEntity(id: 99998, encryptedBool: true, pinnedBool: true, index: 99998, filesystemPathString: 'vault99998', fingerprint: '', name: 'NEW VAULT 1'),
+        const VaultEntity(id: 99999, encryptedBool: true, pinnedBool: true, index: 99999, filesystemPathString: 'vault99999', fingerprint: '', name: 'NEW VAULT 2'),
+        // @formatter:on
       ];
 
       expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
@@ -442,9 +467,11 @@ void main() {
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
+        // @formatter:off
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
+        // @formatter:on
       ];
 
       expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
@@ -482,10 +509,12 @@ void main() {
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5'),
+        // @formatter:off
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5'),
+        // @formatter:on
       ];
 
       expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
@@ -498,6 +527,48 @@ void main() {
       // Assert
       expect(
         () => globalLocator<VaultsService>().deleteById(99999),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
+  group('Tests of VaultsService.getDuplicateVault()', () {
+    test('Should [return VaultModel] if [fingerprint EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      VaultModel? actualVaultModel = await globalLocator<VaultsService>().getDuplicateVault('o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=');
+
+      // Assert
+      VaultModel expectedVaultModel = VaultModel(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        index: 0,
+        filesystemPath: FilesystemPath.fromString('vault1'),
+        fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
+        name: 'VAULT 1',
+        listItemsPreview: <AListItemModel>[
+          // @formatter:off
+          GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
+          NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
+          NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
+          NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
+          // @formatter:on
+        ],
+      );
+
+      expect(actualVaultModel, expectedVaultModel);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [fingerprint NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Assert
+      expect(
+        globalLocator<VaultsService>().getDuplicateVault('Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk='),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -544,6 +615,7 @@ void main() {
         pinnedBool: false,
         index: 0,
         filesystemPath: FilesystemPath.fromString('new/vault/path/vault1'),
+        fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[],
       );

@@ -43,8 +43,6 @@ void main() {
         // Since generated mnemonic phrase is random, predicting it's value is not possible.
         // For that reason values from [VaultCreatePageState] are checked one by one.
         expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultCreatePageCubit.state.loadingBool, false);
-        expect(actualVaultCreatePageCubit.state.lastVaultIndex, 4);
         expect(actualVaultCreatePageCubit.state.mnemonicSize, 12);
         expect(actualVaultCreatePageCubit.state.mnemonic!.length, 12);
       });
@@ -57,15 +55,13 @@ void main() {
         // Since generated mnemonic phrase is random, predicting it's value is not possible.
         // For that reason values from [VaultCreatePageState] are checked one by one.
         expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultCreatePageCubit.state.loadingBool, false);
-        expect(actualVaultCreatePageCubit.state.lastVaultIndex, 4);
         expect(actualVaultCreatePageCubit.state.mnemonicSize, 24);
         expect(actualVaultCreatePageCubit.state.mnemonic!.length, 24);
       });
     });
 
     group('Tests of VaultCreatePageCubit.saveMnemonic() method', () {
-      test('Should [return VaultCreatePageState.loading] and save vault in database', () async {
+      test('Should [return VaultCreatePageState] with new vault in database', () async {
         // Arrange
         actualVaultCreatePageCubit.vaultNameTextEditingController.text = 'Test vault';
 
@@ -81,21 +77,18 @@ void main() {
         });
 
         // Assert
-        List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
-          const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', name: 'VAULT 1'),
-          const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', name: 'VAULT 2'),
-          const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', name: 'VAULT 3'),
-          const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', name: 'VAULT 4'),
-          const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', name: 'VAULT 5'),
-          const VaultEntity(id: 6, encryptedBool: false, pinnedBool: false, index: 5, filesystemPathString: 'vault6', name: 'Test vault')
-        ];
+        VaultCreatePageState expectedVaultCreatePageState = const VaultCreatePageState(
+          confirmPageEnabledBool: true,
+          repeatedVaultModel: null,
+          mnemonicSize: 24,
+        // not included expected mnemonic because of random value
+        );
 
-        // Assert
-        VaultCreatePageState expectedVaultCreatePageState = const VaultCreatePageState.loading();
-
-        expect(actualVaultCreatePageCubit.state, expectedVaultCreatePageState);
+        expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, expectedVaultCreatePageState.confirmPageEnabledBool);
+        expect(actualVaultCreatePageCubit.state.repeatedVaultModel, expectedVaultCreatePageState.repeatedVaultModel);
+        expect(actualVaultCreatePageCubit.state.mnemonicSize, expectedVaultCreatePageState.mnemonicSize);
         expect(actualSecretsFilesystemStructure.length, 10);
-        expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
+        expect(actualVaultsDatabaseValue.length, 6);
       });
     });
   });

@@ -1,9 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:blockchain_utils/bip/bip/bip39/bip39.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_cubit.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
+import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/views/widgets/custom/custom_grid.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
@@ -14,23 +18,23 @@ import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.
 class MnemonicFormEditable extends StatefulWidget {
   final bool mnemonicValidBool;
   final bool mnemonicFilledBool;
-  final int lastVaultIndex;
   final int mnemonicSize;
   final KeyboardValueNotifier keyboardValueNotifier;
   final List<TextEditingController> textControllers;
   final VaultRecoverPageCubit vaultRecoverPageCubit;
   final bool recoverButtonActiveBool;
+  final VaultModel? repeatedVaultModel;
 
   const MnemonicFormEditable({
     required this.mnemonicValidBool,
     required this.mnemonicFilledBool,
-    required this.lastVaultIndex,
     required this.mnemonicSize,
     required this.keyboardValueNotifier,
     required this.textControllers,
     required this.vaultRecoverPageCubit,
+    required this.repeatedVaultModel,
     super.key,
-  }) : recoverButtonActiveBool = mnemonicValidBool == false || mnemonicFilledBool == false;
+  }) : recoverButtonActiveBool = mnemonicValidBool == true && mnemonicFilledBool == true && repeatedVaultModel == null;
 
   @override
   State<StatefulWidget> createState() => _MnemonicFormEditableState();
@@ -81,19 +85,19 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
               if (obscureTextBool)
                 BottomTooltipItem(
                   label: 'Show',
-                  assetIconData: AppIcons.menu_eye_open,
+                  assetIconData: AppIcons.menu_eye_closed,
                   onTap: () => setState(() => obscureTextBool = false),
                 )
               else
                 BottomTooltipItem(
                   label: 'Hide',
-                  assetIconData: AppIcons.menu_eye_closed,
+                  assetIconData: AppIcons.menu_eye_open,
                   onTap: () => setState(() => obscureTextBool = true),
                 ),
               BottomTooltipItem(
                 label: 'Finish',
                 assetIconData: AppIcons.menu_finish,
-                onTap: widget.recoverButtonActiveBool ? null : () => widget.vaultRecoverPageCubit.saveMnemonic(),
+                onTap: widget.recoverButtonActiveBool ? _pressFinishButton : null,
               ),
             ],
             bottomMarginVisibleBool: anyKeyboardVisibleBool == false,
@@ -101,14 +105,35 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
               controller: scrollController,
               child: Column(
                 children: <Widget>[
-                  const SizedBox(height: 8),
+                  if (widget.vaultRecoverPageCubit.state.repeatedVaultModel != null) ...<Widget>[
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'The vault already exists',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        SizedBox(width: 6),
+                        Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.red,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Repeated vault: ${widget.repeatedVaultModel!.name}',
+                      style: const TextStyle(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                  ],
                   LabelWrapperVertical.textField(
                     label: 'Name',
                     labelPadding: const EdgeInsets.symmetric(horizontal: 10),
                     bottomBorderVisibleBool: false,
                     child: CustomTextField(
                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                      initialValue: 'New Vault ${widget.lastVaultIndex + 1}',
                       keyboardType: TextInputType.text,
                       enableInteractiveSelectionBool: true,
                       textEditingController: widget.vaultRecoverPageCubit.vaultNameTextEditingController,
@@ -187,5 +212,24 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
         duration: const Duration(milliseconds: 100),
       );
     }
+  }
+
+  Future<void> _pressFinishButton() async {
+    await CustomLoadingDialog.show<void>(
+      context: context,
+      title: 'Saving...',
+      futureFunction: widget.vaultRecoverPageCubit.saveMnemonic,
+      onSuccess: (_) async {
+        if (widget.vaultRecoverPageCubit.state.repeatedVaultModel != null) {
+          await scrollController.animateTo(
+            scrollController.position.minScrollExtent,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+          );
+        } else {
+          await AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.creationSuccessful);
+        }
+      },
+    );
   }
 }

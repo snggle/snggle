@@ -84,6 +84,11 @@ class VaultsService implements IListItemsService<VaultModel> {
     await _vaultsRepository.deleteById(id);
   }
 
+  Future<VaultModel> getDuplicateVault(String fingerprint) async {
+    VaultEntity vaultEntity = await _vaultsRepository.getByFingerprint(fingerprint);
+    return globalLocator<VaultModelFactory>().createFromEntity(vaultEntity);
+  }
+
   Future<int> getLastIndex() async {
     int? lastIndex = await _vaultsRepository.getLastIndex();
     return lastIndex ?? -1;
