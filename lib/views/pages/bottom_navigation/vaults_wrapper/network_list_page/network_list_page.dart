@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/network_list_page/network_list_page_cubit.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
@@ -42,6 +44,7 @@ class _NetworkListPageState extends State<NetworkListPage> {
   late final NetworkListPageCubit networkListPageCubit = NetworkListPageCubit(
     depth: 0,
     filesystemPath: widget.filesystemPath,
+    onBackFromGroup: globalLocator<PasswordController>().removeByFilesystemPath,
   );
 
   @override
@@ -52,6 +55,7 @@ class _NetworkListPageState extends State<NetworkListPage> {
 
   @override
   void dispose() {
+    globalLocator<PasswordController>().removeByFilesystemPath(widget.vaultModel.filesystemPath);
     draggedItemNotifier.dispose();
     networkListPageCubit.close();
     super.dispose();
@@ -111,6 +115,8 @@ class _NetworkListPageState extends State<NetworkListPage> {
   }
 
   Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
+    globalLocator<PasswordController>().addPassword(passwordModel, listItemModel.filesystemPath);
+
     if (listItemModel is NetworkGroupModel) {
       await AutoRouter.of(context).push<void>(
         WalletListRoute(

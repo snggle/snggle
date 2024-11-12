@@ -12,12 +12,14 @@ import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/transaction_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
+import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/transactions/transaction_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class SignTxPageCubit extends Cubit<ASignTxPageState> {
   final ActiveWalletController _activeWalletController = globalLocator<ActiveWalletController>();
@@ -87,9 +89,16 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
   }
 
   Future<PasswordModel> _getPasswordForWallet(WalletModel walletModel) async {
-    bool encryptedParentBool = await _secretsService.hasEncryptedParent(walletModel.filesystemPath);
+    FilesystemPath encryptedParents = await _secretsService.getEncryptedPath(walletModel.filesystemPath);
 
-    if (encryptedParentBool == true) {
+    bool walletUnlockedBool;
+    if (encryptedParents.pathSegments.isEmpty) {
+      walletUnlockedBool = true;
+    } else {
+      walletUnlockedBool = await globalLocator<PasswordController>().checkIfUnlocked(encryptedParents);
+    }
+
+    if (walletUnlockedBool == false) {
       // TODO(dominik): Exception may be replaced with a UI dialog to enter the password
       throw const ScanQrException(ScanQrExceptionType.walletWithEncryptedParents);
     }

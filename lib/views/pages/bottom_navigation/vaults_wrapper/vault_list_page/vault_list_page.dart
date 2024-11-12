@@ -6,6 +6,8 @@ import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page_cubit.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -39,6 +41,7 @@ class _VaultListPageState extends State<VaultListPage> {
   late final VaultListPageCubit vaultListPageCubit = VaultListPageCubit(
     depth: 0,
     filesystemPath: const FilesystemPath.empty(),
+    onBackFromGroup: globalLocator<PasswordController>().removeByFilesystemPath,
   );
 
   @override
@@ -152,6 +155,8 @@ class _VaultListPageState extends State<VaultListPage> {
   }
 
   Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
+    globalLocator<PasswordController>().addPassword(passwordModel, listItemModel.filesystemPath);
+
     if (listItemModel is VaultModel) {
       await AutoRouter.of(context).push<void>(
         NetworkListRoute(

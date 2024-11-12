@@ -4,6 +4,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_list_p
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
+import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -57,6 +58,7 @@ void main() {
       actualWalletListPageCubit = WalletListPageCubit(
         depth: 0,
         filesystemPath: FilesystemPath.fromString('vault1/network1'),
+        onBackFromGroup: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
 
@@ -468,6 +470,7 @@ void main() {
       actualWalletListPageCubit = WalletListPageCubit(
         depth: 0,
         filesystemPath: FilesystemPath.fromString('vault1/network1'),
+        onBackFromGroup: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
 
@@ -574,6 +577,7 @@ void main() {
       actualWalletListPageCubit = WalletListPageCubit(
         depth: 0,
         filesystemPath: FilesystemPath.fromString('vault1/network1'),
+        onBackFromGroup: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
 

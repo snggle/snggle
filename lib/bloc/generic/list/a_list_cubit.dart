@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/config/locator.dart';
@@ -21,10 +22,12 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
 
   final IListItemsService<T> listItemsService;
   final List<IListItemsService<AListItemModel>> childItemsServices;
+  final ValueChanged<FilesystemPath> onBackFromGroup;
 
   AListCubit({
     required this.listItemsService,
     required this.childItemsServices,
+    required this.onBackFromGroup,
     required FilesystemPath filesystemPath,
     required int depth,
   }) : super(ListState.loading(depth: depth, filesystemPath: filesystemPath));
@@ -82,6 +85,7 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
 
   Future<bool> navigateBack() async {
     if (state.depth > 0) {
+      onBackFromGroup(state.groupModel!.filesystemPath);
       emit(ListState.loading(filesystemPath: state.filesystemPath.pop(), depth: state.depth - 1));
       await refreshAll();
       return true;

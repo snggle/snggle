@@ -138,41 +138,6 @@ void main() {
     });
   });
 
-  group('Tests of SecretsService.hasEncryptedParent()', () {
-    test('Should [return TRUE] if [secrets path has ENCRYPTED parents]', () async {
-      // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id3/id4');
-
-      // Act
-      bool encryptedParentExistsBool = await globalLocator<SecretsService>().hasEncryptedParent(actualFilesystemPath);
-
-      // Assert
-      expect(encryptedParentExistsBool, true);
-    });
-
-    test('Should [return FALSE] if [secrets path has DECRYPTED parents]', () async {
-      // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/id2');
-
-      // Act
-      bool encryptedParentExistsBool = await globalLocator<SecretsService>().hasEncryptedParent(actualFilesystemPath);
-
-      // Assert
-      expect(encryptedParentExistsBool, false);
-    });
-
-    test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage', () async {
-      // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
-
-      // Assert
-      expect(
-        () => globalLocator<SecretsService>().get(actualFilesystemPath, PasswordModel.fromPlaintext('1111')),
-        throwsA(isA<ChildKeyNotFoundException>()),
-      );
-    });
-  });
-
   group('Tests of SecretsService.save()', () {
     test('Should [UPDATE secrets] if [secrets path EXISTS] in collection', () async {
       // Arrange

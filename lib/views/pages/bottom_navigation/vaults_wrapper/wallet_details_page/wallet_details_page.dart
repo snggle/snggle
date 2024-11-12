@@ -5,6 +5,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
@@ -55,6 +57,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
 
   @override
   void dispose() {
+    globalLocator<PasswordController>().removeByFilesystemPath(widget.walletModel.filesystemPath);
     scrollController.dispose();
     super.dispose();
   }

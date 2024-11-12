@@ -5,6 +5,7 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
+import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
@@ -116,6 +117,7 @@ void main() {
       actualVaultListPageCubit = VaultListPageCubit(
         depth: 0,
         filesystemPath: const FilesystemPath.empty(),
+        onBackFromGroup: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
 
@@ -519,6 +521,7 @@ void main() {
       actualVaultListPageCubit = VaultListPageCubit(
         depth: 0,
         filesystemPath: const FilesystemPath.empty(),
+        onBackFromGroup: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
 
@@ -625,6 +628,7 @@ void main() {
       actualVaultListPageCubit = VaultListPageCubit(
         depth: 0,
         filesystemPath: const FilesystemPath.empty(),
+        onBackFromGroup: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
 

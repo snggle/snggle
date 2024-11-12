@@ -37,6 +37,8 @@ class FilesystemPath extends Equatable {
     }
   }
 
+  bool get isNotEmpty => pathSegments.isNotEmpty;
+
   String get fullPath => pathSegments.join('/');
 
   String get parentPath => pathSegments.sublist(0, pathSegments.length - 1).join('/');
