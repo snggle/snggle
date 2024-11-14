@@ -144,7 +144,7 @@ void main() {
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id3/id4');
 
       // Act
-      FilesystemPath actualEncryptedParents = await globalLocator<SecretsService>().getEncryptedPath(actualFilesystemPath);
+      FilesystemPath actualEncryptedParents = await globalLocator<SecretsService>().getDeepestEncryptedPath(actualFilesystemPath);
 
       // Assert
       FilesystemPath expectedEncryptedParents = const FilesystemPath(<String>['id3', 'id4']);
@@ -157,7 +157,7 @@ void main() {
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/id2');
 
       // Act
-      FilesystemPath actualEncryptedParents = await globalLocator<SecretsService>().getEncryptedPath(actualFilesystemPath);
+      FilesystemPath actualEncryptedParents = await globalLocator<SecretsService>().getDeepestEncryptedPath(actualFilesystemPath);
 
       // Assert
       FilesystemPath expectedEncryptedParents = const FilesystemPath(<String>[]);

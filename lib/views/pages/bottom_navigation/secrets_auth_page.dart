@@ -12,11 +12,13 @@ class SecretsAuthPage extends StatefulWidget {
   final String title;
   final AListItemModel listItemModel;
   final ValueChanged<PasswordModel> passwordValidCallback;
+  final String? subtitle;
 
   const SecretsAuthPage({
     required this.title,
     required this.listItemModel,
     required this.passwordValidCallback,
+    this.subtitle,
     super.key,
   });
 
@@ -44,6 +46,7 @@ class _SecretsAuthPageState extends State<SecretsAuthPage> {
         return PinpadScaffold(
           errorBool: secretsAuthPageState is SecretsAuthPageInvalidPinState,
           title: widget.title,
+          subtitle: widget.subtitle,
           initialPinNumbers: secretsAuthPageState.pinNumbers,
           onChanged: secretsAuthPageCubit.updatePinNumbers,
           actionButtons: <Widget>[

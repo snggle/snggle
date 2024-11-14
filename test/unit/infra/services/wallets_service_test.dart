@@ -130,6 +130,44 @@ void main() {
     });
   });
 
+  group('Tests of WalletsService.getByPath()', () {
+    test('Should [return WalletModel] if [group path EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1/network1/wallet1');
+
+      // Act
+      WalletModel actualWalletModel = await globalLocator<WalletsService>().getByPath(actualFilesystemPath);
+
+      // Assert
+      WalletModel expectedWalletModel = WalletModel(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce',
+        derivationPath: "m/44'/60'/0'/0/0",
+        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
+        name: 'WALLET 0',
+      );
+
+      expect(actualWalletModel, expectedWalletModel);
+    });
+
+    test('Should [throw Exception] if [group NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+
+      // Assert
+      expect(
+        () => globalLocator<WalletsService>().getByPath(actualFilesystemPath),
+        throwsA(isA<Exception>()),
+      );
+    });
+  });
+
   group('Tests of WalletsService.move()', () {
     test('Should [MOVE wallet] if [wallet EXISTS] in database', () async {
       // Arrange

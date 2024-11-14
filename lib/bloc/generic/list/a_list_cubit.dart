@@ -36,11 +36,11 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
     await _deleteChildItemsByPath(item.filesystemPath);
     await _deleteMainItem(item);
 
-    GroupModel? previousGroupModel = await groupsService.getByPath(item.filesystemPath.pop());
-    if (previousGroupModel != null && previousGroupModel.hasSingleItem) {
+    try {
+      GroupModel? previousGroupModel = await groupsService.getByPath(item.filesystemPath.pop());
       FilesystemPath newFilesystemPath = await _ungroup(previousGroupModel);
       await navigateTo(filesystemPath: newFilesystemPath, depth: state.depth - 1);
-    } else {
+    } catch (e) {
       await refreshAll();
     }
   }
@@ -61,10 +61,10 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
     await _moveChildItemsByPath(previousItemFilesystemPath, newItemFilesystemPath);
     await _moveMainItem(item, newItemFilesystemPath);
 
-    GroupModel? previousGroupModel = await groupsService.getByPath(item.filesystemPath.pop());
-    if (previousGroupModel != null && previousGroupModel.hasSingleItem) {
+    try {
+      GroupModel? previousGroupModel = await groupsService.getByPath(item.filesystemPath.pop());
       await _ungroup(previousGroupModel);
-    }
+    } catch (_) {}
 
     if (reloadBool) {
       await refreshAll();
@@ -97,7 +97,12 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
   Future<void> refreshAll() async {
     List<T> allItems = await listItemsService.getAllByParentPath(state.filesystemPath, firstLevelBool: true);
     List<GroupModel> allGroups = await groupsService.getAllByParentPath(state.filesystemPath, firstLevelBool: true);
-    GroupModel? groupModel = await groupsService.getByPath(state.filesystemPath);
+    GroupModel? groupModel;
+    try {
+      groupModel = await groupsService.getByPath(state.filesystemPath);
+    } catch (e) {
+      groupModel = null;
+    }
 
     List<AListItemModel> listItems = <AListItemModel>[...allGroups, ...allItems];
     emit(state.copyWith(loadingBool: false, groupModel: groupModel, allItems: _sortItems(listItems)));

@@ -15,12 +15,12 @@ import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_wrapp
 class TxConfirmationScaffold extends StatefulWidget {
   final String title;
   final TransactionModel transactionModel;
-  final VoidCallback onSignPressed;
+  final VoidCallback? onSignPressed;
 
   const TxConfirmationScaffold({
     required this.title,
     required this.transactionModel,
-    required this.onSignPressed,
+    this.onSignPressed,
     super.key,
   });
 
@@ -56,6 +56,7 @@ class _TxConfirmationScaffoldState extends State<TxConfirmationScaffold> {
       body: BottomTooltipWrapper(
         tooltip: BottomTooltip(
           actions: <Widget>[
+            if (widget.onSignPressed != null)
             BottomTooltipItem(
               assetIconData: AppIcons.menu_save,
               label: 'Sign',

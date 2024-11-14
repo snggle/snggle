@@ -144,6 +144,39 @@ void main() {
     });
   });
 
+  group('Tests of NetworkGroupsRepository.getByPath()', () {
+    test('Should [return NetworkGroupEntity] if [group EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      NetworkGroupEntity actualNetworkGroupEntity = await globalLocator<NetworkGroupsRepository>().getByPath(FilesystemPath.fromString('vault1/network1'));
+
+      // Assert
+      NetworkGroupEntity expectedNetworkGroupEntity = NetworkGroupEntity(
+        id: 1,
+        embeddedNetworkTemplate: embeddedNetworkTemplateEntity,
+        encryptedBool: false,
+        pinnedBool: false,
+        name: 'Ethereum1',
+        filesystemPathString: 'vault1/network1',
+      );
+
+      expect(actualNetworkGroupEntity, expectedNetworkGroupEntity);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [group NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Assert
+      expect(
+            () => globalLocator<NetworkGroupsRepository>().getByPath(FilesystemPath.fromString('not_existing_path')),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
   group('Tests of NetworkGroupsRepository.save()', () {
     test('Should [UPDATE network] if [network EXISTS] in database', () async {
       // Arrange

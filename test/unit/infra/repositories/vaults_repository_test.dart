@@ -147,6 +147,40 @@ void main() {
     });
   });
 
+  group('Tests of VaultsRepository.getByPath()', () {
+    test('Should [return VaultEntity] if [group EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      VaultEntity actualVaultEntity = await globalLocator<VaultsRepository>().getByPath(FilesystemPath.fromString('vault1'));
+
+      // Assert
+      VaultEntity expectedVaultEntity = const VaultEntity(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        index: 0,
+        filesystemPathString: 'vault1',
+        fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
+        name: 'VAULT 1',
+      );
+
+      expect(actualVaultEntity, expectedVaultEntity);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [group NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Assert
+      expect(
+            () => globalLocator<VaultsRepository>().getByPath(FilesystemPath.fromString('not_existing_path')),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
   group('Tests of VaultsRepository.getByFingerprint()', () {
     test('Should [return VaultEntity] if [fingerprint EXISTS] in database', () async {
       // Arrange

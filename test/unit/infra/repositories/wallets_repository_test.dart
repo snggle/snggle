@@ -173,6 +173,40 @@ void main() {
     });
   });
 
+  group('Tests of WalletsRepository.getByPath()', () {
+    test('Should [return WalletEntity] if [group EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      WalletEntity actualWalletEntity = await globalLocator<WalletsRepository>().getByPath(FilesystemPath.fromString('vault1/network1/wallet1'));
+
+      // Assert
+      WalletEntity expectedWalletEntity = const WalletEntity(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce',
+        derivationPath: "m/44'/60'/0'/0/0",
+        filesystemPathString: 'vault1/network1/wallet1',
+        name: 'WALLET 0',
+      );
+
+      expect(actualWalletEntity, expectedWalletEntity);
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [group NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Assert
+      expect(
+        () => globalLocator<WalletsRepository>().getByPath(FilesystemPath.fromString('not_existing_path')),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+  });
+
   group('Tests of WalletsRepository.save()', () {
     test('Should [UPDATE wallet] if [wallet EXISTS] in database', () async {
       // Arrange

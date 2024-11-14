@@ -241,6 +241,52 @@ void main() {
     });
   });
 
+  group('Tests of VaultsService.getByPath()', () {
+    test('Should [return VaultModel] if [group path EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1');
+
+      // Act
+      VaultModel actualVaultModel = await globalLocator<VaultsService>().getByPath(actualFilesystemPath);
+
+      // Assert
+      VaultModel expectedVaultModel = VaultModel(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        index: 0,
+        filesystemPath: FilesystemPath.fromString('vault1'),
+        fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
+        name: 'VAULT 1',
+        listItemsPreview: <AListItemModel>[
+          // @formatter:off
+          GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
+          NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
+          NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
+          NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
+          // @formatter:on
+        ],
+      );
+
+      expect(actualVaultModel, expectedVaultModel);
+    });
+
+    test('Should [throw Exception] if [group NOT EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+
+      // Assert
+      expect(
+            () => globalLocator<VaultsService>().getByPath(actualFilesystemPath),
+        throwsA(isA<Exception>()),
+      );
+    });
+  });
+
   group('Tests of VaultsService.move()', () {
     test('Should [MOVE vault] if [vault EXISTS] in database', () async {
       // Arrange

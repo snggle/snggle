@@ -54,6 +54,17 @@ class WalletsRepository {
     return walletEntity;
   }
 
+  Future<WalletEntity> getByPath(FilesystemPath filesystemPath) async {
+    WalletEntity? walletEntity = await isarDatabaseManager.perform((Isar isar) {
+      return isar.wallets.where().filesystemPathStringEqualTo(filesystemPath.fullPath).findFirst();
+    });
+
+    if (walletEntity == null) {
+      throw ChildKeyNotFoundException();
+    }
+    return walletEntity;
+  }
+
   Future<Id> save(WalletEntity walletEntity) async {
     return isarDatabaseManager.perform((Isar isar) async {
       Id createdId = await isar.writeTxn(() async {

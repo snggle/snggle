@@ -31,6 +31,16 @@ class GroupsService implements IListItemsService<GroupModel> {
   }
 
   @override
+  Future<GroupModel> getByPath(FilesystemPath filesystemPath) async {
+    try {
+      GroupEntity groupEntity = await _groupsRepository.getByPath(filesystemPath);
+      return globalLocator<GroupModelFactory>().createFromEntity(groupEntity);
+    } catch (_) {
+      throw Exception('GroupModel not found');
+    }
+  }
+
+  @override
   Future<void> move(GroupModel listItem, FilesystemPath newFilesystemPath) async {
     GroupModel movedGroupModel = listItem.copyWith(filesystemPath: newFilesystemPath);
     await save(movedGroupModel);
@@ -82,15 +92,6 @@ class GroupsService implements IListItemsService<GroupModel> {
 
     await _secretsService.delete(groupModel.filesystemPath);
     await _groupsRepository.deleteById(groupModel.id);
-  }
-
-  Future<GroupModel?> getByPath(FilesystemPath filesystemPath) async {
-    try {
-      GroupEntity groupEntity = await _groupsRepository.getByPath(filesystemPath);
-      return globalLocator<GroupModelFactory>().createFromEntity(groupEntity);
-    } catch (_) {
-      return null;
-    }
   }
 
   Future<GroupModel> updateFilesystemPath(int id, FilesystemPath parentFilesystemPath) async {

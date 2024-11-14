@@ -34,6 +34,16 @@ class NetworkGroupsService implements IListItemsService<NetworkGroupModel> {
   }
 
   @override
+  Future<NetworkGroupModel> getByPath(FilesystemPath filesystemPath) async {
+    try {
+      NetworkGroupEntity networkGroupEntity = await _networkGroupsRepository.getByPath(filesystemPath);
+      return globalLocator<NetworkGroupModelFactory>().createFromEntity(networkGroupEntity);
+    } catch (_) {
+      throw Exception('NetworkGroupModel not found');
+    }
+  }
+
+  @override
   Future<void> move(NetworkGroupModel listItem, FilesystemPath newFilesystemPath) async {
     NetworkGroupModel movedNetworkGroupModel = listItem.copyWith(filesystemPath: newFilesystemPath);
     await save(movedNetworkGroupModel);

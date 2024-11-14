@@ -31,6 +31,16 @@ class WalletsService implements IListItemsService<WalletModel> {
   }
 
   @override
+  Future<WalletModel> getByPath(FilesystemPath filesystemPath) async {
+    try {
+      WalletEntity walletEntity = await _walletsRepository.getByPath(filesystemPath);
+      return globalLocator<WalletModelFactory>().createFromEntity(walletEntity);
+    } catch (_) {
+      throw Exception('WalletModel not found');
+    }
+  }
+
+  @override
   Future<void> move(WalletModel listItem, FilesystemPath newFilesystemPath) async {
     WalletModel movedWalletModel = listItem.copyWith(filesystemPath: newFilesystemPath);
     await save(movedWalletModel);

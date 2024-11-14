@@ -6,6 +6,8 @@ abstract interface class IListItemsService<T extends AListItemModel> {
 
   Future<T> getById(int id);
 
+  Future<T> getByPath(FilesystemPath filesystemPath);
+
   Future<void> move(T listItem, FilesystemPath newFilesystemPath);
 
   Future<void> moveAllByParentPath(FilesystemPath previousFilesystemPath, FilesystemPath newFilesystemPath);

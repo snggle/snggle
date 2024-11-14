@@ -29,12 +29,20 @@ class PasswordController {
     }
   }
 
+  Future<List<FilesystemPath>> getLockedParentPaths(FilesystemPath filesystemPath) async {
+    List<FilesystemPath> encryptedPaths = await globalLocator<SecretsService>().getAllEncryptedPaths(filesystemPath);
+    List<FilesystemPath> unlockedPaths = _listItemAccessModelList.map((ListItemAccessModel e) => e.filesystemPath).toList();
+
+    List<FilesystemPath> lockedParents = encryptedPaths.where((FilesystemPath path) => !unlockedPaths.contains(path)).toList();
+    return lockedParents;
+  }
+
   void removeByFilesystemPath(FilesystemPath filesystemPath) {
     _listItemAccessModelList.removeWhere((ListItemAccessModel listItemAccessModel) => listItemAccessModel.filesystemPath == filesystemPath);
   }
 
   Future<bool> _isUnlocked(FilesystemPath filesystemPath) async {
-    FilesystemPath encryptedFilesystemPath = await globalLocator<SecretsService>().getEncryptedPath(filesystemPath);
+    FilesystemPath encryptedFilesystemPath = await globalLocator<SecretsService>().getDeepestEncryptedPath(filesystemPath);
     if (encryptedFilesystemPath.pathSegments.isEmpty) {
       return true;
     }

@@ -18,6 +18,13 @@ void main() {
   });
 
   group('Test of PasswordController.getPasswordByFilesystemPath() method', () {
+    tearDownAll(() async {
+      globalLocator<PasswordController>().removeByFilesystemPath(FilesystemPath.fromString('vault1/network1'));
+      globalLocator<PasswordController>().removeByFilesystemPath(FilesystemPath.fromString('vault1'));
+      await globalLocator<SecretsService>()
+          .changePassword(FilesystemPath.fromString('vault1'), PasswordModel.fromPlaintext('1111'), PasswordModel.defaultPassword());
+    });
+
     // navigated to Vault1
     test('Should [return default PasswordModel] if the [FilesystemPath EXISTS] in PasswordController and [has DEFAULT password]', () async {
       // Arrange
@@ -128,6 +135,22 @@ void main() {
       PasswordModel expectedPasswordModel = PasswordModel.fromPlaintext('1111');
 
       expect(actualPasswordModel, expectedPasswordModel);
+    });
+  });
+
+  group('Test of PasswordController.getLockedParents() method', () {
+    test('Should return [List<FilesystemPath>]', () async {
+      // Arrange
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1/network1/wallet1');
+      await globalLocator<SecretsService>()
+          .changePassword(FilesystemPath.fromString('vault1'), PasswordModel.defaultPassword(), PasswordModel.fromPlaintext('1111'));
+
+      // Act
+      List<FilesystemPath> actualLockedParents = await globalLocator<PasswordController>().getLockedParentPaths(actualFilesystemPath);
+
+      //   Assert
+      List<FilesystemPath> expectedLockedParents = <FilesystemPath>[FilesystemPath.fromString('vault1')];
+      expect(actualLockedParents, expectedLockedParents);
     });
   });
 }

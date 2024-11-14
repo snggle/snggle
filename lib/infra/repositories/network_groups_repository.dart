@@ -35,6 +35,17 @@ class NetworkGroupsRepository {
     return networkGroupEntity;
   }
 
+  Future<NetworkGroupEntity> getByPath(FilesystemPath filesystemPath) async {
+    NetworkGroupEntity? networkGroupEntity = await isarDatabaseManager.perform((Isar isar) {
+      return isar.networkGroups.where().filesystemPathStringEqualTo(filesystemPath.fullPath).findFirst();
+    });
+
+    if (networkGroupEntity == null) {
+      throw ChildKeyNotFoundException();
+    }
+    return networkGroupEntity;
+  }
+
   Future<Id> save(NetworkGroupEntity networkGroupEntity) async {
     return isarDatabaseManager.perform((Isar isar) async {
       Id createdId = await isar.writeTxn(() async {

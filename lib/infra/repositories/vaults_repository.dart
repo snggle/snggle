@@ -16,14 +16,6 @@ class VaultsRepository {
     return lastIndex;
   }
 
-  Future<List<VaultEntity>> getAll() async {
-    List<VaultEntity> vaultEntities = await isarDatabaseManager.perform((Isar isar) {
-      return isar.vaults.where().findAll();
-    });
-
-    return vaultEntities;
-  }
-
   Future<List<VaultEntity>> getAllByParentPath(FilesystemPath parentFilesystemPath) async {
     List<VaultEntity> vaultEntities = await isarDatabaseManager.perform((Isar isar) {
       return isar.vaults.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).findAll();
@@ -43,9 +35,28 @@ class VaultsRepository {
     return vaultEntity;
   }
 
+  Future<List<VaultEntity>> getAll() async {
+    List<VaultEntity> vaultEntities = await isarDatabaseManager.perform((Isar isar) {
+      return isar.vaults.where().findAll();
+    });
+
+    return vaultEntities;
+  }
+
   Future<VaultEntity> getByFingerprint(String fingerprint) async {
     VaultEntity? vaultEntity = await isarDatabaseManager.perform((Isar isar) {
       return isar.vaults.where().filter().fingerprintEqualTo(fingerprint).findFirst();
+    });
+
+    if (vaultEntity == null) {
+      throw ChildKeyNotFoundException();
+    }
+    return vaultEntity;
+  }
+
+  Future<VaultEntity> getByPath(FilesystemPath filesystemPath) async {
+    VaultEntity? vaultEntity = await isarDatabaseManager.perform((Isar isar) {
+      return isar.vaults.where().filesystemPathStringEqualTo(filesystemPath.fullPath).findFirst();
     });
 
     if (vaultEntity == null) {

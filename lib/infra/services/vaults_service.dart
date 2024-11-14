@@ -31,6 +31,16 @@ class VaultsService implements IListItemsService<VaultModel> {
   }
 
   @override
+  Future<VaultModel> getByPath(FilesystemPath filesystemPath) async {
+    try {
+      VaultEntity vaultEntity = await _vaultsRepository.getByPath(filesystemPath);
+      return globalLocator<VaultModelFactory>().createFromEntity(vaultEntity);
+    } catch (_) {
+      throw Exception('VaultModel not found');
+    }
+  }
+
+  @override
   Future<void> move(VaultModel listItem, FilesystemPath newFilesystemPath) async {
     VaultModel movedVaultModel = listItem.copyWith(filesystemPath: newFilesystemPath);
     await save(movedVaultModel);

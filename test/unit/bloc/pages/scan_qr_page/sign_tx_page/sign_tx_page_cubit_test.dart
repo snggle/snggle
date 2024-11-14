@@ -7,14 +7,17 @@ import 'package:isar/isar.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/a_sign_tx_page_state.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/sign_tx_page_cubit.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/states/sign_tx_page_confirm_tx_state.dart';
+import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/states/sign_tx_page_enter_passwords_state.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/states/sign_tx_page_signed_tx_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
+import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
@@ -390,7 +393,7 @@ void main() {
       globalLocator<ActiveWalletController>().clearActiveWallet();
     });
 
-    test('Should [return SignTxPageConfirmTxState] with initial values', () {
+    test('Should [return SignTxPageConfirmTxState] with initial values', () async {
       // Act
       ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
 
@@ -401,11 +404,25 @@ void main() {
     });
 
     test('Should [throw ScanTxException.walletWithEncryptedParents] if [wallet NOT SET] and [HAS parent password]', () async {
+      // Act
+      await actualSignTxPageCubit.init();
+      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+
       // Assert
-      expect(
-        () => actualSignTxPageCubit.init(),
-        throwsA(const ScanQrException(ScanQrExceptionType.walletWithEncryptedParents)),
-      );
+      ASignTxPageState expectedSignTxPageState = SignTxPageEnterPasswordsState(listItemModels: <AListItemModel>[
+        VaultModel(
+          id: 1,
+          encryptedBool: true,
+          filesystemPath: FilesystemPath.fromString('vault1'),
+          fingerprint: '',
+          index: 0,
+          name: 'New_Vault_0',
+          pinnedBool: false,
+          listItemsPreview: <AListItemModel>[],
+        )
+      ]);
+
+      expect(actualSignTxPageState, expectedSignTxPageState);
     });
 
     tearDownAll(testDatabase.close);

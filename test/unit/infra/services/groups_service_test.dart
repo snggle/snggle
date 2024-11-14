@@ -437,7 +437,7 @@ void main() {
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1/network1/group3');
 
       // Act
-      GroupModel? actualGroupModel = await globalLocator<GroupsService>().getByPath(actualFilesystemPath);
+      GroupModel actualGroupModel = await globalLocator<GroupsService>().getByPath(actualFilesystemPath);
 
       // Assert
       GroupModel expectedGroupModel = GroupModel(
@@ -457,17 +457,17 @@ void main() {
       expect(actualGroupModel, expectedGroupModel);
     });
 
-    test('Should [return NULL] if [group NOT EXISTS] in database', () async {
+    test('Should [throw Exception] if [group NOT EXISTS] in database', () async {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
 
-      // Act
-      GroupModel? actualGroupModel = await globalLocator<GroupsService>().getByPath(actualFilesystemPath);
-
       // Assert
-      expect(actualGroupModel, null);
+      expect(
+        () => globalLocator<GroupsService>().getByPath(actualFilesystemPath),
+        throwsA(isA<Exception>()),
+      );
     });
   });
 
