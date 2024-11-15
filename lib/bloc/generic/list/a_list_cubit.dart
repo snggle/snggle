@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/config/locator.dart';
@@ -21,10 +22,12 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
 
   final IListItemsService<T> listItemsService;
   final List<IListItemsService<AListItemModel>> childItemsServices;
+  final ValueChanged<FilesystemPath> onGroupNavigateBack;
 
   AListCubit({
     required this.listItemsService,
     required this.childItemsServices,
+    required this.onGroupNavigateBack,
     required FilesystemPath filesystemPath,
     required int depth,
   }) : super(ListState.loading(depth: depth, filesystemPath: filesystemPath));
@@ -82,6 +85,7 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
 
   Future<bool> navigateBack() async {
     if (state.depth > 0) {
+      onGroupNavigateBack(state.groupModel!.filesystemPath);
       emit(ListState.loading(filesystemPath: state.filesystemPath.pop(), depth: state.depth - 1));
       await refreshAll();
       return true;
@@ -130,7 +134,7 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
   }
 
   void disableSelection() {
-    emit(state.copyWith(selectionModel: null, forceOverrideBool: true));
+    emit(state.copyWith(selectionModel: null, nullOverrideAllowedBool: true));
   }
 
   Future<void> pinSelection({required List<AListItemModel> selectedItems, required bool pinnedBool}) async {
@@ -141,7 +145,7 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
       },
     );
 
-    emit(state.copyWith(allItems: _sortItems(updatedItems), loadingBool: false, selectionModel: null, forceOverrideBool: true));
+    emit(state.copyWith(allItems: _sortItems(updatedItems), loadingBool: false, selectionModel: null, nullOverrideAllowedBool: true));
   }
 
   Future<void> lockSelection({required List<AListItemModel> selectedItems, required PasswordModel newPasswordModel}) async {
@@ -153,7 +157,7 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
       },
     );
 
-    emit(state.copyWith(allItems: _sortItems(updatedItems), loadingBool: false, selectionModel: null, forceOverrideBool: true));
+    emit(state.copyWith(allItems: _sortItems(updatedItems), loadingBool: false, selectionModel: null, nullOverrideAllowedBool: true));
   }
 
   Future<void> unlockSelection({required AListItemModel selectedItem, required PasswordModel oldPasswordModel}) async {
@@ -165,7 +169,7 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
       },
     );
 
-    emit(state.copyWith(allItems: _sortItems(updatedItems), loadingBool: false, selectionModel: null, forceOverrideBool: true));
+    emit(state.copyWith(allItems: _sortItems(updatedItems), loadingBool: false, selectionModel: null, nullOverrideAllowedBool: true));
   }
 
   Future<void> _deleteChildItemsByPath(FilesystemPath filesystemPath) async {

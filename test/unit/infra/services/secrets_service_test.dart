@@ -138,27 +138,31 @@ void main() {
     });
   });
 
-  group('Tests of SecretsService.hasEncryptedParent()', () {
-    test('Should [return TRUE] if [secrets path has ENCRYPTED parents]', () async {
+  group('Tests of SecretsService.getEncryptedPath()', () {
+    test('Should [return encrypted parents] if [secrets path has ENCRYPTED parents]', () async {
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id3/id4');
 
       // Act
-      bool encryptedParentExistsBool = await globalLocator<SecretsService>().hasEncryptedParent(actualFilesystemPath);
+      FilesystemPath actualEncryptedParents = await globalLocator<SecretsService>().getEncryptedPath(actualFilesystemPath);
 
       // Assert
-      expect(encryptedParentExistsBool, true);
+      FilesystemPath expectedEncryptedParents = const FilesystemPath(<String>['id3', 'id4']);
+
+      expect(actualEncryptedParents, expectedEncryptedParents);
     });
 
-    test('Should [return FALSE] if [secrets path has DECRYPTED parents]', () async {
+    test('Should [return empty FilesystemPath] if [secrets path has DECRYPTED parents]', () async {
       // Arrange
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/id2');
 
       // Act
-      bool encryptedParentExistsBool = await globalLocator<SecretsService>().hasEncryptedParent(actualFilesystemPath);
+      FilesystemPath actualEncryptedParents = await globalLocator<SecretsService>().getEncryptedPath(actualFilesystemPath);
 
       // Assert
-      expect(encryptedParentExistsBool, false);
+      FilesystemPath expectedEncryptedParents = const FilesystemPath(<String>[]);
+
+      expect(actualEncryptedParents, expectedEncryptedParents);
     });
 
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage', () async {

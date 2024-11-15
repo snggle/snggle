@@ -21,6 +21,7 @@ import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
+import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/factories/group_model_factory.dart';
 import 'package:snggle/shared/factories/network_group_model_factory.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
@@ -43,7 +44,9 @@ void initLocator() {
 }
 
 void _initControllers() {
-  globalLocator.registerLazySingleton<MasterKeyController>(MasterKeyController.new);
+  globalLocator
+    ..registerLazySingleton<MasterKeyController>(MasterKeyController.new)
+    ..registerLazySingleton<PasswordController>(PasswordController.new);
 }
 
 void _initRepositories() {

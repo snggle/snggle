@@ -33,7 +33,7 @@ class ListState extends Equatable {
         visibleItems = <AListItemModel>[];
 
   ListState copyWith({
-    bool forceOverrideBool = false,
+    bool nullOverrideAllowedBool = false,
     bool? loadingBool,
     int? depth,
     List<AListItemModel>? allItems,
@@ -47,8 +47,8 @@ class ListState extends Equatable {
       depth: depth ?? this.depth,
       allItems: allItems ?? this.allItems,
       filesystemPath: filesystemPath ?? this.filesystemPath,
-      groupModel: forceOverrideBool ? groupModel : groupModel ?? this.groupModel,
-      selectionModel: forceOverrideBool ? selectionModel : selectionModel ?? this.selectionModel,
+      groupModel: groupModel ?? this.groupModel,
+      selectionModel: nullOverrideAllowedBool ? selectionModel : selectionModel ?? this.selectionModel,
     );
   }
 

@@ -10,6 +10,7 @@ import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/states/sign_tx_page_
 import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/states/sign_tx_page_signed_tx_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
+import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -64,7 +65,7 @@ void main() {
         name: 'WALLET 0',
       );
 
-      globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel, walletPasswordModel: PasswordModel.defaultPassword());
+      globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel);
     });
 
     test('Should [return SignTxPageConfirmTxState] with initial values', () {
@@ -157,7 +158,7 @@ void main() {
         name: 'WALLET 0',
       );
 
-      globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel, walletPasswordModel: PasswordModel.defaultPassword());
+      globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel);
     });
 
     test('Should [return SignTxPageConfirmTxState] with initial values', () {
@@ -221,7 +222,7 @@ void main() {
         name: 'WALLET 0',
       );
 
-      globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel, walletPasswordModel: PasswordModel.defaultPassword());
+      globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel);
     });
 
     test('Should [return SignTxPageConfirmTxState] with initial values', () {
@@ -235,6 +236,9 @@ void main() {
     });
 
     test('Should [return SignTxPageConfirmTxState] with initialized wallet and wallet password', () async {
+      // Arrange
+      globalLocator<PasswordController>().addPassword(PasswordModel.defaultPassword(), const FilesystemPath(<String>['vault1']));
+
       // Act
       await actualSignTxPageCubit.init();
       ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;

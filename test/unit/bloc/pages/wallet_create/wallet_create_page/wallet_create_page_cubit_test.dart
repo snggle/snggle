@@ -11,6 +11,7 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 
 import '../../../../../utils/database_mock.dart';
 import '../../../../../utils/test_database.dart';
+import '../../../../../utils/test_utils.dart';
 
 void main() {
   final TestDatabase testDatabase = TestDatabase();
@@ -24,7 +25,6 @@ void main() {
 
     actualWalletCreatePageCubit = WalletCreatePageCubit(
       parentFilesystemPath: FilesystemPath.fromString('vault1/network1'),
-      vaultPasswordModel: PasswordModel.defaultPassword(),
       vaultModel: VaultModel(
         id: 1,
         encryptedBool: false,
@@ -99,6 +99,12 @@ void main() {
       });
 
       test('Should [return WalletModel] and [emit WalletCreatePageState] with [walletExistsErrorBool == FALSE]', () async {
+        // Arrange
+        TestUtils.mockPasswords(
+          FilesystemPath.fromString('vault1/network1/wallet1'),
+          List<PasswordModel>.generate(3, (_) => PasswordModel.defaultPassword()),
+        );
+
         // Act
         actualWalletCreatePageCubit.derivationPathTextEditingController.text = '99999';
         WalletModel? actualWalletModel = await actualWalletCreatePageCubit.createNewWallet();

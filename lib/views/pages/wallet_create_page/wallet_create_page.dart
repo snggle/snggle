@@ -9,7 +9,6 @@ import 'package:snggle/bloc/pages/wallet_create/wallet_create_page/wallet_create
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
-import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
@@ -28,13 +27,11 @@ import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.
 @RoutePage()
 class WalletCreatePage extends StatefulWidget {
   final VaultModel vaultModel;
-  final PasswordModel vaultPasswordModel;
   final FilesystemPath parentFilesystemPath;
   final NetworkGroupModel networkGroupModel;
 
   const WalletCreatePage({
     required this.vaultModel,
-    required this.vaultPasswordModel,
     required this.parentFilesystemPath,
     required this.networkGroupModel,
     super.key,
@@ -49,7 +46,6 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
 
   late final WalletCreatePageCubit walletCreatePageCubit = WalletCreatePageCubit(
     vaultModel: widget.vaultModel,
-    vaultPasswordModel: widget.vaultPasswordModel,
     networkGroupModel: widget.networkGroupModel,
     parentFilesystemPath: widget.parentFilesystemPath,
   );
