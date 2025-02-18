@@ -19,27 +19,20 @@ class BottomNavigationWrapper extends StatefulWidget {
 }
 
 class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
-  final ValueNotifier<int> activeIndexNotifier = ValueNotifier<int>(0);
-  final Map<int, PageRouteInfo> routes = <int, PageRouteInfo>{
-    0: const VaultsSectionWrapperRoute(),
-    1: const SecretsRoute(),
-    3: const AppsRoute(),
-    4: const SettingsRoute(),
-  };
-
   Widget? tooltipWidget;
-
-  @override
-  void dispose() {
-    activeIndexNotifier.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return AutoTabsRouter(
-      routes: routes.values.toList(),
+      routes: const <PageRouteInfo>[
+        VaultsSectionWrapperRoute(),
+        SecretsRoute(),
+        AppsRoute(),
+        SettingsRoute(),
+      ],
       builder: (BuildContext context, Widget child) {
+        TabsRouter tabsRouter = AutoTabsRouter.of(context);
+
         return Scaffold(
           body: Stack(
             children: <Widget>[
@@ -49,31 +42,31 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
                 left: 0,
                 right: 0,
                 child: tooltipWidget ??
-                    ValueListenableBuilder<int>(
-                      valueListenable: activeIndexNotifier,
-                      builder: (BuildContext context, int activeIndex, _) {
+                    ListenableBuilder(
+                      listenable: tabsRouter,
+                      builder: (BuildContext context, _) {
                         return CustomBottomNavigationBar(
                           bottomNavigationBarItems: <Widget>[
                             CustomBottomNavigationBarItem(
-                              selectedBool: activeIndex == 0,
+                              selectedBool: tabsRouter.activeIndex == 0,
                               assetIconData: AppIcons.bottom_navigation_crypto,
-                              onTap: () => _tapNavigationItem(0),
+                              onTap: () => tabsRouter.setActiveIndex(0),
                             ),
                             CustomBottomNavigationBarItem(
-                              selectedBool: activeIndex == 1,
+                              selectedBool: tabsRouter.activeIndex == 1,
                               assetIconData: AppIcons.bottom_navigation_secrets,
-                              onTap: () => _tapNavigationItem(1),
+                              onTap: () => tabsRouter.setActiveIndex(1),
                             ),
                             const CustomBottomNavigationBarScanIcon(),
                             CustomBottomNavigationBarItem(
-                              selectedBool: activeIndex == 3,
+                              selectedBool: tabsRouter.activeIndex == 2,
                               assetIconData: AppIcons.bottom_navigation_apps,
-                              onTap: () => _tapNavigationItem(3),
+                              onTap: () => tabsRouter.setActiveIndex(2),
                             ),
                             CustomBottomNavigationBarItem(
-                              selectedBool: activeIndex == 4,
+                              selectedBool: tabsRouter.activeIndex == 3,
                               assetIconData: AppIcons.bottom_navigation_menu,
-                              onTap: () => _tapNavigationItem(4),
+                              onTap: () => tabsRouter.setActiveIndex(3),
                             ),
                           ],
                         );
@@ -97,12 +90,5 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
     setState(() {
       tooltipWidget = null;
     });
-  }
-
-  void _tapNavigationItem(int index) {
-    if (routes[index] != null) {
-      AutoRouter.of(context).navigate(routes[index]!);
-      activeIndexNotifier.value = index;
-    }
   }
 }
