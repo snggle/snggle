@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cryptography_utils/cryptography_utils.dart' as crypto_utils;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_cubit.dart';
@@ -103,8 +104,8 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
     }
   }
 
-  void _handleMnemonicSizeSelected(int mnemonicSize) {
-    vaultRecoverPageCubit.init(mnemonicSize);
+  void _handleMnemonicSizeSelected(crypto_utils.MnemonicSize mnemonicSize) {
+    vaultRecoverPageCubit.init(mnemonicSize.wordCount);
     pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
   }
 }

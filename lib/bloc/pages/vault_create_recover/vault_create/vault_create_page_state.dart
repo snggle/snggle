@@ -1,9 +1,10 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 
 class VaultCreatePageState extends Equatable {
   final bool confirmPageEnabledBool;
-  final int? mnemonicSize;
+  final MnemonicSize? mnemonicSize;
   final List<String>? mnemonic;
   final VaultModel? repeatedVaultModel;
 
@@ -18,7 +19,7 @@ class VaultCreatePageState extends Equatable {
     bool? confirmPageEnabledBool,
     bool? loadingBool,
     int? lastVaultIndex,
-    int? mnemonicSize,
+    MnemonicSize? mnemonicSize,
     List<String>? mnemonic,
     VaultModel? repeatedVaultModel,
   }) {

@@ -1,4 +1,3 @@
-import 'package:bip39/bip39.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,7 +63,6 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
   Future<void> saveMnemonic() async {
     List<String> mnemonicWords = state.textControllers!.map((TextEditingController textController) => textController.text).toList();
 
-    // TODO(dominik): Temporary solution to build and validate mnemonic. It should be improved after 'cryptography_utils' package implementation
     Mnemonic mnemonic = Mnemonic(mnemonicWords);
 
     String fingerprint = await MnemonicFingerprintCalculator.calc(mnemonic);
@@ -88,17 +86,17 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
   void _validateMnemonic() {
     List<String> mnemonicWords = state.textControllers!.map((TextEditingController textController) => textController.text).toList();
+
     if (mnemonicWords.any((String mnemonicWord) => mnemonicWord.isEmpty)) {
       emit(state.copyWith(mnemonicFilledBool: false));
     } else {
-      // TODO(dominik): Temporary solution to validate mnemonic phrase. After 'cryptography_utils' package implementation it should be improved
-      bool mnemonicValidBool = validateMnemonic(mnemonicWords.join(' '));
+      bool mnemonicValidBool = Mnemonic.isValidMnemonic(mnemonicWords);
+
       emit(state.copyWith(mnemonicFilledBool: true, mnemonicValidBool: mnemonicValidBool, clearRepeatedVaultModelBool: true));
     }
   }
 
   Future<void> _createVault(List<String> mnemonicWords) async {
-    // TODO(dominik): Temporary solution to build and validate mnemonic. It should be improved after 'cryptography_utils' package implementation
     Mnemonic mnemonic = Mnemonic(mnemonicWords);
 
     String vaultName = vaultNameTextEditingController.text;

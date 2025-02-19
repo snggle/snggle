@@ -1,4 +1,6 @@
-import 'package:bip39/bip39.dart' as bip39;
+import 'dart:convert';
+
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
@@ -7,22 +9,19 @@ class MnemonicModel extends Equatable {
 
   const MnemonicModel(this.mnemonicList);
 
-  factory MnemonicModel.generate([int? mnemonicSize]) {
-    String mnemonicString = bip39.generateMnemonic(
-      // TODO(dominik): Temporary solution to generate mnemonic up to 24 words. It should be improved after 'cryptography_utils' package implementation
-      strength: (mnemonicSize != null && mnemonicSize <= 24) ? (32 * (mnemonicSize / 3)).toInt() : 256,
-    );
+  factory MnemonicModel.generate([MnemonicSize? mnemonicSize]) {
+    Mnemonic mnemonic = Mnemonic.generate(mnemonicSize: mnemonicSize ?? MnemonicSize.words24);
 
-    return MnemonicModel.fromString(mnemonicString);
+    return MnemonicModel(mnemonic.mnemonicList);
   }
 
   MnemonicModel.fromString(String mnemonicString, {String delimiter = ' '}) : mnemonicList = mnemonicString.split(delimiter);
 
   Future<Uint8List> calculateSeed({String passphrase = ''}) async {
-    return compute(_computeMnemonicSeed, <String>[toString(), passphrase]);
+    return compute(_computeMnemonicSeed, _ComputeMnemonicSeedProps(passphrase, toString()));
   }
 
-  bool get isValid => bip39.validateMnemonic(toString());
+  bool get isValid => Mnemonic.isValidMnemonic(mnemonicList);
 
   @override
   String toString() {
@@ -33,8 +32,18 @@ class MnemonicModel extends Equatable {
   List<Object?> get props => <Object>[mnemonicList];
 }
 
+// The second class is in the file since it is used to define parameters for a separate isolate, which is a top-level function
+class _ComputeMnemonicSeedProps {
+  final String mnemonic;
+  final String password;
+
+  const _ComputeMnemonicSeedProps(this.mnemonic, this.password);
+}
+
 // This function is executed in a separated isolate, so it should be declared as a top-level function
-Future<Uint8List> _computeMnemonicSeed(List<String> props) async {
-  assert(props.length == 2, 'Using [_computeMnemonicSeed] method require list with two values <String>[mnemonic, passphrase]');
-  return bip39.mnemonicToSeed(props[0], passphrase: props[1]);
+Future<Uint8List> _computeMnemonicSeed(_ComputeMnemonicSeedProps computeMnemonicSeedProps) async {
+  Uint8List passwordBytes = utf8.encode(computeMnemonicSeedProps.password);
+  Uint8List saltBytes = utf8.encode('mnemonic${computeMnemonicSeedProps.mnemonic}');
+
+  return PBKDF2().process(passwordBytes, saltBytes);
 }
