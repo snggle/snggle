@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
@@ -30,6 +29,9 @@ class ContainerIconGrid extends StatelessWidget {
         double gridSize = min(innerWidth, innerHeight);
         double spacing = gridSize * 0.13;
 
+        int slotsPerSide = _calcSlotsPerSide(listItemsPreview.length);
+        int slotsCount = slotsPerSide * slotsPerSide;
+
         return Padding(
           padding: padding,
           child: Center(
@@ -37,10 +39,10 @@ class ContainerIconGrid extends StatelessWidget {
               width: gridSize,
               height: gridSize,
               child: CustomFlexibleGrid.builder(
-                columnsCount: 3,
+                columnsCount: slotsPerSide,
                 verticalGap: spacing,
                 horizontalGap: spacing,
-                childCount: 9,
+                childCount: slotsCount,
                 itemBuilder: (BuildContext context, int index) {
                   if (index >= listItemsPreview.length) {
                     return const SizedBox.expand();
@@ -68,5 +70,15 @@ class ContainerIconGrid extends StatelessWidget {
         );
       },
     );
+  }
+
+  int _calcSlotsPerSide(int itemsCount) {
+    if (itemsCount == 1) {
+      return 1;
+    } else if (itemsCount <= 4) {
+      return 2;
+    } else {
+      return 3;
+    }
   }
 }
