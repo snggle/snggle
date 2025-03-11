@@ -1,6 +1,4 @@
-import 'dart:typed_data';
-
-import 'package:blockchain_utils/hex/hex.dart';
+import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
@@ -33,7 +31,7 @@ void main() async {
         parentFilesystemPath: FilesystemPath.fromString('vault1/network1'),
         derivationPathString: "m/44'/118'/0'/0/0",
         hdWallet: LegacyHDWallet.fromPrivateKey(
-          privateKey: Secp256k1PrivateKey.fromBytes(Uint8List.fromList(hex.decode('cb117433161949b796277c78edf536af02a606435004203e141047faeef1ff3b'))),
+          privateKey: Secp256k1PrivateKey.fromBytes(HexCodec.decode('cb117433161949b796277c78edf536af02a606435004203e141047faeef1ff3b')),
           derivationPath: LegacyDerivationPath.parse("m/44'/118'/0'/0/0"),
           walletConfig: Bip44WalletsConfig.ethereum,
         ),
@@ -63,7 +61,7 @@ void main() async {
         parentFilesystemPath: FilesystemPath.fromString('vault1/network1'),
         derivationPathString: "m/44'/118'/0'/0/0",
         hdWallet: LegacyHDWallet.fromPrivateKey(
-          privateKey: Secp256k1PrivateKey.fromBytes(Uint8List.fromList(hex.decode('cb117433161949b796277c78edf536af02a606435004203e141047faeef1ff3b'))),
+          privateKey: Secp256k1PrivateKey.fromBytes(HexCodec.decode('cb117433161949b796277c78edf536af02a606435004203e141047faeef1ff3b')),
           derivationPath: LegacyDerivationPath.parse("m/44'/118'/0'/0/0"),
           walletConfig: Bip44WalletsConfig.ethereum,
         ),

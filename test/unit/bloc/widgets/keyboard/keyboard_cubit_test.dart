@@ -1,5 +1,4 @@
-import 'package:blockchain_utils/bip/bip/bip39/bip39_mnemonic.dart';
-import 'package:blockchain_utils/bip/bip/bip39/word_list/languages.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/widgets/keyboard/keyboard_cubit.dart';
@@ -7,7 +6,7 @@ import 'package:snggle/bloc/widgets/keyboard/keyboard_state.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
 
 void main() {
-  List<String> allKeyboardHints = bip39WordList(Bip39Languages.english);
+  List<String> allKeyboardHints = MnemonicDictionary.english;
 
   group('Test of KeyboardCubit process', () {
     KeyboardValueNotifier actualKeyboardValueNotifier = KeyboardValueNotifier(textEditingController: TextEditingController());

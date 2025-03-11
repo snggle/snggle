@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:crypto/crypto.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:encrypt/encrypt.dart';
 
 class Aes256 {
   static String encrypt(String password, String decryptedString) {
     List<int> randomBytes = SecureRandom(16).bytes;
 
-    List<int> hashedPasswordBytes = sha256.convert(utf8.encode(password)).bytes;
-    List<int> securePasswordBytes = sha256.convert(randomBytes + hashedPasswordBytes).bytes;
+    List<int> hashedPasswordBytes = Sha256().convert(utf8.encode(password)).byteList;
+    List<int> securePasswordBytes = Sha256().convert(randomBytes + hashedPasswordBytes).byteList;
 
     Key key = Key.fromBase64(base64Encode(hashedPasswordBytes));
     Encrypter encrypter = Encrypter(AES(key));
@@ -25,12 +25,12 @@ class Aes256 {
   }
 
   static String decrypt(String password, String encryptedString) {
-    List<int> hashedPasswordBytes = sha256.convert(utf8.encode(password)).bytes;
+    List<int> hashedPasswordBytes = Sha256().convert(utf8.encode(password)).byteList;
 
     List<int> encryptedStringBytes = base64Decode(encryptedString);
     List<int> randomBytes = encryptedStringBytes.getRange(0, 16).toList();
     List<int> encryptedDataBytes = encryptedStringBytes.getRange(16, encryptedStringBytes.length - 4).toList();
-    List<int> securePasswordBytes = sha256.convert(randomBytes + hashedPasswordBytes).bytes;
+    List<int> securePasswordBytes = Sha256().convert(randomBytes + hashedPasswordBytes).byteList;
 
     Key key = Key.fromBase64(base64Encode(hashedPasswordBytes));
     Encrypter encrypter = Encrypter(AES(key));
@@ -43,13 +43,13 @@ class Aes256 {
   }
 
   static bool isPasswordValid(String password, String encryptedString) {
-    List<int> hashedPasswordBytes = sha256.convert(utf8.encode(password)).bytes;
+    List<int> hashedPasswordBytes = Sha256().convert(utf8.encode(password)).byteList;
 
     List<int> encryptedStringBytes = base64Decode(encryptedString);
     List<int> randomBytes = encryptedStringBytes.getRange(0, 16).toList();
     List<int> expectedChecksumBytes = encryptedStringBytes.getRange(encryptedStringBytes.length - 4, encryptedStringBytes.length).toList();
 
-    List<int> securePasswordBytes = sha256.convert(randomBytes + hashedPasswordBytes).bytes;
+    List<int> securePasswordBytes = Sha256().convert(randomBytes + hashedPasswordBytes).byteList;
     List<int> actualChecksumBytes = securePasswordBytes.getRange(securePasswordBytes.length - 4, securePasswordBytes.length).toList();
 
     return actualChecksumBytes.toString() == expectedChecksumBytes.toString();

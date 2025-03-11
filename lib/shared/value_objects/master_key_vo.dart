@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:crypto/crypto.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
@@ -16,8 +16,8 @@ class MasterKeyVO extends Equatable {
   // It should only be used during the first app launch or when setting up a new password for the application.
   static Future<MasterKeyVO> create({required MnemonicModel mnemonicModel, required PasswordModel passwordModel}) async {
     Uint8List mnemonicSeed = await mnemonicModel.calculateSeed();
-    Digest decryptedMasterKey = sha256.convert(mnemonicSeed);
-    String decryptedMasterKeyHex = base64Encode(decryptedMasterKey.bytes);
+    Digest decryptedMasterKey = Sha256().convert(mnemonicSeed);
+    String decryptedMasterKeyHex = base64Encode(decryptedMasterKey.byteList);
 
     String encryptedMasterKey = passwordModel.encrypt(decryptedData: decryptedMasterKeyHex);
     return MasterKeyVO(encryptedMasterKey: encryptedMasterKey);

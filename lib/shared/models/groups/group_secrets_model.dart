@@ -1,4 +1,4 @@
-import 'package:crypto/crypto.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:snggle/shared/models/a_secrets_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:uuid/uuid.dart';
@@ -19,7 +19,7 @@ class GroupSecretsModel extends ASecretsModel {
   }
 
   factory GroupSecretsModel.generate(FilesystemPath filesystemPath) {
-    return GroupSecretsModel(filesystemPath: filesystemPath, challenge: sha512.convert(const Uuid().v4().codeUnits).toString());
+    return GroupSecretsModel(filesystemPath: filesystemPath, challenge: Sha512().convert(const Uuid().v4().codeUnits).toString());
   }
 
   @override
