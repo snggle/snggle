@@ -34,7 +34,7 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
     await super.close();
   }
 
-  Future<void> init(int mnemonicSize) async {
+  Future<void> init(MnemonicSize mnemonicSize) async {
     emit(VaultCreatePageState(mnemonicSize: mnemonicSize, confirmPageEnabledBool: false));
 
     int lastVaultIndex = await _vaultsService.getLastIndex();
@@ -55,7 +55,10 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
   }
 
   Future<void> saveMnemonic() async {
-    assert(state.mnemonic != null, 'Method saveMnemonic() can be called only when mnemonic is set');
+    if (state.mnemonic == null) {
+      AppLogger().log(message: 'Method saveMnemonic() can be called only when mnemonic is set');
+      return;
+    }
 
     List<String> mnemonicWords = state.mnemonic!;
     Mnemonic mnemonic = Mnemonic(mnemonicWords);
@@ -74,7 +77,6 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
   }
 
   Future<void> _createVault(List<String> mnemonicWords) async {
-    // TODO(dominik): Temporary solution to build and validate mnemonic. It should be improved after 'cryptography_utils' package implementation
     Mnemonic mnemonic = Mnemonic(mnemonicWords);
 
     String vaultName = vaultNameTextEditingController.text;

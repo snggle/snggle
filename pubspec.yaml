@@ -1,7 +1,7 @@
 name: snggle
 description: Private keys manager
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.42
+version: 0.0.43
 
 environment:
   sdk: "3.2.6"
@@ -51,10 +51,6 @@ dependencies:
   # A set of high-level APIs over PointyCastle for two-way cryptography.
   # https://pub.dev/packages/encrypt
   encrypt: 5.0.3
-
-  # Dart implementation of Bitcoin BIP39 Mnemonic code for generating deterministic keys
-  # https://pub.dev/packages/bip39
-  bip39: 1.0.6
 
   # RFC4122 (v1, v4, v5) UUID Generator and Parser for all Dart platforms (Web, VM, Flutter)
   # https://pub.dev/packages/uuid

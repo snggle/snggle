@@ -1,8 +1,9 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 
-typedef SizeSelectedCallback = void Function(int size);
+typedef SizeSelectedCallback = void Function(MnemonicSize mnemonicSize);
 
 class MnemonicSizePicker extends StatefulWidget {
   final SizeSelectedCallback onSizeSelected;
@@ -17,7 +18,7 @@ class MnemonicSizePicker extends StatefulWidget {
 }
 
 class _MnemonicSizePickerState extends State<MnemonicSizePicker> {
-  static const List<int> predefinedMnemonicSizes = <int>[12, 24];
+  static List<MnemonicSize> predefinedMnemonicSizes = <MnemonicSize>[MnemonicSize.words12, MnemonicSize.words24];
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +37,12 @@ class _MnemonicSizePickerState extends State<MnemonicSizePicker> {
           ),
           const SizedBox(height: 24),
           ...predefinedMnemonicSizes.map(
-            (int size) {
+            (MnemonicSize mnemonicSize) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: GradientOutlinedButton.large(
-                  onPressed: () => widget.onSizeSelected(size),
-                  label: size.toString(),
+                  onPressed: () => widget.onSizeSelected(mnemonicSize),
+                  label: mnemonicSize.wordCount.toString(),
                 ),
               );
             },

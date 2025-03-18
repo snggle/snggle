@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:blockchain_utils/bip/bip/bip39/bip39.dart';
+import 'package:cryptography_utils/cryptography_utils.dart' as crypto_utils;
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_cubit.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
@@ -77,7 +77,7 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
 
         return KeyboardWrapper(
           keyboardValueNotifier: widget.keyboardValueNotifier,
-          availableHints: bip39WordList(Bip39Languages.english),
+          availableHints: crypto_utils.MnemonicDictionary.english,
           child: ScrollableLayout(
             tooltipVisibleBool: anyKeyboardVisibleBool == false,
             scrollController: scrollController,
@@ -179,7 +179,7 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
     bool textFieldFocusedBool = focusNodes[index].hasFocus;
     bool lastTextFieldBool = index == widget.mnemonicSize - 1;
 
-    bool wordCorrectBool = bip39WordList(Bip39Languages.english).contains(word);
+    bool wordCorrectBool = crypto_utils.MnemonicDictionary.english.contains(word);
     bool checksumErrorBool = lastTextFieldBool && widget.mnemonicFilledBool && widget.mnemonicValidBool == false;
 
     return (wordCorrectBool == false || checksumErrorBool) && textFieldFocusedBool == false && word.isNotEmpty;

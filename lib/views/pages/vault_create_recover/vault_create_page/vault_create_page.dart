@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cryptography_utils/cryptography_utils.dart' as crypto_utils;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_cubit.dart';
@@ -84,7 +85,7 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
     }
   }
 
-  Future<void> _handleMnemonicSizeSelected(int mnemonicSize) async {
+  Future<void> _handleMnemonicSizeSelected(crypto_utils.MnemonicSize mnemonicSize) async {
     await vaultCreatePageCubit.init(mnemonicSize);
     await pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
   }

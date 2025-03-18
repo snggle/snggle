@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cryptography_utils/cryptography_utils.dart' as crypto_utils;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
@@ -16,7 +17,7 @@ import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
 
 class MnemonicFormGenerated extends StatefulWidget {
-  final int mnemonicSize;
+  final crypto_utils.MnemonicSize mnemonicSize;
   final List<String> mnemonic;
   final VaultCreatePageCubit vaultCreatePageCubit;
   final VaultModel? repeatedVaultModel;
@@ -135,7 +136,7 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
             const SizedBox(height: 14),
             CustomGrid.builder(
               columnsCount: 3,
-              childCount: widget.mnemonicSize,
+              childCount: widget.mnemonicSize.wordCount,
               itemBuilder: (BuildContext context, int index) {
                 return LabelWrapperVertical.textField(
                   label: '${index + 1}',
