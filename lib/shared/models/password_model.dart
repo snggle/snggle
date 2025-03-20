@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:crypto/crypto.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:snggle/config/app_config.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
@@ -12,7 +12,7 @@ class PasswordModel extends Equatable {
   const PasswordModel({required String hashedPassword}) : _hashedPassword = hashedPassword;
 
   factory PasswordModel.fromPlaintext(String plaintextPassword) {
-    List<int> hashedPasswordBytes = sha256.convert(plaintextPassword.codeUnits).bytes;
+    List<int> hashedPasswordBytes = Sha256().convert(plaintextPassword.codeUnits).byteList;
     String hashedPassword = base64.encode(hashedPasswordBytes);
     return PasswordModel(hashedPassword: hashedPassword);
   }

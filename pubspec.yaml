@@ -1,7 +1,7 @@
 name: snggle
 description: Private keys manager
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.43
+version: 0.0.44
 
 environment:
   sdk: "3.2.6"
@@ -44,10 +44,6 @@ dependencies:
   # https://pub.dev/packages/flutter_secure_storage
   flutter_secure_storage: 9.2.2
 
-  # Implementations of SHA, MD5, and HMAC cryptographic functions.
-  # https://pub.dev/packages/crypto
-  crypto: 3.0.3
-
   # A set of high-level APIs over PointyCastle for two-way cryptography.
   # https://pub.dev/packages/encrypt
   encrypt: 5.0.3
@@ -63,10 +59,6 @@ dependencies:
   # Etherum Blockies implementation
   # https://pub.dev/packages/blockies_svg
   blockies_svg: 1.0.2
-
-  # Comprehensive Crypto & Blockchain Toolkit, Pure Dart, Cross-Platform, Encoding, Cryptography, Addresses, Mnemonics, & More.
-  # https://pub.dev/packages/blockchain_utils
-  blockchain_utils: 3.3.0
 
   # A basic toolkit for Cryptocurrency wallet in Dart. This package is used to generate and manage the Hierarchical Deterministic (HD) Wallet application.
   # https://pub.dev/packages/hd_wallet
