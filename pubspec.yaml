@@ -107,6 +107,8 @@ dependencies:
   # A set of useful sliver tools that are missing from the flutter framework
   # https://pub.dev/packages/sliver_tools
   sliver_tools: 0.2.12
+  
+  camera: ^0.10.5
 
   # Dart package containing utility methods for data encoding and decoding.
   codec_utils:
@@ -118,7 +120,7 @@ dependencies:
   cryptography_utils:
     git:
       url: https://github.com/snggle/cryptography_utils.git
-      ref: master
+      ref: ks-feature/image-generated-entropy
 
 dev_dependencies:
   flutter_test:

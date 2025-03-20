@@ -7,9 +7,11 @@ import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
+import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/vault_create_recover/mnemonic_size_picker.dart';
 import 'package:snggle/views/pages/vault_create_recover/vault_create_page/mnemonic_form_generated.dart';
+import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/paginated_form/paginated_form.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
@@ -56,19 +58,37 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
               icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
             ),
           ],
-          body: PaginatedForm(
-            pageController: pageController,
-            pages: <Widget>[
-              MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected),
-              if (vaultCreatePageState.confirmPageEnabledBool)
-                MnemonicFormGenerated(
-                  mnemonicSize: vaultCreatePageState.mnemonicSize!,
-                  mnemonic: vaultCreatePageState.mnemonic!,
-                  vaultCreatePageCubit: vaultCreatePageCubit,
-                  repeatedVaultModel: vaultCreatePageState.repeatedVaultModel,
-                )
-              else
-                const SizedBox(),
+          body: Column(
+            children: <Widget>[
+              Expanded(
+                child: PaginatedForm(
+                  pageController: pageController,
+                  pages: <Widget>[
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: GradientOutlinedButton.large(
+                            onPressed: () async => AutoRouter.of(context).push(const CameraCaptureRoute()),
+                            label: 'Generate Entropy via Camera',
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (vaultCreatePageState.confirmPageEnabledBool)
+                      MnemonicFormGenerated(
+                        mnemonicSize: vaultCreatePageState.mnemonicSize!,
+                        mnemonic: vaultCreatePageState.mnemonic!,
+                        vaultCreatePageCubit: vaultCreatePageCubit,
+                        repeatedVaultModel: vaultCreatePageState.repeatedVaultModel,
+                      )
+                    else
+                      const SizedBox(),
+                  ],
+                ),
+              ),
             ],
           ),
         );

@@ -26,7 +26,8 @@ class AppRouter extends $AppRouter {
         page: VaultCreateRecoverRoute.page,
         children: <AutoRoute>[
           AutoRoute(page: VaultInitRoute.page, initial: true),
-          AutoRoute(page: VaultCreateRoute.page),
+          AutoRoute(page: VaultCreateRoute.page,),
+          AutoRoute(page: CameraCaptureRoute.page),
           AutoRoute(page: VaultRecoverRoute.page),
         ],
       ),
