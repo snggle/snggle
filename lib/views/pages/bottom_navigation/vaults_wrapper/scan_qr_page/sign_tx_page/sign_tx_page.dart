@@ -23,8 +23,8 @@ class SignTxPage extends StatefulWidget {
     super.key,
   });
 
-  static Future<SignTxPage> load(CborEthSignRequest cborEthSignRequest) async {
-    SignTxPageCubit signTxPageCubit = SignTxPageCubit(cborEthSignRequest: cborEthSignRequest);
+  static Future<SignTxPage> load(CborSolSignRequest cborSolSignRequest) async {
+    SignTxPageCubit signTxPageCubit = SignTxPageCubit(cborSolSignRequest: cborSolSignRequest);
 
     try {
       await signTxPageCubit.init();
@@ -62,10 +62,12 @@ class _SignTxPageState extends State<SignTxPage> {
             onSignPressed: widget.signTxPageCubit.signTransaction,
           );
         } else if (signTxPageState is SignTxPageSignedTxState) {
+          print('Suchar #2: signature');
+          print(signTxPageState.cborSolSignature);
           child = QRResultScaffold.fromUniformResource(
             title: 'SIGNATURE',
             closeButtonVisible: true,
-            ur: UR.fromCborTaggedObject(signTxPageState.cborEthSignature),
+            ur: UR.fromCborTaggedObject(signTxPageState.cborSolSignature),
             tooltip: BottomTooltip(
               actions: <Widget>[
                 BottomTooltipItem(

@@ -88,6 +88,11 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                         icon: const AssetIcon(AppIcons.wallet_metamask, size: 18),
                         onPressed: () => _showQRConnectPage(true),
                       ),
+                      GradientOutlinedButton.large(
+                        label: 'Keystone QR',
+                        icon: const AssetIcon(AppIcons.connect_wallet_qr, size: 18),
+                        onPressed: () => _showQRConnectPage(true),
+                      ),
                     ],
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.hardware) ...<Widget>[
                       const GradientOutlinedButton.large(label: 'Use Trezor interface', icon: AssetIcon(AppIcons.wallet_trezor, size: 18)),
@@ -103,11 +108,27 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
   }
 
   Future<void> _showQRConnectPage(bool connectAllBool) async {
-    await CustomLoadingDialog.show<CborCryptoHDKey>(
+    String networkName = widget.networkTemplateModel.name.toLowerCase();
+
+    Map<String, Future<ACborTaggedObject> Function()> selectNetwork = <String, Future<ACborTaggedObject> Function()>{
+      'ethereum': () => walletConnectPageCubit.getCborCryptoHDKey(connectAllBool: connectAllBool),
+      'solana': () => walletConnectPageCubit.getCborCryptoMultiAccounts(),
+    };
+
+    Future<ACborTaggedObject> Function()? networkHandler = selectNetwork[networkName];
+
+    if (networkHandler == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unsupported network for QR connection')),
+      );
+      return;
+    }
+
+    await CustomLoadingDialog.show<ACborTaggedObject>(
       context: context,
       title: 'Loading...',
-      futureFunction: () => walletConnectPageCubit.getCborCryptoHDKey(connectAllBool: connectAllBool),
-      onSuccess: (CborCryptoHDKey cborCryptoHDKey) async {
+      futureFunction: networkHandler,
+      onSuccess: (ACborTaggedObject result) async {
         bool? navigateBackBool = await showDialog<bool>(
           context: context,
           useSafeArea: false,
@@ -115,7 +136,7 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
             return WalletQrConnectPage(
               walletModel: widget.walletModel,
               networkTemplateModel: widget.networkTemplateModel,
-              cborCryptoHDKey: cborCryptoHDKey,
+              cborTaggedObject: result,
             );
           },
         );

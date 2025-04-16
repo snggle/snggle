@@ -1,3 +1,4 @@
+import 'package:snggle/bloc/pages/wallet_create/derivation_path_index_extractor/a_derivation_path_index_extractor.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
@@ -12,7 +13,8 @@ class WalletsService implements IListItemsService<WalletModel> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
   @override
-  Future<List<WalletModel>> getAllByParentPath(FilesystemPath parentFilesystemPath, {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
+  Future<List<WalletModel>> getAllByParentPath(FilesystemPath parentFilesystemPath,
+      {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
     WalletModelFactory walletModelFactory = globalLocator<WalletModelFactory>();
 
     List<WalletEntity> walletEntityList = await _walletsRepository.getAllByParentPath(parentFilesystemPath);
@@ -89,10 +91,11 @@ class WalletsService implements IListItemsService<WalletModel> {
     return globalLocator<WalletModelFactory>().createFromEntity(walletEntity);
   }
 
-  Future<int> getLastDerivationIndex(FilesystemPath parentFilesystemPath) async {
+  Future<int> getLastDerivationIndex(FilesystemPath parentFilesystemPath, ADerivationPathIndexExtractor derivationPathIndexExtractor) async {
     List<String> derivationPaths = await _walletsRepository.getAllDerivationPaths(parentFilesystemPath);
-    List<int> derivationIndexes = derivationPaths.map((String derivationPath) {
-      return int.parse(derivationPath.replaceAll("''", '').split('/').last);
+
+    List<int> derivationIndexes = derivationPaths.map((String path) {
+      return derivationPathIndexExtractor.extractIndex(path);
     }).toList()
       ..sort();
 

@@ -54,9 +54,9 @@ class TransactionModel extends Equatable {
     );
   }
 
-  factory TransactionModel.fromCborEthSignRequest(int walletId, CborEthSignRequest cborEthSignRequest) {
-    SignDataType signDataType = cborEthSignRequest.dataType == CborEthSignDataType.rawBytes ? SignDataType.rawBytes : SignDataType.typedTransaction;
-    AEthereumTransaction? ethereumTransaction = AEthereumTransaction.fromSerializedData(signDataType, cborEthSignRequest.signData);
+  factory TransactionModel.fromCborEthSignRequest(int walletId, CborSolSignRequest cborSolSignRequest) {
+    SignDataType signDataType = SignDataType.typedTransaction;
+    AEthereumTransaction? ethereumTransaction = AEthereumTransaction.fromSerializedData(signDataType, cborSolSignRequest.signData);
 
     return TransactionModel(
       id: Isar.autoIncrement,
@@ -68,8 +68,21 @@ class TransactionModel extends Equatable {
       functionData: ethereumTransaction.abiFunction?.hex,
       message: ethereumTransaction.message,
       contractAddress: ethereumTransaction.contractAddress,
-      senderAddress: cborEthSignRequest.address,
+      senderAddress: cborSolSignRequest.address.toString(),
       recipientAddress: ethereumTransaction.recipientAddress,
+    );
+  }
+
+  factory TransactionModel.fromCborSolSignRequest(int walletId) {//, CborSolSignRequest request) {
+    return TransactionModel(
+      id: Isar.autoIncrement,
+      walletId: walletId,
+      creationDate: DateTime.now(),
+      signDataType: SignDataType.typedTransaction,
+      senderAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
+      amount: '0.1 SOL',
+      fee: '0.0000149 SOL',
+      recipientAddress: '6VWUtQiEbSXy6viXkxs7xywevQJXruVD1NmhX4akdC1Z',
     );
   }
 

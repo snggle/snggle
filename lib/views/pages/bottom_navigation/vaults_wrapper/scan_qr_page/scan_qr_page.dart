@@ -78,8 +78,8 @@ class _ScanQRPageState extends State<ScanQRPage> {
 
   Future<Widget> _loadResultPage(ACborTaggedObject cborTaggedObject) async {
     switch (cborTaggedObject) {
-      case CborEthSignRequest cborEthSignRequest:
-        return SignTxPage.load(cborEthSignRequest);
+      case CborSolSignRequest cborSolSignRequest:
+        return SignTxPage.load(cborSolSignRequest);
       default:
         throw const ScanQrException(ScanQrExceptionType.unsupported);
     }

@@ -69,6 +69,19 @@ class _QRResultScaffoldState extends State<QRResultScaffold> {
     if (widget.ur != null) {
       urEncoder = UREncoder(ur: widget.ur!, maxFragmentLength: 30);
       qrCodeContent.value = urEncoder!.nextPart();
+      print(qrCodeContent.toString());
+      qrCodeContent.value = urEncoder!.nextPart();
+      print(qrCodeContent.toString());
+      qrCodeContent.value = urEncoder!.nextPart();
+      print(qrCodeContent.toString());
+      qrCodeContent.value = urEncoder!.nextPart();
+      print(qrCodeContent.toString());
+      qrCodeContent.value = urEncoder!.nextPart();
+      print(qrCodeContent.toString());
+      qrCodeContent.value = urEncoder!.nextPart();
+      print(qrCodeContent.toString());
+      qrCodeContent.value = urEncoder!.nextPart();
+      print(qrCodeContent.toString());
       if (urEncoder!.fragmentsCount != 1) {
         _updateQRWithNextPart();
         timer = Timer.periodic(const Duration(milliseconds: 150), (Timer timer) => _updateQRWithNextPart());

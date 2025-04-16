@@ -4,13 +4,13 @@ import 'package:snggle/shared/models/transactions/transaction_model.dart';
 
 class SignTxPageSignedTxState extends ASignTxPageState {
   final TransactionModel transactionModel;
-  final CborEthSignature cborEthSignature;
+  final CborSolSignature cborSolSignature;
 
   const SignTxPageSignedTxState({
     required this.transactionModel,
-    required this.cborEthSignature,
+    required this.cborSolSignature,
   });
 
   @override
-  List<Object?> get props => <Object?>[transactionModel, cborEthSignature];
+  List<Object?> get props => <Object?>[transactionModel, cborSolSignature];
 }

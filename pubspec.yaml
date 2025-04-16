@@ -107,18 +107,21 @@ dependencies:
   # A set of useful sliver tools that are missing from the flutter framework
   # https://pub.dev/packages/sliver_tools
   sliver_tools: 0.2.12
+  
+  solana: ^0.30.1
+  convert: ^3.1.1
 
   # Dart package containing utility methods for data encoding and decoding.
   codec_utils:
     git:
       url: https://github.com/snggle/codec_utils.git
-      ref: master
+      ref: ks-feature/solana-cbor
 
   # Dart package containing utility methods for common cryptographic and blockchain-specific operations.
   cryptography_utils:
     git:
       url: https://github.com/snggle/cryptography_utils.git
-      ref: master
+      ref: ks-feature/solana-network-utils
 
 dev_dependencies:
   flutter_test:

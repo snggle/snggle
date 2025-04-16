@@ -11,6 +11,7 @@ import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/transaction_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
+import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
@@ -23,45 +24,97 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
   final TransactionsService _transactionsService = globalLocator<TransactionsService>();
   final WalletsService _walletsService = globalLocator<WalletsService>();
+  final ActiveWalletController _activeWalletController = globalLocator<ActiveWalletController>();
 
-  final CborEthSignRequest _cborEthSignRequest;
+  final CborSolSignRequest _cborSolSignRequest;
 
   late final PasswordModel _signWalletPasswordModel;
   late final WalletModel signWalletModel;
   late final TransactionModel transactionModel;
 
   SignTxPageCubit({
-    required CborEthSignRequest cborEthSignRequest,
-  })  : _cborEthSignRequest = cborEthSignRequest,
+    required CborSolSignRequest cborSolSignRequest,
+  })  : _cborSolSignRequest = cborSolSignRequest,
         super(const SignTxPageConfirmTxState());
 
   Future<void> init() async {
     await _setupSignWallet();
-    transactionModel = TransactionModel.fromCborEthSignRequest(signWalletModel.id, _cborEthSignRequest);
+    transactionModel = TransactionModel.fromCborSolSignRequest(signWalletModel.id); //, _cborSolSignRequest);
   }
 
   Future<void> signTransaction() async {
-    WalletSecretsModel walletSecretsModel = await _secretsService.get(signWalletModel.filesystemPath, _signWalletPasswordModel);
+    WalletSecretsModel walletSecretsModel = await _secretsService.get(
+      signWalletModel.filesystemPath,
+      _signWalletPasswordModel,
+    );
 
-    ECPrivateKey ecPrivateKey = ECPrivateKey.fromBytes(walletSecretsModel.privateKey, CurvePoints.generatorSecp256k1);
-    AEthereumTransaction ethereumTransaction = AEthereumTransaction.fromSerializedData(transactionModel.signDataType, _cborEthSignRequest.signData);
+    print('--- Raw Sign Data ---');
+    print(_cborSolSignRequest.signData);
 
-    ASignature signature = ethereumTransaction.sign(ecPrivateKey);
-    TransactionModel signedTransactionModel = transactionModel.addSignature(signature.hex);
+    //SolanaTransaction solanaTransaction = SolanaTransaction.fromSerializedData(_cborSolSignRequest.signData);
+    SolanaMessage solanaMessage = SolanaMessage.fromBytes(_cborSolSignRequest.signData);
+
+    print('--- Solana Message ---');
+    print('Recent Blockhash: ${Base58Codec.encode(solanaMessage.recentBlockhash)}');
+
+    for (int i = 0; i < solanaMessage.accountKeys.length; i++) {
+      print('Account $i: ${Base58Codec.encode(solanaMessage.accountKeys[i])}');
+    }
+
+    for (int i = 0; i < solanaMessage.instructions.length; i++) {
+      final SolanaInstruction instruction = solanaMessage.instructions[i];
+      print('--- Instruction #$i ---');
+
+      final int programIdIndex = instruction.programIdIndex;
+      final String programId = Base58Codec.encode(solanaMessage.accountKeys[programIdIndex]);
+      print('Program ID Index: $programIdIndex => $programId');
+      print('Account Indices: ${instruction.accountIndices}');
+      print('Raw Data: ${instruction.data}');
+      print('Account Keys: $solanaMessage.accountKeys');
+      final DecodedInstruction decoded = instruction.decode(solanaMessage.accountKeys);
+
+      print('Decoded Instruction:');
+      print('  Type: ${decoded.type}');
+      print('  Program ID: ${decoded.programId}');
+      if (decoded.error != null) {
+        print('  Error: ${decoded.error}');
+        continue;
+      }
+
+      decoded.printDecoded();
+    }
+
+    EDPrivateKey edPrivateKey = EDPrivateKey.fromBytes(walletSecretsModel.privateKey);
+
+    ED25519PrivateKey ed25519PrivateKey = ED25519PrivateKey(
+      edPrivateKey: edPrivateKey,
+      metadata: Bip32KeyMetadata.fromCompressedPublicKey(
+        compressedPublicKey: edPrivateKey.edPublicKey.bytes,
+      ),
+    );
+
+    SolanaSigner signer = SolanaSigner(ed25519PrivateKey);
+
+    Uint8List message = _cborSolSignRequest.signData;
+    SolanaSignature signature = signer.sign(message);
+    //ASignature signature = solanaTransaction.sign(ed25519PrivateKey, message);
+
+    String signatureHex = HexCodec.encode(signature.bytes);
+
+    TransactionModel signedTransactionModel = transactionModel.addSignature(signatureHex);
     await _transactionsService.save(signedTransactionModel);
 
     emit(SignTxPageSignedTxState(
       transactionModel: signedTransactionModel,
-      cborEthSignature: CborEthSignature(
+      cborSolSignature: CborSolSignature(
         signature: signature.bytes,
-        origin: _cborEthSignRequest.origin,
-        requestId: _cborEthSignRequest.requestId ?? Uint8List(0),
+        requestId: _cborSolSignRequest.requestId ?? Uint8List(0),
       ),
     ));
   }
 
   Future<void> _setupSignWallet() async {
-    String? receivedWalletAddress = _cborEthSignRequest.address?.toLowerCase();
+    String? receivedWalletAddress = _cborSolSignRequest.address?.toString().toLowerCase() ?? _activeWalletController.walletModel?.address;
 
     if (receivedWalletAddress == null) {
       throw const ScanQrException(ScanQrExceptionType.receivedAddressEmpty);

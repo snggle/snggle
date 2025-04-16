@@ -70,4 +70,46 @@ class WalletConnectPageCubit extends Cubit<WalletConnectPageState> {
       name: _walletModel.name,
     );
   }
+
+  Future<CborCryptoMultiAccounts> getCborCryptoMultiAccounts() async {
+    final LegacyDerivationPath derivationPath = LegacyDerivationPath.parse(_walletModel.derivationPath);
+
+    final PasswordModel vaultPasswordModel = await globalLocator<PasswordController>().getPasswordByFilesystemPath(_vaultModel.filesystemPath);
+
+    final VaultSecretsModel vaultSecretsModel = await _secretsService.get<VaultSecretsModel>(
+      _vaultModel.filesystemPath,
+      vaultPasswordModel,
+    );
+
+    final ED25519Derivator ed25519Derivator = ED25519Derivator();
+    final ED25519PrivateKey ed25519PrivateKey = await ed25519Derivator.derivePath(
+      Mnemonic(vaultSecretsModel.mnemonicModel.mnemonicList),
+      derivationPath,
+    );
+
+    final CborCryptoKeypath cborCryptoKeypath = CborCryptoKeypath(
+      components: derivationPath.pathElements
+          .map(
+            (LegacyDerivationPathElement e) => CborPathComponent(index: e.rawIndex, hardened: e.isHardened),
+          )
+          .toList(),
+      sourceFingerprint: 0x12345678,
+    );
+
+    final CborCryptoHDKey solanaKey = CborCryptoHDKey(
+      isMaster: false,
+      isPrivate: false,
+      keyData: ed25519PrivateKey.publicKey.compressed,
+      origin: cborCryptoKeypath,
+      name: _walletModel.name,
+    );
+
+    return CborCryptoMultiAccounts(
+      masterFingerprint: 'e9181cf3',
+      cryptoHDKeyList: <CborCryptoHDKey>[solanaKey],
+      device: 'keystone',
+      deviceId: '28475c8d80f6c06bafbe46a7d1750f3fcf2565f7',
+      deviceVersion: '1.0.2',
+    );
+  }
 }

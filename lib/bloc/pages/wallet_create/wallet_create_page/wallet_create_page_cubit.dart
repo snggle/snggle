@@ -40,7 +40,8 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
         super(const WalletCreatePageState());
 
   Future<void> init({required String defaultWalletName}) async {
-    int lastDerivationIndex = await _walletsService.getLastDerivationIndex(_networkGroupModel.filesystemPath);
+    int lastDerivationIndex = await _walletsService.getLastDerivationIndex(
+        _networkGroupModel.filesystemPath, _networkGroupModel.networkTemplateModel.derivationPathIndexExtractor);
     int derivationIndex = lastDerivationIndex + 1;
 
     if (derivationIndex != 0) {

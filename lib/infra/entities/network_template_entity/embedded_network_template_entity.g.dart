@@ -29,24 +29,30 @@ const EmbeddedNetworkTemplateEntitySchema = Schema(
       name: r'derivationPathTemplate',
       type: IsarType.string,
     ),
-    r'derivatorType': PropertySchema(
+    r'derivationPathType': PropertySchema(
       id: 3,
+      name: r'derivationPathType',
+      type: IsarType.string,
+      enumMap: _EmbeddedNetworkTemplateEntityderivationPathTypeEnumValueMap,
+    ),
+    r'derivatorType': PropertySchema(
+      id: 4,
       name: r'derivatorType',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'name',
       type: IsarType.string,
     ),
     r'networkIconType': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'networkIconType',
       type: IsarType.string,
       enumMap: _EmbeddedNetworkTemplateEntitynetworkIconTypeEnumValueMap,
     ),
     r'walletType': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'walletType',
       type: IsarType.string,
       enumMap: _EmbeddedNetworkTemplateEntitywalletTypeEnumValueMap,
@@ -80,6 +86,12 @@ int _embeddedNetworkTemplateEntityEstimateSize(
     final value = object.derivationPathTemplate;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.derivationPathType;
+    if (value != null) {
+      bytesCount += 3 + value.name.length * 3;
     }
   }
   {
@@ -118,10 +130,11 @@ void _embeddedNetworkTemplateEntitySerialize(
   writer.writeString(offsets[0], object.addressEncoderType);
   writer.writeString(offsets[1], object.curveType?.name);
   writer.writeString(offsets[2], object.derivationPathTemplate);
-  writer.writeString(offsets[3], object.derivatorType);
-  writer.writeString(offsets[4], object.name);
-  writer.writeString(offsets[5], object.networkIconType?.name);
-  writer.writeString(offsets[6], object.walletType?.name);
+  writer.writeString(offsets[3], object.derivationPathType?.name);
+  writer.writeString(offsets[4], object.derivatorType);
+  writer.writeString(offsets[5], object.name);
+  writer.writeString(offsets[6], object.networkIconType?.name);
+  writer.writeString(offsets[7], object.walletType?.name);
 }
 
 EmbeddedNetworkTemplateEntity _embeddedNetworkTemplateEntityDeserialize(
@@ -135,12 +148,15 @@ EmbeddedNetworkTemplateEntity _embeddedNetworkTemplateEntityDeserialize(
     curveType: _EmbeddedNetworkTemplateEntitycurveTypeValueEnumMap[
         reader.readStringOrNull(offsets[1])],
     derivationPathTemplate: reader.readStringOrNull(offsets[2]),
-    derivatorType: reader.readStringOrNull(offsets[3]),
-    name: reader.readStringOrNull(offsets[4]),
+    derivationPathType:
+        _EmbeddedNetworkTemplateEntityderivationPathTypeValueEnumMap[
+            reader.readStringOrNull(offsets[3])],
+    derivatorType: reader.readStringOrNull(offsets[4]),
+    name: reader.readStringOrNull(offsets[5]),
     networkIconType: _EmbeddedNetworkTemplateEntitynetworkIconTypeValueEnumMap[
-        reader.readStringOrNull(offsets[5])],
-    walletType: _EmbeddedNetworkTemplateEntitywalletTypeValueEnumMap[
         reader.readStringOrNull(offsets[6])],
+    walletType: _EmbeddedNetworkTemplateEntitywalletTypeValueEnumMap[
+        reader.readStringOrNull(offsets[7])],
   );
   return object;
 }
@@ -160,13 +176,16 @@ P _embeddedNetworkTemplateEntityDeserializeProp<P>(
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (_EmbeddedNetworkTemplateEntityderivationPathTypeValueEnumMap[
+          reader.readStringOrNull(offset)]) as P;
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
+      return (reader.readStringOrNull(offset)) as P;
+    case 6:
       return (_EmbeddedNetworkTemplateEntitynetworkIconTypeValueEnumMap[
           reader.readStringOrNull(offset)]) as P;
-    case 6:
+    case 7:
       return (_EmbeddedNetworkTemplateEntitywalletTypeValueEnumMap[
           reader.readStringOrNull(offset)]) as P;
     default:
@@ -176,9 +195,19 @@ P _embeddedNetworkTemplateEntityDeserializeProp<P>(
 
 const _EmbeddedNetworkTemplateEntitycurveTypeEnumValueMap = {
   r'secp256k1': r'secp256k1',
+  r'ed25519': r'ed25519',
 };
 const _EmbeddedNetworkTemplateEntitycurveTypeValueEnumMap = {
   r'secp256k1': CurveType.secp256k1,
+  r'ed25519': CurveType.ed25519,
+};
+const _EmbeddedNetworkTemplateEntityderivationPathTypeEnumValueMap = {
+  r'ethereum': r'ethereum',
+  r'solana_4elements': r'solana_4elements',
+};
+const _EmbeddedNetworkTemplateEntityderivationPathTypeValueEnumMap = {
+  r'ethereum': DerivationPathType.ethereum,
+  r'solana_4elements': DerivationPathType.solana_4elements,
 };
 const _EmbeddedNetworkTemplateEntitynetworkIconTypeEnumValueMap = {
   r'bitcoin': r'bitcoin',
@@ -668,6 +697,162 @@ extension EmbeddedNetworkTemplateEntityQueryFilter on QueryBuilder<
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'derivationPathTemplate',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> derivationPathTypeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'derivationPathType',
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> derivationPathTypeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'derivationPathType',
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> derivationPathTypeEqualTo(
+    DerivationPathType? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'derivationPathType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> derivationPathTypeGreaterThan(
+    DerivationPathType? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'derivationPathType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> derivationPathTypeLessThan(
+    DerivationPathType? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'derivationPathType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> derivationPathTypeBetween(
+    DerivationPathType? lower,
+    DerivationPathType? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'derivationPathType',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> derivationPathTypeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'derivationPathType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> derivationPathTypeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'derivationPathType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+          QAfterFilterCondition>
+      derivationPathTypeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'derivationPathType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+          QAfterFilterCondition>
+      derivationPathTypeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'derivationPathType',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> derivationPathTypeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'derivationPathType',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> derivationPathTypeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'derivationPathType',
         value: '',
       ));
     });

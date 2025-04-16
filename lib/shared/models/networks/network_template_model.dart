@@ -1,5 +1,6 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
+import 'package:snggle/bloc/pages/wallet_create/derivation_path_index_extractor/a_derivation_path_index_extractor.dart';
 import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
 
@@ -9,6 +10,7 @@ class NetworkTemplateModel extends Equatable {
 
   final String name;
   final String derivationPathTemplate;
+  final ADerivationPathIndexExtractor derivationPathIndexExtractor;
   final ABlockchainAddressEncoder<ABip32PublicKey> addressEncoder;
   final ADerivator derivator;
   final CurveType curveType;
@@ -18,6 +20,7 @@ class NetworkTemplateModel extends Equatable {
   const NetworkTemplateModel({
     required this.name,
     required this.derivationPathTemplate,
+    required this.derivationPathIndexExtractor,
     required this.addressEncoder,
     required this.derivator,
     required this.curveType,
@@ -29,6 +32,7 @@ class NetworkTemplateModel extends Equatable {
     return NetworkTemplateModel(
       name: embeddedNetworkTemplateEntity.name!,
       derivationPathTemplate: embeddedNetworkTemplateEntity.derivationPathTemplate!,
+      derivationPathIndexExtractor: ADerivationPathIndexExtractor.fromSerializedType(embeddedNetworkTemplateEntity.derivationPathType!.name),
       addressEncoder: ABlockchainAddressEncoder.fromSerializedType(embeddedNetworkTemplateEntity.addressEncoderType!),
       derivator: ADerivator.fromSerializedType(embeddedNetworkTemplateEntity.derivatorType!),
       curveType: embeddedNetworkTemplateEntity.curveType!,
@@ -41,6 +45,7 @@ class NetworkTemplateModel extends Equatable {
     String? name,
     String? derivationPathTemplate,
     ABlockchainAddressEncoder<ABip32PublicKey>? addressEncoder,
+    ADerivationPathIndexExtractor? derivationPathIndexExtractor,
     ADerivator? derivator,
     CurveType? curveType,
     NetworkIconType? networkIconType,
@@ -49,6 +54,7 @@ class NetworkTemplateModel extends Equatable {
     return NetworkTemplateModel(
       name: name ?? this.name,
       derivationPathTemplate: derivationPathTemplate ?? this.derivationPathTemplate,
+      derivationPathIndexExtractor: derivationPathIndexExtractor ?? this.derivationPathIndexExtractor,
       addressEncoder: addressEncoder ?? this.addressEncoder,
       derivator: derivator ?? this.derivator,
       curveType: curveType ?? this.curveType,
@@ -78,6 +84,7 @@ class NetworkTemplateModel extends Equatable {
     }
     customizableDerivationPath = customizableDerivationPath.replaceAll('{{a}}', '$accountIndex');
     customizableDerivationPath = customizableDerivationPath.replaceAll('{{y}}', '$changeIndex');
+    customizableDerivationPath = customizableDerivationPath.replaceAll("{{i}}'", "$addressIndex'");
     customizableDerivationPath = customizableDerivationPath.replaceAll('{{i}}', '$addressIndex');
 
     return customizableDerivationPath;
@@ -112,6 +119,7 @@ class NetworkTemplateModel extends Equatable {
       addressEncoder: addressEncoder,
       curveType: curveType,
     );
+
     return LegacyHDWallet.fromMnemonic(
       derivationPath: legacyDerivationPath,
       mnemonic: mnemonic,
@@ -125,6 +133,7 @@ class NetworkTemplateModel extends Equatable {
         derivationPathTemplate,
         addressEncoder.serializeType(),
         derivator.serializeType(),
+        derivationPathIndexExtractor.serializeType(),
         curveType.name,
         networkIconType.name,
         walletType.name,
