@@ -1,43 +1,35 @@
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
-import 'package:equatable/equatable.dart';
 import 'package:isar/isar.dart';
-import 'package:snggle/infra/entities/transaction_entity/transaction_entity.dart';
+import 'package:snggle/infra/entities/transaction_entity/a_transaction_entity.dart';
+import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
+import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
 
-class TransactionModel extends Equatable {
-  final int id;
-  final int walletId;
-  final DateTime creationDate;
-  final SignDataType signDataType;
-  final String? amount;
+class EthereumTransactionModel extends ATransactionModel {
   final String? fee;
   final String? functionData;
-  final String? message;
-  final String? contractAddress;
-  final String? senderAddress;
-  final String? recipientAddress;
-  final String? signature;
-  final DateTime? signDate;
+  final SignDataType signDataType;
 
-  const TransactionModel({
-    required this.id,
-    required this.walletId,
-    required this.creationDate,
+  const EthereumTransactionModel({
+    required super.id,
+    required super.walletId,
+    required super.creationDate,
     required this.signDataType,
-    this.amount,
+    super.amount,
     this.fee,
     this.functionData,
-    this.message,
-    this.contractAddress,
-    this.senderAddress,
-    this.recipientAddress,
-    this.signDate,
-    this.signature,
+    super.message,
+    super.contractAddress,
+    super.senderAddress,
+    super.recipientAddress,
+    super.signDate,
+    super.signature,
   });
 
-  factory TransactionModel.fromEntity(TransactionEntity transactionEntity) {
-    return TransactionModel(
+  @override
+  factory EthereumTransactionModel.fromEntity(EthereumTransactionEntity transactionEntity) {
+    return EthereumTransactionModel(
       id: transactionEntity.id,
       walletId: transactionEntity.walletId,
       creationDate: DateTime.parse(transactionEntity.creationDate),
@@ -54,11 +46,11 @@ class TransactionModel extends Equatable {
     );
   }
 
-  factory TransactionModel.fromCborEthSignRequest(int walletId, CborEthSignRequest cborEthSignRequest) {
-    SignDataType signDataType = cborEthSignRequest.dataType == CborEthSignDataType.rawBytes ? SignDataType.rawBytes : SignDataType.typedTransaction;
+  factory EthereumTransactionModel.fromCborEthSignRequest(int walletId, CborEthSignRequest cborEthSignRequest) {
+    SignDataType signDataType = SignDataType.typedTransaction;
     AEthereumTransaction? ethereumTransaction = AEthereumTransaction.fromSerializedData(signDataType, cborEthSignRequest.signData);
 
-    return TransactionModel(
+    return EthereumTransactionModel(
       id: Isar.autoIncrement,
       walletId: walletId,
       creationDate: DateTime.now(),
@@ -68,12 +60,13 @@ class TransactionModel extends Equatable {
       functionData: ethereumTransaction.abiFunction?.hex,
       message: ethereumTransaction.message,
       contractAddress: ethereumTransaction.contractAddress,
-      senderAddress: cborEthSignRequest.address,
+      senderAddress: cborEthSignRequest.address.toString(),
       recipientAddress: ethereumTransaction.recipientAddress,
     );
   }
 
-  TransactionModel copyWith({
+  @override
+  EthereumTransactionModel copyWith({
     int? id,
     int? walletId,
     DateTime? creationDate,
@@ -88,7 +81,7 @@ class TransactionModel extends Equatable {
     String? signature,
     DateTime? signDate,
   }) {
-    return TransactionModel(
+    return EthereumTransactionModel(
       id: id ?? this.id,
       walletId: walletId ?? this.walletId,
       creationDate: creationDate ?? this.creationDate,
@@ -105,8 +98,9 @@ class TransactionModel extends Equatable {
     );
   }
 
-  TransactionEntity toEntity() {
-    return TransactionEntity(
+  @override
+  EthereumTransactionEntity toEntity() {
+    return EthereumTransactionEntity(
       id: id,
       walletId: walletId,
       creationDate: creationDate.toUtc().toIso8601String(),
@@ -123,10 +117,18 @@ class TransactionModel extends Equatable {
     );
   }
 
-  TransactionModel addSignature(String signature) {
+  @override
+  EthereumTransactionModel addSignature(String signature) {
     return copyWith(signDate: DateTime.now(), signature: signature);
   }
 
+  @override
+  String? get transactionLabel => switch (signDataType) {
+    SignDataType.typedTransaction => 'ETH TX',
+    SignDataType.rawBytes => 'ETH TEXT',
+  };
+
+  @override
   String get title {
     if (recipientAddress != null) {
       return StringUtils.getShortPublicAddress(recipientAddress!, 4);

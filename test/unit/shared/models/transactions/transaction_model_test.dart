@@ -4,14 +4,14 @@ import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
-import 'package:snggle/infra/entities/transaction_entity/transaction_entity.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 
 void main() {
-  group('Tests of TransactionModel.fromEntity() constructor', () {
-    test('Should [return TransactionModel] from given TransactionEntity', () {
+  group('Tests of EthereumTransactionModel.fromEntity() constructor', () {
+    test('Should [returnEthereumTransactionModel] from given TransactionEntity', () {
       // Arrange
-      TransactionEntity actualTransactionEntity = const TransactionEntity(
+      EthereumTransactionEntity actualTransactionEntity = const EthereumTransactionEntity(
         id: 1,
         walletId: 1,
         creationDate: '2024-07-01T13:45:41.420590Z',
@@ -27,10 +27,10 @@ void main() {
       );
 
       // Act
-      TransactionModel actualTransactionModel = TransactionModel.fromEntity(actualTransactionEntity);
+     EthereumTransactionModel actualTransactionModel =EthereumTransactionModel.fromEntity(actualTransactionEntity);
 
       // Assert
-      TransactionModel expectedTransactionModel = TransactionModel(
+     EthereumTransactionModel expectedTransactionModel =EthereumTransactionModel(
         id: 1,
         walletId: 1,
         creationDate: DateTime.parse('2024-07-01T13:45:41.420590Z'),
@@ -49,8 +49,8 @@ void main() {
     });
   });
 
-  group('Tests of TransactionModel.fromCborEthSignRequest() constructor', () {
-    test('Should [return TransactionModel] from given CborEthSignRequest', () {
+  group('Tests of EthereumTransactionModel.fromCborEthSignRequest() constructor', () {
+    test('Should [returnEthereumTransactionModel] from given CborEthSignRequest', () {
       // Arrange
       CborEthSignRequest actualCborEthSignRequest = CborEthSignRequest(
         requestId: base64Decode('ukI9tqeOQHKqM6StM6LwZw=='),
@@ -71,10 +71,10 @@ void main() {
       );
 
       // Act
-      TransactionModel actualTransactionModel = TransactionModel.fromCborEthSignRequest(1, actualCborEthSignRequest);
+     EthereumTransactionModel actualTransactionModel =EthereumTransactionModel.fromCborEthSignRequest(1, actualCborEthSignRequest);
 
       // Assert
-      TransactionModel expectedTransactionModel = TransactionModel(
+     EthereumTransactionModel expectedTransactionModel =EthereumTransactionModel(
         id: Isar.autoIncrement,
         walletId: 1,
         creationDate: actualTransactionModel.creationDate,
@@ -89,10 +89,10 @@ void main() {
     });
   });
 
-  group('Tests of TransactionModel.toEntity()', () {
-    test('Should [return TransactionEntity] from given TransactionModel', () {
+  group('Tests of EthereumTransactionModel.toEntity()', () {
+    test('Should [return TransactionEntity] from givenEthereumTransactionModel', () {
       // Arrange
-      TransactionModel actualTransactionModel = TransactionModel(
+     EthereumTransactionModel actualTransactionModel =EthereumTransactionModel(
         id: 1,
         walletId: 1,
         creationDate: DateTime.parse('2024-07-01T13:45:41.420590Z'),
@@ -108,10 +108,10 @@ void main() {
       );
 
       // Act
-      TransactionEntity actualTransactionEntity = actualTransactionModel.toEntity();
+      EthereumTransactionEntity actualTransactionEntity = actualTransactionModel.toEntity();
 
       // Assert
-      TransactionEntity expectedTransactionEntity = const TransactionEntity(
+      EthereumTransactionEntity expectedTransactionEntity = const EthereumTransactionEntity(
         id: 1,
         walletId: 1,
         creationDate: '2024-07-01T13:45:41.420590Z',
@@ -130,10 +130,10 @@ void main() {
     });
   });
 
-  group('Tests of TransactionModel.addSignature()', () {
-    test('Should [return TransactionModel] with new signature', () {
+  group('Tests of EthereumTransactionModel.addSignature()', () {
+    test('Should [returnEthereumTransactionModel] with new signature', () {
       // Arrange
-      TransactionModel actualTransactionModel = TransactionModel(
+     EthereumTransactionModel actualTransactionModel =EthereumTransactionModel(
         id: 1,
         walletId: 1,
         creationDate: DateTime.parse('2024-07-01T13:45:41.420590Z'),
@@ -147,10 +147,10 @@ void main() {
       );
 
       // Act
-      TransactionModel actualNewTransactionModel = actualTransactionModel.addSignature('signature');
+     EthereumTransactionModel actualNewTransactionModel = actualTransactionModel.addSignature('signature');
 
       // Assert
-      TransactionModel expectedNewTransactionModel = TransactionModel(
+     EthereumTransactionModel expectedNewTransactionModel =EthereumTransactionModel(
         id: 1,
         walletId: 1,
         creationDate: DateTime.parse('2024-07-01T13:45:41.420590Z'),
@@ -169,5 +169,5 @@ void main() {
     });
   });
 
-  group('Tests of TransactionModel.title getter', () {});
+  group('Tests of EthereumTransactionModel.title getter', () {});
 }

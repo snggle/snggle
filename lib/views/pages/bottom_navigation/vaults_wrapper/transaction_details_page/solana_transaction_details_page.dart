@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:auto_route/annotations.dart';
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
@@ -7,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_scan_icon.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
-import 'package:snggle/views/widgets/generic/display_mode/abi_display_mode/abi_display_mode_selector.dart';
 import 'package:snggle/views/widgets/generic/display_mode/text_display_mode/text_display_mode_selector.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_animated.dart';
@@ -21,21 +18,21 @@ import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 
 @RoutePage()
-class TransactionDetailsPage extends StatefulWidget {
-  final TransactionModel transactionModel;
+class SolanaTransactionDetailsPage extends StatefulWidget {
+  final SolanaTransactionModel transactionModel;
   final NetworkTemplateModel networkTemplateModel;
 
-  const TransactionDetailsPage({
+  const SolanaTransactionDetailsPage({
     required this.transactionModel,
     required this.networkTemplateModel,
     super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => _TransactionDetailsPageState();
+  State<StatefulWidget> createState() => _SolanaTransactionDetailsPageState();
 }
 
-class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
+class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsPage> {
   final ScrollController scrollController = ScrollController();
 
   @override
@@ -50,18 +47,11 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
     String? recipientAddress = widget.transactionModel.recipientAddress;
     String? contractAddress = widget.transactionModel.contractAddress;
 
-    String? fee = widget.transactionModel.fee;
     String? amount = widget.transactionModel.amount;
 
-    Uint8List? abiFunctionBytes = widget.transactionModel.functionData != null ? HexCodec.decode(widget.transactionModel.functionData!) : null;
-    String? functionSelector = abiFunctionBytes != null ? HexCodec.encode(abiFunctionBytes.sublist(0, 4), includePrefixBool: true) : null;
-    Uint8List? functionData = abiFunctionBytes?.sublist(4);
-
     String? signDate = widget.transactionModel.signDate != null ? DateFormat('dd/MM/yy HH:mm').format(widget.transactionModel.signDate!) : null;
-    String signDataType = switch (widget.transactionModel.signDataType) {
-      SignDataType.typedTransaction => 'TRANSACTION',
-      SignDataType.rawBytes => 'PLAIN TEXT',
-    };
+    String? signDataType = 'SOLANA TRANSACTION';
+
 
     String? message = widget.transactionModel.message;
     String? messageLength = message?.codeUnits.length.toString();
@@ -92,7 +82,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                     label: 'Signer',
                     labelStyle: labelTextStyle,
                     collapsedValue: GradientText(
-                      StringUtils.getShortPublicAddress(senderAddress, 6),
+                      StringUtils.getShortHex(senderAddress, 6),
                       gradient: AppColors.primaryGradient,
                       textStyle: horizontalValueTextStyle,
                     ),
@@ -119,7 +109,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                 ),
               ],
               CopyWrapper(
-                value: signDataType,
+                value: signDataType!,
                 child: LabelWrapperHorizontal(
                   label: 'Format',
                   labelStyle: labelTextStyle,
@@ -138,7 +128,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                     label: 'Contract',
                     labelStyle: labelTextStyle,
                     collapsedValue: GradientText(
-                      StringUtils.getShortPublicAddress(contractAddress, 6),
+                      StringUtils.getShortHex(contractAddress, 6),
                       gradient: AppColors.primaryGradient,
                       textStyle: horizontalValueTextStyle,
                     ),
@@ -156,28 +146,13 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                     label: 'Recipient',
                     labelStyle: labelTextStyle,
                     collapsedValue: GradientText(
-                      StringUtils.getShortPublicAddress(recipientAddress, 6),
+                      StringUtils.getShortHex(recipientAddress, 6),
                       gradient: AppColors.primaryGradient,
                       textStyle: horizontalValueTextStyle,
                     ),
                     expandedValue: Text(
                       recipientAddress,
                       style: verticalValueTextStyle,
-                    ),
-                  ),
-                ),
-              ],
-              if (fee != null) ...<Widget>[
-                CopyWrapper(
-                  value: fee,
-                  child: LabelWrapperHorizontal(
-                    label: 'Fee',
-                    labelStyle: labelTextStyle,
-                    padding: EdgeInsets.zero,
-                    child: GradientText(
-                      fee,
-                      gradient: AppColors.primaryGradient,
-                      textStyle: horizontalValueTextStyle,
                     ),
                   ),
                 ),
@@ -194,30 +169,6 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                       gradient: AppColors.primaryGradient,
                       textStyle: horizontalValueTextStyle,
                     ),
-                  ),
-                ),
-              ],
-              if (functionData != null && functionSelector != null) ...<Widget>[
-                CopyWrapper(
-                  value: functionSelector,
-                  child: LabelWrapperHorizontal(
-                    label: 'Function',
-                    labelStyle: labelTextStyle,
-                    padding: EdgeInsets.zero,
-                    child: GradientText(
-                      functionSelector,
-                      gradient: AppColors.primaryGradient,
-                      textStyle: horizontalValueTextStyle,
-                    ),
-                  ),
-                ),
-                CopyWrapper(
-                  value: HexCodec.encode(functionData, includePrefixBool: true),
-                  child: AbiDisplayModeSelector(
-                    label: 'Data',
-                    labelTextStyle: labelTextStyle,
-                    textStyle: verticalValueTextStyle,
-                    functionBytes: functionData,
                   ),
                 ),
               ],

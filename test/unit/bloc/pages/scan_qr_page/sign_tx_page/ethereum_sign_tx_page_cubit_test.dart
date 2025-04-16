@@ -4,17 +4,17 @@ import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
-import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/a_sign_tx_page_state.dart';
-import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/sign_tx_page_cubit.dart';
-import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/states/sign_tx_page_confirm_tx_state.dart';
-import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/states/sign_tx_page_signed_tx_state.dart';
+import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/a_ethereum_sign_tx_page_state.dart';
+import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/ethereum_sign_tx_page_cubit.dart';
+import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/states/ethereum_sign_tx_page_confirm_tx_state.dart';
+import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/states/ethereum_sign_tx_page_signed_tx_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
@@ -24,7 +24,7 @@ import '../../../../../utils/test_database.dart';
 void main() {
   final TestDatabase testDatabase = TestDatabase();
 
-  late SignTxPageCubit actualSignTxPageCubit;
+  late EthereumSignTxPageCubit actualSignTxPageCubit;
   late WalletModel actualWalletModel;
 
   group('Tests of SignTxPageCubit process [ActiveWalletController HAS values] and [transaction VALID]', () {
@@ -34,7 +34,7 @@ void main() {
         appPasswordModel: PasswordModel.fromPlaintext('1111'),
       );
 
-      actualSignTxPageCubit = SignTxPageCubit(
+      actualSignTxPageCubit = EthereumSignTxPageCubit(
         cborEthSignRequest: CborEthSignRequest(
           requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
           signData: base64Decode(
@@ -70,10 +70,10 @@ void main() {
 
     test('Should [return SignTxPageConfirmTxState] with initial values', () {
       // Act
-      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+      AEthereumSignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
 
       // Assert
-      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+      AEthereumSignTxPageState expectedSignTxPageState = const EthereumSignTxPageConfirmTxState();
 
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
@@ -81,10 +81,10 @@ void main() {
     test('Should [return SignTxPageConfirmTxState] with initialized wallet and wallet password', () async {
       // Act
       await actualSignTxPageCubit.init();
-      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+      AEthereumSignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
 
       // Assert
-      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+      AEthereumSignTxPageState expectedSignTxPageState = const EthereumSignTxPageConfirmTxState();
 
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
@@ -92,11 +92,11 @@ void main() {
     test('Should [return SignTxPageSignedTxState] with signed transaction', () async {
       // Act
       await actualSignTxPageCubit.signTransaction();
-      SignTxPageSignedTxState actualSignTxPageState = actualSignTxPageCubit.state as SignTxPageSignedTxState;
+      EthereumSignTxPageSignedTxState actualSignTxPageState = actualSignTxPageCubit.state as EthereumSignTxPageSignedTxState;
 
       // Assert
-      SignTxPageSignedTxState expectedSignTxPageState = SignTxPageSignedTxState(
-        transactionModel: TransactionModel(
+      EthereumSignTxPageSignedTxState expectedSignTxPageState = EthereumSignTxPageSignedTxState(
+       transactionModel: EthereumTransactionModel(
           id: Isar.autoIncrement,
           walletId: 1,
           creationDate: actualSignTxPageState.transactionModel.creationDate,
@@ -128,7 +128,7 @@ void main() {
         appPasswordModel: PasswordModel.fromPlaintext('1111'),
       );
 
-      actualSignTxPageCubit = SignTxPageCubit(
+      actualSignTxPageCubit = EthereumSignTxPageCubit(
         cborEthSignRequest: CborEthSignRequest(
           requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
           signData: base64Decode(
@@ -163,10 +163,10 @@ void main() {
 
     test('Should [return SignTxPageConfirmTxState] with initial values', () {
       // Act
-      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+      AEthereumSignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
 
       // Assert
-      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+      AEthereumSignTxPageState expectedSignTxPageState = const EthereumSignTxPageConfirmTxState();
 
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
@@ -191,7 +191,7 @@ void main() {
         appPasswordModel: PasswordModel.fromPlaintext('1111'),
       );
 
-      actualSignTxPageCubit = SignTxPageCubit(
+      actualSignTxPageCubit = EthereumSignTxPageCubit(
         cborEthSignRequest: CborEthSignRequest(
           requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
           signData: base64Decode(
@@ -227,10 +227,10 @@ void main() {
 
     test('Should [return SignTxPageConfirmTxState] with initial values', () {
       // Act
-      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+      AEthereumSignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
 
       // Assert
-      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+      AEthereumSignTxPageState expectedSignTxPageState = const EthereumSignTxPageConfirmTxState();
 
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
@@ -241,10 +241,10 @@ void main() {
 
       // Act
       await actualSignTxPageCubit.init();
-      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+      AEthereumSignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
 
       // Assert
-      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+      AEthereumSignTxPageState expectedSignTxPageState = const EthereumSignTxPageConfirmTxState();
 
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
@@ -252,11 +252,11 @@ void main() {
     test('Should [return SignTxPageSignedTxState] with signed transaction', () async {
       // Act
       await actualSignTxPageCubit.signTransaction();
-      SignTxPageSignedTxState actualSignTxPageState = actualSignTxPageCubit.state as SignTxPageSignedTxState;
+      EthereumSignTxPageSignedTxState actualSignTxPageState = actualSignTxPageCubit.state as EthereumSignTxPageSignedTxState;
 
       // Assert
-      SignTxPageSignedTxState expectedSignTxPageState = SignTxPageSignedTxState(
-        transactionModel: TransactionModel(
+      EthereumSignTxPageSignedTxState expectedSignTxPageState = EthereumSignTxPageSignedTxState(
+       transactionModel: EthereumTransactionModel(
           id: Isar.autoIncrement,
           walletId: 1,
           creationDate: actualSignTxPageState.transactionModel.creationDate,
@@ -286,7 +286,7 @@ void main() {
         appPasswordModel: PasswordModel.fromPlaintext('1111'),
       );
 
-      actualSignTxPageCubit = SignTxPageCubit(
+      actualSignTxPageCubit = EthereumSignTxPageCubit(
         cborEthSignRequest: CborEthSignRequest(
           requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
           signData: base64Decode(
@@ -310,10 +310,10 @@ void main() {
 
     test('Should [return SignTxPageConfirmTxState] with initial values', () {
       // Act
-      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+      AEthereumSignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
 
       // Assert
-      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+      AEthereumSignTxPageState expectedSignTxPageState = const EthereumSignTxPageConfirmTxState();
 
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
@@ -321,10 +321,10 @@ void main() {
     test('Should [return SignTxPageConfirmTxState] with initialized wallet and wallet password', () async {
       // Act
       await actualSignTxPageCubit.init();
-      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+      AEthereumSignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
 
       // Assert
-      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+      AEthereumSignTxPageState expectedSignTxPageState = const EthereumSignTxPageConfirmTxState();
 
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
@@ -332,11 +332,11 @@ void main() {
     test('Should [return SignTxPageSignedTxState] with signed transaction', () async {
       // Act
       await actualSignTxPageCubit.signTransaction();
-      SignTxPageSignedTxState actualSignTxPageState = actualSignTxPageCubit.state as SignTxPageSignedTxState;
+      EthereumSignTxPageSignedTxState actualSignTxPageState = actualSignTxPageCubit.state as EthereumSignTxPageSignedTxState;
 
       // Assert
-      SignTxPageSignedTxState expectedSignTxPageState = SignTxPageSignedTxState(
-        transactionModel: TransactionModel(
+      EthereumSignTxPageSignedTxState expectedSignTxPageState = EthereumSignTxPageSignedTxState(
+        transactionModel: EthereumTransactionModel(
           id: Isar.autoIncrement,
           walletId: 1,
           creationDate: actualSignTxPageState.transactionModel.creationDate,
@@ -366,7 +366,7 @@ void main() {
         appPasswordModel: PasswordModel.fromPlaintext('1111'),
       );
 
-      actualSignTxPageCubit = SignTxPageCubit(
+      actualSignTxPageCubit = EthereumSignTxPageCubit(
         cborEthSignRequest: CborEthSignRequest(
           requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
           signData: base64Decode(
@@ -392,10 +392,10 @@ void main() {
 
     test('Should [return SignTxPageConfirmTxState] with initial values', () {
       // Act
-      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+      AEthereumSignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
 
       // Assert
-      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+      AEthereumSignTxPageState expectedSignTxPageState = const EthereumSignTxPageConfirmTxState();
 
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
@@ -418,7 +418,7 @@ void main() {
         appPasswordModel: PasswordModel.fromPlaintext('1111'),
       );
 
-      actualSignTxPageCubit = SignTxPageCubit(
+      actualSignTxPageCubit = EthereumSignTxPageCubit(
         cborEthSignRequest: CborEthSignRequest(
           requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
           signData: base64Decode(
@@ -442,10 +442,10 @@ void main() {
 
     test('Should [return SignTxPageConfirmTxState] with initial values', () {
       // Act
-      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+      AEthereumSignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
 
       // Assert
-      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+      AEthereumSignTxPageState expectedSignTxPageState = const EthereumSignTxPageConfirmTxState();
 
       expect(actualSignTxPageState, expectedSignTxPageState);
     });

@@ -1,6 +1,7 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:isar/isar.dart';
+import 'package:snggle/bloc/pages/wallet_create/derivation_path_index_extractor/derivation_path_types.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/networks/network_type.dart';
@@ -13,6 +14,9 @@ class EmbeddedNetworkTemplateEntity extends Equatable {
   final String? addressEncoderType;
   final String? derivationPathTemplate;
   final String? derivatorType;
+
+  @Enumerated(EnumType.name)
+  final DerivationPathType? derivationPathType;
 
   @Enumerated(EnumType.name)
   final CurveType? curveType;
@@ -31,6 +35,7 @@ class EmbeddedNetworkTemplateEntity extends Equatable {
     this.addressEncoderType,
     this.derivationPathTemplate,
     this.derivatorType,
+    this.derivationPathType,
     this.curveType,
     this.networkIconType,
     this.networkType,
@@ -43,6 +48,7 @@ class EmbeddedNetworkTemplateEntity extends Equatable {
       addressEncoderType: networkTemplateModel.addressEncoder.serializeType(),
       derivationPathTemplate: networkTemplateModel.derivationPathTemplate,
       derivatorType: networkTemplateModel.derivator.serializeType(),
+      derivationPathType: networkTemplateModel.derivationPathIndexExtractor.derivationPathType,
       curveType: networkTemplateModel.curveType,
       networkIconType: networkTemplateModel.networkIconType,
       networkType: networkTemplateModel.networkType,
@@ -56,6 +62,7 @@ class EmbeddedNetworkTemplateEntity extends Equatable {
         addressEncoderType,
         derivationPathTemplate,
         derivatorType,
+        derivationPathType,
         curveType,
         networkIconType,
         networkType,

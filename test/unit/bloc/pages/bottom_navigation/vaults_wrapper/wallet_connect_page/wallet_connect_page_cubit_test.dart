@@ -60,14 +60,14 @@ void main() {
         listItemsPreview: <AListItemModel>[],
       ),
       walletModel: WalletModel(
-      id: 2,
-      encryptedBool: false,
-      pinnedBool: false,
-      address: '4PBYLreUzbD92H4MVuGJvs6nbP3Ln7mx9GdtjyKryeW5',
-      derivationPath: "m/44'/501'/0'/0'",
-      filesystemPath: FilesystemPath.fromString('vault1/network2/wallet2'),
-      name: 'WALLET 0',
-    ),
+        id: 2,
+        encryptedBool: false,
+        pinnedBool: false,
+        address: '4PBYLreUzbD92H4MVuGJvs6nbP3Ln7mx9GdtjyKryeW5',
+        derivationPath: "m/44'/501'/0'/0'",
+        filesystemPath: FilesystemPath.fromString('vault1/network2/wallet2'),
+        name: 'WALLET 0',
+      ),
     );
   });
 
@@ -174,8 +174,7 @@ void main() {
       );
 
       // Act
-      CborCryptoMultiAccounts actualMultiAccounts =
-      await actualSolanaWalletConnectPageCubit.getCborCryptoMultiAccounts();
+      CborCryptoMultiAccounts actualMultiAccounts = await actualSolanaWalletConnectPageCubit.getCborCryptoMultiAccounts();
 
       // Assert
       CborCryptoHDKey expectedSolanaKey = CborCryptoHDKey(
@@ -199,6 +198,5 @@ void main() {
 
       expect(actualMultiAccounts, expectedMultiAccounts);
     });
-
   });
 }

@@ -1,0 +1,4 @@
+enum DerivationPathType {
+  lastDynamic,
+  secondLastDynamic,
+}

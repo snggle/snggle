@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
+import 'package:path/path.dart' as p; // ✅ use path everywhere
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
@@ -15,7 +16,8 @@ import 'package:uuid/uuid.dart';
 import 'database_mock.dart';
 
 class TestDatabase {
-  static Directory testRootDirectory = Directory('${Directory.systemTemp.path}/snggle/test');
+  // Keep root deterministic for dumps/debugging
+  static Directory testRootDirectory = Directory(p.join(Directory.systemTemp.path, 'snggle', 'test'));
 
   final FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
 
@@ -35,10 +37,13 @@ class TestDatabase {
     testSessionUUID = const Uuid().v4();
     this.appPasswordModel = appPasswordModel;
 
-    Directory rootDirectory = Directory('${testRootDirectory.path}/$testSessionUUID')..createSync(recursive: true);
+    final Directory rootDirectory = Directory(p.join(testRootDirectory.path, testSessionUUID))
+      ..createSync(recursive: true);
 
+    // Build default DI graph and point RootDirectoryBuilder at this test root.
     initLocator();
     globalLocator.allowReassignment = true;
+    // NOTE: RootDirectoryBuilder is typedef FutureOr<Directory> Function()
     globalLocator.registerLazySingleton<RootDirectoryBuilder>(() => () => rootDirectory);
 
     if (databaseMock != null) {
@@ -57,7 +62,7 @@ class TestDatabase {
 
   void updateSecureStorage(Map<String, dynamic> secureStorageContent) {
     FlutterSecureStorage.setMockInitialValues(Map<String, String>.from(secureStorageContent));
-    String? encryptedMasterKey = secureStorageContent[SecureStorageKey.encryptedMasterKey.name] as String?;
+    final String? encryptedMasterKey = secureStorageContent[SecureStorageKey.encryptedMasterKey.name] as String?;
     if (encryptedMasterKey != null) {
       masterKeyVO = MasterKeyVO(encryptedMasterKey: encryptedMasterKey);
     }
@@ -66,18 +71,18 @@ class TestDatabase {
   Future<void> close() async {
     await globalLocator<IsarDatabaseManager>().close();
 
-    Directory cacheDirectory = Directory('${testRootDirectory.path}/$testSessionUUID');
+    final Directory cacheDirectory = Directory(p.join(testRootDirectory.path, testSessionUUID));
     if (cacheDirectory.existsSync()) {
       cacheDirectory.deleteSync(recursive: true);
     }
   }
 
   Map<String, dynamic> readDecryptedFilesystem({String path = ''}) {
-    Map<String, dynamic> encryptedJson = readRawFilesystem(path: path);
-    Map<String, dynamic> decryptedJson = <String, dynamic>{};
+    final Map<String, dynamic> encryptedJson = readRawFilesystem(path: path);
+    final Map<String, dynamic> decryptedJson = <String, dynamic>{};
     encryptedJson.forEach((String key, dynamic value) {
       if (value is Map<String, dynamic>) {
-        decryptedJson[key] = readDecryptedFilesystem(path: '$path/$key');
+        decryptedJson[key] = readDecryptedFilesystem(path: p.join(path, key));
       } else if (value is String) {
         decryptedJson[key] = masterKeyVO!.decrypt(appPasswordModel: appPasswordModel!, encryptedData: value);
       }
@@ -86,32 +91,33 @@ class TestDatabase {
   }
 
   Map<String, dynamic> readRawFilesystem({String path = ''}) {
-    Directory tmpDirectory = Directory('${testRootDirectory.path}/$testSessionUUID/$path');
+    final Directory tmpDirectory = Directory(p.join(testRootDirectory.path, testSessionUUID, path));
 
-    Map<String, dynamic> json = <String, dynamic>{};
-    List<FileSystemEntity> files = tmpDirectory.listSync();
-    for (FileSystemEntity file in files) {
-      String fileName = file.path.replaceFirst(tmpDirectory.path, '');
-      if (fileName.startsWith('/')) {
-        fileName = fileName.replaceFirst('/', '');
-      }
+    final Map<String, dynamic> json = <String, dynamic>{};
+    if (!tmpDirectory.existsSync()) {
+      return json;
+    }
 
-      if (fileName.endsWith('.snggle')) {
-        json[fileName] = (file as File).readAsStringSync();
-      } else {
-        json[fileName] = readRawFilesystem(path: '$path/$fileName');
+    final List<FileSystemEntity> files = tmpDirectory.listSync();
+    for (final FileSystemEntity entity in files) {
+      final String name = p.basename(entity.path);
+
+      if (name.endsWith('.snggle')) {
+        json[name] = (entity as File).readAsStringSync();
+      } else if (entity is Directory) {
+        json[name] = readRawFilesystem(path: p.join(path, name));
       }
     }
     return json;
   }
 
   Future<Map<String, dynamic>> readEncryptedSecureStorage(SecureStorageKey secureStorageKey) async {
-    String? actualEncryptedVaultsKeyValue = await flutterSecureStorage.read(key: secureStorageKey.name);
-    String actualDecryptedVaultsKeyValue = masterKeyVO!.decrypt(
+    final String? actualEncryptedVaultsKeyValue = await flutterSecureStorage.read(key: secureStorageKey.name);
+    final String actualDecryptedVaultsKeyValue = masterKeyVO!.decrypt(
       appPasswordModel: appPasswordModel!,
       encryptedData: actualEncryptedVaultsKeyValue!,
     );
-    Map<String, dynamic> actualVaultsMap = jsonDecode(actualDecryptedVaultsKeyValue) as Map<String, dynamic>;
+    final Map<String, dynamic> actualVaultsMap = jsonDecode(actualDecryptedVaultsKeyValue) as Map<String, dynamic>;
     return actualVaultsMap;
   }
 
@@ -120,47 +126,45 @@ class TestDatabase {
       await globalLocator<IsarDatabaseManager>().close();
     }
 
-    Directory rootDirectory = await globalLocator<RootDirectoryBuilder>().call();
-    File databaseMockFile = File('test/mocks/${databaseMock.name}/isar_mock.isar');
+    final Directory rootDirectory = await globalLocator<RootDirectoryBuilder>().call();
+    final File databaseMockFile = File(p.join('test', 'mocks', databaseMock.name, 'isar_mock.isar'));
     if (databaseMockFile.existsSync()) {
-      await databaseMockFile.copy('${rootDirectory.path}/$testSessionUUID.isar');
+      await databaseMockFile.copy(p.join(rootDirectory.path, '$testSessionUUID.isar'));
     }
     await globalLocator<IsarDatabaseManager>().initDatabase(name: testSessionUUID);
   }
 
   void _setupSecureStorage(DatabaseMock databaseMock) {
-    File secureStorageMockFile = File('test/mocks/${databaseMock.name}/secure_storage_mock.json');
+    final File secureStorageMockFile = File(p.join('test', 'mocks', databaseMock.name, 'secure_storage_mock.json'));
     if (secureStorageMockFile.existsSync()) {
-      Map<String, dynamic> secureStorageContent = jsonDecode(secureStorageMockFile.readAsStringSync()) as Map<String, dynamic>;
-
+      final Map<String, dynamic> secureStorageContent = jsonDecode(secureStorageMockFile.readAsStringSync()) as Map<String, dynamic>;
       updateSecureStorage(secureStorageContent);
     }
   }
 
   Future<void> _setupFilesystemStorage(DatabaseMock databaseMock) async {
-    Directory rootDirectory = await globalLocator<RootDirectoryBuilder>().call();
-    Directory filesystemMockDirectory = Directory('test/mocks/${databaseMock.name}/filesystem_mock');
+    final Directory rootDirectory = await globalLocator<RootDirectoryBuilder>().call();
+    final Directory filesystemMockDirectory = Directory(p.join('test', 'mocks', databaseMock.name, 'filesystem_mock'));
     if (filesystemMockDirectory.existsSync()) {
-      _copyDirectory(
-        filesystemMockDirectory,
-        rootDirectory,
-      );
+      _copyDirectory(filesystemMockDirectory, rootDirectory);
     }
   }
 
+  /// Recursively copy [source] contents into [destination], preserving names,
+  /// using cross-platform path ops (works on Windows).
   void _copyDirectory(Directory source, Directory destination) {
-    if (destination.existsSync() == false) {
+    if (!destination.existsSync()) {
       destination.createSync(recursive: true);
     }
 
-    source.listSync().forEach((FileSystemEntity entity) {
+    for (final FileSystemEntity entity in source.listSync(followLinks: false)) {
+      final String newPath = p.join(destination.path, p.basename(entity.path));
       if (entity is Directory) {
-        Directory newDirectory = Directory('${destination.path}/${entity.path.split('/').last}');
-        _copyDirectory(entity, newDirectory);
+        _copyDirectory(entity, Directory(newPath));
       } else if (entity is File) {
-        File newFile = File('${destination.path}/${entity.uri.pathSegments.last}');
-        entity.copySync(newFile.path);
+        final File newFile = File(newPath)..createSync(recursive: true)
+          ..writeAsBytesSync(entity.readAsBytesSync());
       }
-    });
+    }
   }
 }

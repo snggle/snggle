@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'transaction_entity.dart';
+part of 'ethereum_transaction_entity.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,14 @@ part of 'transaction_entity.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetTransactionEntityCollection on Isar {
-  IsarCollection<TransactionEntity> get transactions => this.collection();
+extension GetEthereumTransactionEntityCollection on Isar {
+  IsarCollection<EthereumTransactionEntity> get ethereumTransactions =>
+      this.collection();
 }
 
-const TransactionEntitySchema = CollectionSchema(
-  name: r'TransactionEntity',
-  id: 7517214299117749517,
+const EthereumTransactionEntitySchema = CollectionSchema(
+  name: r'EthereumTransactionEntity',
+  id: -8577506285160129413,
   properties: {
     r'amount': PropertySchema(
       id: 0,
@@ -61,7 +62,7 @@ const TransactionEntitySchema = CollectionSchema(
       id: 8,
       name: r'signDataType',
       type: IsarType.byte,
-      enumMap: _TransactionEntitysignDataTypeEnumValueMap,
+      enumMap: _EthereumTransactionEntitysignDataTypeEnumValueMap,
     ),
     r'signDate': PropertySchema(
       id: 9,
@@ -73,28 +74,33 @@ const TransactionEntitySchema = CollectionSchema(
       name: r'signature',
       type: IsarType.string,
     ),
-    r'walletId': PropertySchema(
+    r'signer': PropertySchema(
       id: 11,
+      name: r'signer',
+      type: IsarType.string,
+    ),
+    r'walletId': PropertySchema(
+      id: 12,
       name: r'walletId',
       type: IsarType.long,
     )
   },
-  estimateSize: _transactionEntityEstimateSize,
-  serialize: _transactionEntitySerialize,
-  deserialize: _transactionEntityDeserialize,
-  deserializeProp: _transactionEntityDeserializeProp,
+  estimateSize: _ethereumTransactionEntityEstimateSize,
+  serialize: _ethereumTransactionEntitySerialize,
+  deserialize: _ethereumTransactionEntityDeserialize,
+  deserializeProp: _ethereumTransactionEntityDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {},
   embeddedSchemas: {},
-  getId: _transactionEntityGetId,
-  getLinks: _transactionEntityGetLinks,
-  attach: _transactionEntityAttach,
+  getId: _ethereumTransactionEntityGetId,
+  getLinks: _ethereumTransactionEntityGetLinks,
+  attach: _ethereumTransactionEntityAttach,
   version: '3.1.0+1',
 );
 
-int _transactionEntityEstimateSize(
-  TransactionEntity object,
+int _ethereumTransactionEntityEstimateSize(
+  EthereumTransactionEntity object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -154,11 +160,17 @@ int _transactionEntityEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.signer;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
-void _transactionEntitySerialize(
-  TransactionEntity object,
+void _ethereumTransactionEntitySerialize(
+  EthereumTransactionEntity object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -174,16 +186,17 @@ void _transactionEntitySerialize(
   writer.writeByte(offsets[8], object.signDataType.index);
   writer.writeString(offsets[9], object.signDate);
   writer.writeString(offsets[10], object.signature);
-  writer.writeLong(offsets[11], object.walletId);
+  writer.writeString(offsets[11], object.signer);
+  writer.writeLong(offsets[12], object.walletId);
 }
 
-TransactionEntity _transactionEntityDeserialize(
+EthereumTransactionEntity _ethereumTransactionEntityDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = TransactionEntity(
+  final object = EthereumTransactionEntity(
     amount: reader.readStringOrNull(offsets[0]),
     contractAddress: reader.readStringOrNull(offsets[1]),
     creationDate: reader.readString(offsets[2]),
@@ -193,17 +206,18 @@ TransactionEntity _transactionEntityDeserialize(
     message: reader.readStringOrNull(offsets[5]),
     recipientAddress: reader.readStringOrNull(offsets[6]),
     senderAddress: reader.readStringOrNull(offsets[7]),
-    signDataType: _TransactionEntitysignDataTypeValueEnumMap[
+    signDataType: _EthereumTransactionEntitysignDataTypeValueEnumMap[
             reader.readByteOrNull(offsets[8])] ??
         SignDataType.rawBytes,
     signDate: reader.readStringOrNull(offsets[9]),
     signature: reader.readStringOrNull(offsets[10]),
-    walletId: reader.readLong(offsets[11]),
+    signer: reader.readStringOrNull(offsets[11]),
+    walletId: reader.readLong(offsets[12]),
   );
   return object;
 }
 
-P _transactionEntityDeserializeProp<P>(
+P _ethereumTransactionEntityDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -227,7 +241,7 @@ P _transactionEntityDeserializeProp<P>(
     case 7:
       return (reader.readStringOrNull(offset)) as P;
     case 8:
-      return (_TransactionEntitysignDataTypeValueEnumMap[
+      return (_EthereumTransactionEntitysignDataTypeValueEnumMap[
               reader.readByteOrNull(offset)] ??
           SignDataType.rawBytes) as P;
     case 9:
@@ -235,46 +249,49 @@ P _transactionEntityDeserializeProp<P>(
     case 10:
       return (reader.readStringOrNull(offset)) as P;
     case 11:
+      return (reader.readStringOrNull(offset)) as P;
+    case 12:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-const _TransactionEntitysignDataTypeEnumValueMap = {
+const _EthereumTransactionEntitysignDataTypeEnumValueMap = {
   'rawBytes': 0,
   'typedTransaction': 1,
 };
-const _TransactionEntitysignDataTypeValueEnumMap = {
+const _EthereumTransactionEntitysignDataTypeValueEnumMap = {
   0: SignDataType.rawBytes,
   1: SignDataType.typedTransaction,
 };
 
-Id _transactionEntityGetId(TransactionEntity object) {
+Id _ethereumTransactionEntityGetId(EthereumTransactionEntity object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _transactionEntityGetLinks(
-    TransactionEntity object) {
+List<IsarLinkBase<dynamic>> _ethereumTransactionEntityGetLinks(
+    EthereumTransactionEntity object) {
   return [];
 }
 
-void _transactionEntityAttach(
-    IsarCollection<dynamic> col, Id id, TransactionEntity object) {}
+void _ethereumTransactionEntityAttach(
+    IsarCollection<dynamic> col, Id id, EthereumTransactionEntity object) {}
 
-extension TransactionEntityQueryWhereSort
-    on QueryBuilder<TransactionEntity, TransactionEntity, QWhere> {
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterWhere> anyId() {
+extension EthereumTransactionEntityQueryWhereSort on QueryBuilder<
+    EthereumTransactionEntity, EthereumTransactionEntity, QWhere> {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension TransactionEntityQueryWhere
-    on QueryBuilder<TransactionEntity, TransactionEntity, QWhereClause> {
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterWhereClause>
-      idEqualTo(Id id) {
+extension EthereumTransactionEntityQueryWhere on QueryBuilder<
+    EthereumTransactionEntity, EthereumTransactionEntity, QWhereClause> {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -283,8 +300,8 @@ extension TransactionEntityQueryWhere
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterWhereClause>
-      idNotEqualTo(Id id) {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -306,8 +323,8 @@ extension TransactionEntityQueryWhere
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterWhereClause>
-      idGreaterThan(Id id, {bool include = false}) {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterWhereClause> idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -315,8 +332,8 @@ extension TransactionEntityQueryWhere
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterWhereClause>
-      idLessThan(Id id, {bool include = false}) {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterWhereClause> idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -324,8 +341,8 @@ extension TransactionEntityQueryWhere
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterWhereClause>
-      idBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -342,10 +359,10 @@ extension TransactionEntityQueryWhere
   }
 }
 
-extension TransactionEntityQueryFilter
-    on QueryBuilder<TransactionEntity, TransactionEntity, QFilterCondition> {
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      amountIsNull() {
+extension EthereumTransactionEntityQueryFilter on QueryBuilder<
+    EthereumTransactionEntity, EthereumTransactionEntity, QFilterCondition> {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> amountIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'amount',
@@ -353,8 +370,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      amountIsNotNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> amountIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'amount',
@@ -362,8 +379,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      amountEqualTo(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> amountEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -376,8 +393,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      amountGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> amountGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -392,8 +409,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      amountLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> amountLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -408,8 +425,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      amountBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> amountBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -428,8 +445,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      amountStartsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> amountStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -442,8 +459,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      amountEndsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> amountEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -456,7 +473,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       amountContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -467,7 +485,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       amountMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -478,8 +497,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      amountIsEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> amountIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'amount',
@@ -488,8 +507,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      amountIsNotEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> amountIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'amount',
@@ -498,8 +517,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      contractAddressIsNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> contractAddressIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'contractAddress',
@@ -507,8 +526,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      contractAddressIsNotNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> contractAddressIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'contractAddress',
@@ -516,8 +535,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      contractAddressEqualTo(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> contractAddressEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -530,8 +549,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      contractAddressGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> contractAddressGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -546,8 +565,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      contractAddressLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> contractAddressLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -562,8 +581,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      contractAddressBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> contractAddressBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -582,8 +601,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      contractAddressStartsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> contractAddressStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -596,8 +615,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      contractAddressEndsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> contractAddressEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -610,7 +629,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       contractAddressContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -621,7 +641,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       contractAddressMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -632,8 +653,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      contractAddressIsEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> contractAddressIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'contractAddress',
@@ -642,8 +663,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      contractAddressIsNotEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> contractAddressIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'contractAddress',
@@ -652,8 +673,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      creationDateEqualTo(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> creationDateEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -666,8 +687,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      creationDateGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> creationDateGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -682,8 +703,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      creationDateLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> creationDateLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -698,8 +719,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      creationDateBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> creationDateBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -718,8 +739,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      creationDateStartsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> creationDateStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -732,8 +753,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      creationDateEndsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> creationDateEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -746,7 +767,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       creationDateContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -757,7 +779,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       creationDateMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -768,8 +791,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      creationDateIsEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> creationDateIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'creationDate',
@@ -778,8 +801,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      creationDateIsNotEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> creationDateIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'creationDate',
@@ -788,8 +811,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      feeIsNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> feeIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'fee',
@@ -797,8 +820,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      feeIsNotNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> feeIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'fee',
@@ -806,8 +829,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      feeEqualTo(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> feeEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -820,8 +843,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      feeGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> feeGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -836,8 +859,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      feeLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> feeLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -852,8 +875,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      feeBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> feeBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -872,8 +895,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      feeStartsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> feeStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -886,8 +909,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      feeEndsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> feeEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -900,7 +923,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       feeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -911,7 +935,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       feeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -922,8 +947,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      feeIsEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> feeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'fee',
@@ -932,8 +957,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      feeIsNotEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> feeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'fee',
@@ -942,8 +967,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      functionDataIsNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> functionDataIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'functionData',
@@ -951,8 +976,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      functionDataIsNotNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> functionDataIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'functionData',
@@ -960,8 +985,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      functionDataEqualTo(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> functionDataEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -974,8 +999,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      functionDataGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> functionDataGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -990,8 +1015,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      functionDataLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> functionDataLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1006,8 +1031,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      functionDataBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> functionDataBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1026,8 +1051,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      functionDataStartsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> functionDataStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1040,8 +1065,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      functionDataEndsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> functionDataEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1054,7 +1079,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       functionDataContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1065,7 +1091,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       functionDataMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1076,8 +1103,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      functionDataIsEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> functionDataIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'functionData',
@@ -1086,8 +1113,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      functionDataIsNotEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> functionDataIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'functionData',
@@ -1096,8 +1123,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      idEqualTo(Id value) {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -1106,8 +1133,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      idGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -1120,8 +1147,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      idLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -1134,8 +1161,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      idBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -1152,8 +1179,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      messageIsNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> messageIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'message',
@@ -1161,8 +1188,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      messageIsNotNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> messageIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'message',
@@ -1170,8 +1197,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      messageEqualTo(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> messageEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -1184,8 +1211,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      messageGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> messageGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1200,8 +1227,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      messageLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> messageLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1216,8 +1243,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      messageBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> messageBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1236,8 +1263,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      messageStartsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> messageStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1250,8 +1277,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      messageEndsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> messageEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1264,7 +1291,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       messageContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1275,7 +1303,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       messageMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1286,8 +1315,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      messageIsEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> messageIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'message',
@@ -1296,8 +1325,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      messageIsNotEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> messageIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'message',
@@ -1306,8 +1335,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      recipientAddressIsNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> recipientAddressIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'recipientAddress',
@@ -1315,8 +1344,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      recipientAddressIsNotNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> recipientAddressIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'recipientAddress',
@@ -1324,8 +1353,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      recipientAddressEqualTo(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> recipientAddressEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -1338,8 +1367,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      recipientAddressGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> recipientAddressGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1354,8 +1383,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      recipientAddressLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> recipientAddressLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1370,8 +1399,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      recipientAddressBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> recipientAddressBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1390,8 +1419,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      recipientAddressStartsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> recipientAddressStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1404,8 +1433,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      recipientAddressEndsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> recipientAddressEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1418,7 +1447,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       recipientAddressContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1429,7 +1459,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       recipientAddressMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1440,8 +1471,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      recipientAddressIsEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> recipientAddressIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'recipientAddress',
@@ -1450,8 +1481,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      recipientAddressIsNotEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> recipientAddressIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'recipientAddress',
@@ -1460,8 +1491,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      senderAddressIsNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> senderAddressIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'senderAddress',
@@ -1469,8 +1500,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      senderAddressIsNotNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> senderAddressIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'senderAddress',
@@ -1478,8 +1509,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      senderAddressEqualTo(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> senderAddressEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -1492,8 +1523,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      senderAddressGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> senderAddressGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1508,8 +1539,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      senderAddressLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> senderAddressLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1524,8 +1555,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      senderAddressBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> senderAddressBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1544,8 +1575,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      senderAddressStartsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> senderAddressStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1558,8 +1589,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      senderAddressEndsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> senderAddressEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1572,7 +1603,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       senderAddressContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1583,7 +1615,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       senderAddressMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1594,8 +1627,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      senderAddressIsEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> senderAddressIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'senderAddress',
@@ -1604,8 +1637,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      senderAddressIsNotEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> senderAddressIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'senderAddress',
@@ -1614,8 +1647,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDataTypeEqualTo(SignDataType value) {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDataTypeEqualTo(SignDataType value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'signDataType',
@@ -1624,8 +1657,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDataTypeGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDataTypeGreaterThan(
     SignDataType value, {
     bool include = false,
   }) {
@@ -1638,8 +1671,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDataTypeLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDataTypeLessThan(
     SignDataType value, {
     bool include = false,
   }) {
@@ -1652,8 +1685,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDataTypeBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDataTypeBetween(
     SignDataType lower,
     SignDataType upper, {
     bool includeLower = true,
@@ -1670,8 +1703,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDateIsNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDateIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'signDate',
@@ -1679,8 +1712,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDateIsNotNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDateIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'signDate',
@@ -1688,8 +1721,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDateEqualTo(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDateEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -1702,8 +1735,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDateGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDateGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1718,8 +1751,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDateLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDateLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1734,8 +1767,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDateBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDateBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1754,8 +1787,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDateStartsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDateStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1768,8 +1801,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDateEndsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDateEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1782,7 +1815,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       signDateContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1793,7 +1827,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       signDateMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1804,8 +1839,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDateIsEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDateIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'signDate',
@@ -1814,8 +1849,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signDateIsNotEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signDateIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'signDate',
@@ -1824,8 +1859,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signatureIsNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signatureIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'signature',
@@ -1833,8 +1868,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signatureIsNotNull() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signatureIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'signature',
@@ -1842,8 +1877,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signatureEqualTo(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signatureEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -1856,8 +1891,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signatureGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signatureGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1872,8 +1907,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signatureLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signatureLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1888,8 +1923,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signatureBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signatureBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1908,8 +1943,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signatureStartsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signatureStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1922,8 +1957,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signatureEndsWith(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signatureEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1936,7 +1971,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       signatureContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1947,7 +1983,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
       signatureMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1958,8 +1995,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signatureIsEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signatureIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'signature',
@@ -1968,8 +2005,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      signatureIsNotEmpty() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signatureIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'signature',
@@ -1978,8 +2015,164 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      walletIdEqualTo(int value) {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signerIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'signer',
+      ));
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signerIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'signer',
+      ));
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signerEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'signer',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signerGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'signer',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signerLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'signer',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signerBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'signer',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signerStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'signer',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signerEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'signer',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
+      signerContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'signer',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+          QAfterFilterCondition>
+      signerMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'signer',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signerIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'signer',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> signerIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'signer',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> walletIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'walletId',
@@ -1988,8 +2181,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      walletIdGreaterThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> walletIdGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -2002,8 +2195,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      walletIdLessThan(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> walletIdLessThan(
     int value, {
     bool include = false,
   }) {
@@ -2016,8 +2209,8 @@ extension TransactionEntityQueryFilter
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
-      walletIdBetween(
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterFilterCondition> walletIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -2035,375 +2228,406 @@ extension TransactionEntityQueryFilter
   }
 }
 
-extension TransactionEntityQueryObject
-    on QueryBuilder<TransactionEntity, TransactionEntity, QFilterCondition> {}
+extension EthereumTransactionEntityQueryObject on QueryBuilder<
+    EthereumTransactionEntity, EthereumTransactionEntity, QFilterCondition> {}
 
-extension TransactionEntityQueryLinks
-    on QueryBuilder<TransactionEntity, TransactionEntity, QFilterCondition> {}
+extension EthereumTransactionEntityQueryLinks on QueryBuilder<
+    EthereumTransactionEntity, EthereumTransactionEntity, QFilterCondition> {}
 
-extension TransactionEntityQuerySortBy
-    on QueryBuilder<TransactionEntity, TransactionEntity, QSortBy> {
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByAmount() {
+extension EthereumTransactionEntityQuerySortBy on QueryBuilder<
+    EthereumTransactionEntity, EthereumTransactionEntity, QSortBy> {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByAmount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'amount', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByAmountDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByAmountDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'amount', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByContractAddress() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByContractAddress() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'contractAddress', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByContractAddressDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByContractAddressDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'contractAddress', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByCreationDate() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByCreationDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'creationDate', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByCreationDateDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByCreationDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'creationDate', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy> sortByFee() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByFee() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'fee', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByFeeDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByFeeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'fee', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByFunctionData() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByFunctionData() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'functionData', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByFunctionDataDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByFunctionDataDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'functionData', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByMessage() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByMessage() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'message', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByMessageDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByMessageDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'message', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByRecipientAddress() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByRecipientAddress() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'recipientAddress', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByRecipientAddressDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByRecipientAddressDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'recipientAddress', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortBySenderAddress() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortBySenderAddress() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'senderAddress', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortBySenderAddressDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortBySenderAddressDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'senderAddress', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortBySignDataType() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortBySignDataType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'signDataType', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortBySignDataTypeDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortBySignDataTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'signDataType', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortBySignDate() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortBySignDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'signDate', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortBySignDateDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortBySignDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'signDate', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortBySignature() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortBySignature() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'signature', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortBySignatureDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortBySignatureDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'signature', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByWalletId() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortBySigner() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'signer', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortBySignerDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'signer', Sort.desc);
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByWalletId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'walletId', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      sortByWalletIdDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> sortByWalletIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'walletId', Sort.desc);
     });
   }
 }
 
-extension TransactionEntityQuerySortThenBy
-    on QueryBuilder<TransactionEntity, TransactionEntity, QSortThenBy> {
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByAmount() {
+extension EthereumTransactionEntityQuerySortThenBy on QueryBuilder<
+    EthereumTransactionEntity, EthereumTransactionEntity, QSortThenBy> {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByAmount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'amount', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByAmountDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByAmountDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'amount', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByContractAddress() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByContractAddress() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'contractAddress', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByContractAddressDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByContractAddressDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'contractAddress', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByCreationDate() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByCreationDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'creationDate', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByCreationDateDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByCreationDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'creationDate', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy> thenByFee() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByFee() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'fee', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByFeeDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByFeeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'fee', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByFunctionData() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByFunctionData() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'functionData', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByFunctionDataDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByFunctionDataDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'functionData', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy> thenById() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByIdDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByMessage() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByMessage() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'message', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByMessageDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByMessageDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'message', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByRecipientAddress() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByRecipientAddress() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'recipientAddress', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByRecipientAddressDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByRecipientAddressDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'recipientAddress', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenBySenderAddress() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenBySenderAddress() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'senderAddress', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenBySenderAddressDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenBySenderAddressDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'senderAddress', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenBySignDataType() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenBySignDataType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'signDataType', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenBySignDataTypeDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenBySignDataTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'signDataType', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenBySignDate() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenBySignDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'signDate', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenBySignDateDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenBySignDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'signDate', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenBySignature() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenBySignature() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'signature', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenBySignatureDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenBySignatureDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'signature', Sort.desc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByWalletId() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenBySigner() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'signer', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenBySignerDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'signer', Sort.desc);
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByWalletId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'walletId', Sort.asc);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
-      thenByWalletIdDesc() {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity,
+      QAfterSortBy> thenByWalletIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'walletId', Sort.desc);
     });
   }
 }
 
-extension TransactionEntityQueryWhereDistinct
-    on QueryBuilder<TransactionEntity, TransactionEntity, QDistinct> {
-  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
+extension EthereumTransactionEntityQueryWhereDistinct on QueryBuilder<
+    EthereumTransactionEntity, EthereumTransactionEntity, QDistinct> {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
       distinctByAmount({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'amount', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
       distinctByContractAddress({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'contractAddress',
@@ -2411,35 +2635,35 @@ extension TransactionEntityQueryWhereDistinct
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
       distinctByCreationDate({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'creationDate', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct> distinctByFee(
-      {bool caseSensitive = true}) {
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
+      distinctByFee({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'fee', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
       distinctByFunctionData({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'functionData', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
       distinctByMessage({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'message', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
       distinctByRecipientAddress({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'recipientAddress',
@@ -2447,7 +2671,7 @@ extension TransactionEntityQueryWhereDistinct
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
       distinctBySenderAddress({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'senderAddress',
@@ -2455,28 +2679,35 @@ extension TransactionEntityQueryWhereDistinct
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
       distinctBySignDataType() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'signDataType');
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
       distinctBySignDate({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'signDate', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
       distinctBySignature({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'signature', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
+      distinctBySigner({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'signer', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, EthereumTransactionEntity, QDistinct>
       distinctByWalletId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'walletId');
@@ -2484,89 +2715,100 @@ extension TransactionEntityQueryWhereDistinct
   }
 }
 
-extension TransactionEntityQueryProperty
-    on QueryBuilder<TransactionEntity, TransactionEntity, QQueryProperty> {
-  QueryBuilder<TransactionEntity, int, QQueryOperations> idProperty() {
+extension EthereumTransactionEntityQueryProperty on QueryBuilder<
+    EthereumTransactionEntity, EthereumTransactionEntity, QQueryProperty> {
+  QueryBuilder<EthereumTransactionEntity, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<TransactionEntity, String?, QQueryOperations> amountProperty() {
+  QueryBuilder<EthereumTransactionEntity, String?, QQueryOperations>
+      amountProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'amount');
     });
   }
 
-  QueryBuilder<TransactionEntity, String?, QQueryOperations>
+  QueryBuilder<EthereumTransactionEntity, String?, QQueryOperations>
       contractAddressProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'contractAddress');
     });
   }
 
-  QueryBuilder<TransactionEntity, String, QQueryOperations>
+  QueryBuilder<EthereumTransactionEntity, String, QQueryOperations>
       creationDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'creationDate');
     });
   }
 
-  QueryBuilder<TransactionEntity, String?, QQueryOperations> feeProperty() {
+  QueryBuilder<EthereumTransactionEntity, String?, QQueryOperations>
+      feeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'fee');
     });
   }
 
-  QueryBuilder<TransactionEntity, String?, QQueryOperations>
+  QueryBuilder<EthereumTransactionEntity, String?, QQueryOperations>
       functionDataProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'functionData');
     });
   }
 
-  QueryBuilder<TransactionEntity, String?, QQueryOperations> messageProperty() {
+  QueryBuilder<EthereumTransactionEntity, String?, QQueryOperations>
+      messageProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'message');
     });
   }
 
-  QueryBuilder<TransactionEntity, String?, QQueryOperations>
+  QueryBuilder<EthereumTransactionEntity, String?, QQueryOperations>
       recipientAddressProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'recipientAddress');
     });
   }
 
-  QueryBuilder<TransactionEntity, String?, QQueryOperations>
+  QueryBuilder<EthereumTransactionEntity, String?, QQueryOperations>
       senderAddressProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'senderAddress');
     });
   }
 
-  QueryBuilder<TransactionEntity, SignDataType, QQueryOperations>
+  QueryBuilder<EthereumTransactionEntity, SignDataType, QQueryOperations>
       signDataTypeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'signDataType');
     });
   }
 
-  QueryBuilder<TransactionEntity, String?, QQueryOperations>
+  QueryBuilder<EthereumTransactionEntity, String?, QQueryOperations>
       signDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'signDate');
     });
   }
 
-  QueryBuilder<TransactionEntity, String?, QQueryOperations>
+  QueryBuilder<EthereumTransactionEntity, String?, QQueryOperations>
       signatureProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'signature');
     });
   }
 
-  QueryBuilder<TransactionEntity, int, QQueryOperations> walletIdProperty() {
+  QueryBuilder<EthereumTransactionEntity, String?, QQueryOperations>
+      signerProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'signer');
+    });
+  }
+
+  QueryBuilder<EthereumTransactionEntity, int, QQueryOperations>
+      walletIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'walletId');
     });
