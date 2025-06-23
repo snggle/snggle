@@ -15,7 +15,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_detail
 import 'package:snggle/shared/models/groups/network_group_model.dart' as _i29;
 import 'package:snggle/shared/models/networks/network_template_model.dart'
     as _i27;
-import 'package:snggle/shared/models/transactions/transaction_model.dart'
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart'
     as _i26;
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart'
     as _i22;

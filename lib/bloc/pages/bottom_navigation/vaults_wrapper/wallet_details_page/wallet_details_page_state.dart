@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:snggle/shared/models/simple_selection_model.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 
 class WalletDetailsPageState extends Equatable {
   final List<TransactionModel> transactions;

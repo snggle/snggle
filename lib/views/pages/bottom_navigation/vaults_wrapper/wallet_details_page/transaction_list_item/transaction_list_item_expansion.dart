@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
 import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
 import 'package:snggle/views/widgets/generic/eth_address_preview.dart';

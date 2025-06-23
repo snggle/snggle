@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/eth_address_preview.dart';

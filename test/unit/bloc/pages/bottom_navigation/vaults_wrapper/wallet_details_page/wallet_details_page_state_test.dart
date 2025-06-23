@@ -2,7 +2,7 @@ import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_state.dart';
 import 'package:snggle/shared/models/simple_selection_model.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 
 void main() {
   TransactionModel transactionModel = TransactionModel(

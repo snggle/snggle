@@ -1,7 +1,7 @@
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/transaction_entity/transaction_entity.dart';
 import 'package:snggle/infra/repositories/transactions_repository.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 
 class TransactionsService {
   final TransactionsRepository _transactionsRepository = globalLocator<TransactionsRepository>();

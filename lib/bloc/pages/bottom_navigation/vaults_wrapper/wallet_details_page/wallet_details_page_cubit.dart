@@ -5,7 +5,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_detail
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/transaction_service.dart';
 import 'package:snggle/shared/models/simple_selection_model.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 
 class WalletDetailsPageCubit extends Cubit<WalletDetailsPageState> {

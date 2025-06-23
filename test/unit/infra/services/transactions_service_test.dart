@@ -6,7 +6,7 @@ import 'package:snggle/infra/entities/transaction_entity/transaction_entity.dart
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/transaction_service.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 
 import '../../../utils/database_mock.dart';
 import '../../../utils/test_database.dart';

@@ -3,9 +3,9 @@ import 'dart:typed_data';
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/a_sign_tx_page_state.dart';
-import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/states/sign_tx_page_confirm_tx_state.dart';
-import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/states/sign_tx_page_signed_tx_state.dart';
+import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/a_ethereum_sign_tx_page_state.dart';
+import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/states/ethereum_sign_tx_page_confirm_tx_state.dart';
+import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/states/ethereum_sign_tx_page_signed_tx_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
@@ -16,26 +16,26 @@ import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 
-class SignTxPageCubit extends Cubit<ASignTxPageState> {
+class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
   final TransactionsService _transactionsService = globalLocator<TransactionsService>();
   final WalletsService _walletsService = globalLocator<WalletsService>();
   final ActiveWalletController _activeWalletController = globalLocator<ActiveWalletController>();
 
-  final CborSolSignRequest _cborSolSignRequest;
+  final CborEthSignRequest _cborEthSignRequest;
 
   late final PasswordModel _signWalletPasswordModel;
   late final WalletModel signWalletModel;
   late final TransactionModel transactionModel;
 
-  SignTxPageCubit({
-    required CborSolSignRequest cborSolSignRequest,
-  })  : _cborSolSignRequest = cborSolSignRequest,
-        super(const SignTxPageConfirmTxState());
+  EthereumSignTxPageCubit({
+    required CborEthSignRequest cborEthSignRequest,
+  })  : _cborEthSignRequest = cborEthSignRequest,
+        super(const EthereumSignTxPageConfirmTxState());
 
   Future<void> init() async {
     await _setupSignWallet();
@@ -49,10 +49,10 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
     );
 
     print('--- Raw Sign Data ---');
-    print(_cborSolSignRequest.signData);
+    print(_cborEthSignRequest.signData);
 
     //SolanaTransaction solanaTransaction = SolanaTransaction.fromSerializedData(_cborSolSignRequest.signData);
-    SolanaMessage solanaMessage = SolanaMessage.fromBytes(_cborSolSignRequest.signData);
+    SolanaMessage solanaMessage = SolanaMessage.fromBytes(_cborEthSignRequest.signData);
 
     print('--- Solana Message ---');
     print('Recent Blockhash: ${Base58Codec.encode(solanaMessage.recentBlockhash)}');
@@ -95,7 +95,7 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
 
     SolanaSigner signer = SolanaSigner(ed25519PrivateKey);
 
-    Uint8List message = _cborSolSignRequest.signData;
+    Uint8List message = _cborEthSignRequest.signData;
     SolanaSignature signature = signer.sign(message);
     //ASignature signature = solanaTransaction.sign(ed25519PrivateKey, message);
 
@@ -104,17 +104,17 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
     TransactionModel signedTransactionModel = transactionModel.addSignature(signatureHex);
     await _transactionsService.save(signedTransactionModel);
 
-    emit(SignTxPageSignedTxState(
+    emit(EthereumSignTxPageSignedTxState(
       transactionModel: signedTransactionModel,
-      cborSolSignature: CborSolSignature(
+      cborEthSignature: CborEthSignature(
         signature: signature.bytes,
-        requestId: _cborSolSignRequest.requestId ?? Uint8List(0),
+        requestId: _cborEthSignRequest.requestId ?? Uint8List(0),
       ),
     ));
   }
 
   Future<void> _setupSignWallet() async {
-    String? receivedWalletAddress = _cborSolSignRequest.address?.toString().toLowerCase() ?? _activeWalletController.walletModel?.address;
+    String? receivedWalletAddress = _cborEthSignRequest.address?.toString().toLowerCase() ?? _activeWalletController.walletModel?.address;
 
     if (receivedWalletAddress == null) {
       throw const ScanQrException(ScanQrExceptionType.receivedAddressEmpty);

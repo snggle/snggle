@@ -6,7 +6,7 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/simple_selection_model.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
