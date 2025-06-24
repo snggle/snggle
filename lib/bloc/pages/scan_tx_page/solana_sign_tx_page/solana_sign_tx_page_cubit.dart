@@ -16,7 +16,8 @@ import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
+import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
+//import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 
@@ -30,7 +31,7 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
 
   late final PasswordModel _signWalletPasswordModel;
   late final WalletModel signWalletModel;
-  late final TransactionModel transactionModel;
+  late final SolanaTransactionModel transactionModel;
 
   SolanaSignTxPageCubit({
     required CborSolSignRequest cborSolSignRequest,
@@ -39,7 +40,7 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
 
   Future<void> init() async {
     await _setupSignWallet();
-    transactionModel = TransactionModel.fromCborSolSignRequest(signWalletModel.id); //, _cborSolSignRequest);
+    transactionModel = SolanaTransactionModel.fromCborSolSignRequest(signWalletModel.id, _cborSolSignRequest);
   }
 
   Future<void> signTransaction() async {
@@ -101,7 +102,7 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
 
     String signatureHex = HexCodec.encode(signature.bytes);
 
-    TransactionModel signedTransactionModel = transactionModel.addSignature(signatureHex);
+    SolanaTransactionModel signedTransactionModel = transactionModel.addSignature(signatureHex);
     await _transactionsService.save(signedTransactionModel);
 
     emit(SolanaSignTxPageSignedTxState(

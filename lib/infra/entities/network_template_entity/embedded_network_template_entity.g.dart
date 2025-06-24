@@ -213,12 +213,14 @@ const _EmbeddedNetworkTemplateEntitynetworkIconTypeEnumValueMap = {
   r'bitcoin': r'bitcoin',
   r'cosmos': r'cosmos',
   r'ethereum': r'ethereum',
+  r'solana': r'solana',
   r'unknown': r'unknown',
 };
 const _EmbeddedNetworkTemplateEntitynetworkIconTypeValueEnumMap = {
   r'bitcoin': NetworkIconType.bitcoin,
   r'cosmos': NetworkIconType.cosmos,
   r'ethereum': NetworkIconType.ethereum,
+  r'solana': NetworkIconType.solana,
   r'unknown': NetworkIconType.unknown,
 };
 const _EmbeddedNetworkTemplateEntitywalletTypeEnumValueMap = {

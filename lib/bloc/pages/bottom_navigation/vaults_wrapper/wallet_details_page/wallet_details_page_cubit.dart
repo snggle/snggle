@@ -5,6 +5,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_detail
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/transaction_service.dart';
 import 'package:snggle/shared/models/simple_selection_model.dart';
+import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 
@@ -19,21 +20,21 @@ class WalletDetailsPageCubit extends Cubit<WalletDetailsPageState> {
         super(const WalletDetailsPageState.loading());
 
   Future<void> refresh() async {
-    List<TransactionModel> transactions = await _transactionsService.getByWallet(_walletModel.id);
-    emit(WalletDetailsPageState(transactions: transactions..sort((TransactionModel a, TransactionModel b) => b.creationDate.compareTo(a.creationDate))));
+    List<ATransactionModel> transactions = await _transactionsService.getByWallet(_walletModel.id);
+    emit(WalletDetailsPageState(transactions: transactions..sort((ATransactionModel a, ATransactionModel b) => b.creationDate.compareTo(a.creationDate))));
   }
 
   Future<void> deleteSelected() async {
-    List<TransactionModel> allTransactions = state.transactions;
-    List<TransactionModel> selectedTransactions = state.selectedTransactions;
+    List<ATransactionModel> allTransactions = state.transactions;
+    List<ATransactionModel> selectedTransactions = state.selectedTransactions;
 
     await _transactionsService.deleteAll(selectedTransactions);
 
-    allTransactions.removeWhere((TransactionModel transactionModel) => selectedTransactions.contains(transactionModel));
+    allTransactions.removeWhere((ATransactionModel transactionModel) => selectedTransactions.contains(transactionModel));
     emit(state.copyWith(forceOverrideBool: true, transactions: allTransactions, selectionModel: null));
   }
 
-  void toggleSelection(TransactionModel transactionModel) {
+  void toggleSelection(ATransactionModel transactionModel) {
     if (state.selectionModel == null) {
       select(transactionModel);
     } else {
@@ -45,17 +46,17 @@ class WalletDetailsPageCubit extends Cubit<WalletDetailsPageState> {
     }
   }
 
-  void select(TransactionModel transactionModel) {
+  void select(ATransactionModel transactionModel) {
     int allTransactionsCount = state.transactions.length;
 
-    List<TransactionModel> selectedItems = List<TransactionModel>.from(state.selectedTransactions, growable: true)..add(transactionModel);
-    emit(state.copyWith(selectionModel: SimpleSelectionModel<TransactionModel>(selectedItems: selectedItems, allItemsCount: allTransactionsCount)));
+    List<ATransactionModel> selectedItems = List<ATransactionModel>.from(state.selectedTransactions, growable: true)..add(transactionModel);
+    emit(state.copyWith(selectionModel: SimpleSelectionModel<ATransactionModel>(selectedItems: selectedItems, allItemsCount: allTransactionsCount)));
   }
 
   void selectAll() {
     int allTransactionsCount = state.transactions.length;
     emit(state.copyWith(
-      selectionModel: SimpleSelectionModel<TransactionModel>(
+      selectionModel: SimpleSelectionModel<ATransactionModel>(
         allItemsCount: allTransactionsCount,
         selectedItems: state.transactions,
       ),
@@ -65,15 +66,15 @@ class WalletDetailsPageCubit extends Cubit<WalletDetailsPageState> {
   void unselectAll() {
     int allTransactionsCount = state.transactions.length;
     emit(state.copyWith(
-      selectionModel: SimpleSelectionModel<TransactionModel>.empty(allItemsCount: allTransactionsCount),
+      selectionModel: SimpleSelectionModel<ATransactionModel>.empty(allItemsCount: allTransactionsCount),
     ));
   }
 
-  void unselect(TransactionModel transactionModel) {
+  void unselect(ATransactionModel transactionModel) {
     int allTransactionsCount = state.transactions.length;
 
-    List<TransactionModel> selectedItems = List<TransactionModel>.from(state.selectedTransactions, growable: true)..remove(transactionModel);
-    emit(state.copyWith(selectionModel: SimpleSelectionModel<TransactionModel>(selectedItems: selectedItems, allItemsCount: allTransactionsCount)));
+    List<ATransactionModel> selectedItems = List<ATransactionModel>.from(state.selectedTransactions, growable: true)..remove(transactionModel);
+    emit(state.copyWith(selectionModel: SimpleSelectionModel<ATransactionModel>(selectedItems: selectedItems, allItemsCount: allTransactionsCount)));
   }
 
   void disableSelection() {

@@ -6,6 +6,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_detail
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
+import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
@@ -13,7 +14,7 @@ import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_con
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_item.dart';
 
 class TransactionListItemContextTooltip extends StatefulWidget {
-  final TransactionModel transactionModel;
+  final ATransactionModel transactionModel;
   final WalletDetailsPageCubit walletDetailsPageCubit;
   final Widget pageTooltip;
   final VoidCallback onCloseToolbar;
@@ -48,6 +49,7 @@ class _ListItemContextTooltipState extends State<TransactionListItemContextToolt
               text: switch (widget.transactionModel.signDataType) {
                 SignDataType.typedTransaction => 'TX',
                 SignDataType.rawBytes => 'TEXT',
+                SignDataType.solanaMessage => null,
               },
               style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
             ),

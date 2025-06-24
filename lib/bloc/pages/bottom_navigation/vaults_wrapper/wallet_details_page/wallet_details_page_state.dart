@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:snggle/shared/models/simple_selection_model.dart';
+import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 
 class WalletDetailsPageState extends Equatable {
-  final List<TransactionModel> transactions;
+  final List<ATransactionModel> transactions;
   final bool loadingBool;
-  final SimpleSelectionModel<TransactionModel>? selectionModel;
+  final SimpleSelectionModel<ATransactionModel>? selectionModel;
 
   const WalletDetailsPageState({
     required this.transactions,
@@ -14,14 +15,14 @@ class WalletDetailsPageState extends Equatable {
   });
 
   const WalletDetailsPageState.loading()
-      : transactions = const <TransactionModel>[],
+      : transactions = const <ATransactionModel>[],
         loadingBool = true,
         selectionModel = null;
 
   WalletDetailsPageState copyWith({
     bool forceOverrideBool = false,
-    List<TransactionModel>? transactions,
-    SimpleSelectionModel<TransactionModel>? selectionModel,
+    List<ATransactionModel>? transactions,
+    SimpleSelectionModel<ATransactionModel>? selectionModel,
   }) {
     return WalletDetailsPageState(
       transactions: transactions ?? this.transactions,
@@ -41,8 +42,8 @@ class WalletDetailsPageState extends Equatable {
     return transactions.isEmpty;
   }
 
-  List<TransactionModel> get selectedTransactions {
-    return selectionModel?.selectedItems ?? <TransactionModel>[];
+  List<ATransactionModel> get selectedTransactions {
+    return selectionModel?.selectedItems ?? <ATransactionModel>[];
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_detail
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/simple_selection_model.dart';
+import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/transaction_list_item/transaction_list_item.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
@@ -16,8 +17,8 @@ class WalletDetailsTransactionList extends StatelessWidget {
   final bool emptyBool;
   final bool loadingBool;
   final bool selectionEnabledBool;
-  final List<TransactionModel> transactions;
-  final SimpleSelectionModel<TransactionModel>? selectionModel;
+  final List<ATransactionModel> transactions;
+  final SimpleSelectionModel<ATransactionModel>? selectionModel;
   final WalletDetailsPageCubit walletDetailsPageCubit;
   final NetworkGroupModel networkGroupModel;
 
@@ -58,7 +59,7 @@ class WalletDetailsTransactionList extends StatelessWidget {
                   child: LoadingContainer(height: 30),
                 );
               }
-              TransactionModel transactionModel = transactions[index];
+              ATransactionModel transactionModel = transactions[index];
               return TransactionListItem(
                 key: ValueKey<int>(transactionModel.id),
                 selectedBool: selectionModel?.selectedItems.contains(transactionModel) ?? false,

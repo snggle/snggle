@@ -3,7 +3,7 @@ import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/a_ethereum_
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 
 class EthereumSignTxPageSignedTxState extends AEthereumSignTxPageState {
-  final TransactionModel transactionModel;
+  final EthereumTransactionModel transactionModel;
   final CborEthSignature cborEthSignature;
 
   const EthereumSignTxPageSignedTxState({

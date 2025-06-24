@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
+import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_scan_icon.dart';
@@ -22,7 +23,7 @@ import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 
 @RoutePage()
 class TransactionDetailsPage extends StatefulWidget {
-  final TransactionModel transactionModel;
+  final EthereumTransactionModel transactionModel;
   final NetworkTemplateModel networkTemplateModel;
 
   const TransactionDetailsPage({
@@ -58,9 +59,10 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
     Uint8List? functionData = abiFunctionBytes?.sublist(4);
 
     String? signDate = widget.transactionModel.signDate != null ? DateFormat('dd/MM/yy HH:mm').format(widget.transactionModel.signDate!) : null;
-    String signDataType = switch (widget.transactionModel.signDataType) {
+    String? signDataType = switch (widget.transactionModel.signDataType) {
       SignDataType.typedTransaction => 'TRANSACTION',
       SignDataType.rawBytes => 'PLAIN TEXT',
+      SignDataType.solanaMessage => null,
     };
 
     String? message = widget.transactionModel.message;
@@ -119,13 +121,13 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                 ),
               ],
               CopyWrapper(
-                value: signDataType,
+                value: signDataType!,
                 child: LabelWrapperHorizontal(
                   label: 'Format',
                   labelStyle: labelTextStyle,
                   padding: EdgeInsets.zero,
                   child: GradientText(
-                    signDataType,
+                    signDataType!,
                     gradient: AppColors.primaryGradient,
                     textStyle: horizontalValueTextStyle,
                   ),

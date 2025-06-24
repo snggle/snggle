@@ -11,14 +11,14 @@
 import 'package:auto_route/auto_route.dart' as _i21;
 import 'package:flutter/material.dart' as _i25;
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart'
-    as _i30;
+as _i30;
 import 'package:snggle/shared/models/groups/network_group_model.dart' as _i29;
 import 'package:snggle/shared/models/networks/network_template_model.dart'
-    as _i27;
+as _i27;
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart'
-    as _i26;
+as _i26;
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart'
-    as _i22;
+as _i22;
 import 'package:snggle/shared/models/vaults/vault_model.dart' as _i23;
 import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i28;
 import 'package:snggle/shared/utils/filesystem_path.dart' as _i24;
@@ -26,37 +26,37 @@ import 'package:snggle/views/pages/app_auth_page.dart' as _i1;
 import 'package:snggle/views/pages/app_setup_pin_page.dart' as _i2;
 import 'package:snggle/views/pages/bottom_navigation/apps_page.dart' as _i3;
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart'
-    as _i4;
+as _i4;
 import 'package:snggle/views/pages/bottom_navigation/secrets_page.dart' as _i6;
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/settings_page.dart'
-    as _i7;
+as _i7;
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_section_wrapper.dart'
-    as _i15;
+as _i15;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/network_list_page/network_list_page.dart'
-    as _i5;
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/transaction_details_page/transaction_details_page.dart'
-    as _i9;
+as _i5;
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/transaction_details_page/ethereum_transaction_details_page.dart'
+as _i9;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page.dart'
-    as _i13;
+as _i13;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vaults_section_wrapper.dart'
-    as _i16;
+as _i16;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_connect_page.dart'
-    as _i17;
+as _i17;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page.dart'
-    as _i19;
+as _i19;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_page.dart'
-    as _i20;
+as _i20;
 import 'package:snggle/views/pages/splash_page.dart' as _i8;
 import 'package:snggle/views/pages/vault_create_recover/vault_create_page/vault_create_page.dart'
-    as _i10;
+as _i10;
 import 'package:snggle/views/pages/vault_create_recover/vault_create_recover_wrapper.dart'
-    as _i11;
+as _i11;
 import 'package:snggle/views/pages/vault_create_recover/vault_init_page/vault_init_page.dart'
-    as _i12;
+as _i12;
 import 'package:snggle/views/pages/vault_create_recover/vault_recover_page/vault_recover_page.dart'
-    as _i14;
+as _i14;
 import 'package:snggle/views/pages/wallet_create_page/wallet_create_page.dart'
-    as _i18;
+as _i18;
 
 abstract class $AppRouter extends _i21.RootStackRouter {
   $AppRouter({super.navigatorKey});
@@ -240,9 +240,9 @@ abstract class $AppRouter extends _i21.RootStackRouter {
 class AppAuthRoute extends _i21.PageRouteInfo<void> {
   const AppAuthRoute({List<_i21.PageRouteInfo>? children})
       : super(
-          AppAuthRoute.name,
-          initialChildren: children,
-        );
+    AppAuthRoute.name,
+    initialChildren: children,
+  );
 
   static const String name = 'AppAuthRoute';
 
@@ -254,9 +254,9 @@ class AppAuthRoute extends _i21.PageRouteInfo<void> {
 class AppSetupPinRoute extends _i21.PageRouteInfo<void> {
   const AppSetupPinRoute({List<_i21.PageRouteInfo>? children})
       : super(
-          AppSetupPinRoute.name,
-          initialChildren: children,
-        );
+    AppSetupPinRoute.name,
+    initialChildren: children,
+  );
 
   static const String name = 'AppSetupPinRoute';
 
@@ -268,9 +268,9 @@ class AppSetupPinRoute extends _i21.PageRouteInfo<void> {
 class AppsRoute extends _i21.PageRouteInfo<void> {
   const AppsRoute({List<_i21.PageRouteInfo>? children})
       : super(
-          AppsRoute.name,
-          initialChildren: children,
-        );
+    AppsRoute.name,
+    initialChildren: children,
+  );
 
   static const String name = 'AppsRoute';
 
@@ -282,9 +282,9 @@ class AppsRoute extends _i21.PageRouteInfo<void> {
 class BottomNavigationRoute extends _i21.PageRouteInfo<void> {
   const BottomNavigationRoute({List<_i21.PageRouteInfo>? children})
       : super(
-          BottomNavigationRoute.name,
-          initialChildren: children,
-        );
+    BottomNavigationRoute.name,
+    initialChildren: children,
+  );
 
   static const String name = 'BottomNavigationRoute';
 
@@ -301,20 +301,20 @@ class NetworkListRoute extends _i21.PageRouteInfo<NetworkListRouteArgs> {
     _i25.Key? key,
     List<_i21.PageRouteInfo>? children,
   }) : super(
-          NetworkListRoute.name,
-          args: NetworkListRouteArgs(
-            name: name,
-            vaultModel: vaultModel,
-            filesystemPath: filesystemPath,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+    NetworkListRoute.name,
+    args: NetworkListRouteArgs(
+      name: name,
+      vaultModel: vaultModel,
+      filesystemPath: filesystemPath,
+      key: key,
+    ),
+    initialChildren: children,
+  );
 
   static const String name = 'NetworkListRoute';
 
   static const _i21.PageInfo<NetworkListRouteArgs> page =
-      _i21.PageInfo<NetworkListRouteArgs>(name);
+  _i21.PageInfo<NetworkListRouteArgs>(name);
 }
 
 class NetworkListRouteArgs {
@@ -344,9 +344,9 @@ class NetworkListRouteArgs {
 class SecretsRoute extends _i21.PageRouteInfo<void> {
   const SecretsRoute({List<_i21.PageRouteInfo>? children})
       : super(
-          SecretsRoute.name,
-          initialChildren: children,
-        );
+    SecretsRoute.name,
+    initialChildren: children,
+  );
 
   static const String name = 'SecretsRoute';
 
@@ -358,9 +358,9 @@ class SecretsRoute extends _i21.PageRouteInfo<void> {
 class SettingsRoute extends _i21.PageRouteInfo<void> {
   const SettingsRoute({List<_i21.PageRouteInfo>? children})
       : super(
-          SettingsRoute.name,
-          initialChildren: children,
-        );
+    SettingsRoute.name,
+    initialChildren: children,
+  );
 
   static const String name = 'SettingsRoute';
 
@@ -372,9 +372,9 @@ class SettingsRoute extends _i21.PageRouteInfo<void> {
 class SplashRoute extends _i21.PageRouteInfo<void> {
   const SplashRoute({List<_i21.PageRouteInfo>? children})
       : super(
-          SplashRoute.name,
-          initialChildren: children,
-        );
+    SplashRoute.name,
+    initialChildren: children,
+  );
 
   static const String name = 'SplashRoute';
 
@@ -391,19 +391,19 @@ class TransactionDetailsRoute
     _i25.Key? key,
     List<_i21.PageRouteInfo>? children,
   }) : super(
-          TransactionDetailsRoute.name,
-          args: TransactionDetailsRouteArgs(
-            transactionModel: transactionModel,
-            networkTemplateModel: networkTemplateModel,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+    TransactionDetailsRoute.name,
+    args: TransactionDetailsRouteArgs(
+      transactionModel: transactionModel,
+      networkTemplateModel: networkTemplateModel,
+      key: key,
+    ),
+    initialChildren: children,
+  );
 
   static const String name = 'TransactionDetailsRoute';
 
   static const _i21.PageInfo<TransactionDetailsRouteArgs> page =
-      _i21.PageInfo<TransactionDetailsRouteArgs>(name);
+  _i21.PageInfo<TransactionDetailsRouteArgs>(name);
 }
 
 class TransactionDetailsRouteArgs {
@@ -433,18 +433,18 @@ class VaultCreateRoute extends _i21.PageRouteInfo<VaultCreateRouteArgs> {
     _i25.Key? key,
     List<_i21.PageRouteInfo>? children,
   }) : super(
-          VaultCreateRoute.name,
-          args: VaultCreateRouteArgs(
-            parentFilesystemPath: parentFilesystemPath,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+    VaultCreateRoute.name,
+    args: VaultCreateRouteArgs(
+      parentFilesystemPath: parentFilesystemPath,
+      key: key,
+    ),
+    initialChildren: children,
+  );
 
   static const String name = 'VaultCreateRoute';
 
   static const _i21.PageInfo<VaultCreateRouteArgs> page =
-      _i21.PageInfo<VaultCreateRouteArgs>(name);
+  _i21.PageInfo<VaultCreateRouteArgs>(name);
 }
 
 class VaultCreateRouteArgs {
@@ -468,9 +468,9 @@ class VaultCreateRouteArgs {
 class VaultCreateRecoverRoute extends _i21.PageRouteInfo<void> {
   const VaultCreateRecoverRoute({List<_i21.PageRouteInfo>? children})
       : super(
-          VaultCreateRecoverRoute.name,
-          initialChildren: children,
-        );
+    VaultCreateRecoverRoute.name,
+    initialChildren: children,
+  );
 
   static const String name = 'VaultCreateRecoverRoute';
 
@@ -485,18 +485,18 @@ class VaultInitRoute extends _i21.PageRouteInfo<VaultInitRouteArgs> {
     _i25.Key? key,
     List<_i21.PageRouteInfo>? children,
   }) : super(
-          VaultInitRoute.name,
-          args: VaultInitRouteArgs(
-            parentFilesystemPath: parentFilesystemPath,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+    VaultInitRoute.name,
+    args: VaultInitRouteArgs(
+      parentFilesystemPath: parentFilesystemPath,
+      key: key,
+    ),
+    initialChildren: children,
+  );
 
   static const String name = 'VaultInitRoute';
 
   static const _i21.PageInfo<VaultInitRouteArgs> page =
-      _i21.PageInfo<VaultInitRouteArgs>(name);
+  _i21.PageInfo<VaultInitRouteArgs>(name);
 }
 
 class VaultInitRouteArgs {
@@ -520,9 +520,9 @@ class VaultInitRouteArgs {
 class VaultListRoute extends _i21.PageRouteInfo<void> {
   const VaultListRoute({List<_i21.PageRouteInfo>? children})
       : super(
-          VaultListRoute.name,
-          initialChildren: children,
-        );
+    VaultListRoute.name,
+    initialChildren: children,
+  );
 
   static const String name = 'VaultListRoute';
 
@@ -537,18 +537,18 @@ class VaultRecoverRoute extends _i21.PageRouteInfo<VaultRecoverRouteArgs> {
     _i25.Key? key,
     List<_i21.PageRouteInfo>? children,
   }) : super(
-          VaultRecoverRoute.name,
-          args: VaultRecoverRouteArgs(
-            parentFilesystemPath: parentFilesystemPath,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+    VaultRecoverRoute.name,
+    args: VaultRecoverRouteArgs(
+      parentFilesystemPath: parentFilesystemPath,
+      key: key,
+    ),
+    initialChildren: children,
+  );
 
   static const String name = 'VaultRecoverRoute';
 
   static const _i21.PageInfo<VaultRecoverRouteArgs> page =
-      _i21.PageInfo<VaultRecoverRouteArgs>(name);
+  _i21.PageInfo<VaultRecoverRouteArgs>(name);
 }
 
 class VaultRecoverRouteArgs {
@@ -572,9 +572,9 @@ class VaultRecoverRouteArgs {
 class SettingsSectionWrapperRoute extends _i21.PageRouteInfo<void> {
   const SettingsSectionWrapperRoute({List<_i21.PageRouteInfo>? children})
       : super(
-          SettingsSectionWrapperRoute.name,
-          initialChildren: children,
-        );
+    SettingsSectionWrapperRoute.name,
+    initialChildren: children,
+  );
 
   static const String name = 'SettingsSectionWrapperRoute';
 
@@ -586,9 +586,9 @@ class SettingsSectionWrapperRoute extends _i21.PageRouteInfo<void> {
 class VaultsSectionWrapperRoute extends _i21.PageRouteInfo<void> {
   const VaultsSectionWrapperRoute({List<_i21.PageRouteInfo>? children})
       : super(
-          VaultsSectionWrapperRoute.name,
-          initialChildren: children,
-        );
+    VaultsSectionWrapperRoute.name,
+    initialChildren: children,
+  );
 
   static const String name = 'VaultsSectionWrapperRoute';
 
@@ -605,20 +605,20 @@ class WalletConnectRoute extends _i21.PageRouteInfo<WalletConnectRouteArgs> {
     _i25.Key? key,
     List<_i21.PageRouteInfo>? children,
   }) : super(
-          WalletConnectRoute.name,
-          args: WalletConnectRouteArgs(
-            vaultModel: vaultModel,
-            walletModel: walletModel,
-            networkTemplateModel: networkTemplateModel,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+    WalletConnectRoute.name,
+    args: WalletConnectRouteArgs(
+      vaultModel: vaultModel,
+      walletModel: walletModel,
+      networkTemplateModel: networkTemplateModel,
+      key: key,
+    ),
+    initialChildren: children,
+  );
 
   static const String name = 'WalletConnectRoute';
 
   static const _i21.PageInfo<WalletConnectRouteArgs> page =
-      _i21.PageInfo<WalletConnectRouteArgs>(name);
+  _i21.PageInfo<WalletConnectRouteArgs>(name);
 }
 
 class WalletConnectRouteArgs {
@@ -653,20 +653,20 @@ class WalletCreateRoute extends _i21.PageRouteInfo<WalletCreateRouteArgs> {
     _i25.Key? key,
     List<_i21.PageRouteInfo>? children,
   }) : super(
-          WalletCreateRoute.name,
-          args: WalletCreateRouteArgs(
-            vaultModel: vaultModel,
-            parentFilesystemPath: parentFilesystemPath,
-            networkGroupModel: networkGroupModel,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+    WalletCreateRoute.name,
+    args: WalletCreateRouteArgs(
+      vaultModel: vaultModel,
+      parentFilesystemPath: parentFilesystemPath,
+      networkGroupModel: networkGroupModel,
+      key: key,
+    ),
+    initialChildren: children,
+  );
 
   static const String name = 'WalletCreateRoute';
 
   static const _i21.PageInfo<WalletCreateRouteArgs> page =
-      _i21.PageInfo<WalletCreateRouteArgs>(name);
+  _i21.PageInfo<WalletCreateRouteArgs>(name);
 }
 
 class WalletCreateRouteArgs {
@@ -702,21 +702,21 @@ class WalletDetailsRoute extends _i21.PageRouteInfo<WalletDetailsRouteArgs> {
     _i25.Key? key,
     List<_i21.PageRouteInfo>? children,
   }) : super(
-          WalletDetailsRoute.name,
-          args: WalletDetailsRouteArgs(
-            vaultModel: vaultModel,
-            networkGroupModel: networkGroupModel,
-            walletModel: walletModel,
-            walletDetailsPageCubit: walletDetailsPageCubit,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+    WalletDetailsRoute.name,
+    args: WalletDetailsRouteArgs(
+      vaultModel: vaultModel,
+      networkGroupModel: networkGroupModel,
+      walletModel: walletModel,
+      walletDetailsPageCubit: walletDetailsPageCubit,
+      key: key,
+    ),
+    initialChildren: children,
+  );
 
   static const String name = 'WalletDetailsRoute';
 
   static const _i21.PageInfo<WalletDetailsRouteArgs> page =
-      _i21.PageInfo<WalletDetailsRouteArgs>(name);
+  _i21.PageInfo<WalletDetailsRouteArgs>(name);
 }
 
 class WalletDetailsRouteArgs {
@@ -755,21 +755,21 @@ class WalletListRoute extends _i21.PageRouteInfo<WalletListRouteArgs> {
     _i25.Key? key,
     List<_i21.PageRouteInfo>? children,
   }) : super(
-          WalletListRoute.name,
-          args: WalletListRouteArgs(
-            name: name,
-            vaultModel: vaultModel,
-            filesystemPath: filesystemPath,
-            networkGroupModel: networkGroupModel,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+    WalletListRoute.name,
+    args: WalletListRouteArgs(
+      name: name,
+      vaultModel: vaultModel,
+      filesystemPath: filesystemPath,
+      networkGroupModel: networkGroupModel,
+      key: key,
+    ),
+    initialChildren: children,
+  );
 
   static const String name = 'WalletListRoute';
 
   static const _i21.PageInfo<WalletListRouteArgs> page =
-      _i21.PageInfo<WalletListRouteArgs>(name);
+  _i21.PageInfo<WalletListRouteArgs>(name);
 }
 
 class WalletListRouteArgs {

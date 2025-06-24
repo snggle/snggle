@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
@@ -12,12 +13,12 @@ import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip.dart'
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_wrapper.dart';
 
-class TxConfirmationScaffold extends StatefulWidget {
+class EthereumTxConfirmationScaffold extends StatefulWidget {
   final String title;
-  final TransactionModel transactionModel;
+  final EthereumTransactionModel transactionModel;
   final VoidCallback onSignPressed;
 
-  const TxConfirmationScaffold({
+  const EthereumTxConfirmationScaffold({
     required this.title,
     required this.transactionModel,
     required this.onSignPressed,
@@ -25,10 +26,10 @@ class TxConfirmationScaffold extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _TxConfirmationScaffoldState();
+  State<StatefulWidget> createState() => _EthereumTxConfirmationScaffoldState();
 }
 
-class _TxConfirmationScaffoldState extends State<TxConfirmationScaffold> {
+class _EthereumTxConfirmationScaffoldState extends State<EthereumTxConfirmationScaffold> {
   final ScrollController scrollController = ScrollController();
 
   @override

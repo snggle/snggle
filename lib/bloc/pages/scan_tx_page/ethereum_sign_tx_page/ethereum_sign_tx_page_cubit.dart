@@ -30,7 +30,7 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
 
   late final PasswordModel _signWalletPasswordModel;
   late final WalletModel signWalletModel;
-  late final TransactionModel transactionModel;
+  late final EthereumTransactionModel transactionModel;
 
   EthereumSignTxPageCubit({
     required CborEthSignRequest cborEthSignRequest,
@@ -39,7 +39,7 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
 
   Future<void> init() async {
     await _setupSignWallet();
-    transactionModel = TransactionModel.fromCborSolSignRequest(signWalletModel.id); //, _cborSolSignRequest);
+    transactionModel = EthereumTransactionModel.fromCborEthSignRequest(signWalletModel.id, _cborEthSignRequest);
   }
 
   Future<void> signTransaction() async {
@@ -101,7 +101,7 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
 
     String signatureHex = HexCodec.encode(signature.bytes);
 
-    TransactionModel signedTransactionModel = transactionModel.addSignature(signatureHex);
+    EthereumTransactionModel signedTransactionModel = transactionModel.addSignature(signatureHex);
     await _transactionsService.save(signedTransactionModel);
 
     emit(EthereumSignTxPageSignedTxState(
