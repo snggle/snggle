@@ -244,10 +244,12 @@ P _transactionEntityDeserializeProp<P>(
 const _TransactionEntitysignDataTypeEnumValueMap = {
   'rawBytes': 0,
   'typedTransaction': 1,
+  'solanaMessage': 2,
 };
 const _TransactionEntitysignDataTypeValueEnumMap = {
   0: SignDataType.rawBytes,
   1: SignDataType.typedTransaction,
+  2: SignDataType.solanaMessage,
 };
 
 Id _transactionEntityGetId(TransactionEntity object) {

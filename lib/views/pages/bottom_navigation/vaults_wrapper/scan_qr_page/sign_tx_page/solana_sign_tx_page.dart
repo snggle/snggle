@@ -8,7 +8,6 @@ import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/states/solana
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/ethereum_tx_confirmation_scaffold.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/solana_tx_confirmation_scaffold.dart';
 import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';

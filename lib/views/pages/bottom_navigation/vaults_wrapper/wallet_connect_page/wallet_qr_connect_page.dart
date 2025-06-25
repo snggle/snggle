@@ -33,8 +33,6 @@ class _WalletQrConnectPageState extends State<WalletQrConnectPage> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    print(widget.cborTaggedObject.toString());
-    print(widget.cborTaggedObject);
     return QRResultScaffold.fromUniformResource(
       title: 'Wallet QR Connect',
       subtitle: 'Extended public key',

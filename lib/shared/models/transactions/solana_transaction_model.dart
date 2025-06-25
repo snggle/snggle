@@ -20,6 +20,7 @@ class SolanaTransactionModel extends ATransactionModel {
     super.signDate,
   });
 
+  @override
   factory SolanaTransactionModel.fromEntity(TransactionEntity transactionEntity) {
     return SolanaTransactionModel(
       id: transactionEntity.id,
@@ -37,52 +38,14 @@ class SolanaTransactionModel extends ATransactionModel {
   }
 
   factory SolanaTransactionModel.fromCborSolSignRequest(int walletId, CborSolSignRequest cborSolSignRequest) {
-    SignDataType signDataType = SignDataType.typedTransaction;
+    SignDataType signDataType = SignDataType.solanaMessage;
     //SolanaTransaction solanaTransaction = SolanaTransaction.fromSerializedData(cborSolSignRequest.signData);
     SolanaMessage message = SolanaMessage.fromBytes(cborSolSignRequest.signData);
-    SolanaTransaction solanaTransaction = SolanaTransaction.fromSerializedData(cborSolSignRequest.signData);
     DecodedInstruction? decoded;
-    print('--- Solana Message ---');
-    print('Recent Blockhash: ${Base58Codec.encode(message.recentBlockhash)}');
-
-    for (int i = 0; i < message.accountKeys.length; i++) {
-      print('Account $i: ${Base58Codec.encode(message.accountKeys[i])}');
-    }
 
     for (int i = 0; i < message.instructions.length; i++) {
       SolanaInstruction instruction = message.instructions[i];
-      print('--- Instruction #$i ---');
-
-      int programIdIndex = instruction.programIdIndex;
-      String programId = Base58Codec.encode(message.accountKeys[programIdIndex]);
-      print('Program ID Index: $programIdIndex => $programId');
-      print('Account Indices: ${instruction.accountIndices}');
-      print('Raw Data: ${instruction.data}');
-
       decoded = instruction.decode(message.accountKeys);
-
-      print('Decoded Instruction:');
-      print('  Type: ${decoded.type}');
-      print('  Program ID: ${decoded.programId}');
-      if (decoded.error != null) {
-        print('  Error: ${decoded.error}');
-        continue;
-      }
-
-      if (decoded.type == 'SPL-Token-Transfer') {
-        print('SPL Token Transfer');
-        print('  From: ${decoded.from}');
-        print('  To:   ${decoded.to}');
-        print('  Authority: ${decoded.authority}');
-        print('  Amount: ${decoded.amount}');
-      } else if (decoded.type == 'SOL-Transfer') {
-        print('Native SOL Transfer');
-        print('  From: ${decoded.from}');
-        print('  To:   ${decoded.to}');
-        print('  Amount (Lamports): ${decoded.amountLamports}');
-      } else {
-        print('Unknown instruction type.');
-      }
     }
 
     return SolanaTransactionModel(

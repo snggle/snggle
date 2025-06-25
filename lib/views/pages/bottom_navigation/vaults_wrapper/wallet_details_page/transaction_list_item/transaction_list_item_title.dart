@@ -2,7 +2,6 @@ import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
-import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/utils/date_time_utils.dart';
 import 'package:snggle/views/widgets/custom/custom_checkbox.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';

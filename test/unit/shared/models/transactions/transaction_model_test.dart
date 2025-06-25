@@ -5,7 +5,6 @@ import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:snggle/infra/entities/transaction_entity/transaction_entity.dart';
-import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 
 void main() {
   group('Tests of TransactionModel.fromEntity() constructor', () {

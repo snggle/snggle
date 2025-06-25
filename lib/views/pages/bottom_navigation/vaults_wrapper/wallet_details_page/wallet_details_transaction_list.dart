@@ -5,7 +5,6 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/simple_selection_model.dart';
 import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
-import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/transaction_list_item/transaction_list_item.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/generic/loading_container.dart';
