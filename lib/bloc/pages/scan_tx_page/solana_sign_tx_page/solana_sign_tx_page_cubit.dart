@@ -17,7 +17,6 @@ import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
-//import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 
@@ -44,61 +43,17 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
   }
 
   Future<void> signTransaction() async {
-    WalletSecretsModel walletSecretsModel = await _secretsService.get(
-      signWalletModel.filesystemPath,
-      _signWalletPasswordModel,
-    );
-
-    print('--- Raw Sign Data ---');
-    print(_cborSolSignRequest.signData);
-
-    //SolanaTransaction solanaTransaction = SolanaTransaction.fromSerializedData(_cborSolSignRequest.signData);
-    SolanaMessage solanaMessage = SolanaMessage.fromBytes(_cborSolSignRequest.signData);
-
-    print('--- Solana Message ---');
-    print('Recent Blockhash: ${Base58Codec.encode(solanaMessage.recentBlockhash)}');
-
-    for (int i = 0; i < solanaMessage.accountKeys.length; i++) {
-      print('Account $i: ${Base58Codec.encode(solanaMessage.accountKeys[i])}');
-    }
-
-    for (int i = 0; i < solanaMessage.instructions.length; i++) {
-      final SolanaInstruction instruction = solanaMessage.instructions[i];
-      print('--- Instruction #$i ---');
-
-      final int programIdIndex = instruction.programIdIndex;
-      final String programId = Base58Codec.encode(solanaMessage.accountKeys[programIdIndex]);
-      print('Program ID Index: $programIdIndex => $programId');
-      print('Account Indices: ${instruction.accountIndices}');
-      print('Raw Data: ${instruction.data}');
-      print('Account Keys: $solanaMessage.accountKeys');
-      final DecodedInstruction decoded = instruction.decode(solanaMessage.accountKeys);
-
-      print('Decoded Instruction:');
-      print('  Type: ${decoded.type}');
-      print('  Program ID: ${decoded.programId}');
-      if (decoded.error != null) {
-        print('  Error: ${decoded.error}');
-        continue;
-      }
-
-      decoded.printDecoded();
-    }
+    WalletSecretsModel walletSecretsModel = await _secretsService.get(signWalletModel.filesystemPath, _signWalletPasswordModel);
 
     EDPrivateKey edPrivateKey = EDPrivateKey.fromBytes(walletSecretsModel.privateKey);
 
     ED25519PrivateKey ed25519PrivateKey = ED25519PrivateKey(
       edPrivateKey: edPrivateKey,
-      metadata: Bip32KeyMetadata.fromCompressedPublicKey(
-        compressedPublicKey: edPrivateKey.edPublicKey.bytes,
-      ),
+      metadata: Bip32KeyMetadata.fromCompressedPublicKey(compressedPublicKey: edPrivateKey.edPublicKey.bytes),
     );
 
-    SolanaSigner signer = SolanaSigner(ed25519PrivateKey);
-
     Uint8List message = _cborSolSignRequest.signData;
-    SolanaSignature signature = signer.sign(message);
-    //ASignature signature = solanaTransaction.sign(ed25519PrivateKey, message);
+    ASignature signature = SolanaSigner(ed25519PrivateKey).sign(message);
 
     String signatureHex = HexCodec.encode(signature.bytes);
 

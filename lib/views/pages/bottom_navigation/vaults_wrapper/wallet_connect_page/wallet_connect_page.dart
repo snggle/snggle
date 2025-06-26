@@ -84,12 +84,7 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                   children: <Widget>[
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
                       GradientOutlinedButton.large(
-                        label: 'Metamask QR',
-                        icon: const AssetIcon(AppIcons.wallet_metamask, size: 18),
-                        onPressed: () => _showQRConnectPage(true),
-                      ),
-                      GradientOutlinedButton.large(
-                        label: 'Keystone QR',
+                        label: 'QR code',
                         icon: const AssetIcon(AppIcons.connect_wallet_qr, size: 18),
                         onPressed: () => _showQRConnectPage(true),
                       ),
@@ -112,6 +107,7 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
 
     Map<String, Future<ACborTaggedObject> Function()> selectNetwork = <String, Future<ACborTaggedObject> Function()>{
       'ethereum': () => walletConnectPageCubit.getCborCryptoHDKey(connectAllBool: connectAllBool),
+      // TODO(Kamil): Consider connectAllBool equivalent
       'solana': () => walletConnectPageCubit.getCborCryptoMultiAccounts(),
     };
 

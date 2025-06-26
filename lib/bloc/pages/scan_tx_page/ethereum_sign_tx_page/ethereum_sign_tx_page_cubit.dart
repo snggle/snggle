@@ -21,8 +21,7 @@ import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 
 class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
-  final TransactionsService _transactionsService =
-      globalLocator<TransactionsService>();
+  final TransactionsService _transactionsService = globalLocator<TransactionsService>();
   final WalletsService _walletsService = globalLocator<WalletsService>();
 
   final CborEthSignRequest _cborEthSignRequest;
@@ -38,23 +37,17 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
 
   Future<void> init() async {
     await _setupSignWallet();
-    transactionModel = EthereumTransactionModel.fromCborEthSignRequest(
-        signWalletModel.id, _cborEthSignRequest);
+    transactionModel = EthereumTransactionModel.fromCborEthSignRequest(signWalletModel.id, _cborEthSignRequest);
   }
 
   Future<void> signTransaction() async {
-    WalletSecretsModel walletSecretsModel = await _secretsService.get(
-        signWalletModel.filesystemPath, _signWalletPasswordModel);
+    WalletSecretsModel walletSecretsModel = await _secretsService.get(signWalletModel.filesystemPath, _signWalletPasswordModel);
 
-    ECPrivateKey ecPrivateKey = ECPrivateKey.fromBytes(
-        walletSecretsModel.privateKey, CurvePoints.generatorSecp256k1);
-    AEthereumTransaction ethereumTransaction =
-        AEthereumTransaction.fromSerializedData(
-            transactionModel.signDataType, _cborEthSignRequest.signData);
+    ECPrivateKey ecPrivateKey = ECPrivateKey.fromBytes(walletSecretsModel.privateKey, CurvePoints.generatorSecp256k1);
+    AEthereumTransaction ethereumTransaction = AEthereumTransaction.fromSerializedData(transactionModel.signDataType, _cborEthSignRequest.signData);
 
     ASignature signature = ethereumTransaction.sign(ecPrivateKey);
-    EthereumTransactionModel signedTransactionModel =
-        transactionModel.addSignature(signature.hex);
+    EthereumTransactionModel signedTransactionModel = transactionModel.addSignature(signature.hex);
     await _transactionsService.save(signedTransactionModel);
 
     emit(EthereumSignTxPageSignedTxState(
@@ -88,12 +81,10 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
 
   Future<PasswordModel> _getPasswordForWallet(WalletModel walletModel) async {
     try {
-      return await globalLocator<PasswordController>()
-          .getPasswordByFilesystemPath(walletModel.filesystemPath);
+      return await globalLocator<PasswordController>().getPasswordByFilesystemPath(walletModel.filesystemPath);
     } catch (_) {
       // TODO(dominik): Exception may be replaced with a UI dialog to enter the password
-      throw const ScanQrException(
-          ScanQrExceptionType.walletWithEncryptedParents);
+      throw const ScanQrException(ScanQrExceptionType.walletWithEncryptedParents);
     }
   }
 }
