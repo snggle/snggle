@@ -73,6 +73,7 @@ class _SolanaTxConfirmationScaffoldState extends State<SolanaTxConfirmationScaff
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  // TODO(kamil): Replace Sender with Signer and remove Recipient for transactions other than SOL transfers
                   if (widget.transactionModel.senderAddress != null) ...<Widget>[
                     LabelWrapperVertical(label: 'From', child: ETHAddressPreview(address: widget.transactionModel.senderAddress!)),
                   ],
