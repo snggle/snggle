@@ -39,8 +39,8 @@ class SolanaTransactionModel extends ATransactionModel {
 
   factory SolanaTransactionModel.fromCborSolSignRequest(int walletId, CborSolSignRequest cborSolSignRequest) {
     SignDataType signDataType = SignDataType.solanaMessage;
-    SolanaMessage message = SolanaMessage.fromBytes(cborSolSignRequest.signData);
-    DecodedInstruction? decoded;
+    ASolanaMessage message = ASolanaMessage.fromSerializedData(cborSolSignRequest.signData);
+    SolanaInstructionDecoded? decoded;
 
     for (int i = 0; i < message.instructions.length; i++) {
       SolanaInstruction instruction = message.instructions[i];

@@ -51,7 +51,7 @@ class TransactionListItemTitle extends StatelessWidget {
               switch (transactionModel.signDataType) {
                 SignDataType.typedTransaction => 'TX',
                 SignDataType.rawBytes => 'TEXT',
-                SignDataType.solanaMessage => null,
+                SignDataType.solanaMessage => 'TX',
               },
               gradient: RadialGradient(radius: 1, center: Alignment.center, colors: AppColors.primaryGradient.colors),
               textStyle: textTheme.labelMedium?.copyWith(height: 0.95, letterSpacing: 1),
