@@ -6,6 +6,9 @@ import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
 
 class SolanaTransactionModel extends ATransactionModel {
+  final SolanaInstructionType? instructionType;
+  final String? signer;
+
   const SolanaTransactionModel({
     required super.id,
     required super.walletId,
@@ -18,6 +21,8 @@ class SolanaTransactionModel extends ATransactionModel {
     super.recipientAddress,
     super.signature,
     super.signDate,
+    this.signer,
+    this.instructionType,
   });
 
   @override
@@ -32,31 +37,28 @@ class SolanaTransactionModel extends ATransactionModel {
       contractAddress: transactionEntity.contractAddress,
       senderAddress: transactionEntity.senderAddress,
       recipientAddress: transactionEntity.recipientAddress,
+      signer: transactionEntity.signer,
       signDate: transactionEntity.signDate != null ? DateTime.parse(transactionEntity.signDate!) : null,
       signature: transactionEntity.signature,
     );
   }
 
   factory SolanaTransactionModel.fromCborSolSignRequest(int walletId, CborSolSignRequest cborSolSignRequest) {
-    SignDataType signDataType = SignDataType.solanaMessage;
     ASolanaMessage message = ASolanaMessage.fromSerializedData(cborSolSignRequest.signData);
-    SolanaInstructionDecoded? decoded;
-
-    for (int i = 0; i < message.instructions.length; i++) {
-      SolanaInstruction instruction = message.instructions[i];
-      decoded = instruction.decode(message.accountKeys);
-    }
+    SolanaInstructionDecoded? solanaInstructionDecoded = _findRelevantInstruction(message);
 
     return SolanaTransactionModel(
       id: Isar.autoIncrement,
       walletId: walletId,
       creationDate: DateTime.now(),
-      signDataType: signDataType,
-      amount: decoded?.amount.toString(),
+      signDataType: SignDataType.solanaMessage,
+      amount: solanaInstructionDecoded?.amount?.toString(),
       message: message.toString(),
-      contractAddress: decoded?.mint,
-      senderAddress: decoded?.from,
-      recipientAddress: decoded?.to,
+      contractAddress: solanaInstructionDecoded?.mint,
+      senderAddress: solanaInstructionDecoded?.from,
+      recipientAddress: solanaInstructionDecoded?.to,
+      signer: solanaInstructionDecoded?.signer,
+      instructionType: solanaInstructionDecoded?.type,
     );
   }
 
@@ -73,8 +75,10 @@ class SolanaTransactionModel extends ATransactionModel {
     String? contractAddress,
     String? senderAddress,
     String? recipientAddress,
+    String? signer,
     String? signature,
     DateTime? signDate,
+    SolanaInstructionType? instructionType,
   }) {
     return SolanaTransactionModel(
       id: id ?? this.id,
@@ -86,8 +90,10 @@ class SolanaTransactionModel extends ATransactionModel {
       contractAddress: contractAddress ?? this.contractAddress,
       senderAddress: senderAddress ?? this.senderAddress,
       recipientAddress: recipientAddress ?? this.recipientAddress,
+      signer: signer ?? this.signer,
       signature: signature ?? this.signature,
       signDate: signDate ?? this.signDate,
+      instructionType: instructionType ?? this.instructionType,
     );
   }
 
@@ -113,6 +119,17 @@ class SolanaTransactionModel extends ATransactionModel {
     return copyWith(signDate: DateTime.now(), signature: signature);
   }
 
+  static SolanaInstructionDecoded? _findRelevantInstruction(ASolanaMessage message) {
+    for (int i = message.instructions.length - 1; i >= 0; i--) {
+      SolanaInstructionDecoded decoded = message.instructions[i].decode(message.accountKeys);
+
+      if (decoded.type == SolanaInstructionType.solTransfer || decoded.type == SolanaInstructionType.tokenTransfer) {
+        return decoded;
+      }
+    }
+    return null;
+  }
+
   @override
   String get title {
     if (recipientAddress != null) {
@@ -128,16 +145,18 @@ class SolanaTransactionModel extends ATransactionModel {
 
   @override
   List<Object?> get props => <Object?>[
-    id,
-    walletId,
-    creationDate,
-    signDataType,
-    amount,
-    message,
-    contractAddress,
-    senderAddress,
-    recipientAddress,
-    signature,
-    signDate,
-  ];
+        id,
+        walletId,
+        creationDate,
+        signDataType,
+        amount,
+        message,
+        contractAddress,
+        senderAddress,
+        recipientAddress,
+        signer,
+        signature,
+        signDate,
+        instructionType,
+      ];
 }

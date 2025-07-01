@@ -1,3 +1,4 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
@@ -51,6 +52,13 @@ class _SolanaTxConfirmationScaffoldState extends State<SolanaTxConfirmationScaff
       ],
     );
 
+    //final SolanaTransactionModel transaction = widget.transactionModel;
+    bool isTokenTransfer = widget.transactionModel.instructionType == SolanaInstructionType.tokenTransfer;
+    bool isSolTransfer = widget.transactionModel.instructionType == SolanaInstructionType.solTransfer;
+
+    String sender = isTokenTransfer ? widget.transactionModel.signer ?? 'Unknown' : widget.transactionModel.senderAddress ?? 'Unknown';
+    String recipient = isSolTransfer ? widget.transactionModel.recipientAddress ?? 'Unknown' : 'Unknown';
+
     return CustomScaffold(
       title: widget.title,
       body: BottomTooltipWrapper(
@@ -73,12 +81,11 @@ class _SolanaTxConfirmationScaffoldState extends State<SolanaTxConfirmationScaff
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // TODO(kamil): Replace Sender with Signer and remove Recipient for transactions other than SOL transfers
-                  if (widget.transactionModel.senderAddress != null) ...<Widget>[
-                    LabelWrapperVertical(label: 'From', child: ETHAddressPreview(address: widget.transactionModel.senderAddress!)),
+                  if (widget.transactionModel != null) ...<Widget>[
+                    LabelWrapperVertical(label: 'From', child: ETHAddressPreview(address: sender)),
                   ],
-                  if (widget.transactionModel.recipientAddress != null) ...<Widget>[
-                    LabelWrapperVertical(label: 'To', child: ETHAddressPreview(address: widget.transactionModel.recipientAddress!)),
+                  if (widget.transactionModel != null) ...<Widget>[
+                    LabelWrapperVertical(label: 'To', child: ETHAddressPreview(address: recipient)),
                   ],
                   if (widget.transactionModel.contractAddress != null) ...<Widget>[
                     LabelWrapperVertical(label: 'Contract', child: ETHAddressPreview(address: widget.transactionModel.contractAddress!)),

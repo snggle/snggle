@@ -18,6 +18,7 @@ class TransactionEntity extends Equatable {
   final String? contractAddress;
   final String? senderAddress;
   final String? recipientAddress;
+  final String? signer;
   final String? signature;
   final String? signDate;
 
@@ -33,6 +34,7 @@ class TransactionEntity extends Equatable {
     this.contractAddress,
     this.senderAddress,
     this.recipientAddress,
+    this.signer,
     this.signature,
     this.signDate,
   });
@@ -50,6 +52,7 @@ class TransactionEntity extends Equatable {
         contractAddress,
         senderAddress,
         recipientAddress,
+        signer,
         signature,
         signDate,
       ];
