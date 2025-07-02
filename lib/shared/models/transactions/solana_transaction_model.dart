@@ -143,6 +143,23 @@ class SolanaTransactionModel extends ATransactionModel {
     }
   }
 
+  String? get displayedSender {
+    if (instructionType == SolanaInstructionType.solTransfer) {
+      return senderAddress;
+    }
+    else if (instructionType == SolanaInstructionType.tokenTransfer) {
+      return signer;
+    }
+    return null;
+  }
+
+  String? get displayedRecipient {
+    if (instructionType == SolanaInstructionType.solTransfer) {
+      return recipientAddress;
+    }
+      return null;
+  }
+
   @override
   List<Object?> get props => <Object?>[
         id,

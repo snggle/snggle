@@ -52,13 +52,6 @@ class _SolanaTxConfirmationScaffoldState extends State<SolanaTxConfirmationScaff
       ],
     );
 
-    //final SolanaTransactionModel transaction = widget.transactionModel;
-    bool isTokenTransfer = widget.transactionModel.instructionType == SolanaInstructionType.tokenTransfer;
-    bool isSolTransfer = widget.transactionModel.instructionType == SolanaInstructionType.solTransfer;
-
-    String sender = isTokenTransfer ? widget.transactionModel.signer ?? 'Unknown' : widget.transactionModel.senderAddress ?? 'Unknown';
-    String recipient = isSolTransfer ? widget.transactionModel.recipientAddress ?? 'Unknown' : 'Unknown';
-
     return CustomScaffold(
       title: widget.title,
       body: BottomTooltipWrapper(
@@ -81,11 +74,11 @@ class _SolanaTxConfirmationScaffoldState extends State<SolanaTxConfirmationScaff
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  if (widget.transactionModel != null) ...<Widget>[
-                    LabelWrapperVertical(label: 'From', child: ETHAddressPreview(address: sender)),
+                  if (widget.transactionModel.displayedSender != null) ...<Widget>[
+                    LabelWrapperVertical(label: 'From', child: ETHAddressPreview(address: widget.transactionModel.displayedSender!)),
                   ],
-                  if (widget.transactionModel != null) ...<Widget>[
-                    LabelWrapperVertical(label: 'To', child: ETHAddressPreview(address: recipient)),
+                  if (widget.transactionModel.displayedRecipient != null) ...<Widget>[
+                    LabelWrapperVertical(label: 'To', child: ETHAddressPreview(address: widget.transactionModel.displayedRecipient!)),
                   ],
                   if (widget.transactionModel.contractAddress != null) ...<Widget>[
                     LabelWrapperVertical(label: 'Contract', child: ETHAddressPreview(address: widget.transactionModel.contractAddress!)),
