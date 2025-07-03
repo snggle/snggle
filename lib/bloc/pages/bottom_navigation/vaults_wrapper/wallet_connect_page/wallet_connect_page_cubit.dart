@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_connect_page_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
+import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
@@ -71,9 +72,7 @@ class WalletConnectPageCubit extends Cubit<WalletConnectPageState> {
     );
   }
 
-  Future<CborCryptoMultiAccounts> getCborCryptoMultiAccounts() async {
-    LegacyDerivationPath derivationPath = LegacyDerivationPath.parse(_walletModel.derivationPath);
-
+  Future<CborCryptoMultiAccounts> getCborCryptoMultiAccounts({required bool connectAllBool}) async {
     PasswordModel vaultPasswordModel = await globalLocator<PasswordController>().getPasswordByFilesystemPath(_vaultModel.filesystemPath);
 
     VaultSecretsModel vaultSecretsModel = await _secretsService.get<VaultSecretsModel>(
@@ -82,31 +81,41 @@ class WalletConnectPageCubit extends Cubit<WalletConnectPageState> {
     );
 
     ED25519Derivator ed25519Derivator = ED25519Derivator();
-    ED25519PrivateKey ed25519PrivateKey = await ed25519Derivator.derivePath(
-      Mnemonic(vaultSecretsModel.mnemonicModel.mnemonicList),
-      derivationPath,
-    );
 
-    CborCryptoKeypath cborCryptoKeypath = CborCryptoKeypath(
-      components: derivationPath.pathElements
-          .map(
-            (LegacyDerivationPathElement e) => CborPathComponent(index: e.rawIndex, hardened: e.isHardened),
-          )
-          .toList(),
-      sourceFingerprint: 0x12345678,
-    );
+    List<WalletModel> walletsSelectedForConnectingList = connectAllBool
+        ? await globalLocator<WalletsService>().getAllByParentPath(_vaultModel.filesystemPath, firstLevelBool: false)
+        : <WalletModel>[_walletModel];
 
-    CborCryptoHDKey solanaKey = CborCryptoHDKey(
-      isMaster: false,
-      isPrivate: false,
-      keyData: ed25519PrivateKey.publicKey.compressed,
-      origin: cborCryptoKeypath,
-      name: _walletModel.name,
-    );
+    List<CborCryptoHDKey> cryptoHDKeysList = <CborCryptoHDKey>[];
+
+    for (WalletModel selectedWallet in walletsSelectedForConnectingList) {
+      LegacyDerivationPath derivationPath = LegacyDerivationPath.parse(selectedWallet.derivationPath);
+
+      ED25519PrivateKey ed25519PrivateKey = await ed25519Derivator.derivePath(
+        Mnemonic(vaultSecretsModel.mnemonicModel.mnemonicList),
+        derivationPath,
+      );
+
+      CborCryptoKeypath cborCryptoKeypath = CborCryptoKeypath(
+        components:
+            derivationPath.pathElements.map((LegacyDerivationPathElement e) => CborPathComponent(index: e.rawIndex, hardened: e.isHardened)).toList(),
+        sourceFingerprint: 0x12345678,
+      );
+
+      cryptoHDKeysList.add(
+        CborCryptoHDKey(
+          isMaster: false,
+          isPrivate: false,
+          keyData: ed25519PrivateKey.publicKey.compressed,
+          origin: cborCryptoKeypath,
+          name: selectedWallet.name,
+        ),
+      );
+    }
 
     return CborCryptoMultiAccounts(
       masterFingerprint: 'e9181cf3',
-      cryptoHDKeyList: <CborCryptoHDKey>[solanaKey],
+      cryptoHDKeyList: cryptoHDKeysList,
       device: 'keystone',
       deviceId: '28475c8d80f6c06bafbe46a7d1750f3fcf2565f7',
       deviceVersion: '1.0.2',

@@ -84,7 +84,14 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                   children: <Widget>[
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
                       GradientOutlinedButton.large(
-                        label: 'QR code',
+                        label: 'QR code - single wallet',
+                        icon: const AssetIcon(AppIcons.connect_wallet_qr, size: 18),
+                        onPressed: () => _showQRConnectPage(false),
+                      ),
+                    ],
+                    if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
+                      GradientOutlinedButton.large(
+                        label: 'QR code - all wallets',
                         icon: const AssetIcon(AppIcons.connect_wallet_qr, size: 18),
                         onPressed: () => _showQRConnectPage(true),
                       ),
@@ -107,8 +114,7 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
 
     Map<String, Future<ACborTaggedObject> Function()> selectNetwork = <String, Future<ACborTaggedObject> Function()>{
       'ethereum': () => walletConnectPageCubit.getCborCryptoHDKey(connectAllBool: connectAllBool),
-      // TODO(Kamil): Consider connectAllBool equivalent
-      'solana': () => walletConnectPageCubit.getCborCryptoMultiAccounts(),
+      'solana': () => walletConnectPageCubit.getCborCryptoMultiAccounts(connectAllBool: connectAllBool),
     };
 
     Future<ACborTaggedObject> Function()? networkHandler = selectNetwork[networkName];
