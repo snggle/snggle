@@ -12,11 +12,13 @@ class WalletListItem extends StatelessWidget {
   final WalletModel walletModel;
   final AnimationController fadeAnimationController;
   final AnimationController slideAnimationController;
+  final bool isSelected;
 
   const WalletListItem({
     required this.walletModel,
     required this.fadeAnimationController,
     required this.slideAnimationController,
+    this.isSelected = false,
     super.key,
   });
 
@@ -24,43 +26,63 @@ class WalletListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
 
-    return HorizontalListItemLayoutAnimated(
-      lockedBool: walletModel.encryptedBool,
-      horizontalListItemAnimationType: HorizontalListItemAnimationType.slideLeftToRight,
-      fadeAnimationController: fadeAnimationController,
-      slideAnimationController: slideAnimationController,
-      iconWidget: ListItemIcon(
-        size: HorizontalListItemLayout.listItemIconSize,
-        listItemModel: walletModel,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: isSelected ? AppColors.body1 : Colors.transparent,
+          width: 2.0,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        color: isSelected ? AppColors.body1.withOpacity(0.1) : null,
       ),
-      titleWidget: Text(
-        walletModel.name,
-        style: textTheme.titleMedium?.copyWith(color: AppColors.body1),
-      ),
-      subtitleWidget: Row(
-        children: <Widget>[
-          GradientText(
-            walletModel.getShortAddress(3),
-            textStyle: textTheme.titleMedium,
-            overflow: TextOverflow.ellipsis,
-            gradient: RadialGradient(
-              radius: 7,
-              center: const Alignment(-1, 1.5),
-              colors: AppColors.primaryGradient.colors,
+      child: HorizontalListItemLayoutAnimated(
+        lockedBool: walletModel.encryptedBool,
+        horizontalListItemAnimationType: HorizontalListItemAnimationType.slideLeftToRight,
+        fadeAnimationController: fadeAnimationController,
+        slideAnimationController: slideAnimationController,
+        iconWidget: Stack(
+          children: <Widget>[
+            ListItemIcon(
+              size: HorizontalListItemLayout.listItemIconSize,
+              listItemModel: walletModel,
             ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: LegacyDerivationPathOverflowText(
-                derivationPath: walletModel.derivationPath,
-                textAlign: TextAlign.end,
-                textStyle: textTheme.labelMedium!.copyWith(color: AppColors.darkGrey),
+            if (isSelected)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Icon(Icons.check_circle, color: AppColors.body1, size: 20),
+              ),
+          ],
+        ),
+        titleWidget: Text(
+          walletModel.name,
+          style: textTheme.titleMedium?.copyWith(color: AppColors.body1),
+        ),
+        subtitleWidget: Row(
+          children: <Widget>[
+            GradientText(
+              walletModel.getShortAddress(3),
+              textStyle: textTheme.titleMedium,
+              overflow: TextOverflow.ellipsis,
+              gradient: RadialGradient(
+                radius: 7,
+                center: const Alignment(-1, 1.5),
+                colors: AppColors.primaryGradient.colors,
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 16),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: LegacyDerivationPathOverflowText(
+                  derivationPath: walletModel.derivationPath,
+                  textAlign: TextAlign.end,
+                  textStyle: textTheme.labelMedium!.copyWith(color: AppColors.darkGrey),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

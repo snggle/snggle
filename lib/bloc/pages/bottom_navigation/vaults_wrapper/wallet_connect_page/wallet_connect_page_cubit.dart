@@ -29,7 +29,7 @@ class WalletConnectPageCubit extends Cubit<WalletConnectPageState> {
     emit(WalletConnectPageState(walletConnectOption: walletConnectOption));
   }
 
-  Future<CborCryptoHDKey> getCborCryptoHDKey({required bool connectAllBool}) async {
+  Future<CborCryptoHDKey> getCborCryptoHDKey({required bool connectAllBool, List<WalletModel>? selectedWallets}) async {
     Secp256k1Derivator secp256k1Derivator = Secp256k1Derivator();
     LegacyDerivationPath legacyDerivationPath = LegacyDerivationPath.parse(_walletModel.derivationPath);
 
@@ -72,7 +72,7 @@ class WalletConnectPageCubit extends Cubit<WalletConnectPageState> {
     );
   }
 
-  Future<CborCryptoMultiAccounts> getCborCryptoMultiAccounts({required bool connectAllBool}) async {
+  Future<CborCryptoMultiAccounts> getCborCryptoMultiAccounts({required bool connectAllBool, List<WalletModel>? selectedWallets}) async {
     PasswordModel vaultPasswordModel = await globalLocator<PasswordController>().getPasswordByFilesystemPath(_vaultModel.filesystemPath);
 
     VaultSecretsModel vaultSecretsModel = await _secretsService.get<VaultSecretsModel>(
@@ -84,7 +84,7 @@ class WalletConnectPageCubit extends Cubit<WalletConnectPageState> {
 
     List<WalletModel> walletsSelectedForConnectingList = connectAllBool
         ? await globalLocator<WalletsService>().getAllByParentPath(_vaultModel.filesystemPath, firstLevelBool: false)
-        : <WalletModel>[_walletModel];
+        : selectedWallets ?? <WalletModel>[_walletModel];
 
     List<CborCryptoHDKey> cryptoHDKeysList = <CborCryptoHDKey>[];
 

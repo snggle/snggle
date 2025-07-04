@@ -1,15 +1,21 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:codec_utils/codec_utils.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_connect_page_cubit.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_connect_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/services/network_groups_service.dart';
+import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_connect_option.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_connect_option_button.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_qr_connect_page.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
@@ -35,6 +41,8 @@ class WalletConnectPage extends StatefulWidget {
 }
 
 class _WalletConnectPageState extends State<WalletConnectPage> {
+  final NetworkGroupsService _networkGroupsService = globalLocator<NetworkGroupsService>();
+
   late final WalletConnectPageCubit walletConnectPageCubit = WalletConnectPageCubit(
     vaultModel: widget.vaultModel,
     walletModel: widget.walletModel,
@@ -84,16 +92,23 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                   children: <Widget>[
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
                       GradientOutlinedButton.large(
-                        label: 'QR code - single wallet',
+                        label: 'Single wallet',
                         icon: const AssetIcon(AppIcons.connect_wallet_qr, size: 18),
                         onPressed: () => _showQRConnectPage(false),
                       ),
                     ],
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
                       GradientOutlinedButton.large(
-                        label: 'QR code - all wallets',
+                        label: 'All wallets',
                         icon: const AssetIcon(AppIcons.connect_wallet_qr, size: 18),
                         onPressed: () => _showQRConnectPage(true),
+                      ),
+                    ],
+                    if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
+                      GradientOutlinedButton.large(
+                        label: 'Selected wallets',
+                        icon: const AssetIcon(AppIcons.connect_wallet_qr, size: 18),
+                        onPressed: _selectWalletsForExport,
                       ),
                     ],
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.hardware) ...<Widget>[
@@ -110,14 +125,7 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
   }
 
   Future<void> _showQRConnectPage(bool connectAllBool) async {
-    String networkName = widget.networkTemplateModel.name.toLowerCase();
-
-    Map<String, Future<ACborTaggedObject> Function()> selectNetwork = <String, Future<ACborTaggedObject> Function()>{
-      'ethereum': () => walletConnectPageCubit.getCborCryptoHDKey(connectAllBool: connectAllBool),
-      'solana': () => walletConnectPageCubit.getCborCryptoMultiAccounts(connectAllBool: connectAllBool),
-    };
-
-    Future<ACborTaggedObject> Function()? networkHandler = selectNetwork[networkName];
+    Future<ACborTaggedObject> Function()? networkHandler = _getNetworkHandler(connectAllBool: connectAllBool);
 
     if (networkHandler == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -125,6 +133,11 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
       );
       return;
     }
+
+    await _showQrDialog(networkHandler);
+  }
+
+  Future<void> _showQrDialog(Future<ACborTaggedObject> Function() networkHandler) async {
 
     await CustomLoadingDialog.show<ACborTaggedObject>(
       context: context,
@@ -148,5 +161,55 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
         }
       },
     );
+  }
+
+  Future<ACborTaggedObject> Function()? _getNetworkHandler({bool connectAllBool = false, List<WalletModel>? selectedWallets}) {
+    String name = widget.networkTemplateModel.name.toLowerCase();
+    return switch (name) {
+      'ethereum' => () => walletConnectPageCubit.getCborCryptoHDKey(
+        connectAllBool: connectAllBool,
+        selectedWallets: selectedWallets,
+      ),
+      'solana' => () => walletConnectPageCubit.getCborCryptoMultiAccounts(
+        connectAllBool: connectAllBool,
+        selectedWallets: selectedWallets,
+      ),
+      String() => null,
+    };
+  }
+
+  Future<void> _selectWalletsForExport() async {
+
+    List<NetworkGroupModel> networkGroups =
+    await _networkGroupsService.getAllByParentPath(widget.vaultModel.filesystemPath);
+    FilesystemPath filesystemPathTest = widget.vaultModel.filesystemPath;
+    for (NetworkGroupModel networkGroup in networkGroups) {
+      if (networkGroup.networkTemplateModel.curveType == CurveType.ed25519) {
+        filesystemPathTest = networkGroup.filesystemPath;
+      }
+    }
+
+    List<WalletModel>? selectedWallets = await AutoRouter.of(context).push<List<WalletModel>>(
+      WalletSelectItemListRoute(
+        name: 'Select Wallets',
+        vaultModel: widget.vaultModel,
+        filesystemPath: filesystemPathTest,
+        networkGroupModel: await _networkGroupsService.getById(widget.vaultModel.id * 2),
+      ),
+    );
+
+    if (selectedWallets == null || selectedWallets.isEmpty) {
+      return;
+    }
+
+    Future<ACborTaggedObject> Function()? networkHandler = _getNetworkHandler(connectAllBool: false, selectedWallets: selectedWallets);
+    if (networkHandler == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unsupported network for QR connection')),
+      );
+      return;
+    }
+
+    await _showQrDialog(networkHandler);
   }
 }

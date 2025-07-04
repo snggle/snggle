@@ -43,6 +43,7 @@ class AppRouter extends $AppRouter {
               AutoRoute(page: VaultListRoute.page, initial: true),
               AutoRoute(page: NetworkListRoute.page),
               AutoRoute(page: WalletListRoute.page),
+              AutoRoute(page: WalletSelectItemListRoute.page),
               AutoRoute(page: WalletDetailsRoute.page),
               AutoRoute(page: EthereumTransactionDetailsRoute.page),
               AutoRoute(page: SolanaTransactionDetailsRoute.page),
@@ -51,6 +52,7 @@ class AppRouter extends $AppRouter {
           ),
           AutoRoute(page: VaultListRoute.page),
           AutoRoute(page: WalletListRoute.page),
+          AutoRoute(page: WalletSelectItemListRoute.page),
           AutoRoute(page: SecretsRoute.page),
           AutoRoute(page: AppsRoute.page),
           AutoRoute(

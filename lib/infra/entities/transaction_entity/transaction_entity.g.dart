@@ -73,8 +73,13 @@ const TransactionEntitySchema = CollectionSchema(
       name: r'signature',
       type: IsarType.string,
     ),
-    r'walletId': PropertySchema(
+    r'signer': PropertySchema(
       id: 11,
+      name: r'signer',
+      type: IsarType.string,
+    ),
+    r'walletId': PropertySchema(
+      id: 12,
       name: r'walletId',
       type: IsarType.long,
     )
@@ -154,6 +159,12 @@ int _transactionEntityEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.signer;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -174,7 +185,8 @@ void _transactionEntitySerialize(
   writer.writeByte(offsets[8], object.signDataType.index);
   writer.writeString(offsets[9], object.signDate);
   writer.writeString(offsets[10], object.signature);
-  writer.writeLong(offsets[11], object.walletId);
+  writer.writeString(offsets[11], object.signer);
+  writer.writeLong(offsets[12], object.walletId);
 }
 
 TransactionEntity _transactionEntityDeserialize(
@@ -198,7 +210,8 @@ TransactionEntity _transactionEntityDeserialize(
         SignDataType.rawBytes,
     signDate: reader.readStringOrNull(offsets[9]),
     signature: reader.readStringOrNull(offsets[10]),
-    walletId: reader.readLong(offsets[11]),
+    signer: reader.readStringOrNull(offsets[11]),
+    walletId: reader.readLong(offsets[12]),
   );
   return object;
 }
@@ -235,6 +248,8 @@ P _transactionEntityDeserializeProp<P>(
     case 10:
       return (reader.readStringOrNull(offset)) as P;
     case 11:
+      return (reader.readStringOrNull(offset)) as P;
+    case 12:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1981,6 +1996,160 @@ extension TransactionEntityQueryFilter
   }
 
   QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+      signerIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'signer',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+      signerIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'signer',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+      signerEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'signer',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+      signerGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'signer',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+      signerLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'signer',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+      signerBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'signer',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+      signerStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'signer',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+      signerEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'signer',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+      signerContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'signer',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+      signerMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'signer',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+      signerIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'signer',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
+      signerIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'signer',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterFilterCondition>
       walletIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -2199,6 +2368,20 @@ extension TransactionEntityQuerySortBy
   }
 
   QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
+      sortBySigner() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'signer', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
+      sortBySignerDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'signer', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
       sortByWalletId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'walletId', Sort.asc);
@@ -2382,6 +2565,20 @@ extension TransactionEntityQuerySortThenBy
   }
 
   QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
+      thenBySigner() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'signer', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
+      thenBySignerDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'signer', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QAfterSortBy>
       thenByWalletId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'walletId', Sort.asc);
@@ -2479,6 +2676,13 @@ extension TransactionEntityQueryWhereDistinct
   }
 
   QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
+      distinctBySigner({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'signer', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<TransactionEntity, TransactionEntity, QDistinct>
       distinctByWalletId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'walletId');
@@ -2565,6 +2769,12 @@ extension TransactionEntityQueryProperty
       signatureProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'signature');
+    });
+  }
+
+  QueryBuilder<TransactionEntity, String?, QQueryOperations> signerProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'signer');
     });
   }
 
