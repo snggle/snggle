@@ -92,21 +92,21 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                   children: <Widget>[
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
                       GradientOutlinedButton.large(
-                        label: 'Single wallet',
+                        label: 'Export this wallet only',
                         icon: const AssetIcon(AppIcons.connect_wallet_qr, size: 18),
                         onPressed: () => _showQRConnectPage(false),
                       ),
                     ],
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
                       GradientOutlinedButton.large(
-                        label: 'All wallets',
+                        label: 'Export all wallets in the vault',
                         icon: const AssetIcon(AppIcons.connect_wallet_qr, size: 18),
                         onPressed: () => _showQRConnectPage(true),
                       ),
                     ],
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
                       GradientOutlinedButton.large(
-                        label: 'Selected wallets',
+                        label: 'Select wallets from the vault for export',
                         icon: const AssetIcon(AppIcons.connect_wallet_qr, size: 18),
                         onPressed: _selectWalletsForExport,
                       ),

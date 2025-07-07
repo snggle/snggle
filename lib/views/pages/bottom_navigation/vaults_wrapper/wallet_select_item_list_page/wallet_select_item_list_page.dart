@@ -1,16 +1,16 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_page_cubit.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/shared/controllers/active_wallet_controller.dart';
+import 'package:snggle/infra/services/network_groups_service.dart';
+import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
-import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
@@ -23,7 +23,6 @@ import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dar
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_animation_wrapper.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_layout.dart';
-import 'package:snggle/views/widgets/list/list_item_actions_wrapper.dart';
 import 'package:snggle/views/widgets/list/list_page_scaffold.dart';
 import 'package:snggle/views/widgets/list/sliver_page_list.dart';
 
@@ -47,6 +46,7 @@ class WalletSelectItemListPage extends StatefulWidget {
 }
 
 class _WalletSelectItemListPageState extends State<WalletSelectItemListPage> {
+  final NetworkGroupsService _networkGroupsService = globalLocator<NetworkGroupsService>();
   final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
   late final WalletListPageCubit walletListPageCubit;
   final Set<WalletModel> _selectedWallets = <WalletModel>{};
@@ -64,7 +64,6 @@ class _WalletSelectItemListPageState extends State<WalletSelectItemListPage> {
 
   @override
   void dispose() {
-    globalLocator<PasswordController>().removeByFilesystemPath(widget.networkGroupModel.filesystemPath);
     draggedItemNotifier.dispose();
     walletListPageCubit.close();
     super.dispose();
@@ -85,13 +84,13 @@ class _WalletSelectItemListPageState extends State<WalletSelectItemListPage> {
     return Scaffold(
       floatingActionButton: _selectedWallets.isNotEmpty
           ? Padding(
-        padding: const EdgeInsets.only(bottom: 84),
-        child: FloatingActionButton.extended(
-          onPressed: _confirmSelection,
-          label: Text('Export ${_selectedWallets.length} wallet(s)'),
-          icon: const Icon(Icons.check),
-        ),
-      )
+              padding: const EdgeInsets.only(bottom: 84),
+              child: FloatingActionButton.extended(
+                onPressed: _confirmSelection,
+                label: Text('Export ${_selectedWallets.length} wallet(s)'),
+                icon: const Icon(Icons.check),
+              ),
+            )
           : null,
       body: ListPageScaffold<WalletModel, WalletListPageCubit>(
         defaultPageTitle: widget.name,
@@ -132,19 +131,23 @@ class _WalletSelectItemListPageState extends State<WalletSelectItemListPage> {
                       childBuilder: (AnimationController fadeAnimationController, AnimationController slideAnimationController) {
                         return switch (listItemModel) {
                           WalletModel walletModel => GestureDetector(
-                            onTap: () => _toggleSelection(walletModel),
-                            child: WalletListItem(
-                              walletModel: walletModel,
-                              fadeAnimationController: fadeAnimationController,
-                              slideAnimationController: slideAnimationController,
-                              isSelected: _selectedWallets.contains(walletModel),
+                              onTap: () => _toggleSelection(walletModel),
+                              child: WalletListItem(
+                                walletModel: walletModel,
+                                fadeAnimationController: fadeAnimationController,
+                                slideAnimationController: slideAnimationController,
+                                isSelected: _selectedWallets.contains(walletModel),
+                              ),
                             ),
-                          ),
-                          GroupModel groupModel => WalletGroupListItem(
-                            groupModel: groupModel,
-                            fadeAnimationController: fadeAnimationController,
-                            slideAnimationController: slideAnimationController,
-                          ),
+                          GroupModel groupModel => GestureDetector(
+                              onTap: () => _openGroup(groupModel),
+                              onLongPress: () => _toggleGroupSelect(listItemModel),
+                              child: WalletGroupListItem(
+                                groupModel: groupModel,
+                                fadeAnimationController: fadeAnimationController,
+                                slideAnimationController: slideAnimationController,
+                              ),
+                            ),
                           _ => const SizedBox(),
                         };
                       },
@@ -159,7 +162,6 @@ class _WalletSelectItemListPageState extends State<WalletSelectItemListPage> {
     );
   }
 
-
   Future<void> _navigateToWalletCreatePage() async {
     await AutoRouter.of(context).push<void>(WalletCreateRoute(
       vaultModel: widget.vaultModel,
@@ -169,31 +171,21 @@ class _WalletSelectItemListPageState extends State<WalletSelectItemListPage> {
     await walletListPageCubit.refreshAll();
   }
 
-  Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
-    globalLocator<PasswordController>().addPassword(passwordModel, listItemModel.filesystemPath);
-    ActiveWalletController activeWalletController = globalLocator<ActiveWalletController>();
+  Future<void> _toggleGroupSelect(GroupModel group) async {
+    List<WalletModel> allWallets = await globalLocator<WalletsService>().getAllByParentPath(group.filesystemPath, firstLevelBool: false);
 
-    if (listItemModel is WalletModel) {
-      WalletDetailsPageCubit walletDetailsPageCubit = WalletDetailsPageCubit(walletModel: listItemModel);
-
-      activeWalletController.setActiveWallet(
-        walletModel: listItemModel,
-        transactionSignedCallback: walletDetailsPageCubit.refresh,
-      );
-      await AutoRouter.of(context).push<void>(WalletDetailsRoute(
-        vaultModel: widget.vaultModel,
-        networkGroupModel: widget.networkGroupModel,
-        walletModel: listItemModel,
-        walletDetailsPageCubit: walletDetailsPageCubit,
-      ));
-
-      await walletDetailsPageCubit.close();
-      activeWalletController.clearActiveWallet();
-      if (mounted) {
-        await walletListPageCubit.refreshAll();
+    setState(() {
+      bool anySelected = allWallets.any(_selectedWallets.contains);
+      if (anySelected) {
+        _selectedWallets.removeAll(allWallets);
+      } else {
+        _selectedWallets.addAll(allWallets);
       }
-    } else if (listItemModel is GroupModel) {
-      await walletListPageCubit.navigateNext(filesystemPath: listItemModel.filesystemPath);
-    }
+    });
+  }
+
+  Future<void> _openGroup(GroupModel group) async {
+    await walletListPageCubit.navigateNext(filesystemPath: group.filesystemPath);
+    setState(() {});
   }
 }
