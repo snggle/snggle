@@ -4,7 +4,6 @@ import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:snggle/config/app_config.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
-import 'package:snggle/shared/utils/crypto/aes256.dart';
 
 class PasswordModel extends Equatable {
   final String _hashedPassword;
@@ -28,7 +27,7 @@ class PasswordModel extends Equatable {
   }
 
   String encrypt({required String decryptedData}) {
-    return Aes256.encrypt(_hashedPassword, decryptedData);
+    return AES256Randomized.encrypt(_hashedPassword, decryptedData);
   }
 
   String decrypt({required String encryptedData}) {
@@ -36,11 +35,12 @@ class PasswordModel extends Equatable {
     if (passwordValidBool == false) {
       throw InvalidPasswordException();
     }
-    return Aes256.decrypt(_hashedPassword, encryptedData);
+
+    return AES256Randomized.decrypt(_hashedPassword, encryptedData);
   }
 
   bool isValidForData(String encryptedData) {
-    return Aes256.isPasswordValid(_hashedPassword, encryptedData);
+    return AES256Randomized.isPasswordValid(_hashedPassword, encryptedData);
   }
 
   @override

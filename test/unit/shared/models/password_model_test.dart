@@ -1,7 +1,7 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/utils/crypto/aes256.dart';
 
 void main() {
   group('Tests of [PasswordModel] constructors', () {
@@ -66,7 +66,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to encode and decode text
-      String actualDecryptedData = Aes256.decrypt(actualPasswordHash, actualEncryptedData);
+      String actualDecryptedData = AES256Randomized.decrypt(actualPasswordHash, actualEncryptedData);
 
       // Assert
       String expectedDecryptedData = 'decrypted_data';

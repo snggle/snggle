@@ -1,8 +1,8 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/utils/crypto/aes256.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
 
 void main() {
@@ -18,7 +18,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to encode and decode masterKey hash
-      String actualDecryptedMasterKey = Aes256.decrypt(actualPasswordHash, actualMasterKeyVO.encryptedMasterKey);
+      String actualDecryptedMasterKey = AES256Randomized.decrypt(actualPasswordHash, actualMasterKeyVO.encryptedMasterKey);
 
       // Assert
       String expectedDecryptedMasterKey = 'MbE9pafRXdsfe9m9488D27zqwXz2BOdy3FPjlW3M9+I=';
@@ -59,7 +59,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to encode and decode hash
-      String actualDecryptedData = Aes256.decrypt(actualDecryptedMasterKey, actualEncryptedData);
+      String actualDecryptedData = AES256Randomized.decrypt(actualDecryptedMasterKey, actualEncryptedData);
 
       // Assert
       String expectedDecryptedData = 'decrypted_data';
