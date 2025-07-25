@@ -3,8 +3,8 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/views/widgets/generic/loading_container.dart';
 
 class HorizontalListItemLayout extends StatelessWidget {
-  static const Size listItemSize = Size(double.infinity, 80);
-  static const Size listItemIconSize = Size(52, 52);
+  static const Size listItemSize = Size(double.infinity, 95);
+  static const Size listItemIconSize = Size(62, 62);
 
   final Widget iconWidget;
   final bool lockedBool;
@@ -31,7 +31,7 @@ class HorizontalListItemLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
       height: listItemSize.height,
       decoration: BoxDecoration(
         color: lockedBool ? const Color(0x4FDADADA) : Colors.transparent,
