@@ -14,14 +14,17 @@ class ShuffleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget textWidget = Text(
-      'SHUFFLE',
-      style: TextStyle(
-        fontSize: 14,
-        letterSpacing: 5,
-        height: 1.71,
-        fontWeight: FontWeight.w400,
-        color: AppColors.body3,
+    Widget textWidget = FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        'SHUFFLE',
+        style: TextStyle(
+          fontSize: 14,
+          letterSpacing: 5,
+          height: 1.71,
+          fontWeight: FontWeight.w400,
+          color: AppColors.body3,
+        ),
       ),
     );
 

@@ -112,13 +112,9 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                       inputBorder: InputBorder.none,
                       keyboardType: TextInputType.text,
                       prefixIconConstraints: BoxConstraints(maxHeight: 20, maxWidth: textSize.width),
-                      prefixIcon: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          baseDerivationPath,
-                          style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
-                        ),
-                      ),
+                      prefixText: baseDerivationPath,
+                      prefixStyle: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
+                      padding: EdgeInsets.zero,
                       inputFormatters: <TextInputFormatter>[
                         LegacyDerivationPathInputFormatter(),
                       ],

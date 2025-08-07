@@ -37,10 +37,12 @@ class WalletListItem extends StatelessWidget {
         walletModel.name,
         style: textTheme.titleMedium?.copyWith(color: AppColors.body1),
       ),
-      subtitleWidget: Row(
+      subtitleWidget: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           GradientText(
-            walletModel.getShortAddress(3),
+            walletModel.getShortAddress(4),
             textStyle: textTheme.titleMedium,
             overflow: TextOverflow.ellipsis,
             gradient: RadialGradient(
@@ -49,16 +51,10 @@ class WalletListItem extends StatelessWidget {
               colors: AppColors.primaryGradient.colors,
             ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: LegacyDerivationPathOverflowText(
-                derivationPath: walletModel.derivationPath,
-                textAlign: TextAlign.end,
-                textStyle: textTheme.labelMedium!.copyWith(color: AppColors.darkGrey),
-              ),
-            ),
+          LegacyDerivationPathOverflowText(
+            derivationPath: walletModel.derivationPath,
+            textAlign: TextAlign.start,
+            textStyle: textTheme.labelMedium!.copyWith(color: AppColors.darkGrey),
           ),
         ],
       ),

@@ -28,7 +28,7 @@ class CustomDialogOption extends StatelessWidget {
         style: TextButton.styleFrom(
           splashFactory: NoSplash.splashFactory,
           shadowColor: Colors.transparent,
-          padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(0),
           ),
