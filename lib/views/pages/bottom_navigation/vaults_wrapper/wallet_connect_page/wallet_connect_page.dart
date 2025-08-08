@@ -12,6 +12,7 @@ import 'package:snggle/shared/models/wallets/wallet_connect_option.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_connect_option_button.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_qr_connect_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_trezor_connect_page.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
@@ -90,7 +91,11 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                       ),
                     ],
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.hardware) ...<Widget>[
-                      const GradientOutlinedButton.large(label: 'Use Trezor interface', icon: AssetIcon(AppIcons.wallet_trezor, size: 18)),
+                      GradientOutlinedButton.large(
+                        label: 'Use Trezor interface',
+                        icon: const AssetIcon(AppIcons.wallet_trezor, size: 18),
+                        onPressed: _showTrezorConnectPage,
+                      ),
                     ],
                   ],
                 ),
@@ -113,6 +118,31 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
           useSafeArea: false,
           builder: (BuildContext context) {
             return WalletQrConnectPage(
+              walletModel: widget.walletModel,
+              networkTemplateModel: widget.networkTemplateModel,
+              cborCryptoHDKey: cborCryptoHDKey,
+            );
+          },
+        );
+
+        if (navigateBackBool == true) {
+          await AutoRouter.of(context).pop();
+        }
+      },
+    );
+  }
+
+  Future<void> _showTrezorConnectPage() async {
+    await CustomLoadingDialog.show<CborCryptoHDKey>(
+      context: context,
+      title: 'Loading...',
+      futureFunction: () => walletConnectPageCubit.getCborCryptoHDKey(connectAllBool: true),
+      onSuccess: (CborCryptoHDKey cborCryptoHDKey) async {
+        bool? navigateBackBool = await showDialog<bool>(
+          context: context,
+          useSafeArea: false,
+          builder: (BuildContext context) {
+            return WalletTrezorConnectPage(
               walletModel: widget.walletModel,
               networkTemplateModel: widget.networkTemplateModel,
               cborCryptoHDKey: cborCryptoHDKey,
