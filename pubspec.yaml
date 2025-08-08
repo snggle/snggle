@@ -116,6 +116,12 @@ dependencies:
       url: https://github.com/snggle/cryptography_utils.git
       ref: master
 
+  # Data Over Audio
+  mrumru:
+    git:
+      url: git@github.com:snggle/mrumru.git
+      ref: dev
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

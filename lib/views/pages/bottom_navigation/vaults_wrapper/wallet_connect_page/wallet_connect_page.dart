@@ -87,7 +87,7 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                       GradientOutlinedButton.large(
                         label: 'Metamask QR',
                         icon: const AssetIcon(AppIcons.wallet_metamask, size: 18),
-                        onPressed: () => _showQRConnectPage(true),
+                        onPressed: _showQRConnectPage,
                       ),
                     ],
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.hardware) ...<Widget>[
@@ -107,11 +107,11 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
     );
   }
 
-  Future<void> _showQRConnectPage(bool connectAllBool) async {
+  Future<void> _showQRConnectPage() async {
     await CustomLoadingDialog.show<CborCryptoHDKey>(
       context: context,
       title: 'Loading...',
-      futureFunction: () => walletConnectPageCubit.getCborCryptoHDKey(connectAllBool: connectAllBool),
+      futureFunction: () => walletConnectPageCubit.getCborCryptoHDKey(derivationPathDepth: 3),
       onSuccess: (CborCryptoHDKey cborCryptoHDKey) async {
         bool? navigateBackBool = await showDialog<bool>(
           context: context,
@@ -136,7 +136,7 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
     await CustomLoadingDialog.show<CborCryptoHDKey>(
       context: context,
       title: 'Loading...',
-      futureFunction: () => walletConnectPageCubit.getCborCryptoHDKey(connectAllBool: true),
+      futureFunction: () => walletConnectPageCubit.getCborCryptoHDKey(derivationPathDepth: 4),
       onSuccess: (CborCryptoHDKey cborCryptoHDKey) async {
         bool? navigateBackBool = await showDialog<bool>(
           context: context,

@@ -89,7 +89,7 @@ void main() {
       );
 
       // Act
-      CborCryptoHDKey actualCborCryptoHDKey = await actualWalletConnectPageCubit.getCborCryptoHDKey(connectAllBool: true);
+      CborCryptoHDKey actualCborCryptoHDKey = await actualWalletConnectPageCubit.getCborCryptoHDKey(derivationPathDepth: 3);
 
       // Assert
       CborCryptoHDKey expectedCborCryptoHDKey = CborCryptoHDKey(
@@ -117,7 +117,7 @@ void main() {
       );
 
       // Act
-      CborCryptoHDKey actualCborCryptoHDKey = await actualWalletConnectPageCubit.getCborCryptoHDKey(connectAllBool: false);
+      CborCryptoHDKey actualCborCryptoHDKey = await actualWalletConnectPageCubit.getCborCryptoHDKey(derivationPathDepth: 4);
 
       // Assert
       CborCryptoHDKey expectedCborCryptoHDKey = CborCryptoHDKey(
