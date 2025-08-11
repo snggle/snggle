@@ -5,7 +5,7 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/scan_qr_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/listening_page/listening_page.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class CustomBottomNavigationBarScanIcon extends StatefulWidget {
@@ -67,7 +67,7 @@ class _CustomBottomNavigationBarScanIconState extends State<CustomBottomNavigati
       useRootNavigator: true,
       useSafeArea: false,
       builder: (BuildContext context) {
-        return const ScanQRPage();
+        return const ListeningPage();
       },
     );
 
