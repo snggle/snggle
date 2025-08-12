@@ -1,5 +1,8 @@
-import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/states/receive_section_result_state.dart';
+import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/a_receive_section_state.dart';
 
-class ReceiveSectionRecordingState extends ReceiveSectionResultState {
-  ReceiveSectionRecordingState({required super.decodedMessageParts, required super.brokenMessageIndexes});
+class ReceiveSectionRecordingState extends AReceiveSectionState {
+  ReceiveSectionRecordingState();
+
+  @override
+  List<Object?> get props => <Object>[];
 }

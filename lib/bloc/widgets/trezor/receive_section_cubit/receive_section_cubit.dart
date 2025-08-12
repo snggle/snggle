@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:codec_utils/codec_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,6 +15,8 @@ class ReceiveSectionCubit extends Cubit<AReceiveSectionState> {
   final ValueNotifier<String> consoleNotifier = ValueNotifier<String>('');
   late final AudioDecoder _audioDecoder;
   AudioSettingsModel audioSettingsModel = AudioSettingsModel(frequencyGenerator: StandardFrequencyGenerator(subbandCount: 32));
+  int? dataFramesCount;
+  ACborTaggedObject? cborTaggedObject;
 
   ReceiveSectionCubit() : super(ReceiveSectionEmptyState()) {
     _audioDecoder = AudioDecoder(
@@ -27,11 +30,11 @@ class ReceiveSectionCubit extends Cubit<AReceiveSectionState> {
   Future<void> startRecording() async {
     try {
       await _audioDecoder.startRecording(audioSettingsModel);
-      emit(ReceiveSectionRecordingState(
-        decodedMessageParts: const <String>[],
-        brokenMessageIndexes: const <int>[],
-      ));
-      consoleNotifier.value = '';
+      emit(ReceiveSectionRecordingState());
+      dataFramesCount = null;
+      consoleNotifier
+        ..value = ''
+        ..value += 'Recording started...';
     } catch (e) {
       AppLogger().log(message: 'Cannot start recording: $e');
       emit(ReceiveSectionEmptyState());
@@ -43,29 +46,49 @@ class ReceiveSectionCubit extends Cubit<AReceiveSectionState> {
     emit(ReceiveSectionEmptyState());
   }
 
+  void acquireCborObect() {
+    try {
+      URDecoder urDecoder = URDecoder();
+      urDecoder.receivePart(part);
+      ACborTaggedObject? cborTaggedObject = _urDecoder.buildCborTaggedObject();
+      emit(ScanQRPageState(cborTaggedObject: cborTaggedObject, loadingBool: true));
+    } catch (_) {
+      _unsupportedOperationCallback();
+    }
+  }
+
   void _handleMetadataFrameReceived(MetadataFrameModel metadataFrameModel) {
-    consoleNotifier.value += 'MetadataFrameModel: total frames: ${metadataFrameModel.dataFramesCount}\n';
+    dataFramesCount = metadataFrameModel.dataFramesCount;
+    consoleNotifier.value += '\nDecoding started...';
   }
 
   void _handleDataFrameReceived(DataFrameModel dataFrameModel) {
-    consoleNotifier.value += '\nDataFrameModel (${dataFrameModel.frameIndex}): ${dataFrameModel.data}\n';
+    consoleNotifier.value += '\nReceived frame (${dataFrameModel.frameIndex}/$dataFramesCount)';
   }
 
   void _handleDecodingCompleted(FrameCollectionModel frameCollectionModel) {
-    List<String> decodedParts = frameCollectionModel.getMessageParts();
-    emit(ReceiveSectionResultState(
-      decodedMessageParts: decodedParts,
-      brokenMessageIndexes: frameCollectionModel.getBrokenDataFrameIndexes(),
-    ));
+    List<String> receivedDataFrames = frameCollectionModel.getMessageParts();
+    if (dataFramesCount == null) {
+      return;
+    }
+
+    if (receivedDataFrames.length == dataFramesCount) {
+      String decodedMsg = frameCollectionModel.getMessageParts().join('');
+      URDecoder urDecoder = URDecoder()..receivePart(decodedMsg);
+      cborTaggedObject = urDecoder.buildCborTaggedObject();
+
+      emit(ReceiveSectionResultState(
+        brokenFramesCount: frameCollectionModel.getBrokenDataFrameIndexes().length,
+        allFramesCount: dataFramesCount!,
+      ));
+    }
   }
 
-  void _handleDecodingFailed() {
-    emit(ReceiveSectionResultState(
-      decodedMessageParts: const <String>[
-        'TRANSFER FAILED!',
-        '\nPlease reduce the environment noise or use different transfer parameters.',
-      ],
-      brokenMessageIndexes: const <int>[],
-    ));
+  Future<void> _handleDecodingFailed() async {
+    consoleNotifier.value += '\nTRANSFER FAILED!';
+    await stopRecording();
+    consoleNotifier.value += '\nRestarting';
+    await startRecording();
+    consoleNotifier.value += 'Recording started...';
   }
 }

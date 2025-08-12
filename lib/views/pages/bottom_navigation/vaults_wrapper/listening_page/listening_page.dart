@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/scan_qr_page.dart';
-import 'package:snggle/views/widgets/trezor/receive_section.dart';
+import 'package:snggle/views/widgets/trezor/receive_audio_page.dart';
 
 class ListeningPage extends StatefulWidget {
   const ListeningPage({super.key});
@@ -29,12 +29,12 @@ class _ListeningPageState extends State<ListeningPage> {
           children: <Widget>[
             ElevatedButton(
               onPressed: _showScanQRPage,
-              child: const Text('Przejdź do opcji 1'),
+              child: const Text('QR'),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _showReceivePage,
-              child: const Text('Przejdź do opcji 2'),
+              child: const Text('Audio'),
             ),
           ],
         ),
@@ -59,7 +59,7 @@ class _ListeningPageState extends State<ListeningPage> {
       useRootNavigator: true,
       useSafeArea: false,
       builder: (BuildContext context) {
-        return const ReceiveSection();
+        return const ReceiveAudioPage();
       },
     );
   }
