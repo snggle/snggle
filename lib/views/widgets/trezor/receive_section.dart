@@ -1,16 +1,14 @@
-import 'package:codec_utils/codec_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/a_receive_section_state.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/receive_section_cubit.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/states/receive_section_missing_data_state.dart';
-import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/states/receive_section_recording_state.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/states/receive_section_result_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
 
 class ReceiveSection extends StatefulWidget {
-  final ValueChanged<ACborTaggedObject> onSubmitted;
+  final ValueChanged<String> onSubmitted;
   final bool closeButtonVisible;
   final bool popButtonVisible;
   final VoidCallback? customPopCallback;
@@ -58,7 +56,6 @@ class _ReceiveSectionState extends State<ReceiveSection> {
     return BlocBuilder<ReceiveSectionCubit, AReceiveSectionState>(
         bloc: _receiveSectionCubit,
         builder: (BuildContext context, AReceiveSectionState state) {
-          bool recordingInProgressBool = state is ReceiveSectionRecordingState;
           return Stack(
             children: <Widget>[
               Positioned(
@@ -124,7 +121,7 @@ class _ReceiveSectionState extends State<ReceiveSection> {
                   bottom: 150,
                   left: 0,
                   right: 0,
-                  child: ElevatedButton(onPressed: () => widget.onSubmitted(state.cborTaggedObject), child: const Text('Proceed')),
+                  child: ElevatedButton(onPressed: () => widget.onSubmitted(state.recordedMsg), child: const Text('Proceed')),
                 ),
             ],
           );

@@ -8,27 +8,34 @@ import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/states/sign_tx_page_
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/sign_tx_page/sign_tx_mode.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/tx_confirmation_scaffold.dart';
 import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/qr/qr_result_scaffold.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
+import 'package:snggle/views/widgets/trezor/send_section.dart';
 
 class SignTxPage extends StatefulWidget {
   final SignTxPageCubit signTxPageCubit;
+  final SignTxMode signTxMode;
 
   const SignTxPage({
     required this.signTxPageCubit,
+    required this.signTxMode,
     super.key,
   });
 
-  static Future<SignTxPage> load(CborEthSignRequest cborEthSignRequest) async {
+  static Future<SignTxPage> load(CborEthSignRequest cborEthSignRequest, SignTxMode signTxMode) async {
     SignTxPageCubit signTxPageCubit = SignTxPageCubit(cborEthSignRequest: cborEthSignRequest);
 
     try {
       await signTxPageCubit.init();
-      return SignTxPage(signTxPageCubit: signTxPageCubit);
+      return SignTxPage(
+        signTxPageCubit: signTxPageCubit,
+        signTxMode: signTxMode,
+      );
     } on ScanQrException {
       await signTxPageCubit.close();
       rethrow;
@@ -62,7 +69,7 @@ class _SignTxPageState extends State<SignTxPage> {
             onSignPressed: widget.signTxPageCubit.signTransaction,
           );
         } else if (signTxPageState is SignTxPageSignedTxState) {
-          child = QRResultScaffold.fromUniformResource(
+          child = widget.signTxMode == SignTxMode.qr ? QRResultScaffold.fromUniformResource(
             title: 'SIGNATURE',
             closeButtonVisible: true,
             ur: UR.fromCborTaggedObject(signTxPageState.cborEthSignature),
@@ -93,7 +100,8 @@ class _SignTxPageState extends State<SignTxPage> {
                 ),
               ],
             ),
-          );
+          ) :
+          SendSection(responseMsg: HexCodec.encode(signTxPageState.cborEthSignature.toSerializedCbor(includeTagBool: false)));
         }
 
         return AnimatedSwitcher(

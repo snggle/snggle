@@ -63,11 +63,8 @@ class ReceiveSectionCubit extends Cubit<AReceiveSectionState> {
     }
 
     if (receivedDataFrames.length == dataFramesCount) {
-      String decodedMsg = frameCollectionModel.getMessageParts().join('');
-      URDecoder urDecoder = URDecoder()..receivePart(decodedMsg);
-      cborTaggedObject = urDecoder.buildCborTaggedObject();
-
-      emit(ReceiveSectionResultState(cborTaggedObject: cborTaggedObject!));
+      String recordedMsg = frameCollectionModel.getMessageParts().join('');
+      emit(ReceiveSectionResultState(recordedMsg: recordedMsg));
     } else {
       emit(ReceiveSectionMissingDataState(
         brokenFramesCount: frameCollectionModel.getBrokenDataFrameIndexes().length,

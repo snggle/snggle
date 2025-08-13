@@ -1,11 +1,10 @@
-import 'package:codec_utils/codec_utils.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/a_receive_section_state.dart';
 
 class ReceiveSectionResultState extends AReceiveSectionState {
-  final ACborTaggedObject cborTaggedObject;
+  final String recordedMsg;
 
-  ReceiveSectionResultState({required this.cborTaggedObject,});
+  ReceiveSectionResultState({required this.recordedMsg,});
 
   @override
-  List<Object?> get props => <Object>[cborTaggedObject];
+  List<Object?> get props => <Object>[recordedMsg];
 }

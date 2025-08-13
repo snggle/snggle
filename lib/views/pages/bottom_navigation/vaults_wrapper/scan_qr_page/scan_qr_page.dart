@@ -7,6 +7,7 @@ import 'package:snggle/bloc/pages/scan_tx_page/scan_qr_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/sign_tx_page/sign_tx_mode.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/sign_tx_page/sign_tx_page.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
@@ -79,7 +80,10 @@ class _ScanQRPageState extends State<ScanQRPage> {
   Future<Widget> _loadResultPage(ACborTaggedObject cborTaggedObject) async {
     switch (cborTaggedObject) {
       case CborEthSignRequest cborEthSignRequest:
-        return SignTxPage.load(cborEthSignRequest);
+        return SignTxPage.load(
+          cborEthSignRequest,
+          SignTxMode.qr,
+        );
       default:
         throw const ScanQrException(ScanQrExceptionType.unsupported);
     }
