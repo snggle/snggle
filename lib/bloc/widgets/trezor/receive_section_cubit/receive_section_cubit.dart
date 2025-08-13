@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mrumru/mrumru.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/a_receive_section_state.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/states/receive_section_empty_state.dart';
+import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/states/receive_section_missing_data_state.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/states/receive_section_recording_state.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/states/receive_section_result_state.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
@@ -46,17 +47,6 @@ class ReceiveSectionCubit extends Cubit<AReceiveSectionState> {
     emit(ReceiveSectionEmptyState());
   }
 
-  void acquireCborObect() {
-    try {
-      URDecoder urDecoder = URDecoder();
-      urDecoder.receivePart(part);
-      ACborTaggedObject? cborTaggedObject = _urDecoder.buildCborTaggedObject();
-      emit(ScanQRPageState(cborTaggedObject: cborTaggedObject, loadingBool: true));
-    } catch (_) {
-      _unsupportedOperationCallback();
-    }
-  }
-
   void _handleMetadataFrameReceived(MetadataFrameModel metadataFrameModel) {
     dataFramesCount = metadataFrameModel.dataFramesCount;
     consoleNotifier.value += '\nDecoding started...';
@@ -77,7 +67,9 @@ class ReceiveSectionCubit extends Cubit<AReceiveSectionState> {
       URDecoder urDecoder = URDecoder()..receivePart(decodedMsg);
       cborTaggedObject = urDecoder.buildCborTaggedObject();
 
-      emit(ReceiveSectionResultState(
+      emit(ReceiveSectionResultState(cborTaggedObject: cborTaggedObject!));
+    } else {
+      emit(ReceiveSectionMissingDataState(
         brokenFramesCount: frameCollectionModel.getBrokenDataFrameIndexes().length,
         allFramesCount: dataFramesCount!,
       ));

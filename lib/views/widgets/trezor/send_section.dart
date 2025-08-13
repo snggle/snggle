@@ -5,10 +5,10 @@ import 'package:snggle/bloc/widgets/trezor/send_section_cubit/send_section_cubit
 import 'package:snggle/bloc/widgets/trezor/send_section_cubit/states/send_section_emitting_state.dart';
 
 class SendSection extends StatefulWidget {
-  final String requestMsg;
+  final String responseMsg;
 
   const SendSection({
-    required this.requestMsg,
+    required this.responseMsg,
     super.key,
   });
 
@@ -41,7 +41,7 @@ class _SendSectionState extends State<SendSection> {
                           onPressed: emittingInProgressBool
                               ? null
                               : () {
-                            sendSectionCubit.playSound(widget.requestMsg);
+                            sendSectionCubit.playSound(widget.responseMsg);
                           },
                           child: const Text('Emit audio', style: TextStyle(color: Colors.blue)),
                         ),

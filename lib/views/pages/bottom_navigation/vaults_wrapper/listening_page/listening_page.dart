@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/scan_qr_page.dart';
-import 'package:snggle/views/widgets/trezor/receive_audio_page.dart';
+import 'package:snggle/views/widgets/trezor/audio_transfer_page.dart';
 
 class ListeningPage extends StatefulWidget {
   const ListeningPage({super.key});
@@ -59,7 +59,7 @@ class _ListeningPageState extends State<ListeningPage> {
       useRootNavigator: true,
       useSafeArea: false,
       builder: (BuildContext context) {
-        return const ReceiveAudioPage();
+        return const AudioTransferPage();
       },
     );
   }

@@ -102,7 +102,7 @@ class _TrezorScaffoldState extends State<TrezorScaffold> {
                     ),
                     const SizedBox(height: 10),
                   ],
-                  SendSection(requestMsg: widget.msg),
+                  SendSection(responseMsg: widget.msg),
                   SizedBox(height: widget.qrCodeGap),
                   widget.child,
                   const SizedBox(height: 50),
