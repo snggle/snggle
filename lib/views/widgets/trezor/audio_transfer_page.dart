@@ -116,18 +116,18 @@ class _AudioTransferPageState extends State<AudioTransferPage> {
         return CustomDialog(
           backgroundColor: AppColors.body2.withOpacity(0.5),
           title: switch (scanQrExceptionType) {
-            ScanQrExceptionType.unsupported => 'Unsupported QR Code',
+            ScanQrExceptionType.unsupported => 'Unsupported audio',
             ScanQrExceptionType.receivedAddressEmpty => 'Missing Address',
             ScanQrExceptionType.walletNotFound => 'Wallet Not Found',
             ScanQrExceptionType.walletWithEncryptedParents => 'Secured Wallet',
           },
           content: Text(
             switch (scanQrExceptionType) {
-              ScanQrExceptionType.unsupported => 'Scanned QR code is not supported by the application. Please ensure you are using a valid QR code.',
+              ScanQrExceptionType.unsupported => 'Recorded audio is not supported by the application. Please ensure you are using a valid audio signal.',
               ScanQrExceptionType.receivedAddressEmpty =>
-                'Scanned transaction does not contain the wallet address required for signing. Please try again with the correct QR code.',
+                'Recorded transaction does not contain the wallet address required for signing. Please try again with the correct audio signal.',
               ScanQrExceptionType.walletNotFound =>
-                'Scanned transaction contains an address that does not exist in the application. Please check if you are using the correct wallet.',
+                'Recorded transaction contains an address that does not exist in the application. Please check if you are using the correct wallet.',
               ScanQrExceptionType.walletWithEncryptedParents =>
                 "The wallet is in the password protected path. Please unlock the protected elements on the wallet's path to continue.",
             },

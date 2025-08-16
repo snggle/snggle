@@ -37,7 +37,7 @@ class ReceiveSectionCubit extends Cubit<AReceiveSectionState> {
         ..value = ''
         ..value += 'Recording started...';
     } catch (e) {
-      AppLogger().log(message: 'Cannot start recording: $e');
+      AppLogger().log(message: '\nCannot start recording: $e');
       emit(ReceiveSectionEmptyState());
     }
   }
@@ -57,6 +57,7 @@ class ReceiveSectionCubit extends Cubit<AReceiveSectionState> {
   }
 
   void _handleDecodingCompleted(FrameCollectionModel frameCollectionModel) {
+    consoleNotifier.value += '\nRecording stopped.';
     List<String> receivedDataFrames = frameCollectionModel.getMessageParts();
     if (dataFramesCount == null) {
       return;
@@ -78,6 +79,6 @@ class ReceiveSectionCubit extends Cubit<AReceiveSectionState> {
     await stopRecording();
     consoleNotifier.value += '\nRestarting';
     await startRecording();
-    consoleNotifier.value += 'Recording started...';
+    consoleNotifier.value += '\nRecording started...';
   }
 }

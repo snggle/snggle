@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/a_receive_section_state.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/receive_section_cubit.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/states/receive_section_missing_data_state.dart';
+import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/states/receive_section_recording_state.dart';
 import 'package:snggle/bloc/widgets/trezor/receive_section_cubit/states/receive_section_result_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
@@ -56,6 +57,8 @@ class _ReceiveSectionState extends State<ReceiveSection> {
     return BlocBuilder<ReceiveSectionCubit, AReceiveSectionState>(
         bloc: _receiveSectionCubit,
         builder: (BuildContext context, AReceiveSectionState state) {
+          bool recordingInProgressBool = state is ReceiveSectionRecordingState;
+
           return Stack(
             children: <Widget>[
               Positioned(
@@ -73,6 +76,7 @@ class _ReceiveSectionState extends State<ReceiveSection> {
                   ),
                 ),
               ),
+              if (recordingInProgressBool)
               Positioned(
                 top: 150,
                 left: 0,

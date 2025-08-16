@@ -31,6 +31,7 @@ class AudioTransferCubit extends Cubit<AudioTransferState> {
       }
     } catch (e) {
       AppLogger().log(message: 'Recorded a signal that could not be processed', logLevel: LogLevel.warning);
+      _unsupportedOperationCallback();
     }
   }
 
