@@ -101,7 +101,7 @@ class _SignTxPageState extends State<SignTxPage> {
               ],
             ),
           ) :
-          SendSection(responseMsg: HexCodec.encode(signTxPageState.cborEthSignature.toSerializedCbor(includeTagBool: false)));
+          SendSection(responseMsg: HexCodec.encode(signTxPageState.cborEthSignature.toSerializedCbor(includeTagBool: true)));
         }
 
         return AnimatedSwitcher(

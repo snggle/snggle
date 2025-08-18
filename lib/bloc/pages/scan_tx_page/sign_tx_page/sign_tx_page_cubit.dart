@@ -50,6 +50,12 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
     TransactionModel signedTransactionModel = transactionModel.addSignature(signature.hex);
     await _transactionsService.save(signedTransactionModel);
 
+    CborEthSignature cborEthSignature = CborEthSignature(
+      signature: signature.bytes,
+      origin: _cborEthSignRequest.origin,
+      requestId: _cborEthSignRequest.requestId ?? Uint8List(0),
+    );
+
     emit(SignTxPageSignedTxState(
       transactionModel: signedTransactionModel,
       cborEthSignature: CborEthSignature(
@@ -58,6 +64,10 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
         requestId: _cborEthSignRequest.requestId ?? Uint8List(0),
       ),
     ));
+
+    print('signature: $signature');
+    print('');
+    print('cbor: ${HexCodec.encode(cborEthSignature.toSerializedCbor(includeTagBool: true))}');
   }
 
   Future<void> _setupSignWallet() async {
