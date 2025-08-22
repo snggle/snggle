@@ -58,8 +58,8 @@ class _EthereumTransactionDetailsPageState extends State<EthereumTransactionDeta
     Uint8List? functionData = abiFunctionBytes?.sublist(4);
 
     String? signDate = widget.transactionModel.signDate != null ? DateFormat('dd/MM/yy HH:mm').format(widget.transactionModel.signDate!) : null;
-    String? signDataType = switch (widget.transactionModel.signDataType) {
-      SignDataType.typedTransaction => 'ETHEREUM TRANSACTION',
+    String signDataType = switch (widget.transactionModel.signDataType) {
+      SignDataType.typedTransaction => 'TRANSACTION',
       SignDataType.rawBytes => 'PLAIN TEXT',
     };
 
@@ -119,7 +119,7 @@ class _EthereumTransactionDetailsPageState extends State<EthereumTransactionDeta
                 ),
               ],
               CopyWrapper(
-                value: signDataType!,
+                value: signDataType,
                 child: LabelWrapperHorizontal(
                   label: 'Format',
                   labelStyle: labelTextStyle,

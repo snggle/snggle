@@ -1,4 +1,3 @@
-import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
@@ -48,7 +47,7 @@ class TransactionListItemTitle extends StatelessWidget {
           SizedBox(
             width: 50,
             child: GradientText(
-              transactionModel.transactionLabel,
+              transactionModel.transactionLabel ?? '',
               gradient: RadialGradient(radius: 1, center: Alignment.center, colors: AppColors.primaryGradient.colors),
               textStyle: textTheme.labelMedium?.copyWith(height: 0.95, letterSpacing: 1),
               textAlign: TextAlign.center,

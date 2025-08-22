@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:codec_utils/codec_utils.dart';
-import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/a_solana_sign_tx_page_state.dart';

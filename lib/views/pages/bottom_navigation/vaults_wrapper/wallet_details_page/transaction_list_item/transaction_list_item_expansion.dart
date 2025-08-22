@@ -4,6 +4,7 @@ import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
 import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
+import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/public_address_preview.dart';
 

@@ -55,9 +55,7 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
     Uint8List message = _cborSolSignRequest.signData;
     ASignature signature = SolanaSigner(ed25519PrivateKey).sign(message);
 
-    String signatureHex = HexCodec.encode(signature.bytes);
-
-    SolanaTransactionModel signedTransactionModel = transactionModel.addSignature(signatureHex);
+    SolanaTransactionModel signedTransactionModel = transactionModel.addSignature(signature.hex);
     await _transactionsService.save(signedTransactionModel);
 
     emit(SolanaSignTxPageSignedTxState(

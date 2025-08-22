@@ -18,6 +18,7 @@ import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_scan_icon.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
+import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
 import 'package:snggle/views/widgets/generic/gradient_scrollbar.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';

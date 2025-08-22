@@ -15,6 +15,9 @@ import 'package:uuid/uuid.dart';
 
 import 'database_mock.dart';
 
+// TODO(Kamil): This file was temporarily modified by ChatGPT to fix tests on Windows
+// TODO(Kamil): it will likely be reverted before merging and moved into a new branch
+
 class TestDatabase {
   // Keep root deterministic for dumps/debugging
   static Directory testRootDirectory = Directory(p.join(Directory.systemTemp.path, 'snggle', 'test'));

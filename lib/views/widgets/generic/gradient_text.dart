@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class GradientText extends StatelessWidget {
-  final String? text;
+  final String text;
   final Gradient gradient;
   final int? maxLines;
   final TextAlign? textAlign;
@@ -28,7 +28,7 @@ class GradientText extends StatelessWidget {
         colors: gradient.colors,
       ).createShader,
       child: Text(
-        text!,
+        text,
         maxLines: maxLines,
         textAlign: textAlign,
         overflow: overflow,

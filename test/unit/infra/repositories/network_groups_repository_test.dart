@@ -1,7 +1,6 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
-import 'package:snggle/bloc/pages/wallet_create/derivation_path_index_extractor/derivation_path_types.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
 import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
@@ -28,7 +27,6 @@ void main() {
     networkType: NetworkType.ethereum,
     name: 'Ethereum',
     walletType: WalletType.legacy,
-    derivationPathType: DerivationPathType.lastDynamic,
   );
 
   setUp(() async {

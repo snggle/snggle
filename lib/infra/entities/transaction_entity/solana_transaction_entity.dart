@@ -1,4 +1,3 @@
-import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:isar/isar.dart';
 import 'package:snggle/infra/entities/transaction_entity/a_transaction_entity.dart';
 

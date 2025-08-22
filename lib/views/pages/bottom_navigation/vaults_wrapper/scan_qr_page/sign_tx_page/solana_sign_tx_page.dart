@@ -8,8 +8,10 @@ import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/states/solana
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/solana_tx_confirmation_scaffold.dart';
+import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/tx_confirmation_scaffold.dart';
 import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
+import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/qr/qr_result_scaffold.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip.dart';
@@ -24,13 +26,13 @@ class SolanaSignTxPage extends StatefulWidget {
   });
 
   static Future<SolanaSignTxPage> load(CborSolSignRequest cborSolSignRequest) async {
-    SolanaSignTxPageCubit signTxPageCubit = SolanaSignTxPageCubit(cborSolSignRequest: cborSolSignRequest);
+    SolanaSignTxPageCubit solanaSignTxPageCubit = SolanaSignTxPageCubit(cborSolSignRequest: cborSolSignRequest);
 
     try {
-      await signTxPageCubit.init();
-      return SolanaSignTxPage(signTxPageCubit: signTxPageCubit);
+      await solanaSignTxPageCubit.init();
+      return SolanaSignTxPage(signTxPageCubit: solanaSignTxPageCubit);
     } on ScanQrException {
-      await signTxPageCubit.close();
+      await solanaSignTxPageCubit.close();
       rethrow;
     }
   }
@@ -56,10 +58,44 @@ class _SolanaSignTxPageState extends State<SolanaSignTxPage> {
         late Widget child;
 
         if (signTxPageState is SolanaSignTxPageConfirmTxState) {
-          child = SolanaTxConfirmationScaffold(
+          child = TxConfirmationScaffold(
             title: 'CONFIRM',
-            transactionModel: widget.signTxPageCubit.transactionModel,
             onSignPressed: widget.signTxPageCubit.signTransaction,
+            transactionBodyWidget: Builder(
+              builder: (BuildContext context) {
+                SolanaTransactionModel tx = widget.signTxPageCubit.transactionModel;
+                const RadialGradient gradient = RadialGradient(
+                  radius: 10,
+                  center: Alignment(-0.6, -0.6),
+                  colors: <Color>[
+                    Color(0xFF000000),
+                    Color(0xFF42D2FF),
+                    Color(0xFF939393),
+                    Color(0xFF000000),
+                  ],
+                );
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    if (tx.senderAddress != null) LabelWrapperVertical(label: 'From', child: AddressPreview(address: tx.senderAddress!)),
+                    if (tx.recipientAddress != null) LabelWrapperVertical(label: 'To', child: AddressPreview(address: tx.recipientAddress!)),
+                    if (tx.contractAddress != null) LabelWrapperVertical(label: 'Mint', child: AddressPreview(address: tx.contractAddress!)),
+                    if (tx.amount != null)
+                      LabelWrapperVertical(
+                        label: 'Amount',
+                        child: GradientText(tx.amount!, gradient: gradient, textStyle: textTheme.bodyMedium),
+                      ),
+                    if (tx.message != null)
+                      LabelWrapperVertical(
+                        label: 'Message',
+                        child: Text(tx.message!, style: textTheme.bodyMedium?.copyWith(color: AppColors.body3)),
+                      ),
+                    const SizedBox(height: 100),
+                  ],
+                );
+              },
+            ),
           );
         } else if (signTxPageState is SolanaSignTxPageSignedTxState) {
           child = QRResultScaffold.fromUniformResource(
@@ -79,7 +115,7 @@ class _SolanaSignTxPageState extends State<SolanaSignTxPage> {
               children: <Widget>[
                 LabelWrapperVertical(
                   label: 'Signed with',
-                  child: ETHAddressPreview(
+                  child: AddressPreview(
                     address: widget.signTxPageCubit.signWalletModel.address,
                     textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
                   ),

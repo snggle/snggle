@@ -1,7 +1,6 @@
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:isar/isar.dart';
-import 'package:snggle/infra/entities/transaction_entity/a_transaction_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
 import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
@@ -47,7 +46,7 @@ class EthereumTransactionModel extends ATransactionModel {
   }
 
   factory EthereumTransactionModel.fromCborEthSignRequest(int walletId, CborEthSignRequest cborEthSignRequest) {
-    SignDataType signDataType = SignDataType.typedTransaction;
+    SignDataType signDataType = cborEthSignRequest.dataType == CborEthSignDataType.rawBytes ? SignDataType.rawBytes : SignDataType.typedTransaction;
     AEthereumTransaction? ethereumTransaction = AEthereumTransaction.fromSerializedData(signDataType, cborEthSignRequest.signData);
 
     return EthereumTransactionModel(
@@ -124,8 +123,8 @@ class EthereumTransactionModel extends ATransactionModel {
 
   @override
   String? get transactionLabel => switch (signDataType) {
-    SignDataType.typedTransaction => 'ETH TX',
-    SignDataType.rawBytes => 'ETH TEXT',
+    SignDataType.typedTransaction => 'TX',
+    SignDataType.rawBytes => 'TEXT',
   };
 
   @override

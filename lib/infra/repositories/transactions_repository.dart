@@ -11,9 +11,9 @@ class TransactionsRepository {
   /// Get all transactions (Ethereum + Solana) by wallet
   Future<List<ATransactionEntity>> getByWallet(int walletId) async {
     return isarDatabaseManager.perform((Isar isar) async {
-      List<EthereumTransactionEntity> eth = await isar.ethereumTransactions.filter().walletIdEqualTo(walletId).findAll();
-      List<SolanaTransactionEntity> sol = await isar.solanaTransactions.filter().walletIdEqualTo(walletId).findAll();
-      return <ATransactionEntity>[...eth, ...sol];
+      List<EthereumTransactionEntity> ethereumTransactionList = await isar.ethereumTransactions.filter().walletIdEqualTo(walletId).findAll();
+      List<SolanaTransactionEntity> solanaTransactionList = await isar.solanaTransactions.filter().walletIdEqualTo(walletId).findAll();
+      return <ATransactionEntity>[...ethereumTransactionList, ...solanaTransactionList];
     });
   }
 
@@ -36,14 +36,14 @@ class TransactionsRepository {
   Future<void> deleteAll(List<ATransactionEntity> transactionEntities) async {
     return isarDatabaseManager.perform((Isar isar) async {
       await isar.writeTxn(() async {
-        List<Id> ethIds = transactionEntities.whereType<EthereumTransactionEntity>().map((EthereumTransactionEntity e) => e.id).toList();
-        List<Id> solIds = transactionEntities.whereType<SolanaTransactionEntity>().map((SolanaTransactionEntity e) => e.id).toList();
+        List<Id> ethereumTransactionIdList = transactionEntities.whereType<EthereumTransactionEntity>().map((EthereumTransactionEntity e) => e.id).toList();
+        List<Id> solanaTransactionIdList = transactionEntities.whereType<SolanaTransactionEntity>().map((SolanaTransactionEntity e) => e.id).toList();
 
-        if (ethIds.isNotEmpty) {
-          await isar.ethereumTransactions.deleteAll(ethIds);
+        if (ethereumTransactionIdList.isNotEmpty) {
+          await isar.ethereumTransactions.deleteAll(ethereumTransactionIdList);
         }
-        if (solIds.isNotEmpty) {
-          await isar.solanaTransactions.deleteAll(solIds);
+        if (solanaTransactionIdList.isNotEmpty) {
+          await isar.solanaTransactions.deleteAll(solanaTransactionIdList);
         }
       });
     });

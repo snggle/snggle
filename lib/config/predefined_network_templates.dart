@@ -1,6 +1,4 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
-import 'package:snggle/bloc/pages/wallet_create/derivation_path_index_extractor/derivation_path_last_index_extractor.dart';
-import 'package:snggle/bloc/pages/wallet_create/derivation_path_index_extractor/derivation_path_second_last_index_extractor.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/networks/network_type.dart';

@@ -1,6 +1,5 @@
 import 'package:auto_route/annotations.dart';
 import 'package:codec_utils/codec_utils.dart';
-import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:snggle/config/app_colors.dart';
@@ -50,8 +49,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
     String? amount = widget.transactionModel.amount;
 
     String? signDate = widget.transactionModel.signDate != null ? DateFormat('dd/MM/yy HH:mm').format(widget.transactionModel.signDate!) : null;
-    String? signDataType = 'SOLANA TRANSACTION';
-
+    String signDataType = 'TRANSACTION';
 
     String? message = widget.transactionModel.message;
     String? messageLength = message?.codeUnits.length.toString();
@@ -109,7 +107,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
                 ),
               ],
               CopyWrapper(
-                value: signDataType!,
+                value: signDataType,
                 child: LabelWrapperHorizontal(
                   label: 'Format',
                   labelStyle: labelTextStyle,
