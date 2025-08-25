@@ -10,7 +10,7 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/tx_confirmation_scaffold.dart';
-import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
+import 'package:snggle/views/widgets/generic/address_preview.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/tx_confirmation_scaffold.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';

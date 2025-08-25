@@ -1,3 +1,4 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:isar/isar.dart';
 
@@ -5,13 +6,13 @@ abstract class ATransactionEntity extends Equatable {
   final Id id;
   final int walletId;
   final String creationDate;
-
+  @enumerated
+  final SignDataType signDataType;
   final String? amount;
-  final String? fee;
-  final String? senderAddress;
   final String? message;
+  final String? contractAddress;
+  final String? senderAddress;
   final String? recipientAddress;
-  final String? signer;
   final String? signature;
   final String? signDate;
 
@@ -19,12 +20,12 @@ abstract class ATransactionEntity extends Equatable {
     required this.id,
     required this.walletId,
     required this.creationDate,
+    required this.signDataType,
     this.amount,
-    this.fee,
+    this.contractAddress,
     this.message,
     this.senderAddress,
     this.recipientAddress,
-    this.signer,
     this.signature,
     this.signDate,
   });
@@ -34,11 +35,12 @@ abstract class ATransactionEntity extends Equatable {
     id,
     walletId,
     creationDate,
+    signDataType,
     amount,
-    fee,
+    contractAddress,
+    message,
     senderAddress,
     recipientAddress,
-    signer,
     signature,
     signDate,
   ];

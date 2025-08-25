@@ -1,7 +1,6 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/pages/wallet_create/derivation_path_index_extractor/derivation_path_index_extractor.dart';
 import 'package:snggle/bloc/pages/wallet_create/wallet_create_page/wallet_create_page_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/secrets_service.dart';

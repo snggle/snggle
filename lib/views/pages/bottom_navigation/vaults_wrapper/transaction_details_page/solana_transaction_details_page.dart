@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:codec_utils/codec_utils.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:snggle/config/app_colors.dart';
@@ -49,7 +50,10 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
     String? amount = widget.transactionModel.amount;
 
     String? signDate = widget.transactionModel.signDate != null ? DateFormat('dd/MM/yy HH:mm').format(widget.transactionModel.signDate!) : null;
-    String signDataType = 'TRANSACTION';
+    String signDataType = switch (widget.transactionModel.signDataType) {
+      SignDataType.typedTransaction => 'TRANSACTION',
+      SignDataType.rawBytes => 'PLAIN TEXT',
+    };
 
     String? message = widget.transactionModel.message;
     String? messageLength = message?.codeUnits.length.toString();
@@ -80,7 +84,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
                     label: 'Signer',
                     labelStyle: labelTextStyle,
                     collapsedValue: GradientText(
-                      StringUtils.getShortHex(senderAddress, 6),
+                      StringUtils.getShortText(senderAddress, 6),
                       gradient: AppColors.primaryGradient,
                       textStyle: horizontalValueTextStyle,
                     ),
@@ -126,7 +130,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
                     label: 'Contract',
                     labelStyle: labelTextStyle,
                     collapsedValue: GradientText(
-                      StringUtils.getShortHex(contractAddress, 6),
+                      StringUtils.getShortText(contractAddress, 6),
                       gradient: AppColors.primaryGradient,
                       textStyle: horizontalValueTextStyle,
                     ),
@@ -144,7 +148,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
                     label: 'Recipient',
                     labelStyle: labelTextStyle,
                     collapsedValue: GradientText(
-                      StringUtils.getShortHex(recipientAddress, 6),
+                      StringUtils.getShortText(recipientAddress, 6),
                       gradient: AppColors.primaryGradient,
                       textStyle: horizontalValueTextStyle,
                     ),

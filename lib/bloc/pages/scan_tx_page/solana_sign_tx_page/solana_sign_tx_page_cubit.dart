@@ -52,10 +52,9 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
       metadata: Bip32KeyMetadata.fromCompressedPublicKey(compressedPublicKey: edPrivateKey.edPublicKey.bytes),
     );
 
-    Uint8List message = _cborSolSignRequest.signData;
-    ASignature signature = SolanaSigner(ed25519PrivateKey).sign(message);
+    ASignature signature = SolanaSigner(ed25519PrivateKey).sign(_cborSolSignRequest.signData);
 
-    SolanaTransactionModel signedTransactionModel = transactionModel.addSignature(signature.hex);
+    SolanaTransactionModel signedTransactionModel = transactionModel.addSignature(signature.hex) as SolanaTransactionModel;
     await _transactionsService.save(signedTransactionModel);
 
     emit(SolanaSignTxPageSignedTxState(

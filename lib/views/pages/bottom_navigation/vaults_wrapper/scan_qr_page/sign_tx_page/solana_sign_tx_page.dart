@@ -10,7 +10,7 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/tx_confirmation_scaffold.dart';
-import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
+import 'package:snggle/views/widgets/generic/address_preview.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/qr/qr_result_scaffold.dart';
@@ -64,27 +64,18 @@ class _SolanaSignTxPageState extends State<SolanaSignTxPage> {
             transactionBodyWidget: Builder(
               builder: (BuildContext context) {
                 SolanaTransactionModel tx = widget.signTxPageCubit.transactionModel;
-                const RadialGradient gradient = RadialGradient(
-                  radius: 10,
-                  center: Alignment(-0.6, -0.6),
-                  colors: <Color>[
-                    Color(0xFF000000),
-                    Color(0xFF42D2FF),
-                    Color(0xFF939393),
-                    Color(0xFF000000),
-                  ],
-                );
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    if (tx.signerAddress != null) LabelWrapperVertical(label: 'Signer', child: AddressPreview(address: tx.signerAddress!)),
                     if (tx.senderAddress != null) LabelWrapperVertical(label: 'From', child: AddressPreview(address: tx.senderAddress!)),
                     if (tx.recipientAddress != null) LabelWrapperVertical(label: 'To', child: AddressPreview(address: tx.recipientAddress!)),
                     if (tx.contractAddress != null) LabelWrapperVertical(label: 'Mint', child: AddressPreview(address: tx.contractAddress!)),
                     if (tx.amount != null)
                       LabelWrapperVertical(
                         label: 'Amount',
-                        child: GradientText(tx.amount!, gradient: gradient, textStyle: textTheme.bodyMedium),
+                        child: GradientText(tx.amount!, gradient: AppColors.primaryGradient, textStyle: textTheme.bodyMedium),
                       ),
                     if (tx.message != null)
                       LabelWrapperVertical(

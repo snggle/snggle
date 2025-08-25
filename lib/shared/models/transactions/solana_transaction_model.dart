@@ -14,13 +14,14 @@ class SolanaTransactionModel extends ATransactionModel {
     required super.id,
     required super.walletId,
     required super.creationDate,
+    required super.signDataType,
     super.amount,
     super.message,
     super.contractAddress,
     super.senderAddress,
     super.recipientAddress,
-    super.signature,
     super.signDate,
+    super.signature,
     this.signerAddress,
   });
 
@@ -30,25 +31,29 @@ class SolanaTransactionModel extends ATransactionModel {
       id: transactionEntity.id,
       walletId: transactionEntity.walletId,
       creationDate: DateTime.parse(transactionEntity.creationDate),
+      signDataType: transactionEntity.signDataType,
       amount: transactionEntity.amount,
       message: transactionEntity.message,
+      contractAddress: transactionEntity.contractAddress,
       senderAddress: transactionEntity.senderAddress,
       recipientAddress: transactionEntity.recipientAddress,
-      signerAddress: transactionEntity.signer,
       signDate: transactionEntity.signDate != null ? DateTime.parse(transactionEntity.signDate!) : null,
       signature: transactionEntity.signature,
+      signerAddress: transactionEntity.signerAddress,
     );
   }
 
   factory SolanaTransactionModel.fromCborSolSignRequest(int walletId, CborSolSignRequest cborSolSignRequest) {
-    SolanaSignDataType solanaSignDataType = cborSolSignRequest.dataType == CborSolSignDataType.transaction ? SolanaSignDataType.transaction : SolanaSignDataType.message;
-    ASolanaMessage solanaMessage = ASolanaMessage.fromSerializedData(solanaSignDataType, cborSolSignRequest.signData);
+    SignDataType signDataType =
+        cborSolSignRequest.dataType == CborSolSignDataType.transaction ? SignDataType.typedTransaction : SignDataType.rawBytes;
+    ASolanaMessage solanaMessage = ASolanaMessage.fromSerializedData(signDataType, cborSolSignRequest.signData);
 
     if (solanaMessage is ASolanaTransactionMessage) {
       return _mapFromDecodedInstructions(
         walletId: walletId,
-        signData: cborSolSignRequest.signData,
         message: solanaMessage,
+        signData: cborSolSignRequest.signData,
+        signDataType: signDataType,
       );
     } else {
       return SolanaTransactionModel(
@@ -56,6 +61,7 @@ class SolanaTransactionModel extends ATransactionModel {
         walletId: walletId,
         creationDate: DateTime.now(),
         message: solanaMessage.message,
+        signDataType: signDataType,
       );
     }
   }
@@ -65,30 +71,29 @@ class SolanaTransactionModel extends ATransactionModel {
     int? id,
     int? walletId,
     DateTime? creationDate,
+    SignDataType? signDataType,
     String? amount,
-    String? fee,
-    String? functionData,
-    String? contractAddress,
     String? message,
-    String? mint,
+    String? contractAddress,
     String? senderAddress,
     String? recipientAddress,
-    String? signerAddress,
-    String? signature,
     DateTime? signDate,
+    String? signature,
+    String? signerAddress,
   }) {
     return SolanaTransactionModel(
       id: id ?? this.id,
       walletId: walletId ?? this.walletId,
       creationDate: creationDate ?? this.creationDate,
+      signDataType: signDataType ?? this.signDataType,
       amount: amount ?? this.amount,
       message: message ?? this.message,
       contractAddress: contractAddress ?? this.contractAddress,
       senderAddress: senderAddress ?? this.senderAddress,
       recipientAddress: recipientAddress ?? this.recipientAddress,
-      signerAddress: signerAddress ?? this.signerAddress,
-      signature: signature ?? this.signature,
       signDate: signDate ?? this.signDate,
+      signature: signature ?? this.signature,
+      signerAddress: signerAddress ?? this.signerAddress,
     );
   }
 
@@ -98,29 +103,44 @@ class SolanaTransactionModel extends ATransactionModel {
       id: id,
       walletId: walletId,
       creationDate: creationDate.toUtc().toIso8601String(),
+      signDataType: signDataType,
       amount: amount,
       message: message,
+      contractAddress: contractAddress,
       senderAddress: senderAddress,
       recipientAddress: recipientAddress,
-      signature: signature,
       signDate: signDate?.toUtc().toIso8601String(),
+      signature: signature,
+      signerAddress: signerAddress,
     );
   }
 
   @override
-  SolanaTransactionModel addSignature(String signature) {
-    return copyWith(signDate: DateTime.now(), signature: signature);
+  String get title {
+    if (recipientAddress != null) {
+      return StringUtils.getShortText(recipientAddress!, 4);
+    } else if (message != null) {
+      return message!;
+    } else if (contractAddress != null) {
+      return StringUtils.getShortText(contractAddress!, 4);
+    } else {
+      return '---';
+    }
   }
 
   @override
-  String? get transactionLabel => 'TX';
+  String get transactionLabel => switch (signDataType) {
+    SignDataType.typedTransaction => 'TX',
+    SignDataType.rawBytes => 'TEXT',
+  };
 
-  static SolanaTransactionModel _mapFromDecodedInstructions({required int walletId, required Uint8List signData, required ASolanaTransactionMessage message}) {
+  static SolanaTransactionModel _mapFromDecodedInstructions(
+      {required int walletId, required Uint8List signData, required ASolanaTransactionMessage message, required SignDataType signDataType}) {
     String? amount;
-    String? mint;
+    String? mintAddress;
     String? senderAddress;
     String? recipientAddress;
-    String? signer;
+    String? signerAddress;
 
     for (ASolanaInstructionDecoded solanaInstructionDecoded in message.decodedInstructions) {
       switch (solanaInstructionDecoded.runtimeType) {
@@ -132,22 +152,22 @@ class SolanaTransactionModel extends ATransactionModel {
 
         case SolanaTokenTransferCheckedInstruction:
           amount = solanaInstructionDecoded.getAmount().toString();
-          mint = solanaInstructionDecoded.mint;
+          mintAddress = solanaInstructionDecoded.mint;
           senderAddress = solanaInstructionDecoded.source;
           recipientAddress = solanaInstructionDecoded.destination;
-          signer = solanaInstructionDecoded.authority;
+          signerAddress = solanaInstructionDecoded.authority;
           break;
 
         case SolanaStakeWithdrawInstruction:
           amount = solanaInstructionDecoded.getAmount().toString();
           recipientAddress = solanaInstructionDecoded.destination;
-          signer = solanaInstructionDecoded.withdrawAuthority;
+          signerAddress = solanaInstructionDecoded.withdrawAuthority;
           senderAddress = solanaInstructionDecoded.stakeAccount;
           break;
 
         case SolanaStakeDelegateInstruction:
           recipientAddress = solanaInstructionDecoded.stakeAccount;
-          signer = solanaInstructionDecoded.stakeAuthority;
+          signerAddress = solanaInstructionDecoded.stakeAuthority;
           break;
 
         case SolanaStakeInitializeInstruction:
@@ -158,7 +178,7 @@ class SolanaTransactionModel extends ATransactionModel {
         case SolanaStakeDeactivateInstruction:
           senderAddress = solanaInstructionDecoded.stakeAccount;
           recipientAddress = solanaInstructionDecoded.stakeAuthority;
-          signer = solanaInstructionDecoded.stakeAuthority;
+          signerAddress = solanaInstructionDecoded.stakeAuthority;
           break;
 
         default:
@@ -170,26 +190,14 @@ class SolanaTransactionModel extends ATransactionModel {
       id: Isar.autoIncrement,
       walletId: walletId,
       creationDate: DateTime.now(),
+      signDataType: signDataType,
       amount: amount,
-      message: HexCodec.encode(signData),
-      contractAddress: mint,
+      message: HexCodec.encode(signData, includePrefixBool: true),
+      contractAddress: mintAddress,
       senderAddress: senderAddress,
       recipientAddress: recipientAddress,
-      signerAddress: signer,
+      signerAddress: signerAddress,
     );
-  }
-
-  @override
-  String get title {
-    if (recipientAddress != null) {
-      return StringUtils.getShortHex(recipientAddress!, 4);
-    } else if (message != null) {
-      return message!;
-    } else if (contractAddress != null) {
-      return StringUtils.getShortHex(contractAddress!, 4);
-    } else {
-      return '---';
-    }
   }
 
   @override
@@ -197,13 +205,14 @@ class SolanaTransactionModel extends ATransactionModel {
         id,
         walletId,
         creationDate,
+        signDataType,
         amount,
         message,
         contractAddress,
         senderAddress,
         recipientAddress,
-        signerAddress,
-        signature,
         signDate,
+        signature,
+        signerAddress,
       ];
 }

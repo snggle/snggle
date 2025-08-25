@@ -47,7 +47,7 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
     AEthereumTransaction ethereumTransaction = AEthereumTransaction.fromSerializedData(transactionModel.signDataType, _cborEthSignRequest.signData);
 
     ASignature signature = ethereumTransaction.sign(ecPrivateKey);
-    EthereumTransactionModel signedTransactionModel = transactionModel.addSignature(signature.hex);
+    EthereumTransactionModel signedTransactionModel = transactionModel.addSignature(signature.hex) as EthereumTransactionModel;
     await _transactionsService.save(signedTransactionModel);
 
     emit(EthereumSignTxPageSignedTxState(

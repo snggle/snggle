@@ -69,21 +69,21 @@ class _ListItemContextTooltipState extends State<TransactionListItemContextToolt
 
   void _navigateToTransactionDetails() {
     widget.onCloseToolbar();
-    ATransactionModel transaction = widget.transactionModel;
-    NetworkTemplateModel network = widget.networkTemplateModel;
+    ATransactionModel transactionModel = widget.transactionModel;
+    NetworkTemplateModel networkTemplateModel = widget.networkTemplateModel;
 
-    if (transaction is EthereumTransactionModel) {
+    if (transactionModel is EthereumTransactionModel) {
       AutoRouter.of(context).push(
         EthereumTransactionDetailsRoute(
-          transactionModel: transaction,
-          networkTemplateModel: network,
+          transactionModel: transactionModel,
+          networkTemplateModel: networkTemplateModel,
         ),
       );
-    } else if (transaction is SolanaTransactionModel) {
+    } else if (transactionModel is SolanaTransactionModel) {
       AutoRouter.of(context).push(
         SolanaTransactionDetailsRoute(
-          transactionModel: transaction,
-          networkTemplateModel: network,
+          transactionModel: transactionModel,
+          networkTemplateModel: networkTemplateModel,
         ),
       );
     }}

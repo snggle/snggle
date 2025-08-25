@@ -84,7 +84,6 @@ class NetworkTemplateModel extends Equatable {
     }
     customizableDerivationPath = customizableDerivationPath.replaceAll('{{a}}', '$accountIndex');
     customizableDerivationPath = customizableDerivationPath.replaceAll('{{y}}', '$changeIndex');
-    customizableDerivationPath = customizableDerivationPath.replaceAll("{{i}}'", "$addressIndex'");
     customizableDerivationPath = customizableDerivationPath.replaceAll('{{i}}', '$addressIndex');
 
     return customizableDerivationPath;

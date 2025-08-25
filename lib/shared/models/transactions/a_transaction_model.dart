@@ -1,18 +1,19 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:snggle/infra/entities/transaction_entity/a_transaction_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/solana_transaction_entity.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
-import 'package:snggle/shared/utils/string_utils.dart';
 
 abstract class ATransactionModel extends Equatable {
   final int id;
   final int walletId;
-  final String? contractAddress;
   final DateTime creationDate;
+  final SignDataType signDataType;
   final String? amount;
   final String? message;
+  final String? contractAddress;
   final String? senderAddress;
   final String? recipientAddress;
   final String? signature;
@@ -22,9 +23,10 @@ abstract class ATransactionModel extends Equatable {
     required this.id,
     required this.walletId,
     required this.creationDate,
+    required this.signDataType,
     this.amount,
-    this.contractAddress,
     this.message,
+    this.contractAddress,
     this.senderAddress,
     this.recipientAddress,
     this.signature,
@@ -35,8 +37,10 @@ abstract class ATransactionModel extends Equatable {
     int? id,
     int? walletId,
     DateTime? creationDate,
+    SignDataType? signDataType,
     String? amount,
     String? message,
+    String? contractAddress,
     String? senderAddress,
     String? recipientAddress,
     String? signature,
@@ -59,25 +63,19 @@ abstract class ATransactionModel extends Equatable {
     return copyWith(signDate: DateTime.now(), signature: signature);
   }
 
-  String? get transactionLabel => null;
+  String get transactionLabel;
 
-  String get title {
-    if (recipientAddress != null) {
-      return StringUtils.getShortHex(recipientAddress!, 4);
-    } else if (message != null) {
-      return message!;
-    } else {
-      return '---';
-    }
-  }
+  String get title;
 
   @override
   List<Object?> get props => <Object?>[
         id,
         walletId,
         creationDate,
+        signDataType,
         amount,
         message,
+        contractAddress,
         senderAddress,
         recipientAddress,
         signature,

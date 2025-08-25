@@ -123,9 +123,9 @@ class EthereumTransactionModel extends ATransactionModel {
 
   @override
   String? get transactionLabel => switch (signDataType) {
-    SignDataType.typedTransaction => 'TX',
-    SignDataType.rawBytes => 'TEXT',
-  };
+        SignDataType.typedTransaction => 'TX',
+        SignDataType.rawBytes => 'TEXT',
+      };
 
   @override
   String get title {
