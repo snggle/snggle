@@ -58,6 +58,8 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
     String? message = widget.transactionModel.message;
     String? messageLength = message?.codeUnits.length.toString();
 
+    String? instructionBytes = widget.transactionModel.instructionBytes;
+
     String? signatureAlgorithm = widget.networkTemplateModel.curveType.name;
     String? signature = widget.transactionModel.signature;
     String? signatureLength = signature != null ? HexCodec.decode(signature).length.toString() : null;
@@ -195,6 +197,22 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
                     labelTextStyle: labelTextStyle,
                     textStyle: verticalValueTextStyle,
                     value: message,
+                  ),
+                ),
+              ],
+              if (instructionBytes != null) ...<Widget>[
+                CopyWrapper(
+                  value: instructionBytes,
+                  child: LabelWrapperVertical(
+                    label: 'Instructions',
+                    labelStyle: labelTextStyle,
+                    labelPadding: const EdgeInsets.only(top: 10, bottom: 6, left: 16, right: 16),
+                    padding: const EdgeInsets.only(bottom: 10),
+                    bottomBorderVisibleBool: false,
+                    child: Text(
+                      instructionBytes,
+                      style: verticalValueTextStyle,
+                    ),
                   ),
                 ),
               ],

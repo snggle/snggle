@@ -31,18 +31,18 @@ class EthereumTransactionEntity extends ATransactionEntity {
 
   @override
   List<Object?> get props => <Object?>[
-    id,
-    walletId,
-    creationDate,
-    signDataType,
-    amount,
-    message,
-    contractAddress,
-    senderAddress,
-    recipientAddress,
-    signature,
-    signDate,
-    fee,
-    functionData,
-  ];
+        id,
+        walletId,
+        creationDate,
+        signDataType,
+        amount,
+        message,
+        contractAddress,
+        senderAddress,
+        recipientAddress,
+        signature,
+        signDate,
+        fee,
+        functionData,
+      ];
 }

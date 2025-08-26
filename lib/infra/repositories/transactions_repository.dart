@@ -8,7 +8,6 @@ import 'package:snggle/infra/managers/isar_database_manager.dart';
 class TransactionsRepository {
   final IsarDatabaseManager isarDatabaseManager = globalLocator<IsarDatabaseManager>();
 
-  /// Get all transactions (Ethereum + Solana) by wallet
   Future<List<ATransactionEntity>> getByWallet(int walletId) async {
     return isarDatabaseManager.perform((Isar isar) async {
       List<EthereumTransactionEntity> ethereumTransactionList = await isar.ethereumTransactions.filter().walletIdEqualTo(walletId).findAll();
@@ -17,7 +16,6 @@ class TransactionsRepository {
     });
   }
 
-  /// Save a transaction (detects Ethereum or Solana automatically)
   Future<int> save(ATransactionEntity transactionEntity) async {
     return isarDatabaseManager.perform((Isar isar) async {
       return isar.writeTxn(() async {
@@ -32,11 +30,11 @@ class TransactionsRepository {
     });
   }
 
-  /// Delete a batch of transactions
   Future<void> deleteAll(List<ATransactionEntity> transactionEntities) async {
     return isarDatabaseManager.perform((Isar isar) async {
       await isar.writeTxn(() async {
-        List<Id> ethereumTransactionIdList = transactionEntities.whereType<EthereumTransactionEntity>().map((EthereumTransactionEntity e) => e.id).toList();
+        List<Id> ethereumTransactionIdList =
+            transactionEntities.whereType<EthereumTransactionEntity>().map((EthereumTransactionEntity e) => e.id).toList();
         List<Id> solanaTransactionIdList = transactionEntities.whereType<SolanaTransactionEntity>().map((SolanaTransactionEntity e) => e.id).toList();
 
         if (ethereumTransactionIdList.isNotEmpty) {

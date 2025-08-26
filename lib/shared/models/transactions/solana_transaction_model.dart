@@ -8,6 +8,7 @@ import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
 
 class SolanaTransactionModel extends ATransactionModel {
+  final String? instructionBytes;
   final String? signerAddress;
 
   const SolanaTransactionModel({
@@ -22,6 +23,7 @@ class SolanaTransactionModel extends ATransactionModel {
     super.recipientAddress,
     super.signDate,
     super.signature,
+    this.instructionBytes,
     this.signerAddress,
   });
 
@@ -39,6 +41,7 @@ class SolanaTransactionModel extends ATransactionModel {
       recipientAddress: transactionEntity.recipientAddress,
       signDate: transactionEntity.signDate != null ? DateTime.parse(transactionEntity.signDate!) : null,
       signature: transactionEntity.signature,
+      instructionBytes: transactionEntity.instructionBytes,
       signerAddress: transactionEntity.signerAddress,
     );
   }
@@ -79,6 +82,7 @@ class SolanaTransactionModel extends ATransactionModel {
     String? recipientAddress,
     DateTime? signDate,
     String? signature,
+    String? instructionBytes,
     String? signerAddress,
   }) {
     return SolanaTransactionModel(
@@ -93,6 +97,7 @@ class SolanaTransactionModel extends ATransactionModel {
       recipientAddress: recipientAddress ?? this.recipientAddress,
       signDate: signDate ?? this.signDate,
       signature: signature ?? this.signature,
+      instructionBytes: instructionBytes ?? this.instructionBytes,
       signerAddress: signerAddress ?? this.signerAddress,
     );
   }
@@ -111,6 +116,7 @@ class SolanaTransactionModel extends ATransactionModel {
       recipientAddress: recipientAddress,
       signDate: signDate?.toUtc().toIso8601String(),
       signature: signature,
+      instructionBytes: instructionBytes,
       signerAddress: signerAddress,
     );
   }
@@ -130,9 +136,9 @@ class SolanaTransactionModel extends ATransactionModel {
 
   @override
   String get transactionLabel => switch (signDataType) {
-    SignDataType.typedTransaction => 'TX',
-    SignDataType.rawBytes => 'TEXT',
-  };
+        SignDataType.typedTransaction => 'TX',
+        SignDataType.rawBytes => 'TEXT',
+      };
 
   static SolanaTransactionModel _mapFromDecodedInstructions(
       {required int walletId, required Uint8List signData, required ASolanaTransactionMessage message, required SignDataType signDataType}) {
@@ -192,7 +198,7 @@ class SolanaTransactionModel extends ATransactionModel {
       creationDate: DateTime.now(),
       signDataType: signDataType,
       amount: amount,
-      message: HexCodec.encode(signData, includePrefixBool: true),
+      instructionBytes: HexCodec.encode(signData, includePrefixBool: true),
       contractAddress: mintAddress,
       senderAddress: senderAddress,
       recipientAddress: recipientAddress,
@@ -213,6 +219,7 @@ class SolanaTransactionModel extends ATransactionModel {
         recipientAddress,
         signDate,
         signature,
+        instructionBytes,
         signerAddress,
       ];
 }

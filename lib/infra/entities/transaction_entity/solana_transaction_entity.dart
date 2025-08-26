@@ -9,6 +9,7 @@ part 'solana_transaction_entity.g.dart';
   ignore: <String>{'props', 'stringify', 'hashCode'},
 )
 class SolanaTransactionEntity extends ATransactionEntity {
+  final String? instructionBytes;
   final String? signerAddress;
 
   const SolanaTransactionEntity({
@@ -23,6 +24,7 @@ class SolanaTransactionEntity extends ATransactionEntity {
     super.recipientAddress,
     super.signDate,
     super.signature,
+    this.instructionBytes,
     this.signerAddress
   });
 
@@ -39,6 +41,7 @@ class SolanaTransactionEntity extends ATransactionEntity {
     recipientAddress,
     signDate,
     signature,
+    instructionBytes,
     signerAddress,
   ];
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:codec_utils/codec_utils.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/a_solana_sign_tx_page_state.dart';
@@ -104,6 +105,7 @@ void main() {
           signature:
               '0xb01714bf19f9e2afbdf53cf97b4479b7d55b729a604787681535f57c53df5cb07f8653c1a20bfa3e68c3289b2584ab7de9a9acc0998d0cfb5a34a2b586630e3b1b',
           signDate: actualSignTxPageState.transactionModel.signDate,
+          signDataType: SignDataType.rawBytes,
         ),
         cborSolSignature: CborSolSignature(
           signature: base64Decode('sBcUvxn54q+99Tz5e0R5t9VbcppgR4doFTX1fFPfXLB/hlPBogv6PmjDKJslhKt96amswJmNDPtaNKK1hmMOOxs='),
@@ -262,6 +264,7 @@ void main() {
           signature:
               '0xb01714bf19f9e2afbdf53cf97b4479b7d55b729a604787681535f57c53df5cb07f8653c1a20bfa3e68c3289b2584ab7de9a9acc0998d0cfb5a34a2b586630e3b1b',
           signDate: actualSignTxPageState.transactionModel.signDate,
+          signDataType: SignDataType.rawBytes,
         ),
         cborSolSignature: CborSolSignature(
           signature: base64Decode('sBcUvxn54q+99Tz5e0R5t9VbcppgR4doFTX1fFPfXLB/hlPBogv6PmjDKJslhKt96amswJmNDPtaNKK1hmMOOxs='),
@@ -341,6 +344,7 @@ void main() {
           signature:
               '0xb01714bf19f9e2afbdf53cf97b4479b7d55b729a604787681535f57c53df5cb07f8653c1a20bfa3e68c3289b2584ab7de9a9acc0998d0cfb5a34a2b586630e3b1b',
           signDate: actualSignTxPageState.transactionModel.signDate,
+          signDataType: SignDataType.rawBytes,
         ),
         cborSolSignature: CborSolSignature(
           signature: base64Decode('sBcUvxn54q+99Tz5e0R5t9VbcppgR4doFTX1fFPfXLB/hlPBogv6PmjDKJslhKt96amswJmNDPtaNKK1hmMOOxs='),

@@ -32,16 +32,16 @@ abstract class ATransactionEntity extends Equatable {
 
   @override
   List<Object?> get props => <Object?>[
-    id,
-    walletId,
-    creationDate,
-    signDataType,
-    amount,
-    contractAddress,
-    message,
-    senderAddress,
-    recipientAddress,
-    signature,
-    signDate,
-  ];
+        id,
+        walletId,
+        creationDate,
+        signDataType,
+        amount,
+        contractAddress,
+        message,
+        senderAddress,
+        recipientAddress,
+        signature,
+        signDate,
+      ];
 }

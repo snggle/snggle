@@ -33,44 +33,49 @@ const SolanaTransactionEntitySchema = CollectionSchema(
       name: r'creationDate',
       type: IsarType.string,
     ),
-    r'message': PropertySchema(
+    r'instructionBytes': PropertySchema(
       id: 3,
+      name: r'instructionBytes',
+      type: IsarType.string,
+    ),
+    r'message': PropertySchema(
+      id: 4,
       name: r'message',
       type: IsarType.string,
     ),
     r'recipientAddress': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'recipientAddress',
       type: IsarType.string,
     ),
     r'senderAddress': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'senderAddress',
       type: IsarType.string,
     ),
     r'signDataType': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'signDataType',
       type: IsarType.byte,
       enumMap: _SolanaTransactionEntitysignDataTypeEnumValueMap,
     ),
     r'signDate': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'signDate',
       type: IsarType.string,
     ),
     r'signature': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'signature',
       type: IsarType.string,
     ),
     r'signerAddress': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'signerAddress',
       type: IsarType.string,
     ),
     r'walletId': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'walletId',
       type: IsarType.long,
     )
@@ -108,6 +113,12 @@ int _solanaTransactionEntityEstimateSize(
     }
   }
   bytesCount += 3 + object.creationDate.length * 3;
+  {
+    final value = object.instructionBytes;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   {
     final value = object.message;
     if (value != null) {
@@ -156,14 +167,15 @@ void _solanaTransactionEntitySerialize(
   writer.writeString(offsets[0], object.amount);
   writer.writeString(offsets[1], object.contractAddress);
   writer.writeString(offsets[2], object.creationDate);
-  writer.writeString(offsets[3], object.message);
-  writer.writeString(offsets[4], object.recipientAddress);
-  writer.writeString(offsets[5], object.senderAddress);
-  writer.writeByte(offsets[6], object.signDataType.index);
-  writer.writeString(offsets[7], object.signDate);
-  writer.writeString(offsets[8], object.signature);
-  writer.writeString(offsets[9], object.signerAddress);
-  writer.writeLong(offsets[10], object.walletId);
+  writer.writeString(offsets[3], object.instructionBytes);
+  writer.writeString(offsets[4], object.message);
+  writer.writeString(offsets[5], object.recipientAddress);
+  writer.writeString(offsets[6], object.senderAddress);
+  writer.writeByte(offsets[7], object.signDataType.index);
+  writer.writeString(offsets[8], object.signDate);
+  writer.writeString(offsets[9], object.signature);
+  writer.writeString(offsets[10], object.signerAddress);
+  writer.writeLong(offsets[11], object.walletId);
 }
 
 SolanaTransactionEntity _solanaTransactionEntityDeserialize(
@@ -177,16 +189,17 @@ SolanaTransactionEntity _solanaTransactionEntityDeserialize(
     contractAddress: reader.readStringOrNull(offsets[1]),
     creationDate: reader.readString(offsets[2]),
     id: id,
-    message: reader.readStringOrNull(offsets[3]),
-    recipientAddress: reader.readStringOrNull(offsets[4]),
-    senderAddress: reader.readStringOrNull(offsets[5]),
+    instructionBytes: reader.readStringOrNull(offsets[3]),
+    message: reader.readStringOrNull(offsets[4]),
+    recipientAddress: reader.readStringOrNull(offsets[5]),
+    senderAddress: reader.readStringOrNull(offsets[6]),
     signDataType: _SolanaTransactionEntitysignDataTypeValueEnumMap[
-            reader.readByteOrNull(offsets[6])] ??
+            reader.readByteOrNull(offsets[7])] ??
         SignDataType.rawBytes,
-    signDate: reader.readStringOrNull(offsets[7]),
-    signature: reader.readStringOrNull(offsets[8]),
-    signerAddress: reader.readStringOrNull(offsets[9]),
-    walletId: reader.readLong(offsets[10]),
+    signDate: reader.readStringOrNull(offsets[8]),
+    signature: reader.readStringOrNull(offsets[9]),
+    signerAddress: reader.readStringOrNull(offsets[10]),
+    walletId: reader.readLong(offsets[11]),
   );
   return object;
 }
@@ -211,16 +224,18 @@ P _solanaTransactionEntityDeserializeProp<P>(
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
+      return (reader.readStringOrNull(offset)) as P;
+    case 7:
       return (_SolanaTransactionEntitysignDataTypeValueEnumMap[
               reader.readByteOrNull(offset)] ??
           SignDataType.rawBytes) as P;
-    case 7:
-      return (reader.readStringOrNull(offset)) as P;
     case 8:
       return (reader.readStringOrNull(offset)) as P;
     case 9:
       return (reader.readStringOrNull(offset)) as P;
     case 10:
+      return (reader.readStringOrNull(offset)) as P;
+    case 11:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -833,6 +848,162 @@ extension SolanaTransactionEntityQueryFilter on QueryBuilder<
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity,
+      QAfterFilterCondition> instructionBytesIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'instructionBytes',
+      ));
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity,
+      QAfterFilterCondition> instructionBytesIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'instructionBytes',
+      ));
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity,
+      QAfterFilterCondition> instructionBytesEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'instructionBytes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity,
+      QAfterFilterCondition> instructionBytesGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'instructionBytes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity,
+      QAfterFilterCondition> instructionBytesLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'instructionBytes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity,
+      QAfterFilterCondition> instructionBytesBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'instructionBytes',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity,
+      QAfterFilterCondition> instructionBytesStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'instructionBytes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity,
+      QAfterFilterCondition> instructionBytesEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'instructionBytes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity,
+          QAfterFilterCondition>
+      instructionBytesContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'instructionBytes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity,
+          QAfterFilterCondition>
+      instructionBytesMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'instructionBytes',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity,
+      QAfterFilterCondition> instructionBytesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'instructionBytes',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity,
+      QAfterFilterCondition> instructionBytesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'instructionBytes',
+        value: '',
       ));
     });
   }
@@ -1937,6 +2108,20 @@ extension SolanaTransactionEntityQuerySortBy
   }
 
   QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity, QAfterSortBy>
+      sortByInstructionBytes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'instructionBytes', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity, QAfterSortBy>
+      sortByInstructionBytesDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'instructionBytes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity, QAfterSortBy>
       sortByMessage() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'message', Sort.asc);
@@ -2108,6 +2293,20 @@ extension SolanaTransactionEntityQuerySortThenBy on QueryBuilder<
   }
 
   QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity, QAfterSortBy>
+      thenByInstructionBytes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'instructionBytes', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity, QAfterSortBy>
+      thenByInstructionBytesDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'instructionBytes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity, QAfterSortBy>
       thenByMessage() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'message', Sort.asc);
@@ -2245,6 +2444,14 @@ extension SolanaTransactionEntityQueryWhereDistinct on QueryBuilder<
   }
 
   QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity, QDistinct>
+      distinctByInstructionBytes({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'instructionBytes',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, SolanaTransactionEntity, QDistinct>
       distinctByMessage({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'message', caseSensitive: caseSensitive);
@@ -2330,6 +2537,13 @@ extension SolanaTransactionEntityQueryProperty on QueryBuilder<
       creationDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'creationDate');
+    });
+  }
+
+  QueryBuilder<SolanaTransactionEntity, String?, QQueryOperations>
+      instructionBytesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'instructionBytes');
     });
   }
 

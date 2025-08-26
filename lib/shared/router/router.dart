@@ -44,8 +44,6 @@ class AppRouter extends $AppRouter {
               AutoRoute(page: NetworkListRoute.page),
               AutoRoute(page: WalletListRoute.page),
               AutoRoute(page: WalletDetailsRoute.page),
-              AutoRoute(page: EthereumTransactionDetailsRoute.page),
-              AutoRoute(page: SolanaTransactionDetailsRoute.page),
               AutoRoute(page: WalletConnectRoute.page),
             ],
           ),
