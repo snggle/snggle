@@ -86,7 +86,8 @@ class _ListItemContextTooltipState extends State<TransactionListItemContextToolt
           networkTemplateModel: networkTemplateModel,
         ),
       );
-    }}
+    }
+  }
 
   void _selectTransaction() {
     widget.walletDetailsPageCubit.select(widget.transactionModel);

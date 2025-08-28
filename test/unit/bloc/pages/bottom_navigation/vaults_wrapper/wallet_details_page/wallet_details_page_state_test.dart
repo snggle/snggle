@@ -29,7 +29,7 @@ void main() {
       // Assert
       WalletDetailsPageState expectedWalletDetailsPageState = const WalletDetailsPageState(
         loadingBool: true,
-        transactions: <EthereumTransactionModel>[],
+        transactions: <ATransactionModel>[],
       );
 
       expect(actualWalletDetailsPageState, expectedWalletDetailsPageState);
@@ -41,8 +41,8 @@ void main() {
       // Assert
       WalletDetailsPageState actualWalletDetailsPageState = const WalletDetailsPageState(
         loadingBool: false,
-        transactions: <EthereumTransactionModel>[],
-        selectionModel: SimpleSelectionModel<EthereumTransactionModel>(allItemsCount: 4, selectedItems: <EthereumTransactionModel>[]),
+        transactions: <ATransactionModel>[],
+        selectionModel: SimpleSelectionModel<ATransactionModel>(allItemsCount: 4, selectedItems: <ATransactionModel>[]),
       );
 
       // Act
@@ -56,7 +56,7 @@ void main() {
       // Assert
       WalletDetailsPageState actualWalletDetailsPageState = const WalletDetailsPageState(
         loadingBool: false,
-        transactions: <EthereumTransactionModel>[],
+        transactions: <ATransactionModel>[],
       );
 
       // Act
@@ -72,7 +72,7 @@ void main() {
       // Assert
       WalletDetailsPageState actualWalletDetailsPageState = const WalletDetailsPageState(
         loadingBool: false,
-        transactions: <EthereumTransactionModel>[],
+        transactions: <ATransactionModel>[],
       );
 
       // Act
@@ -86,7 +86,7 @@ void main() {
       // Assert
       WalletDetailsPageState actualWalletDetailsPageState = WalletDetailsPageState(
         loadingBool: true,
-        transactions: <EthereumTransactionModel>[transactionModel],
+        transactions: <ATransactionModel>[transactionModel],
       );
 
       // Act
@@ -100,7 +100,7 @@ void main() {
       // Assert
       WalletDetailsPageState actualWalletDetailsPageState = WalletDetailsPageState(
         loadingBool: false,
-        transactions: <EthereumTransactionModel>[transactionModel],
+        transactions: <ATransactionModel>[transactionModel],
       );
 
       // Act
@@ -116,7 +116,7 @@ void main() {
       // Assert
       WalletDetailsPageState actualWalletDetailsPageState = const WalletDetailsPageState(
         loadingBool: false,
-        transactions: <EthereumTransactionModel>[],
+        transactions: <ATransactionModel>[],
       );
 
       // Act
@@ -130,7 +130,7 @@ void main() {
       // Assert
       WalletDetailsPageState actualWalletDetailsPageState = WalletDetailsPageState(
         loadingBool: false,
-        transactions: <EthereumTransactionModel>[transactionModel],
+        transactions: <ATransactionModel>[transactionModel],
       );
 
       // Act
@@ -142,14 +142,14 @@ void main() {
   });
 
   group('Tests of WalletDetailsPageState.selectedTransactions getter', () {
-    test('Should [return List<EthereumTransactionModel>] if [SelectionModel NOT EMPTY]', () {
+    test('Should [return List<ATransactionModel>] if [SelectionModel NOT EMPTY]', () {
       // Assert
       WalletDetailsPageState actualWalletDetailsPageState = WalletDetailsPageState(
         loadingBool: false,
-        transactions: <EthereumTransactionModel>[transactionModel],
-        selectionModel: SimpleSelectionModel<EthereumTransactionModel>(
+        transactions: <ATransactionModel>[transactionModel],
+        selectionModel: SimpleSelectionModel<ATransactionModel>(
           allItemsCount: 1,
-          selectedItems: <EthereumTransactionModel>[transactionModel],
+          selectedItems: <ATransactionModel>[transactionModel],
         ),
       );
 
@@ -157,7 +157,7 @@ void main() {
       List<ATransactionModel> actualSelectedTransactions = actualWalletDetailsPageState.selectedTransactions;
 
       // Assert
-      List<EthereumTransactionModel> expectedSelectedTransactions = <EthereumTransactionModel>[transactionModel];
+      List<ATransactionModel> expectedSelectedTransactions = <ATransactionModel>[transactionModel];
 
       expect(actualSelectedTransactions, expectedSelectedTransactions);
     });
@@ -166,10 +166,10 @@ void main() {
       // Assert
       WalletDetailsPageState actualWalletDetailsPageState = WalletDetailsPageState(
         loadingBool: false,
-        transactions: <EthereumTransactionModel>[transactionModel],
-        selectionModel: const SimpleSelectionModel<EthereumTransactionModel>(
+        transactions: <ATransactionModel>[transactionModel],
+        selectionModel: const SimpleSelectionModel<ATransactionModel>(
           allItemsCount: 1,
-          selectedItems: <EthereumTransactionModel>[],
+          selectedItems: <ATransactionModel>[],
         ),
       );
 
@@ -177,7 +177,7 @@ void main() {
       List<ATransactionModel> actualSelectedTransactions = actualWalletDetailsPageState.selectedTransactions;
 
       // Assert
-      List<EthereumTransactionModel> expectedSelectedTransactions = <EthereumTransactionModel>[];
+      List<ATransactionModel> expectedSelectedTransactions = <ATransactionModel>[];
 
       expect(actualSelectedTransactions, expectedSelectedTransactions);
     });
@@ -186,14 +186,14 @@ void main() {
       // Assert
       WalletDetailsPageState actualWalletDetailsPageState = WalletDetailsPageState(
         loadingBool: false,
-        transactions: <EthereumTransactionModel>[transactionModel],
+        transactions: <ATransactionModel>[transactionModel],
       );
 
       // Act
       List<ATransactionModel> actualSelectedTransactions = actualWalletDetailsPageState.selectedTransactions;
 
       // Assert
-      List<EthereumTransactionModel> expectedSelectedTransactions = <EthereumTransactionModel>[];
+      List<ATransactionModel> expectedSelectedTransactions = <ATransactionModel>[];
 
       expect(actualSelectedTransactions, expectedSelectedTransactions);
     });

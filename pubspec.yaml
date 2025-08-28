@@ -64,8 +64,6 @@ dependencies:
   # https://pub.dev/packages/path_provider
   path_provider: 2.1.4
 
-  path: any
-
   # Spring curves for Flutter animations. Based on real physics equations with three damping curves.
   # https://pub.dev/packages/sprung
   sprung: 3.0.1

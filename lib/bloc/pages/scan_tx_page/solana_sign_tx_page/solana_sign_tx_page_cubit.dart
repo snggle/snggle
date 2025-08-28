@@ -31,6 +31,7 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
   late final PasswordModel _signWalletPasswordModel;
   late final WalletModel signWalletModel;
   late final SolanaTransactionModel transactionModel;
+  late final ASolanaMessage _solanaMessage;
 
   SolanaSignTxPageCubit({
     required CborSolSignRequest cborSolSignRequest,
@@ -39,7 +40,7 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
 
   Future<void> init() async {
     await _setupSignWallet();
-    transactionModel = SolanaTransactionModel.fromCborSolSignRequest(signWalletModel.id, _cborSolSignRequest);
+    transactionModel = SolanaTransactionModel.fromCborSolSignRequest(signWalletModel.id, _cborSolSignRequest, _solanaMessage);
   }
 
   Future<void> signTransaction() async {
@@ -67,7 +68,12 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
   }
 
   Future<void> _setupSignWallet() async {
+    _solanaMessage = _getMessageFromCbor(_cborSolSignRequest);
+
     String? receivedWalletAddress = _cborSolSignRequest.address?.toString().toLowerCase() ?? _activeWalletController.walletModel?.address;
+    if (_solanaMessage is ASolanaTransactionMessage) {
+      receivedWalletAddress = _getWalletFromInstructions(_solanaMessage);
+    }
 
     if (receivedWalletAddress == null) {
       throw const ScanQrException(ScanQrExceptionType.receivedAddressEmpty);
@@ -75,6 +81,54 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
 
     signWalletModel = await _getWalletFromDatabase(receivedWalletAddress);
     _signWalletPasswordModel = await _getPasswordForWallet(signWalletModel);
+  }
+
+  ASolanaMessage _getMessageFromCbor(CborSolSignRequest cborSolSignRequest) {
+    SignDataType signDataType =
+        cborSolSignRequest.dataType == CborSolSignDataType.transaction ? SignDataType.typedTransaction : SignDataType.rawBytes;
+    ASolanaMessage solanaMessage = ASolanaMessage.fromSerializedData(signDataType, cborSolSignRequest.signData);
+
+    return solanaMessage;
+  }
+
+  String? _getWalletFromInstructions(ASolanaTransactionMessage solanaTransactionMessage) {
+    String? senderAddress;
+    String? signerAddress;
+
+    for (ASolanaInstructionDecoded solanaInstructionDecoded in solanaTransactionMessage.decodedInstructions) {
+      switch (solanaInstructionDecoded.runtimeType) {
+        case SolanaSystemTransferInstruction:
+          senderAddress = solanaInstructionDecoded.source;
+          break;
+
+        case SolanaTokenTransferCheckedInstruction:
+          senderAddress = solanaInstructionDecoded.source;
+          signerAddress = solanaInstructionDecoded.authority;
+          break;
+
+        case SolanaStakeWithdrawInstruction:
+          signerAddress = solanaInstructionDecoded.withdrawAuthority;
+          senderAddress = solanaInstructionDecoded.stakeAccount;
+          break;
+
+        case SolanaStakeDelegateInstruction:
+          signerAddress = solanaInstructionDecoded.stakeAuthority;
+          break;
+
+        case SolanaStakeInitializeInstruction:
+          senderAddress = solanaInstructionDecoded.staker;
+          break;
+
+        case SolanaStakeDeactivateInstruction:
+          senderAddress = solanaInstructionDecoded.stakeAccount;
+          signerAddress = solanaInstructionDecoded.stakeAuthority;
+          break;
+
+        default:
+          break;
+      }
+    }
+    return signerAddress ?? senderAddress;
   }
 
   Future<WalletModel> _getWalletFromDatabase(String signWalletAddress) async {

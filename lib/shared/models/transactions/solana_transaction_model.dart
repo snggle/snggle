@@ -46,10 +46,9 @@ class SolanaTransactionModel extends ATransactionModel {
     );
   }
 
-  factory SolanaTransactionModel.fromCborSolSignRequest(int walletId, CborSolSignRequest cborSolSignRequest) {
+  factory SolanaTransactionModel.fromCborSolSignRequest(int walletId, CborSolSignRequest cborSolSignRequest, ASolanaMessage solanaMessage) {
     SignDataType signDataType =
         cborSolSignRequest.dataType == CborSolSignDataType.transaction ? SignDataType.typedTransaction : SignDataType.rawBytes;
-    ASolanaMessage solanaMessage = ASolanaMessage.fromSerializedData(signDataType, cborSolSignRequest.signData);
 
     if (solanaMessage is ASolanaTransactionMessage) {
       return _mapFromDecodedInstructions(

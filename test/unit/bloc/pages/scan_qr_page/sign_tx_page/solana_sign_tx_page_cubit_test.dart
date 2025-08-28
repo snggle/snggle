@@ -36,21 +36,19 @@ void main() {
 
       actualSignTxPageCubit = SolanaSignTxPageCubit(
         cborSolSignRequest: CborSolSignRequest(
-          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
+          requestId: base64Decode('+/KzMsaXS3efD8VgHR9KsQ=='),
           signData: base64Decode(
-            'V2VsY29tZSB0byBPcGVuU2VhIQoKQ2xpY2sgdG8gc2lnbiBpbiBhbmQgYWNjZXB0IHRoZSBPcGVuU2VhIFRlcm1zIG9mIFNlcnZpY2UgKGh0dHBzOi8vb3BlbnNlYS5pby90b3MpIGFuZCBQcml2YWN5IFBvbGljeSAoaHR0cHM6Ly9vcGVuc2VhLmlvL3ByaXZhY3kpLgoKVGhpcyByZXF1ZXN0IHdpbGwgbm90IHRyaWdnZXIgYSBibG9ja2NoYWluIHRyYW5zYWN0aW9uIG9yIGNvc3QgYW55IGdhcyBmZWVzLgoKV2FsbGV0IGFkZHJlc3M6CjB4NTNiZjBhMTg3NTQ4NzNhODEwMjYyNWQ4MjI1YWY2YTE1YTQzNDIzYwoKTm9uY2U6CjFkOGQyZGMxLTBiN2MtNDc2Mi1hNTIwLWE0ODVhZTI2MTcxOQ==',
+            'b3BlbnNlYS5pbyB3YW50cyB5b3UgdG8gc2lnbiBpbiB3aXRoIHlvdXIgYWNjb3VudDoKMnhHRDdjV3R3cG1DcFcyTnZUOUVKdDk2ZURhdlMzc3VWZ1FOVmFCVTRBMTkKCkNsaWNrIHRvIHNpZ24gaW4gYW5kIGFjY2VwdCB0aGUgT3BlblNlYSBUZXJtcyBvZiBTZXJ2aWNlIChodHRwczovL29wZW5zZWEuaW8vdG9zKSBhbmQgUHJpdmFjeSBQb2xpY3kgKGh0dHBzOi8vb3BlbnNlYS5pby9wcml2YWN5KS4KClVSSTogaHR0cHM6Ly9vcGVuc2VhLmlvLwpWZXJzaW9uOiAxCkNoYWluIElEOiAxCk5vbmNlOiBncThjcDI4aW5uODlyZ3ZhaG91c2QycXMzMwpJc3N1ZWQgQXQ6IDIwMjUtMDgtMjVUMTY6MjU6MzkuMzI5Wg==',
           ),
-          dataType: CborSolSignDataType.transaction,
           derivationPath: const CborCryptoKeypath(
             components: <CborPathComponent>[
               CborPathComponent(index: 44, hardened: true),
-              CborPathComponent(index: 60, hardened: true),
+              CborPathComponent(index: 501, hardened: true),
               CborPathComponent(index: 0, hardened: true),
-              CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 0, hardened: false)
+              CborPathComponent(index: 0, hardened: true),
             ],
-            sourceFingerprint: 1881575369,
           ),
+          dataType: CborSolSignDataType.message,
         ),
       );
 
@@ -58,10 +56,10 @@ void main() {
         id: 2,
         encryptedBool: false,
         pinnedBool: false,
-        address: '4PBYLreUzbD92H4MVuGJvs6nbP3Ln7mx9GdtjyKryeW5',
+        address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
         derivationPath: "m/44'/501'/0'/0'",
         filesystemPath: FilesystemPath.fromString('vault1/network2/wallet2'),
-        name: 'WALLET 0',
+        name: 'WALLET 1',
       );
 
       globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel);
@@ -97,19 +95,27 @@ void main() {
       SolanaSignTxPageSignedTxState expectedSignTxPageState = SolanaSignTxPageSignedTxState(
         transactionModel: SolanaTransactionModel(
           id: Isar.autoIncrement,
-          walletId: 1,
+          walletId: 2,
           creationDate: actualSignTxPageState.transactionModel.creationDate,
-          senderAddress: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
-          message:
-              'Welcome to OpenSea!\n\nClick to sign in and accept the OpenSea Terms of Service (https://opensea.io/tos) and Privacy Policy (https://opensea.io/privacy).\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nWallet address:\n0x53bf0a18754873a8102625d8225af6a15a43423c\n\nNonce:\n1d8d2dc1-0b7c-4762-a520-a485ae261719',
           signature:
-              '0xb01714bf19f9e2afbdf53cf97b4479b7d55b729a604787681535f57c53df5cb07f8653c1a20bfa3e68c3289b2584ab7de9a9acc0998d0cfb5a34a2b586630e3b1b',
+              '0x2c246c695a5e45977b4865050a73a38639cc2aa013ed9908ab95ae6303eb8e8b2dd7a3214d6aa9d5649d489d87a08964d5d826a225119a0c956ad2100c29030b',
+          message:
+          'opensea.io wants you to sign in with your account:\n'
+              '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19\n'
+              '\n'
+              'Click to sign in and accept the OpenSea Terms of Service (https://opensea.io/tos) and Privacy Policy (https://opensea.io/privacy).\n'
+              '\n'
+              'URI: https://opensea.io/\n'
+              'Version: 1\n'
+              'Chain ID: 1\n'
+              'Nonce: gq8cp28inn89rgvahousd2qs33\n'
+              'Issued At: 2025-08-25T16:25:39.329Z',
           signDate: actualSignTxPageState.transactionModel.signDate,
           signDataType: SignDataType.rawBytes,
         ),
         cborSolSignature: CborSolSignature(
-          signature: base64Decode('sBcUvxn54q+99Tz5e0R5t9VbcppgR4doFTX1fFPfXLB/hlPBogv6PmjDKJslhKt96amswJmNDPtaNKK1hmMOOxs='),
-          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
+          signature: base64Decode('LCRsaVpeRZd7SGUFCnOjhjnMKqAT7ZkIq5WuYwPrjost16MhTWqp1WSdSJ2HoIlk1dgmoiURmgyVatIQDCkDCw=='),
+          requestId: base64Decode('+/KzMsaXS3efD8VgHR9KsQ=='),
         ),
       );
 
@@ -130,11 +136,10 @@ void main() {
 
       actualSignTxPageCubit = SolanaSignTxPageCubit(
         cborSolSignRequest: CborSolSignRequest(
-          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
+          requestId: base64Decode('+/KzMsaXS3efD8VgHR9KsQ=='),
           signData: base64Decode(
-            'V2VsY29tZSB0byBPcGVuU2VhIQoKQ2xpY2sgdG8gc2lnbiBpbiBhbmQgYWNjZXB0IHRoZSBPcGVuU2VhIFRlcm1zIG9mIFNlcnZpY2UgKGh0dHBzOi8vb3BlbnNlYS5pby90b3MpIGFuZCBQcml2YWN5IFBvbGljeSAoaHR0cHM6Ly9vcGVuc2VhLmlvL3ByaXZhY3kpLgoKVGhpcyByZXF1ZXN0IHdpbGwgbm90IHRyaWdnZXIgYSBibG9ja2NoYWluIHRyYW5zYWN0aW9uIG9yIGNvc3QgYW55IGdhcyBmZWVzLgoKV2FsbGV0IGFkZHJlc3M6CjB4NTNiZjBhMTg3NTQ4NzNhODEwMjYyNWQ4MjI1YWY2YTE1YTQzNDIzYwoKTm9uY2U6CjFkOGQyZGMxLTBiN2MtNDc2Mi1hNTIwLWE0ODVhZTI2MTcxOQ==',
+            'b3BlbnNlYS5pbyB3YW50cyB5b3UgdG8gc2lnbiBpbiB3aXRoIHlvdXIgYWNjb3VudDoKMnhHRDdjV3R3cG1DcFcyTnZUOUVKdDk2ZURhdlMzc3VWZ1FOVmFCVTRBMTkKCkNsaWNrIHRvIHNpZ24gaW4gYW5kIGFjY2VwdCB0aGUgT3BlblNlYSBUZXJtcyBvZiBTZXJ2aWNlIChodHRwczovL29wZW5zZWEuaW8vdG9zKSBhbmQgUHJpdmFjeSBQb2xpY3kgKGh0dHBzOi8vb3BlbnNlYS5pby9wcml2YWN5KS4KClVSSTogaHR0cHM6Ly9vcGVuc2VhLmlvLwpWZXJzaW9uOiAxCkNoYWluIElEOiAxCk5vbmNlOiBncThjcDI4aW5uODlyZ3ZhaG91c2QycXMzMwpJc3N1ZWQgQXQ6IDIwMjUtMDgtMjVUMTY6MjU6MzkuMzI5Wg==',
           ),
-          dataType: CborSolSignDataType.transaction,
           derivationPath: const CborCryptoKeypath(
             components: <CborPathComponent>[
               CborPathComponent(index: 44, hardened: true),
@@ -142,19 +147,19 @@ void main() {
               CborPathComponent(index: 0, hardened: true),
               CborPathComponent(index: 0, hardened: true),
             ],
-            sourceFingerprint: 0x12345678,
           ),
+          dataType: CborSolSignDataType.message,
         ),
       );
 
       actualWalletModel = WalletModel(
-        id: 1,
+        id: 2,
         encryptedBool: false,
         pinnedBool: false,
-        address: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
-        derivationPath: "m/44'/60'/0'/0/0",
-        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
-        name: 'WALLET 0',
+        address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
+        derivationPath: "m/44'/501'/0'/0'",
+        filesystemPath: FilesystemPath.fromString('vault1/network2/wallet2'),
+        name: 'WALLET 1',
       );
 
       globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel);
@@ -171,6 +176,9 @@ void main() {
     });
 
     test('Should [throw ScanTxException.receivedAddressEmpty] if [transaction HAS EMPTY address]', () async {
+      // Arrange
+      globalLocator<ActiveWalletController>().clearActiveWallet();
+
       // Assert
       expect(
         () => actualSignTxPageCubit.init(),
@@ -192,32 +200,30 @@ void main() {
 
       actualSignTxPageCubit = SolanaSignTxPageCubit(
         cborSolSignRequest: CborSolSignRequest(
-          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
+          requestId: base64Decode('+/KzMsaXS3efD8VgHR9KsQ=='),
           signData: base64Decode(
-            'V2VsY29tZSB0byBPcGVuU2VhIQoKQ2xpY2sgdG8gc2lnbiBpbiBhbmQgYWNjZXB0IHRoZSBPcGVuU2VhIFRlcm1zIG9mIFNlcnZpY2UgKGh0dHBzOi8vb3BlbnNlYS5pby90b3MpIGFuZCBQcml2YWN5IFBvbGljeSAoaHR0cHM6Ly9vcGVuc2VhLmlvL3ByaXZhY3kpLgoKVGhpcyByZXF1ZXN0IHdpbGwgbm90IHRyaWdnZXIgYSBibG9ja2NoYWluIHRyYW5zYWN0aW9uIG9yIGNvc3QgYW55IGdhcyBmZWVzLgoKV2FsbGV0IGFkZHJlc3M6CjB4NTNiZjBhMTg3NTQ4NzNhODEwMjYyNWQ4MjI1YWY2YTE1YTQzNDIzYwoKTm9uY2U6CjFkOGQyZGMxLTBiN2MtNDc2Mi1hNTIwLWE0ODVhZTI2MTcxOQ==',
+            'b3BlbnNlYS5pbyB3YW50cyB5b3UgdG8gc2lnbiBpbiB3aXRoIHlvdXIgYWNjb3VudDoKMnhHRDdjV3R3cG1DcFcyTnZUOUVKdDk2ZURhdlMzc3VWZ1FOVmFCVTRBMTkKCkNsaWNrIHRvIHNpZ24gaW4gYW5kIGFjY2VwdCB0aGUgT3BlblNlYSBUZXJtcyBvZiBTZXJ2aWNlIChodHRwczovL29wZW5zZWEuaW8vdG9zKSBhbmQgUHJpdmFjeSBQb2xpY3kgKGh0dHBzOi8vb3BlbnNlYS5pby9wcml2YWN5KS4KClVSSTogaHR0cHM6Ly9vcGVuc2VhLmlvLwpWZXJzaW9uOiAxCkNoYWluIElEOiAxCk5vbmNlOiBncThjcDI4aW5uODlyZ3ZhaG91c2QycXMzMwpJc3N1ZWQgQXQ6IDIwMjUtMDgtMjVUMTY6MjU6MzkuMzI5Wg==',
           ),
-          dataType: CborSolSignDataType.transaction,
           derivationPath: const CborCryptoKeypath(
             components: <CborPathComponent>[
               CborPathComponent(index: 44, hardened: true),
-              CborPathComponent(index: 60, hardened: true),
+              CborPathComponent(index: 501, hardened: true),
               CborPathComponent(index: 0, hardened: true),
-              CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 0, hardened: false)
+              CborPathComponent(index: 0, hardened: true),
             ],
-            sourceFingerprint: 1881575369,
           ),
+          dataType: CborSolSignDataType.message,
         ),
       );
 
       actualWalletModel = WalletModel(
-        id: 1,
+        id: 2,
         encryptedBool: false,
         pinnedBool: false,
-        address: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
-        derivationPath: "m/44'/60'/0'/0/0",
-        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
-        name: 'WALLET 0',
+        address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
+        derivationPath: "m/44'/501'/0'/0'",
+        filesystemPath: FilesystemPath.fromString('vault1/network2/wallet2'),
+        name: 'WALLET 1',
       );
 
       globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel);
@@ -256,19 +262,27 @@ void main() {
       SolanaSignTxPageSignedTxState expectedSignTxPageState = SolanaSignTxPageSignedTxState(
         transactionModel: SolanaTransactionModel(
           id: Isar.autoIncrement,
-          walletId: 1,
+          walletId: 2,
           creationDate: actualSignTxPageState.transactionModel.creationDate,
-          senderAddress: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
-          message:
-              'Welcome to OpenSea!\n\nClick to sign in and accept the OpenSea Terms of Service (https://opensea.io/tos) and Privacy Policy (https://opensea.io/privacy).\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nWallet address:\n0x53bf0a18754873a8102625d8225af6a15a43423c\n\nNonce:\n1d8d2dc1-0b7c-4762-a520-a485ae261719',
           signature:
-              '0xb01714bf19f9e2afbdf53cf97b4479b7d55b729a604787681535f57c53df5cb07f8653c1a20bfa3e68c3289b2584ab7de9a9acc0998d0cfb5a34a2b586630e3b1b',
+          '0x2c246c695a5e45977b4865050a73a38639cc2aa013ed9908ab95ae6303eb8e8b2dd7a3214d6aa9d5649d489d87a08964d5d826a225119a0c956ad2100c29030b',
+          message:
+          'opensea.io wants you to sign in with your account:\n'
+              '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19\n'
+              '\n'
+              'Click to sign in and accept the OpenSea Terms of Service (https://opensea.io/tos) and Privacy Policy (https://opensea.io/privacy).\n'
+              '\n'
+              'URI: https://opensea.io/\n'
+              'Version: 1\n'
+              'Chain ID: 1\n'
+              'Nonce: gq8cp28inn89rgvahousd2qs33\n'
+              'Issued At: 2025-08-25T16:25:39.329Z',
           signDate: actualSignTxPageState.transactionModel.signDate,
           signDataType: SignDataType.rawBytes,
         ),
         cborSolSignature: CborSolSignature(
-          signature: base64Decode('sBcUvxn54q+99Tz5e0R5t9VbcppgR4doFTX1fFPfXLB/hlPBogv6PmjDKJslhKt96amswJmNDPtaNKK1hmMOOxs='),
-          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
+          signature: base64Decode('LCRsaVpeRZd7SGUFCnOjhjnMKqAT7ZkIq5WuYwPrjost16MhTWqp1WSdSJ2HoIlk1dgmoiURmgyVatIQDCkDCw=='),
+          requestId: base64Decode('+/KzMsaXS3efD8VgHR9KsQ=='),
         ),
       );
 
@@ -279,7 +293,7 @@ void main() {
   });
 
   group('Tests of SignTxPageCubit process [ActiveWalletController HAS EMPTY values] and [Transaction VALID]', () {
-    setUpAll(() async {
+    setUp(() async {
       await testDatabase.init(
         databaseMock: DatabaseMock.transactionsDatabaseMock,
         appPasswordModel: PasswordModel.fromPlaintext('1111'),
@@ -287,21 +301,19 @@ void main() {
 
       actualSignTxPageCubit = SolanaSignTxPageCubit(
         cborSolSignRequest: CborSolSignRequest(
-          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
+          requestId: base64Decode('+/KzMsaXS3efD8VgHR9KsQ=='),
           signData: base64Decode(
-            'V2VsY29tZSB0byBPcGVuU2VhIQoKQ2xpY2sgdG8gc2lnbiBpbiBhbmQgYWNjZXB0IHRoZSBPcGVuU2VhIFRlcm1zIG9mIFNlcnZpY2UgKGh0dHBzOi8vb3BlbnNlYS5pby90b3MpIGFuZCBQcml2YWN5IFBvbGljeSAoaHR0cHM6Ly9vcGVuc2VhLmlvL3ByaXZhY3kpLgoKVGhpcyByZXF1ZXN0IHdpbGwgbm90IHRyaWdnZXIgYSBibG9ja2NoYWluIHRyYW5zYWN0aW9uIG9yIGNvc3QgYW55IGdhcyBmZWVzLgoKV2FsbGV0IGFkZHJlc3M6CjB4NTNiZjBhMTg3NTQ4NzNhODEwMjYyNWQ4MjI1YWY2YTE1YTQzNDIzYwoKTm9uY2U6CjFkOGQyZGMxLTBiN2MtNDc2Mi1hNTIwLWE0ODVhZTI2MTcxOQ==',
+            'b3BlbnNlYS5pbyB3YW50cyB5b3UgdG8gc2lnbiBpbiB3aXRoIHlvdXIgYWNjb3VudDoKMnhHRDdjV3R3cG1DcFcyTnZUOUVKdDk2ZURhdlMzc3VWZ1FOVmFCVTRBMTkKCkNsaWNrIHRvIHNpZ24gaW4gYW5kIGFjY2VwdCB0aGUgT3BlblNlYSBUZXJtcyBvZiBTZXJ2aWNlIChodHRwczovL29wZW5zZWEuaW8vdG9zKSBhbmQgUHJpdmFjeSBQb2xpY3kgKGh0dHBzOi8vb3BlbnNlYS5pby9wcml2YWN5KS4KClVSSTogaHR0cHM6Ly9vcGVuc2VhLmlvLwpWZXJzaW9uOiAxCkNoYWluIElEOiAxCk5vbmNlOiBncThjcDI4aW5uODlyZ3ZhaG91c2QycXMzMwpJc3N1ZWQgQXQ6IDIwMjUtMDgtMjVUMTY6MjU6MzkuMzI5Wg==',
           ),
-          dataType: CborSolSignDataType.transaction,
           derivationPath: const CborCryptoKeypath(
             components: <CborPathComponent>[
               CborPathComponent(index: 44, hardened: true),
-              CborPathComponent(index: 60, hardened: true),
+              CborPathComponent(index: 501, hardened: true),
               CborPathComponent(index: 0, hardened: true),
-              CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 0, hardened: false)
+              CborPathComponent(index: 0, hardened: true),
             ],
-            sourceFingerprint: 1881575369,
           ),
+          dataType: CborSolSignDataType.message,
         ),
       );
     });
@@ -316,43 +328,12 @@ void main() {
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
 
-    test('Should [return SignTxPageConfirmTxState] with initialized wallet and wallet password', () async {
-      // Act
-      await actualSignTxPageCubit.init();
-      ASolanaSignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
-
+    test('Should [throw ScanQrExceptionType.receivedAddressEmpty] if [wallet NOT SET]', () async {
       // Assert
-      ASolanaSignTxPageState expectedSignTxPageState = const SolanaSignTxPageConfirmTxState();
-
-      expect(actualSignTxPageState, expectedSignTxPageState);
-    });
-
-    test('Should [return SignTxPageSignedTxState] with signed transaction', () async {
-      // Act
-      await actualSignTxPageCubit.signTransaction();
-      SolanaSignTxPageSignedTxState actualSignTxPageState = actualSignTxPageCubit.state as SolanaSignTxPageSignedTxState;
-
-      // Assert
-      SolanaSignTxPageSignedTxState expectedSignTxPageState = SolanaSignTxPageSignedTxState(
-        transactionModel: SolanaTransactionModel(
-          id: Isar.autoIncrement,
-          walletId: 1,
-          creationDate: actualSignTxPageState.transactionModel.creationDate,
-          senderAddress: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
-          message:
-              'Welcome to OpenSea!\n\nClick to sign in and accept the OpenSea Terms of Service (https://opensea.io/tos) and Privacy Policy (https://opensea.io/privacy).\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nWallet address:\n0x53bf0a18754873a8102625d8225af6a15a43423c\n\nNonce:\n1d8d2dc1-0b7c-4762-a520-a485ae261719',
-          signature:
-              '0xb01714bf19f9e2afbdf53cf97b4479b7d55b729a604787681535f57c53df5cb07f8653c1a20bfa3e68c3289b2584ab7de9a9acc0998d0cfb5a34a2b586630e3b1b',
-          signDate: actualSignTxPageState.transactionModel.signDate,
-          signDataType: SignDataType.rawBytes,
-        ),
-        cborSolSignature: CborSolSignature(
-          signature: base64Decode('sBcUvxn54q+99Tz5e0R5t9VbcppgR4doFTX1fFPfXLB/hlPBogv6PmjDKJslhKt96amswJmNDPtaNKK1hmMOOxs='),
-          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
-        ),
+      expect(
+            () => actualSignTxPageCubit.init(),
+        throwsA(const ScanQrException(ScanQrExceptionType.receivedAddressEmpty)),
       );
-
-      expect(actualSignTxPageState, expectedSignTxPageState);
     });
 
     tearDownAll(testDatabase.close);
@@ -367,21 +348,19 @@ void main() {
 
       actualSignTxPageCubit = SolanaSignTxPageCubit(
         cborSolSignRequest: CborSolSignRequest(
-          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
+          requestId: base64Decode('+/KzMsaXS3efD8VgHR9KsQ=='),
           signData: base64Decode(
-            'V2VsY29tZSB0byBPcGVuU2VhIQoKQ2xpY2sgdG8gc2lnbiBpbiBhbmQgYWNjZXB0IHRoZSBPcGVuU2VhIFRlcm1zIG9mIFNlcnZpY2UgKGh0dHBzOi8vb3BlbnNlYS5pby90b3MpIGFuZCBQcml2YWN5IFBvbGljeSAoaHR0cHM6Ly9vcGVuc2VhLmlvL3ByaXZhY3kpLgoKVGhpcyByZXF1ZXN0IHdpbGwgbm90IHRyaWdnZXIgYSBibG9ja2NoYWluIHRyYW5zYWN0aW9uIG9yIGNvc3QgYW55IGdhcyBmZWVzLgoKV2FsbGV0IGFkZHJlc3M6CjB4NTNiZjBhMTg3NTQ4NzNhODEwMjYyNWQ4MjI1YWY2YTE1YTQzNDIzYwoKTm9uY2U6CjFkOGQyZGMxLTBiN2MtNDc2Mi1hNTIwLWE0ODVhZTI2MTcxOQ==',
+            'AQACBB0D1AEIXs5Rz43yeayo7W0tSpSEF7kNTRVAVF4UGFj0UZgIBV3jdeGVGJKrsLg0H3NjL/I/lmh3OjD0yjTNe1wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMGRm/lIRcy/+ytunLDm+e8jOW7xfcSayxDmzpAAAAAvsFnx3LCWACVgkEemZnhkUpLl9hJ7zvQyrFIrH+YayoDAwAJAwAtMQEAAAAAAwAFAu8BAAACAgABDAIAAAAAypo7AAAAAA==',
           ),
-          dataType: CborSolSignDataType.transaction,
           derivationPath: const CborCryptoKeypath(
             components: <CborPathComponent>[
               CborPathComponent(index: 44, hardened: true),
-              CborPathComponent(index: 60, hardened: true),
+              CborPathComponent(index: 501, hardened: true),
               CborPathComponent(index: 0, hardened: true),
-              CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 0, hardened: false)
+              CborPathComponent(index: 0, hardened: true),
             ],
-            sourceFingerprint: 1881575369,
           ),
+          dataType: CborSolSignDataType.transaction,
         ),
       );
 
@@ -418,21 +397,19 @@ void main() {
 
       actualSignTxPageCubit = SolanaSignTxPageCubit(
         cborSolSignRequest: CborSolSignRequest(
-          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
+          requestId: base64Decode('+/KzMsaXS3efD8VgHR9KsQ=='),
           signData: base64Decode(
-            'V2VsY29tZSB0byBPcGVuU2VhIQoKQ2xpY2sgdG8gc2lnbiBpbiBhbmQgYWNjZXB0IHRoZSBPcGVuU2VhIFRlcm1zIG9mIFNlcnZpY2UgKGh0dHBzOi8vb3BlbnNlYS5pby90b3MpIGFuZCBQcml2YWN5IFBvbGljeSAoaHR0cHM6Ly9vcGVuc2VhLmlvL3ByaXZhY3kpLgoKVGhpcyByZXF1ZXN0IHdpbGwgbm90IHRyaWdnZXIgYSBibG9ja2NoYWluIHRyYW5zYWN0aW9uIG9yIGNvc3QgYW55IGdhcyBmZWVzLgoKV2FsbGV0IGFkZHJlc3M6CjB4NTNiZjBhMTg3NTQ4NzNhODEwMjYyNWQ4MjI1YWY2YTE1YTQzNDIzYwoKTm9uY2U6CjFkOGQyZGMxLTBiN2MtNDc2Mi1hNTIwLWE0ODVhZTI2MTcxOQ==',
+            'AQACBB0D1AEIXs5Rz43yeayo7W0tSpSEF7kN1RVAVF4UGFj0UZgIBV3jdeGVGJKrsLg0H3NjL/I/lmh3OjD0yjTNe1wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMGRm/lIRcy/+ytunLDm+e8jOW7xfcSayxDmzpAAAAAvsFnx3LCWACVgkEemZnhkUpLl9hJ7zvQyrFIrH+YayoDAwAJAwAtMQEAAAAAAwAFAu8BAAACAgABDAIAAAAAypo7AAAAAA==',
           ),
-          dataType: CborSolSignDataType.transaction,
           derivationPath: const CborCryptoKeypath(
             components: <CborPathComponent>[
               CborPathComponent(index: 44, hardened: true),
-              CborPathComponent(index: 60, hardened: true),
+              CborPathComponent(index: 501, hardened: true),
               CborPathComponent(index: 0, hardened: true),
-              CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 0, hardened: false)
+              CborPathComponent(index: 0, hardened: true),
             ],
-            sourceFingerprint: 1881575369,
           ),
+          dataType: CborSolSignDataType.transaction,
         ),
       );
     });

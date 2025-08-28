@@ -11,7 +11,11 @@ class WalletsRepository {
 
   Future<List<String>> getAllDerivationPaths(FilesystemPath parentFilesystemPath) async {
     List<String> derivationPaths = await isarDatabaseManager.perform((Isar isar) {
-      return isar.wallets.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).derivationPathProperty().findAll();
+      if (parentFilesystemPath.fullPath.isEmpty) {
+        return isar.wallets.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).derivationPathProperty().findAll();
+      } else {
+        return isar.wallets.where().filter().filesystemPathStringStartsWith('${parentFilesystemPath.fullPath}/').derivationPathProperty().findAll();
+      }
     });
     return derivationPaths;
   }
