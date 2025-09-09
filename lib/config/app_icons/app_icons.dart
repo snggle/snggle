@@ -23,6 +23,7 @@ class AppIcons {
   static const AssetIconData horizontal_tile_network_bitcoin = AssetIconData('assets/icons/horizontal_tile_network_bitcoin.svg');
   static const AssetIconData horizontal_tile_network_cosmos = AssetIconData('assets/icons/horizontal_tile_network_cosmos.svg');
   static const AssetIconData horizontal_tile_network_ethereum = AssetIconData('assets/icons/horizontal_tile_network_ethereum.svg');
+  static const AssetIconData horizontal_tile_network_solana = AssetIconData('assets/icons/horizontal_tile_network_solana.svg');
   static const AssetIconData horizontal_tile_network_unknown = AssetIconData('assets/icons/horizontal_tile_network_unknown.svg');
   static const AssetIconData icon_container_folder_medium_background = AssetIconData('assets/icons/icon_container_folder_medium_background.svg');
   static const AssetIconData icon_container_folder_pinned_medium = AssetIconData('assets/icons/icon_container_folder_pinned_medium.svg');
@@ -32,6 +33,7 @@ class AppIcons {
   static const AssetIconData icon_container_network_bitcoin = AssetIconData('assets/icons/icon_container_network_bitcoin.svg');
   static const AssetIconData icon_container_network_cosmos = AssetIconData('assets/icons/icon_container_network_cosmos.svg');
   static const AssetIconData icon_container_network_ethereum = AssetIconData('assets/icons/icon_container_network_ethereum.svg');
+  static const AssetIconData icon_container_network_solana = AssetIconData('assets/icons/icon_container_network_solana.svg');
   static const AssetIconData icon_container_network_unknown = AssetIconData('assets/icons/icon_container_network_unknown.svg');
   static const AssetIconData icon_container_vault_pinned_medium = AssetIconData('assets/icons/icon_container_vault_pinned_medium.svg');
   static const AssetIconData icon_container_vault_pinned_medium_background =
@@ -61,6 +63,7 @@ class AppIcons {
   static const AssetIconData network_bitcoin_large = AssetIconData('assets/icons/network_bitcoin_large.svg');
   static const AssetIconData network_cosmos_large = AssetIconData('assets/icons/network_cosmos_large.svg');
   static const AssetIconData network_ethereum_large = AssetIconData('assets/icons/network_ethereum_large.svg');
+  static const AssetIconData network_solana_large = AssetIconData('assets/icons/network_solana_large.svg');
   static const AssetIconData network_unknown_large = AssetIconData('assets/icons/network_unknown_large.svg');
   static const AssetIconData page_add_button = AssetIconData('assets/icons/page_add_button.svg');
   static const AssetIconData page_no_data = AssetIconData('assets/icons/page_no_data.svg');
@@ -74,5 +77,6 @@ class AppIcons {
   static const AssetIconData text_tab = AssetIconData('assets/icons/text_tab.svg');
   static const AssetIconData text_wrap = AssetIconData('assets/icons/text_wrap.svg');
   static const AssetIconData wallet_metamask = AssetIconData('assets/icons/wallet_metamask.svg');
+  static const AssetIconData wallet_solflare = AssetIconData('assets/icons/wallet_solflare.svg');
   static const AssetIconData wallet_trezor = AssetIconData('assets/icons/wallet_trezor.svg');
 }

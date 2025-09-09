@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
@@ -11,7 +12,13 @@ class WalletsRepository {
 
   Future<List<String>> getAllDerivationPaths(FilesystemPath parentFilesystemPath) async {
     List<String> derivationPaths = await isarDatabaseManager.perform((Isar isar) {
-      return isar.wallets.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).derivationPathProperty().findAll();
+      bool hasParentsBool = parentFilesystemPath.fullPath.isEmpty;
+      if (hasParentsBool) {
+        return isar.wallets.where().derivationPathProperty().findAll();
+      } else {
+        String baseDerivationPath = '${parentFilesystemPath.fullPath}/';
+        return isar.wallets.where().filter().filesystemPathStringStartsWith(baseDerivationPath).derivationPathProperty().findAll();
+      }
     });
     return derivationPaths;
   }

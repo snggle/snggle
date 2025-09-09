@@ -45,8 +45,14 @@ const EmbeddedNetworkTemplateEntitySchema = Schema(
       type: IsarType.string,
       enumMap: _EmbeddedNetworkTemplateEntitynetworkIconTypeEnumValueMap,
     ),
-    r'walletType': PropertySchema(
+    r'networkType': PropertySchema(
       id: 6,
+      name: r'networkType',
+      type: IsarType.string,
+      enumMap: _EmbeddedNetworkTemplateEntitynetworkTypeEnumValueMap,
+    ),
+    r'walletType': PropertySchema(
+      id: 7,
       name: r'walletType',
       type: IsarType.string,
       enumMap: _EmbeddedNetworkTemplateEntitywalletTypeEnumValueMap,
@@ -101,6 +107,12 @@ int _embeddedNetworkTemplateEntityEstimateSize(
     }
   }
   {
+    final value = object.networkType;
+    if (value != null) {
+      bytesCount += 3 + value.name.length * 3;
+    }
+  }
+  {
     final value = object.walletType;
     if (value != null) {
       bytesCount += 3 + value.name.length * 3;
@@ -121,7 +133,8 @@ void _embeddedNetworkTemplateEntitySerialize(
   writer.writeString(offsets[3], object.derivatorType);
   writer.writeString(offsets[4], object.name);
   writer.writeString(offsets[5], object.networkIconType?.name);
-  writer.writeString(offsets[6], object.walletType?.name);
+  writer.writeString(offsets[6], object.networkType?.name);
+  writer.writeString(offsets[7], object.walletType?.name);
 }
 
 EmbeddedNetworkTemplateEntity _embeddedNetworkTemplateEntityDeserialize(
@@ -139,8 +152,10 @@ EmbeddedNetworkTemplateEntity _embeddedNetworkTemplateEntityDeserialize(
     name: reader.readStringOrNull(offsets[4]),
     networkIconType: _EmbeddedNetworkTemplateEntitynetworkIconTypeValueEnumMap[
         reader.readStringOrNull(offsets[5])],
-    walletType: _EmbeddedNetworkTemplateEntitywalletTypeValueEnumMap[
+    networkType: _EmbeddedNetworkTemplateEntitynetworkTypeValueEnumMap[
         reader.readStringOrNull(offsets[6])],
+    walletType: _EmbeddedNetworkTemplateEntitywalletTypeValueEnumMap[
+        reader.readStringOrNull(offsets[7])],
   );
   return object;
 }
@@ -167,6 +182,9 @@ P _embeddedNetworkTemplateEntityDeserializeProp<P>(
       return (_EmbeddedNetworkTemplateEntitynetworkIconTypeValueEnumMap[
           reader.readStringOrNull(offset)]) as P;
     case 6:
+      return (_EmbeddedNetworkTemplateEntitynetworkTypeValueEnumMap[
+          reader.readStringOrNull(offset)]) as P;
+    case 7:
       return (_EmbeddedNetworkTemplateEntitywalletTypeValueEnumMap[
           reader.readStringOrNull(offset)]) as P;
     default:
@@ -176,21 +194,33 @@ P _embeddedNetworkTemplateEntityDeserializeProp<P>(
 
 const _EmbeddedNetworkTemplateEntitycurveTypeEnumValueMap = {
   r'secp256k1': r'secp256k1',
+  r'ed25519': r'ed25519',
 };
 const _EmbeddedNetworkTemplateEntitycurveTypeValueEnumMap = {
   r'secp256k1': CurveType.secp256k1,
+  r'ed25519': CurveType.ed25519,
 };
 const _EmbeddedNetworkTemplateEntitynetworkIconTypeEnumValueMap = {
   r'bitcoin': r'bitcoin',
   r'cosmos': r'cosmos',
   r'ethereum': r'ethereum',
+  r'solana': r'solana',
   r'unknown': r'unknown',
 };
 const _EmbeddedNetworkTemplateEntitynetworkIconTypeValueEnumMap = {
   r'bitcoin': NetworkIconType.bitcoin,
   r'cosmos': NetworkIconType.cosmos,
   r'ethereum': NetworkIconType.ethereum,
+  r'solana': NetworkIconType.solana,
   r'unknown': NetworkIconType.unknown,
+};
+const _EmbeddedNetworkTemplateEntitynetworkTypeEnumValueMap = {
+  r'ethereum': r'ethereum',
+  r'solana': r'solana',
+};
+const _EmbeddedNetworkTemplateEntitynetworkTypeValueEnumMap = {
+  r'ethereum': NetworkType.ethereum,
+  r'solana': NetworkType.solana,
 };
 const _EmbeddedNetworkTemplateEntitywalletTypeEnumValueMap = {
   r'legacy': r'legacy',
@@ -1136,6 +1166,162 @@ extension EmbeddedNetworkTemplateEntityQueryFilter on QueryBuilder<
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'networkIconType',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> networkTypeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'networkType',
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> networkTypeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'networkType',
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> networkTypeEqualTo(
+    NetworkType? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'networkType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> networkTypeGreaterThan(
+    NetworkType? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'networkType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> networkTypeLessThan(
+    NetworkType? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'networkType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> networkTypeBetween(
+    NetworkType? lower,
+    NetworkType? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'networkType',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> networkTypeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'networkType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> networkTypeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'networkType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+          QAfterFilterCondition>
+      networkTypeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'networkType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+          QAfterFilterCondition>
+      networkTypeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'networkType',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> networkTypeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'networkType',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
+      QAfterFilterCondition> networkTypeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'networkType',
         value: '',
       ));
     });

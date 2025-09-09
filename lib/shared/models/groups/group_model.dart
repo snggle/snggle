@@ -39,6 +39,9 @@ class GroupModel extends AListItemModel {
   @override
   String get defaultItemName => 'Folder';
 
+  @override
+  bool get draggableBool => false;
+
   bool get hasSingleItem => listItemsPreview.length == 1;
 
   @override

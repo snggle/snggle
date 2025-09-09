@@ -129,11 +129,11 @@ class TransactionModel extends Equatable {
 
   String get title {
     if (recipientAddress != null) {
-      return StringUtils.getShortHex(recipientAddress!, 4);
+      return StringUtils.getShortPublicAddress(recipientAddress!, 4);
     } else if (message != null) {
       return message!;
     } else if (contractAddress != null) {
-      return StringUtils.getShortHex(contractAddress!, 4);
+      return StringUtils.getShortPublicAddress(contractAddress!, 4);
     } else {
       return '---';
     }

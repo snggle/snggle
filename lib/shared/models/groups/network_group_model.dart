@@ -44,5 +44,8 @@ class NetworkGroupModel extends AListItemModel {
   String get defaultItemName => 'Network Group';
 
   @override
+  bool get draggableBool => false;
+
+  @override
   List<Object?> get props => <Object?>[id, pinnedBool, encryptedBool, listItemsPreview, filesystemPath, name, networkTemplateModel, name];
 }

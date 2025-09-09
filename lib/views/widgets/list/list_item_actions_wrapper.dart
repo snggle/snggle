@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
-import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/secrets_auth_page.dart';
 import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
@@ -55,6 +54,7 @@ class _ListItemActionsWrapperState<T extends AListItemModel, C extends AListCubi
     AListItemModel listItemModel = widget.listItemModel;
 
     Widget child = widget.child;
+    bool itemDraggableBool = widget.listItemModel.draggableBool;
 
     if (listState.isSelectionEnabled) {
       child = SelectionWrapper(
@@ -63,7 +63,7 @@ class _ListItemActionsWrapperState<T extends AListItemModel, C extends AListCubi
         onSelectValueChanged: _handleSelectValueChanged,
         child: IgnorePointer(child: widget.child),
       );
-    } else if (widget.listItemModel is GroupModel) {
+    } else if (itemDraggableBool == false) {
       child = GestureDetector(
         onTap: _handleNavigation,
         onLongPress: _openToolbar,

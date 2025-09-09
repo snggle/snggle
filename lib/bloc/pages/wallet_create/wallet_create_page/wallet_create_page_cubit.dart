@@ -14,6 +14,7 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_creation_request_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/utils/derivation_path_index_extractor.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
@@ -42,7 +43,9 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
   Future<void> init({required String defaultWalletName}) async {
     nameTextEditingController.addListener(_updateWalletNameEmptyState);
 
-    int lastDerivationIndex = await _walletsService.getLastDerivationIndex(_networkGroupModel.filesystemPath);
+    DerivationPathIndexExtractor derivationPathIndexExtractor =
+        DerivationPathIndexExtractor.fromNetworkTemplateModel(_networkGroupModel.networkTemplateModel);
+    int lastDerivationIndex = await _walletsService.getHighestDerivationIndex(_networkGroupModel.filesystemPath, derivationPathIndexExtractor);
     int derivationIndex = lastDerivationIndex + 1;
 
     if (derivationIndex != 0) {
@@ -52,7 +55,7 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
     }
 
     derivationPathTextEditingController
-      ..text = _networkTemplateModel.getCustomizableDerivationPath(addressIndex: derivationIndex)
+      ..text = derivationIndex.toString()
       ..addListener(_handleDerivationPathChanged);
   }
 

@@ -7,6 +7,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_connec
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
+import 'package:snggle/shared/models/networks/network_type.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_connect_option.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
@@ -69,12 +70,13 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                     icon: AppIcons.connect_wallet_qr,
                     onTap: () => walletConnectPageCubit.changeConnectOption(WalletConnectOption.qr),
                   ),
-                  WalletConnectOptionButton(
-                    selectedBool: walletConnectPageState.walletConnectOption == WalletConnectOption.hardware,
-                    label: 'Hardware based',
-                    icon: AppIcons.connect_wallet_hardware,
-                    onTap: () => walletConnectPageCubit.changeConnectOption(WalletConnectOption.hardware),
-                  ),
+                  if (widget.networkTemplateModel.networkType == NetworkType.ethereum)
+                    WalletConnectOptionButton(
+                      selectedBool: walletConnectPageState.walletConnectOption == WalletConnectOption.hardware,
+                      label: 'Hardware based',
+                      icon: AppIcons.connect_wallet_hardware,
+                      onTap: () => walletConnectPageCubit.changeConnectOption(WalletConnectOption.hardware),
+                    ),
                 ],
               ),
               const SizedBox(height: 34),
@@ -83,11 +85,18 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                 child: Column(
                   children: <Widget>[
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
-                      GradientOutlinedButton.large(
-                        label: 'Metamask QR',
-                        icon: const AssetIcon(AppIcons.wallet_metamask, size: 18),
-                        onPressed: () => _showQRConnectPage(true),
-                      ),
+                      switch (widget.networkTemplateModel.networkType) {
+                        NetworkType.ethereum => GradientOutlinedButton.large(
+                            label: 'Metamask QR',
+                            icon: const AssetIcon(AppIcons.wallet_metamask, size: 18),
+                            onPressed: () => _showQRConnectPage(true),
+                          ),
+                        NetworkType.solana => GradientOutlinedButton.large(
+                            label: 'Solflare QR',
+                            icon: const AssetIcon(AppIcons.wallet_solflare, size: 18),
+                            onPressed: () => _showQRConnectPage(true),
+                          ),
+                      }
                     ],
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.hardware) ...<Widget>[
                       const GradientOutlinedButton.large(label: 'Use Trezor interface', icon: AssetIcon(AppIcons.wallet_trezor, size: 18)),
@@ -103,11 +112,18 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
   }
 
   Future<void> _showQRConnectPage(bool connectAllBool) async {
-    await CustomLoadingDialog.show<CborCryptoHDKey>(
+    await CustomLoadingDialog.show<ACborTaggedObject>(
       context: context,
       title: 'Loading...',
-      futureFunction: () => walletConnectPageCubit.getCborCryptoHDKey(connectAllBool: connectAllBool),
-      onSuccess: (CborCryptoHDKey cborCryptoHDKey) async {
+      futureFunction: () {
+        switch (widget.networkTemplateModel.networkType) {
+          case NetworkType.ethereum:
+            return walletConnectPageCubit.getCborCryptoHDKey(connectAllBool: connectAllBool);
+          case NetworkType.solana:
+            return walletConnectPageCubit.getCborCryptoMultiAccounts();
+        }
+      },
+      onSuccess: (ACborTaggedObject cborTaggedObject) async {
         bool? navigateBackBool = await showDialog<bool>(
           context: context,
           useSafeArea: false,
@@ -115,7 +131,7 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
             return WalletQrConnectPage(
               walletModel: widget.walletModel,
               networkTemplateModel: widget.networkTemplateModel,
-              cborCryptoHDKey: cborCryptoHDKey,
+              cborTaggedObject: cborTaggedObject,
             );
           },
         );

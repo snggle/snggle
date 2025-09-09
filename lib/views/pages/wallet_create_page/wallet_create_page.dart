@@ -9,10 +9,12 @@ import 'package:snggle/bloc/pages/wallet_create/wallet_create_page/wallet_create
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
+import 'package:snggle/shared/models/networks/network_type.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/shared/utils/formatters/legacy_derivation_path_input_formatter.dart';
+import 'package:snggle/shared/utils/string_utils.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
@@ -67,6 +69,13 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
     ThemeData theme = Theme.of(context);
 
     String baseDerivationPath = '${widget.networkGroupModel.networkTemplateModel.baseDerivationPath}/';
+    bool networkIsSolanaBool = widget.networkGroupModel.networkTemplateModel.networkType == NetworkType.solana;
+    String? suffix = networkIsSolanaBool ? "'/0'" : null;
+
+    TextScaler textScaler = MediaQuery.textScalerOf(context);
+    double prefixWidth = StringUtils.getTextSize(baseDerivationPath, theme.textTheme.bodyMedium!, textScaler: textScaler).width;
+    double? suffixWidth = networkIsSolanaBool ? StringUtils.getTextSize(suffix!, theme.textTheme.bodyMedium!, textScaler: textScaler).width : null;
+
     return BlocBuilder<WalletCreatePageCubit, WalletCreatePageState>(
       bloc: walletCreatePageCubit,
       builder: (BuildContext context, WalletCreatePageState walletCreatePageState) {
@@ -111,9 +120,12 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                     child: CustomTextField(
                       textEditingController: walletCreatePageCubit.derivationPathTextEditingController,
                       inputBorder: InputBorder.none,
-                      keyboardType: TextInputType.text,
-                      prefixWidgetConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+                      keyboardType: TextInputType.number,
+                      prefixWidgetConstraints: BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: prefixWidth),
                       prefixWidget: Text(baseDerivationPath, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)),
+                      suffixWidgetConstraints: networkIsSolanaBool ? BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: suffixWidth!) : null,
+                      suffixWidget:
+                          networkIsSolanaBool ? Text(suffix!, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)) : null,
                       padding: EdgeInsets.zero,
                       inputFormatters: <TextInputFormatter>[
                         LegacyDerivationPathInputFormatter(),

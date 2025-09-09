@@ -16,12 +16,12 @@ import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.
 class WalletQrConnectPage extends StatefulWidget {
   final WalletModel walletModel;
   final NetworkTemplateModel networkTemplateModel;
-  final CborCryptoHDKey cborCryptoHDKey;
+  final ACborTaggedObject cborTaggedObject;
 
   const WalletQrConnectPage({
     required this.walletModel,
     required this.networkTemplateModel,
-    required this.cborCryptoHDKey,
+    required this.cborTaggedObject,
     super.key,
   });
 
@@ -38,7 +38,7 @@ class _WalletQrConnectPageState extends State<WalletQrConnectPage> {
       title: 'Wallet QR Connect',
       subtitle: 'Extended public key',
       popButtonVisible: true,
-      ur: UR.fromCborTaggedObject(widget.cborCryptoHDKey),
+      ur: UR.fromCborTaggedObject(widget.cborTaggedObject),
       tooltip: BottomTooltip(
         actions: <Widget>[
           BottomTooltipItem(
@@ -66,7 +66,7 @@ class _WalletQrConnectPageState extends State<WalletQrConnectPage> {
           ExpandableSwitchTile(
             label: 'Extended public key details',
             body: Text(
-              const JsonEncoder.withIndent('   ').convert(widget.cborCryptoHDKey.toCborMap(includeTagBool: true).toJson()),
+              const JsonEncoder.withIndent('   ').convert(widget.cborTaggedObject.toCborMap(includeTagBool: true).toJson()),
               style: theme.textTheme.labelMedium?.copyWith(color: AppColors.body3),
             ),
           ),

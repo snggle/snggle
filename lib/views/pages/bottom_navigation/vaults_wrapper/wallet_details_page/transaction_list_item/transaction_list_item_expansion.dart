@@ -3,8 +3,8 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/transactions/transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
 import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
-import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
+import 'package:snggle/views/widgets/generic/public_address_preview.dart';
 
 class TransactionListItemExpansion extends StatelessWidget {
   final TransactionModel transactionModel;
@@ -49,7 +49,7 @@ class TransactionListItemExpansion extends StatelessWidget {
             child: LabelWrapperVertical(
               label: 'From',
               labelStyle: labelTextStyle,
-              child: ETHAddressPreview(address: senderAddress, textStyle: valueTextStyle),
+              child: PublicAddressPreview(address: senderAddress, textStyle: valueTextStyle),
             ),
           ),
         ],
@@ -59,7 +59,7 @@ class TransactionListItemExpansion extends StatelessWidget {
             child: LabelWrapperVertical(
               label: 'To',
               labelStyle: labelTextStyle,
-              child: ETHAddressPreview(address: recipientAddress, textStyle: valueTextStyle),
+              child: PublicAddressPreview(address: recipientAddress, textStyle: valueTextStyle),
             ),
           ),
         ],
@@ -69,7 +69,7 @@ class TransactionListItemExpansion extends StatelessWidget {
             child: LabelWrapperVertical(
               label: 'Contract',
               labelStyle: labelTextStyle,
-              child: ETHAddressPreview(address: contractAddress, textStyle: valueTextStyle),
+              child: PublicAddressPreview(address: contractAddress, textStyle: valueTextStyle),
             ),
           ),
         ],
@@ -111,7 +111,7 @@ class TransactionListItemExpansion extends StatelessWidget {
               label: 'Signature',
               bottomBorderVisibleBool: false,
               labelStyle: labelTextStyle,
-              child: Text(StringUtils.getShortHex(signature, 4), style: valueTextStyle),
+              child: Text(StringUtils.getShortPublicAddress(signature, 4), style: valueTextStyle),
             ),
           ),
         ],

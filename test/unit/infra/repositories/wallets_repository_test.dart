@@ -33,6 +33,7 @@ void main() {
         "m/44'/60'/0'/0/2",
         "m/44'/60'/0'/0/3",
         "m/44'/60'/0'/0/4",
+        "m/44'/501'/0'/0'"
       ];
 
       expect(actualDerivationPaths, expectedDerivationPaths);
@@ -83,7 +84,8 @@ void main() {
         const WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
         const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
         const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
-        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4')
+        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        const WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5')
         // @formatter:on
       ];
 
@@ -202,7 +204,8 @@ void main() {
         const WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
         const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
         const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
-        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4')
+        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        const WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5')
         // @formatter:on
       ];
 
@@ -238,6 +241,7 @@ void main() {
         const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
         const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
         const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        const WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5'),
         const WalletEntity(id: 999999, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet999999', name: 'NEW WALLET 0')
         // @formatter:on
       ];
@@ -272,7 +276,8 @@ void main() {
         const WalletEntity(id: 2, encryptedBool: true, pinnedBool: true, address: '0x1111111111111111111111111111111111111111', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'UPDATED WALLET 1'),
         const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
         const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
-        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4')
+        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        const WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5')
         // @formatter:on
       ];
 
@@ -305,6 +310,7 @@ void main() {
         const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
         const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
         const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        const WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5'),
         const WalletEntity(id: 999998, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet999998', name: 'NEW WALLET 0'),
         const WalletEntity(id: 999999, encryptedBool: true, pinnedBool: true, address: '0x1111111111111111111111111111111111111111', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet999999', name: 'NEW WALLET 1'),
         // @formatter:on
@@ -332,7 +338,8 @@ void main() {
         const WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
         const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
         const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
-        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4')
+        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        const WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5')
         // @formatter:on
       ];
 

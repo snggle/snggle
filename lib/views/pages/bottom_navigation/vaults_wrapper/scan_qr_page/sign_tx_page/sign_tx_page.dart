@@ -9,8 +9,8 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/tx_confirmation_scaffold.dart';
-import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
+import 'package:snggle/views/widgets/generic/public_address_preview.dart';
 import 'package:snggle/views/widgets/qr/qr_result_scaffold.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
@@ -24,7 +24,8 @@ class SignTxPage extends StatefulWidget {
   });
 
   static Future<SignTxPage> load({required bool walletAutoDetectionEnabledBool, required CborEthSignRequest cborEthSignRequest}) async {
-    SignTxPageCubit signTxPageCubit = SignTxPageCubit(walletAutoDetectionEnabledBool: walletAutoDetectionEnabledBool, cborEthSignRequest: cborEthSignRequest);
+    SignTxPageCubit signTxPageCubit =
+        SignTxPageCubit(walletAutoDetectionEnabledBool: walletAutoDetectionEnabledBool, cborEthSignRequest: cborEthSignRequest);
 
     try {
       await signTxPageCubit.init();
@@ -79,7 +80,7 @@ class _SignTxPageState extends State<SignTxPage> {
               children: <Widget>[
                 LabelWrapperVertical(
                   label: 'Signed with',
-                  child: ETHAddressPreview(
+                  child: PublicAddressPreview(
                     address: widget.signTxPageCubit.senderWalletModel.address,
                     textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
                   ),

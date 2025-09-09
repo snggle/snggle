@@ -16,6 +16,11 @@ enum NetworkIconType {
     largeIcon: AppIcons.network_ethereum_large,
     horizontalTileIcon: AppIcons.horizontal_tile_network_ethereum,
   ),
+  solana(
+    listSmallIcon: AppIcons.icon_container_network_solana,
+    largeIcon: AppIcons.network_solana_large,
+    horizontalTileIcon: AppIcons.horizontal_tile_network_solana,
+  ),
   unknown(
     listSmallIcon: AppIcons.icon_container_network_unknown,
     largeIcon: AppIcons.network_unknown_large,

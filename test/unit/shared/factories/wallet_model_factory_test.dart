@@ -70,10 +70,10 @@ void main() async {
 
       // Assert
       WalletModel expectedWalletModel = WalletModel(
-        id: 6,
+        id: 7,
         encryptedBool: false,
         pinnedBool: false,
-        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet6'),
+        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet7'),
         name: 'NEW WALLET',
         address: '0x50e10257924889818aA729c6EDfa02524b32Edb9',
         derivationPath: "m/44'/118'/0'/0/0",
