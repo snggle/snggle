@@ -4,6 +4,7 @@ import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
+import 'package:snggle/shared/models/networks/network_type.dart';
 
 void main() {
   group('Tests of NetworkTemplateModel.deriveWallet()', () {
@@ -17,6 +18,7 @@ void main() {
         derivator: Secp256k1Derivator(),
         curveType: CurveType.secp256k1,
         walletType: WalletType.legacy,
+        networkType: NetworkType.ethereum,
       );
 
       Mnemonic actualMnemonic = Mnemonic.fromMnemonicPhrase('carry pave input birth pole vague elephant moment either science food donkey');
@@ -61,6 +63,7 @@ void main() {
         derivator: Secp256k1Derivator(),
         curveType: CurveType.secp256k1,
         walletType: WalletType.legacy,
+        networkType: NetworkType.ethereum,
       );
 
       // Act
@@ -82,6 +85,7 @@ void main() {
         derivator: Secp256k1Derivator(),
         curveType: CurveType.secp256k1,
         walletType: WalletType.legacy,
+        networkType: NetworkType.ethereum,
       );
 
       // Act
@@ -105,6 +109,7 @@ void main() {
         derivator: Secp256k1Derivator(),
         curveType: CurveType.secp256k1,
         walletType: WalletType.legacy,
+        networkType: NetworkType.ethereum,
       );
 
       // Act
@@ -126,6 +131,7 @@ void main() {
         derivator: Secp256k1Derivator(),
         curveType: CurveType.secp256k1,
         walletType: WalletType.legacy,
+        networkType: NetworkType.ethereum,
       );
 
       // Act
@@ -147,6 +153,7 @@ void main() {
         derivator: Secp256k1Derivator(),
         curveType: CurveType.secp256k1,
         walletType: WalletType.legacy,
+        networkType: NetworkType.ethereum,
       );
 
       // Act
@@ -168,6 +175,7 @@ void main() {
         derivator: Secp256k1Derivator(),
         curveType: CurveType.secp256k1,
         walletType: WalletType.legacy,
+        networkType: NetworkType.ethereum,
       );
 
       // Act
@@ -191,6 +199,7 @@ void main() {
         derivator: Secp256k1Derivator(),
         curveType: CurveType.secp256k1,
         walletType: WalletType.legacy,
+        networkType: NetworkType.ethereum,
       );
 
       // Act
@@ -212,6 +221,7 @@ void main() {
         derivator: Secp256k1Derivator(),
         curveType: CurveType.secp256k1,
         walletType: WalletType.legacy,
+        networkType: NetworkType.ethereum,
       );
 
       // Act
@@ -233,6 +243,7 @@ void main() {
         derivator: Secp256k1Derivator(),
         curveType: CurveType.secp256k1,
         walletType: WalletType.legacy,
+        networkType: NetworkType.ethereum,
       );
 
       // Act

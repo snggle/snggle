@@ -7,6 +7,7 @@ import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/utils/derivation_path_index_extractor.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 import '../../../utils/database_mock.dart';
@@ -457,7 +458,7 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      int actualLastDerivationIndex = await globalLocator<WalletsService>().getLastDerivationIndex(FilesystemPath.fromString('vault1/network1'));
+      int actualLastDerivationIndex = await globalLocator<WalletsService>().getLastDerivationIndex(FilesystemPath.fromString('vault1/network1'), DerivationPathIndexExtractor(derivationPathTemplate: "m/44'/60'/0'/0/{{i}}"));
 
       // Assert
       expect(actualLastDerivationIndex, 4);
@@ -468,7 +469,7 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
 
       // Act
-      int actualLastDerivationIndex = await globalLocator<WalletsService>().getLastDerivationIndex(FilesystemPath.fromString('vault1/network1'));
+      int actualLastDerivationIndex = await globalLocator<WalletsService>().getLastDerivationIndex(FilesystemPath.fromString('vault1/network1'), DerivationPathIndexExtractor(derivationPathTemplate: "m/44'/60'/0'/0/{{i}}"));
 
       // Assert
       expect(actualLastDerivationIndex, -1);

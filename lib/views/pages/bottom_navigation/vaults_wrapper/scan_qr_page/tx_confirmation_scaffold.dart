@@ -4,7 +4,7 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/transactions/transaction_model.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
-import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
+import 'package:snggle/views/widgets/generic/address_preview.dart';
 import 'package:snggle/views/widgets/generic/gradient_scrollbar.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
@@ -74,13 +74,13 @@ class _TxConfirmationScaffoldState extends State<TxConfirmationScaffold> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   if (widget.transactionModel.senderAddress != null) ...<Widget>[
-                    LabelWrapperVertical(label: 'From', child: ETHAddressPreview(address: widget.transactionModel.senderAddress!)),
+                    LabelWrapperVertical(label: 'From', child: AddressPreview(address: widget.transactionModel.senderAddress!)),
                   ],
                   if (widget.transactionModel.recipientAddress != null) ...<Widget>[
-                    LabelWrapperVertical(label: 'To', child: ETHAddressPreview(address: widget.transactionModel.recipientAddress!)),
+                    LabelWrapperVertical(label: 'To', child: AddressPreview(address: widget.transactionModel.recipientAddress!)),
                   ],
                   if (widget.transactionModel.contractAddress != null) ...<Widget>[
-                    LabelWrapperVertical(label: 'Contract', child: ETHAddressPreview(address: widget.transactionModel.contractAddress!)),
+                    LabelWrapperVertical(label: 'Contract', child: AddressPreview(address: widget.transactionModel.contractAddress!)),
                   ],
                   if (widget.transactionModel.amount != null) ...<Widget>[
                     LabelWrapperVertical(

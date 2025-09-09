@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:isar/isar.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
+import 'package:snggle/shared/models/networks/network_type.dart';
 
 part 'embedded_network_template_entity.g.dart';
 
@@ -20,6 +21,9 @@ class EmbeddedNetworkTemplateEntity extends Equatable {
   final NetworkIconType? networkIconType;
 
   @Enumerated(EnumType.name)
+  final NetworkType? networkType;
+
+  @Enumerated(EnumType.name)
   final WalletType? walletType;
 
   const EmbeddedNetworkTemplateEntity({
@@ -29,6 +33,7 @@ class EmbeddedNetworkTemplateEntity extends Equatable {
     this.derivatorType,
     this.curveType,
     this.networkIconType,
+    this.networkType,
     this.walletType,
   });
 
@@ -40,6 +45,7 @@ class EmbeddedNetworkTemplateEntity extends Equatable {
       derivatorType: networkTemplateModel.derivator.serializeType(),
       curveType: networkTemplateModel.curveType,
       networkIconType: networkTemplateModel.networkIconType,
+      networkType: networkTemplateModel.networkType,
       walletType: networkTemplateModel.walletType,
     );
   }
@@ -52,6 +58,7 @@ class EmbeddedNetworkTemplateEntity extends Equatable {
         derivatorType,
         curveType,
         networkIconType,
+        networkType,
         walletType,
       ];
 }

@@ -83,7 +83,10 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
     VaultModel vaultModel = await _vaultModelFactory.createNewVault(_parentFilesystemPath, mnemonic, vaultName);
 
     // TODO(dominik): Temporary solution to use network template. In the future, there will be dedicated page to create network template
-    NetworkTemplateModel networkTemplateModel = PredefinedNetworkTemplates.ethereum;
-    await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath, networkTemplateModel.name, networkTemplateModel);
+    NetworkTemplateModel networkTemplateModelEthereum = PredefinedNetworkTemplates.ethereum;
+    NetworkTemplateModel networkTemplateModelSolana = PredefinedNetworkTemplates.solana;
+    await _networkGroupsModelFactory.createNewNetworkGroup(
+        vaultModel.filesystemPath, networkTemplateModelEthereum.name, networkTemplateModelEthereum);
+    await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath, networkTemplateModelSolana.name, networkTemplateModelSolana);
   }
 }
