@@ -2,6 +2,7 @@ import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
+import 'package:snggle/shared/models/networks/network_type.dart';
 
 class NetworkTemplateModel extends Equatable {
   static final RegExp _derivationPathRegExp = RegExp(r"^(?<static_part>m(?:/(?<segment>\d+'?))+)/?(?<dynamic_part>(?:{{\w+}}.*)?)$");
@@ -13,6 +14,7 @@ class NetworkTemplateModel extends Equatable {
   final ADerivator derivator;
   final CurveType curveType;
   final NetworkIconType networkIconType;
+  final NetworkType networkType;
   final WalletType walletType;
 
   const NetworkTemplateModel({
@@ -22,6 +24,7 @@ class NetworkTemplateModel extends Equatable {
     required this.derivator,
     required this.curveType,
     required this.networkIconType,
+    required this.networkType,
     required this.walletType,
   });
 
@@ -33,6 +36,7 @@ class NetworkTemplateModel extends Equatable {
       derivator: ADerivator.fromSerializedType(embeddedNetworkTemplateEntity.derivatorType!),
       curveType: embeddedNetworkTemplateEntity.curveType!,
       networkIconType: embeddedNetworkTemplateEntity.networkIconType!,
+      networkType: embeddedNetworkTemplateEntity.networkType!,
       walletType: embeddedNetworkTemplateEntity.walletType!,
     );
   }
@@ -44,6 +48,7 @@ class NetworkTemplateModel extends Equatable {
     ADerivator? derivator,
     CurveType? curveType,
     NetworkIconType? networkIconType,
+    NetworkType? networkType,
     WalletType? walletType,
   }) {
     return NetworkTemplateModel(
@@ -53,6 +58,7 @@ class NetworkTemplateModel extends Equatable {
       derivator: derivator ?? this.derivator,
       curveType: curveType ?? this.curveType,
       networkIconType: networkIconType ?? this.networkIconType,
+      networkType: networkType ?? this.networkType,
       walletType: walletType ?? this.walletType,
     );
   }
@@ -127,6 +133,7 @@ class NetworkTemplateModel extends Equatable {
         derivator.serializeType(),
         curveType.name,
         networkIconType.name,
+        networkType.name,
         walletType.name,
       ];
 }

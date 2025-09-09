@@ -14,6 +14,7 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_creation_request_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/utils/derivation_path_index_extractor.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
@@ -40,7 +41,8 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
         super(const WalletCreatePageState());
 
   Future<void> init({required String defaultWalletName}) async {
-    int lastDerivationIndex = await _walletsService.getLastDerivationIndex(_networkGroupModel.filesystemPath);
+    int lastDerivationIndex = await _walletsService.getLastDerivationIndex(
+        _networkGroupModel.filesystemPath, DerivationPathIndexExtractor.fromNetworkTemplateModel(_networkGroupModel.networkTemplateModel));
     int derivationIndex = lastDerivationIndex + 1;
 
     if (derivationIndex != 0) {

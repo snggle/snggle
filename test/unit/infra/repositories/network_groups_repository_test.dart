@@ -8,6 +8,7 @@ import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/repositories/network_groups_repository.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
+import 'package:snggle/shared/models/networks/network_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
@@ -23,6 +24,7 @@ void main() {
     derivationPathTemplate: "m/44'/60'/0'/0/{{i}}",
     derivatorType: 'secp256k1',
     networkIconType: NetworkIconType.ethereum,
+    networkType: NetworkType.ethereum,
     name: 'Ethereum',
     walletType: WalletType.legacy,
   );

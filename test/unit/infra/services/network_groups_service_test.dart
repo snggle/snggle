@@ -12,6 +12,7 @@ import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
+import 'package:snggle/shared/models/networks/network_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
@@ -28,6 +29,7 @@ void main() {
     derivationPathTemplate: "m/44'/60'/0'/0/{{i}}",
     derivatorType: 'secp256k1',
     networkIconType: NetworkIconType.ethereum,
+    networkType: NetworkType.ethereum,
     name: 'Ethereum',
     walletType: WalletType.legacy,
   );

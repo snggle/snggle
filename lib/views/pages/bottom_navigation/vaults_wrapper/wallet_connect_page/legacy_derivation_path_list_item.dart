@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
+import 'package:snggle/shared/models/networks/network_type.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
@@ -18,10 +19,14 @@ class LegacyDerivationPathListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
-    List<String> derivationPathList = derivationPath.split('/')
-      ..removeLast()
-      ..removeLast();
-    String visibleDerivationPath = derivationPathList.join('/');
+    String visibleDerivationPath = derivationPath;
+
+    if (networkTemplateModel.networkType == NetworkType.ethereum) {
+      List<String> derivationPathList = derivationPath.split('/')
+        ..removeLast()
+        ..removeLast();
+      visibleDerivationPath = derivationPathList.join('/');
+    }
 
     return Row(
       children: <Widget>[
