@@ -104,7 +104,7 @@ void main() {
       expect(actualWalletConnectPageState, expectedWalletConnectPageState);
     });
 
-    test('Should [return CborCryptoHDKey] with extended public key for all wallets', () async {
+    test('Should [return CborCryptoHDKey] with extended public key for all wallets (Ethereum)', () async {
       // Arrange
       TestUtils.mockPasswords(
         FilesystemPath.fromString('vault1/network1/wallet1'),
@@ -132,7 +132,7 @@ void main() {
       expect(actualCborCryptoHDKey, expectedCborCryptoHDKey);
     });
 
-    test('Should [return CborCryptoHDKey] with extended public key for single wallet', () async {
+    test('Should [return CborCryptoHDKey] with extended public key for single wallet (Ethereum)', () async {
       // Arrange
       TestUtils.mockPasswords(
         FilesystemPath.fromString('vault1/network1/wallet1'),
@@ -166,7 +166,7 @@ void main() {
       expect(actualCborCryptoHDKey, expectedCborCryptoHDKey);
     });
 
-    test('Should [return CborCryptoMultiAccounts] with Solana Crypto HD key for a single wallet', () async {
+    test('Should [return CborCryptoMultiAccounts] with extended public key for single wallet (Solana)', () async {
       // Arrange
       TestUtils.mockPasswords(
         FilesystemPath.fromString('vault1/network2/wallet2'),

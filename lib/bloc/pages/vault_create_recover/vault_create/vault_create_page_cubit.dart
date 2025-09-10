@@ -85,6 +85,7 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
     // TODO(dominik): Temporary solution to use network template. In the future, there will be dedicated page to create network template
     NetworkTemplateModel networkTemplateModelEthereum = PredefinedNetworkTemplates.ethereum;
     NetworkTemplateModel networkTemplateModelSolana = PredefinedNetworkTemplates.solana;
+
     await _networkGroupsModelFactory.createNewNetworkGroup(
         vaultModel.filesystemPath, networkTemplateModelEthereum.name, networkTemplateModelEthereum);
     await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath, networkTemplateModelSolana.name, networkTemplateModelSolana);
