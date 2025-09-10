@@ -4,11 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 
-class AddressPreview extends StatelessWidget {
+class PublicAddressPreview extends StatelessWidget {
   final String address;
   final TextStyle? textStyle;
 
-  const AddressPreview({
+  const PublicAddressPreview({
     required this.address,
     this.textStyle,
     super.key,

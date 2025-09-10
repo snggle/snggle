@@ -9,7 +9,7 @@ void main() {
       String actualHex = '0x16980b3B4a3f9D89E33311B5aa8f80303E5ca4F8';
 
       // Act
-      String actualShortHex = StringUtils.getShortText(actualHex, 3);
+      String actualShortHex = StringUtils.getShortPublicAddress(actualHex, 3);
 
       // Assert
       String expectedShortHex = '0x169...4F8';
@@ -22,7 +22,7 @@ void main() {
       String actualHex = 'Hello, World!';
 
       // Act
-      String actualShortHex = StringUtils.getShortText(actualHex, 3);
+      String actualShortHex = StringUtils.getShortPublicAddress(actualHex, 3);
 
       // Assert
       String expectedShortHex = 'Hel...ld!';

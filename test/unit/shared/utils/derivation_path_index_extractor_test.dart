@@ -15,6 +15,7 @@ void main() {
 
       // Assert
       int expectedDerivationIndex = 2;
+
       expect(actualDerivationIndex, expectedDerivationIndex);
     });
 
@@ -30,6 +31,7 @@ void main() {
 
       // Assert
       int expectedDerivationIndex = 2;
+
       expect(actualDerivationIndex, expectedDerivationIndex);
     });
 
