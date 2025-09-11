@@ -56,9 +56,9 @@ class _SplashPageState extends State<SplashPage> {
 
   void _handleBlocListener(BuildContext context, ASplashPageState? splashPageState) {
     if (splashPageState is SplashPageSetupPinState) {
-      AutoRouter.of(context).replace(const AppSetupPinRoute());
+      AutoRouter.of(context).replace(AppSetUpPinRoute());
     } else if (splashPageState is SplashPageEnterPinState) {
-      AutoRouter.of(context).replace(const AppAuthRoute());
+      AutoRouter.of(context).replace(AppEnterPinRoute());
     }
   }
 }

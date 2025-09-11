@@ -20,8 +20,8 @@ class AppRouter extends $AppRouter {
         page: SplashRoute.page,
         initial: true,
       ),
-      AutoRoute(page: AppSetupPinRoute.page),
-      AutoRoute(page: AppAuthRoute.page),
+      AutoRoute(page: AppSetUpPinRoute.page),
+      AutoRoute(page: AppEnterPinRoute.page),
       AutoRoute(
         page: VaultCreateRecoverRoute.page,
         children: <AutoRoute>[

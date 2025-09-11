@@ -11,6 +11,12 @@ class MasterKeyVO extends Equatable {
 
   const MasterKeyVO({required String encryptedMasterKey}) : _encryptedMasterKey = encryptedMasterKey;
 
+  MasterKeyVO change({required PasswordModel oldPassword, required PasswordModel newPassword}) {
+    String decryptedData = oldPassword.decrypt(encryptedData: encryptedMasterKey);
+    String encryptedData = newPassword.encrypt(decryptedData: decryptedData);
+    return MasterKeyVO(encryptedMasterKey: encryptedData);
+  }
+
   // This method is used to generate a completely new [MasterKeyVO] from given [MnemonicModel].
   // It should only be used during the first app launch or when setting up a new password for the application.
   static Future<MasterKeyVO> create({required MnemonicModel mnemonicModel, required PasswordModel passwordModel}) async {

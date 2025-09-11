@@ -52,6 +52,7 @@ class _SecretsAuthPageState extends State<SecretsAuthPage> {
               onPressed: secretsAuthPageCubit.authenticate,
             ),
           ],
+          popButtonVisible: true,
         );
       },
     );

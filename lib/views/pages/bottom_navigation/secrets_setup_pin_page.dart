@@ -52,6 +52,7 @@ class _SecretsSetupPinPageState extends State<SecretsSetupPinPage> {
                   onPressed: secretsSetupPinPageCubit.setupFirstPin,
                 ),
             ],
+            popButtonVisible: false,
           );
         } else if (secretsSetupPinPageState is SecretsSetupPinPageConfirmPinState) {
           child = PinpadScaffold(
@@ -67,6 +68,7 @@ class _SecretsSetupPinPageState extends State<SecretsSetupPinPage> {
                   onPressed: secretsSetupPinPageCubit.resetAllPins,
                 ),
             ],
+            popButtonVisible: true,
           );
         }
 

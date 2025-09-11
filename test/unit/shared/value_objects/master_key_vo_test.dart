@@ -115,5 +115,48 @@ void main() {
         );
       });
     });
+
+    group('Tests of MasterKeyVO.change()', () {
+      test('Should [CHANGE password] if [old password valid] and [new password valid]', () {
+        // Arrange
+        PasswordModel oldPasswordModel = PasswordModel.fromPlaintext('1111');
+        PasswordModel newPasswordModel = PasswordModel.fromPlaintext('2222');
+        String expectedDecryptedMasterKey = 'master_key_plaintext_value';
+
+        String encryptedMasterKey = oldPasswordModel.encrypt(decryptedData: expectedDecryptedMasterKey);
+        MasterKeyVO actualMasterKeyVO = MasterKeyVO(encryptedMasterKey: encryptedMasterKey);
+
+        // Act
+        MasterKeyVO changedMasterKeyVO = actualMasterKeyVO.change(
+          oldPassword: oldPasswordModel,
+          newPassword: newPasswordModel,
+        );
+
+        // Assert
+        String actualDecryptedMasterKey = newPasswordModel.decrypt(encryptedData: changedMasterKeyVO.encryptedMasterKey);
+        expect(actualDecryptedMasterKey, expectedDecryptedMasterKey);
+      });
+
+      test('Should [throw InvalidPasswordException] if used [INVALID password]', () {
+        // Arrange
+        PasswordModel firstPasswordModel = PasswordModel.fromPlaintext('1111');
+        PasswordModel wrongPasswordModel = PasswordModel.fromPlaintext('0000');
+        PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('2222');
+
+        String encryptedMasterKey = firstPasswordModel.encrypt(
+          decryptedData: 'master_key_plaintext_value',
+        );
+        MasterKeyVO actualMasterKeyVO = MasterKeyVO(encryptedMasterKey: encryptedMasterKey);
+
+        // Assert
+        expect(
+          () => actualMasterKeyVO.change(
+            oldPassword: wrongPasswordModel,
+            newPassword: actualPasswordModel,
+          ),
+          throwsA(isA<InvalidPasswordException>()),
+        );
+      });
+    });
   });
 }

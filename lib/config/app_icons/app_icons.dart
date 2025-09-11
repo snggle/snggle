@@ -34,7 +34,8 @@ class AppIcons {
   static const AssetIconData icon_container_network_ethereum = AssetIconData('assets/icons/icon_container_network_ethereum.svg');
   static const AssetIconData icon_container_network_unknown = AssetIconData('assets/icons/icon_container_network_unknown.svg');
   static const AssetIconData icon_container_vault_pinned_medium = AssetIconData('assets/icons/icon_container_vault_pinned_medium.svg');
-  static const AssetIconData icon_container_vault_pinned_medium_background = AssetIconData('assets/icons/icon_container_vault_pinned_medium_background.svg');
+  static const AssetIconData icon_container_vault_pinned_medium_background =
+      AssetIconData('assets/icons/icon_container_vault_pinned_medium_background.svg');
   static const AssetIconData icon_container_vault_unpinned_medium = AssetIconData('assets/icons/icon_container_vault_unpinned_medium.svg');
   static const AssetIconData icon_container_vault_unpinned_medium_background =
       AssetIconData('assets/icons/icon_container_vault_unpinned_medium_background.svg');
@@ -63,6 +64,7 @@ class AppIcons {
   static const AssetIconData page_add_button = AssetIconData('assets/icons/page_add_button.svg');
   static const AssetIconData page_no_data = AssetIconData('assets/icons/page_no_data.svg');
   static const AssetIconData settings_warning = AssetIconData('assets/icons/settings_warning.svg');
+  static const AssetIconData settings_change_app_pin = AssetIconData('assets/icons/settings_change_app_pin.svg');
   static const AssetIconData switch_border = AssetIconData('assets/icons/switch_border.svg');
   static const AssetIconData switch_dot = AssetIconData('assets/icons/switch_dot.svg');
   static const AssetIconData text_display_mode = AssetIconData('assets/icons/text_display_mode.svg');

@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/app_wipe_dialog/app_wipe_dialog.dart';
 import 'package:snggle/views/widgets/custom/custom_large_list_tile.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
@@ -22,6 +24,11 @@ class _SettingsPageState extends State<SettingsPage> {
       popButtonVisible: false,
       body: Column(
         children: <Widget>[
+          CustomLargeListTile(
+            leading: const AssetIcon(AppIcons.settings_change_app_pin, size: 42),
+            title: 'Change Application PIN',
+            onTap: () => context.router.push(AppEnterPinRoute(appPinType: AppPinType.changePin)),
+          ),
           CustomLargeListTile(
             leading: const AssetIcon(AppIcons.settings_warning, size: 42),
             title: 'Wipe Application',

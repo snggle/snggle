@@ -1,0 +1,74 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/a_app_enter_pin_page_state.dart';
+import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/app_enter_pin_page_cubit.dart';
+import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/states/app_enter_invalid_pin_page_state.dart';
+import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/shared/utils/logger/app_logger.dart';
+import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
+import 'package:snggle/views/widgets/button/custom_text_button.dart';
+import 'package:snggle/views/widgets/pinpad/pinpad_scaffold.dart';
+
+@RoutePage()
+class AppEnterPinPage extends StatefulWidget {
+  final AppPinType appPinType;
+
+  const AppEnterPinPage({
+    super.key,
+    this.appPinType = AppPinType.enterPin,
+  });
+
+  @override
+  State<AppEnterPinPage> createState() => _AppEnterPinPageState();
+}
+
+class _AppEnterPinPageState extends State<AppEnterPinPage> {
+  final AppEnterPinPageCubit appEnterPinPageCubit = AppEnterPinPageCubit();
+
+  @override
+  void dispose() {
+    appEnterPinPageCubit.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    bool appPinTypeChangeBool = widget.appPinType == AppPinType.changePin;
+    String title = appPinTypeChangeBool ? 'Enter current PIN' : 'Enter PIN';
+
+    return BlocBuilder<AppEnterPinPageCubit, AAppEnterPinPageState>(
+      bloc: appEnterPinPageCubit,
+      builder: (BuildContext context, AAppEnterPinPageState appEnterPinPageState) {
+        return PinpadScaffold(
+          errorBool: appEnterPinPageState is AppEnterInvalidPinPageState,
+          title: title,
+          initialPinNumbers: appEnterPinPageState.pinNumbers,
+          onChanged: appEnterPinPageCubit.updatePinNumbers,
+          actionButtons: <Widget>[
+            CustomTextButton(
+              title: 'Confirm',
+              onPressed: () => _handleConfirmButtonPressed(
+                changePinBool: appPinTypeChangeBool,
+              ),
+            ),
+          ],
+          popButtonVisible: appPinTypeChangeBool,
+        );
+      },
+    );
+  }
+
+  Future<void> _handleConfirmButtonPressed({required bool changePinBool}) async {
+    try {
+      await appEnterPinPageCubit.authenticate();
+      if (changePinBool) {
+        await AutoRouter.of(context).replace(AppSetUpPinRoute(appPinType: AppPinType.changePin));
+      } else {
+        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
+      }
+    } catch (e) {
+      AppLogger().log(message: 'Provided invalid PIN');
+    }
+  }
+}

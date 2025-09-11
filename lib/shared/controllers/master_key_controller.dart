@@ -11,6 +11,19 @@ class MasterKeyController {
     _masterKeyPasswordModel = passwordModel;
   }
 
+  Future<void> changePassword(PasswordModel newPasswordModel) async {
+    PasswordModel? oldPasswordModel = _masterKeyPasswordModel;
+    if (oldPasswordModel == null) {
+      throw Exception('[MasterKeyController] Missing old password (authenticate first).');
+    }
+
+    MasterKeyVO currentMasterKeyVO = await _masterKeyService.getMasterKey();
+    MasterKeyVO newMasterKeyVO = currentMasterKeyVO.change(oldPassword: oldPasswordModel, newPassword: newPasswordModel);
+
+    await _masterKeyService.setMasterKey(newMasterKeyVO);
+    _masterKeyPasswordModel = newPasswordModel;
+  }
+
   Future<String> encrypt(String plaintextValue) async {
     if (_masterKeyPasswordModel == null) {
       throw Exception('[MasterKeyController] does not contain password which is required to encrypt data with MasterKey');

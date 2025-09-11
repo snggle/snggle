@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-abstract class AAppSetupPinPageState extends Equatable {
-  const AAppSetupPinPageState();
+abstract class AAppSetUpPinPageState extends Equatable {
+  const AAppSetUpPinPageState();
 
   @override
   List<Object> get props => <Object>[];
