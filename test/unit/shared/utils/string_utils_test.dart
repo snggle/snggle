@@ -3,31 +3,57 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
 
 void main() {
-  group('Tests of StringUtils.getShortText()', () {
-    test('Should [return short HEX string] if given [value IS HEX]', () {
+  group('Tests of StringUtils.getShortPublicAddress()', () {
+    test('Should [return short public address HEX string] if given [value IS HEX (Ethereum address)]', () {
       // Arrange
-      String actualHex = '0x16980b3B4a3f9D89E33311B5aa8f80303E5ca4F8';
+      String actualPublicAddressHex = '0x16980b3B4a3f9D89E33311B5aa8f80303E5ca4F8';
 
       // Act
-      String actualShortHex = StringUtils.getShortPublicAddress(actualHex, 3);
+      String actualShortPublicAddressHex = StringUtils.getShortPublicAddress(actualPublicAddressHex, 3);
 
       // Assert
-      String expectedShortHex = '0x169...4F8';
+      String expectedShortPublicAddressHex = '0x169...4F8';
 
-      expect(actualShortHex, expectedShortHex);
+      expect(actualShortPublicAddressHex, expectedShortPublicAddressHex);
     });
 
-    test('Should [return short text string] if given [value NOT HEX]', () {
+    test('Should [return short public address text string] if given [value NOT HEX (Solana address)]', () {
       // Arrange
-      String actualHex = 'Hello, World!';
+      String actualPublicAddress = '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19';
 
       // Act
-      String actualShortHex = StringUtils.getShortPublicAddress(actualHex, 3);
+      String actualShortPublicAddress = StringUtils.getShortPublicAddress(actualPublicAddress, 3);
 
       // Assert
-      String expectedShortHex = 'Hel...ld!';
+      String expectedShortPublicAddress = '2xG...A19';
 
-      expect(actualShortHex, expectedShortHex);
+      expect(actualShortPublicAddress, expectedShortPublicAddress);
+    });
+
+    test('Should [return short public address text string] if given [value NOT HEX (Bitcoin address)]', () {
+      // Arrange
+      String actualPublicAddress = 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh';
+
+      // Act
+      String actualShortPublicAddress = StringUtils.getShortPublicAddress(actualPublicAddress, 3);
+
+      // Assert
+      String expectedShortPublicAddress = 'bc1...wlh';
+
+      expect(actualShortPublicAddress, expectedShortPublicAddress);
+    });
+
+    test('Should [return short text string] if given [value NOT HEX (String)]', () {
+      // Arrange
+      String actualString = 'Hello, World!';
+
+      // Act
+      String actualShortString = StringUtils.getShortPublicAddress(actualString, 3);
+
+      // Assert
+      String expectedShortString = 'Hel...ld!';
+
+      expect(actualShortString, expectedShortString);
     });
   });
 
