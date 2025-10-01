@@ -10,9 +10,7 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/tx_confirmation_scaffold.dart';
-import 'package:snggle/views/widgets/generic/address_preview.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/tx_confirmation_scaffold.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/public_address_preview.dart';
 import 'package:snggle/views/widgets/qr/qr_result_scaffold.dart';
@@ -60,10 +58,45 @@ class _EthereumSignTxPageState extends State<EthereumSignTxPage> {
         late Widget child;
 
         if (signTxPageState is EthereumSignTxPageConfirmTxState) {
-          child = EthereumTxConfirmationScaffold(
+          child = TxConfirmationScaffold(
             title: 'CONFIRM',
-            transactionModel: widget.signTxPageCubit.transactionModel,
             onSignPressed: widget.signTxPageCubit.signTransaction,
+            transactionBodyWidget: Builder(
+              builder: (BuildContext context) {
+                EthereumTransactionModel tx = widget.signTxPageCubit.transactionModel;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    if (tx.senderAddress != null) LabelWrapperVertical(label: 'From', child: PublicAddressPreview(address: tx.senderAddress!)),
+                    if (tx.recipientAddress != null) LabelWrapperVertical(label: 'To', child: PublicAddressPreview(address: tx.recipientAddress!)),
+                    if (tx.contractAddress != null)
+                      LabelWrapperVertical(label: 'Contract', child: PublicAddressPreview(address: tx.contractAddress!)),
+                    if (tx.amount != null)
+                      LabelWrapperVertical(
+                        label: 'Amount',
+                        child: GradientText(tx.amount!, gradient: AppColors.primaryGradient, textStyle: textTheme.bodyMedium),
+                      ),
+                    if (tx.fee != null)
+                      LabelWrapperVertical(
+                        label: 'Fee',
+                        child: GradientText(tx.fee!, gradient: AppColors.primaryGradient, textStyle: textTheme.bodyMedium),
+                      ),
+                    if (tx.functionData != null)
+                      LabelWrapperVertical(
+                        label: 'Data',
+                        child: Text(tx.functionData!, style: textTheme.bodyMedium?.copyWith(color: AppColors.body3)),
+                      ),
+                    if (tx.message != null)
+                      LabelWrapperVertical(
+                        label: 'Message',
+                        child: Text(tx.message!, style: textTheme.bodyMedium?.copyWith(color: AppColors.body3)),
+                      ),
+                    const SizedBox(height: 100),
+                  ],
+                );
+              },
+            ),
           );
         } else if (signTxPageState is EthereumSignTxPageSignedTxState) {
           child = QRResultScaffold.fromUniformResource(

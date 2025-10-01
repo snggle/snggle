@@ -8,13 +8,12 @@ import 'package:snggle/shared/utils/string_utils.dart';
 class EthereumTransactionModel extends ATransactionModel {
   final String? fee;
   final String? functionData;
-  final SignDataType signDataType;
 
   const EthereumTransactionModel({
     required super.id,
     required super.walletId,
     required super.creationDate,
-    required this.signDataType,
+    required super.signDataType,
     super.amount,
     this.fee,
     this.functionData,
@@ -117,17 +116,6 @@ class EthereumTransactionModel extends ATransactionModel {
   }
 
   @override
-  EthereumTransactionModel addSignature(String signature) {
-    return copyWith(signDate: DateTime.now(), signature: signature);
-  }
-
-  @override
-  String? get transactionLabel => switch (signDataType) {
-        SignDataType.typedTransaction => 'TX',
-        SignDataType.rawBytes => 'TEXT',
-      };
-
-  @override
   String get title {
     if (recipientAddress != null) {
       return StringUtils.getShortPublicAddress(recipientAddress!, 4);
@@ -139,6 +127,12 @@ class EthereumTransactionModel extends ATransactionModel {
       return '---';
     }
   }
+
+  @override
+  String get transactionLabel => switch (signDataType) {
+        SignDataType.typedTransaction => 'TX',
+        SignDataType.rawBytes => 'TEXT',
+      };
 
   @override
   List<Object?> get props => <Object?>[

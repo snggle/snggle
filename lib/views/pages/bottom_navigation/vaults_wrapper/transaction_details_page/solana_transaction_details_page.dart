@@ -86,7 +86,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
                     label: 'Signer',
                     labelStyle: labelTextStyle,
                     collapsedValue: GradientText(
-                      StringUtils.getShortText(senderAddress, 6),
+                      StringUtils.getShortPublicAddress(senderAddress, 6),
                       gradient: AppColors.primaryGradient,
                       textStyle: horizontalValueTextStyle,
                     ),
@@ -132,7 +132,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
                     label: 'Contract',
                     labelStyle: labelTextStyle,
                     collapsedValue: GradientText(
-                      StringUtils.getShortText(contractAddress, 6),
+                      StringUtils.getShortPublicAddress(contractAddress, 6),
                       gradient: AppColors.primaryGradient,
                       textStyle: horizontalValueTextStyle,
                     ),
@@ -150,7 +150,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
                     label: 'Recipient',
                     labelStyle: labelTextStyle,
                     collapsedValue: GradientText(
-                      StringUtils.getShortText(recipientAddress, 6),
+                      StringUtils.getShortPublicAddress(recipientAddress, 6),
                       gradient: AppColors.primaryGradient,
                       textStyle: horizontalValueTextStyle,
                     ),

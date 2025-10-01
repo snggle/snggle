@@ -63,9 +63,9 @@ abstract class ATransactionModel extends Equatable {
     return copyWith(signDate: DateTime.now(), signature: signature);
   }
 
-  String get transactionLabel;
-
   String get title;
+
+  String get transactionLabel;
 
   @override
   List<Object?> get props => <Object?>[

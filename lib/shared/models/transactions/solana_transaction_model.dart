@@ -123,11 +123,11 @@ class SolanaTransactionModel extends ATransactionModel {
   @override
   String get title {
     if (recipientAddress != null) {
-      return StringUtils.getShortText(recipientAddress!, 4);
+      return StringUtils.getShortPublicAddress(recipientAddress!, 4);
     } else if (message != null) {
       return message!;
     } else if (contractAddress != null) {
-      return StringUtils.getShortText(contractAddress!, 4);
+      return StringUtils.getShortPublicAddress(contractAddress!, 4);
     } else {
       return '---';
     }

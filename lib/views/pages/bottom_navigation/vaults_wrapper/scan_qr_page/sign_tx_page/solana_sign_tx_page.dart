@@ -10,9 +10,9 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
 import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/tx_confirmation_scaffold.dart';
-import 'package:snggle/views/widgets/generic/address_preview.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
+import 'package:snggle/views/widgets/generic/public_address_preview.dart';
 import 'package:snggle/views/widgets/qr/qr_result_scaffold.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
@@ -68,10 +68,10 @@ class _SolanaSignTxPageState extends State<SolanaSignTxPage> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    if (tx.signerAddress != null) LabelWrapperVertical(label: 'Signer', child: AddressPreview(address: tx.signerAddress!)),
-                    if (tx.senderAddress != null) LabelWrapperVertical(label: 'From', child: AddressPreview(address: tx.senderAddress!)),
-                    if (tx.recipientAddress != null) LabelWrapperVertical(label: 'To', child: AddressPreview(address: tx.recipientAddress!)),
-                    if (tx.contractAddress != null) LabelWrapperVertical(label: 'Mint', child: AddressPreview(address: tx.contractAddress!)),
+                    if (tx.signerAddress != null) LabelWrapperVertical(label: 'Signer', child: PublicAddressPreview(address: tx.signerAddress!)),
+                    if (tx.senderAddress != null) LabelWrapperVertical(label: 'From', child: PublicAddressPreview(address: tx.senderAddress!)),
+                    if (tx.recipientAddress != null) LabelWrapperVertical(label: 'To', child: PublicAddressPreview(address: tx.recipientAddress!)),
+                    if (tx.contractAddress != null) LabelWrapperVertical(label: 'Mint', child: PublicAddressPreview(address: tx.contractAddress!)),
                     if (tx.amount != null)
                       LabelWrapperVertical(
                         label: 'Amount',
@@ -106,7 +106,7 @@ class _SolanaSignTxPageState extends State<SolanaSignTxPage> {
               children: <Widget>[
                 LabelWrapperVertical(
                   label: 'Signed with',
-                  child: AddressPreview(
+                  child: PublicAddressPreview(
                     address: widget.signTxPageCubit.signWalletModel.address,
                     textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
                   ),

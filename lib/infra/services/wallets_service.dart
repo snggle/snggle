@@ -1,4 +1,3 @@
-import 'package:snggle/bloc/pages/wallet_create/derivation_path_index_extractor/a_derivation_path_index_extractor.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
