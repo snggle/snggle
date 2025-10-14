@@ -71,9 +71,8 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
     _solanaMessage = _getMessageFromCbor(_cborSolSignRequest);
 
     String? receivedWalletAddress = _cborSolSignRequest.address?.toString().toLowerCase() ?? _activeWalletController.walletModel?.address;
-    if (_solanaMessage is ASolanaTransactionMessage) {
-      receivedWalletAddress = _getWalletFromInstructions(_solanaMessage);
-    }
+    receivedWalletAddress =
+        (_solanaMessage is ASolanaTransactionMessage) ? (_getWalletFromInstructions(_solanaMessage) ?? receivedWalletAddress) : receivedWalletAddress;
 
     if (receivedWalletAddress == null) {
       throw const ScanQrException(ScanQrExceptionType.receivedAddressEmpty);
