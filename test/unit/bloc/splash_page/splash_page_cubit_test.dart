@@ -3,11 +3,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/splash_page/splash_page_cubit.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
-import 'package:snggle/bloc/splash_page/states/splash_page_ignore_pin_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_loading_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_setup_pin_state.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 
 void main() {
   initLocator();
@@ -52,27 +50,6 @@ void main() {
 
       // Assert
       expect: () => <ASplashPageState>[SplashPageSetupPinState()],
-    );
-
-    blocTest<SplashPageCubit, ASplashPageState>(
-      'Should return a [SplashPageIgnorePinState] as user decides to setup later, hence [setupPinVisibleBool] is set to false',
-      // Arrange
-      build: () {
-        // @formatter:off
-        FlutterSecureStorage.setMockInitialValues(<String, String>{
-          SecureStorageKey.encryptedMasterKey.name: 'Hr7afkeYIZeUWGvYsFEMorVcFSpr2ehXJ8ncwa1XTL71Q39Dl2LLciHKmaqs4YZqMiceOG3uBSHSyt6JP0F4yKJTWh2Ykrc00aHN/Ui58aNaXkyi7FLYbThHj0t2and/25D3XA==',
-        });
-        // @formatter:on
-        return SplashPageCubit();
-      },
-
-      // Act
-      act: (SplashPageCubit splashPageCubit) async {
-        await splashPageCubit.init();
-      },
-
-      // Assert
-      expect: () => <ASplashPageState>[SplashPageIgnorePinState()],
     );
   });
 }

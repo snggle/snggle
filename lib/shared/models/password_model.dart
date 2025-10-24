@@ -20,12 +20,6 @@ class PasswordModel extends Equatable {
     return PasswordModel.fromPlaintext(AppConfig.defaultPassword);
   }
 
-  static bool isEncryptedWithCustomPassword(String encryptedData) {
-    PasswordModel defaultPasswordModel = PasswordModel.defaultPassword();
-    bool defaultPasswordBool = defaultPasswordModel.isValidForData(encryptedData);
-    return defaultPasswordBool == false;
-  }
-
   String encrypt({required String decryptedData}) {
     return AES256Randomized.encrypt(_hashedPassword, decryptedData);
   }

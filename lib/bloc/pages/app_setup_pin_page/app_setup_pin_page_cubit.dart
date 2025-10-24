@@ -4,7 +4,6 @@ import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_c
 import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_enter_pin_state.dart';
 import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_invalid_pin_state.dart';
 import 'package:snggle/bloc/pages/app_setup_pin_page/states/app_setup_pin_page_loading_state.dart';
-
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
@@ -56,10 +55,6 @@ class AppSetupPinPageCubit extends Cubit<AAppSetupPinPageState> {
       ));
       throw InvalidPasswordException('PIN numbers are not equal');
     }
-  }
-
-  Future<void> setupDefaultPin() async {
-    await _savePin(PasswordModel.defaultPassword());
   }
 
   void resetAllPins() {

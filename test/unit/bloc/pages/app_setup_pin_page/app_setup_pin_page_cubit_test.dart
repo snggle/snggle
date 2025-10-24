@@ -97,16 +97,6 @@ Future<void> main() async {
         expect(actualAppSetupPinPageCubit.state, expectedAppSetupPinPageState);
       });
 
-      test('Should [emit AppSetupPinPageLoadingState] after setting default pin', () async {
-        // Act
-        await actualAppSetupPinPageCubit.setupDefaultPin();
-
-        // Assert
-        AAppSetupPinPageState expectedAppSetupPinPageState = const AppSetupPinPageLoadingState();
-
-        expect(actualAppSetupPinPageCubit.state, expectedAppSetupPinPageState);
-      });
-
       tearDownAll(testDatabase.close);
     });
 

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/splash_page/splash_page_cubit.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_enter_pin_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
-import 'package:snggle/bloc/splash_page/states/splash_page_ignore_pin_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_setup_pin_state.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 
@@ -60,8 +59,6 @@ class _SplashPageState extends State<SplashPage> {
       AutoRouter.of(context).replace(const AppSetupPinRoute());
     } else if (splashPageState is SplashPageEnterPinState) {
       AutoRouter.of(context).replace(const AppAuthRoute());
-    } else if (splashPageState is SplashPageIgnorePinState) {
-      AutoRouter.of(context).replace(const BottomNavigationRoute());
     }
   }
 }
