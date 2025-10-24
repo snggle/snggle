@@ -68,7 +68,8 @@ class _SolanaSignTxPageState extends State<SolanaSignTxPage> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    if (tx.signerAddress != null) LabelWrapperVertical(label: 'Signer', child: PublicAddressPreview(address: tx.signerAddress!)),
+                    if (tx.signerAddress != null && tx.signerAddress != tx.senderAddress)
+                      LabelWrapperVertical(label: 'Signer', child: PublicAddressPreview(address: tx.signerAddress!)),
                     if (tx.senderAddress != null) LabelWrapperVertical(label: 'From', child: PublicAddressPreview(address: tx.senderAddress!)),
                     if (tx.recipientAddress != null) LabelWrapperVertical(label: 'To', child: PublicAddressPreview(address: tx.recipientAddress!)),
                     if (tx.contractAddress != null) LabelWrapperVertical(label: 'Mint', child: PublicAddressPreview(address: tx.contractAddress!)),
@@ -76,6 +77,21 @@ class _SolanaSignTxPageState extends State<SolanaSignTxPage> {
                       LabelWrapperVertical(
                         label: 'Amount',
                         child: GradientText(tx.amount!, gradient: AppColors.primaryGradient, textStyle: textTheme.bodyMedium),
+                      ),
+                    if (tx.expectedAmountOut != null)
+                      LabelWrapperVertical(
+                        label: 'Expected amount after swap',
+                        child: GradientText(tx.expectedAmountOut!, gradient: AppColors.primaryGradient, textStyle: textTheme.bodyMedium),
+                      ),
+                    if (tx.minimumAmountOut != null)
+                      LabelWrapperVertical(
+                        label: 'Minimum amount after swap',
+                        child: GradientText(tx.minimumAmountOut!, gradient: AppColors.primaryGradient, textStyle: textTheme.bodyMedium),
+                      ),
+                    if (tx.slippage != null)
+                      LabelWrapperVertical(
+                        label: 'Slippage',
+                        child: GradientText(tx.slippage!, gradient: AppColors.primaryGradient, textStyle: textTheme.bodyMedium),
                       ),
                     if (tx.message != null)
                       LabelWrapperVertical(

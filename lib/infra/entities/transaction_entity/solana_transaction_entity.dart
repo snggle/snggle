@@ -9,39 +9,46 @@ part 'solana_transaction_entity.g.dart';
   ignore: <String>{'props', 'stringify', 'hashCode'},
 )
 class SolanaTransactionEntity extends ATransactionEntity {
+  final String? expectedAmountOut;
+  final String? minimumAmountOut;
+  final String? slippage;
   final String? instructionBytes;
   final String? signerAddress;
 
-  const SolanaTransactionEntity({
-    required super.id,
-    required super.walletId,
-    required super.creationDate,
-    required super.signDataType,
-    super.amount,
-    super.message,
-    super.contractAddress,
-    super.senderAddress,
-    super.recipientAddress,
-    super.signDate,
-    super.signature,
-    this.instructionBytes,
-    this.signerAddress
-  });
+  const SolanaTransactionEntity(
+      {required super.id,
+      required super.walletId,
+      required super.creationDate,
+      required super.signDataType,
+      super.amount,
+      super.message,
+      super.contractAddress,
+      super.senderAddress,
+      super.recipientAddress,
+      super.signDate,
+      super.signature,
+      this.expectedAmountOut,
+      this.minimumAmountOut,
+      this.slippage,
+      this.instructionBytes,
+      this.signerAddress});
 
   @override
   List<Object?> get props => <Object?>[
-    id,
-    walletId,
-    creationDate,
-    signDataType,
-    amount,
-    message,
-    contractAddress,
-    senderAddress,
-    recipientAddress,
-    signDate,
-    signature,
-    instructionBytes,
-    signerAddress,
-  ];
+        id,
+        walletId,
+        creationDate,
+        signDataType,
+        amount,
+        message,
+        contractAddress,
+        senderAddress,
+        recipientAddress,
+        signDate,
+        signature,
+        expectedAmountOut,
+        minimumAmountOut,
+        instructionBytes,
+        signerAddress,
+      ];
 }

@@ -10,6 +10,9 @@ import 'package:snggle/shared/utils/string_utils.dart';
 class SolanaTransactionModel extends ATransactionModel {
   final String? instructionBytes;
   final String? signerAddress;
+  final String? expectedAmountOut;
+  final String? minimumAmountOut;
+  final String? slippage;
 
   const SolanaTransactionModel({
     required super.id,
@@ -23,6 +26,9 @@ class SolanaTransactionModel extends ATransactionModel {
     super.recipientAddress,
     super.signDate,
     super.signature,
+    this.expectedAmountOut,
+    this.minimumAmountOut,
+    this.slippage,
     this.instructionBytes,
     this.signerAddress,
   });
@@ -35,6 +41,9 @@ class SolanaTransactionModel extends ATransactionModel {
       creationDate: DateTime.parse(transactionEntity.creationDate),
       signDataType: transactionEntity.signDataType,
       amount: transactionEntity.amount,
+      expectedAmountOut: transactionEntity.expectedAmountOut,
+      minimumAmountOut: transactionEntity.minimumAmountOut,
+      slippage: transactionEntity.slippage,
       message: transactionEntity.message,
       contractAddress: transactionEntity.contractAddress,
       senderAddress: transactionEntity.senderAddress,
@@ -75,6 +84,9 @@ class SolanaTransactionModel extends ATransactionModel {
     DateTime? creationDate,
     SignDataType? signDataType,
     String? amount,
+    String? expectedAmountOut,
+    String? minimumAmountOut,
+    String? slippage,
     String? message,
     String? contractAddress,
     String? senderAddress,
@@ -90,6 +102,9 @@ class SolanaTransactionModel extends ATransactionModel {
       creationDate: creationDate ?? this.creationDate,
       signDataType: signDataType ?? this.signDataType,
       amount: amount ?? this.amount,
+      expectedAmountOut: expectedAmountOut ?? this.expectedAmountOut,
+      minimumAmountOut: minimumAmountOut ?? this.minimumAmountOut,
+      slippage: slippage ?? this.slippage,
       message: message ?? this.message,
       contractAddress: contractAddress ?? this.contractAddress,
       senderAddress: senderAddress ?? this.senderAddress,
@@ -109,6 +124,9 @@ class SolanaTransactionModel extends ATransactionModel {
       creationDate: creationDate.toUtc().toIso8601String(),
       signDataType: signDataType,
       amount: amount,
+      expectedAmountOut: expectedAmountOut,
+      minimumAmountOut: minimumAmountOut,
+      slippage: slippage,
       message: message,
       contractAddress: contractAddress,
       senderAddress: senderAddress,
@@ -142,53 +160,23 @@ class SolanaTransactionModel extends ATransactionModel {
   static SolanaTransactionModel _mapFromDecodedInstructions(
       {required int walletId, required Uint8List signData, required ASolanaTransactionMessage message, required SignDataType signDataType}) {
     String? amount;
+    String? minimumAmountOut;
+    String? expectedAmountOut;
+    String? slippage;
     String? mintAddress;
     String? senderAddress;
     String? recipientAddress;
     String? signerAddress;
 
     for (ASolanaInstructionDecoded solanaInstructionDecoded in message.decodedInstructions) {
-      switch (solanaInstructionDecoded.runtimeType) {
-        case SolanaSystemTransferInstruction:
-          amount = solanaInstructionDecoded.getAmount().toString();
-          senderAddress = solanaInstructionDecoded.source;
-          recipientAddress = solanaInstructionDecoded.destination;
-          break;
-
-        case SolanaTokenTransferCheckedInstruction:
-          amount = solanaInstructionDecoded.getAmount().toString();
-          mintAddress = solanaInstructionDecoded.mint;
-          senderAddress = solanaInstructionDecoded.source;
-          recipientAddress = solanaInstructionDecoded.destination;
-          signerAddress = solanaInstructionDecoded.authority;
-          break;
-
-        case SolanaStakeWithdrawInstruction:
-          amount = solanaInstructionDecoded.getAmount().toString();
-          recipientAddress = solanaInstructionDecoded.destination;
-          signerAddress = solanaInstructionDecoded.withdrawAuthority;
-          senderAddress = solanaInstructionDecoded.stakeAccount;
-          break;
-
-        case SolanaStakeDelegateInstruction:
-          recipientAddress = solanaInstructionDecoded.stakeAccount;
-          signerAddress = solanaInstructionDecoded.stakeAuthority;
-          break;
-
-        case SolanaStakeInitializeInstruction:
-          senderAddress = solanaInstructionDecoded.staker;
-          recipientAddress = solanaInstructionDecoded.stakeAccount;
-          break;
-
-        case SolanaStakeDeactivateInstruction:
-          senderAddress = solanaInstructionDecoded.stakeAccount;
-          recipientAddress = solanaInstructionDecoded.stakeAuthority;
-          signerAddress = solanaInstructionDecoded.stakeAuthority;
-          break;
-
-        default:
-          break;
-      }
+      amount = solanaInstructionDecoded.getAmount()?.toString() ?? amount;
+      minimumAmountOut = solanaInstructionDecoded.getSwapMinimumAmountOut()?.toString() ?? minimumAmountOut;
+      expectedAmountOut = solanaInstructionDecoded.getSwapExpectedAmountOut()?.toString() ?? expectedAmountOut;
+      slippage = solanaInstructionDecoded.getSlippagePercentage()?.toString() ?? slippage;
+      mintAddress = solanaInstructionDecoded.getMintAddress() ?? mintAddress;
+      senderAddress = solanaInstructionDecoded.getSenderAddress() ?? senderAddress;
+      recipientAddress = solanaInstructionDecoded.getRecipientAddress() ?? recipientAddress;
+      signerAddress = solanaInstructionDecoded.getSignerAddress() ?? signerAddress;
     }
 
     return SolanaTransactionModel(
@@ -197,6 +185,9 @@ class SolanaTransactionModel extends ATransactionModel {
       creationDate: DateTime.now(),
       signDataType: signDataType,
       amount: amount,
+      expectedAmountOut: expectedAmountOut,
+      minimumAmountOut: minimumAmountOut,
+      slippage: slippage,
       instructionBytes: HexCodec.encode(signData, includePrefixBool: true),
       contractAddress: mintAddress,
       senderAddress: senderAddress,
@@ -212,6 +203,9 @@ class SolanaTransactionModel extends ATransactionModel {
         creationDate,
         signDataType,
         amount,
+        expectedAmountOut,
+        minimumAmountOut,
+        slippage,
         message,
         contractAddress,
         senderAddress,

@@ -95,37 +95,8 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
     String? signerAddress;
 
     for (ASolanaInstructionDecoded solanaInstructionDecoded in solanaTransactionMessage.decodedInstructions) {
-      switch (solanaInstructionDecoded.runtimeType) {
-        case SolanaSystemTransferInstruction:
-          senderAddress = solanaInstructionDecoded.source;
-          break;
-
-        case SolanaTokenTransferCheckedInstruction:
-          senderAddress = solanaInstructionDecoded.source;
-          signerAddress = solanaInstructionDecoded.authority;
-          break;
-
-        case SolanaStakeWithdrawInstruction:
-          signerAddress = solanaInstructionDecoded.withdrawAuthority;
-          senderAddress = solanaInstructionDecoded.stakeAccount;
-          break;
-
-        case SolanaStakeDelegateInstruction:
-          signerAddress = solanaInstructionDecoded.stakeAuthority;
-          break;
-
-        case SolanaStakeInitializeInstruction:
-          senderAddress = solanaInstructionDecoded.staker;
-          break;
-
-        case SolanaStakeDeactivateInstruction:
-          senderAddress = solanaInstructionDecoded.stakeAccount;
-          signerAddress = solanaInstructionDecoded.stakeAuthority;
-          break;
-
-        default:
-          break;
-      }
+      senderAddress = solanaInstructionDecoded.getSenderAddress() ?? senderAddress;
+      signerAddress = solanaInstructionDecoded.getSignerAddress() ?? signerAddress;
     }
     return signerAddress ?? senderAddress;
   }
