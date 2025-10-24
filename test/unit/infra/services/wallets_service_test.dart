@@ -25,7 +25,8 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      List<WalletModel> actualWalletModelList = await globalLocator<WalletsService>().getAllByParentPath(const FilesystemPath.empty(), firstLevelBool: false);
+      List<WalletModel> actualWalletModelList =
+          await globalLocator<WalletsService>().getAllByParentPath(const FilesystemPath.empty(), firstLevelBool: false);
 
       // Assert
       List<WalletModel> expectedWalletModelList = <WalletModel>[
@@ -412,40 +413,6 @@ void main() {
       // Assert
       expect(
         () => globalLocator<WalletsService>().deleteById(99999),
-        throwsA(isA<ChildKeyNotFoundException>()),
-      );
-    });
-  });
-
-  group('Tests of WalletsService.getByAddress()', () {
-    test('Should [return WalletModel] if [wallet address EXISTS] in collection', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Act
-      WalletModel? actualWalletModel = await globalLocator<WalletsService>().getByAddress('0x4BD51C77E08Ac696789464A079cEBeE203963Dce');
-
-      // Assert
-      WalletModel expectedWalletModel = WalletModel(
-        id: 1,
-        encryptedBool: false,
-        pinnedBool: false,
-        address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce',
-        derivationPath: "m/44'/60'/0'/0/0",
-        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
-        name: 'WALLET 0',
-      );
-
-      expect(actualWalletModel, expectedWalletModel);
-    });
-
-    test('Should [throw ChildKeyNotFoundException] if [wallet address NOT EXISTS] in collection', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
-
-      // Assert
-      expect(
-        () => globalLocator<WalletsService>().getByAddress('0x000000000000000000000000000000000000dEaD'),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

@@ -13,7 +13,6 @@ class QRResultScaffold extends StatefulWidget {
   final String title;
   final UR? ur;
   final Widget child;
-  final Widget tooltip;
   final bool closeButtonVisible;
   final bool popButtonVisible;
   final double qrCodeGap;
@@ -22,12 +21,12 @@ class QRResultScaffold extends StatefulWidget {
   final VoidCallback? customPopCallback;
   final List<Widget>? actions;
   final Widget? addressPreview;
+  final Widget? tooltip;
 
   const QRResultScaffold.fromUniformResource({
     required this.title,
     required this.ur,
     required this.child,
-    required this.tooltip,
     this.subtitle,
     this.closeButtonVisible = false,
     this.popButtonVisible = true,
@@ -35,6 +34,7 @@ class QRResultScaffold extends StatefulWidget {
     this.customPopCallback,
     this.actions,
     this.addressPreview,
+    this.tooltip,
     super.key,
   }) : plaintext = null;
 
@@ -42,7 +42,6 @@ class QRResultScaffold extends StatefulWidget {
     required this.title,
     required this.plaintext,
     required this.child,
-    required this.tooltip,
     this.subtitle,
     this.closeButtonVisible = false,
     this.popButtonVisible = true,
@@ -50,6 +49,7 @@ class QRResultScaffold extends StatefulWidget {
     this.customPopCallback,
     this.actions,
     this.addressPreview,
+    this.tooltip,
     super.key,
   }) : ur = null;
 

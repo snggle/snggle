@@ -25,9 +25,9 @@ class GradientOutlinedButton extends StatelessWidget {
     required this.label,
     this.onPressed,
     this.icon,
+    this.width,
     super.key,
-  })  : width = null,
-        letterSpacing = 0.5,
+  })  : letterSpacing = 0.5,
         borderRadius = 7,
         padding = const EdgeInsets.symmetric(vertical: 9.5, horizontal: 31);
 

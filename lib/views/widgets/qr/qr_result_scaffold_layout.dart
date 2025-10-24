@@ -5,12 +5,12 @@ import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_
 
 class QRResultScaffoldLayout extends StatelessWidget {
   final Widget body;
-  final Widget tooltip;
+  final Widget? tooltip;
   final Widget? addressPreview;
 
   const QRResultScaffoldLayout({
     required this.body,
-    required this.tooltip,
+    this.tooltip,
     this.addressPreview,
     super.key,
   });

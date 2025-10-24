@@ -71,7 +71,7 @@ void main() {
       );
 
       // Act
-      TransactionModel actualTransactionModel = TransactionModel.fromCborEthSignRequest(1, actualCborEthSignRequest);
+      TransactionModel actualTransactionModel = TransactionModel.fromCborEthSignRequest(1, '0xd6c63265857c51ee794964d2f98431b02db87ee7', actualCborEthSignRequest);
 
       // Assert
       TransactionModel expectedTransactionModel = TransactionModel(
