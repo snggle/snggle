@@ -40,6 +40,7 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
 
   Future<void> init() async {
     senderWalletAddress = _activeWalletController.walletModel?.address ?? _cborEthSignRequest.address?.toLowerCase();
+    print('SIGNER ADDRESS: $senderWalletAddress');
 
     await _setupSignWallet();
     transactionModel = TransactionModel.fromCborEthSignRequest(senderWalletModel.id, senderWalletAddress, _cborEthSignRequest);
@@ -55,13 +56,20 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
     TransactionModel signedTransactionModel = transactionModel.addSignature(signature.hex);
     await _transactionsService.save(signedTransactionModel);
 
+    CborEthSignature cborEthSignature = CborEthSignature(
+      signature: signature.bytes,
+      origin: _cborEthSignRequest.origin,
+      requestId: _cborEthSignRequest.requestId ?? Uint8List(0),
+    );
+
+    print('SIGNATURE');
+    print('requestId: ${cborEthSignature.requestId}');
+    print('signature: ${cborEthSignature.signature}');
+    print('origin: ${cborEthSignature.origin}');
+
     emit(SignTxPageSignedTxState(
       transactionModel: signedTransactionModel,
-      cborEthSignature: CborEthSignature(
-        signature: signature.bytes,
-        origin: _cborEthSignRequest.origin,
-        requestId: _cborEthSignRequest.requestId ?? Uint8List(0),
-      ),
+      cborEthSignature: cborEthSignature,
     ));
   }
 

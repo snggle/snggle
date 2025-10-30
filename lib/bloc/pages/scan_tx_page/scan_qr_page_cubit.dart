@@ -48,6 +48,16 @@ class ScanQRPageCubit extends Cubit<ScanQRPageState> {
   void _finishScanning() {
     try {
       ACborTaggedObject? cborTaggedObject = _urDecoder.buildCborTaggedObject();
+      if (cborTaggedObject is CborEthSignRequest) {
+        print('SIGN REQUEST');
+        print('derivationPath: ${cborTaggedObject.derivationPath}');
+        print('address: ${cborTaggedObject.address}');
+        print('chainId: ${cborTaggedObject.chainId}');
+        print('dataType: ${cborTaggedObject.dataType}');
+        print('origin: ${cborTaggedObject.origin}');
+        print('requestId: ${cborTaggedObject.requestId}');
+        print('signData: ${cborTaggedObject.signData}');
+      }
       emit(ScanQRPageState(cborTaggedObject: cborTaggedObject, loadingBool: true));
     } catch (_) {
       _unsupportedOperationCallback();
