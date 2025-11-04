@@ -11,6 +11,8 @@ import 'package:snggle/bloc/pages/scan_tx_page/sign_tx_page/states/sign_tx_page_
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
+import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
+import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/transactions/transaction_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
@@ -23,9 +25,9 @@ void main() {
   final TestDatabase testDatabase = TestDatabase();
 
   late SignTxPageCubit actualSignTxPageCubit;
-  late WalletModel actualWalletModel;
+  late WalletModel actualActiveWalletModel;
 
-  group('Tests of SignTxPageCubit process [ActiveWalletController HAS values] and [transaction VALID]', () {
+  group('Tests of SignTxPageCubit process [useWalletAutoDetectionBool = true] and [Transaction VALID]', () {
     setUpAll(() async {
       await testDatabase.init(
         databaseMock: DatabaseMock.transactionsDatabaseMock,
@@ -47,23 +49,11 @@ void main() {
               CborPathComponent(index: 0, hardened: false),
               CborPathComponent(index: 0, hardened: false)
             ],
-            sourceFingerprint: 1881575369,
+            sourceFingerprint: 1024969286,
           ),
-          address: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
         ),
+        walletAutoDetectionEnabledBool: true,
       );
-
-      actualWalletModel = WalletModel(
-        id: 1,
-        encryptedBool: false,
-        pinnedBool: false,
-        address: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
-        derivationPath: "m/44'/60'/0'/0/0",
-        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
-        name: 'WALLET 0',
-      );
-
-      globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel);
     });
 
     test('Should [return SignTxPageConfirmTxState] with initial values', () {
@@ -118,9 +108,57 @@ void main() {
     tearDownAll(testDatabase.close);
   });
 
-  group('Tests of SignTxPageCubit process [ActiveWalletController HAS values] and [transaction INVALID]', () {
-    late WalletModel actualWalletModel;
+  group('Tests of SignTxPageCubit process [useWalletAutoDetectionBool = true] and [wallet has PARENT password]', () {
+    setUpAll(() async {
+      await testDatabase.init(
+        databaseMock: DatabaseMock.transactionsDatabaseMockWithPassword,
+        appPasswordModel: PasswordModel.fromPlaintext('1111'),
+      );
 
+      actualSignTxPageCubit = SignTxPageCubit(
+        cborEthSignRequest: CborEthSignRequest(
+          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
+          signData: base64Decode(
+            'V2VsY29tZSB0byBPcGVuU2VhIQoKQ2xpY2sgdG8gc2lnbiBpbiBhbmQgYWNjZXB0IHRoZSBPcGVuU2VhIFRlcm1zIG9mIFNlcnZpY2UgKGh0dHBzOi8vb3BlbnNlYS5pby90b3MpIGFuZCBQcml2YWN5IFBvbGljeSAoaHR0cHM6Ly9vcGVuc2VhLmlvL3ByaXZhY3kpLgoKVGhpcyByZXF1ZXN0IHdpbGwgbm90IHRyaWdnZXIgYSBibG9ja2NoYWluIHRyYW5zYWN0aW9uIG9yIGNvc3QgYW55IGdhcyBmZWVzLgoKV2FsbGV0IGFkZHJlc3M6CjB4NTNiZjBhMTg3NTQ4NzNhODEwMjYyNWQ4MjI1YWY2YTE1YTQzNDIzYwoKTm9uY2U6CjFkOGQyZGMxLTBiN2MtNDc2Mi1hNTIwLWE0ODVhZTI2MTcxOQ==',
+          ),
+          dataType: CborEthSignDataType.rawBytes,
+          derivationPath: const CborCryptoKeypath(
+            components: <CborPathComponent>[
+              CborPathComponent(index: 44, hardened: true),
+              CborPathComponent(index: 60, hardened: true),
+              CborPathComponent(index: 0, hardened: true),
+              CborPathComponent(index: 0, hardened: false),
+              CborPathComponent(index: 0, hardened: false)
+            ],
+            sourceFingerprint: 1024969286,
+          ),
+        ),
+        walletAutoDetectionEnabledBool: true,
+      );
+    });
+
+    test('Should [return SignTxPageConfirmTxState] with initial values', () {
+      // Act
+      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+
+      // Assert
+      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+
+      expect(actualSignTxPageState, expectedSignTxPageState);
+    });
+
+    test('Should [throw ScanTxException.walletWithEncryptedParents] if [wallet HAS parent password]', () async {
+      // Assert
+      expect(
+        () => actualSignTxPageCubit.init(),
+        throwsA(const ScanQrException(ScanQrExceptionType.walletWithEncryptedParents)),
+      );
+    });
+
+    tearDownAll(testDatabase.close);
+  });
+
+  group('Tests of SignTxPageCubit process [useWalletAutoDetectionBool = true] and [fingerprint NOT EXISTS]', () {
     setUpAll(() async {
       await testDatabase.init(
         databaseMock: DatabaseMock.transactionsDatabaseMock,
@@ -142,22 +180,11 @@ void main() {
               CborPathComponent(index: 0, hardened: false),
               CborPathComponent(index: 0, hardened: false)
             ],
-            sourceFingerprint: 1881575369,
+            sourceFingerprint: null,
           ),
         ),
+        walletAutoDetectionEnabledBool: true,
       );
-
-      actualWalletModel = WalletModel(
-        id: 1,
-        encryptedBool: false,
-        pinnedBool: false,
-        address: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
-        derivationPath: "m/44'/60'/0'/0/0",
-        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
-        name: 'WALLET 0',
-      );
-
-      globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel);
     });
 
     test('Should [return SignTxPageConfirmTxState] with initial values', () {
@@ -170,27 +197,112 @@ void main() {
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
 
-    test('Should [return SignTxPageConfirmTxState] with active wallet address if [transaction HAS EMPTY address]', () async {
-      // Arrange
-      await actualSignTxPageCubit.init();
-
-      // Act
-      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
-      String actualActiveWalletAddress = actualSignTxPageCubit.activeWalletModel.address;
-
+    test('Should [throw ScanTxException.walletNotFound] if [fingerprint = null] in the sign request', () async {
       // Assert
-      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
-      String expectedActiveWalletAddress = '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09';
-
-      expect(actualSignTxPageState, expectedSignTxPageState);
-      expect(actualActiveWalletAddress, expectedActiveWalletAddress);
+      expect(
+        () => actualSignTxPageCubit.init(),
+        throwsA(const ScanQrException(ScanQrExceptionType.receivedAddressEmpty)),
+      );
     });
 
     tearDownAll(testDatabase.close);
   });
 
-  group('Tests of SignTxPageCubit process [ActiveWalletController HAS values], [wallet has PARENT password] and [transaction VALID]', () {
-    late WalletModel actualWalletModel;
+  group('Tests of SignTxPageCubit process [useWalletAutoDetectionBool = false] and [transaction VALID]', () {
+    setUpAll(() async {
+      await testDatabase.init(
+        databaseMock: DatabaseMock.transactionsDatabaseMock,
+        appPasswordModel: PasswordModel.fromPlaintext('1111'),
+      );
+
+      actualSignTxPageCubit = SignTxPageCubit(
+        cborEthSignRequest: CborEthSignRequest(
+          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
+          signData: base64Decode(
+            'V2VsY29tZSB0byBPcGVuU2VhIQoKQ2xpY2sgdG8gc2lnbiBpbiBhbmQgYWNjZXB0IHRoZSBPcGVuU2VhIFRlcm1zIG9mIFNlcnZpY2UgKGh0dHBzOi8vb3BlbnNlYS5pby90b3MpIGFuZCBQcml2YWN5IFBvbGljeSAoaHR0cHM6Ly9vcGVuc2VhLmlvL3ByaXZhY3kpLgoKVGhpcyByZXF1ZXN0IHdpbGwgbm90IHRyaWdnZXIgYSBibG9ja2NoYWluIHRyYW5zYWN0aW9uIG9yIGNvc3QgYW55IGdhcyBmZWVzLgoKV2FsbGV0IGFkZHJlc3M6CjB4NTNiZjBhMTg3NTQ4NzNhODEwMjYyNWQ4MjI1YWY2YTE1YTQzNDIzYwoKTm9uY2U6CjFkOGQyZGMxLTBiN2MtNDc2Mi1hNTIwLWE0ODVhZTI2MTcxOQ==',
+          ),
+          dataType: CborEthSignDataType.rawBytes,
+          derivationPath: const CborCryptoKeypath(
+            components: <CborPathComponent>[
+              CborPathComponent(index: 44, hardened: true),
+              CborPathComponent(index: 60, hardened: true),
+              CborPathComponent(index: 0, hardened: true),
+              CborPathComponent(index: 0, hardened: false),
+              CborPathComponent(index: 0, hardened: false)
+            ],
+            sourceFingerprint: 1024969286,
+          ),
+        ),
+        walletAutoDetectionEnabledBool: false,
+      );
+
+      actualActiveWalletModel = WalletModel(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        address: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
+        derivationPath: "m/44'/60'/0'/0/0",
+        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
+        name: 'WALLET 0',
+      );
+
+      globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualActiveWalletModel);
+    });
+
+    test('Should [return SignTxPageConfirmTxState] with initial values', () {
+      // Act
+      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+
+      // Assert
+      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+
+      expect(actualSignTxPageState, expectedSignTxPageState);
+    });
+
+    test('Should [return SignTxPageConfirmTxState] with initialized wallet and wallet password', () async {
+      // Act
+      await actualSignTxPageCubit.init();
+      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+
+      // Assert
+      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+
+      expect(actualSignTxPageState, expectedSignTxPageState);
+    });
+
+    test('Should [return SignTxPageSignedTxState] with signed transaction', () async {
+      // Act
+      await actualSignTxPageCubit.signTransaction();
+      SignTxPageSignedTxState actualSignTxPageState = actualSignTxPageCubit.state as SignTxPageSignedTxState;
+
+      // Assert
+      SignTxPageSignedTxState expectedSignTxPageState = SignTxPageSignedTxState(
+        transactionModel: TransactionModel(
+          id: Isar.autoIncrement,
+          walletId: 1,
+          creationDate: actualSignTxPageState.transactionModel.creationDate,
+          signDataType: SignDataType.rawBytes,
+          senderAddress: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
+          message:
+              'Welcome to OpenSea!\n\nClick to sign in and accept the OpenSea Terms of Service (https://opensea.io/tos) and Privacy Policy (https://opensea.io/privacy).\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nWallet address:\n0x53bf0a18754873a8102625d8225af6a15a43423c\n\nNonce:\n1d8d2dc1-0b7c-4762-a520-a485ae261719',
+          signature:
+              '0xb01714bf19f9e2afbdf53cf97b4479b7d55b729a604787681535f57c53df5cb07f8653c1a20bfa3e68c3289b2584ab7de9a9acc0998d0cfb5a34a2b586630e3b1b',
+          signDate: actualSignTxPageState.transactionModel.signDate,
+        ),
+        cborEthSignature: CborEthSignature(
+          signature: base64Decode('sBcUvxn54q+99Tz5e0R5t9VbcppgR4doFTX1fFPfXLB/hlPBogv6PmjDKJslhKt96amswJmNDPtaNKK1hmMOOxs='),
+          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
+        ),
+      );
+
+      expect(actualSignTxPageState, expectedSignTxPageState);
+    });
+
+    tearDownAll(testDatabase.close);
+  });
+
+  group('Tests of SignTxPageCubit process [useWalletAutoDetectionBool = false] and [wallet has PARENT password]', () {
+    late WalletModel actualActiveWalletModel;
 
     setUpAll(() async {
       await testDatabase.init(
@@ -215,11 +327,11 @@ void main() {
             ],
             sourceFingerprint: 1881575369,
           ),
-          address: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
         ),
+        walletAutoDetectionEnabledBool: false,
       );
 
-      actualWalletModel = WalletModel(
+      actualActiveWalletModel = WalletModel(
         id: 1,
         encryptedBool: false,
         pinnedBool: false,
@@ -229,7 +341,7 @@ void main() {
         name: 'WALLET 0',
       );
 
-      globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualWalletModel);
+      globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualActiveWalletModel);
     });
 
     test('Should [return SignTxPageConfirmTxState] with initial values', () {
@@ -256,7 +368,7 @@ void main() {
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
 
-    test('Should [return SignTxPageSignedTxState] with signed transaction', () async {
+    test('Should [return SignTxPageSignedTxState] with signed transaction (open wallet is unlocked)', () async {
       // Act
       await actualSignTxPageCubit.signTransaction();
       SignTxPageSignedTxState actualSignTxPageState = actualSignTxPageCubit.state as SignTxPageSignedTxState;
@@ -282,6 +394,77 @@ void main() {
       );
 
       expect(actualSignTxPageState, expectedSignTxPageState);
+    });
+
+    tearDownAll(testDatabase.close);
+  });
+
+  group('Tests of SignTxPageCubit process [useWalletAutoDetectionBool = false] and [fingerprint NOT EXISTS]', () {
+    late WalletModel actualActiveWalletModel;
+
+    setUpAll(() async {
+      await testDatabase.init(
+        databaseMock: DatabaseMock.transactionsDatabaseMock,
+        appPasswordModel: PasswordModel.fromPlaintext('1111'),
+      );
+
+      actualSignTxPageCubit = SignTxPageCubit(
+        cborEthSignRequest: CborEthSignRequest(
+          requestId: base64Decode('Uf2uvaSQROyLDEU2is7lvw=='),
+          signData: base64Decode(
+            'V2VsY29tZSB0byBPcGVuU2VhIQoKQ2xpY2sgdG8gc2lnbiBpbiBhbmQgYWNjZXB0IHRoZSBPcGVuU2VhIFRlcm1zIG9mIFNlcnZpY2UgKGh0dHBzOi8vb3BlbnNlYS5pby90b3MpIGFuZCBQcml2YWN5IFBvbGljeSAoaHR0cHM6Ly9vcGVuc2VhLmlvL3ByaXZhY3kpLgoKVGhpcyByZXF1ZXN0IHdpbGwgbm90IHRyaWdnZXIgYSBibG9ja2NoYWluIHRyYW5zYWN0aW9uIG9yIGNvc3QgYW55IGdhcyBmZWVzLgoKV2FsbGV0IGFkZHJlc3M6CjB4NTNiZjBhMTg3NTQ4NzNhODEwMjYyNWQ4MjI1YWY2YTE1YTQzNDIzYwoKTm9uY2U6CjFkOGQyZGMxLTBiN2MtNDc2Mi1hNTIwLWE0ODVhZTI2MTcxOQ==',
+          ),
+          dataType: CborEthSignDataType.rawBytes,
+          derivationPath: const CborCryptoKeypath(
+            components: <CborPathComponent>[
+              CborPathComponent(index: 44, hardened: true),
+              CborPathComponent(index: 60, hardened: true),
+              CborPathComponent(index: 0, hardened: true),
+              CborPathComponent(index: 0, hardened: false),
+              CborPathComponent(index: 0, hardened: false)
+            ],
+          ),
+        ),
+        walletAutoDetectionEnabledBool: false,
+      );
+
+      actualActiveWalletModel = WalletModel(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        address: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
+        derivationPath: "m/44'/60'/0'/0/0",
+        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
+        name: 'WALLET 0',
+      );
+
+      globalLocator<ActiveWalletController>().setActiveWallet(walletModel: actualActiveWalletModel);
+    });
+
+    test('Should [return SignTxPageConfirmTxState] with initial values', () {
+      // Act
+      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+
+      // Assert
+      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+
+      expect(actualSignTxPageState, expectedSignTxPageState);
+    });
+
+    test('Should [return SignTxPageConfirmTxState] with active wallet address if [transaction HAS EMPTY address]', () async {
+      // Arrange
+      await actualSignTxPageCubit.init();
+
+      // Act
+      ASignTxPageState actualSignTxPageState = actualSignTxPageCubit.state;
+      String actualActiveWalletAddress = actualSignTxPageCubit.senderWalletModel.address;
+
+      // Assert
+      ASignTxPageState expectedSignTxPageState = const SignTxPageConfirmTxState();
+      String expectedActiveWalletAddress = '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09';
+
+      expect(actualSignTxPageState, expectedSignTxPageState);
+      expect(actualActiveWalletAddress, expectedActiveWalletAddress);
     });
 
     tearDownAll(testDatabase.close);

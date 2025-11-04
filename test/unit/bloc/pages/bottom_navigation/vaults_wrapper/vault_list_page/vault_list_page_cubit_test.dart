@@ -29,8 +29,8 @@ void main() {
     name: 'VAULTS GROUP 1',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
-      VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-      VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+      VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: '1024969286', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+      VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
       // @formatter:on
     ],
   );
@@ -42,8 +42,8 @@ void main() {
     name: 'UPDATED VAULTS GROUP 1',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
-      VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-      VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+      VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: '1024969286', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+      VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
       // @formatter:on
     ],
   );
@@ -53,7 +53,7 @@ void main() {
     pinnedBool: false,
     index: 0,
     filesystemPath: FilesystemPath.fromString('vault1'),
-    fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
+    fingerprint: '2429747484',
     name: 'VAULT 1',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
@@ -70,7 +70,7 @@ void main() {
     pinnedBool: false,
     index: 1,
     filesystemPath: FilesystemPath.fromString('vault2'),
-    fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=',
+    fingerprint: '2619341544',
     name: 'VAULT 2',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
@@ -84,7 +84,7 @@ void main() {
     pinnedBool: false,
     index: 2,
     filesystemPath: FilesystemPath.fromString('vault3'),
-    fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=',
+    fingerprint: '405998762',
     name: 'VAULT 3',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
@@ -98,7 +98,7 @@ void main() {
     pinnedBool: true,
     index: 2,
     filesystemPath: FilesystemPath.fromString('vault3'),
-    fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=',
+    fingerprint: '405998762',
     name: 'UPDATED VAULT 3',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
@@ -676,7 +676,7 @@ void main() {
               pinnedBool: false,
               index: 3,
               filesystemPath: FilesystemPath.fromString('group1/vault4'),
-              fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=',
+              fingerprint: '1024969286',
               name: 'VAULT 4',
               listItemsPreview: <AListItemModel>[
                 // @formatter:off
@@ -690,7 +690,7 @@ void main() {
               pinnedBool: false,
               index: 4,
               filesystemPath: FilesystemPath.fromString('group1/vault5'),
-              fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=',
+              fingerprint: '1980042394',
               name: 'VAULT 5',
               listItemsPreview: <AListItemModel>[
                 // @formatter:off
@@ -744,7 +744,7 @@ void main() {
               pinnedBool: false,
               index: 3,
               filesystemPath: FilesystemPath.fromString('group1/vault4'),
-              fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=',
+              fingerprint: '1024969286',
               name: 'VAULT 4',
               listItemsPreview: <AListItemModel>[
                 // @formatter:off
@@ -758,7 +758,7 @@ void main() {
               pinnedBool: false,
               index: 4,
               filesystemPath: FilesystemPath.fromString('group1/vault5'),
-              fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=',
+              fingerprint: '1980042394',
               name: 'VAULT 5',
               listItemsPreview: <AListItemModel>[
                 // @formatter:off

@@ -23,8 +23,8 @@ class SignTxPage extends StatefulWidget {
     super.key,
   });
 
-  static Future<SignTxPage> load(CborEthSignRequest cborEthSignRequest) async {
-    SignTxPageCubit signTxPageCubit = SignTxPageCubit(cborEthSignRequest: cborEthSignRequest);
+  static Future<SignTxPage> load({required bool walletAutoDetectionEnabledBool, required CborEthSignRequest cborEthSignRequest}) async {
+    SignTxPageCubit signTxPageCubit = SignTxPageCubit(walletAutoDetectionEnabledBool: walletAutoDetectionEnabledBool, cborEthSignRequest: cborEthSignRequest);
 
     try {
       await signTxPageCubit.init();
@@ -80,7 +80,7 @@ class _SignTxPageState extends State<SignTxPage> {
                 LabelWrapperVertical(
                   label: 'Signed with',
                   child: ETHAddressPreview(
-                    address: widget.signTxPageCubit.activeWalletModel.address,
+                    address: widget.signTxPageCubit.senderWalletModel.address,
                     textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
                   ),
                 ),

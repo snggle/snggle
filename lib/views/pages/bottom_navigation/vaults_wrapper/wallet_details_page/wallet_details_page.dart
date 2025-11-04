@@ -207,7 +207,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
       useRootNavigator: true,
       useSafeArea: false,
       builder: (BuildContext context) {
-        return const ScanQRPage();
+        return const ScanQRPage(walletAutoDetectionEnabledBool: false);
       },
     );
 
