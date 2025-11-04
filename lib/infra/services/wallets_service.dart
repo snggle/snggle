@@ -84,6 +84,11 @@ class WalletsService implements IListItemsService<WalletModel> {
     await _walletsRepository.deleteById(id);
   }
 
+  Future<WalletModel> getByAddress(String address) async {
+    WalletEntity walletEntity = await _walletsRepository.getByAddress(address);
+    return globalLocator<WalletModelFactory>().createFromEntity(walletEntity);
+  }
+
   Future<int> getLastDerivationIndex(FilesystemPath parentFilesystemPath) async {
     List<String> derivationPaths = await _walletsRepository.getAllDerivationPaths(parentFilesystemPath);
     List<int> derivationIndexes = derivationPaths.map((String derivationPath) {

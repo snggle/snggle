@@ -54,7 +54,7 @@ class TransactionModel extends Equatable {
     );
   }
 
-  factory TransactionModel.fromCborEthSignRequest(int activeWalletId, String activeWalletAddress, CborEthSignRequest cborEthSignRequest) {
+  factory TransactionModel.fromCborEthSignRequest(int activeWalletId, String? activeWalletAddress, CborEthSignRequest cborEthSignRequest) {
     SignDataType signDataType = cborEthSignRequest.dataType == CborEthSignDataType.rawBytes ? SignDataType.rawBytes : SignDataType.typedTransaction;
     AEthereumTransaction? ethereumTransaction = AEthereumTransaction.fromSerializedData(signDataType, cborEthSignRequest.signData);
 
@@ -68,7 +68,7 @@ class TransactionModel extends Equatable {
       functionData: ethereumTransaction.abiFunction?.hex,
       message: ethereumTransaction.message,
       contractAddress: ethereumTransaction.contractAddress,
-      senderAddress: activeWalletAddress,
+      senderAddress: activeWalletAddress ?? cborEthSignRequest.address,
       recipientAddress: ethereumTransaction.recipientAddress,
     );
   }

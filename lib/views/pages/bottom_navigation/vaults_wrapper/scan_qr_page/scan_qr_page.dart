@@ -98,10 +98,19 @@ class _ScanQRPageState extends State<ScanQRPage> {
           backgroundColor: AppColors.body2.withOpacity(0.5),
           title: switch (scanQrExceptionType) {
             ScanQrExceptionType.unsupported => 'Unsupported QR Code',
+            ScanQrExceptionType.receivedAddressEmpty => 'Missing Address',
+            ScanQrExceptionType.walletNotFound => 'Wallet Not Found',
+            ScanQrExceptionType.walletWithEncryptedParents => 'Secured Wallet',
           },
           content: Text(
             switch (scanQrExceptionType) {
               ScanQrExceptionType.unsupported => 'Scanned QR code is not supported by the application. Please ensure you are using a valid QR code.',
+              ScanQrExceptionType.receivedAddressEmpty =>
+                'Scanned transaction does not contain the wallet address required for signing. Please try again with the correct QR code.',
+              ScanQrExceptionType.walletNotFound =>
+                'Scanned transaction contains an address that does not exist in the application. Please check if you are using the correct wallet.',
+              ScanQrExceptionType.walletWithEncryptedParents =>
+                "The wallet is in the password protected path. Please unlock the protected elements on the wallet's path to continue.",
             },
             textAlign: TextAlign.center,
           ),

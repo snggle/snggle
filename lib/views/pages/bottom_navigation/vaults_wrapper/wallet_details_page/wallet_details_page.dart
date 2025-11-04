@@ -17,6 +17,7 @@ import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_transaction_list.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
+import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_scan_icon.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
 import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
@@ -188,6 +189,12 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
           title: widget.walletModel.name,
           plaintext: widget.walletModel.address,
           qrCodeGap: 0,
+          tooltip: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CustomBottomNavigationBarScanIcon(foregroundColor: AppColors.darkGrey),
+            ],
+          ),
           child: LabelWrapperVertical(
             label: '',
             bottomBorderVisibleBool: false,

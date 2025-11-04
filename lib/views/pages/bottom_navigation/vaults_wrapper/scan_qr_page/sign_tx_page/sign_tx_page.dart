@@ -80,7 +80,7 @@ class _SignTxPageState extends State<SignTxPage> {
                 LabelWrapperVertical(
                   label: 'Signed with',
                   child: ETHAddressPreview(
-                    address: widget.signTxPageCubit.activeWalletModel.address,
+                    address: widget.signTxPageCubit.senderWalletModel.address,
                     textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
                   ),
                 ),
