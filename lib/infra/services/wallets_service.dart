@@ -91,7 +91,7 @@ class WalletsService implements IListItemsService<WalletModel> {
     return globalLocator<WalletModelFactory>().createFromEntity(walletEntity);
   }
 
-  Future<int> getLastDerivationIndex(FilesystemPath parentFilesystemPath, DerivationPathIndexExtractor derivationPathIndexExtractor) async {
+  Future<int> getHighestDerivationIndex(FilesystemPath parentFilesystemPath, DerivationPathIndexExtractor derivationPathIndexExtractor) async {
     List<String> derivationPaths = await _walletsRepository.getAllDerivationPaths(parentFilesystemPath);
     List<int> derivationIndexes = derivationPaths.map(derivationPathIndexExtractor.extractIndex).toList()..sort();
 

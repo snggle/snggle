@@ -22,10 +22,10 @@ class LegacyDerivationPathListItem extends StatelessWidget {
     String visibleDerivationPath = derivationPath;
 
     if (networkTemplateModel.networkType == NetworkType.ethereum) {
-      List<String> derivationPathList = derivationPath.split('/')
+      List<String> derivationPathComponentList = derivationPath.split('/')
         ..removeLast()
         ..removeLast();
-      visibleDerivationPath = derivationPathList.join('/');
+      visibleDerivationPath = derivationPathComponentList.join('/');
     }
 
     return Row(
