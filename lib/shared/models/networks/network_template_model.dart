@@ -79,12 +79,18 @@ class NetworkTemplateModel extends Equatable {
     String? dynamicPart = match?.namedGroup('dynamic_part');
 
     String customizableDerivationPath = dynamicPart ?? '';
+
     if (customizableDerivationPath.contains('{{i}}') == false) {
-      customizableDerivationPath += '{{i}}';
+      customizableDerivationPath = _appendIndex(customizableDerivationPath);
     }
+
     customizableDerivationPath = customizableDerivationPath.replaceAll('{{a}}', '$accountIndex');
     customizableDerivationPath = customizableDerivationPath.replaceAll('{{y}}', '$changeIndex');
     customizableDerivationPath = customizableDerivationPath.replaceAll('{{i}}', '$addressIndex');
+
+    if (networkType == NetworkType.solana) {
+      customizableDerivationPath = customizableDerivationPath.split("'/0'").first;
+    }
 
     return customizableDerivationPath;
   }
@@ -100,6 +106,9 @@ class NetworkTemplateModel extends Equatable {
 
     if (customDerivationPath.isEmpty) {
       return baseDerivationPath;
+    }
+    if (networkType == NetworkType.solana) {
+      return "$baseDerivationPath/$updatedCustomDerivationPath'/0'";
     } else {
       return '$baseDerivationPath/$updatedCustomDerivationPath';
     }
@@ -109,6 +118,19 @@ class NetworkTemplateModel extends Equatable {
     RegExpMatch? match = _derivationPathRegExp.firstMatch(derivationPathTemplate);
     String? staticPart = match?.namedGroup('static_part');
     return staticPart ?? _defaultDerivationPath;
+  }
+
+  String _appendIndex(String customizableDerivationPath) {
+    if (customizableDerivationPath.contains('{{i}}') == true) {
+      return customizableDerivationPath;
+    }
+
+    switch (networkType) {
+      case NetworkType.ethereum:
+        return '$customizableDerivationPath{{i}}';
+      case NetworkType.solana:
+        return "{{i}}'/0'";
+    }
   }
 
   Future<LegacyHDWallet> _deriveLegacyHDWallet(Mnemonic mnemonic, String derivationPathString) async {

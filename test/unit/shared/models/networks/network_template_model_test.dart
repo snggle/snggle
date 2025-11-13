@@ -236,7 +236,7 @@ void main() {
       );
 
       // Act
-      String actualDerivationPath = actualNetworkTemplateModel.mergeCustomDerivationPath("1'/0'");
+      String actualDerivationPath = actualNetworkTemplateModel.mergeCustomDerivationPath('1');
 
       // Assert
       String expectedDerivationPath = "m/44'/501'/1'/0'";
@@ -280,7 +280,7 @@ void main() {
       );
 
       // Act
-      String actualDerivationPath = actualNetworkTemplateModel.mergeCustomDerivationPath("/1'/0'");
+      String actualDerivationPath = actualNetworkTemplateModel.mergeCustomDerivationPath('1');
 
       // Assert
       String expectedDerivationPath = "m/44'/501'/1'/0'";
@@ -324,7 +324,7 @@ void main() {
       );
 
       // Act
-      String actualDerivationPath = actualNetworkTemplateModel.mergeCustomDerivationPath("1'/0'/");
+      String actualDerivationPath = actualNetworkTemplateModel.mergeCustomDerivationPath('1');
 
       // Assert
       String expectedDerivationPath = "m/44'/501'/1'/0'";
