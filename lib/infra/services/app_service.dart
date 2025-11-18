@@ -14,16 +14,6 @@ class AppService {
   final RootDirectoryBuilder _rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
   final MasterKeyService _masterKeyService = globalLocator<MasterKeyService>();
 
-  Future<bool> isCustomPasswordSet() async {
-    bool masterKeyExistsBool = await _masterKeyService.isMasterKeyExists();
-    if (masterKeyExistsBool) {
-      MasterKeyVO masterKeyVO = await _masterKeyService.getMasterKey();
-      return PasswordModel.isEncryptedWithCustomPassword(masterKeyVO.encryptedMasterKey);
-    } else {
-      return false;
-    }
-  }
-
   Future<bool> isPasswordValid(PasswordModel appPasswordModel) async {
     MasterKeyVO masterKeyVO = await _masterKeyService.getMasterKey();
     return appPasswordModel.isValidForData(masterKeyVO.encryptedMasterKey);

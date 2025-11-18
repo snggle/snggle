@@ -80,24 +80,6 @@ void main() {
     });
   });
 
-  group('Tests of MasterKeyService.setDefaultMasterKey()', () {
-    test('Should [CREATE and SAVE default master key] in database', () async {
-      // Arrange
-      testDatabase.updateSecureStorage(emptyDatabase);
-
-      // Act
-      await globalLocator<MasterKeyService>().setDefaultMasterKey();
-      String? actualEncryptedMasterKey = await const FlutterSecureStorage().read(key: actualSecureStorageKey.name);
-
-      // Since result of setDefaultMasterKey() method is always random, we are not able to predict the expected value of "encryptedMasterKey".
-      // However, generated data should be encrypted via default password, so we can check if we can decrypt hash using this password.
-      bool actualDefaultPasswordValid = PasswordModel.defaultPassword().isValidForData(actualEncryptedMasterKey!);
-
-      // Assert
-      expect(actualDefaultPasswordValid, true);
-    });
-  });
-
   group('Tests of MasterKeyService.setMasterKey()', () {
     test('Should [UPDATE hash] in database if [master key EXISTS] in database', () async {
       // Arrange

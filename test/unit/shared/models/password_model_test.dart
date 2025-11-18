@@ -30,31 +30,6 @@ void main() {
     });
   });
 
-  group('Tests of PasswordModel.isEncryptedWithCustomPassword()', () {
-    test('Should [return TRUE] if data is [encrypted by CUSTOM password]', () async {
-      // Arrange
-      String actualEncryptedData =
-          'oEGBHJUZ6pw8dF2g6YAz4gmuhTj9x5MN8J2mZDzpoNQ1lDFEUl+hNklVnNJIEbhBXAtnrxo2ghNiiGuRC84LEff+AUEN8Na6+avqOVK+Csf6fS2JwjxJPRhD0mFuKP1QcGdV2g==';
-
-      // Act
-      bool actualCustomPasswordBool = PasswordModel.isEncryptedWithCustomPassword(actualEncryptedData);
-
-      // Assert
-      expect(actualCustomPasswordBool, true);
-    });
-
-    test('Should [return FALSE] if data is [encrypted by DEFAULT password]', () async {
-      // Arrange
-      String actualEncryptedData = 'hHbwgENri2fKNi4Lu3aZPQsaW5QIF5NAkcsBvyAzm7pZpJyx2gtdrN8wz1kdM8rbvnVzEvfzSc7ohJJ2wiO7sDOzVuk=';
-
-      // Act
-      bool actualCustomPasswordBool = PasswordModel.isEncryptedWithCustomPassword(actualEncryptedData);
-
-      // Assert
-      expect(actualCustomPasswordBool, false);
-    });
-  });
-
   group('Tests of PasswordModel.encrypt()', () {
     test('Should [return hash] representing given data encrypted by hashed password', () {
       // Arrange

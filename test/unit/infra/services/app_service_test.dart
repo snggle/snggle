@@ -17,41 +17,6 @@ void main() {
     await testDatabase.init(appPasswordModel: PasswordModel.fromPlaintext('1111'));
   });
 
-  group('Tests of AppService.isCustomPasswordSet()', () {
-    test('Should [return TRUE] if [master key EXISTS] in database and [encrypted with CUSTOM PASSWORD]', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.masterKeyOnlyDatabaseMock);
-
-      // Act
-      bool actualPasswordSetBool = await globalLocator<AppService>().isCustomPasswordSet();
-
-      // Assert
-      expect(actualPasswordSetBool, true);
-    });
-
-    test('Should [return FALSE] if [master key EXISTS] in database and [encrypted with DEFAULT PASSWORD]', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.defaultMasterKeyOnlyDatabaseMock);
-
-      // Act
-      bool actualPasswordSetBool = await globalLocator<AppService>().isCustomPasswordSet();
-
-      // Assert
-      expect(actualPasswordSetBool, false);
-    });
-
-    test('Should [return FALSE] if [master key NOT EXISTS] in database', () async {
-      // Arrange
-      await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
-
-      // Act
-      bool actualPasswordSetBool = await globalLocator<AppService>().isCustomPasswordSet();
-
-      // Assert
-      expect(actualPasswordSetBool, false);
-    });
-  });
-
   group('Tests of AppService.isPasswordValid()', () {
     test('Should [return TRUE] if [master key EXISTS] in database and given [password VALID]', () async {
       // Arrange

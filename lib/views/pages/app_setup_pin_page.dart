@@ -48,11 +48,6 @@ class _AppSetupPinPageState extends State<AppSetupPinPage> {
             initialPinNumbers: appSetupPinPageState.firstPinNumbers,
             onChanged: _handleFirstPinChange,
             actionButtons: <Widget>[
-              if (appSetupPinPageState.firstPinNumbers.isEmpty)
-                CustomTextButton(
-                  title: 'Setup Later',
-                  onPressed: _handleSetupLaterPressed,
-                ),
               if (appSetupPinPageState.firstPinNumbers.length >= 4)
                 CustomTextButton(
                   title: 'Confirm',
@@ -109,11 +104,6 @@ class _AppSetupPinPageState extends State<AppSetupPinPage> {
     } catch (e) {
       AppLogger().log(message: 'Provided invalid confirm PIN');
     }
-  }
-
-  Future<void> _handleSetupLaterPressed() async {
-    await appSetupPinPageCubit.setupDefaultPin();
-    await AutoRouter.of(context).replace(const BottomNavigationRoute());
   }
 
   void _handleBackButtonPressed(bool didPopBool) {
