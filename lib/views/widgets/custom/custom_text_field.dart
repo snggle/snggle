@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/shared/utils/string_utils.dart';
 
 class CustomTextField extends StatefulWidget {
   final bool enabledBool;
@@ -12,11 +13,16 @@ class CustomTextField extends StatefulWidget {
   final bool obscureTextBool;
   final String? initialValue;
   final String? prefixText;
+  final String? suffixText;
   final TextStyle? textStyle;
   final TextStyle? prefixStyle;
+  final TextStyle? suffixStyle;
   final Widget? prefix;
+  final Widget? suffix;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final BoxConstraints? prefixIconConstraints;
+  final BoxConstraints? suffixIconConstraints;
   final ValueChanged<String>? onChanged;
   final ValueChanged<bool>? onFocusChanged;
   final FocusNode? focusNode;
@@ -36,11 +42,16 @@ class CustomTextField extends StatefulWidget {
     this.obscureTextBool = false,
     this.initialValue,
     this.prefixText,
+    this.suffixText,
     this.textStyle,
     this.prefixStyle,
+    this.suffixStyle,
     this.prefix,
+    this.suffix,
     this.prefixIcon,
+    this.suffixIcon,
     this.prefixIconConstraints,
+    this.suffixIconConstraints,
     this.onChanged,
     this.onFocusChanged,
     this.focusNode,
@@ -88,42 +99,86 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
     TextStyle? textStyle = widget.textStyle ?? theme.textTheme.bodyMedium;
     TextStyle? prefixStyle = widget.prefixStyle ?? textStyle ?? theme.textTheme.bodyMedium;
+    TextStyle? suffixStyle = widget.suffixStyle ?? textStyle ?? theme.textTheme.bodyMedium;
 
-    return TextField(
-      enabled: widget.enabledBool,
-      readOnly: widget.readOnlyBool,
-      obscureText: widget.obscureTextBool,
-      enableInteractiveSelection: widget.enableInteractiveSelectionBool,
-      enableSuggestions: false,
-      autocorrect: false,
-      controller: widget.textEditingController,
-      focusNode: widget.focusNode,
-      autofocus: widget.autofocusBool,
-      keyboardType: widget.keyboardType,
-      cursorColor: AppColors.body1,
-      cursorWidth: 1.5,
-      obscuringCharacter: '*',
-      onChanged: widget.onChanged?.call,
-      style: widget.enabledBool
-          ? textStyle?.copyWith(
-              color: widget.errorExistsBool ? null : AppColors.body3,
-              foreground: widget.errorExistsBool ? errorPainter : null,
-            )
-          : textStyle?.copyWith(color: AppColors.middleGrey),
-      inputFormatters: widget.inputFormatters,
-      decoration: InputDecoration(
-        isDense: true,
-        prefix: widget.prefix,
-        prefixText: widget.prefixText,
-        prefixStyle: prefixStyle?.copyWith(color: AppColors.middleGrey),
-        prefixIcon: widget.prefixIcon,
-        prefixIconConstraints: widget.prefixIconConstraints,
-        contentPadding: widget.padding ?? const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-        enabledBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
-        focusedBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
-        disabledBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
-      ),
-    );
+    return ValueListenableBuilder<TextEditingValue>(
+        valueListenable: widget.textEditingController!,
+        builder: (BuildContext context, TextEditingValue value, _) {
+          double suffixOffset = _calculateSuffixOffset(value, theme, prefixStyle, textStyle, suffixStyle);
+
+          return TextField(
+            enabled: widget.enabledBool,
+            readOnly: widget.readOnlyBool,
+            obscureText: widget.obscureTextBool,
+            enableInteractiveSelection: widget.enableInteractiveSelectionBool,
+            enableSuggestions: false,
+            autocorrect: false,
+            controller: widget.textEditingController,
+            focusNode: widget.focusNode,
+            autofocus: widget.autofocusBool,
+            keyboardType: widget.keyboardType,
+            cursorColor: AppColors.body1,
+            cursorWidth: 1.5,
+            obscuringCharacter: '*',
+            onChanged: widget.onChanged?.call,
+            style: widget.enabledBool
+                ? textStyle?.copyWith(
+                    color: widget.errorExistsBool ? null : AppColors.body3,
+                    foreground: widget.errorExistsBool ? errorPainter : null,
+                  )
+                : textStyle?.copyWith(color: AppColors.middleGrey),
+            inputFormatters: widget.inputFormatters,
+            decoration: InputDecoration(
+              isDense: true,
+              prefix: widget.prefix,
+              prefixText: widget.prefixText,
+              prefixStyle: prefixStyle?.copyWith(color: AppColors.middleGrey),
+              prefixIcon: widget.prefixIcon,
+              prefixIconConstraints: widget.prefixIconConstraints,
+              suffix: Transform.translate(
+                offset: Offset(suffixOffset, 0),
+                child: Text(
+                  widget.suffixText ?? '',
+                  style: suffixStyle?.copyWith(color: AppColors.middleGrey),
+                ),
+              ),
+              suffixStyle: suffixStyle?.copyWith(color: AppColors.middleGrey),
+              suffixIcon: widget.suffixIcon,
+              suffixIconConstraints: widget.suffixIconConstraints,
+              contentPadding: widget.padding ?? const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+              enabledBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
+              focusedBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
+              disabledBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
+            ),
+          );
+        });
+  }
+
+  double _calculateSuffixOffset(TextEditingValue textEditingValue, ThemeData themeData, TextStyle? prefixStyle, TextStyle? textStyle, TextStyle? suffixStyle) {
+    RenderBox? box = context.findRenderObject() as RenderBox?;
+    if (box == null) {
+      return 0;
+    }
+    double textFieldWidth = box.size.width;
+
+    double horizontalPadding = widget.padding?.horizontal ?? 12;
+    double prefixIconWidth = widget.prefixIcon != null ? (widget.prefixIconConstraints?.maxWidth ?? 0) : 0;
+    double suffixIconWidth = widget.suffixIcon != null ? (widget.suffixIconConstraints?.maxWidth ?? 0) : 0;
+
+    double textEditingValueWidth = StringUtils.getTextSize(textEditingValue.text, themeData.textTheme.bodyMedium!.copyWith(color: AppColors.middleGrey)).width;
+    double prefixTextWidth = 0;
+    if (widget.prefixText != null) {
+      prefixTextWidth = StringUtils.getTextSize(widget.prefixText!, prefixStyle!).width;
+    }
+    double suffixTextWidth = StringUtils.getTextSize(widget.suffixText ?? '', suffixStyle!).width;
+    double editableWidth = textFieldWidth - horizontalPadding - prefixIconWidth - suffixIconWidth - prefixTextWidth;
+    double oneCharLength = StringUtils.getTextSize('1', textStyle!).width;
+
+    double suffixOffset = textEditingValueWidth - editableWidth + suffixTextWidth;
+    double clampLowerLimit = -editableWidth + suffixTextWidth + oneCharLength;
+    double clamped = suffixOffset.clamp(clampLowerLimit, 0);
+
+    return clamped;
   }
 
   void _handleFocusChanged() {

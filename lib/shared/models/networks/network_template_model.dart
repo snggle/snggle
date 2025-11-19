@@ -70,6 +70,8 @@ class NetworkTemplateModel extends Equatable {
     }
   }
 
+  // TODO(Kamil): Dominik created this method with fully customizable derivation paths in mind. It is futile with the current limited customization.
+  // TODO(Kamil): The method will be used again when full customization is implemented.
   String getCustomizableDerivationPath({
     int accountIndex = 0,
     int changeIndex = 0,

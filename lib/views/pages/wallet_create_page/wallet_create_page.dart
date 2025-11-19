@@ -69,6 +69,10 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
     ThemeData theme = Theme.of(context);
 
     String baseDerivationPath = '${widget.networkGroupModel.networkTemplateModel.baseDerivationPath}/';
+    Size textSize = StringUtils.getTextSize(baseDerivationPath, theme.textTheme.bodyMedium!);
+
+    bool networkIsSolanaBool = widget.networkGroupModel.networkTemplateModel.networkType == NetworkType.solana;
+    String? suffix = networkIsSolanaBool ? "'/0'" : null;
 
     return BlocBuilder<WalletCreatePageCubit, WalletCreatePageState>(
       bloc: walletCreatePageCubit,
@@ -107,44 +111,18 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                   ),
                   LabelWrapperVertical(
                     label: 'Derivation Path',
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          baseDerivationPath,
-                          style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
-                        ),
-                        ValueListenableBuilder<TextEditingValue>(
-                          valueListenable: walletCreatePageCubit.derivationPathTextEditingController,
-                          builder: (BuildContext context, TextEditingValue value, _) {
-                            double textWidth =
-                                StringUtils.getTextSize(value.text, theme.textTheme.bodyMedium!.copyWith(color: AppColors.middleGrey)).width + 3;
-
-                            return AnimatedContainer(
-                              duration: const Duration(milliseconds: 100),
-                              width: textWidth.clamp(12, 150),
-                              child: CustomTextField(
-                                textEditingController: walletCreatePageCubit.derivationPathTextEditingController,
-                                inputBorder: InputBorder.none,
-                                keyboardType: TextInputType.number,
-                                prefixIconConstraints: BoxConstraints(
-                                  maxHeight: 20,
-                                  maxWidth: textWidth,
-                                ),
-                                prefixStyle: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
-                                padding: EdgeInsets.zero,
-                                inputFormatters: <TextInputFormatter>[
-                                  LegacyDerivationPathInputFormatter(),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                        if (widget.networkGroupModel.networkTemplateModel.networkType == NetworkType.solana)
-                          Text(
-                            "'/0'",
-                            style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
-                          ),
+                    child: CustomTextField(
+                      textEditingController: walletCreatePageCubit.derivationPathTextEditingController,
+                      inputBorder: InputBorder.none,
+                      keyboardType: TextInputType.number,
+                      prefixIconConstraints: BoxConstraints(maxHeight: 20, maxWidth: textSize.width),
+                      prefixText: baseDerivationPath,
+                      prefixStyle: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
+                      suffixText: suffix,
+                      suffixStyle: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
+                      padding: EdgeInsets.zero,
+                      inputFormatters: <TextInputFormatter>[
+                        LegacyDerivationPathInputFormatter(),
                       ],
                     ),
                   ),

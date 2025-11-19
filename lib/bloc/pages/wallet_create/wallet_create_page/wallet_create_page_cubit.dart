@@ -53,7 +53,7 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
     }
 
     derivationPathTextEditingController
-      ..text = _networkTemplateModel.getCustomizableDerivationPath(addressIndex: derivationIndex)
+      ..text = derivationIndex.toString()
       ..addListener(_handleDerivationPathChanged);
   }
 

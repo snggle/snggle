@@ -10,6 +10,7 @@ class PredefinedNetworkTemplates {
     name: 'Ethereum',
     networkIconType: NetworkIconType.ethereum,
     networkType: NetworkType.ethereum,
+    // TODO(Kamil): derivationPathTemplate will be modified to include other editable elements when we implement fully customizable derivation paths.
     derivationPathTemplate: "m/44'/60'/0'/0/{{i}}",
     addressEncoder: EthereumAddressEncoder(),
     derivator: Secp256k1Derivator(),
@@ -21,6 +22,7 @@ class PredefinedNetworkTemplates {
     name: 'Solana',
     networkIconType: NetworkIconType.solana,
     networkType: NetworkType.solana,
+    // TODO(Kamil): derivationPathTemplate will be modified to include other editable elements when we implement fully customizable derivation paths.
     derivationPathTemplate: "m/44'/501'/{{i}}'/0'",
     addressEncoder: SolanaAddressEncoder(),
     derivator: ED25519Derivator(),
