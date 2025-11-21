@@ -154,25 +154,30 @@ class _CustomTextFieldState extends State<CustomTextField> {
         });
   }
 
-  double _calculateSuffixOffset(TextEditingValue textEditingValue, ThemeData themeData, TextStyle? prefixStyle, TextStyle? textStyle, TextStyle? suffixStyle) {
-    RenderBox? box = context.findRenderObject() as RenderBox?;
-    if (box == null) {
+  double _calculateSuffixOffset(
+      TextEditingValue textEditingValue, ThemeData themeData, TextStyle? prefixStyle, TextStyle? textStyle, TextStyle? suffixStyle) {
+    RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) {
       return 0;
     }
-    double textFieldWidth = box.size.width;
+    double textFieldWidth = renderBox.size.width;
 
     double horizontalPadding = widget.padding?.horizontal ?? 12;
     double prefixIconWidth = widget.prefixIcon != null ? (widget.prefixIconConstraints?.maxWidth ?? 0) : 0;
     double suffixIconWidth = widget.suffixIcon != null ? (widget.suffixIconConstraints?.maxWidth ?? 0) : 0;
 
-    double textEditingValueWidth = StringUtils.getTextSize(textEditingValue.text, themeData.textTheme.bodyMedium!.copyWith(color: AppColors.middleGrey)).width;
+    TextScaler textScaler = MediaQuery.textScalerOf(context);
+
+    double textEditingValueWidth =
+        StringUtils.getTextSize(textEditingValue.text, themeData.textTheme.bodyMedium!.copyWith(color: AppColors.middleGrey), textScaler: textScaler)
+            .width;
     double prefixTextWidth = 0;
     if (widget.prefixText != null) {
-      prefixTextWidth = StringUtils.getTextSize(widget.prefixText!, prefixStyle!).width;
+      prefixTextWidth = StringUtils.getTextSize(widget.prefixText!, prefixStyle!, textScaler: textScaler).width;
     }
-    double suffixTextWidth = StringUtils.getTextSize(widget.suffixText ?? '', suffixStyle!).width;
+    double suffixTextWidth = StringUtils.getTextSize(widget.suffixText ?? '', suffixStyle!, textScaler: textScaler).width;
     double editableWidth = textFieldWidth - horizontalPadding - prefixIconWidth - suffixIconWidth - prefixTextWidth;
-    double oneCharLength = StringUtils.getTextSize('1', textStyle!).width;
+    double oneCharLength = StringUtils.getTextSize('1', textStyle!, textScaler: textScaler).width;
 
     double suffixOffset = textEditingValueWidth - editableWidth + suffixTextWidth;
     double clampLowerLimit = -editableWidth + suffixTextWidth + oneCharLength;

@@ -64,10 +64,10 @@ void main() {
       TextStyle actualTextStyle = const TextStyle(fontSize: 16);
 
       // Act
-      Size actualTextSize = StringUtils.getTextSize(actualText, actualTextStyle);
+      Size actualTextSize = StringUtils.getTextSize(actualText, actualTextStyle, textScaler: const TextScaler.linear(1.15));
 
       // Assert
-      Size expectedTextSize = const Size(0, 16);
+      Size expectedTextSize = const Size(0, 18);
 
       expect(actualTextSize, expectedTextSize);
     });
@@ -78,10 +78,10 @@ void main() {
       TextStyle actualTextStyle = const TextStyle(fontSize: 16);
 
       // Act
-      Size actualTextSize = StringUtils.getTextSize(actualText, actualTextStyle);
+      Size actualTextSize = StringUtils.getTextSize(actualText, actualTextStyle, textScaler: const TextScaler.linear(1.15));
 
       // Assert
-      Size expectedTextSize = const Size(192, 16);
+      Size expectedTextSize = const Size(220.8, 18);
 
       expect(actualTextSize, expectedTextSize);
     });

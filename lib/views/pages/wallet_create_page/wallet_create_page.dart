@@ -69,7 +69,8 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
     ThemeData theme = Theme.of(context);
 
     String baseDerivationPath = '${widget.networkGroupModel.networkTemplateModel.baseDerivationPath}/';
-    Size textSize = StringUtils.getTextSize(baseDerivationPath, theme.textTheme.bodyMedium!);
+    TextScaler textScaler = MediaQuery.textScalerOf(context);
+    Size textSize = StringUtils.getTextSize(baseDerivationPath, theme.textTheme.bodyMedium!, textScaler: textScaler);
 
     bool networkIsSolanaBool = widget.networkGroupModel.networkTemplateModel.networkType == NetworkType.solana;
     String? suffix = networkIsSolanaBool ? "'/0'" : null;
