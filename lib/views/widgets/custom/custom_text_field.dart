@@ -135,16 +135,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
               prefixStyle: prefixStyle?.copyWith(color: AppColors.middleGrey),
               prefixIcon: widget.prefixIcon,
               prefixIconConstraints: widget.prefixIconConstraints,
-              suffix: Transform.translate(
-                offset: Offset(suffixOffset, 0),
-                child: Text(
-                  widget.suffixText ?? '',
-                  style: suffixStyle?.copyWith(color: AppColors.middleGrey),
-                ),
-              ),
+              suffix: widget.suffix,
+              suffixText: widget.suffixText,
               suffixStyle: suffixStyle?.copyWith(color: AppColors.middleGrey),
-              suffixIcon: widget.suffixIcon,
-              suffixIconConstraints: widget.suffixIconConstraints,
+              suffixIcon: Transform.translate(
+                offset: Offset(suffixOffset, 0),
+                child: widget.suffixIcon,
+              ),
+              suffixIconConstraints: widget.suffixIconConstraints ?? const BoxConstraints(minWidth: 0, minHeight: 0),
               contentPadding: widget.padding ?? const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
               enabledBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
               focusedBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
@@ -167,23 +165,25 @@ class _CustomTextFieldState extends State<CustomTextField> {
     double suffixIconWidth = widget.suffixIcon != null ? (widget.suffixIconConstraints?.maxWidth ?? 0) : 0;
 
     TextScaler textScaler = MediaQuery.textScalerOf(context);
+    double textEditingValueWidth = StringUtils.getTextSize(
+      textEditingValue.text,
+      themeData.textTheme.bodyMedium!.copyWith(color: AppColors.middleGrey),
+      textScaler: textScaler,
+    ).width;
 
-    double textEditingValueWidth =
-        StringUtils.getTextSize(textEditingValue.text, themeData.textTheme.bodyMedium!.copyWith(color: AppColors.middleGrey), textScaler: textScaler)
-            .width;
     double prefixTextWidth = 0;
     if (widget.prefixText != null) {
       prefixTextWidth = StringUtils.getTextSize(widget.prefixText!, prefixStyle!, textScaler: textScaler).width;
     }
     double suffixTextWidth = StringUtils.getTextSize(widget.suffixText ?? '', suffixStyle!, textScaler: textScaler).width;
+
     double editableWidth = textFieldWidth - horizontalPadding - prefixIconWidth - suffixIconWidth - prefixTextWidth;
-    double oneCharLength = StringUtils.getTextSize('1', textStyle!, textScaler: textScaler).width;
-
+    double oneCharWidth = StringUtils.getTextSize('1', textStyle!, textScaler: textScaler).width;
     double suffixOffset = textEditingValueWidth - editableWidth + suffixTextWidth;
-    double clampLowerLimit = -editableWidth + suffixTextWidth + oneCharLength;
-    double clamped = suffixOffset.clamp(clampLowerLimit, 0);
+    double clampLowerLimit = suffixTextWidth + oneCharWidth - editableWidth;
+    double clampedOffset = suffixOffset.clamp(clampLowerLimit, 0);
 
-    return clamped;
+    return clampedOffset;
   }
 
   void _handleFocusChanged() {

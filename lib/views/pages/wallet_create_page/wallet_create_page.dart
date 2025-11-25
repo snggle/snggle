@@ -69,11 +69,12 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
     ThemeData theme = Theme.of(context);
 
     String baseDerivationPath = '${widget.networkGroupModel.networkTemplateModel.baseDerivationPath}/';
-    TextScaler textScaler = MediaQuery.textScalerOf(context);
-    Size textSize = StringUtils.getTextSize(baseDerivationPath, theme.textTheme.bodyMedium!, textScaler: textScaler);
-
     bool networkIsSolanaBool = widget.networkGroupModel.networkTemplateModel.networkType == NetworkType.solana;
     String? suffix = networkIsSolanaBool ? "'/0'" : null;
+
+    TextScaler textScaler = MediaQuery.textScalerOf(context);
+    Size prefixSize = StringUtils.getTextSize(baseDerivationPath, theme.textTheme.bodyMedium!, textScaler: textScaler);
+    Size? suffixSize = networkIsSolanaBool ? StringUtils.getTextSize(suffix!, theme.textTheme.bodyMedium!, textScaler: textScaler) : null;
 
     return BlocBuilder<WalletCreatePageCubit, WalletCreatePageState>(
       bloc: walletCreatePageCubit,
@@ -116,11 +117,10 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                       textEditingController: walletCreatePageCubit.derivationPathTextEditingController,
                       inputBorder: InputBorder.none,
                       keyboardType: TextInputType.number,
-                      prefixIconConstraints: BoxConstraints(maxHeight: 20, maxWidth: textSize.width),
-                      prefixText: baseDerivationPath,
-                      prefixStyle: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
-                      suffixText: suffix,
-                      suffixStyle: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
+                      prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: prefixSize.width),
+                      prefixIcon: Text(baseDerivationPath, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)),
+                      suffixIconConstraints: networkIsSolanaBool ? BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: suffixSize!.width) : null,
+                      suffixIcon: networkIsSolanaBool ? Text(suffix!, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)) : null,
                       padding: EdgeInsets.zero,
                       inputFormatters: <TextInputFormatter>[
                         LegacyDerivationPathInputFormatter(),
