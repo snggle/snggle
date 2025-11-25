@@ -15,6 +15,7 @@ import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/shared/utils/formatters/legacy_derivation_path_input_formatter.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
+import 'package:snggle/views/widgets/custom/affixed_text_field.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
@@ -113,19 +114,8 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                   ),
                   LabelWrapperVertical(
                     label: 'Derivation Path',
-                    child: CustomTextField(
-                      textEditingController: walletCreatePageCubit.derivationPathTextEditingController,
-                      inputBorder: InputBorder.none,
-                      keyboardType: TextInputType.number,
-                      prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: prefixSize.width),
-                      prefixIcon: Text(baseDerivationPath, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)),
-                      suffixIconConstraints: networkIsSolanaBool ? BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: suffixSize!.width) : null,
-                      suffixIcon: networkIsSolanaBool ? Text(suffix!, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)) : null,
-                      padding: EdgeInsets.zero,
-                      inputFormatters: <TextInputFormatter>[
-                        LegacyDerivationPathInputFormatter(),
-                      ],
-                    ),
+                    child: AffixedTextField(controller: walletCreatePageCubit.derivationPathTextEditingController,
+                    prefix: baseDerivationPath, suffix: suffix ?? ''),
                   ),
                   if (walletCreatePageState.emptyDerivationPathBool == true)
                     const ErrorMessageListTile(
