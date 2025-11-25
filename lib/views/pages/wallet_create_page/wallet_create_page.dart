@@ -73,8 +73,8 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
     String? suffix = networkIsSolanaBool ? "'/0'" : null;
 
     TextScaler textScaler = MediaQuery.textScalerOf(context);
-    Size prefixSize = StringUtils.getTextSize(baseDerivationPath, theme.textTheme.bodyMedium!, textScaler: textScaler);
-    Size? suffixSize = networkIsSolanaBool ? StringUtils.getTextSize(suffix!, theme.textTheme.bodyMedium!, textScaler: textScaler) : null;
+    double prefixWidth = StringUtils.getTextSize(baseDerivationPath, theme.textTheme.bodyMedium!, textScaler: textScaler).width;
+    double? suffixWidth = networkIsSolanaBool ? StringUtils.getTextSize(suffix!, theme.textTheme.bodyMedium!, textScaler: textScaler).width : null;
 
     return BlocBuilder<WalletCreatePageCubit, WalletCreatePageState>(
       bloc: walletCreatePageCubit,
@@ -117,10 +117,11 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                       textEditingController: walletCreatePageCubit.derivationPathTextEditingController,
                       inputBorder: InputBorder.none,
                       keyboardType: TextInputType.number,
-                      prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: prefixSize.width),
+                      prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: prefixWidth),
                       prefixIcon: Text(baseDerivationPath, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)),
-                      suffixIconConstraints: networkIsSolanaBool ? BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: suffixSize!.width) : null,
-                      suffixIcon: networkIsSolanaBool ? Text(suffix!, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)) : null,
+                      suffixIconConstraints: networkIsSolanaBool ? BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: suffixWidth!) : null,
+                      suffixIcon:
+                          networkIsSolanaBool ? Text(suffix!, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)) : null,
                       padding: EdgeInsets.zero,
                       inputFormatters: <TextInputFormatter>[
                         LegacyDerivationPathInputFormatter(),

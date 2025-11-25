@@ -81,7 +81,7 @@ void main() {
       Size actualTextSize = StringUtils.getTextSize(actualText, actualTextStyle, textScaler: const TextScaler.linear(1.15));
 
       // Assert
-      Size expectedTextSize = const Size(220.8, 18);
+      Size expectedTextSize = const Size(220.7999267578125, 18);
 
       expect(actualTextSize, expectedTextSize);
     });

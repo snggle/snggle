@@ -104,7 +104,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return ValueListenableBuilder<TextEditingValue>(
         valueListenable: widget.textEditingController!,
         builder: (BuildContext context, TextEditingValue value, _) {
-          double suffixOffset = _calculateSuffixOffset(value, theme, prefixStyle, textStyle, suffixStyle);
+          bool suffixExistsBool = widget.suffixIcon != null;
+          double suffixOffset = suffixExistsBool ? _calculateSuffixOffset(value, theme, prefixStyle, textStyle, suffixStyle) : 0;
 
           return TextField(
             enabled: widget.enabledBool,
@@ -138,10 +139,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
               suffix: widget.suffix,
               suffixText: widget.suffixText,
               suffixStyle: suffixStyle?.copyWith(color: AppColors.middleGrey),
-              suffixIcon: Transform.translate(
-                offset: Offset(suffixOffset, 0),
-                child: widget.suffixIcon,
-              ),
+              suffixIcon: suffixExistsBool
+                  ? Transform.translate(
+                      offset: Offset(suffixOffset, 0),
+                      child: widget.suffixIcon,
+                    )
+                  : widget.suffixIcon,
               suffixIconConstraints: widget.suffixIconConstraints ?? const BoxConstraints(minWidth: 0, minHeight: 0),
               contentPadding: widget.padding ?? const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
               enabledBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
