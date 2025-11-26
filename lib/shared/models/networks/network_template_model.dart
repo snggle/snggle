@@ -70,33 +70,6 @@ class NetworkTemplateModel extends Equatable {
     }
   }
 
-  // TODO(Kamil): Dominik created this method with fully customizable derivation paths in mind. It is futile with the current limited customization.
-  // TODO(Kamil): The method will be used again when full customization is implemented.
-  String getCustomizableDerivationPath({
-    int accountIndex = 0,
-    int changeIndex = 0,
-    int addressIndex = 0,
-  }) {
-    RegExpMatch? match = _derivationPathRegExp.firstMatch(derivationPathTemplate);
-    String? dynamicPart = match?.namedGroup('dynamic_part');
-
-    String customizableDerivationPath = dynamicPart ?? '';
-
-    if (customizableDerivationPath.contains('{{i}}') == false) {
-      customizableDerivationPath = _appendIndex(customizableDerivationPath);
-    }
-
-    customizableDerivationPath = customizableDerivationPath.replaceAll('{{a}}', '$accountIndex');
-    customizableDerivationPath = customizableDerivationPath.replaceAll('{{y}}', '$changeIndex');
-    customizableDerivationPath = customizableDerivationPath.replaceAll('{{i}}', '$addressIndex');
-
-    if (networkType == NetworkType.solana) {
-      customizableDerivationPath = customizableDerivationPath.split("'/0'").first;
-    }
-
-    return customizableDerivationPath;
-  }
-
   String mergeCustomDerivationPath(String customDerivationPath) {
     String updatedCustomDerivationPath = customDerivationPath;
     if (updatedCustomDerivationPath.startsWith('/')) {
@@ -120,19 +93,6 @@ class NetworkTemplateModel extends Equatable {
     RegExpMatch? match = _derivationPathRegExp.firstMatch(derivationPathTemplate);
     String? staticPart = match?.namedGroup('static_part');
     return staticPart ?? _defaultDerivationPath;
-  }
-
-  String _appendIndex(String customizableDerivationPath) {
-    if (customizableDerivationPath.contains('{{i}}') == true) {
-      return customizableDerivationPath;
-    }
-
-    switch (networkType) {
-      case NetworkType.ethereum:
-        return '$customizableDerivationPath{{i}}';
-      case NetworkType.solana:
-        return "{{i}}'/0'";
-    }
   }
 
   Future<LegacyHDWallet> _deriveLegacyHDWallet(Mnemonic mnemonic, String derivationPathString) async {
