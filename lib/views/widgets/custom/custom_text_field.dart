@@ -15,8 +15,8 @@ class CustomTextField extends StatefulWidget {
   final TextStyle? textStyle;
   final TextStyle? prefixStyle;
   final Widget? prefix;
-  final Widget? prefixIcon;
-  final BoxConstraints? prefixIconConstraints;
+  final Widget? prefixWidget;
+  final BoxConstraints? prefixWidgetConstraints;
   final ValueChanged<String>? onChanged;
   final ValueChanged<bool>? onFocusChanged;
   final FocusNode? focusNode;
@@ -39,8 +39,8 @@ class CustomTextField extends StatefulWidget {
     this.textStyle,
     this.prefixStyle,
     this.prefix,
-    this.prefixIcon,
-    this.prefixIconConstraints,
+    this.prefixWidget,
+    this.prefixWidgetConstraints,
     this.onChanged,
     this.onFocusChanged,
     this.focusNode,
@@ -116,8 +116,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
         prefix: widget.prefix,
         prefixText: widget.prefixText,
         prefixStyle: prefixStyle?.copyWith(color: AppColors.middleGrey),
-        prefixIcon: widget.prefixIcon,
-        prefixIconConstraints: widget.prefixIconConstraints,
+        // The prefixIcon can be used as prefix text, because prefixText disappears if editable text is empty, but prefixIcon is always visible.
+        prefixIcon: widget.prefixWidget,
+        prefixIconConstraints: widget.prefixWidgetConstraints,
         contentPadding: widget.padding ?? const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
         enabledBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),
         focusedBorder: widget.inputBorder ?? UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider, width: 0.6)),

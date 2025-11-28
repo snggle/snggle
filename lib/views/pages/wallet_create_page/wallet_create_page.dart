@@ -13,7 +13,6 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/shared/utils/formatters/legacy_derivation_path_input_formatter.dart';
-import 'package:snggle/shared/utils/string_utils.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
@@ -68,8 +67,6 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
     ThemeData theme = Theme.of(context);
 
     String baseDerivationPath = '${widget.networkGroupModel.networkTemplateModel.baseDerivationPath}/';
-    Size textSize = StringUtils.getTextSize(baseDerivationPath, theme.textTheme.bodyMedium!);
-
     return BlocBuilder<WalletCreatePageCubit, WalletCreatePageState>(
       bloc: walletCreatePageCubit,
       builder: (BuildContext context, WalletCreatePageState walletCreatePageState) {
@@ -111,9 +108,8 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                       textEditingController: walletCreatePageCubit.derivationPathTextEditingController,
                       inputBorder: InputBorder.none,
                       keyboardType: TextInputType.text,
-                      prefixIconConstraints: BoxConstraints(maxHeight: 20, maxWidth: textSize.width),
-                      prefixText: baseDerivationPath,
-                      prefixStyle: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
+                      prefixWidgetConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+                      prefixWidget: Text(baseDerivationPath, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)),
                       padding: EdgeInsets.zero,
                       inputFormatters: <TextInputFormatter>[
                         LegacyDerivationPathInputFormatter(),
