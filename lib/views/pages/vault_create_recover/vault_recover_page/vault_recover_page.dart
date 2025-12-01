@@ -64,7 +64,7 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
           body: PaginatedForm(
             pageController: pageController,
             pages: <Widget>[
-              MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected),
+              MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected, advancedWarningBool: false),
               if (vaultRecoverPageState.confirmPageEnabledBool)
                 MnemonicFormEditable(
                   mnemonicSize: vaultRecoverPageState.mnemonicSize!,

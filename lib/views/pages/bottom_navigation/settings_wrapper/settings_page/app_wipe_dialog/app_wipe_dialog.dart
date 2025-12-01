@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/settings_wrapper/settings_page/app_wipe_dialog/app_wipe_dialog_cubit.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/settings_wrapper/settings_page/app_wipe_dialog/app_wipe_dialog_state.dart';
+import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
-import 'package:snggle/views/widgets/generic/gradient_text.dart';
 
 class AppWipeDialog extends StatefulWidget {
   const AppWipeDialog({super.key});
@@ -40,14 +40,12 @@ class _AppWipeDialogState extends State<AppWipeDialog> {
 
         return CustomDialog(
           title: 'WIPE APPLICATION',
+          borderGradient: AppColors.warningRedGradient,
           content: Column(
             children: <Widget>[
-              GradientText(
+              Text(
                 'Are you sure you want to wipe the application? This action cannot be undone and you will lose all your data!',
-                gradient: const LinearGradient(
-                  colors: <Color>[Color(0xFFFF5050), Color(0xFF939393)],
-                ),
-                textStyle: textTheme.labelMedium,
+                style: textTheme.labelMedium,
                 textAlign: TextAlign.center,
               ),
             ],
@@ -60,9 +58,7 @@ class _AppWipeDialogState extends State<AppWipeDialog> {
             CustomDialogOption(
               autoCloseBool: false,
               label: appWipeDialogState.confirmationsLeft != 0 ? 'Confirm (${appWipeDialogState.confirmationsLeft})' : 'Wipe',
-              labelGradient: const LinearGradient(
-                colors: <Color>[Color(0xFFFF5050), Color(0xFF939393)],
-              ),
+              labelColor: AppColors.warningRed,
               onPressed: appWipeDialogCubit.confirm,
             ),
           ],

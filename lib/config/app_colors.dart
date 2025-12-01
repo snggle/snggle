@@ -10,6 +10,8 @@ class AppColors {
   static Color lightGrey3 = const Color(0xFFFBFBFB);
   static Color middleGrey = const Color(0xFFC7C7C7);
   static Color darkGrey = const Color(0xFF969696);
+  static Color warningOrange = const Color(0xFFFF9100);
+  static Color warningRed = const Color(0xFFFF5050);
 
   static Color divider = const Color(0xFFC7C7C7);
   static Color lineNumbers = const Color(0xFFF3F3F3);
@@ -25,14 +27,28 @@ class AppColors {
     ],
   );
 
-  static Gradient validationGradient = const RadialGradient(
+  static Gradient validationGradient = RadialGradient(
     radius: 1,
-    center: Alignment(-0.6, -0.6),
+    center: const Alignment(-0.6, -0.6),
     colors: <Color>[
-      Color(0xFF000000),
-      Color(0xFFFF5050),
-      Color(0xFF939393),
-      Color(0xFF000000),
+      const Color(0xFF000000),
+      warningRed,
+      const Color(0xFF939393),
+      const Color(0xFF000000),
+    ],
+  );
+
+  static Gradient warningOrangeGradient = LinearGradient(
+    colors: <Color>[
+      const Color(0xFF939393),
+      warningOrange,
+    ],
+  );
+
+  static Gradient warningRedGradient = LinearGradient(
+    colors: <Color>[
+      const Color(0xFF939393),
+      warningRed,
     ],
   );
 }

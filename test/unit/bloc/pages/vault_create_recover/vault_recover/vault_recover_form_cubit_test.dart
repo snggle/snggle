@@ -40,6 +40,51 @@ void main() {
     });
 
     group('Tests of VaultRecoverPageCubit.init() method', () {
+      test('Should [return VaultRecoverPageState] with new values after calling method again (mnemonic size changed)', () async {
+        // Act
+        await actualVaultRecoverPageCubit.init(15);
+
+        // Assert
+        // Since generated TextEditingControllers have different hashCodes we are not able to compare them directly.
+        // For that reason values from [VaultRecoverPageState] are checked one by one.
+        expect(actualVaultRecoverPageCubit.state.confirmPageEnabledBool, true);
+        expect(actualVaultRecoverPageCubit.state.loadingBool, false);
+        expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
+        expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
+        expect(actualVaultRecoverPageCubit.state.mnemonicSize, 15);
+        expect(actualVaultRecoverPageCubit.state.textControllers?.length, 15);
+      });
+
+      test('Should [return VaultRecoverPageState] with new values after calling method again (mnemonic size changed)', () async {
+        // Act
+        await actualVaultRecoverPageCubit.init(18);
+
+        // Assert
+        // Since generated TextEditingControllers have different hashCodes we are not able to compare them directly.
+        // For that reason values from [VaultRecoverPageState] are checked one by one.
+        expect(actualVaultRecoverPageCubit.state.confirmPageEnabledBool, true);
+        expect(actualVaultRecoverPageCubit.state.loadingBool, false);
+        expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
+        expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
+        expect(actualVaultRecoverPageCubit.state.mnemonicSize, 18);
+        expect(actualVaultRecoverPageCubit.state.textControllers?.length, 18);
+      });
+
+      test('Should [return VaultRecoverPageState] with new values after calling method again (mnemonic size changed)', () async {
+        // Act
+        await actualVaultRecoverPageCubit.init(21);
+
+        // Assert
+        // Since generated TextEditingControllers have different hashCodes we are not able to compare them directly.
+        // For that reason values from [VaultRecoverPageState] are checked one by one.
+        expect(actualVaultRecoverPageCubit.state.confirmPageEnabledBool, true);
+        expect(actualVaultRecoverPageCubit.state.loadingBool, false);
+        expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
+        expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
+        expect(actualVaultRecoverPageCubit.state.mnemonicSize, 21);
+        expect(actualVaultRecoverPageCubit.state.textControllers?.length, 21);
+      });
+
       test('Should [return VaultRecoverPageState] containing info about current vault index and generated mnemonic phrase', () async {
         // Act
         await actualVaultRecoverPageCubit.init(24);

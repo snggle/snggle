@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 
@@ -9,6 +10,7 @@ class CustomDialog extends StatelessWidget {
   final Widget content;
   final List<CustomDialogOption> options;
   final Color? backgroundColor;
+  final Gradient? borderGradient;
   final PopInvokedCallback? onPopInvoked;
 
   const CustomDialog({
@@ -16,6 +18,7 @@ class CustomDialog extends StatelessWidget {
     required this.content,
     required this.options,
     this.backgroundColor,
+    this.borderGradient,
     this.onPopInvoked,
     super.key,
   });
@@ -23,6 +26,7 @@ class CustomDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
+    bool gradientBorderEnabledBool = borderGradient != null;
 
     Widget separator = Container(
       height: 24,
@@ -78,7 +82,9 @@ class CustomDialog extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: backgroundColor,
                         borderRadius: BorderRadius.circular(22),
-                        border: Border.all(color: AppColors.middleGrey),
+                        border: gradientBorderEnabledBool
+                            ? GradientBoxBorder(gradient: borderGradient!)
+                            : Border.all(color: AppColors.middleGrey),
                       ),
                       padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
                       child: Column(
