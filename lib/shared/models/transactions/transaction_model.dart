@@ -54,13 +54,13 @@ class TransactionModel extends Equatable {
     );
   }
 
-  factory TransactionModel.fromCborEthSignRequest(int walletId, CborEthSignRequest cborEthSignRequest) {
+  factory TransactionModel.fromCborEthSignRequest(int activeWalletId, String activeWalletAddress, CborEthSignRequest cborEthSignRequest) {
     SignDataType signDataType = cborEthSignRequest.dataType == CborEthSignDataType.rawBytes ? SignDataType.rawBytes : SignDataType.typedTransaction;
     AEthereumTransaction? ethereumTransaction = AEthereumTransaction.fromSerializedData(signDataType, cborEthSignRequest.signData);
 
     return TransactionModel(
       id: Isar.autoIncrement,
-      walletId: walletId,
+      walletId: activeWalletId,
       creationDate: DateTime.now(),
       signDataType: signDataType,
       amount: ethereumTransaction.getAmount(TokenDenominationType.network)?.toString(),
@@ -68,7 +68,7 @@ class TransactionModel extends Equatable {
       functionData: ethereumTransaction.abiFunction?.hex,
       message: ethereumTransaction.message,
       contractAddress: ethereumTransaction.contractAddress,
-      senderAddress: cborEthSignRequest.address,
+      senderAddress: activeWalletAddress,
       recipientAddress: ethereumTransaction.recipientAddress,
     );
   }

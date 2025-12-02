@@ -6,16 +6,17 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_detail
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/scan_qr_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_transaction_list.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
-import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_scan_icon.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
 import 'package:snggle/views/widgets/generic/eth_address_preview.dart';
@@ -45,6 +46,7 @@ class WalletDetailsPage extends StatefulWidget {
 
 class _WalletDetailsPageState extends State<WalletDetailsPage> {
   final ScrollController scrollController = ScrollController();
+  final ActiveWalletController activeWalletController = globalLocator<ActiveWalletController>();
 
   @override
   void initState() {
@@ -106,10 +108,11 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                     ),
                   ),
                 ),
-                const SliverToBoxAdapter(child: SizedBox(height: 12)),
+                const SliverToBoxAdapter(child: SizedBox(height: 16)),
                 SliverToBoxAdapter(
                   child: Center(
                     child: GradientOutlinedButton.small(
+                      width: 176,
                       label: 'Connect Wallet',
                       onPressed: () {
                         AutoRouter.of(context).navigate(WalletConnectRoute(
@@ -121,7 +124,17 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                     ),
                   ),
                 ),
-                const SliverToBoxAdapter(child: SizedBox(height: 48)),
+                const SliverToBoxAdapter(child: SizedBox(height: 12)),
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: GradientOutlinedButton.small(
+                      width: 176,
+                      label: 'Sign Transaction',
+                      onPressed: _showScanQRPage,
+                    ),
+                  ),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 32)),
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 6),
                   sliver: SliverToBoxAdapter(
@@ -175,12 +188,6 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
           title: widget.walletModel.name,
           plaintext: widget.walletModel.address,
           qrCodeGap: 0,
-          tooltip: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              CustomBottomNavigationBarScanIcon(foregroundColor: AppColors.darkGrey),
-            ],
-          ),
           child: LabelWrapperVertical(
             label: '',
             bottomBorderVisibleBool: false,
@@ -192,5 +199,18 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
         );
       },
     );
+  }
+
+  Future<void> _showScanQRPage() async {
+    await showDialog(
+      context: context,
+      useRootNavigator: true,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return const ScanQRPage();
+      },
+    );
+
+    activeWalletController.notifyTransactionSigned();
   }
 }

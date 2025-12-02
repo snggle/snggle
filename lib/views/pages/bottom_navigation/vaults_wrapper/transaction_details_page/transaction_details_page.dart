@@ -9,7 +9,6 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/transactions/transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
-import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_scan_icon.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
 import 'package:snggle/views/widgets/generic/display_mode/abi_display_mode/abi_display_mode_selector.dart';
@@ -74,13 +73,6 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
       title: 'Details',
       body: ScrollableLayout(
         scrollController: scrollController,
-        tooltip: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CustomBottomNavigationBarScanIcon(foregroundColor: AppColors.darkGrey),
-          ],
-        ),
         child: SingleChildScrollView(
           controller: scrollController,
           child: Column(
