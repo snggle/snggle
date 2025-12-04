@@ -116,7 +116,7 @@ class TestListItem extends AListItemModel {
   }) : super(filesystemPath: FilesystemPath.fromString('id$id'));
 
   @override
-  AListItemModel copyWith({bool? encryptedBool, bool? pinnedBool}) {
+  AListItemModel copyWith({bool? encryptedBool, bool? pinnedBool, String? name}) {
     return TestListItem(
       id: id,
       encryptedBool: encryptedBool ?? this.encryptedBool,
@@ -126,4 +126,7 @@ class TestListItem extends AListItemModel {
 
   @override
   String get name => 'Test List Item';
+
+  @override
+  String get defaultItemName => 'Default Test List Item';
 }

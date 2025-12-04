@@ -60,6 +60,8 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
+    TextEditingController vaultNameTextEditingController = widget.vaultCreatePageCubit.vaultNameTextEditingController;
+
     return ScrollableLayout(
       scrollController: scrollController,
       tooltipItems: <Widget>[
@@ -75,17 +77,13 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
             assetIconData: AppIcons.menu_eye_open,
             onTap: () => setState(() => obscureTextBool = true),
           ),
-        ValueListenableBuilder<bool>(
-          valueListenable: scrolledBottomNotifier,
-          builder: (BuildContext context, bool scrolledBottomBool, _) {
+        AnimatedBuilder(
+          animation: Listenable.merge(<Listenable?>[scrolledBottomNotifier, vaultNameTextEditingController]),
+          builder: (BuildContext context, _) {
             return BottomTooltipItem(
-              label: scrolledBottomBool ? 'Finish' : 'Continue',
-              assetIconData: scrolledBottomBool ? AppIcons.menu_save : AppIcons.menu_finish,
-              onTap: scrolledBottomBool
-                  ? (statementAcceptedBool && widget.repeatedVaultModel == null)
-                      ? _pressFinishButton
-                      : null
-                  : _pressContinueButton,
+              label: _bottomTooltipLabel,
+              assetIconData: _bottomTooltipIcon,
+              onTap: _bottomTooltipOnTap,
             );
           },
         ),
@@ -182,6 +180,18 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
       ),
     );
   }
+
+  AssetIconData get _bottomTooltipIcon => _scrolledBottomBool ? AppIcons.menu_save : AppIcons.menu_finish;
+
+  String get _bottomTooltipLabel => _scrolledBottomBool ? 'Finish' : 'Continue';
+
+  VoidCallback? get _bottomTooltipOnTap => _scrolledBottomBool ? (_finishButtonEnabledBool ? _pressFinishButton : null) : _pressContinueButton;
+
+  bool get _finishButtonEnabledBool => _scrolledBottomBool && statementAcceptedBool && widget.repeatedVaultModel == null && _vaultNameNotEmptyBool;
+
+  bool get _scrolledBottomBool => scrolledBottomNotifier.value;
+
+  bool get _vaultNameNotEmptyBool => widget.vaultCreatePageCubit.vaultNameTextEditingController.text.trim().isNotEmpty;
 
   void _pressContinueButton() {
     scrollController.animateTo(

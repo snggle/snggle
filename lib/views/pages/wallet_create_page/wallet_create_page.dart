@@ -75,10 +75,20 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
           body: ScrollableLayout(
             scrollController: scrollController,
             tooltipItems: <Widget>[
-              BottomTooltipItem(
-                label: 'Finish',
-                assetIconData: AppIcons.menu_save,
-                onTap: walletCreatePageState.walletExistsErrorBool ? null : _createNewWallet,
+              ValueListenableBuilder<TextEditingValue>(
+                valueListenable: walletCreatePageCubit.nameTextEditingController,
+                builder: (BuildContext context, TextEditingValue walletNameTextEditingController, _) {
+                  String walletName = walletNameTextEditingController.text.trim();
+                  bool finishButtonEnabledBool = walletCreatePageState.emptyDerivationPathBool == false &&
+                      walletCreatePageState.walletExistsErrorBool == false &&
+                      walletName.isNotEmpty;
+
+                  return BottomTooltipItem(
+                    label: 'Finish',
+                    assetIconData: AppIcons.menu_save,
+                    onTap: finishButtonEnabledBool ? _createNewWallet : null,
+                  );
+                },
               ),
             ],
             child: SingleChildScrollView(

@@ -50,6 +50,7 @@ class AppIcons {
   static const AssetIconData menu_finish = AssetIconData('assets/icons/menu_finish.svg');
   static const AssetIconData menu_lock = AssetIconData('assets/icons/menu_lock.svg');
   static const AssetIconData menu_pin = AssetIconData('assets/icons/menu_pin.svg');
+  static const AssetIconData menu_rename = AssetIconData('assets/icons/menu_rename.svg');
   static const AssetIconData menu_save = AssetIconData('assets/icons/menu_save.svg');
   static const AssetIconData menu_search = AssetIconData('assets/icons/menu_search.svg');
   static const AssetIconData menu_select = AssetIconData('assets/icons/menu_select.svg');

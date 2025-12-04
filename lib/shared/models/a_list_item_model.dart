@@ -17,7 +17,7 @@ abstract class AListItemModel with EquatableMixin {
     String? name,
   }) : _name = name;
 
-  AListItemModel copyWith({bool? encryptedBool, bool? pinnedBool});
+  AListItemModel copyWith({bool? encryptedBool, bool? pinnedBool, String? name});
 
   AListItemModel setEncrypted({required bool encryptedBool}) {
     return copyWith(encryptedBool: encryptedBool);
@@ -28,6 +28,8 @@ abstract class AListItemModel with EquatableMixin {
   }
 
   String? get name => _name;
+
+  String get defaultItemName;
 
   int compareTo(AListItemModel other) {
     bool currentIsGroupBool = this is GroupModel;

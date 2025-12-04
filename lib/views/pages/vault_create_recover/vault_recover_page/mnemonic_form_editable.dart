@@ -22,7 +22,6 @@ class MnemonicFormEditable extends StatefulWidget {
   final KeyboardValueNotifier keyboardValueNotifier;
   final List<TextEditingController> textControllers;
   final VaultRecoverPageCubit vaultRecoverPageCubit;
-  final bool recoverButtonActiveBool;
   final VaultModel? repeatedVaultModel;
 
   const MnemonicFormEditable({
@@ -34,7 +33,7 @@ class MnemonicFormEditable extends StatefulWidget {
     required this.vaultRecoverPageCubit,
     required this.repeatedVaultModel,
     super.key,
-  }) : recoverButtonActiveBool = mnemonicValidBool == true && mnemonicFilledBool == true && repeatedVaultModel == null;
+  });
 
   @override
   State<StatefulWidget> createState() => _MnemonicFormEditableState();
@@ -81,7 +80,7 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
           child: ScrollableLayout(
             tooltipVisibleBool: anyKeyboardVisibleBool == false,
             scrollController: scrollController,
-            tooltipItems: <BottomTooltipItem>[
+            tooltipItems: <Widget>[
               if (obscureTextBool)
                 BottomTooltipItem(
                   label: 'Show',
@@ -94,10 +93,19 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
                   assetIconData: AppIcons.menu_eye_open,
                   onTap: () => setState(() => obscureTextBool = true),
                 ),
-              BottomTooltipItem(
-                label: 'Finish',
-                assetIconData: AppIcons.menu_finish,
-                onTap: widget.recoverButtonActiveBool ? _pressFinishButton : null,
+              ValueListenableBuilder<TextEditingValue>(
+                valueListenable: widget.vaultRecoverPageCubit.vaultNameTextEditingController,
+                builder: (BuildContext context, TextEditingValue vaultNameTextEditingController, _) {
+                  String vaultName = vaultNameTextEditingController.text.trim();
+                  bool finishButtonEnabledBool =
+                      widget.mnemonicValidBool && widget.mnemonicFilledBool && widget.repeatedVaultModel == null && vaultName.isNotEmpty;
+
+                  return BottomTooltipItem(
+                    label: 'Finish',
+                    assetIconData: AppIcons.menu_finish,
+                    onTap: finishButtonEnabledBool ? _pressFinishButton : null,
+                  );
+                },
               ),
             ],
             bottomMarginVisibleBool: anyKeyboardVisibleBool == false,

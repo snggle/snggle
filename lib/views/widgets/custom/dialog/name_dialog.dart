@@ -3,33 +3,52 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 
-class FolderNameDialog extends StatefulWidget {
+class NameDialog extends StatefulWidget {
+  final String title;
+  final String? defaultName;
+  final String? description;
   final VoidCallback? onClose;
   final ValueChanged<String>? onSave;
 
-  const FolderNameDialog({
+  const NameDialog({
+    required this.title,
+    this.defaultName,
+    this.description,
     this.onClose,
     this.onSave,
     super.key,
   });
 
   @override
-  FolderNameDialogState createState() => FolderNameDialogState();
+  NameDialogState createState() => NameDialogState();
 }
 
-class FolderNameDialogState extends State<FolderNameDialog> {
-  final String defaultName = 'New Folder';
+class NameDialogState extends State<NameDialog> {
   final TextEditingController textEditingController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.defaultName != null) {
+      textEditingController.text = widget.defaultName!;
+    }
+    textEditingController.addListener(_handleNameChanged);
+    _handleNameChanged();
+  }
+
+  @override
   void dispose() {
-    textEditingController.dispose();
+    textEditingController
+      ..removeListener(_handleNameChanged)
+      ..dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
+
+    bool saveButtonEnabledBool = widget.onSave != null && textEditingController.text.trim().isNotEmpty;
 
     OutlineInputBorder inputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(6),
@@ -39,28 +58,29 @@ class FolderNameDialogState extends State<FolderNameDialog> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomDialog(
-        title: 'Create new folder'.toUpperCase(),
+        title: widget.title.toUpperCase(),
         content: Column(
           children: <Widget>[
-            Text(
-              'Enter a name for the\nnew folder',
-              textAlign: TextAlign.center,
-              style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
-            ),
+            if (widget.description != null)
+              Text(
+                widget.description!,
+                textAlign: TextAlign.center,
+                style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+              ),
             const SizedBox(height: 10),
             TextField(
               controller: textEditingController,
+              maxLength: 100,
               autofocus: true,
               keyboardType: TextInputType.text,
               style: textTheme.bodyMedium?.copyWith(color: AppColors.body3, height: 1),
               decoration: InputDecoration(
                 isDense: true,
+                counterText: '',
                 contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                 border: inputBorder,
                 enabledBorder: inputBorder,
                 focusedBorder: inputBorder,
-                hintText: defaultName,
-                hintStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey, height: 1),
               ),
             ),
           ],
@@ -72,18 +92,21 @@ class FolderNameDialogState extends State<FolderNameDialog> {
           ),
           CustomDialogOption(
             label: 'Save',
-            onPressed: () => widget.onSave != null ? _saveFolderName() : () {},
+            onPressed: saveButtonEnabledBool ? _saveName : null,
           ),
         ],
       ),
     );
   }
 
-  void _saveFolderName() {
-    String folderName = textEditingController.text;
-    if (folderName.isEmpty) {
-      folderName = defaultName;
+  void _handleNameChanged() {
+    if (mounted) {
+      setState(() {});
     }
-    widget.onSave!(folderName);
+  }
+
+  void _saveName() {
+    String newName = textEditingController.text;
+    widget.onSave!(newName);
   }
 }
