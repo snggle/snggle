@@ -471,6 +471,29 @@ void main() {
     });
   });
 
+  group('Tests of GroupsService.rename()', () {
+    test('Should [RENAME GroupModel] with a new name', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      await globalLocator<GroupsService>().rename(1, 'NEW VAULTS GROUP 1 NAME');
+
+      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
+        return isar.groups.where().findAll();
+      });
+
+      // Assert
+      List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
+        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'NEW VAULTS GROUP 1 NAME'),
+        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
+        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
+      ];
+
+      expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
+    });
+  });
+
   group('Tests of GroupsService.updateFilesystemPath()', () {
     test('Should [return updated GroupModel] if [group EXISTS] in database', () async {
       // Arrange

@@ -29,6 +29,8 @@ abstract class AListItemModel with EquatableMixin {
 
   String? get name => _name;
 
+  String get defaultItemName;
+
   int compareTo(AListItemModel other) {
     bool currentIsGroupBool = this is GroupModel;
 

@@ -12,7 +12,8 @@ class GroupsService implements IListItemsService<GroupModel> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
   @override
-  Future<List<GroupModel>> getAllByParentPath(FilesystemPath parentFilesystemPath, {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
+  Future<List<GroupModel>> getAllByParentPath(FilesystemPath parentFilesystemPath,
+      {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
     GroupModelFactory groupModelFactory = globalLocator<GroupModelFactory>();
 
     List<GroupEntity> groupEntityList = await _groupsRepository.getAllByParentPath(parentFilesystemPath);
@@ -91,6 +92,12 @@ class GroupsService implements IListItemsService<GroupModel> {
     } catch (_) {
       return null;
     }
+  }
+
+  Future<void> rename(int id, String newName) async {
+    GroupModel groupModel = await getById(id);
+    GroupModel renamedGroupModel = groupModel.copyWith(name: newName);
+    await save(renamedGroupModel);
   }
 
   Future<GroupModel> updateFilesystemPath(int id, FilesystemPath parentFilesystemPath) async {

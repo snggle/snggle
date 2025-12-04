@@ -7,18 +7,24 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/i_list_items_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
+import 'package:snggle/infra/services/vaults_service.dart';
+import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/factories/group_model_factory.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/selection_model.dart';
+import 'package:snggle/shared/models/vaults/vault_model.dart';
+import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 typedef SelectionModifier = Future<AListItemModel> Function(AListItemModel selectedItem);
 
 abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
-  final GroupsService groupsService = globalLocator<GroupsService>();
   final SecretsService secretsService = globalLocator<SecretsService>();
+  final GroupsService groupsService = globalLocator<GroupsService>();
+  final VaultsService vaultsService = globalLocator<VaultsService>();
+  final WalletsService walletsService = globalLocator<WalletsService>();
 
   final IListItemsService<T> listItemsService;
   final List<IListItemsService<AListItemModel>> childItemsServices;
@@ -69,6 +75,11 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
     if (reloadBool) {
       await refreshAll();
     }
+  }
+
+  Future<void> renameItem(AListItemModel item, String newName) async {
+    await _renameItem(item, newName);
+    await refreshAll();
   }
 
   Future<void> navigateNext({required FilesystemPath filesystemPath}) async {
@@ -203,6 +214,18 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
       await groupsService.move(item, newItemFilesystemPath);
     } else {
       throw UnsupportedError('Unsupported item type: ${item.runtimeType}');
+    }
+  }
+
+  Future<void> _renameItem(AListItemModel item, String newName) async {
+    if (item is VaultModel) {
+      await vaultsService.rename(item.id, newName);
+    } else if (item is WalletModel) {
+      await walletsService.rename(item.id, newName);
+    } else if (item is GroupModel) {
+      await groupsService.rename(item.id, newName);
+    } else {
+      throw UnsupportedError('Rename not supported for ${item.runtimeType}');
     }
   }
 

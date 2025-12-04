@@ -600,6 +600,33 @@ void main() {
     });
   });
 
+  group('Tests of VaultsService.rename()', () {
+    test('Should [RENAME vault] if [vault EXISTS] in database', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      await globalLocator<VaultsService>().rename(1, 'NEW VAULT 1 NAME');
+
+      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
+        return isar.vaults.where().findAll();
+      });
+
+      // Assert
+      List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
+        // @formatter:off
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'NEW VAULT 1 NAME'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5')
+        // @formatter:on
+      ];
+
+      expect(actualVaultsDatabaseValue, expectedVaultsDatabaseValue);
+    });
+  });
+
   group('Tests of VaultsService.updateFilesystemPath()', () {
     test('Should [return updated VaultModel] if [vault EXISTS] in database', () async {
       // Arrange

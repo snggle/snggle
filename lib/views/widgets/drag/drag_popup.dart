@@ -8,7 +8,7 @@ import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
-import 'package:snggle/views/widgets/custom/dialog/folder_name_dialog.dart';
+import 'package:snggle/views/widgets/custom/dialog/name_dialog.dart';
 import 'package:snggle/views/widgets/drag/drag_config.dart';
 import 'package:snggle/views/widgets/drag/drag_popup_cursor_controller.dart';
 import 'package:snggle/views/widgets/drag/drag_popup_grid.dart';
@@ -164,7 +164,10 @@ class _DragPopupState<T extends AListItemModel> extends State<DragPopup<T>> {
       context: context,
       barrierColor: Colors.transparent,
       builder: (BuildContext context) {
-        return FolderNameDialog(
+        return NameDialog(
+          title: 'Create new folder',
+          description: 'Enter a name for the\nnew folder',
+          defaultName: 'New Folder',
           onSave: (String name) async {
             await widget.listCubit.groupItems(item1, item2, name);
           },

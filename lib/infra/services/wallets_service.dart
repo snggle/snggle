@@ -12,7 +12,8 @@ class WalletsService implements IListItemsService<WalletModel> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
   @override
-  Future<List<WalletModel>> getAllByParentPath(FilesystemPath parentFilesystemPath, {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
+  Future<List<WalletModel>> getAllByParentPath(FilesystemPath parentFilesystemPath,
+      {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
     WalletModelFactory walletModelFactory = globalLocator<WalletModelFactory>();
 
     List<WalletEntity> walletEntityList = await _walletsRepository.getAllByParentPath(parentFilesystemPath);
@@ -97,6 +98,12 @@ class WalletsService implements IListItemsService<WalletModel> {
   Future<bool> isDerivationPathExists(FilesystemPath parentFilesystemPath, String derivationPathString) async {
     List<String> derivationPaths = await _walletsRepository.getAllDerivationPaths(parentFilesystemPath);
     return derivationPaths.contains(derivationPathString);
+  }
+
+  Future<void> rename(int id, String newName) async {
+    WalletModel walletModel = await getById(id);
+    WalletModel renamedWalletModel = walletModel.copyWith(name: newName);
+    await save(renamedWalletModel);
   }
 
   Future<WalletModel> updateFilesystemPath(int id, FilesystemPath parentFilesystemPath) async {

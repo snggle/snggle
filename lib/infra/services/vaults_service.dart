@@ -12,7 +12,8 @@ class VaultsService implements IListItemsService<VaultModel> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
   @override
-  Future<List<VaultModel>> getAllByParentPath(FilesystemPath parentFilesystemPath, {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
+  Future<List<VaultModel>> getAllByParentPath(FilesystemPath parentFilesystemPath,
+      {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
     VaultModelFactory vaultModelFactory = globalLocator<VaultModelFactory>();
 
     List<VaultEntity> vaultEntityList = await _vaultsRepository.getAllByParentPath(parentFilesystemPath);
@@ -92,6 +93,12 @@ class VaultsService implements IListItemsService<VaultModel> {
   Future<int> getLastIndex() async {
     int? lastIndex = await _vaultsRepository.getLastIndex();
     return lastIndex ?? -1;
+  }
+
+  Future<void> rename(int id, String newName) async {
+    VaultModel vaultModel = await getById(id);
+    VaultModel renamedVaultModel = vaultModel.copyWith(name: newName);
+    await save(renamedVaultModel);
   }
 
   Future<VaultModel> updateFilesystemPath(int id, FilesystemPath parentFilesystemPath) async {
