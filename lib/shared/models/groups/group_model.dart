@@ -36,6 +36,9 @@ class GroupModel extends AListItemModel {
   @override
   String get name => _name;
 
+  @override
+  String get defaultItemName => 'Folder';
+
   bool get hasSingleItem => listItemsPreview.length == 1;
 
   @override

@@ -7,12 +7,14 @@ class VaultCreatePageState extends Equatable {
   final MnemonicSize? mnemonicSize;
   final List<String>? mnemonic;
   final VaultModel? repeatedVaultModel;
+  final bool vaultNameEmptyBool;
 
   const VaultCreatePageState({
     this.confirmPageEnabledBool = false,
     this.mnemonicSize,
     this.mnemonic,
     this.repeatedVaultModel,
+    this.vaultNameEmptyBool = false,
   });
 
   VaultCreatePageState copyWith({
@@ -22,15 +24,17 @@ class VaultCreatePageState extends Equatable {
     MnemonicSize? mnemonicSize,
     List<String>? mnemonic,
     VaultModel? repeatedVaultModel,
+    bool? vaultNameEmptyBool,
   }) {
     return VaultCreatePageState(
       confirmPageEnabledBool: confirmPageEnabledBool ?? this.confirmPageEnabledBool,
       mnemonicSize: mnemonicSize ?? this.mnemonicSize,
       mnemonic: mnemonic ?? this.mnemonic,
       repeatedVaultModel: repeatedVaultModel ?? this.repeatedVaultModel,
+      vaultNameEmptyBool: vaultNameEmptyBool ?? this.vaultNameEmptyBool,
     );
   }
 
   @override
-  List<Object?> get props => <Object?>[confirmPageEnabledBool, mnemonicSize, mnemonic, repeatedVaultModel];
+  List<Object?> get props => <Object?>[confirmPageEnabledBool, mnemonicSize, mnemonic, repeatedVaultModel, vaultNameEmptyBool];
 }

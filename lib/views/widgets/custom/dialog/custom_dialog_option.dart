@@ -3,7 +3,7 @@ import 'package:snggle/config/app_colors.dart';
 
 class CustomDialogOption extends StatelessWidget {
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool autoCloseBool;
   final Color? labelColor;
   final double horizontalPadding;
@@ -20,6 +20,7 @@ class CustomDialogOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
+    bool buttonEnabledBool = onPressed != null;
 
     return SizedBox(
       height: 36,
@@ -34,14 +35,24 @@ class CustomDialogOption extends StatelessWidget {
         ).copyWith(
           overlayColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) => Colors.transparent),
         ),
-        onPressed: () {
-          if (autoCloseBool) {
-            Navigator.of(context).pop();
-          }
-          onPressed();
-        },
-        child: Text(label, style: textTheme.bodyMedium!.copyWith(color: labelColor ?? AppColors.body3, height: 1)),
+        onPressed: _buttonEnabledBool ? () => _pressButton(context) : null,
+        child: Text(
+          label,
+          style: textTheme.bodyMedium!.copyWith(
+            color: buttonEnabledBool ? (labelColor ?? AppColors.body3) : AppColors.middleGrey,
+            height: 1,
+          ),
+        ),
       ),
     );
+  }
+
+  bool get _buttonEnabledBool => onPressed != null;
+
+  void _pressButton(BuildContext context) {
+    if (autoCloseBool) {
+      Navigator.of(context).pop();
+    }
+    onPressed?.call();
   }
 }

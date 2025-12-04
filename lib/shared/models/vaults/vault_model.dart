@@ -46,5 +46,8 @@ class VaultModel extends AListItemModel {
   }
 
   @override
+  String get defaultItemName => 'Vault';
+
+  @override
   List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, index, filesystemPath, fingerprint, name, listItemsPreview];
 }

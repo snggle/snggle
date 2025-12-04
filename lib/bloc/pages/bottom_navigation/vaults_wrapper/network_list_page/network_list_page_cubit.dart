@@ -22,4 +22,7 @@ class NetworkListPageCubit extends AListCubit<NetworkGroupModel> {
           ],
           onGroupNavigateBack: onGroupNavigateBack,
         );
+
+  @override
+  bool get canBeRenamedBool => false;
 }

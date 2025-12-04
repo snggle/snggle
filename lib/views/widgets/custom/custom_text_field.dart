@@ -96,6 +96,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       enableInteractiveSelection: widget.enableInteractiveSelectionBool,
       enableSuggestions: false,
       autocorrect: false,
+      maxLength: 100,
       controller: widget.textEditingController,
       focusNode: widget.focusNode,
       autofocus: widget.autofocusBool,
@@ -113,6 +114,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       inputFormatters: widget.inputFormatters,
       decoration: InputDecoration(
         isDense: true,
+        counterText: '',
         prefix: widget.prefix,
         prefixText: widget.prefixText,
         prefixStyle: prefixStyle?.copyWith(color: AppColors.middleGrey),

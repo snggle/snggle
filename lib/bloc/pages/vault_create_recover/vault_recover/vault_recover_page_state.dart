@@ -10,6 +10,7 @@ class VaultRecoverPageState extends Equatable {
   final int? mnemonicSize;
   final List<TextEditingController>? textControllers;
   final VaultModel? repeatedVaultModel;
+  final bool vaultNameEmptyBool;
 
   const VaultRecoverPageState({
     this.confirmPageEnabledBool = false,
@@ -19,6 +20,7 @@ class VaultRecoverPageState extends Equatable {
     this.mnemonicSize,
     this.textControllers,
     this.repeatedVaultModel,
+    this.vaultNameEmptyBool = false,
   });
 
   const VaultRecoverPageState.loading() : this(loadingBool: true);
@@ -33,6 +35,7 @@ class VaultRecoverPageState extends Equatable {
     List<TextEditingController>? textControllers,
     VaultModel? repeatedVaultModel,
     bool clearRepeatedVaultModelBool = false,
+    bool? vaultNameEmptyBool,
   }) {
     return VaultRecoverPageState(
       confirmPageEnabledBool: confirmPageEnabledBool ?? this.confirmPageEnabledBool,
@@ -41,9 +44,18 @@ class VaultRecoverPageState extends Equatable {
       mnemonicSize: mnemonicSize ?? this.mnemonicSize,
       textControllers: textControllers ?? this.textControllers,
       repeatedVaultModel: clearRepeatedVaultModelBool ? null : repeatedVaultModel ?? this.repeatedVaultModel,
+      vaultNameEmptyBool: vaultNameEmptyBool ?? this.vaultNameEmptyBool,
     );
   }
 
   @override
-  List<Object?> get props => <Object?>[confirmPageEnabledBool, mnemonicValidBool, mnemonicFilledBool, mnemonicSize, textControllers, repeatedVaultModel];
+  List<Object?> get props => <Object?>[
+        confirmPageEnabledBool,
+        mnemonicValidBool,
+        mnemonicFilledBool,
+        mnemonicSize,
+        textControllers,
+        repeatedVaultModel,
+        vaultNameEmptyBool,
+      ];
 }

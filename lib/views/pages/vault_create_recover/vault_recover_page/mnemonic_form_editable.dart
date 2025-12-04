@@ -8,6 +8,7 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/views/widgets/custom/custom_grid.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
+import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
@@ -22,7 +23,6 @@ class MnemonicFormEditable extends StatefulWidget {
   final KeyboardValueNotifier keyboardValueNotifier;
   final List<TextEditingController> textControllers;
   final VaultRecoverPageCubit vaultRecoverPageCubit;
-  final bool recoverButtonActiveBool;
   final VaultModel? repeatedVaultModel;
 
   const MnemonicFormEditable({
@@ -34,7 +34,10 @@ class MnemonicFormEditable extends StatefulWidget {
     required this.vaultRecoverPageCubit,
     required this.repeatedVaultModel,
     super.key,
-  }) : recoverButtonActiveBool = mnemonicValidBool == true && mnemonicFilledBool == true && repeatedVaultModel == null;
+  });
+
+  bool get recoverButtonEnabledBool =>
+      mnemonicValidBool == true && mnemonicFilledBool == true && repeatedVaultModel == null && vaultRecoverPageCubit.state.vaultNameEmptyBool != true;
 
   @override
   State<StatefulWidget> createState() => _MnemonicFormEditableState();
@@ -97,7 +100,7 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
               BottomTooltipItem(
                 label: 'Finish',
                 assetIconData: AppIcons.menu_finish,
-                onTap: widget.recoverButtonActiveBool ? _pressFinishButton : null,
+                onTap: widget.recoverButtonEnabledBool ? _pressFinishButton : null,
               ),
             ],
             bottomMarginVisibleBool: anyKeyboardVisibleBool == false,
@@ -139,6 +142,10 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
                       textEditingController: widget.vaultRecoverPageCubit.vaultNameTextEditingController,
                     ),
                   ),
+                  if (widget.vaultRecoverPageCubit.state.vaultNameEmptyBool == true)
+                    const ErrorMessageListTile(
+                      message: 'Vault name cannot be empty',
+                    ),
                   const SizedBox(height: 14),
                   CustomGrid.builder(
                     childCount: widget.mnemonicSize,
