@@ -48,6 +48,42 @@ void main() {
         expect(actualVaultCreatePageCubit.state.mnemonic!.length, 12);
       });
 
+      test('Should [return VaultCreatePageState] containing info about current vault index and generated mnemonic phrase', () async {
+        // Act
+        await actualVaultCreatePageCubit.init(MnemonicSize.words15);
+
+        // Assert
+        // Since generated mnemonic phrase is random, predicting it's value is not possible.
+        // For that reason values from [VaultCreatePageState] are checked one by one.
+        expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
+        expect(actualVaultCreatePageCubit.state.mnemonicSize, MnemonicSize.words15);
+        expect(actualVaultCreatePageCubit.state.mnemonic!.length, 15);
+      });
+
+      test('Should [return VaultCreatePageState] containing info about current vault index and generated mnemonic phrase', () async {
+        // Act
+        await actualVaultCreatePageCubit.init(MnemonicSize.words18);
+
+        // Assert
+        // Since generated mnemonic phrase is random, predicting it's value is not possible.
+        // For that reason values from [VaultCreatePageState] are checked one by one.
+        expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
+        expect(actualVaultCreatePageCubit.state.mnemonicSize, MnemonicSize.words18);
+        expect(actualVaultCreatePageCubit.state.mnemonic!.length, 18);
+      });
+
+      test('Should [return VaultCreatePageState] containing info about current vault index and generated mnemonic phrase', () async {
+        // Act
+        await actualVaultCreatePageCubit.init(MnemonicSize.words21);
+
+        // Assert
+        // Since generated mnemonic phrase is random, predicting it's value is not possible.
+        // For that reason values from [VaultCreatePageState] are checked one by one.
+        expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
+        expect(actualVaultCreatePageCubit.state.mnemonicSize, MnemonicSize.words21);
+        expect(actualVaultCreatePageCubit.state.mnemonic!.length, 21);
+      });
+
       test('Should [return VaultCreatePageState] with new values after calling method again (mnemonic size changed)', () async {
         // Act
         await actualVaultCreatePageCubit.init(MnemonicSize.words24);

@@ -59,7 +59,7 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
           body: PaginatedForm(
             pageController: pageController,
             pages: <Widget>[
-              MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected),
+              MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected, advancedWarningBool: true),
               if (vaultCreatePageState.confirmPageEnabledBool)
                 MnemonicFormGenerated(
                   mnemonicSize: vaultCreatePageState.mnemonicSize!,
