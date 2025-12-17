@@ -160,6 +160,8 @@ class _DragPopupState<T extends AListItemModel> extends State<DragPopup<T>> {
   }
 
   Future<void> _createGroup(AListItemModel item1, AListItemModel item2) async {
+    List<String> takenFolderNamesList = widget.listCubit.state.allItems.whereType<GroupModel>().map((GroupModel groupModel) => groupModel.name).toList();
+
     await showDialog(
       context: context,
       barrierColor: Colors.transparent,
@@ -168,6 +170,7 @@ class _DragPopupState<T extends AListItemModel> extends State<DragPopup<T>> {
           title: 'Create new folder',
           description: 'Enter a name for the\nnew folder',
           defaultName: 'New Folder',
+          takenFolderNamesList: takenFolderNamesList,
           onSave: (String name) async {
             await widget.listCubit.groupItems(item1, item2, name);
           },

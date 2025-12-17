@@ -22,6 +22,7 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
 
   final TextEditingController vaultNameTextEditingController = TextEditingController();
   final FilesystemPath _parentFilesystemPath;
+  late List<String> _takenVaultNamesList;
 
   VaultCreatePageCubit({
     required FilesystemPath parentFilesystemPath,
@@ -36,6 +37,14 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
 
   Future<void> init(MnemonicSize mnemonicSize) async {
     emit(VaultCreatePageState(mnemonicSize: mnemonicSize, confirmPageEnabledBool: false));
+
+    vaultNameTextEditingController
+      ..removeListener(_handleVaultNameChanged)
+      ..addListener(_handleVaultNameChanged);
+
+    List<VaultModel> vaultsList = await _vaultsService.getAllByParentPath(const FilesystemPath.empty());
+
+    _takenVaultNamesList = vaultsList.map((VaultModel vaultModel) => vaultModel.name).toList();
 
     int lastVaultIndex = await _vaultsService.getLastIndex();
     List<String> mnemonic = MnemonicModel.generate(mnemonicSize).mnemonicList;
@@ -74,6 +83,14 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
       );
       await _createVault(mnemonicWords);
     }
+  }
+
+  void _handleVaultNameChanged() {
+    String vaultName = vaultNameTextEditingController.text;
+
+    bool vaultNameExistsBool = _takenVaultNamesList.any((String existingVaultName) => existingVaultName == vaultName);
+
+    emit(state.copyWith(vaultNameExistsBool: vaultNameExistsBool));
   }
 
   Future<void> _createVault(List<String> mnemonicWords) async {

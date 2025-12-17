@@ -95,6 +95,34 @@ void main() {
         expect(actualVaultCreatePageCubit.state.mnemonicSize, MnemonicSize.words24);
         expect(actualVaultCreatePageCubit.state.mnemonic!.length, 24);
       });
+
+      test('Should [emit VaultCreatePageState] with [vaultNameExistsBool == TRUE] if a vault name is TAKEN', () async {
+        // Arrange
+        await actualVaultCreatePageCubit.init(MnemonicSize.words24);
+
+        // Act
+        actualVaultCreatePageCubit.vaultNameTextEditingController.text = 'VAULT 1';
+
+        // Assert
+        expect(
+          actualVaultCreatePageCubit.state.vaultNameExistsBool,
+          true,
+        );
+      });
+
+      test('Should [emit VaultCreatePageState] with [vaultNameExistsBool == FALSE] if a vault name is TAKEN', () async {
+        // Arrange
+        await actualVaultCreatePageCubit.init(MnemonicSize.words24);
+
+        // Act
+        actualVaultCreatePageCubit.vaultNameTextEditingController.text = 'VAULT 99999';
+
+        // Assert
+        expect(
+          actualVaultCreatePageCubit.state.vaultNameExistsBool,
+          false,
+        );
+      });
     });
 
     group('Tests of VaultCreatePageCubit.saveMnemonic() method', () {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
+import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 
 class NameDialog extends StatefulWidget {
   final String title;
@@ -9,6 +10,7 @@ class NameDialog extends StatefulWidget {
   final String? description;
   final VoidCallback? onClose;
   final ValueChanged<String>? onSave;
+  final List<String>? takenFolderNamesList;
 
   const NameDialog({
     required this.title,
@@ -16,6 +18,7 @@ class NameDialog extends StatefulWidget {
     this.description,
     this.onClose,
     this.onSave,
+    this.takenFolderNamesList,
     super.key,
   });
 
@@ -25,6 +28,7 @@ class NameDialog extends StatefulWidget {
 
 class NameDialogState extends State<NameDialog> {
   final TextEditingController textEditingController = TextEditingController();
+  bool _folderNameTakenBool = false;
 
   @override
   void initState() {
@@ -83,6 +87,10 @@ class NameDialogState extends State<NameDialog> {
                 focusedBorder: inputBorder,
               ),
             ),
+            if (_folderNameTakenBool == true)
+              const ErrorMessageListTile(
+                message: 'Folder with this name already exists',
+              ),
           ],
         ),
         options: <CustomDialogOption>[
@@ -100,8 +108,13 @@ class NameDialogState extends State<NameDialog> {
   }
 
   void _handleNameChanged() {
-    if (mounted) {
-      setState(() {});
+    String folderName = textEditingController.text.isEmpty ? defaultName : textEditingController.text;
+    bool folderNameTakenBool = widget.takenFolderNamesList?.any((String existingFolderName) => existingFolderName == folderName) ?? false;
+
+    if (folderNameTakenBool != _folderNameTakenBool) {
+      setState(() {
+        _folderNameTakenBool = folderNameTakenBool;
+      });
     }
   }
 

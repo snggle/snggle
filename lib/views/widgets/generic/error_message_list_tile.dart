@@ -29,6 +29,12 @@ class _ErrorMessageListTileState extends State<ErrorMessageListTile> with Ticker
   }
 
   @override
+  void dispose() {
+    animation.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 

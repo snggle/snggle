@@ -82,6 +82,34 @@ void main() {
         expect(actualName, expectedName);
         expect(actualDerivationPath, expectedDerivationPath);
       });
+
+      test('Should [emit WalletCreatePageState] with [walletNameExistsBool == TRUE] if a wallet name is TAKEN', () async {
+        // Arrange
+        await actualWalletCreatePageCubit.init(defaultWalletName: 'Wallet');
+
+        // Act
+        actualWalletCreatePageCubit.nameTextEditingController.text = 'WALLET 1';
+
+        // Assert
+        expect(
+          actualWalletCreatePageCubit.state.walletNameExistsBool,
+          true,
+        );
+      });
+
+      test('Should [emit WalletCreatePageState] with [walletNameExistsBool == FALSE] if a wallet name is NOT TAKEN', () async {
+        // Arrange
+        await actualWalletCreatePageCubit.init(defaultWalletName: 'Wallet');
+
+        // Act
+        actualWalletCreatePageCubit.nameTextEditingController.text = 'Wallet 5';
+
+        // Assert
+        expect(
+          actualWalletCreatePageCubit.state.walletNameExistsBool,
+          false,
+        );
+      });
     });
 
     group('Tests of WalletCreatePageCubit.createNewWallet()', () {
@@ -127,5 +155,7 @@ void main() {
         expect(actualWalletCreatePageState, expectedWalletCreatePageState);
       });
     });
+
+    group('Tests of ', () {});
   });
 }

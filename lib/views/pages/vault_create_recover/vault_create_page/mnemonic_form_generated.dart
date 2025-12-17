@@ -12,6 +12,7 @@ import 'package:snggle/views/widgets/custom/custom_checkbox_list_tile.dart';
 import 'package:snggle/views/widgets/custom/custom_grid.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
+import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
@@ -131,6 +132,10 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
                 textEditingController: widget.vaultCreatePageCubit.vaultNameTextEditingController,
               ),
             ),
+            if (widget.vaultCreatePageCubit.state.vaultNameExistsBool  == true)
+              const ErrorMessageListTile(
+                message: 'Vault with this name already exists',
+              ),
             const SizedBox(height: 14),
             CustomGrid.builder(
               columnsCount: 3,

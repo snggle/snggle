@@ -112,6 +112,10 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                       keyboardType: TextInputType.text,
                     ),
                   ),
+                  if (walletCreatePageCubit.state.walletNameExistsBool  == true)
+                    const ErrorMessageListTile(
+                      message: 'Wallet with this name already exists',
+                    ),
                   LabelWrapperVertical(
                     label: 'Derivation Path',
                     child: CustomTextField(

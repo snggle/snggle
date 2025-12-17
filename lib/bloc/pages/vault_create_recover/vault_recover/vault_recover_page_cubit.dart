@@ -21,6 +21,7 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
   final TextEditingController vaultNameTextEditingController = TextEditingController();
   final FilesystemPath _parentFilesystemPath;
+  late List<String> _takenVaultNamesList;
 
   VaultRecoverPageCubit({
     required FilesystemPath parentFilesystemPath,
@@ -39,6 +40,13 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
     _disposeControllers();
 
+    vaultNameTextEditingController
+      ..removeListener(_handleVaultNameChanged)
+      ..addListener(_handleVaultNameChanged);
+
+    List<VaultModel> vaultsList = await _vaultsService.getAllByParentPath(const FilesystemPath.empty());
+
+    _takenVaultNamesList = vaultsList.map((VaultModel vaultModel) => vaultModel.name).toList();
     List<TextEditingController> textControllers = List<TextEditingController>.generate(mnemonicSize, (_) => TextEditingController());
 
     for (TextEditingController textEditingController in textControllers) {
@@ -82,6 +90,14 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
   void _disposeControllers() {
     state.textControllers?.forEach((TextEditingController textController) => textController.dispose());
+  }
+
+  void _handleVaultNameChanged() {
+    String vaultName = vaultNameTextEditingController.text;
+
+    bool vaultNameExistsBool = _takenVaultNamesList.any((String existingVaultName) => existingVaultName == vaultName);
+
+    emit(state.copyWith(vaultNameExistsBool: vaultNameExistsBool));
   }
 
   void _validateMnemonic() {

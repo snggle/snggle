@@ -8,6 +8,7 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/views/widgets/custom/custom_grid.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
+import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
@@ -147,6 +148,10 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
                       textEditingController: widget.vaultRecoverPageCubit.vaultNameTextEditingController,
                     ),
                   ),
+                  if (widget.vaultRecoverPageCubit.state.vaultNameExistsBool  == true)
+                    const ErrorMessageListTile(
+                      message: 'Vault with this name already exists',
+                    ),
                   const SizedBox(height: 14),
                   CustomGrid.builder(
                     childCount: widget.mnemonicSize,

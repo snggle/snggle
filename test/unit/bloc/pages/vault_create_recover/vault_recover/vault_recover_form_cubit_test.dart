@@ -114,6 +114,36 @@ void main() {
         expect(actualVaultRecoverPageCubit.state.mnemonicSize, 12);
         expect(actualVaultRecoverPageCubit.state.textControllers?.length, 12);
       });
+
+
+
+      test('Should [emit VaultCreatePageState] with [vaultNameExistsBool == TRUE] if a vault name is TAKEN', () async {
+        // Arrange
+        await actualVaultRecoverPageCubit.init(12);
+
+        // Act
+        actualVaultRecoverPageCubit.vaultNameTextEditingController.text = 'VAULT 1';
+
+        // Assert
+        expect(
+          actualVaultRecoverPageCubit.state.vaultNameExistsBool,
+          true,
+        );
+      });
+
+      test('Should [emit VaultCreatePageState] with [vaultNameExistsBool == FALSE] if a vault name is TAKEN', () async {
+        // Arrange
+        await actualVaultRecoverPageCubit.init(12);
+
+        // Act
+        actualVaultRecoverPageCubit.vaultNameTextEditingController.text = 'VAULT 99999';
+
+        // Assert
+        expect(
+          actualVaultRecoverPageCubit.state.vaultNameExistsBool,
+          false,
+        );
+      });
     });
 
     group('Tests of TextEditingControllers listener (form validation)', () {

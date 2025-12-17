@@ -28,6 +28,7 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
   final NetworkGroupModel _networkGroupModel;
   final NetworkTemplateModel _networkTemplateModel;
   final FilesystemPath _parentFilesystemPath;
+  late List<String> _takenWalletNamesList;
 
   WalletCreatePageCubit({
     required VaultModel vaultModel,
@@ -40,6 +41,12 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
         super(const WalletCreatePageState());
 
   Future<void> init({required String defaultWalletName}) async {
+    nameTextEditingController.addListener(_handleWalletNameChanged);
+
+    List<WalletModel> walletsInNetworkList = await _walletsService.getAllByParentPath(_networkGroupModel.filesystemPath);
+
+    _takenWalletNamesList = walletsInNetworkList.map((WalletModel walletModel) => walletModel.name).toList();
+
     int lastDerivationIndex = await _walletsService.getLastDerivationIndex(_networkGroupModel.filesystemPath);
     int derivationIndex = lastDerivationIndex + 1;
 
@@ -92,5 +99,13 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
 
   void _handleDerivationPathChanged() {
     emit(const WalletCreatePageState(walletExistsErrorBool: false));
+  }
+
+  void _handleWalletNameChanged() {
+    String walletName = nameTextEditingController.text;
+
+    bool walletNameExistsBool = _takenWalletNamesList.any((String existingWalletName) => existingWalletName == walletName);
+
+    emit(state.copyWith(walletNameExistsBool: walletNameExistsBool));
   }
 }
