@@ -110,7 +110,7 @@ void main() {
         );
       });
 
-      test('Should [emit VaultCreatePageState] with [vaultNameExistsBool == FALSE] if a vault name is TAKEN', () async {
+      test('Should [emit VaultCreatePageState] with [vaultNameExistsBool == FALSE] if a vault name is NOT TAKEN', () async {
         // Arrange
         await actualVaultCreatePageCubit.init(MnemonicSize.words24);
 
