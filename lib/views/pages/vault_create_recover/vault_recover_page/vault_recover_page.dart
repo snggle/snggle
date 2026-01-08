@@ -1,9 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cryptography_utils/cryptography_utils.dart' as crypto_utils;
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_cubit.dart';
-import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
@@ -31,56 +28,44 @@ class VaultRecoverPage extends StatefulWidget {
 class _VaultRecoverPageState extends State<VaultRecoverPage> {
   final PageController pageController = PageController(keepPage: false);
   final KeyboardValueNotifier keyboardValueNotifier = KeyboardValueNotifier();
-  late final VaultRecoverPageCubit vaultRecoverPageCubit = VaultRecoverPageCubit(
-    parentFilesystemPath: widget.parentFilesystemPath,
-  );
+  crypto_utils.MnemonicSize? mnemonicSize;
 
   @override
   void dispose() {
     pageController.dispose();
     keyboardValueNotifier.dispose();
-    vaultRecoverPageCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VaultRecoverPageCubit, VaultRecoverPageState>(
-      bloc: vaultRecoverPageCubit,
-      builder: (BuildContext context, VaultRecoverPageState vaultRecoverPageState) {
-        return CustomScaffold(
-          title: 'Vault recovery',
-          popAvailableBool: false,
-          popButtonVisible: true,
-          resizeToAvoidBottomInsetBool: true,
-          customPopCallback: _handleCustomPop,
-          customSystemPopCallback: _handleSystemPop,
-          actions: <Widget>[
-            IconButton(
-              onPressed: () => AutoRouter.of(context).root.pop(),
-              icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
-            ),
-          ],
-          body: PaginatedForm(
-            pageController: pageController,
-            pages: <Widget>[
-              MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected, advancedWarningBool: false),
-              if (vaultRecoverPageState.confirmPageEnabledBool)
-                MnemonicFormEditable(
-                  mnemonicSize: vaultRecoverPageState.mnemonicSize!,
-                  keyboardValueNotifier: keyboardValueNotifier,
-                  textControllers: vaultRecoverPageState.textControllers!,
-                  mnemonicValidBool: vaultRecoverPageState.mnemonicValidBool,
-                  mnemonicFilledBool: vaultRecoverPageState.mnemonicFilledBool,
-                  vaultRecoverPageCubit: vaultRecoverPageCubit,
-                  repeatedVaultModel: vaultRecoverPageState.repeatedVaultModel,
-                )
-              else
-                const SizedBox()
-            ],
-          ),
-        );
-      },
+    return CustomScaffold(
+      title: 'Vault recovery',
+      popAvailableBool: false,
+      popButtonVisible: true,
+      resizeToAvoidBottomInsetBool: true,
+      customPopCallback: _handleCustomPop,
+      customSystemPopCallback: _handleSystemPop,
+      actions: <Widget>[
+        IconButton(
+          onPressed: () => AutoRouter.of(context).root.pop(),
+          icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
+        ),
+      ],
+      body: PaginatedForm(
+        pageController: pageController,
+        pages: <Widget>[
+          MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected, advancedWarningBool: false),
+          if (mnemonicSize != null)
+            MnemonicFormEditable(
+              mnemonicSize: mnemonicSize!,
+              parentFilesystemPath: widget.parentFilesystemPath,
+              keyboardValueNotifier: keyboardValueNotifier,
+            )
+          else
+            const SizedBox()
+        ],
+      ),
     );
   }
 
@@ -105,7 +90,9 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
   }
 
   void _handleMnemonicSizeSelected(crypto_utils.MnemonicSize mnemonicSize) {
-    vaultRecoverPageCubit.init(mnemonicSize.wordCount);
+    setState(() {
+      this.mnemonicSize = mnemonicSize;
+    });
     pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
   }
 }

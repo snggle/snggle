@@ -1,41 +1,33 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 
-class VaultRecoverPageState extends Equatable {
-  final bool confirmPageEnabledBool;
-  final bool loadingBool;
+class MnemonicFormEditableState extends Equatable {
   final bool mnemonicValidBool;
   final bool mnemonicFilledBool;
-  final int? mnemonicSize;
-  final List<TextEditingController>? textControllers;
+  final MnemonicSize mnemonicSize;
+  final List<TextEditingController> textControllers;
   final VaultModel? repeatedVaultModel;
 
-  const VaultRecoverPageState({
-    this.confirmPageEnabledBool = false,
-    this.loadingBool = false,
+  const MnemonicFormEditableState({
+    required this.mnemonicSize,
+    required this.textControllers,
     this.mnemonicValidBool = false,
     this.mnemonicFilledBool = false,
-    this.mnemonicSize,
-    this.textControllers,
     this.repeatedVaultModel,
   });
 
-  const VaultRecoverPageState.loading() : this(loadingBool: true);
-
-  VaultRecoverPageState copyWith({
-    bool? confirmPageEnabledBool,
+  MnemonicFormEditableState copyWith({
     bool? mnemonicValidBool,
     bool? mnemonicFilledBool,
-    int? lastVaultIndex,
-    int? mnemonicSize,
-    List<FocusNode>? focusNodes,
+    MnemonicSize? mnemonicSize,
     List<TextEditingController>? textControllers,
     VaultModel? repeatedVaultModel,
+    bool? vaultNameExistsBool,
     bool clearRepeatedVaultModelBool = false,
   }) {
-    return VaultRecoverPageState(
-      confirmPageEnabledBool: confirmPageEnabledBool ?? this.confirmPageEnabledBool,
+    return MnemonicFormEditableState(
       mnemonicValidBool: mnemonicValidBool ?? this.mnemonicValidBool,
       mnemonicFilledBool: mnemonicFilledBool ?? this.mnemonicFilledBool,
       mnemonicSize: mnemonicSize ?? this.mnemonicSize,
@@ -44,6 +36,8 @@ class VaultRecoverPageState extends Equatable {
     );
   }
 
+  bool get mnemonicCompleteBool => mnemonicFilledBool && mnemonicValidBool && repeatedVaultModel == null;
+
   @override
-  List<Object?> get props => <Object?>[confirmPageEnabledBool, mnemonicValidBool, mnemonicFilledBool, mnemonicSize, textControllers, repeatedVaultModel];
+  List<Object?> get props => <Object?>[mnemonicValidBool, mnemonicFilledBool, mnemonicSize, textControllers, repeatedVaultModel];
 }

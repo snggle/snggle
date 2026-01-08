@@ -1,9 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cryptography_utils/cryptography_utils.dart' as crypto_utils;
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_cubit.dart';
-import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
@@ -29,50 +26,40 @@ class VaultCreatePage extends StatefulWidget {
 
 class _VaultCreatePageState extends State<VaultCreatePage> {
   final PageController pageController = PageController(keepPage: false);
-  late final VaultCreatePageCubit vaultCreatePageCubit = VaultCreatePageCubit(
-    parentFilesystemPath: widget.parentFilesystemPath,
-  );
+  crypto_utils.MnemonicSize? mnemonicSize;
 
   @override
   void dispose() {
     pageController.dispose();
-    vaultCreatePageCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VaultCreatePageCubit, VaultCreatePageState>(
-      bloc: vaultCreatePageCubit,
-      builder: (BuildContext context, VaultCreatePageState vaultCreatePageState) {
-        return CustomScaffold(
-          title: 'Vault creation',
-          popAvailableBool: false,
-          popButtonVisible: true,
-          customPopCallback: _handleCustomPop,
-          actions: <Widget>[
-            IconButton(
-              onPressed: () => AutoRouter.of(context).root.pop(),
-              icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
-            ),
-          ],
-          body: PaginatedForm(
-            pageController: pageController,
-            pages: <Widget>[
-              MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected, advancedWarningBool: true),
-              if (vaultCreatePageState.confirmPageEnabledBool)
-                MnemonicFormGenerated(
-                  mnemonicSize: vaultCreatePageState.mnemonicSize!,
-                  mnemonic: vaultCreatePageState.mnemonic!,
-                  vaultCreatePageCubit: vaultCreatePageCubit,
-                  repeatedVaultModel: vaultCreatePageState.repeatedVaultModel,
-                )
-              else
-                const SizedBox(),
-            ],
-          ),
-        );
-      },
+    return CustomScaffold(
+      title: 'Vault creation',
+      popAvailableBool: false,
+      popButtonVisible: true,
+      customPopCallback: _handleCustomPop,
+      actions: <Widget>[
+        IconButton(
+          onPressed: () => AutoRouter.of(context).root.pop(),
+          icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
+        ),
+      ],
+      body: PaginatedForm(
+        pageController: pageController,
+        pages: <Widget>[
+          MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected, advancedWarningBool: true),
+          if (mnemonicSize != null)
+            MnemonicFormGenerated(
+              mnemonicSize: mnemonicSize!,
+              parentFilesystemPath: widget.parentFilesystemPath,
+            )
+          else
+            const SizedBox(),
+        ],
+      ),
     );
   }
 
@@ -86,7 +73,9 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
   }
 
   Future<void> _handleMnemonicSizeSelected(crypto_utils.MnemonicSize mnemonicSize) async {
-    await vaultCreatePageCubit.init(mnemonicSize);
+    setState(() {
+      this.mnemonicSize = mnemonicSize;
+    });
     await pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
   }
 }

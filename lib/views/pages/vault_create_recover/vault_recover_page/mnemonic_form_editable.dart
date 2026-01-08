@@ -1,13 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cryptography_utils/cryptography_utils.dart' as crypto_utils;
 import 'package:flutter/material.dart';
-import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:snggle/bloc/widgets/mnemonic_form/mnemonic_form_editable/mnemonic_form_editable_cubit.dart';
+import 'package:snggle/bloc/widgets/mnemonic_form/mnemonic_form_editable/mnemonic_form_editable_state.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
-import 'package:snggle/shared/models/vaults/vault_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/widgets/custom/custom_grid.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
+import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
@@ -16,43 +19,44 @@ import 'package:snggle/views/widgets/keyboard/keyboard_wrapper.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
 
 class MnemonicFormEditable extends StatefulWidget {
-  final bool mnemonicValidBool;
-  final bool mnemonicFilledBool;
-  final int mnemonicSize;
+  final crypto_utils.MnemonicSize mnemonicSize;
+  final FilesystemPath parentFilesystemPath;
   final KeyboardValueNotifier keyboardValueNotifier;
-  final List<TextEditingController> textControllers;
-  final VaultRecoverPageCubit vaultRecoverPageCubit;
-  final bool recoverButtonActiveBool;
-  final VaultModel? repeatedVaultModel;
 
   const MnemonicFormEditable({
-    required this.mnemonicValidBool,
-    required this.mnemonicFilledBool,
     required this.mnemonicSize,
+    required this.parentFilesystemPath,
     required this.keyboardValueNotifier,
-    required this.textControllers,
-    required this.vaultRecoverPageCubit,
-    required this.repeatedVaultModel,
     super.key,
-  }) : recoverButtonActiveBool = mnemonicValidBool == true && mnemonicFilledBool == true && repeatedVaultModel == null;
+  });
 
   @override
-  State<StatefulWidget> createState() => _MnemonicFormEditableState();
+  State<MnemonicFormEditable> createState() => _MnemonicFormEditableState();
 }
 
 class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
   final ScrollController scrollController = ScrollController();
+  late final MnemonicFormEditableCubit mnemonicFormEditableCubit;
   late final List<GlobalObjectKey> mnemonicWordKeys = List<GlobalObjectKey>.generate(
-    widget.mnemonicSize,
+    widget.mnemonicSize.wordCount,
     (int index) => GlobalObjectKey('mnemonic_word_$index'),
   );
 
   late final List<FocusNode> focusNodes = List<FocusNode>.generate(
-    widget.mnemonicSize,
+    widget.mnemonicSize.wordCount,
     (int index) => FocusNode(),
   );
 
   bool obscureTextBool = true;
+
+  @override
+  void initState() {
+    super.initState();
+    mnemonicFormEditableCubit = MnemonicFormEditableCubit(
+      parentFilesystemPath: widget.parentFilesystemPath,
+      mnemonicSize: widget.mnemonicSize,
+    );
+  }
 
   @override
   void dispose() {
@@ -63,6 +67,8 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
       focusNode.dispose();
     }
 
+    scrollController.dispose();
+    mnemonicFormEditableCubit.close();
     super.dispose();
   }
 
@@ -70,106 +76,115 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
-    return KeyboardVisibilityBuilder(
-      keyboardValueNotifier: widget.keyboardValueNotifier,
-      builder: ({required bool customKeyboardVisibleBool, required bool nativeKeyboardVisibleBool}) {
-        bool anyKeyboardVisibleBool = customKeyboardVisibleBool || nativeKeyboardVisibleBool;
-
-        return KeyboardWrapper(
+    return BlocBuilder<MnemonicFormEditableCubit, MnemonicFormEditableState>(
+      bloc: mnemonicFormEditableCubit,
+      builder: (BuildContext context, MnemonicFormEditableState mnemonicFormEditableState) {
+        return KeyboardVisibilityBuilder(
           keyboardValueNotifier: widget.keyboardValueNotifier,
-          availableHints: crypto_utils.MnemonicDictionary.english,
-          child: ScrollableLayout(
-            tooltipVisibleBool: anyKeyboardVisibleBool == false,
-            scrollController: scrollController,
-            tooltipItems: <BottomTooltipItem>[
-              if (obscureTextBool)
-                BottomTooltipItem(
-                  label: 'Show',
-                  assetIconData: AppIcons.menu_eye_closed,
-                  onTap: () => setState(() => obscureTextBool = false),
-                )
-              else
-                BottomTooltipItem(
-                  label: 'Hide',
-                  assetIconData: AppIcons.menu_eye_open,
-                  onTap: () => setState(() => obscureTextBool = true),
-                ),
-              BottomTooltipItem(
-                label: 'Finish',
-                assetIconData: AppIcons.menu_finish,
-                onTap: widget.recoverButtonActiveBool ? _pressFinishButton : null,
-              ),
-            ],
-            bottomMarginVisibleBool: anyKeyboardVisibleBool == false,
-            child: SingleChildScrollView(
-              controller: scrollController,
-              child: Column(
-                children: <Widget>[
-                  if (widget.vaultRecoverPageCubit.state.repeatedVaultModel != null) ...<Widget>[
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'The vault already exists',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        SizedBox(width: 6),
-                        Icon(
-                          Icons.warning_amber_rounded,
-                          color: Colors.red,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Repeated vault: ${widget.repeatedVaultModel!.name}',
-                      style: const TextStyle(color: Colors.red),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                  LabelWrapperVertical.textField(
-                    label: 'Name',
-                    labelPadding: const EdgeInsets.symmetric(horizontal: 10),
-                    bottomBorderVisibleBool: false,
-                    child: CustomTextField(
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                      keyboardType: TextInputType.text,
-                      enableInteractiveSelectionBool: true,
-                      textEditingController: widget.vaultRecoverPageCubit.vaultNameTextEditingController,
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  CustomGrid.builder(
-                    childCount: widget.mnemonicSize,
-                    columnsCount: 3,
-                    itemBuilder: (BuildContext context, int index) {
-                      bool errorVisibleBool = _isErrorVisible(index, widget.textControllers[index].text);
+          builder: ({required bool customKeyboardVisibleBool, required bool nativeKeyboardVisibleBool}) {
+            bool anyKeyboardVisibleBool = customKeyboardVisibleBool || nativeKeyboardVisibleBool;
 
-                      return LabelWrapperVertical.textField(
-                        label: '${index + 1}',
+            return KeyboardWrapper(
+              keyboardValueNotifier: widget.keyboardValueNotifier,
+              availableHints: crypto_utils.MnemonicDictionary.english,
+              child: ScrollableLayout(
+                tooltipVisibleBool: anyKeyboardVisibleBool == false,
+                scrollController: scrollController,
+                tooltipItems: <BottomTooltipItem>[
+                  if (obscureTextBool)
+                    BottomTooltipItem(
+                      label: 'Show',
+                      assetIconData: AppIcons.menu_eye_closed,
+                      onTap: () => setState(() => obscureTextBool = false),
+                    )
+                  else
+                    BottomTooltipItem(
+                      label: 'Hide',
+                      assetIconData: AppIcons.menu_eye_open,
+                      onTap: () => setState(() => obscureTextBool = true),
+                    ),
+                  BottomTooltipItem(
+                    label: 'Finish',
+                    assetIconData: AppIcons.menu_finish,
+                    onTap: mnemonicFormEditableCubit.state.mnemonicCompleteBool ? _pressFinishButton : null,
+                  ),
+                ],
+                bottomMarginVisibleBool: anyKeyboardVisibleBool == false,
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
+                    children: <Widget>[
+                      if (mnemonicFormEditableCubit.state.repeatedVaultModel != null) ...<Widget>[
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'The vault already exists',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            SizedBox(width: 6),
+                            Icon(
+                              Icons.warning_amber_rounded,
+                              color: Colors.red,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Repeated vault: ${mnemonicFormEditableCubit.state.repeatedVaultModel!.name}',
+                          style: const TextStyle(color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                      LabelWrapperVertical.textField(
+                        label: 'Name',
                         labelPadding: const EdgeInsets.symmetric(horizontal: 10),
                         bottomBorderVisibleBool: false,
                         child: CustomTextField(
-                          key: mnemonicWordKeys[index],
                           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                          autofocusBool: false,
-                          customKeyboardBool: true,
-                          obscureTextBool: obscureTextBool && focusNodes[index].hasFocus == false,
-                          onFocusChanged: (bool hasFocus) => _handleTextFieldFocusChange(hasFocus, index),
-                          textStyle: theme.textTheme.bodyMedium,
-                          textEditingController: widget.textControllers[index],
-                          focusNode: focusNodes[index],
-                          errorExistsBool: errorVisibleBool,
+                          keyboardType: TextInputType.text,
+                          enableInteractiveSelectionBool: true,
+                          textEditingController: mnemonicFormEditableCubit.vaultNameTextEditingController,
                         ),
-                      );
-                    },
+                      ),
+                      if (mnemonicFormEditableCubit.state.vaultNameExistsBool == true)
+                        const ErrorMessageListTile(
+                          message: 'Vault with this name already exists',
+                        ),
+                      const SizedBox(height: 14),
+                      CustomGrid.builder(
+                        childCount: mnemonicFormEditableCubit.state.mnemonicSize.wordCount,
+                        columnsCount: 3,
+                        itemBuilder: (BuildContext context, int index) {
+                          bool errorVisibleBool = _isErrorVisible(index, mnemonicFormEditableCubit.state.textControllers[index].text);
+
+                          return LabelWrapperVertical.textField(
+                            label: '${index + 1}',
+                            labelPadding: const EdgeInsets.symmetric(horizontal: 10),
+                            bottomBorderVisibleBool: false,
+                            child: CustomTextField(
+                              key: mnemonicWordKeys[index],
+                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                              autofocusBool: false,
+                              customKeyboardBool: true,
+                              obscureTextBool: obscureTextBool && focusNodes[index].hasFocus == false,
+                              onFocusChanged: (bool hasFocus) => _handleTextFieldFocusChange(hasFocus, index),
+                              textStyle: theme.textTheme.bodyMedium,
+                              textEditingController: mnemonicFormEditableCubit.state.textControllers[index],
+                              focusNode: focusNodes[index],
+                              errorExistsBool: errorVisibleBool,
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(height: anyKeyboardVisibleBool ? 40 : 110),
+                    ],
                   ),
-                  SizedBox(height: anyKeyboardVisibleBool ? 40 : 110),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -177,10 +192,11 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
 
   bool _isErrorVisible(int index, String word) {
     bool textFieldFocusedBool = focusNodes[index].hasFocus;
-    bool lastTextFieldBool = index == widget.mnemonicSize - 1;
+    bool lastTextFieldBool = index == widget.mnemonicSize.wordCount - 1;
 
     bool wordCorrectBool = crypto_utils.MnemonicDictionary.english.contains(word);
-    bool checksumErrorBool = lastTextFieldBool && widget.mnemonicFilledBool && widget.mnemonicValidBool == false;
+    bool checksumErrorBool =
+        lastTextFieldBool && mnemonicFormEditableCubit.state.mnemonicFilledBool && mnemonicFormEditableCubit.state.mnemonicValidBool == false;
 
     return (wordCorrectBool == false || checksumErrorBool) && textFieldFocusedBool == false && word.isNotEmpty;
   }
@@ -191,7 +207,7 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
 
     if (hasFocus) {
       widget.keyboardValueNotifier.showKeyboard(
-        textEditingController: widget.textControllers.elementAt(index),
+        textEditingController: mnemonicFormEditableCubit.state.textControllers.elementAt(index),
         previousFocusNode: index != 0 ? focusNodes.elementAtOrNull(index - 1) : null,
         currentFocusNode: currentFocusNode,
         nextFocusNode: focusNodes.elementAtOrNull(index + 1),
@@ -218,9 +234,9 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
     await CustomLoadingDialog.show<void>(
       context: context,
       title: 'Saving...',
-      futureFunction: widget.vaultRecoverPageCubit.saveMnemonic,
+      futureFunction: mnemonicFormEditableCubit.saveMnemonic,
       onSuccess: (_) async {
-        if (widget.vaultRecoverPageCubit.state.repeatedVaultModel != null) {
+        if (mnemonicFormEditableCubit.state.repeatedVaultModel != null) {
           await scrollController.animateTo(
             scrollController.position.minScrollExtent,
             duration: const Duration(milliseconds: 200),
