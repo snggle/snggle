@@ -132,7 +132,7 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
                 textEditingController: widget.vaultCreatePageCubit.vaultNameTextEditingController,
               ),
             ),
-            if (widget.vaultCreatePageCubit.state.vaultNameExistsBool  == true)
+            if (widget.vaultCreatePageCubit.state.vaultNameExistsBool == true)
               const ErrorMessageListTile(
                 message: 'Vault with this name already exists',
               ),

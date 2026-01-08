@@ -148,7 +148,7 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
                       textEditingController: widget.vaultRecoverPageCubit.vaultNameTextEditingController,
                     ),
                   ),
-                  if (widget.vaultRecoverPageCubit.state.vaultNameExistsBool  == true)
+                  if (widget.vaultRecoverPageCubit.state.vaultNameExistsBool == true)
                     const ErrorMessageListTile(
                       message: 'Vault with this name already exists',
                     ),

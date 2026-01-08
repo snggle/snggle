@@ -160,7 +160,8 @@ class _DragPopupState<T extends AListItemModel> extends State<DragPopup<T>> {
   }
 
   Future<void> _createGroup(AListItemModel item1, AListItemModel item2) async {
-    List<String> takenFolderNamesList = widget.listCubit.state.allItems.whereType<GroupModel>().map((GroupModel groupModel) => groupModel.name).toList();
+    List<String> takenFolderNamesList =
+        widget.listCubit.state.allItems.whereType<GroupModel>().map((GroupModel groupModel) => groupModel.name).toList();
 
     await showDialog(
       context: context,

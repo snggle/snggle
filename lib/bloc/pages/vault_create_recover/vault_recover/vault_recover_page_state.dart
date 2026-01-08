@@ -49,6 +49,13 @@ class VaultRecoverPageState extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      <Object?>[confirmPageEnabledBool, mnemonicValidBool, mnemonicFilledBool, mnemonicSize, textControllers, repeatedVaultModel, vaultNameExistsBool];
+  List<Object?> get props => <Object?>[
+        confirmPageEnabledBool,
+        mnemonicValidBool,
+        mnemonicFilledBool,
+        mnemonicSize,
+        textControllers,
+        repeatedVaultModel,
+        vaultNameExistsBool,
+      ];
 }
