@@ -41,6 +41,7 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
     _disposeControllers();
 
     vaultNameTextEditingController
+      // Temporary workaround for the repeated init triggering bug - we ensure the Listener is removed before adding a new one to avoid duplicates
       ..removeListener(_handleVaultNameChanged)
       ..addListener(_handleVaultNameChanged);
 
@@ -97,7 +98,9 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
     bool vaultNameExistsBool = _takenVaultNamesList.any((String existingVaultName) => existingVaultName == vaultName);
 
-    emit(state.copyWith(vaultNameExistsBool: vaultNameExistsBool));
+    if (state.vaultNameExistsBool != vaultNameExistsBool) {
+      emit(state.copyWith(vaultNameExistsBool: vaultNameExistsBool));
+    }
   }
 
   void _validateMnemonic() {

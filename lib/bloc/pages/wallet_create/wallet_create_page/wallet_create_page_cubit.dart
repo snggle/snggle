@@ -106,6 +106,8 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
 
     bool walletNameExistsBool = _takenWalletNamesList.any((String existingWalletName) => existingWalletName == walletName);
 
-    emit(state.copyWith(walletNameExistsBool: walletNameExistsBool));
+    if (state.walletNameExistsBool != walletNameExistsBool) {
+      emit(state.copyWith(walletNameExistsBool: walletNameExistsBool));
+    }
   }
 }

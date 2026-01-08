@@ -155,7 +155,5 @@ void main() {
         expect(actualWalletCreatePageState, expectedWalletCreatePageState);
       });
     });
-
-    group('Tests of ', () {});
   });
 }

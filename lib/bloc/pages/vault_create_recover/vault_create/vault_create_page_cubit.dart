@@ -39,6 +39,7 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
     emit(VaultCreatePageState(mnemonicSize: mnemonicSize, confirmPageEnabledBool: false));
 
     vaultNameTextEditingController
+      // Temporary workaround for the repeated init triggering bug - we ensure the Listener is removed before adding a new one to avoid duplicates
       ..removeListener(_handleVaultNameChanged)
       ..addListener(_handleVaultNameChanged);
 
@@ -90,7 +91,9 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
 
     bool vaultNameExistsBool = _takenVaultNamesList.any((String existingVaultName) => existingVaultName == vaultName);
 
-    emit(state.copyWith(vaultNameExistsBool: vaultNameExistsBool));
+    if (state.vaultNameExistsBool != vaultNameExistsBool) {
+      emit(state.copyWith(vaultNameExistsBool: vaultNameExistsBool));
+    }
   }
 
   Future<void> _createVault(List<String> mnemonicWords) async {
