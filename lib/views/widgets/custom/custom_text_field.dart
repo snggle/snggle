@@ -11,6 +11,7 @@ class CustomTextField extends StatefulWidget {
   final bool errorExistsBool;
   final bool readOnlyBool;
   final bool obscureTextBool;
+  final bool dynamicSuffixBool;
   final String? initialValue;
   final String? prefixText;
   final String? suffixText;
@@ -40,6 +41,7 @@ class CustomTextField extends StatefulWidget {
     this.errorExistsBool = false,
     this.readOnlyBool = false,
     this.obscureTextBool = false,
+    this.dynamicSuffixBool = false,
     this.initialValue,
     this.prefixText,
     this.suffixText,
@@ -105,7 +107,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         valueListenable: widget.textEditingController!,
         builder: (BuildContext context, TextEditingValue value, _) {
           bool suffixExistsBool = widget.suffixWidget != null;
-          double suffixOffset = suffixExistsBool ? _calculateSuffixOffset(value, theme, prefixStyle, textStyle, suffixStyle) : 0;
+          double suffixOffset =
+              (suffixExistsBool && widget.dynamicSuffixBool) ? _calculateSuffixOffset(value, theme, prefixStyle, textStyle, suffixStyle) : 0;
 
           return TextField(
             enabled: widget.enabledBool,

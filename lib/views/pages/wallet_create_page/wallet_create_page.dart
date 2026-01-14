@@ -126,6 +126,7 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                       suffixWidgetConstraints: networkIsSolanaBool ? BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: suffixWidth!) : null,
                       suffixWidget:
                           networkIsSolanaBool ? Text(suffix!, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)) : null,
+                      dynamicSuffixBool: true,
                       padding: EdgeInsets.zero,
                       inputFormatters: <TextInputFormatter>[
                         LegacyDerivationPathInputFormatter(),
