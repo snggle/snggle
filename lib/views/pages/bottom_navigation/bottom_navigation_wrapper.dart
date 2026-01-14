@@ -26,7 +26,7 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
     return AutoTabsRouter(
       routes: const <PageRouteInfo>[
         VaultsSectionWrapperRoute(),
-        SecretsRoute(),
+        EntriesSectionWrapperRoute(),
         AppsRoute(),
         SettingsRoute(),
       ],

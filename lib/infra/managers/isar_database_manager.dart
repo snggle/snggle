@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/entities/credential_entity/credential_entity.dart';
+import 'package:snggle/infra/entities/entry_entity/entry_entity.dart';
 import 'package:snggle/infra/entities/group_entity/group_entity.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
@@ -34,9 +34,9 @@ class IsarDatabaseManager {
         WalletEntitySchema,
         NetworkGroupEntitySchema,
         GroupEntitySchema,
-        CredentialEntitySchema,
         EthereumTransactionEntitySchema,
         SolanaTransactionEntitySchema,
+        EntryEntitySchema,
       ],
       name: databaseName,
       directory: rootDirectory.path,

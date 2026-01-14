@@ -162,9 +162,51 @@ void main() {
         await secretsDir.delete(recursive: true);
       }
 
-      Directory nestedDir = Directory('${secretsDir.path}/nested');
+      Directory nestedDir = Directory('${secretsDir.path}/vaults');
       await nestedDir.create(recursive: true);
       await File('${nestedDir.path}/vault.snggle').writeAsBytes(<int>[1, 2, 3]);
+
+      // Act
+      bool actualDatabaseExistBool = await globalLocator<AppService>().isDataBaseExist();
+
+      // Assert
+      expect(actualDatabaseExistBool, true);
+    });
+
+    test('Should [return TRUE] if [entry file EXISTS] and has [size > 0]', () async {
+      // Arrange
+      RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
+      Directory rootDirectory = await rootDirectoryBuilder.call();
+      Directory secretsDir = Directory('${rootDirectory.path}/secrets');
+
+      if (await secretsDir.exists()) {
+        await secretsDir.delete(recursive: true);
+      }
+
+      Directory nestedDir = Directory('${secretsDir.path}/entries');
+      await nestedDir.create(recursive: true);
+      await File('${nestedDir.path}/entries/entry.snggle').writeAsBytes(<int>[1, 2, 3]);
+
+      // Act
+      bool actualDatabaseExistBool = await globalLocator<AppService>().isDataBaseExist();
+
+      // Assert
+      expect(actualDatabaseExistBool, true);
+    });
+
+    test('Should [return FALSE] if [only root files EXIST] and have [size > 0]', () async {
+      // Arrange
+      RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
+      Directory rootDirectory = await rootDirectoryBuilder.call();
+      Directory secretsDir = Directory('${rootDirectory.path}/secrets');
+
+      if (await secretsDir.exists()) {
+        await secretsDir.delete(recursive: true);
+      }
+
+      Directory nestedDir = Directory('${secretsDir.path}/vaults');
+      await nestedDir.create(recursive: true);
+      await File('${nestedDir.path}/vaults/vault.snggle').writeAsBytes(<int>[1, 2, 3]);
 
       // Act
       bool actualDatabaseExistBool = await globalLocator<AppService>().isDataBaseExist();

@@ -22,6 +22,7 @@ class SplashPageCubit extends Cubit<ASplashPageState> {
     try {
       bool masterKeyExistsBool = await _masterKeyService.isMasterKeyExists();
       bool databaseExistsBool = await _appService.isDataBaseExist();
+      print('Suchar: Bool: $databaseExistsBool');
       if (masterKeyExistsBool) {
         emit(SplashPageEnterPinState());
       } else {

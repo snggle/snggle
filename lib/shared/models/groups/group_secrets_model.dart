@@ -22,6 +22,18 @@ class GroupSecretsModel extends ASecretsModel {
     return GroupSecretsModel(filesystemPath: filesystemPath, challenge: Sha512().convert(const Uuid().v4().codeUnits).toString());
   }
 
+  factory GroupSecretsModel.createEntry(FilesystemPath filesystemPath) {
+    return GroupSecretsModel(filesystemPath: filesystemPath, challenge: 'odszyfrowanawartoscdlasecretowwplikuentries.snggle');
+  }
+
+  factory GroupSecretsModel.createVault(FilesystemPath filesystemPath) {
+    return GroupSecretsModel(filesystemPath: filesystemPath, challenge: 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle');
+  }
+
+  factory GroupSecretsModel.create3(FilesystemPath filesystemPath) {
+    return GroupSecretsModel(filesystemPath: filesystemPath, challenge: 'odszyfrowanawartoscdlasecretowwplikuid3.snggle');
+  }
+
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/theme_config.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
@@ -18,6 +19,13 @@ Future<void> main() async {
 
   initLocator();
   await globalLocator<IsarDatabaseManager>().initDatabase();
+
+  await const FlutterSecureStorage().deleteAll();
+
+  await const FlutterSecureStorage().write(
+      key: 'encryptedMasterKey',
+      value:
+          '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==');
 
   runApp(const AppCore());
 }

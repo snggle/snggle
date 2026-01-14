@@ -4,7 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/a_app_enter_pin_page_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/app_enter_pin_page_cubit.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/states/app_enter_invalid_pin_page_state.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/services/secrets_service.dart';
+import 'package:snggle/shared/models/groups/group_secrets_model.dart';
+import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
 import 'package:snggle/views/widgets/button/custom_text_button.dart';
@@ -14,10 +19,10 @@ import 'package:snggle/views/widgets/pinpad/pinpad_scaffold.dart';
 @RoutePage()
 class AppEnterPinPage extends StatefulWidget {
   final AppPinType appPinType;
-  final bool autofillBool;
+  // final bool autofillBool;
 
   const AppEnterPinPage({
-    required this.autofillBool,
+    // required this.autofillBool,
     super.key,
     this.appPinType = AppPinType.enterPin,
   });
@@ -70,11 +75,22 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
       if (changePinBool) {
         await AutoRouter.of(context).replace(AppSetUpPinRoute(appPinType: AppPinType.changePin));
       } else {
-        if (widget.autofillBool == false) {
-          await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
-        } else {
-          await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const AutofillCredentialPickerScreen()]);
-        }
+        // if (widget.autofillBool == false) {
+        //   await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
+        // } else {
+        //   await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const AutofillCredentialPickerScreen()]);
+        // }
+        GroupSecretsModel vaultsRootSecretsModel = GroupSecretsModel.create3(FilesystemPath.fromString('id3'));
+        await globalLocator<SecretsService>().save(vaultsRootSecretsModel, PasswordModel.defaultPassword());
+        GroupSecretsModel entriesRootSecretsModel = GroupSecretsModel.createEntry(FilesystemPath.fromString('entries'));
+        await globalLocator<SecretsService>().save(entriesRootSecretsModel, PasswordModel.defaultPassword());
+        GroupSecretsModel entriesRootSecretsModel2 = GroupSecretsModel.createVault(FilesystemPath.fromString('vaults'));
+        await globalLocator<SecretsService>().save(entriesRootSecretsModel2, PasswordModel.defaultPassword());
+
+        print('Suchar: done');
+        await Future<void>.delayed(const Duration(days: 30));
+
+        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
       }
     } catch (e) {
       AppLogger().log(message: 'Provided invalid PIN');
