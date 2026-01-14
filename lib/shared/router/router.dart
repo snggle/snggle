@@ -30,6 +30,16 @@ class AppRouter extends $AppRouter {
           AutoRoute(page: VaultRecoverRoute.page),
         ],
       ),
+      AutoRoute(page: EntryCreateRoute.page), // TODO(kamil): make into a separate EntryModifyPage
+      AutoRoute(
+        page: EntryCreateRecoverRoute.page,
+        children: <AutoRoute>[
+          AutoRoute(page: EntryInitRoute.page, initial: true),
+          AutoRoute(page: EntryCreateRoute.page),
+
+          //AutoRoute(page: EntryRecoverRoute.page),
+        ],
+      ),
       AutoRoute(page: WalletCreateRoute.page),
       AutoRoute(page: EthereumTransactionDetailsRoute.page),
       AutoRoute(page: SolanaTransactionDetailsRoute.page),
@@ -49,7 +59,13 @@ class AppRouter extends $AppRouter {
           ),
           AutoRoute(page: VaultListRoute.page),
           AutoRoute(page: WalletListRoute.page),
-          AutoRoute(page: SecretsRoute.page),
+          AutoRoute(
+            page: EntriesSectionWrapperRoute.page,
+            children: <AutoRoute>[
+              AutoRoute(page: EntryListRoute.page, initial: true),
+              AutoRoute(page: EntryDetailsRoute.page),
+            ],
+          ),
           AutoRoute(page: AppsRoute.page),
           AutoRoute(
             page: SettingsSectionWrapperRoute.page,

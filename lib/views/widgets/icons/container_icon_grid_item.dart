@@ -70,6 +70,19 @@ class ContainerIconGridItem extends StatelessWidget {
         unpinnedBackground = AppIcons.icon_container_vault_unpinned_medium_background,
         icon = networkGroupModel.networkTemplateModel.networkIconType.listSmallIcon;
 
+  /*ContainerIconGridItem.fromEntryModel({
+    required EntryModel entryModel,
+    required this.size,
+    this.backgroundColor,
+    super.key,
+  })  : pinnedBool = entryModel.pinnedBool,
+        encryptedBool = entryModel.encryptedBool,
+        pinnedBorder = AppIcons.icon_container_vault_pinned_medium,
+        pinnedBackground = AppIcons.icon_container_vault_pinned_medium_background,
+        unpinnedBorder = AppIcons.icon_container_vault_unpinned_medium,
+        unpinnedBackground = AppIcons.icon_container_vault_unpinned_medium_background,
+        icon = null;*/
+
   @override
   Widget build(BuildContext context) {
     return Stack(

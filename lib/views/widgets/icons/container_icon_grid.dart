@@ -1,12 +1,14 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/views/widgets/custom/custom_flexible_grid.dart';
 import 'package:snggle/views/widgets/icons/container_icon_grid_item.dart';
+import 'package:snggle/views/widgets/icons/entry_icon.dart';
 import 'package:snggle/views/widgets/icons/wallet_icon.dart';
 
 class ContainerIconGrid extends StatelessWidget {
@@ -60,6 +62,8 @@ class ContainerIconGrid extends StatelessWidget {
                       return ContainerIconGridItem.fromGroupModel(groupModel: groupModel, size: size);
                     case WalletModel walletModel:
                       return WalletIcon(size: size, walletModel: walletModel, smallBool: true);
+                    case EntryModel entryModel:
+                      return EntryIcon(size: size, entryModel: entryModel, smallBool: true);
                     default:
                       throw Exception('Unknown AListItemModel');
                   }

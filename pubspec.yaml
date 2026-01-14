@@ -104,6 +104,8 @@ dependencies:
   # https://pub.dev/packages/sliver_tools
   sliver_tools: 0.2.12
 
+  otp: ^3.1.0
+
   # Dart package containing utility methods for data encoding and decoding.
   codec_utils:
     git:
