@@ -15,10 +15,17 @@ class AppService {
 
   Future<bool> isDataBaseExist() async {
     Directory rootDirectory = await _rootDirectoryBuilder.call();
-    Directory secretsDirectory = Directory('${rootDirectory.path}/secrets');
+    List<Directory> vaultsEntriesDirectories = <Directory>[
+      Directory('${rootDirectory.path}/secrets/vaults'),
+      Directory('${rootDirectory.path}/secrets/entries'),
+    ];
 
-    if (await secretsDirectory.exists()) {
-      await for (FileSystemEntity fileSystemEntity in secretsDirectory.list(recursive: true, followLinks: false)) {
+    for (Directory directory in vaultsEntriesDirectories) {
+      if (await directory.exists() == false) {
+        continue;
+      }
+
+      await for (FileSystemEntity fileSystemEntity in directory.list(recursive: true, followLinks: false)) {
         if (fileSystemEntity is! File) {
           continue;
         }

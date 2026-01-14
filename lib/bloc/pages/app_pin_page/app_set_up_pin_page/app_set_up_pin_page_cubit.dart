@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/a_app_set_up_pin_page_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_confirm_pin_state.dart';
@@ -8,10 +10,13 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
+import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
+import 'package:snggle/shared/models/groups/group_secrets_model.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
 import 'package:snggle/views/pages/app_master_key/app_master_key_type.dart';
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
@@ -98,5 +103,21 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
     await _masterKeyService.setMasterKey(masterKeyVO);
 
     _masterKeyController.setPassword(pinPasswordModel);
+
+    await _createRootFolders();
+  }
+
+  Future<void> _createRootFolders() async {
+    Directory rootDirectory = await globalLocator<RootDirectoryBuilder>().call();
+
+    await Future.wait(<Future<void>>[
+      Directory('${rootDirectory.path}/secrets/vaults').create(recursive: true),
+      Directory('${rootDirectory.path}/secrets/entries').create(recursive: true),
+    ]);
+
+    GroupSecretsModel vaultsRootSecretsModel = GroupSecretsModel.generate(FilesystemPath.fromString('vaults'));
+    await globalLocator<SecretsService>().save(vaultsRootSecretsModel, PasswordModel.defaultPassword());
+    GroupSecretsModel entriesRootSecretsModel = GroupSecretsModel.generate(FilesystemPath.fromString('entries'));
+    await globalLocator<SecretsService>().save(entriesRootSecretsModel, PasswordModel.defaultPassword());
   }
 }

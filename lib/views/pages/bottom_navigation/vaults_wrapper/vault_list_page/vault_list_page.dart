@@ -40,7 +40,7 @@ class _VaultListPageState extends State<VaultListPage> {
   final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
   late final VaultListPageCubit vaultListPageCubit = VaultListPageCubit(
     depth: 0,
-    filesystemPath: const FilesystemPath.empty(),
+    filesystemPath: FilesystemPath.fromString('vaults'),
     onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
   );
 

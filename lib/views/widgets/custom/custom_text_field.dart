@@ -11,6 +11,7 @@ class CustomTextField extends StatefulWidget {
   final bool errorExistsBool;
   final bool readOnlyBool;
   final bool obscureTextBool;
+  final bool dynamicSuffixBool;
   final String? initialValue;
   final String? prefixText;
   final String? suffixText;
@@ -25,6 +26,7 @@ class CustomTextField extends StatefulWidget {
   final BoxConstraints? suffixWidgetConstraints;
   final ValueChanged<String>? onChanged;
   final ValueChanged<bool>? onFocusChanged;
+  final GestureTapCallback? onTap;
   final FocusNode? focusNode;
   final TextInputType keyboardType;
   final TextEditingController? textEditingController;
@@ -40,6 +42,7 @@ class CustomTextField extends StatefulWidget {
     this.errorExistsBool = false,
     this.readOnlyBool = false,
     this.obscureTextBool = false,
+    this.dynamicSuffixBool = false,
     this.initialValue,
     this.prefixText,
     this.suffixText,
@@ -54,6 +57,7 @@ class CustomTextField extends StatefulWidget {
     this.suffixWidgetConstraints,
     this.onChanged,
     this.onFocusChanged,
+    this.onTap,
     this.focusNode,
     this.keyboardType = TextInputType.none,
     this.textEditingController,
@@ -105,7 +109,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         valueListenable: widget.textEditingController!,
         builder: (BuildContext context, TextEditingValue value, _) {
           bool suffixExistsBool = widget.suffixWidget != null;
-          double suffixOffset = suffixExistsBool ? _calculateSuffixOffset(value, theme, prefixStyle, textStyle, suffixStyle) : 0;
+          double suffixOffset =
+              (suffixExistsBool && widget.dynamicSuffixBool) ? _calculateSuffixOffset(value, theme, prefixStyle, textStyle, suffixStyle) : 0;
 
           return TextField(
             enabled: widget.enabledBool,
@@ -123,6 +128,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             cursorWidth: 1.5,
             obscuringCharacter: '*',
             onChanged: widget.onChanged?.call,
+            onTap: widget.onTap,
             style: widget.enabledBool
                 ? textStyle?.copyWith(
                     color: widget.errorExistsBool ? null : AppColors.body3,

@@ -26,49 +26,49 @@ void main() async {
     id: 2,
     encryptedBool: false,
     pinnedBool: false,
-    filesystemPath: FilesystemPath.fromString('vault1/group2'),
+    filesystemPath: FilesystemPath.fromString('vaults/vault1/group2'),
     name: 'NETWORKS GROUP 1',
     listItemsPreview: <AListItemModel>[
-      NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
-      NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
+      NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2/network6'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
+      NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2/network8'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
     ],
   );
   GroupModel updatedGroupModel = GroupModel(
     id: 2,
     encryptedBool: true,
     pinnedBool: true,
-    filesystemPath: FilesystemPath.fromString('vault1/group2'),
+    filesystemPath: FilesystemPath.fromString('vaults/vault1/group2'),
     name: 'UPDATED NETWORKS GROUP 1',
     listItemsPreview: <AListItemModel>[
-      NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
-      NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
+      NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2/network6'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
+      NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2/network8'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
     ],
   );
   NetworkGroupModel networkGroupModel1 = NetworkGroupModel(
     pinnedBool: false,
     encryptedBool: false,
     id: 1,
-    filesystemPath: FilesystemPath.fromString('vault1/network1'),
+    filesystemPath: FilesystemPath.fromString('vaults/vault1/network1'),
     networkTemplateModel: PredefinedNetworkTemplates.ethereum,
     listItemsPreview: <AListItemModel>[
-      GroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1/group3'), name: 'WALLETS GROUP 1', listItemsPreview: <AListItemModel>[]),
-      WalletModel(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", name: 'WALLET 0', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1')),
-      WalletModel(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", name: 'WALLET 1', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet2')),
-      WalletModel(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", name: 'WALLET 2', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet3')),
+      GroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group3'), name: 'WALLETS GROUP 1', listItemsPreview: <AListItemModel>[]),
+      WalletModel(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", name: 'WALLET 0', filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/wallet1')),
+      WalletModel(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", name: 'WALLET 1', filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/wallet2')),
+      WalletModel(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", name: 'WALLET 2', filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/wallet3')),
       ],
     name: 'Ethereum1',
   );
-  NetworkGroupModel networkGroupModel2 = NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], name: 'Ethereum7');
-  NetworkGroupModel networkGroupModel3 = NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], name: 'Ethereum9');
-  NetworkGroupModel updatedNetworkGroupModel3 =  NetworkGroupModel(id: 9, encryptedBool: true, pinnedBool: true, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], name: 'Ethereum9-UPDATED');
+  NetworkGroupModel networkGroupModel2 = NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vaults/vault1/network7'), listItemsPreview: <AListItemModel>[], name: 'Ethereum7');
+  NetworkGroupModel networkGroupModel3 = NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vaults/vault1/network9'), listItemsPreview: <AListItemModel>[], name: 'Ethereum9');
+  NetworkGroupModel updatedNetworkGroupModel3 =  NetworkGroupModel(id: 9, encryptedBool: true, pinnedBool: true, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vaults/vault1/network9'), listItemsPreview: <AListItemModel>[], name: 'Ethereum9-UPDATED');
   NetworkGroupModel networkGroupModelSolana = NetworkGroupModel(
     id: 10,
     encryptedBool: false,
     pinnedBool: false,
-    filesystemPath: FilesystemPath.fromString('vault1/network10'),
+    filesystemPath: FilesystemPath.fromString('vaults/vault1/network10'),
     networkTemplateModel: PredefinedNetworkTemplates.solana,
     listItemsPreview: <AListItemModel>[
-      WalletModel(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", name: 'WALLET 5', filesystemPath: FilesystemPath.fromString('vault1/network10/wallet6'))
+      WalletModel(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", name: 'WALLET 5', filesystemPath: FilesystemPath.fromString('vaults/vault1/network10/wallet6'))
     ],
     name: 'Solana1',
   );
@@ -83,7 +83,7 @@ void main() async {
 
       actualNetworkListPageCubit = NetworkListPageCubit(
         depth: 0,
-        filesystemPath: FilesystemPath.fromString('vault1'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
@@ -106,7 +106,7 @@ void main() async {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[groupModel, networkGroupModel1, networkGroupModel2, networkGroupModel3, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -129,7 +129,7 @@ void main() async {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[updatedNetworkGroupModel3, groupModel, networkGroupModel1, networkGroupModel2, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -150,7 +150,7 @@ void main() async {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[updatedGroupModel, updatedNetworkGroupModel3, networkGroupModel1, networkGroupModel2, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -169,10 +169,16 @@ void main() async {
           loadingBool: false,
           selectionModel: SelectionModel(
             allItemsCount: 5,
-            selectedItems: <AListItemModel>[updatedGroupModel, updatedNetworkGroupModel3, networkGroupModel1, networkGroupModel2, networkGroupModelSolana],
+            selectedItems: <AListItemModel>[
+              updatedGroupModel,
+              updatedNetworkGroupModel3,
+              networkGroupModel1,
+              networkGroupModel2,
+              networkGroupModelSolana
+            ],
           ),
           allItems: <AListItemModel>[updatedGroupModel, updatedNetworkGroupModel3, networkGroupModel1, networkGroupModel2, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -193,7 +199,7 @@ void main() async {
             selectedItems: <AListItemModel>[],
           ),
           allItems: <AListItemModel>[updatedGroupModel, updatedNetworkGroupModel3, networkGroupModel1, networkGroupModel2, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -215,7 +221,7 @@ void main() async {
             selectedItems: <AListItemModel>[updatedNetworkGroupModel3],
           ),
           allItems: <AListItemModel>[updatedGroupModel, updatedNetworkGroupModel3, networkGroupModel1, networkGroupModel2, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -235,7 +241,7 @@ void main() async {
             selectedItems: <AListItemModel>[updatedNetworkGroupModel3, updatedGroupModel],
           ),
           allItems: <AListItemModel>[updatedGroupModel, updatedNetworkGroupModel3, networkGroupModel1, networkGroupModel2, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -257,7 +263,7 @@ void main() async {
             selectedItems: <AListItemModel>[updatedGroupModel],
           ),
           allItems: <AListItemModel>[updatedGroupModel, updatedNetworkGroupModel3, networkGroupModel1, networkGroupModel2, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -277,7 +283,7 @@ void main() async {
             selectedItems: <AListItemModel>[],
           ),
           allItems: <AListItemModel>[updatedGroupModel, updatedNetworkGroupModel3, networkGroupModel1, networkGroupModel2, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -296,7 +302,7 @@ void main() async {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[updatedGroupModel, updatedNetworkGroupModel3, networkGroupModel1, networkGroupModel2, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -324,7 +330,7 @@ void main() async {
             updatedNetworkGroupModel3.copyWith(pinnedBool: false),
             networkGroupModelSolana,
           ],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -353,7 +359,7 @@ void main() async {
             networkGroupModel2,
             networkGroupModelSolana,
           ],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -384,7 +390,7 @@ void main() async {
             networkGroupModel2,
             networkGroupModelSolana,
           ],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -412,7 +418,7 @@ void main() async {
             networkGroupModel2,
             networkGroupModelSolana,
           ],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -438,7 +444,7 @@ void main() async {
             networkGroupModel2,
             networkGroupModelSolana,
           ],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -461,7 +467,7 @@ void main() async {
             networkGroupModel2,
             networkGroupModelSolana,
           ],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -481,7 +487,7 @@ void main() async {
             networkGroupModel2,
             networkGroupModelSolana,
           ],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -500,7 +506,7 @@ void main() async {
 
       actualNetworkListPageCubit = NetworkListPageCubit(
         depth: 0,
-        filesystemPath: FilesystemPath.fromString('vault1'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
@@ -523,7 +529,7 @@ void main() async {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[groupModel, networkGroupModel1, networkGroupModel2, networkGroupModel3, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -547,7 +553,8 @@ void main() async {
           allItems: <AListItemModel>[
             groupModel.copyWith(
               listItemsPreview: <AListItemModel>[
-                networkGroupModel1.copyWith(filesystemPath: FilesystemPath.fromString('vault1/group2/network1'), listItemsPreview: <AListItemModel>[]),
+                networkGroupModel1
+                    .copyWith(filesystemPath: FilesystemPath.fromString('vaults/vault1/group2/network1'), listItemsPreview: <AListItemModel>[]),
                 ...groupModel.listItemsPreview,
               ],
             ),
@@ -555,7 +562,7 @@ void main() async {
             networkGroupModel3,
             networkGroupModelSolanaShallow,
           ],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -576,24 +583,27 @@ void main() async {
           allItems: <AListItemModel>[
             groupModel.copyWith(
               listItemsPreview: <AListItemModel>[
-                networkGroupModel1.copyWith(filesystemPath: FilesystemPath.fromString('vault1/group2/network1'), listItemsPreview: <AListItemModel>[]),
+                networkGroupModel1
+                    .copyWith(filesystemPath: FilesystemPath.fromString('vaults/vault1/group2/network1'), listItemsPreview: <AListItemModel>[]),
                 ...groupModel.listItemsPreview,
               ],
             ),
             GroupModel(
-              id: 4,
+              id: 5,
               pinnedBool: false,
               encryptedBool: false,
-              filesystemPath: FilesystemPath.fromString('vault1/group4'),
+              filesystemPath: FilesystemPath.fromString('vaults/vault1/group5'),
               listItemsPreview: <AListItemModel>[
-                networkGroupModel2.copyWith(filesystemPath: FilesystemPath.fromString('vault1/group4/network7'), listItemsPreview: <AListItemModel>[]),
-                networkGroupModel3.copyWith(filesystemPath: FilesystemPath.fromString('vault1/group4/network9'), listItemsPreview: <AListItemModel>[]),
+                networkGroupModel2
+                    .copyWith(filesystemPath: FilesystemPath.fromString('vaults/vault1/group5/network7'), listItemsPreview: <AListItemModel>[]),
+                networkGroupModel3
+                    .copyWith(filesystemPath: FilesystemPath.fromString('vaults/vault1/group5/network9'), listItemsPreview: <AListItemModel>[]),
               ],
               name: 'TEST GROUP',
             ),
             networkGroupModelSolana.copyWith(listItemsPreview: <AListItemModel>[]),
           ],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -612,7 +622,7 @@ void main() async {
 
       actualNetworkListPageCubit = NetworkListPageCubit(
         depth: 0,
-        filesystemPath: FilesystemPath.fromString('vault1'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
@@ -635,7 +645,7 @@ void main() async {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[groupModel, networkGroupModel1, networkGroupModel2, networkGroupModel3, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -656,11 +666,11 @@ void main() async {
           groupModel: groupModel,
           allItems: <AListItemModel>[
             // @formatter:off
-            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
-            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
+            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2/network6'), listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
+            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2/network8'), listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
             // @formatter:off
           ],
-          filesystemPath: FilesystemPath.fromString('vault1/group2'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1/group2'),
         );
 
         expect(actualListState, expectedListState);
@@ -678,7 +688,7 @@ void main() async {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[groupModel, networkGroupModel1, networkGroupModel2, networkGroupModel3, networkGroupModelSolana],
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         );
 
         expect(actualListState, expectedListState);
@@ -699,11 +709,11 @@ void main() async {
           groupModel: groupModel,
           allItems: <AListItemModel>[
             // @formatter:off
-            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
-            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
+            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2/network6'), listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
+            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, networkTemplateModel: PredefinedNetworkTemplates.ethereum, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2/network8'), listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
             // @formatter:off
           ],
-          filesystemPath: FilesystemPath.fromString('vault1/group2'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1/group2'),
         );
 
         expect(actualListState, expectedListState);

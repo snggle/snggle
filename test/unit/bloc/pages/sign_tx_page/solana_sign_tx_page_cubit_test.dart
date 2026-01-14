@@ -59,7 +59,7 @@ void main() {
         pinnedBool: false,
         address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
         derivationPath: "m/44'/501'/0'/0'",
-        filesystemPath: FilesystemPath.fromString('vault1/network2/wallet2'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1/network2/wallet2'),
         name: 'WALLET 1',
       );
 
@@ -288,7 +288,7 @@ void main() {
         pinnedBool: false,
         address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
         derivationPath: "m/44'/501'/0'/0'",
-        filesystemPath: FilesystemPath.fromString('vault1/network2/wallet2'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1/network2/wallet2'),
         name: 'WALLET 1',
       );
 
@@ -389,7 +389,7 @@ void main() {
         pinnedBool: false,
         address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
         derivationPath: "m/44'/501'/0'/0'",
-        filesystemPath: FilesystemPath.fromString('vault1/network2/wallet2'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1/network2/wallet2'),
         name: 'WALLET 1',
       );
 
@@ -459,7 +459,7 @@ void main() {
         pinnedBool: false,
         address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
         derivationPath: "m/44'/501'/0'/0'",
-        filesystemPath: FilesystemPath.fromString('vault1/network2/wallet2'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1/network2/wallet2'),
         name: 'WALLET 1',
       );
 

@@ -22,7 +22,7 @@ void main() {
       appPasswordModel: PasswordModel.fromPlaintext('1111'),
     );
 
-    actualVaultCreatePageCubit = VaultCreatePageCubit(parentFilesystemPath: const FilesystemPath.empty());
+    actualVaultCreatePageCubit = VaultCreatePageCubit(parentFilesystemPath: FilesystemPath.fromString('vaults'));
   });
 
   group('Tests of VaultCreatePageCubit process', () {
@@ -135,7 +135,7 @@ void main() {
 
         // Output is always a random string because AES changes the initialization vector with Random Secure
         // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-        Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem(path: 'secrets');
+        Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem(path: 'secrets/vaults');
 
         List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
           return isar.vaults.where().findAll();
