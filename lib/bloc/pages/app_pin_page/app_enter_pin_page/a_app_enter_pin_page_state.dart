@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-abstract class AAppAuthPageState extends Equatable {
+abstract class AAppEnterPinPageState extends Equatable {
   final List<int> pinNumbers;
 
-  const AAppAuthPageState({required this.pinNumbers});
+  const AAppEnterPinPageState({required this.pinNumbers});
 
   @override
   List<Object> get props => <Object>[pinNumbers];

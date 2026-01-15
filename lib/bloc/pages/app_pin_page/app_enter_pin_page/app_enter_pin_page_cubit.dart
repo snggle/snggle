@@ -1,21 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/pages/app_auth_page/a_app_auth_page_state.dart';
-import 'package:snggle/bloc/pages/app_auth_page/states/app_auth_page_enter_pin_state.dart';
-import 'package:snggle/bloc/pages/app_auth_page/states/app_auth_page_invalid_pin_state.dart';
+import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/a_app_enter_pin_page_state.dart';
+import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/states/app_enter_invalid_pin_page_state.dart';
+import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/states/app_enter_pin_page_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/password_model.dart';
 
-class AppAuthPageCubit extends Cubit<AAppAuthPageState> {
+class AppEnterPinPageCubit extends Cubit<AAppEnterPinPageState> {
   final AppService _appService = globalLocator<AppService>();
   final MasterKeyController _masterKeyController = globalLocator<MasterKeyController>();
 
-  AppAuthPageCubit() : super(const AppAuthPageEnterPinState.empty());
+  AppEnterPinPageCubit() : super(const AppEnterPinPageState.empty());
 
   void updatePinNumbers(List<int> pinNumbers) {
-    emit(AppAuthPageEnterPinState(pinNumbers: pinNumbers));
+    emit(AppEnterPinPageState(pinNumbers: pinNumbers));
   }
 
   Future<void> authenticate() async {
@@ -24,7 +24,7 @@ class AppAuthPageCubit extends Cubit<AAppAuthPageState> {
     if (passwordValidBool) {
       _masterKeyController.setPassword(passwordModel);
     } else {
-      emit(AppAuthPageInvalidPinState(pinNumbers: state.pinNumbers));
+      emit(AppEnterInvalidPinPageState(pinNumbers: state.pinNumbers));
       throw InvalidPasswordException();
     }
   }

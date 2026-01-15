@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart';
-import 'package:snggle/bloc/pages/app_setup_pin_page/a_app_setup_pin_page_state.dart';
+import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/a_app_set_up_pin_page_state.dart';
 
-class AppSetupPinPageConfirmPinState extends AAppSetupPinPageState {
+class AppSetUpPinPageConfirmPinState extends AAppSetUpPinPageState {
   final List<int> firstPinNumbers;
   final List<int> confirmPinNumbers;
 
-  const AppSetupPinPageConfirmPinState({
+  const AppSetUpPinPageConfirmPinState({
     required this.firstPinNumbers,
     required this.confirmPinNumbers,
   });
 
-  AppSetupPinPageConfirmPinState copyWith({
+  AppSetUpPinPageConfirmPinState copyWith({
     List<int>? firstPinNumbers,
     List<int>? confirmPinNumbers,
   }) {
-    return AppSetupPinPageConfirmPinState(
+    return AppSetUpPinPageConfirmPinState(
       firstPinNumbers: firstPinNumbers ?? this.firstPinNumbers,
       confirmPinNumbers: confirmPinNumbers ?? this.confirmPinNumbers,
     );

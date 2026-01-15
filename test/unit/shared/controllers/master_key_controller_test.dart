@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
+import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
@@ -103,6 +104,42 @@ void main() {
       String expectedDecryptedValue = 'some_value';
 
       expect(actualDecryptedValue, expectedDecryptedValue);
+    });
+  });
+
+  group('Tests of MasterKeyController.changePassword()', () {
+    setUp(() {
+      actualMasterKeyController = MasterKeyController();
+      testDatabase.updateSecureStorage(<String, String>{
+        SecureStorageKey.encryptedMasterKey.name: actualMasterKeyVO.encryptedMasterKey,
+      });
+    });
+
+    test('Should [encrypt and decrypt] if password was changed', () async {
+      // Arrange
+      PasswordModel newPassword = PasswordModel.fromPlaintext('2222');
+
+      actualMasterKeyController.setPassword(PasswordModel.fromPlaintext('1111'));
+
+      // Act
+      await actualMasterKeyController.changePassword(newPassword);
+
+      // Assert
+      MasterKeyVO actualMasterKey = await MasterKeyService().getMasterKey();
+
+      String expectedDecrypted = 'another_value';
+      String newCiphertext = await actualMasterKeyController.encrypt(expectedDecrypted);
+      String actualDecrypted = actualMasterKey.decrypt(appPasswordModel: newPassword, encryptedData: newCiphertext);
+      expect(actualDecrypted, expectedDecrypted);
+    });
+
+    test('Should [throw Exception] if [password was NOT SET]', () async {
+      // Arrange
+      MasterKeyController actualMasterKeyController = MasterKeyController();
+      PasswordModel newPasswordModel = PasswordModel.fromPlaintext('2222');
+
+      // Assert
+      expect(() async => actualMasterKeyController.changePassword(newPasswordModel), throwsException);
     });
   });
 

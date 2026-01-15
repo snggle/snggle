@@ -5,6 +5,7 @@ import 'package:snggle/views/widgets/pinpad/pinpad_keyboard.dart';
 
 class PinpadScaffold extends StatefulWidget {
   final bool errorBool;
+  final bool popButtonVisible;
   final String title;
   final List<int> initialPinNumbers;
   final List<Widget> actionButtons;
@@ -13,6 +14,7 @@ class PinpadScaffold extends StatefulWidget {
 
   const PinpadScaffold({
     required this.errorBool,
+    required this.popButtonVisible,
     required this.title,
     required this.initialPinNumbers,
     required this.actionButtons,
@@ -45,7 +47,7 @@ class _PinpadScaffoldState extends State<PinpadScaffold> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      popButtonVisible: false,
+      popButtonVisible: widget.popButtonVisible,
       title: widget.title,
       body: Center(
         child: Container(
