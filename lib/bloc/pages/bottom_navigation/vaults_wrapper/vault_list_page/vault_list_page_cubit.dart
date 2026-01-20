@@ -24,4 +24,7 @@ class VaultListPageCubit extends AListCubit<VaultModel> {
           ],
           onGroupNavigateBack: onGroupNavigateBack,
         );
+
+  @override
+  bool get canRenameBool => true;
 }

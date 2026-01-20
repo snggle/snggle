@@ -78,9 +78,15 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
   }
 
   Future<void> renameItem(AListItemModel item, String newName) async {
-    await _renameItem(item, newName);
-    await refreshAll();
+    if (canRenameBool) {
+      await listItemsService.save(item.copyWith(name: newName) as T);
+      await refreshAll();
+    } else {
+      throw UnsupportedError('Unsupported item type: ${item.runtimeType}');
+    }
   }
+
+  bool get canRenameBool;
 
   Future<void> navigateNext({required FilesystemPath filesystemPath}) async {
     int newDepth = state.depth + 1;
@@ -214,18 +220,6 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
       await groupsService.move(item, newItemFilesystemPath);
     } else {
       throw UnsupportedError('Unsupported item type: ${item.runtimeType}');
-    }
-  }
-
-  Future<void> _renameItem(AListItemModel item, String newName) async {
-    if (item is VaultModel) {
-      await vaultsService.rename(item.id, newName);
-    } else if (item is WalletModel) {
-      await walletsService.rename(item.id, newName);
-    } else if (item is GroupModel) {
-      await groupsService.rename(item.id, newName);
-    } else {
-      throw UnsupportedError('Rename not supported for ${item.runtimeType}');
     }
   }
 

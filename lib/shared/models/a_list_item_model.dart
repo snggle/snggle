@@ -17,7 +17,7 @@ abstract class AListItemModel with EquatableMixin {
     String? name,
   }) : _name = name;
 
-  AListItemModel copyWith({bool? encryptedBool, bool? pinnedBool});
+  AListItemModel copyWith({bool? encryptedBool, bool? pinnedBool, String? name});
 
   AListItemModel setEncrypted({required bool encryptedBool}) {
     return copyWith(encryptedBool: encryptedBool);

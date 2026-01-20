@@ -95,12 +95,6 @@ class VaultsService implements IListItemsService<VaultModel> {
     return lastIndex ?? -1;
   }
 
-  Future<void> rename(int id, String newName) async {
-    VaultModel vaultModel = await getById(id);
-    VaultModel renamedVaultModel = vaultModel.copyWith(name: newName);
-    await save(renamedVaultModel);
-  }
-
   Future<VaultModel> updateFilesystemPath(int id, FilesystemPath parentFilesystemPath) async {
     VaultEntity vaultEntity = await _vaultsRepository.getById(id);
     vaultEntity = vaultEntity.copyWith(filesystemPathString: parentFilesystemPath.add('vault$id').fullPath);

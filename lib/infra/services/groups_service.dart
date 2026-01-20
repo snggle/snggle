@@ -94,12 +94,6 @@ class GroupsService implements IListItemsService<GroupModel> {
     }
   }
 
-  Future<void> rename(int id, String newName) async {
-    GroupModel groupModel = await getById(id);
-    GroupModel renamedGroupModel = groupModel.copyWith(name: newName);
-    await save(renamedGroupModel);
-  }
-
   Future<GroupModel> updateFilesystemPath(int id, FilesystemPath parentFilesystemPath) async {
     GroupEntity groupEntity = await _groupsRepository.getById(id);
     groupEntity = groupEntity.copyWith(filesystemPathString: parentFilesystemPath.add('group$id').fullPath);

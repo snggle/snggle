@@ -160,14 +160,15 @@ class _DragPopupState<T extends AListItemModel> extends State<DragPopup<T>> {
   }
 
   Future<void> _createGroup(AListItemModel item1, AListItemModel item2) async {
+    String groupType = '${item1.defaultItemName} Group';
     await showDialog(
       context: context,
       barrierColor: Colors.transparent,
       builder: (BuildContext context) {
         return NameDialog(
-          title: 'Create new folder',
-          description: 'Enter a name for the\nnew folder',
-          defaultName: 'New Folder',
+          title: 'Create $groupType',
+          description: 'Enter a name for the\n$groupType',
+          defaultName: 'New $groupType',
           onSave: (String name) async {
             await widget.listCubit.groupItems(item1, item2, name);
           },

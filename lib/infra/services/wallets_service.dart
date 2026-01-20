@@ -100,12 +100,6 @@ class WalletsService implements IListItemsService<WalletModel> {
     return derivationPaths.contains(derivationPathString);
   }
 
-  Future<void> rename(int id, String newName) async {
-    WalletModel walletModel = await getById(id);
-    WalletModel renamedWalletModel = walletModel.copyWith(name: newName);
-    await save(renamedWalletModel);
-  }
-
   Future<WalletModel> updateFilesystemPath(int id, FilesystemPath parentFilesystemPath) async {
     WalletEntity walletEntity = await _walletsRepository.getById(id);
     walletEntity = walletEntity.copyWith(filesystemPathString: parentFilesystemPath.add('wallet$id').fullPath);
