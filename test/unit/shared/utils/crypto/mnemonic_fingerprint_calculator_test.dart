@@ -12,7 +12,7 @@ void main() {
       String actualFingerprint = await MnemonicFingerprintCalculator.calc(actualMnemonic);
 
       // Assert
-      String expectedFingerprint = 'Lki3oJlA8rXrJiViEZG3RSqGobYXZ+ki4kGabkZl/rk=';
+      String expectedFingerprint = '1881575369';
 
       expect(actualFingerprint, expectedFingerprint);
     });

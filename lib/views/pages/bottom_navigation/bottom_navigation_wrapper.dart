@@ -4,6 +4,7 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_item.dart';
+import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar_scan_icon.dart';
 
 @RoutePage(name: 'BottomNavigationRoute')
 class BottomNavigationWrapper extends StatefulWidget {
@@ -56,6 +57,7 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
                               assetIconData: AppIcons.bottom_navigation_secrets,
                               onTap: () => tabsRouter.setActiveIndex(1),
                             ),
+                            const CustomBottomNavigationBarScanIcon(),
                             CustomBottomNavigationBarItem(
                               selectedBool: tabsRouter.activeIndex == 2,
                               assetIconData: AppIcons.bottom_navigation_apps,

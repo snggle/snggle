@@ -32,7 +32,7 @@ void main() {
         pinnedBool: false,
         index: 0,
         filesystemPath: FilesystemPath.fromString('vault1'),
-        fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
+        fingerprint: '2429747484',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[],
       ),

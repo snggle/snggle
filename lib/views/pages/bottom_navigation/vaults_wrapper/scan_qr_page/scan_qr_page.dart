@@ -6,6 +6,7 @@ import 'package:snggle/bloc/pages/scan_tx_page/scan_qr_page_cubit.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/scan_qr_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
+import 'package:snggle/shared/exceptions/scan_qr_exception_msgs.dart';
 import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/sign_tx_page/sign_tx_page.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
@@ -14,7 +15,9 @@ import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
 import 'package:snggle/views/widgets/qr/qr_camera_scaffold.dart';
 
 class ScanQRPage extends StatefulWidget {
-  const ScanQRPage({super.key});
+  final bool walletAutoDetectionEnabledBool;
+
+  const ScanQRPage({required this.walletAutoDetectionEnabledBool, super.key});
 
   @override
   _ScanQRPageState createState() => _ScanQRPageState();
@@ -79,7 +82,10 @@ class _ScanQRPageState extends State<ScanQRPage> {
   Future<Widget> _loadResultPage(ACborTaggedObject cborTaggedObject) async {
     switch (cborTaggedObject) {
       case CborEthSignRequest cborEthSignRequest:
-        return SignTxPage.load(cborEthSignRequest);
+        return SignTxPage.load(
+          walletAutoDetectionEnabledBool: widget.walletAutoDetectionEnabledBool,
+          cborEthSignRequest: cborEthSignRequest,
+        );
       default:
         throw const ScanQrException(ScanQrExceptionType.unsupported);
     }
@@ -96,13 +102,9 @@ class _ScanQRPageState extends State<ScanQRPage> {
       builder: (BuildContext context) {
         return CustomDialog(
           backgroundColor: AppColors.body2.withOpacity(0.5),
-          title: switch (scanQrExceptionType) {
-            ScanQrExceptionType.unsupported => 'Unsupported QR Code',
-          },
+          title: ScanQrExceptionMsgs.getTitle(scanQrExceptionType),
           content: Text(
-            switch (scanQrExceptionType) {
-              ScanQrExceptionType.unsupported => 'Scanned QR code is not supported by the application. Please ensure you are using a valid QR code.',
-            },
+            ScanQrExceptionMsgs.getDescription(scanQrExceptionType),
             textAlign: TextAlign.center,
           ),
           onPopInvoked: (_) => scanQRPageCubit.reset(),

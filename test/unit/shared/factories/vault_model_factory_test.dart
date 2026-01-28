@@ -38,7 +38,7 @@ void main() {
         encryptedBool: false,
         pinnedBool: false,
         filesystemPath: FilesystemPath.fromString('vault1'),
-        fingerprint: 'rbPUWRXeYnqrxPsuYsDGprj7esbf1bAqDJIFbS5L77M=',
+        fingerprint: '381505146',
         name: 'NEW VAULT',
         index: 0,
         listItemsPreview: <AListItemModel>[],
@@ -61,7 +61,7 @@ void main() {
         encryptedBool: false,
         pinnedBool: false,
         filesystemPath: FilesystemPath.fromString('vault6'),
-        fingerprint: 'rbPUWRXeYnqrxPsuYsDGprj7esbf1bAqDJIFbS5L77M=',
+        fingerprint: '381505146',
         name: 'NEW VAULT',
         index: 5,
         listItemsPreview: <AListItemModel>[],
@@ -78,11 +78,11 @@ void main() {
 
       List<VaultEntity> actualVaultEntityList = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5')
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286=', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
         // @formatter:on
       ];
 
@@ -97,7 +97,7 @@ void main() {
           pinnedBool: false,
           index: 0,
           filesystemPath: FilesystemPath.fromString('vault1'),
-          fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
+          fingerprint: '2429747484',
           name: 'VAULT 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -114,7 +114,7 @@ void main() {
           pinnedBool: false,
           index: 1,
           filesystemPath: FilesystemPath.fromString('vault2'),
-          fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=',
+          fingerprint: '2619341544',
           name: 'VAULT 2',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -128,7 +128,7 @@ void main() {
           pinnedBool: false,
           index: 2,
           filesystemPath: FilesystemPath.fromString('vault3'),
-          fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=',
+          fingerprint: '405998762',
           name: 'VAULT 3',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -142,7 +142,7 @@ void main() {
           pinnedBool: false,
           index: 3,
           filesystemPath: FilesystemPath.fromString('group1/vault4'),
-          fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=',
+          fingerprint: '1024969286=',
           name: 'VAULT 4',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -156,7 +156,7 @@ void main() {
           pinnedBool: false,
           index: 4,
           filesystemPath: FilesystemPath.fromString('group1/vault5'),
-          fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=',
+          fingerprint: '1980042394',
           name: 'VAULT 5',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
@@ -175,11 +175,11 @@ void main() {
 
       List<VaultEntity> actualVaultEntityList = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5')
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286=', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
         // @formatter:on
       ];
 
@@ -189,11 +189,11 @@ void main() {
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[
         // @formatter:off
-        VaultModel(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPath: FilesystemPath.fromString('vault1'), fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=', name: 'VAULT 1', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPath: FilesystemPath.fromString('vault2'), fingerprint: '9cI8nWEzpJQZDx5dzfb6FyVvmaAUKC94Q1OQs9ai2eQ=', name: 'VAULT 2', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPath: FilesystemPath.fromString('vault3'), fingerprint: 'Gow34W/o1hxCx0osLnstFO+ATc5vFkp21xXu4mKHC3s=', name: 'VAULT 3', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: 'VeIT3LQy3WdODsCjmwPgDoEsS7kwgsYDtz96awLpnPs=', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: 'uQYyWS3a1fTFqqfJbHGB/f+c7qj+3wb8yDX1oup2CQk=', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+        VaultModel(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPath: FilesystemPath.fromString('vault1'), fingerprint: '2429747484', name: 'VAULT 1', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPath: FilesystemPath.fromString('vault2'), fingerprint: '2619341544', name: 'VAULT 2', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPath: FilesystemPath.fromString('vault3'), fingerprint: '405998762', name: 'VAULT 3', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: '1024969286=', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
         // @formatter:on
       ];
 
@@ -211,7 +211,7 @@ void main() {
         encryptedBool: false,
         pinnedBool: false,
         index: 0,
-        fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
+        fingerprint: '2429747484',
         name: 'VAULT 1',
         filesystemPathString: 'vault1',
       );
@@ -226,7 +226,7 @@ void main() {
         pinnedBool: false,
         index: 0,
         filesystemPath: FilesystemPath.fromString('vault1'),
-        fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
+        fingerprint: '2429747484',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[
           // @formatter:off
@@ -250,7 +250,7 @@ void main() {
         encryptedBool: false,
         pinnedBool: false,
         index: 0,
-        fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
+        fingerprint: '2429747484',
         name: 'VAULT 1',
         filesystemPathString: 'vault1',
       );
@@ -265,7 +265,7 @@ void main() {
         pinnedBool: false,
         index: 0,
         filesystemPath: FilesystemPath.fromString('vault1'),
-        fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
+        fingerprint: '2429747484',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[],
       );
