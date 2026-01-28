@@ -86,6 +86,7 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
         derivationPathString: derivationPathString,
         parentFilesystemPath: _parentFilesystemPath,
         name: nameTextEditingController.text,
+        networkId: _networkGroupModel.id.toInt(),
       ),
     );
   }

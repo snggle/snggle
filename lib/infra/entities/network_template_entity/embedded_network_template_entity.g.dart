@@ -176,9 +176,11 @@ P _embeddedNetworkTemplateEntityDeserializeProp<P>(
 
 const _EmbeddedNetworkTemplateEntitycurveTypeEnumValueMap = {
   r'secp256k1': r'secp256k1',
+  r'ed25519': r'ed25519',
 };
 const _EmbeddedNetworkTemplateEntitycurveTypeValueEnumMap = {
   r'secp256k1': CurveType.secp256k1,
+  r'ed25519': CurveType.ed25519,
 };
 const _EmbeddedNetworkTemplateEntitynetworkIconTypeEnumValueMap = {
   r'bitcoin': r'bitcoin',

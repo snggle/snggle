@@ -7,14 +7,16 @@ class WalletCreationRequestModel extends Equatable {
   final String name;
   final FilesystemPath parentFilesystemPath;
   final AHDWallet hdWallet;
+  final int networkId;
 
   const WalletCreationRequestModel({
     required this.derivationPathString,
     required this.name,
     required this.parentFilesystemPath,
     required this.hdWallet,
+    required this.networkId,
   });
 
   @override
-  List<Object?> get props => <Object?>[derivationPathString, name, parentFilesystemPath, hdWallet];
+  List<Object?> get props => <Object?>[derivationPathString, name, parentFilesystemPath, hdWallet, networkId];
 }

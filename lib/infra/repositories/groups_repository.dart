@@ -8,6 +8,13 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 class GroupsRepository {
   final IsarDatabaseManager isarDatabaseManager = globalLocator<IsarDatabaseManager>();
 
+  Future<int?> getLastLocalGroupIndex(int networkId) async {
+    GroupEntity? groupEntity = await isarDatabaseManager.perform((Isar isar) async {
+      return isar.groups.where().filter().networkIdEqualTo(networkId).sortByLocalIdDesc().findFirst();
+    });
+    return groupEntity?.localId;
+  }
+
   Future<List<GroupEntity>> getAll() async {
     List<GroupEntity> groupEntities = await isarDatabaseManager.perform((Isar isar) {
       return isar.groups.where().findAll();

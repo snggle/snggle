@@ -45,9 +45,33 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
     }
   }
 
-  Future<void> groupItems(AListItemModel a, AListItemModel b, String groupName) async {
+  Future<String> appendGroupNameNumber(AListItemModel draggedItem, String groupName, int localId) async {
+    if (localId > 0) {
+      String defaultGroupName = '$groupName ${localId.toString()}';
+      return defaultGroupName;
+    }
+    return groupName;
+  }
+
+  Future<int> getGroupLocalId(int? networkId) async {
+    int actualNetworkId = networkId ?? -1;
+    int highestLocalId = await groupsService.getLastLocalGroupIndex(actualNetworkId);
+    return highestLocalId + 1;
+  }
+
+  String getTitleGroupName(String defaultItemName) {
+    String titleGroupName = '${defaultItemName} Group';
+    return titleGroupName;
+  }
+
+  Future<void> groupItems(AListItemModel a, AListItemModel b, String groupName, int networkId, int localId) async {
     List<AListItemModel> itemsToGroup = <AListItemModel>[a, b];
-    GroupModel newGroupModel = await globalLocator<GroupModelFactory>().createNewGroup(parentFilesystemPath: state.filesystemPath, name: groupName);
+    GroupModel newGroupModel = await globalLocator<GroupModelFactory>().createNewGroup(
+      parentFilesystemPath: state.filesystemPath,
+      name: groupName,
+      networkId: networkId,
+      localId: localId,
+    );
 
     for (AListItemModel item in itemsToGroup) {
       await moveItem(item, newGroupModel.filesystemPath);

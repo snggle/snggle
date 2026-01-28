@@ -13,6 +13,8 @@ class GroupEntity extends Equatable {
   final String name;
   @Index()
   final String filesystemPathString;
+  final int networkId;
+  final int localId;
 
   const GroupEntity({
     required this.id,
@@ -20,6 +22,8 @@ class GroupEntity extends Equatable {
     required this.encryptedBool,
     required this.name,
     required this.filesystemPathString,
+    required this.networkId,
+    required this.localId,
   });
 
   factory GroupEntity.fromGroupModel(GroupModel groupModel) {
@@ -29,6 +33,8 @@ class GroupEntity extends Equatable {
       encryptedBool: groupModel.encryptedBool,
       name: groupModel.name,
       filesystemPathString: groupModel.filesystemPath.fullPath,
+      networkId: groupModel.networkId,
+      localId: groupModel.localId,
     );
   }
 
@@ -38,6 +44,9 @@ class GroupEntity extends Equatable {
     bool? encryptedBool,
     String? name,
     String? filesystemPathString,
+    int? networkId,
+    int? localId,
+
   }) {
     return GroupEntity(
       id: id ?? this.id,
@@ -45,6 +54,8 @@ class GroupEntity extends Equatable {
       encryptedBool: encryptedBool ?? this.encryptedBool,
       name: name ?? this.name,
       filesystemPathString: filesystemPathString ?? this.filesystemPathString,
+      networkId: networkId ?? this.networkId,
+      localId: localId ?? this.localId,
     );
   }
 
@@ -52,5 +63,5 @@ class GroupEntity extends Equatable {
   FilesystemPath get filesystemPath => FilesystemPath.fromString(filesystemPathString);
 
   @override
-  List<Object?> get props => <Object>[id, pinnedBool, encryptedBool, name, filesystemPathString];
+  List<Object?> get props => <Object>[id, pinnedBool, encryptedBool, name, filesystemPathString, networkId, localId];
 }

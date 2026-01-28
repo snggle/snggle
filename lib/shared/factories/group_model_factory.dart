@@ -22,7 +22,12 @@ class GroupModelFactory {
   final NetworkGroupsService _networkGroupsService = globalLocator<NetworkGroupsService>();
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
-  Future<GroupModel> createNewGroup({required FilesystemPath parentFilesystemPath, required String name}) async {
+  Future<GroupModel> createNewGroup({
+    required FilesystemPath parentFilesystemPath,
+    required String name,
+    required int networkId,
+    required int localId,
+  }) async {
     GroupModel groupModel = GroupModel(
       id: Isar.autoIncrement,
       pinnedBool: false,
@@ -30,6 +35,8 @@ class GroupModelFactory {
       listItemsPreview: List<AListItemModel>.empty(),
       filesystemPath: const FilesystemPath.empty(),
       name: name,
+      networkId: networkId,
+      localId: localId,
     );
     int groupId = await _groupsService.save(groupModel);
     groupModel = await _groupsService.updateFilesystemPath(groupId, parentFilesystemPath);
@@ -74,6 +81,7 @@ class GroupModelFactory {
       filesystemPath: groupEntity.filesystemPath,
       name: groupEntity.name,
       listItemsPreview: listItemsPreview,
+      networkId: groupEntity.networkId,
     );
   }
 }

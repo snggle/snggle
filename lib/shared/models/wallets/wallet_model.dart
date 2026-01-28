@@ -5,6 +5,7 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 class WalletModel extends AListItemModel {
   final String address;
   final String derivationPath;
+  final int _networkId;
 
   WalletModel({
     required super.id,
@@ -14,7 +15,8 @@ class WalletModel extends AListItemModel {
     required String super.name,
     required this.address,
     required this.derivationPath,
-  });
+    required int networkId,
+  }) : _networkId = networkId;
 
   @override
   WalletModel copyWith({
@@ -25,6 +27,7 @@ class WalletModel extends AListItemModel {
     String? name,
     String? address,
     String? derivationPath,
+    int? networkId,
   }) {
     return WalletModel(
       id: id ?? this.id,
@@ -34,6 +37,7 @@ class WalletModel extends AListItemModel {
       name: name ?? this.name,
       address: address ?? this.address,
       derivationPath: derivationPath ?? this.derivationPath,
+      networkId: networkId ?? this.networkId,
     );
   }
 
@@ -59,6 +63,12 @@ class WalletModel extends AListItemModel {
 
   @override
   String get name => super.name!;
+
+  @override
+  String get defaultItemName => 'Wallet';
+
+  @override
+  int get networkId => _networkId;
 
   String getShortAddress(int length) {
     return '${address.substring(0, length + 2)}...${address.substring(address.length - length)}';

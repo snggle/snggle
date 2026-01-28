@@ -93,6 +93,11 @@ class GroupsService implements IListItemsService<GroupModel> {
     }
   }
 
+  Future<int> getLastLocalGroupIndex(int networkId) async {
+    int? lastIndex = await _groupsRepository.getLastLocalGroupIndex(networkId);
+    return lastIndex ?? -1;
+  }
+
   Future<GroupModel> updateFilesystemPath(int id, FilesystemPath parentFilesystemPath) async {
     GroupEntity groupEntity = await _groupsRepository.getById(id);
     groupEntity = groupEntity.copyWith(filesystemPathString: parentFilesystemPath.add('group$id').fullPath);

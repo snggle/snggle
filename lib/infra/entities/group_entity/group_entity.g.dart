@@ -27,13 +27,23 @@ const GroupEntitySchema = CollectionSchema(
       name: r'filesystemPathString',
       type: IsarType.string,
     ),
-    r'name': PropertySchema(
+    r'localId': PropertySchema(
       id: 2,
+      name: r'localId',
+      type: IsarType.long,
+    ),
+    r'name': PropertySchema(
+      id: 3,
       name: r'name',
       type: IsarType.string,
     ),
+    r'networkId': PropertySchema(
+      id: 4,
+      name: r'networkId',
+      type: IsarType.long,
+    ),
     r'pinnedBool': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'pinnedBool',
       type: IsarType.bool,
     )
@@ -85,8 +95,10 @@ void _groupEntitySerialize(
 ) {
   writer.writeBool(offsets[0], object.encryptedBool);
   writer.writeString(offsets[1], object.filesystemPathString);
-  writer.writeString(offsets[2], object.name);
-  writer.writeBool(offsets[3], object.pinnedBool);
+  writer.writeLong(offsets[2], object.localId);
+  writer.writeString(offsets[3], object.name);
+  writer.writeLong(offsets[4], object.networkId);
+  writer.writeBool(offsets[5], object.pinnedBool);
 }
 
 GroupEntity _groupEntityDeserialize(
@@ -99,8 +111,10 @@ GroupEntity _groupEntityDeserialize(
     encryptedBool: reader.readBool(offsets[0]),
     filesystemPathString: reader.readString(offsets[1]),
     id: id,
-    name: reader.readString(offsets[2]),
-    pinnedBool: reader.readBool(offsets[3]),
+    localId: reader.readLong(offsets[2]),
+    name: reader.readString(offsets[3]),
+    networkId: reader.readLong(offsets[4]),
+    pinnedBool: reader.readBool(offsets[5]),
   );
   return object;
 }
@@ -117,8 +131,12 @@ P _groupEntityDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
+      return (reader.readLong(offset)) as P;
+    case 5:
       return (reader.readBool(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -460,6 +478,60 @@ extension GroupEntityQueryFilter
     });
   }
 
+  QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition> localIdEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'localId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition>
+      localIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'localId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition> localIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'localId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition> localIdBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'localId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -592,6 +664,62 @@ extension GroupEntityQueryFilter
   }
 
   QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition>
+      networkIdEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'networkId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition>
+      networkIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'networkId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition>
+      networkIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'networkId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition>
+      networkIdBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'networkId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition>
       pinnedBoolEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -637,6 +765,18 @@ extension GroupEntityQuerySortBy
     });
   }
 
+  QueryBuilder<GroupEntity, GroupEntity, QAfterSortBy> sortByLocalId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'localId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterSortBy> sortByLocalIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'localId', Sort.desc);
+    });
+  }
+
   QueryBuilder<GroupEntity, GroupEntity, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -646,6 +786,18 @@ extension GroupEntityQuerySortBy
   QueryBuilder<GroupEntity, GroupEntity, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterSortBy> sortByNetworkId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'networkId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterSortBy> sortByNetworkIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'networkId', Sort.desc);
     });
   }
 
@@ -703,6 +855,18 @@ extension GroupEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<GroupEntity, GroupEntity, QAfterSortBy> thenByLocalId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'localId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterSortBy> thenByLocalIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'localId', Sort.desc);
+    });
+  }
+
   QueryBuilder<GroupEntity, GroupEntity, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -712,6 +876,18 @@ extension GroupEntityQuerySortThenBy
   QueryBuilder<GroupEntity, GroupEntity, QAfterSortBy> thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterSortBy> thenByNetworkId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'networkId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterSortBy> thenByNetworkIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'networkId', Sort.desc);
     });
   }
 
@@ -744,10 +920,22 @@ extension GroupEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<GroupEntity, GroupEntity, QDistinct> distinctByLocalId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'localId');
+    });
+  }
+
   QueryBuilder<GroupEntity, GroupEntity, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QDistinct> distinctByNetworkId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'networkId');
     });
   }
 
@@ -779,9 +967,21 @@ extension GroupEntityQueryProperty
     });
   }
 
+  QueryBuilder<GroupEntity, int, QQueryOperations> localIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'localId');
+    });
+  }
+
   QueryBuilder<GroupEntity, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<GroupEntity, int, QQueryOperations> networkIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'networkId');
     });
   }
 
