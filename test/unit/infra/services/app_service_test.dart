@@ -17,6 +17,10 @@ void main() {
     await testDatabase.init(appPasswordModel: PasswordModel.fromPlaintext('1111'));
   });
 
+  tearDown(() async {
+    await testDatabase.close();
+  });
+
   group('Tests of AppService.isPasswordValid()', () {
     test('Should [return TRUE] if [master key EXISTS] in database and given [password VALID]', () async {
       // Arrange
@@ -53,25 +57,39 @@ void main() {
   });
 
   group('Tests of AppService.wipeAll()', () {
-    test('Should [wipe application] including removing all data from Isar database, Filesystem storage and Flutter Secure Storage', () async {
-      // Arrange
+    setUp(() async {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+    });
 
+    test('Should [wipe filesystem storage] if [filesystem NOT EMPTY]', () async {
       // Act
       await globalLocator<AppService>().wipeAll();
 
+      // Assert
       Map<String, dynamic> actualFilesystemStructure = testDatabase.readRawFilesystem();
-      Map<String, dynamic> actualDatabaseValue = await const FlutterSecureStorage().readAll();
-      int actualIsarSize = await globalLocator<IsarDatabaseManager>().perform((Isar isar) => isar.getSize());
+      expect(actualFilesystemStructure, <String, dynamic>{});
+    });
+
+    test('Should [wipe FlutterSecureStorage] if [FlutterSecureStorage NOT EMPTY]', () async {
+      // Act
+      await globalLocator<AppService>().wipeAll();
 
       // Assert
-      Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{};
-      Map<String, dynamic> expectedDatabaseValue = <String, dynamic>{};
-      int expectedIsarSize = 0;
+      Map<String, String> actualDatabaseValue = await const FlutterSecureStorage().readAll();
+      expect(actualDatabaseValue, <String, dynamic>{});
+    });
 
-      expect(actualFilesystemStructure, expectedFilesystemStructure);
-      expect(actualDatabaseValue, expectedDatabaseValue);
-      expect(actualIsarSize, expectedIsarSize);
+    test('Should [close Isar] and [prevent further DB operations] if [Isar OPEN]', () async {
+      // Act
+      await globalLocator<AppService>().wipeAll();
+
+      // Assert
+      expect(Isar.getInstance(testDatabase.testSessionUUID), isNull);
+
+      expect(
+        () => globalLocator<IsarDatabaseManager>().perform((Isar isar) => isar.getSize()),
+        throwsA(isA<IsarError>()),
+      );
     });
   });
 
