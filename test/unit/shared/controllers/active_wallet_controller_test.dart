@@ -17,6 +17,7 @@ void main() {
         derivationPath: "m/44'/60'/0'/0/0",
         filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
         name: 'WALLET 0',
+        networkId: 1,
       );
 
       // Act

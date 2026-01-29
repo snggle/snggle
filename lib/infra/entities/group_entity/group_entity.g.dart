@@ -113,7 +113,7 @@ GroupEntity _groupEntityDeserialize(
     id: id,
     localId: reader.readLong(offsets[2]),
     name: reader.readString(offsets[3]),
-    networkId: reader.readLong(offsets[4]),
+    networkId: reader.readLongOrNull(offsets[4]),
     pinnedBool: reader.readBool(offsets[5]),
   );
   return object;
@@ -135,7 +135,7 @@ P _groupEntityDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readLong(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 5:
       return (reader.readBool(offset)) as P;
     default:
@@ -664,7 +664,25 @@ extension GroupEntityQueryFilter
   }
 
   QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition>
-      networkIdEqualTo(int value) {
+      networkIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'networkId',
+      ));
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition>
+      networkIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'networkId',
+      ));
+    });
+  }
+
+  QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition>
+      networkIdEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'networkId',
@@ -675,7 +693,7 @@ extension GroupEntityQueryFilter
 
   QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition>
       networkIdGreaterThan(
-    int value, {
+    int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -689,7 +707,7 @@ extension GroupEntityQueryFilter
 
   QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition>
       networkIdLessThan(
-    int value, {
+    int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -703,8 +721,8 @@ extension GroupEntityQueryFilter
 
   QueryBuilder<GroupEntity, GroupEntity, QAfterFilterCondition>
       networkIdBetween(
-    int lower,
-    int upper, {
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -979,7 +997,7 @@ extension GroupEntityQueryProperty
     });
   }
 
-  QueryBuilder<GroupEntity, int, QQueryOperations> networkIdProperty() {
+  QueryBuilder<GroupEntity, int?, QQueryOperations> networkIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'networkId');
     });

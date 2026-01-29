@@ -27,9 +27,10 @@ void main() {
     filesystemPath: FilesystemPath.fromString('vault1/network1/group3'),
     name: 'WALLETS GROUP 1',
     listItemsPreview: <AListItemModel>[
-      WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3'),
-      WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4')
+      WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3', networkId: 0),
+      WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4', networkId: 0)
     ],
+    networkId: 1,
   );
   GroupModel updatedGroupModel = GroupModel(
     id: 3,
@@ -38,14 +39,14 @@ void main() {
     filesystemPath: FilesystemPath.fromString('vault1/network1/group3'),
     name: 'UPDATED WALLETS GROUP 1',
     listItemsPreview: <AListItemModel>[
-      WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3'),
-      WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4')
+      WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3', networkId: 0),
+      WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4', networkId: 0)
     ],
   );
-  WalletModel walletModel1 = WalletModel(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'), name: 'WALLET 0');
-  WalletModel walletModel2 = WalletModel(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPath: FilesystemPath.fromString('vault1/network1/wallet2'), name: 'WALLET 1');
-  WalletModel walletModel3 = WalletModel(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPath: FilesystemPath.fromString('vault1/network1/wallet3'), name: 'WALLET 2');
-  WalletModel updatedWalletModel3 = WalletModel(id: 3, encryptedBool: true, pinnedBool: true, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPath: FilesystemPath.fromString('vault1/network1/wallet3'), name: 'UPDATED WALLET 2');
+  WalletModel walletModel1 = WalletModel(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'), name: 'WALLET 0', networkId: 0);
+  WalletModel walletModel2 = WalletModel(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPath: FilesystemPath.fromString('vault1/network1/wallet2'), name: 'WALLET 1', networkId: 0);
+  WalletModel walletModel3 = WalletModel(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPath: FilesystemPath.fromString('vault1/network1/wallet3'), name: 'WALLET 2', networkId: 0);
+  WalletModel updatedWalletModel3 = WalletModel(id: 3, encryptedBool: true, pinnedBool: true, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPath: FilesystemPath.fromString('vault1/network1/wallet3'), name: 'UPDATED WALLET 2', networkId: 0);
   // @formatter:on
 
   group('Tests of WalletListPageCubit process', () {
@@ -527,10 +528,34 @@ void main() {
       });
     });
 
+    group('Tests of VaultListPageCubit.getBasicGroupName()', () {
+      test('Should [return BASIC GROUP NAME] based on the default item name', () async {
+        // Act
+        String actualTitleGroupName = actualWalletListPageCubit.getBasicGroupName(walletModel1.defaultItemName);
+
+        // Assert
+        String expectedTitleGroupName = 'Wallet Group';
+
+        expect(actualTitleGroupName, expectedTitleGroupName);
+      });
+    });
+
+    group('Tests of VaultListPageCubit.getGroupLocalId()', () {
+      test('Should [return LOCAL ID] for a new group based on NETWORK ID', () async {
+        // Act
+        int actualLocalId = await actualWalletListPageCubit.getGroupLocalId(1);
+
+        // Assert
+        int expectedLocalId = 1;
+
+        expect(actualLocalId, expectedLocalId);
+      });
+    });
+
     group('Tests of WalletListPageCubit.groupItems()', () {
       test('Should [emit ListState] with new group containing selected items', () async {
         // Act
-        await actualWalletListPageCubit.groupItems(walletModel2, walletModel3, 'TEST GROUP');
+        await actualWalletListPageCubit.groupItems(walletModel2, walletModel3, 'TEST GROUP', 1, 0);
 
         ListState actualListState = actualWalletListPageCubit.state;
 
@@ -549,6 +574,7 @@ void main() {
                 walletModel3.copyWith(filesystemPath: FilesystemPath.fromString('vault1/network1/group4/wallet3')),
               ],
               name: 'TEST GROUP',
+              networkId: 1,
             ),
             groupModel.copyWith(
               listItemsPreview: <AListItemModel>[
@@ -620,8 +646,8 @@ void main() {
           groupModel: groupModel,
           allItems: <AListItemModel>[
             // @formatter:off
-            WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3'),
-            WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4')
+            WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3', networkId: 0),
+            WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4', networkId: 0)
             // @formatter:on
           ],
           filesystemPath: FilesystemPath.fromString('vault1/network1/group3'),
@@ -663,8 +689,8 @@ void main() {
           groupModel: groupModel,
           allItems: <AListItemModel>[
             // @formatter:off
-            WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3'),
-            WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4')
+            WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3', networkId: 0),
+            WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4', networkId: 0)
             // @formatter:on
           ],
           filesystemPath: FilesystemPath.fromString('vault1/network1/group3'),

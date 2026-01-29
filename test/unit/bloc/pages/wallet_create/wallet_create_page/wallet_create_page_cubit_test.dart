@@ -120,6 +120,7 @@ void main() {
           derivationPath: "m/44'/60'/0'/0/99999",
           filesystemPath: FilesystemPath.fromString('vault1/network1/wallet6'),
           name: 'Wallet 5',
+          networkId: 1,
         );
         WalletCreatePageState expectedWalletCreatePageState = const WalletCreatePageState(walletExistsErrorBool: false);
 

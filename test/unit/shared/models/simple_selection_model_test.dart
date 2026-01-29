@@ -63,4 +63,7 @@ class TestListItem extends AListItemModel {
 
   @override
   String get name => 'Test List Item';
+
+  @override
+  String get defaultItemName => 'Default Test List Item';
 }

@@ -25,7 +25,7 @@ class GroupModelFactory {
   Future<GroupModel> createNewGroup({
     required FilesystemPath parentFilesystemPath,
     required String name,
-    required int networkId,
+    required int? networkId,
     required int localId,
   }) async {
     GroupModel groupModel = GroupModel(
@@ -82,6 +82,7 @@ class GroupModelFactory {
       name: groupEntity.name,
       listItemsPreview: listItemsPreview,
       networkId: groupEntity.networkId,
+      localId: groupEntity.localId,
     );
   }
 }

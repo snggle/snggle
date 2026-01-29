@@ -32,6 +32,7 @@ void main() async {
       NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
       NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
     ],
+    networkId: 0,
   );
   GroupModel updatedGroupModel = GroupModel(
     id: 2,
@@ -51,10 +52,10 @@ void main() async {
     filesystemPath: FilesystemPath.fromString('vault1/network1'),
     networkTemplateModel: PredefinedNetworkTemplates.ethereum,
     listItemsPreview: <AListItemModel>[
-      GroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1/group3'), name: 'WALLETS GROUP 1', listItemsPreview: <AListItemModel>[]),
-      WalletModel(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", name: 'WALLET 0', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1')),
-      WalletModel(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", name: 'WALLET 1', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet2')),
-      WalletModel(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", name: 'WALLET 2', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet3')),
+      GroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1/group3'), name: 'WALLETS GROUP 1', listItemsPreview: <AListItemModel>[], networkId: 1),
+      WalletModel(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", name: 'WALLET 0', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'), networkId: 0),
+      WalletModel(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", name: 'WALLET 1', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet2'), networkId: 0),
+      WalletModel(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", name: 'WALLET 2', filesystemPath: FilesystemPath.fromString('vault1/network1/wallet3'), networkId: 0),
     ],
     name: 'Ethereum1',
   );
@@ -540,10 +541,22 @@ void main() async {
       });
     });
 
+    group('Tests of VaultListPageCubit.getBasicGroupName()', () {
+      test('Should [return BASIC GROUP NAME] based on the default item name', () async {
+        // Act
+        String actualTitleGroupName = actualNetworkListPageCubit.getBasicGroupName(networkGroupModel1.defaultItemName);
+
+        // Assert
+        String expectedTitleGroupName = 'Network Group';
+
+        expect(actualTitleGroupName, expectedTitleGroupName);
+      });
+    });
+
     group('Tests of NetworkListPageCubit.groupItems()', () {
       test('Should [emit ListState] with new group containing selected items', () async {
         // Act
-        await actualNetworkListPageCubit.groupItems(networkGroupModel2, networkGroupModel3, 'TEST GROUP');
+        await actualNetworkListPageCubit.groupItems(networkGroupModel2, networkGroupModel3, 'TEST GROUP', -1, 0);
 
         ListState actualListState = actualNetworkListPageCubit.state;
 

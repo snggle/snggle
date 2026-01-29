@@ -41,7 +41,7 @@ class NetworkGroupModel extends AListItemModel {
   String get name => super.name ?? networkTemplateModel.name;
 
   @override
-  String get defaultItemName => 'Network Group';
+  String get defaultItemName => 'Network';
 
   @override
   List<Object?> get props => <Object?>[id, pinnedBool, encryptedBool, listItemsPreview, filesystemPath, name, networkTemplateModel, name];

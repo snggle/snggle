@@ -30,6 +30,8 @@ void main() {
       GroupModel actualGroupModel = await globalLocator<GroupModelFactory>().createNewGroup(
         parentFilesystemPath: FilesystemPath.fromString('test/path'),
         name: 'NEW GROUP',
+        networkId: null,
+        localId: 1,
       );
 
       // Assert
@@ -40,6 +42,8 @@ void main() {
         filesystemPath: FilesystemPath.fromString('test/path/group4'),
         listItemsPreview: <AListItemModel>[],
         name: 'NEW GROUP',
+        networkId: ,
+        localId: ,
       );
 
       expect(actualGroupModel, expectedGroupModel);
@@ -94,8 +98,8 @@ void main() {
           name: 'WALLETS GROUP 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-            WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3'),
-            WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4')
+            WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3', networkId: 1),
+            WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4', networkId: 1)
             // @formatter:on
           ],
         ),

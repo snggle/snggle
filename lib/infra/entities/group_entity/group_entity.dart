@@ -13,7 +13,7 @@ class GroupEntity extends Equatable {
   final String name;
   @Index()
   final String filesystemPathString;
-  final int networkId;
+  final int? networkId;
   final int localId;
 
   const GroupEntity({
@@ -63,5 +63,5 @@ class GroupEntity extends Equatable {
   FilesystemPath get filesystemPath => FilesystemPath.fromString(filesystemPathString);
 
   @override
-  List<Object?> get props => <Object>[id, pinnedBool, encryptedBool, name, filesystemPathString, networkId, localId];
+  List<Object?> get props => <Object?>[id, pinnedBool, encryptedBool, name, filesystemPathString, networkId, localId];
 }

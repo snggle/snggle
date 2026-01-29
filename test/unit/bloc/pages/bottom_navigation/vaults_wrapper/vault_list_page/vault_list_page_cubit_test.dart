@@ -57,7 +57,7 @@ void main() {
     name: 'VAULT 1',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
-      GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
+      GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[], networkId: 0),
       NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
       NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
       NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
@@ -578,10 +578,34 @@ void main() {
       });
     });
 
+    group('Tests of VaultListPageCubit.getBasicGroupName()', () {
+      test('Should [return BASIC GROUP NAME] based on the default item name', () async {
+        // Act
+        String actualTitleGroupName = actualVaultListPageCubit.getBasicGroupName(vaultModel1.defaultItemName);
+
+        // Assert
+        String expectedTitleGroupName = 'Vault Group';
+
+        expect(actualTitleGroupName, expectedTitleGroupName);
+      });
+    });
+
+    group('Tests of VaultListPageCubit.getGroupLocalId()', () {
+      test('Should [return LOCAL ID] for a new group based on NETWORK ID', () async {
+        // Act
+        int actualLocalId = await actualVaultListPageCubit.getGroupLocalId(-1);
+
+        // Assert
+        int expectedLocalId = 1;
+
+        expect(actualLocalId, expectedLocalId);
+      });
+    });
+
     group('Tests of VaultListPageCubit.groupItems()', () {
       test('Should [emit ListState] with new group containing selected items', () async {
         // Act
-        await actualVaultListPageCubit.groupItems(vaultModel2, vaultModel3, 'TEST GROUP');
+        await actualVaultListPageCubit.groupItems(vaultModel2, vaultModel3, 'TEST GROUP', -1, 0);
 
         ListState actualListState = actualVaultListPageCubit.state;
 

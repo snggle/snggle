@@ -1,11 +1,10 @@
-import 'package:isar/isar.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class GroupModel extends AListItemModel {
   final List<AListItemModel> listItemsPreview;
   final String _name;
-  final int _networkId;
+  final int? _networkId;
   final int _localId;
 
   GroupModel({
@@ -15,8 +14,8 @@ class GroupModel extends AListItemModel {
     required super.filesystemPath,
     required this.listItemsPreview,
     required String name,
-    int networkId = -1,
-    int localId = 0,
+    required int? networkId,
+    required int localId,
   })  : _name = name,
         _networkId = networkId,
         _localId = localId;
@@ -49,7 +48,7 @@ class GroupModel extends AListItemModel {
   String get name => _name;
 
   @override
-  int get networkId => _networkId;
+  int? get networkId => _networkId;
 
   int get localId => _localId;
 
