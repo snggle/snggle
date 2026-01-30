@@ -10,7 +10,7 @@ class NameDialog extends StatefulWidget {
   final String? description;
   final VoidCallback? onClose;
   final ValueChanged<String>? onSave;
-  final List<String>? takenFolderNamesList;
+  final List<String>? existingNamesList;
 
   const NameDialog({
     required this.title,
@@ -18,7 +18,7 @@ class NameDialog extends StatefulWidget {
     this.description,
     this.onClose,
     this.onSave,
-    this.takenFolderNamesList,
+    this.existingNamesList,
     super.key,
   });
 
@@ -28,7 +28,8 @@ class NameDialog extends StatefulWidget {
 
 class NameDialogState extends State<NameDialog> {
   final TextEditingController textEditingController = TextEditingController();
-  bool _folderNameTakenBool = false;
+  bool _nameTakenBool = false;
+  bool _nameIsEmptyBool = false;
 
   @override
   void initState() {
@@ -52,7 +53,8 @@ class NameDialogState extends State<NameDialog> {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
 
-    bool saveButtonEnabledBool = widget.onSave != null && textEditingController.text.trim().isNotEmpty;
+    bool inputIsEmptyBool = textEditingController.text.trim().isEmpty;
+    bool saveButtonEnabledBool = widget.onSave != null && inputIsEmptyBool == false;
 
     OutlineInputBorder inputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(6),
@@ -87,9 +89,13 @@ class NameDialogState extends State<NameDialog> {
                 focusedBorder: inputBorder,
               ),
             ),
-            if (_folderNameTakenBool == true)
+            if (_nameTakenBool == true)
               const ErrorMessageListTile(
                 message: 'Folder with this name already exists',
+              ),
+            if (inputIsEmptyBool == true)
+              const ErrorMessageListTile(
+                message: 'Folder name cannot be empty',
               ),
           ],
         ),
@@ -108,12 +114,15 @@ class NameDialogState extends State<NameDialog> {
   }
 
   void _handleNameChanged() {
-    String folderName = textEditingController.text.isEmpty ? defaultName : textEditingController.text;
-    bool folderNameTakenBool = widget.takenFolderNamesList?.any((String existingFolderName) => existingFolderName == folderName) ?? false;
+    String name = textEditingController.text;
+    bool nameTakenBool = widget.existingNamesList?.any((String existingName) => existingName == name) ?? false;
 
-    if (folderNameTakenBool != _folderNameTakenBool) {
+    bool nameIsEmptyBool = name.isEmpty;
+
+    if (nameTakenBool != _nameTakenBool || nameIsEmptyBool != _nameIsEmptyBool) {
       setState(() {
-        _folderNameTakenBool = folderNameTakenBool;
+        _nameTakenBool = nameTakenBool;
+        _nameIsEmptyBool = nameIsEmptyBool;
       });
     }
   }

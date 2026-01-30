@@ -105,9 +105,10 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
     String walletName = nameTextEditingController.text;
 
     bool walletNameExistsBool = _takenWalletNamesList.any((String existingWalletName) => existingWalletName == walletName);
+    bool walletNameEmptyBool = walletName.isEmpty;
 
-    if (state.walletNameExistsBool != walletNameExistsBool) {
-      emit(state.copyWith(walletNameExistsBool: walletNameExistsBool));
+    if (state.walletNameExistsBool != walletNameExistsBool || state.walletNameEmptyBool != walletNameEmptyBool) {
+      emit(state.copyWith(walletNameExistsBool: walletNameExistsBool, walletNameEmptyBool: walletNameEmptyBool));
     }
   }
 }

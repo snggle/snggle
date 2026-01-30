@@ -123,6 +123,34 @@ void main() {
           false,
         );
       });
+
+      test('Should [emit VaultCreatePageState] with [vaultNameEmptyBool == TRUE] if a vault name is EMPTY', () async {
+        // Arrange
+        await actualVaultCreatePageCubit.init(MnemonicSize.words24);
+
+        // Act
+        actualVaultCreatePageCubit.vaultNameTextEditingController.text = '';
+
+        // Assert
+        expect(
+          actualVaultCreatePageCubit.state.vaultNameEmptyBool,
+          true,
+        );
+      });
+
+      test('Should [emit VaultCreatePageState] with [vaultNameEmptyBool == FALSE] if a vault name is NOT EMPTY', () async {
+        // Arrange
+        await actualVaultCreatePageCubit.init(MnemonicSize.words24);
+
+        // Act
+        actualVaultCreatePageCubit.vaultNameTextEditingController.text = 'VAULT 99999';
+
+        // Assert
+        expect(
+          actualVaultCreatePageCubit.state.vaultNameEmptyBool,
+          false,
+        );
+      });
     });
 
     group('Tests of VaultCreatePageCubit.saveMnemonic() method', () {

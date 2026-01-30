@@ -171,7 +171,7 @@ class _DragPopupState<T extends AListItemModel> extends State<DragPopup<T>> {
           title: 'Create new folder',
           description: 'Enter a name for the\nnew folder',
           defaultName: 'New Folder',
-          takenFolderNamesList: takenFolderNamesList,
+          existingNamesList: takenFolderNamesList,
           onSave: (String name) async {
             await widget.listCubit.groupItems(item1, item2, name);
           },

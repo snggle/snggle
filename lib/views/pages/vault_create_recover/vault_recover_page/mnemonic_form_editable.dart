@@ -152,6 +152,10 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
                     const ErrorMessageListTile(
                       message: 'Vault with this name already exists',
                     ),
+                  if (widget.vaultRecoverPageCubit.state.vaultNameEmptyBool == true)
+                    const ErrorMessageListTile(
+                      message: 'Vault name cannot be empty',
+                    ),
                   const SizedBox(height: 14),
                   CustomGrid.builder(
                     childCount: widget.mnemonicSize,

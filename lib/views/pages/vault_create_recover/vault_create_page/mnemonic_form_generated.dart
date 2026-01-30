@@ -136,6 +136,10 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
               const ErrorMessageListTile(
                 message: 'Vault with this name already exists',
               ),
+            if (widget.vaultCreatePageCubit.state.vaultNameEmptyBool == true)
+              const ErrorMessageListTile(
+                message: 'Vault name cannot be empty',
+              ),
             const SizedBox(height: 14),
             CustomGrid.builder(
               columnsCount: 3,

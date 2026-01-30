@@ -90,9 +90,10 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
     String vaultName = vaultNameTextEditingController.text;
 
     bool vaultNameExistsBool = _takenVaultNamesList.any((String existingVaultName) => existingVaultName == vaultName);
+    bool vaultNameEmptyBool = vaultName.isEmpty;
 
-    if (state.vaultNameExistsBool != vaultNameExistsBool) {
-      emit(state.copyWith(vaultNameExistsBool: vaultNameExistsBool));
+    if (state.vaultNameExistsBool != vaultNameExistsBool || state.vaultNameEmptyBool != vaultNameEmptyBool) {
+      emit(state.copyWith(vaultNameExistsBool: vaultNameExistsBool, vaultNameEmptyBool: vaultNameEmptyBool));
     }
   }
 

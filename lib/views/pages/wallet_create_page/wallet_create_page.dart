@@ -116,6 +116,10 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                     const ErrorMessageListTile(
                       message: 'Wallet with this name already exists',
                     ),
+                  if (walletCreatePageCubit.state.walletNameEmptyBool == true)
+                    const ErrorMessageListTile(
+                      message: 'Wallet name cannot be empty',
+                    ),
                   LabelWrapperVertical(
                     label: 'Derivation Path',
                     child: CustomTextField(

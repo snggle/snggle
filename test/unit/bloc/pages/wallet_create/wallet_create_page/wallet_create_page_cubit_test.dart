@@ -110,6 +110,34 @@ void main() {
           false,
         );
       });
+
+      test('Should [emit WalletCreatePageState] with [walletNameExistsBool == TRUE] if a wallet name is EMPTY', () async {
+        // Arrange
+        await actualWalletCreatePageCubit.init(defaultWalletName: 'Wallet');
+
+        // Act
+        actualWalletCreatePageCubit.nameTextEditingController.text = '';
+
+        // Assert
+        expect(
+          actualWalletCreatePageCubit.state.walletNameEmptyBool,
+          true,
+        );
+      });
+
+      test('Should [emit WalletCreatePageState] with [walletNameExistsBool == FALSE] if a wallet name is NOT EMPTY', () async {
+        // Arrange
+        await actualWalletCreatePageCubit.init(defaultWalletName: 'Wallet');
+
+        // Act
+        actualWalletCreatePageCubit.nameTextEditingController.text = 'Wallet 5';
+
+        // Assert
+        expect(
+          actualWalletCreatePageCubit.state.walletNameEmptyBool,
+          false,
+        );
+      });
     });
 
     group('Tests of WalletCreatePageCubit.createNewWallet()', () {
