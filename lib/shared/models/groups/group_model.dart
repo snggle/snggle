@@ -4,7 +4,7 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 class GroupModel extends AListItemModel {
   final List<AListItemModel> listItemsPreview;
   final String _name;
-  final int? _networkId;
+  final int _networkId;
   final int _localId;
 
   GroupModel({
@@ -14,8 +14,8 @@ class GroupModel extends AListItemModel {
     required super.filesystemPath,
     required this.listItemsPreview,
     required String name,
-    required int? networkId,
     required int localId,
+    int networkId = -1,
   })  : _name = name,
         _networkId = networkId,
         _localId = localId;
@@ -48,7 +48,7 @@ class GroupModel extends AListItemModel {
   String get name => _name;
 
   @override
-  int? get networkId => _networkId;
+  int get networkId => _networkId;
 
   int get localId => _localId;
 
@@ -58,5 +58,5 @@ class GroupModel extends AListItemModel {
   bool get hasSingleItem => listItemsPreview.length == 1;
 
   @override
-  List<Object?> get props => <Object?>[id, pinnedBool, encryptedBool, listItemsPreview, filesystemPath, name, networkId, localId];
+  List<Object?> get props => <Object>[id, pinnedBool, encryptedBool, listItemsPreview, filesystemPath, name, networkId, localId];
 }

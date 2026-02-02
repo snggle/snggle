@@ -13,7 +13,7 @@ class GroupEntity extends Equatable {
   final String name;
   @Index()
   final String filesystemPathString;
-  final int? networkId;
+  final int networkId;
   final int localId;
 
   const GroupEntity({

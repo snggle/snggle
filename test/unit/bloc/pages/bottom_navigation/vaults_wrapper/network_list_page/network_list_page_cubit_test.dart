@@ -33,6 +33,7 @@ void main() async {
       NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
     ],
     networkId: 0,
+    localId: null,
   );
   GroupModel updatedGroupModel = GroupModel(
     id: 2,

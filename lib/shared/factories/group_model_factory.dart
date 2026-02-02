@@ -25,7 +25,7 @@ class GroupModelFactory {
   Future<GroupModel> createNewGroup({
     required FilesystemPath parentFilesystemPath,
     required String name,
-    required int? networkId,
+    required int networkId,
     required int localId,
   }) async {
     GroupModel groupModel = GroupModel(

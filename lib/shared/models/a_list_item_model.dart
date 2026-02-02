@@ -31,7 +31,7 @@ abstract class AListItemModel with EquatableMixin {
 
   String get defaultItemName;
 
-  int? get networkId => null;
+  int get networkId => -1;
 
   int compareTo(AListItemModel other) {
     bool currentIsGroupBool = this is GroupModel;
