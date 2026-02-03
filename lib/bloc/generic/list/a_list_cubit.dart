@@ -7,6 +7,7 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/i_list_items_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
+import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/shared/factories/group_model_factory.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
@@ -19,6 +20,7 @@ typedef SelectionModifier = Future<AListItemModel> Function(AListItemModel selec
 abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
   final GroupsService groupsService = globalLocator<GroupsService>();
   final SecretsService secretsService = globalLocator<SecretsService>();
+  final VaultsService vaultsService = globalLocator<VaultsService>();
 
   final IListItemsService<T> listItemsService;
   final List<IListItemsService<AListItemModel>> childItemsServices;
@@ -80,6 +82,24 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
     } else {
       throw UnsupportedError('Unsupported item type: ${item.runtimeType}');
     }
+  }
+
+  List<String> getExistingNames(AListItemModel item) {
+    String? currentItemName = item.name;
+    bool itemTypeGroupBool = item is GroupModel;
+
+    List<String> existingNamesList = state.allItems
+        .whereType<AListItemModel>()
+        .where((AListItemModel item) => (item is GroupModel) == itemTypeGroupBool)
+        .map((AListItemModel item) => item.name)
+        .whereType<String>()
+        .toList();
+
+    if (existingNamesList.where((String name) => name == item.name).length == 1) {
+      existingNamesList.remove(currentItemName);
+    }
+
+    return existingNamesList;
   }
 
   Future<void> navigateNext({required FilesystemPath filesystemPath}) async {

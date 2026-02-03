@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
 import 'package:snggle/views/pages/bottom_navigation/secrets_auth_page.dart';
@@ -105,6 +106,9 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
   }
 
   void _renameItem() {
+    AListItemModel listItem = widget.listItemModel;
+    List<String> existingNamesList = widget.listCubit.getExistingNames(listItem);
+
     widget.onCloseToolbar.call();
     showDialog(
       context: context,
@@ -112,6 +116,7 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
       builder: (BuildContext context) => NameDialog(
         title: 'Rename ${widget.listItemModel.defaultItemName.toLowerCase()}',
         defaultName: widget.listItemModel.name,
+        existingNamesList: existingNamesList,
         onSave: (String newName) async {
           await _handleRename(newName);
         },
