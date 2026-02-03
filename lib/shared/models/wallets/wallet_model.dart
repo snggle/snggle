@@ -11,7 +11,7 @@ class WalletModel extends AListItemModel {
     required super.encryptedBool,
     required super.pinnedBool,
     required super.filesystemPath,
-    required String super.name,
+    required super.name,
     required this.address,
     required this.derivationPath,
   });
