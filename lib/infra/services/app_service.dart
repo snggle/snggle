@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
@@ -37,8 +36,6 @@ class AppService {
   }
 
   Future<void> _wipeIsarDatabase() async {
-    await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-      return isar.writeTxn(() => isar.clear());
-    });
+    await globalLocator<IsarDatabaseManager>().close();
   }
 }

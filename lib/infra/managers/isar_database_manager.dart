@@ -16,6 +16,15 @@ class IsarDatabaseManager {
   bool initializedBool = false;
 
   Future<void> initDatabase({String? name}) async {
+    String databaseName = name ?? Isar.defaultName;
+    Isar? databaseIsar = Isar.getInstance(databaseName);
+
+    if (databaseIsar != null) {
+      _isar = databaseIsar;
+      initializedBool = true;
+      return;
+    }
+
     Directory rootDirectory = await globalLocator<RootDirectoryBuilder>().call();
     _isar = await Isar.open(
       <CollectionSchema<dynamic>>[
@@ -25,7 +34,7 @@ class IsarDatabaseManager {
         GroupEntitySchema,
         TransactionEntitySchema,
       ],
-      name: name ?? Isar.defaultName,
+      name: databaseName,
       directory: rootDirectory.path,
     );
     initializedBool = true;
@@ -44,7 +53,8 @@ class IsarDatabaseManager {
 
   Future<void> close() async {
     if (initializedBool == true && _isar.isOpen) {
-      await _isar.close();
+      await _isar.close(deleteFromDisk: true);
     }
+    initializedBool = false;
   }
 }

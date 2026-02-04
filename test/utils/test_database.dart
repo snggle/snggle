@@ -86,23 +86,32 @@ class TestDatabase {
   }
 
   Map<String, dynamic> readRawFilesystem({String path = ''}) {
+    Map<String, dynamic> jsonMap = <String, dynamic>{};
+
     Directory tmpDirectory = Directory('${testRootDirectory.path}/$testSessionUUID/$path');
 
-    Map<String, dynamic> json = <String, dynamic>{};
-    List<FileSystemEntity> files = tmpDirectory.listSync();
-    for (FileSystemEntity file in files) {
-      String fileName = file.path.replaceFirst(tmpDirectory.path, '');
+    if (!tmpDirectory.existsSync()) {
+      return jsonMap;
+    }
+
+    for (FileSystemEntity fileSystemEntity in tmpDirectory.listSync(followLinks: false)) {
+      String fileName = fileSystemEntity.path.replaceFirst(tmpDirectory.path, '');
       if (fileName.startsWith('/')) {
-        fileName = fileName.replaceFirst('/', '');
+        fileName = fileName.substring(1);
       }
 
-      if (fileName.endsWith('.snggle')) {
-        json[fileName] = (file as File).readAsStringSync();
-      } else {
-        json[fileName] = readRawFilesystem(path: '$path/$fileName');
+      String nextPath = path.isEmpty ? fileName : '$path/$fileName';
+
+      if (fileSystemEntity is Directory) {
+        jsonMap[fileName] = readRawFilesystem(path: nextPath);
+      } else if (fileSystemEntity is File) {
+        if (fileName.endsWith('.snggle')) {
+          jsonMap[fileName] = fileSystemEntity.readAsStringSync();
+        }
       }
     }
-    return json;
+
+    return jsonMap;
   }
 
   Future<Map<String, dynamic>> readEncryptedSecureStorage(SecureStorageKey secureStorageKey) async {
