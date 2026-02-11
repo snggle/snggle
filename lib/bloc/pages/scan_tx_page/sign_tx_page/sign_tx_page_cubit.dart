@@ -21,8 +21,6 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
-import 'package:snggle/shared/utils/logger/app_logger.dart';
-import 'package:snggle/shared/utils/logger/log_level.dart';
 
 class SignTxPageCubit extends Cubit<ASignTxPageState> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
@@ -45,24 +43,14 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
         super(const SignTxPageConfirmTxState());
 
   Future<void> init() async {
-    _verifySignRequestValues();
-    if (_walletAutoDetectionEnabledBool) {
-      int? sourceFingerprint = _cborEthSignRequest.derivationPath.sourceFingerprint;
-      if (sourceFingerprint == null) {
-        throw const ScanQrException(ScanQrExceptionType.receivedAddressEmpty);
-      }
-
-      VaultModel matchingVaultModel = await _findMatchingVault(sourceFingerprint);
-      String derivationPath = _convertToStringDerivationPath(_cborEthSignRequest.derivationPath.components);
-      WalletModel matchingWalletModel = await _findMatchingWalletInVault(matchingVaultModel, derivationPath);
-
-      senderWalletModel = matchingWalletModel;
-    } else {
-      senderWalletModel = await _walletsService.getByAddress(globalLocator<ActiveWalletController>().walletModel!.address);
-    }
+    senderWalletModel = await _determineSenderWalletModel();
 
     _senderWalletPasswordModel = await _getPasswordForWallet(senderWalletModel);
-    transactionModel = TransactionModel.fromCborEthSignRequest(senderWalletModel.id, senderWalletModel.address, _cborEthSignRequest);
+    transactionModel = TransactionModel.fromCborEthSignRequest(
+      senderWalletModel.id,
+      senderWalletModel.address,
+      _cborEthSignRequest,
+    );
   }
 
   Future<void> signTransaction() async {
@@ -85,6 +73,41 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
     ));
   }
 
+  Future<WalletModel> _determineSenderWalletModel() async {
+    if (_walletAutoDetectionEnabledBool == false) {
+      return _getActiveWallet();
+    }
+
+    if (_cborEthSignRequest.address != null) {
+      return _getWalletBySenderAddress(_cborEthSignRequest.address!);
+    }
+
+    if (_cborEthSignRequest.derivationPath.sourceFingerprint != null) {
+      return _getWalletByFingerprint(_cborEthSignRequest.derivationPath.sourceFingerprint!);
+    }
+
+    throw const ScanQrException(ScanQrExceptionType.receivedAddressEmpty);
+  }
+
+  Future<WalletModel> _getActiveWallet() {
+    String address = globalLocator<ActiveWalletController>().walletModel!.address;
+    return _walletsService.getByAddress(address);
+  }
+
+  Future<WalletModel> _getWalletBySenderAddress(String senderAddress) {
+    return _walletsService.getByAddress(senderAddress);
+  }
+
+  Future<WalletModel> _getWalletByFingerprint(int fingerprint) async {
+    VaultModel matchingVault = await _findMatchingVault(fingerprint);
+
+    String derivationPath = _convertDerivationPathToString(
+      _cborEthSignRequest.derivationPath.components,
+    );
+
+    return _findMatchingWalletInVault(matchingVault, derivationPath);
+  }
+
   Future<VaultModel> _findMatchingVault(int sourceFingerprint) async {
     FilesystemPath emptyRootPath = FilesystemPath.fromString('');
     List<VaultModel> allVaultModels = await _vaultsService.getAllByParentPath(emptyRootPath);
@@ -93,6 +116,16 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
       (VaultModel vaultModel) => vaultModel.fingerprint == sourceFingerprint.toString(),
       orElse: () => throw const ScanQrException(ScanQrExceptionType.vaultNotFound),
     );
+  }
+
+  // TODO(marcin): Optional extraction of derivation path conversion to codec_utils library
+  String _convertDerivationPathToString(List<CborPathComponent> cborPathComponents) {
+    String path = cborPathComponents.map((CborPathComponent component) {
+      String formattedIndex = component.hardened ? "${component.index}'" : '${component.index}';
+      return formattedIndex;
+    }).join('/');
+
+    return 'm/$path';
   }
 
   Future<WalletModel> _findMatchingWalletInVault(VaultModel vaultModel, String derivationPath) async {
@@ -111,54 +144,5 @@ class SignTxPageCubit extends Cubit<ASignTxPageState> {
       // TODO(dominik): Exception may be replaced with a UI dialog to enter the password
       throw const ScanQrException(ScanQrExceptionType.walletWithEncryptedParents);
     }
-  }
-
-  void _verifySignRequestValues() {
-    Map<String, Object?> valuesExpectedNull = <String, Object?>{
-      'depth': _cborEthSignRequest.derivationPath.depth,
-      'address': _cborEthSignRequest.address,
-      'origin': _cborEthSignRequest.origin,
-    };
-
-    Map<String, Object?> valuesExpectedNotNull = <String, Object?>{
-      'fingerprint': _cborEthSignRequest.derivationPath.sourceFingerprint,
-      'requestId': _cborEthSignRequest.requestId,
-    };
-
-    List<String> notNullButExpectedNull = <String>[
-      for (MapEntry<String, Object?> entry in valuesExpectedNull.entries)
-        if (entry.value != null) entry.key
-    ];
-
-    List<String> nullButExpectedNotNull = <String>[
-      for (MapEntry<String, Object?> entry in valuesExpectedNotNull.entries)
-        if (entry.value == null) entry.key
-    ];
-
-    if (notNullButExpectedNull.isNotEmpty) {
-      AppLogger().log(
-        message:
-        'Sign request check: expected [null] but found [value] for: ${notNullButExpectedNull.join(', ')}',
-        logLevel: LogLevel.info,
-      );
-    }
-
-    if (nullButExpectedNotNull.isNotEmpty) {
-      AppLogger().log(
-        message:
-        'Sign request check: expected [value] but found [null] for: ${nullButExpectedNotNull.join(', ')}',
-        logLevel: LogLevel.info,
-      );
-    }
-  }
-
-  // TODO(marcin): Optional extraction of derivation path conversion to codec_utils library
-  String _convertToStringDerivationPath(List<CborPathComponent> cborPathComponents) {
-    String path = cborPathComponents.map((CborPathComponent component) {
-      String formattedIndex = component.hardened ? "${component.index}'" : '${component.index}';
-      return formattedIndex;
-    }).join('/');
-
-    return 'm/$path';
   }
 }
