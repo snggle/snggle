@@ -37,6 +37,11 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
   Future<void> init(MnemonicSize mnemonicSize) async {
     emit(VaultCreatePageState(mnemonicSize: mnemonicSize, confirmPageEnabledBool: false));
 
+    // TODO(kamil): Temporary workaround for the repeated init triggering bug, we ensure the Listener is removed before adding a new one
+    vaultNameTextEditingController
+      ..removeListener(_updateVaultNameEmptyState)
+      ..addListener(_updateVaultNameEmptyState);
+
     int lastVaultIndex = await _vaultsService.getLastIndex();
     List<String> mnemonic = MnemonicModel.generate(mnemonicSize).mnemonicList;
 
@@ -73,6 +78,14 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
         logLevel: LogLevel.info,
       );
       await _createVault(mnemonicWords);
+    }
+  }
+
+  void _updateVaultNameEmptyState() {
+    bool tmpVaultNameEmptyBool = vaultNameTextEditingController.text.trim().isEmpty;
+
+    if (state.vaultNameEmptyBool != tmpVaultNameEmptyBool) {
+      emit(state.copyWith(vaultNameEmptyBool: tmpVaultNameEmptyBool));
     }
   }
 

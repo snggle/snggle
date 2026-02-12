@@ -35,6 +35,8 @@ class WalletListItem extends StatelessWidget {
       ),
       titleWidget: Text(
         walletModel.name,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
         style: textTheme.titleMedium?.copyWith(color: AppColors.body1),
       ),
       subtitleWidget: Column(

@@ -39,6 +39,11 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
     _disposeControllers();
 
+    // TODO(kamil): Temporary workaround for the repeated init triggering bug, we ensure the Listener is removed before adding a new one
+    vaultNameTextEditingController
+      ..removeListener(_updateVaultNameEmptyState)
+      ..addListener(_updateVaultNameEmptyState);
+
     List<TextEditingController> textControllers = List<TextEditingController>.generate(mnemonicSize, (_) => TextEditingController());
 
     for (TextEditingController textEditingController in textControllers) {
@@ -82,6 +87,14 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
 
   void _disposeControllers() {
     state.textControllers?.forEach((TextEditingController textController) => textController.dispose());
+  }
+
+  void _updateVaultNameEmptyState() {
+    bool tmpVaultNameEmptyBool = vaultNameTextEditingController.text.trim().isEmpty;
+
+    if (state.vaultNameEmptyBool != tmpVaultNameEmptyBool) {
+      emit(state.copyWith(vaultNameEmptyBool: tmpVaultNameEmptyBool));
+    }
   }
 
   void _validateMnemonic() {

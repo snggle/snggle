@@ -465,6 +465,57 @@ void main() {
       });
     });
 
+    group('Tests of VaultListPageCubit.rename()', () {
+      test('Should [emit ListState] with renamed VAULT', () async {
+        // Arrange
+        String actualNewVaultName = 'NEW VAULT NAME';
+
+        // Act
+        await actualVaultListPageCubit.renameItem(updatedVaultModel3, actualNewVaultName);
+        ListState actualListState = actualVaultListPageCubit.state;
+
+        // Assert
+        ListState expectedListState = ListState(
+          depth: 0,
+          loadingBool: false,
+          allItems: <AListItemModel>[
+            updatedVaultModel3.copyWith(name: 'NEW VAULT NAME'),
+            updatedGroupModel.copyWith(pinnedBool: false, encryptedBool: false),
+            vaultModel1,
+            vaultModel2,
+          ],
+          filesystemPath: const FilesystemPath.empty(),
+        );
+
+        expect(actualListState, expectedListState);
+      });
+
+      test('Should [emit ListState] with renamed GROUP', () async {
+        // Arrange
+        String actualNewGroupName = 'NEW GROUP NAME';
+
+        // Act
+        await actualVaultListPageCubit.renameItem(updatedGroupModel, actualNewGroupName);
+
+        ListState actualListState = actualVaultListPageCubit.state;
+
+        // Assert
+        ListState expectedListState = ListState(
+          depth: 0,
+          loadingBool: false,
+          allItems: <AListItemModel>[
+            updatedGroupModel.copyWith(name: 'NEW GROUP NAME'),
+            updatedVaultModel3.copyWith(name: 'NEW VAULT NAME'),
+            vaultModel1,
+            vaultModel2,
+          ],
+          filesystemPath: const FilesystemPath.empty(),
+        );
+
+        expect(actualListState, expectedListState);
+      });
+    });
+
     group('Tests of VaultListPageCubit.deleteItem()', () {
       test('Should [emit ListState] without deleted VAULT', () async {
         // Act
@@ -477,8 +528,8 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[
-            updatedGroupModel.copyWith(pinnedBool: false, encryptedBool: false),
-            updatedVaultModel3.copyWith(pinnedBool: false, encryptedBool: false),
+            updatedGroupModel.copyWith(name: 'NEW GROUP NAME'),
+            updatedVaultModel3.copyWith(name: 'NEW VAULT NAME'),
             vaultModel2,
           ],
           filesystemPath: const FilesystemPath.empty(),
@@ -498,7 +549,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[
-            updatedVaultModel3.copyWith(pinnedBool: false, encryptedBool: false),
+            updatedVaultModel3.copyWith(name: 'NEW VAULT NAME'),
             vaultModel2,
           ],
           filesystemPath: const FilesystemPath.empty(),

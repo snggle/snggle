@@ -414,6 +414,56 @@ void main() {
       });
     });
 
+    group('Tests of WalletListPageCubit.renameItem()', () {
+      test('Should [emit ListState] with renamed WALLET', () async {
+        // Arrange
+        String actualNewWalletName = 'NEW WALLET';
+
+        // Act
+        await actualWalletListPageCubit.renameItem(walletModel1, actualNewWalletName);
+        ListState actualListState = actualWalletListPageCubit.state;
+
+        // Assert
+        ListState expectedListState = ListState(
+          depth: 0,
+          loadingBool: false,
+          allItems: <AListItemModel>[
+            updatedGroupModel.copyWith(pinnedBool: false, encryptedBool: false),
+            walletModel1.copyWith(name: 'NEW WALLET'),
+            walletModel2,
+            updatedWalletModel3.copyWith(pinnedBool: false, encryptedBool: false),
+          ],
+          filesystemPath: FilesystemPath.fromString('vault1/network1'),
+        );
+
+        expect(actualListState, expectedListState);
+      });
+
+      test('Should [emit ListState] with renamed GROUP', () async {
+        // Arrange
+        String actualNewGroupName = 'NEW GROUP NAME';
+
+        // Act
+        await actualWalletListPageCubit.renameItem(updatedGroupModel, actualNewGroupName);
+        ListState actualListState = actualWalletListPageCubit.state;
+
+        // Assert
+        ListState expectedListState = ListState(
+          depth: 0,
+          loadingBool: false,
+          allItems: <AListItemModel>[
+            updatedGroupModel.copyWith(name: 'NEW GROUP NAME'),
+            walletModel1.copyWith(name: 'NEW WALLET', pinnedBool: false, encryptedBool: false),
+            walletModel2,
+            updatedWalletModel3.copyWith(pinnedBool: false, encryptedBool: false),
+          ],
+          filesystemPath: FilesystemPath.fromString('vault1/network1'),
+        );
+
+        expect(actualListState, expectedListState);
+      });
+    });
+
     group('Tests of WalletListPageCubit.deleteItem()', () {
       test('Should [emit ListState] without deleted WALLET', () async {
         // Act
@@ -425,7 +475,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[
-            updatedGroupModel.copyWith(pinnedBool: false, encryptedBool: false),
+            updatedGroupModel.copyWith(name: 'NEW GROUP NAME'),
             walletModel2,
             updatedWalletModel3.copyWith(pinnedBool: false, encryptedBool: false),
           ],

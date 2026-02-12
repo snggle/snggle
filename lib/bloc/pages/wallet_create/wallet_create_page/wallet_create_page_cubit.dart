@@ -40,6 +40,8 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
         super(const WalletCreatePageState());
 
   Future<void> init({required String defaultWalletName}) async {
+    nameTextEditingController.addListener(_updateWalletNameEmptyState);
+
     int lastDerivationIndex = await _walletsService.getLastDerivationIndex(_networkGroupModel.filesystemPath);
     int derivationIndex = lastDerivationIndex + 1;
 
@@ -92,5 +94,13 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
 
   void _handleDerivationPathChanged() {
     emit(const WalletCreatePageState(walletExistsErrorBool: false));
+  }
+
+  void _updateWalletNameEmptyState() {
+    bool tmpWalletNameEmptyBool = nameTextEditingController.text.trim().isEmpty;
+
+    if (state.walletNameEmptyBool != tmpWalletNameEmptyBool) {
+      emit(state.copyWith(walletNameEmptyBool: tmpWalletNameEmptyBool));
+    }
   }
 }

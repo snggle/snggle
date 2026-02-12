@@ -78,7 +78,7 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
               BottomTooltipItem(
                 label: 'Finish',
                 assetIconData: AppIcons.menu_save,
-                onTap: walletCreatePageState.walletExistsErrorBool ? null : _createNewWallet,
+                onTap: _finishButtonEnabledBool ? _createNewWallet : null,
               ),
             ],
             child: SingleChildScrollView(
@@ -102,6 +102,10 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                       keyboardType: TextInputType.text,
                     ),
                   ),
+                  if (walletCreatePageCubit.state.walletNameEmptyBool == true)
+                    const ErrorMessageListTile(
+                      message: 'Wallet name cannot be empty',
+                    ),
                   LabelWrapperVertical(
                     label: 'Derivation Path',
                     child: CustomTextField(
@@ -132,6 +136,11 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
       },
     );
   }
+
+  bool get _finishButtonEnabledBool =>
+      walletCreatePageCubit.state.walletNameEmptyBool == false &&
+      walletCreatePageCubit.state.emptyDerivationPathBool == false &&
+      walletCreatePageCubit.state.walletExistsErrorBool == false;
 
   Future<void> _createNewWallet() async {
     await CustomLoadingDialog.show<WalletModel?>(

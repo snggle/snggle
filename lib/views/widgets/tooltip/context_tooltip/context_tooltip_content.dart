@@ -22,12 +22,6 @@ class ContextTooltipContent extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width - 32;
     double elementsWidth = min(screenWidth, max(actions.length, 3) * 72);
     double maxPopupWidth = elementsWidth;
-    bool elementsSizeOverflowBool = false;
-
-    if (elementsWidth > screenWidth) {
-      elementsSizeOverflowBool = true;
-      maxPopupWidth = screenWidth;
-    }
 
     return ContextTooltipBackground(
       maxPopupWidth: maxPopupWidth,
@@ -55,7 +49,7 @@ class ContextTooltipContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 for (int i = 0; i < actions.length; i++) ...<Widget>[
-                  if (elementsSizeOverflowBool) Expanded(child: actions[i]) else actions[i],
+                  Expanded(child: actions[i]),
                   if (i < actions.length - 1)
                     Container(
                       height: 30,

@@ -60,6 +60,9 @@ class WalletModel extends AListItemModel {
   @override
   String get name => super.name!;
 
+  @override
+  String get defaultItemName => 'Wallet';
+
   String getShortAddress(int length) {
     return '${address.substring(0, length + 2)}...${address.substring(address.length - length)}';
   }

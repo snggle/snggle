@@ -12,6 +12,7 @@ import 'package:snggle/views/widgets/custom/custom_checkbox_list_tile.dart';
 import 'package:snggle/views/widgets/custom/custom_grid.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
+import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
@@ -45,8 +46,8 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _enableFinishButton();
-      scrollController.addListener(_enableFinishButton);
+      _updateScrolledBottomNotifier();
+      scrollController.addListener(_updateScrolledBottomNotifier);
     });
   }
 
@@ -82,7 +83,7 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
               label: scrolledBottomBool ? 'Finish' : 'Continue',
               assetIconData: scrolledBottomBool ? AppIcons.menu_save : AppIcons.menu_finish,
               onTap: scrolledBottomBool
-                  ? (statementAcceptedBool && widget.repeatedVaultModel == null)
+                  ? _finishButtonEnabledBool
                       ? _pressFinishButton
                       : null
                   : _pressContinueButton,
@@ -133,6 +134,10 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
                 textEditingController: widget.vaultCreatePageCubit.vaultNameTextEditingController,
               ),
             ),
+            if (widget.vaultCreatePageCubit.state.vaultNameEmptyBool == true)
+              const ErrorMessageListTile(
+                message: 'Vault name cannot be empty',
+              ),
             const SizedBox(height: 14),
             CustomGrid.builder(
               columnsCount: 3,
@@ -183,6 +188,9 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
     );
   }
 
+  bool get _finishButtonEnabledBool =>
+      statementAcceptedBool && widget.repeatedVaultModel == null && widget.vaultCreatePageCubit.state.vaultNameEmptyBool == false;
+
   void _pressContinueButton() {
     scrollController.animateTo(
       scrollController.position.maxScrollExtent,
@@ -191,7 +199,7 @@ class _MnemonicFormGeneratedState extends State<MnemonicFormGenerated> {
     );
   }
 
-  void _enableFinishButton() {
+  void _updateScrolledBottomNotifier() {
     if (scrollController.position.atEdge && scrollController.position.pixels == scrollController.position.maxScrollExtent) {
       scrolledBottomNotifier.value = true;
     } else {

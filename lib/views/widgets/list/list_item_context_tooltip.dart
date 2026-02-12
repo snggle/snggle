@@ -7,11 +7,13 @@ import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.d
 import 'package:snggle/views/pages/bottom_navigation/secrets_auth_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/secrets_setup_pin_page.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_agreement_dialog.dart';
+import 'package:snggle/views/widgets/custom/dialog/name_dialog.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_content.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_item.dart';
 
 class ListItemContextTooltip<T extends AListItemModel> extends StatefulWidget {
   final bool allowItemDeletionBool;
+  final bool allowItemRenamingBool;
   final AListItemModel listItemModel;
   final AListCubit<T> listCubit;
   final Widget pageTooltip;
@@ -19,6 +21,7 @@ class ListItemContextTooltip<T extends AListItemModel> extends StatefulWidget {
 
   const ListItemContextTooltip({
     required this.allowItemDeletionBool,
+    required this.allowItemRenamingBool,
     required this.listItemModel,
     required this.listCubit,
     required this.pageTooltip,
@@ -52,6 +55,12 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
             assetIconData: AppIcons.menu_pin,
             label: 'Pin',
             onTap: () => _handlePinValueChanged(true),
+          ),
+        if (widget.allowItemRenamingBool)
+          ContextTooltipItem(
+            assetIconData: AppIcons.menu_rename,
+            label: 'Rename',
+            onTap: _renameItem,
           ),
         if (widget.listItemModel.encryptedBool)
           ContextTooltipItem(
@@ -93,6 +102,25 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
       selectedItems: <AListItemModel>[widget.listItemModel],
       pinnedBool: pinnedBool,
     );
+  }
+
+  void _renameItem() {
+    widget.onCloseToolbar.call();
+    showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      builder: (BuildContext context) => NameDialog(
+        title: 'Rename ${widget.listItemModel.defaultItemName.toLowerCase()}',
+        defaultName: widget.listItemModel.name,
+        onSave: (String newName) async {
+          await _handleRename(newName);
+        },
+      ),
+    );
+  }
+
+  Future<void> _handleRename(String newName) async {
+    await widget.listCubit.renameItem(widget.listItemModel, newName);
   }
 
   Future<void> _lockItem() async {
