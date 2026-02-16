@@ -16,8 +16,8 @@ class AppEnterPinPage extends StatefulWidget {
   final AppPinType appPinType;
 
   const AppEnterPinPage({
-    this.appPinType = AppPinType.enterPin,
     super.key,
+    this.appPinType = AppPinType.enterPin,
   });
 
   @override

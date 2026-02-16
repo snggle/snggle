@@ -4,8 +4,7 @@ import 'package:snggle/bloc/splash_page/splash_page_cubit.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_enter_pin_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_loading_state.dart';
-import 'package:snggle/bloc/splash_page/states/splash_page_master_key_removed_state.dart';
-import 'package:snggle/bloc/splash_page/states/splash_page_setup_pin_state.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_setup_app_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -69,7 +68,7 @@ Future<void> main() async {
       await actualSplashPageCubit.init();
 
       // Assert
-      ASplashPageState expectedSplashPageState = SplashPageSetupPinState();
+      ASplashPageState expectedSplashPageState = SplashPageSetupAppState();
 
       expect(actualSplashPageCubit.state, expectedSplashPageState);
     });
@@ -104,7 +103,7 @@ Future<void> main() async {
       await actualSplashPageCubit.init();
 
       // Assert
-      ASplashPageState expectedSplashPageState = SplashPageMasterKeyRemovedState();
+      ASplashPageState expectedSplashPageState = SplashPageSetupAppState();
 
       expect(actualSplashPageCubit.state, expectedSplashPageState);
     });

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/infra/exceptions/invalid_master_key_exception.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
+import 'package:snggle/views/widgets/custom/dialog/master_key_dialog.dart';
 import 'package:snggle/views/widgets/generic/gradient_scrollbar.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
@@ -9,7 +11,7 @@ import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_wrapp
 
 class TxConfirmationScaffold extends StatelessWidget {
   final String title;
-  final VoidCallback onSignPressed;
+  final Future<void> Function() onSignPressed;
   final Widget transactionBodyWidget;
 
   const TxConfirmationScaffold({
@@ -31,7 +33,17 @@ class TxConfirmationScaffold extends StatelessWidget {
             BottomTooltipItem(
               assetIconData: AppIcons.menu_save,
               label: 'Sign',
-              onTap: onSignPressed,
+              onTap: () async {
+                try {
+                  await onSignPressed();
+                } on InvalidMasterKeyException {
+                  if (context.mounted == false) {
+                    return;
+                  }
+
+                  await MasterKeyDialog.show(context);
+                }
+              },
             ),
           ],
         ),

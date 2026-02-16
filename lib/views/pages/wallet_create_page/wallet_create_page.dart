@@ -8,6 +8,7 @@ import 'package:snggle/bloc/pages/wallet_create/wallet_create_page/wallet_create
 import 'package:snggle/bloc/pages/wallet_create/wallet_create_page/wallet_create_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/infra/exceptions/invalid_master_key_exception.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/networks/network_type.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
@@ -17,7 +18,7 @@ import 'package:snggle/shared/utils/formatters/legacy_derivation_path_input_form
 import 'package:snggle/shared/utils/string_utils.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
-import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
+import 'package:snggle/views/widgets/custom/dialog/master_key_dialog.dart';
 import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_horizontal.dart';
@@ -155,15 +156,21 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
       walletCreatePageCubit.state.walletExistsErrorBool == false;
 
   Future<void> _createNewWallet() async {
-    await CustomLoadingDialog.show<WalletModel?>(
-      context: context,
-      title: 'Saving...',
-      futureFunction: walletCreatePageCubit.createNewWallet,
-      onSuccess: (WalletModel? walletModel) async {
-        if (walletModel != null) {
-          await AutoRouter.of(context).pop();
-        }
-      },
-    );
+    try {
+      WalletModel? walletModel = await walletCreatePageCubit.createNewWallet();
+
+      if (mounted == false) {
+        return;
+      }
+
+      if (walletModel != null) {
+        await AutoRouter.of(context).pop();
+      }
+    } on InvalidMasterKeyException {
+      if (mounted == false) {
+        return;
+      }
+      unawaited(MasterKeyDialog.show(context));
+    }
   }
 }

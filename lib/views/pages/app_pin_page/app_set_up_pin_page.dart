@@ -7,21 +7,31 @@ import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_se
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_enter_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_invalid_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_loading_state.dart';
+import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
+import 'package:snggle/views/pages/app_master_key/app_master_key_type.dart';
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
 import 'package:snggle/views/widgets/button/custom_text_button.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/generic/loading_scaffold.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_scaffold.dart';
 
 @RoutePage()
 class AppSetUpPinPage extends StatefulWidget {
-  final AppPinType appPinType;
+  final AppPinType _appPinType;
+  final MnemonicModel? _mnemonicModel;
+  final AppMasterKeyType? _appMasterKeyType;
 
   const AppSetUpPinPage({
+    MnemonicModel? mnemonicModel,
+    AppPinType appPinType = AppPinType.setUpPin,
+    AppMasterKeyType? appMasterKeyType,
     super.key,
-    this.appPinType = AppPinType.setUpPin,
-  });
+  })  : _appMasterKeyType = appMasterKeyType,
+        _mnemonicModel = mnemonicModel,
+        _appPinType = appPinType;
 
   @override
   State<AppSetUpPinPage> createState() => _AppSetUpPinPageState();
@@ -33,7 +43,11 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
   @override
   void initState() {
     super.initState();
-    appSetupPinPageCubit = AppSetUpPinPageCubit(appPinType: widget.appPinType);
+    appSetupPinPageCubit = AppSetUpPinPageCubit(
+      appMasterKeyType: widget._appMasterKeyType,
+      appPinType: widget._appPinType,
+      mnemonicModel: widget._mnemonicModel,
+    );
   }
 
   @override
@@ -44,12 +58,13 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool appPinTypeChangeBool = widget.appPinType == AppPinType.changePin;
+    bool appPinTypeChangeBool = widget._appPinType == AppPinType.changePin;
     Widget childWidget;
 
     return BlocBuilder<AppSetUpPinPageCubit, AAppSetUpPinPageState>(
       bloc: appSetupPinPageCubit,
       builder: (BuildContext context, AAppSetUpPinPageState appSetUpPinPageState) {
+        bool canPopBool = appSetUpPinPageState is! AppSetUpPinPageConfirmPinState;
         if (appSetUpPinPageState is AppSetUpPinPageLoadingState) {
           return const LoadingScaffold();
         }
@@ -66,7 +81,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
                   onPressed: appSetupPinPageCubit.setUpFirstPin,
                 ),
             ],
-            popButtonVisible: appPinTypeChangeBool,
+            popButtonVisible: true,
           );
         } else if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState) {
           childWidget = PinpadScaffold(
@@ -91,16 +106,13 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
           childWidget = const SizedBox.shrink();
         }
         return PopScope(
-          canPop: _isPopAllowed(
-            changePinFlowBool: appPinTypeChangeBool,
-            appSetUpPinPageState: appSetUpPinPageState,
-          ),
+          canPop: canPopBool,
           onPopInvoked: (bool didPop) async {
-            appSetupPinPageCubit.resetAllPins();
-            if (appPinTypeChangeBool && appSetUpPinPageState is AppSetUpPinPageEnterPinState) {
-              await context.router.replaceAll(<PageRouteInfo>[const SettingsRoute()]);
-              return;
-            }
+            await _handleBackButtonPressed(
+              appSetUpPinPageState: appSetUpPinPageState,
+              appPinTypeChangeBool: appPinTypeChangeBool,
+              didPop: didPop,
+            );
           },
           child: Material(
             child: AnimatedSwitcher(
@@ -113,41 +125,79 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
     );
   }
 
+  Future<void> _handleBackButtonPressed({
+    required AAppSetUpPinPageState appSetUpPinPageState,
+    required bool appPinTypeChangeBool,
+    required bool didPop,
+  }) async {
+    if (didPop) {
+      return;
+    } else if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState) {
+      appSetupPinPageCubit.resetAllPins();
+      return;
+    } else if (appPinTypeChangeBool && appSetUpPinPageState is AppSetUpPinPageEnterPinState) {
+      await context.router.replaceAll(<PageRouteInfo>[const SettingsRoute()]);
+      return;
+    }
+
+    await context.router.pop();
+  }
+
   void _handleFirstPinChange(List<int> pinNumbers) {
     appSetupPinPageCubit.updateFirstPin(pinNumbers);
   }
 
   void _handleConfirmPinChange(
-    List<int> firstPinNumbers,
-    List<int> confirmPinNumbers,
+    List<int> firstPinNumbersList,
+    List<int> confirmPinNumbersList,
   ) {
-    appSetupPinPageCubit.updateConfirmPin(confirmPinNumbers);
-    if (firstPinNumbers.length == confirmPinNumbers.length) {
+    appSetupPinPageCubit.updateConfirmPin(confirmPinNumbersList);
+    if (firstPinNumbersList.length == confirmPinNumbersList.length) {
       _trySetupPin();
     }
-  }
-
-  bool _isPopAllowed({
-    required bool changePinFlowBool,
-    required AAppSetUpPinPageState appSetUpPinPageState,
-  }) {
-    if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState || changePinFlowBool) {
-      return false;
-    }
-    return true;
   }
 
   Future<void> _trySetupPin() async {
     try {
       await appSetupPinPageCubit.setUpConfirmPin();
-      if (widget.appPinType == AppPinType.changePin) {
+      if (mounted == false) {
+        return;
+      }
+      if (widget._appPinType == AppPinType.changePin) {
         await context.router.pop();
         return;
       } else {
+        bool recoverTypeBool = widget._appMasterKeyType == AppMasterKeyType.recover;
+        await _showMasterKeySuccessDialog(recoverTypeBool: recoverTypeBool);
+
         await context.router.replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
       }
     } catch (e) {
       AppLogger().log(message: 'Provided invalid confirm PIN');
     }
+  }
+
+  Future<void> _showMasterKeySuccessDialog({required bool recoverTypeBool}) async {
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.transparent,
+      builder: (BuildContext dialogContext) {
+        return CustomDialog(
+          title: 'Success',
+          content: Text(
+            textAlign: TextAlign.center,
+            recoverTypeBool ? 'Your Master Key has been successfully recovered.' : 'Your new Master Key has been successfully created.',
+          ),
+          backgroundColor: Colors.white,
+          options: <CustomDialogOption>[
+            CustomDialogOption(
+              label: 'Continue',
+              onPressed: () => Navigator.of(dialogContext).pop(),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
