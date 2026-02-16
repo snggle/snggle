@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
+import 'package:snggle/shared/utils/logger/app_logger.dart';
 
 class MasterKeyVO extends Equatable {
   final String _encryptedMasterKey;
@@ -40,7 +41,8 @@ class MasterKeyVO extends Equatable {
     try {
       return AES256Randomized.decrypt(decryptedMasterKey, encryptedData);
     } catch (e) {
-      throw ArgumentError('Provided password is valid, but cannot decrypt data using MasterKey');
+      AppLogger().log(message: 'Provided password is valid, but cannot decrypt data using MasterKey');
+      throw ArgumentError();
     }
   }
 

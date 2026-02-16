@@ -8,6 +8,7 @@ import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
 import 'package:snggle/views/widgets/button/custom_text_button.dart';
+import 'package:snggle/views/widgets/pinpad/pinpad_banner.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_scaffold.dart';
 
 @RoutePage()
@@ -15,8 +16,8 @@ class AppEnterPinPage extends StatefulWidget {
   final AppPinType appPinType;
 
   const AppEnterPinPage({
-    super.key,
     this.appPinType = AppPinType.enterPin,
+    super.key,
   });
 
   @override
@@ -40,7 +41,9 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
     return BlocBuilder<AppEnterPinPageCubit, AAppEnterPinPageState>(
       bloc: appEnterPinPageCubit,
       builder: (BuildContext context, AAppEnterPinPageState appEnterPinPageState) {
+        String? textWarning = _getTextWarning(appPinTypeChangeBool: appPinTypeChangeBool, appEnterPinPageState: appEnterPinPageState);
         return PinpadScaffold(
+          header: textWarning != null ? PinpadBanner(text: textWarning) : null,
           errorBool: appEnterPinPageState is AppEnterInvalidPinPageState,
           title: title,
           initialPinNumbers: appEnterPinPageState.pinNumbers,
@@ -61,7 +64,7 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
 
   Future<void> _handleConfirmButtonPressed({required bool changePinBool}) async {
     try {
-      await appEnterPinPageCubit.authenticate();
+      await appEnterPinPageCubit.authenticate(appPinType: widget.appPinType);
       if (changePinBool) {
         await AutoRouter.of(context).replace(AppSetUpPinRoute(appPinType: AppPinType.changePin));
       } else {
@@ -69,6 +72,28 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
       }
     } catch (e) {
       AppLogger().log(message: 'Provided invalid PIN');
+      if (appEnterPinPageCubit.state.attemptsLeft == 0 && changePinBool == false) {
+        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const AppMasterKeyRemovedRoute()]);
+      }
     }
+  }
+
+  String? _getTextWarning({required bool appPinTypeChangeBool, required AAppEnterPinPageState appEnterPinPageState}) {
+    if (appPinTypeChangeBool) {
+      return null;
+    }
+
+    int attemptsLeft = appEnterPinPageState.attemptsLeft;
+    String warningText;
+
+    if (attemptsLeft >= 3) {
+      return null;
+    } else if (attemptsLeft == 2) {
+      warningText = 'Invalid PIN. Two attempts left.';
+    } else {
+      warningText = 'Invalid PIN. Last attempt left.';
+    }
+
+    return warningText;
   }
 }

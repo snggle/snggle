@@ -11,6 +11,7 @@ class PinpadScaffold extends StatefulWidget {
   final List<Widget> actionButtons;
   final ValueChanged<List<int>> onChanged;
   final int maxPinLength;
+  final Widget? header;
 
   const PinpadScaffold({
     required this.errorBool,
@@ -20,6 +21,7 @@ class PinpadScaffold extends StatefulWidget {
     required this.actionButtons,
     required this.onChanged,
     this.maxPinLength = 8,
+    this.header,
     super.key,
   });
 
@@ -59,6 +61,10 @@ class _PinpadScaffoldState extends State<PinpadScaffold> {
             child: Column(
               children: <Widget>[
                 const SizedBox(height: 16),
+                if (widget.header != null) ...<Widget>[
+                  widget.header!,
+                  const SizedBox(height: 12),
+                ],
                 ValueListenableBuilder<List<int>>(
                   valueListenable: pinNumbersNotifier,
                   builder: (BuildContext context, List<int> enteredNumbers, _) {

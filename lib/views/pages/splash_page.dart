@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/splash_page/splash_page_cubit.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_enter_pin_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_master_key_removed_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_setup_pin_state.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 
@@ -57,6 +58,8 @@ class _SplashPageState extends State<SplashPage> {
   void _handleBlocListener(BuildContext context, ASplashPageState? splashPageState) {
     if (splashPageState is SplashPageSetupPinState) {
       AutoRouter.of(context).replace(AppSetUpPinRoute());
+    } else if (splashPageState is SplashPageMasterKeyRemovedState) {
+      AutoRouter.of(context).replace(const AppMasterKeyRemovedRoute());
     } else if (splashPageState is SplashPageEnterPinState) {
       AutoRouter.of(context).replace(AppEnterPinRoute());
     }
