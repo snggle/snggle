@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/repositories/groups_repository.dart';
+import 'package:snggle/infra/repositories/isar_database_version_repository.dart';
 import 'package:snggle/infra/repositories/master_key_repository.dart';
 import 'package:snggle/infra/repositories/network_groups_repository.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
@@ -13,6 +14,7 @@ import 'package:snggle/infra/repositories/vaults_repository.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
 import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/infra/services/groups_service.dart';
+import 'package:snggle/infra/services/isar_database_version_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/infra/services/network_groups_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
@@ -41,6 +43,7 @@ void initLocator() {
     ..registerLazySingleton<ActiveWalletController>(ActiveWalletController.new)
     ..registerSingleton<RootDirectoryBuilder>(getApplicationSupportDirectory)
     ..registerSingleton<IsarDatabaseManager>(IsarDatabaseManager());
+  //..registerLazySingleton<IsarDatabaseManager>(IsarDatabaseManager.new);
 }
 
 void _initControllers() {
@@ -53,6 +56,7 @@ void _initRepositories() {
   globalLocator
     ..registerLazySingleton<NetworkGroupsRepository>(NetworkGroupsRepository.new)
     ..registerLazySingleton<MasterKeyRepository>(MasterKeyRepository.new)
+    ..registerLazySingleton<IsarDatabaseVersionRepository>(IsarDatabaseVersionRepository.new)
     ..registerLazySingleton<SecretsRepository>(SecretsRepository.new)
     ..registerLazySingleton<VaultsRepository>(VaultsRepository.new)
     ..registerLazySingleton<WalletsRepository>(WalletsRepository.new)
@@ -65,6 +69,7 @@ void _initServices() {
     ..registerLazySingleton<AppService>(AppService.new)
     ..registerLazySingleton<NetworkGroupsService>(NetworkGroupsService.new)
     ..registerLazySingleton<MasterKeyService>(MasterKeyService.new)
+    ..registerLazySingleton<IsarDatabaseVersionService>(IsarDatabaseVersionService.new)
     ..registerLazySingleton<SecretsService>(SecretsService.new)
     ..registerLazySingleton<VaultsService>(VaultsService.new)
     ..registerLazySingleton<WalletsService>(WalletsService.new)
