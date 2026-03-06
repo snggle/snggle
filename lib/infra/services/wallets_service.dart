@@ -5,6 +5,7 @@ import 'package:snggle/infra/services/i_list_items_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/shared/factories/wallet_model_factory.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/utils/derivation_path_index_extractor.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class WalletsService implements IListItemsService<WalletModel> {
@@ -12,7 +13,8 @@ class WalletsService implements IListItemsService<WalletModel> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
   @override
-  Future<List<WalletModel>> getAllByParentPath(FilesystemPath parentFilesystemPath, {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
+  Future<List<WalletModel>> getAllByParentPath(FilesystemPath parentFilesystemPath,
+      {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
     WalletModelFactory walletModelFactory = globalLocator<WalletModelFactory>();
 
     List<WalletEntity> walletEntityList = await _walletsRepository.getAllByParentPath(parentFilesystemPath);
@@ -89,12 +91,9 @@ class WalletsService implements IListItemsService<WalletModel> {
     return globalLocator<WalletModelFactory>().createFromEntity(walletEntity);
   }
 
-  Future<int> getLastDerivationIndex(FilesystemPath parentFilesystemPath) async {
+  Future<int> getHighestDerivationIndex(FilesystemPath parentFilesystemPath, DerivationPathIndexExtractor derivationPathIndexExtractor) async {
     List<String> derivationPaths = await _walletsRepository.getAllDerivationPaths(parentFilesystemPath);
-    List<int> derivationIndexes = derivationPaths.map((String derivationPath) {
-      return int.parse(derivationPath.replaceAll("''", '').split('/').last);
-    }).toList()
-      ..sort();
+    List<int> derivationIndexes = derivationPaths.map(derivationPathIndexExtractor.extractIndex).toList()..sort();
 
     return derivationIndexes.isEmpty ? -1 : derivationIndexes.last;
   }

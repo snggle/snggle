@@ -141,12 +141,12 @@ void main() {
 
         // Assert
         WalletModel expectedWalletModel = WalletModel(
-          id: 6,
+          id: 7,
           encryptedBool: false,
           pinnedBool: false,
           address: '0x58d66B2F427936f1245f181fAaAaC51A176BF485',
           derivationPath: "m/44'/60'/0'/0/99999",
-          filesystemPath: FilesystemPath.fromString('vault1/network1/wallet6'),
+          filesystemPath: FilesystemPath.fromString('vault1/network1/wallet7'),
           name: 'Wallet 5',
         );
         WalletCreatePageState expectedWalletCreatePageState = const WalletCreatePageState(walletExistsErrorBool: false);

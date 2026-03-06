@@ -70,4 +70,39 @@ class WalletConnectPageCubit extends Cubit<WalletConnectPageState> {
       name: _walletModel.name,
     );
   }
+
+  Future<CborCryptoMultiAccounts> getCborCryptoMultiAccounts() async {
+    LegacyDerivationPath derivationPath = LegacyDerivationPath.parse(_walletModel.derivationPath);
+
+    PasswordModel vaultPasswordModel = await globalLocator<PasswordController>().getPasswordByFilesystemPath(_vaultModel.filesystemPath);
+
+    VaultSecretsModel vaultSecretsModel = await _secretsService.get<VaultSecretsModel>(
+      _vaultModel.filesystemPath,
+      vaultPasswordModel,
+    );
+
+    ED25519Derivator ed25519Derivator = ED25519Derivator();
+    ED25519PrivateKey ed25519PrivateKey = await ed25519Derivator.derivePath(
+      Mnemonic(vaultSecretsModel.mnemonicModel.mnemonicList),
+      derivationPath,
+    );
+
+    CborCryptoKeypath cborCryptoKeypath = CborCryptoKeypath(
+      components: derivationPath.pathElements //
+          .map((LegacyDerivationPathElement e) => CborPathComponent(index: e.rawIndex, hardened: e.isHardened))
+          .toList(),
+    );
+
+    return CborCryptoMultiAccounts(
+      cryptoHDKeyList: <CborCryptoHDKey>[
+        CborCryptoHDKey(
+          isMaster: false,
+          isPrivate: false,
+          keyData: ed25519PrivateKey.publicKey.compressed,
+          origin: cborCryptoKeypath,
+          name: _walletModel.name,
+        ),
+      ],
+    );
+  }
 }

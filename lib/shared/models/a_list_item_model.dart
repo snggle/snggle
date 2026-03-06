@@ -27,9 +27,11 @@ abstract class AListItemModel with EquatableMixin {
     return copyWith(pinnedBool: pinnedBool);
   }
 
-  String? get name => _name;
-
   String get defaultItemName;
+
+  bool get draggableBool => true;
+
+  String? get name => _name;
 
   int compareTo(AListItemModel other) {
     bool currentIsGroupBool = this is GroupModel;

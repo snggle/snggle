@@ -47,6 +47,7 @@ void main() {
             NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
             NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
             NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
+            NetworkGroupModel(id: 10, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network10'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.solana, name: 'Solana1'),
             // @formatter:on
           ],
         ),
@@ -106,6 +107,7 @@ void main() {
             NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
             NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
             NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
+            NetworkGroupModel(id: 10, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network10'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.solana, name: 'Solana1'),
             // @formatter:on
           ],
         ),
@@ -222,6 +224,7 @@ void main() {
           NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
           NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
           NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
+          NetworkGroupModel(id: 10, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network10'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.solana, name: 'Solana1'),
           // @formatter:on
         ],
       );
@@ -555,6 +558,7 @@ void main() {
           NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
           NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
           NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
+          NetworkGroupModel(id: 10, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network10'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.solana, name: 'Solana1'),
           // @formatter:on
         ],
       );
@@ -635,5 +639,5 @@ void main() {
     });
   });
 
-  tearDownAll(testDatabase.close);
+  //tearDownAll(testDatabase.close);
 }

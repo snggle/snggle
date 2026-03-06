@@ -33,7 +33,7 @@ import 'package:snggle/views/pages/bottom_navigation/secrets_page.dart' as _i6;
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/settings_page.dart'
     as _i7;
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_section_wrapper.dart'
-    as _i16;
+    as _i15;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/network_list_page/network_list_page.dart'
     as _i5;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/transaction_details_page/transaction_details_page.dart'
@@ -41,7 +41,7 @@ import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/transaction_
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page.dart'
     as _i13;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vaults_section_wrapper.dart'
-    as _i15;
+    as _i16;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_connect_page.dart'
     as _i17;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page.dart'
@@ -182,13 +182,13 @@ abstract class $AppRouter extends _i21.RootStackRouter {
         ),
       );
     },
-    VaultsSectionWrapperRoute.name: (routeData) {
+    SettingsSectionWrapperRoute.name: (routeData) {
       return _i21.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const _i15.VaultsSectionWrapper(),
       );
     },
-    SettingsSectionWrapperRoute.name: (routeData) {
+    VaultsSectionWrapperRoute.name: (routeData) {
       return _i21.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const _i16.VaultsSectionWrapper(),
@@ -629,20 +629,6 @@ class VaultRecoverRouteArgs {
 
 /// generated route for
 /// [_i15.VaultsSectionWrapper]
-class VaultsSectionWrapperRoute extends _i21.PageRouteInfo<void> {
-  const VaultsSectionWrapperRoute({List<_i21.PageRouteInfo>? children})
-      : super(
-          VaultsSectionWrapperRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'VaultsSectionWrapperRoute';
-
-  static const _i21.PageInfo<void> page = _i21.PageInfo<void>(name);
-}
-
-/// generated route for
-/// [_i16.VaultsSectionWrapper]
 class SettingsSectionWrapperRoute extends _i21.PageRouteInfo<void> {
   const SettingsSectionWrapperRoute({List<_i21.PageRouteInfo>? children})
       : super(
@@ -651,6 +637,20 @@ class SettingsSectionWrapperRoute extends _i21.PageRouteInfo<void> {
         );
 
   static const String name = 'SettingsSectionWrapperRoute';
+
+  static const _i21.PageInfo<void> page = _i21.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i16.VaultsSectionWrapper]
+class VaultsSectionWrapperRoute extends _i21.PageRouteInfo<void> {
+  const VaultsSectionWrapperRoute({List<_i21.PageRouteInfo>? children})
+      : super(
+          VaultsSectionWrapperRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'VaultsSectionWrapperRoute';
 
   static const _i21.PageInfo<void> page = _i21.PageInfo<void>(name);
 }

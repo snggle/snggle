@@ -17,7 +17,8 @@ import '../../../../../../utils/test_utils.dart';
 
 void main() {
   final TestDatabase testDatabase = TestDatabase();
-  late WalletConnectPageCubit actualWalletConnectPageCubit;
+  late WalletConnectPageCubit actualEthereumWalletConnectPageCubit;
+  late WalletConnectPageCubit actualSolanaWalletConnectPageCubit;
 
   setUp(() async {
     await testDatabase.init(
@@ -25,7 +26,7 @@ void main() {
       databaseMock: DatabaseMock.fullDatabaseMock,
     );
 
-    actualWalletConnectPageCubit = WalletConnectPageCubit(
+    actualEthereumWalletConnectPageCubit = WalletConnectPageCubit(
       vaultModel: VaultModel(
         id: 1,
         encryptedBool: false,
@@ -46,12 +47,34 @@ void main() {
         name: 'WALLET 0',
       ),
     );
+
+    actualSolanaWalletConnectPageCubit = WalletConnectPageCubit(
+      vaultModel: VaultModel(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        index: 0,
+        filesystemPath: FilesystemPath.fromString('vault1'),
+        fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
+        name: 'VAULT 1',
+        listItemsPreview: <AListItemModel>[],
+      ),
+      walletModel: WalletModel(
+        id: 2,
+        encryptedBool: false,
+        pinnedBool: false,
+        address: '4PBYLreUzbD92H4MVuGJvs6nbP3Ln7mx9GdtjyKryeW5',
+        derivationPath: "m/44'/501'/0'/0'",
+        filesystemPath: FilesystemPath.fromString('vault1/network2/wallet2'),
+        name: 'WALLET 0',
+      ),
+    );
   });
 
   group('Tests of WalletConnectPageCubit process', () {
     test('Should [return WalletConnectPageState] with WalletConnectOption.qr as default state', () {
       // Act
-      WalletConnectPageState actualWalletConnectPageState = actualWalletConnectPageCubit.state;
+      WalletConnectPageState actualWalletConnectPageState = actualEthereumWalletConnectPageCubit.state;
 
       // Assert
       WalletConnectPageState expectedWalletConnectPageState = const WalletConnectPageState(walletConnectOption: WalletConnectOption.qr);
@@ -61,8 +84,8 @@ void main() {
 
     test('Should [return WalletConnectPageState] with WalletConnectOption.hardware', () {
       // Act
-      actualWalletConnectPageCubit.changeConnectOption(WalletConnectOption.hardware);
-      WalletConnectPageState actualWalletConnectPageState = actualWalletConnectPageCubit.state;
+      actualEthereumWalletConnectPageCubit.changeConnectOption(WalletConnectOption.hardware);
+      WalletConnectPageState actualWalletConnectPageState = actualEthereumWalletConnectPageCubit.state;
 
       // Assert
       WalletConnectPageState expectedWalletConnectPageState = const WalletConnectPageState(walletConnectOption: WalletConnectOption.hardware);
@@ -72,8 +95,8 @@ void main() {
 
     test('Should [return WalletConnectPageState] with WalletConnectOption.qr', () {
       // Act
-      actualWalletConnectPageCubit.changeConnectOption(WalletConnectOption.qr);
-      WalletConnectPageState actualWalletConnectPageState = actualWalletConnectPageCubit.state;
+      actualEthereumWalletConnectPageCubit.changeConnectOption(WalletConnectOption.qr);
+      WalletConnectPageState actualWalletConnectPageState = actualEthereumWalletConnectPageCubit.state;
 
       // Assert
       WalletConnectPageState expectedWalletConnectPageState = const WalletConnectPageState(walletConnectOption: WalletConnectOption.qr);
@@ -81,7 +104,7 @@ void main() {
       expect(actualWalletConnectPageState, expectedWalletConnectPageState);
     });
 
-    test('Should [return CborCryptoHDKey] with extended public key for all wallets', () async {
+    test('Should [return CborCryptoHDKey] with extended public key for all wallets (Ethereum)', () async {
       // Arrange
       TestUtils.mockPasswords(
         FilesystemPath.fromString('vault1/network1/wallet1'),
@@ -89,7 +112,7 @@ void main() {
       );
 
       // Act
-      CborCryptoHDKey actualCborCryptoHDKey = await actualWalletConnectPageCubit.getCborCryptoHDKey(connectAllBool: true);
+      CborCryptoHDKey actualCborCryptoHDKey = await actualEthereumWalletConnectPageCubit.getCborCryptoHDKey(connectAllBool: true);
 
       // Assert
       CborCryptoHDKey expectedCborCryptoHDKey = CborCryptoHDKey(
@@ -109,7 +132,7 @@ void main() {
       expect(actualCborCryptoHDKey, expectedCborCryptoHDKey);
     });
 
-    test('Should [return CborCryptoHDKey] with extended public key for single wallet', () async {
+    test('Should [return CborCryptoHDKey] with extended public key for single wallet (Ethereum)', () async {
       // Arrange
       TestUtils.mockPasswords(
         FilesystemPath.fromString('vault1/network1/wallet1'),
@@ -117,7 +140,7 @@ void main() {
       );
 
       // Act
-      CborCryptoHDKey actualCborCryptoHDKey = await actualWalletConnectPageCubit.getCborCryptoHDKey(connectAllBool: false);
+      CborCryptoHDKey actualCborCryptoHDKey = await actualEthereumWalletConnectPageCubit.getCborCryptoHDKey(connectAllBool: false);
 
       // Assert
       CborCryptoHDKey expectedCborCryptoHDKey = CborCryptoHDKey(
@@ -141,6 +164,39 @@ void main() {
       );
 
       expect(actualCborCryptoHDKey, expectedCborCryptoHDKey);
+    });
+
+    test('Should [return CborCryptoMultiAccounts] with extended public key for single wallet (Solana)', () async {
+      // Arrange
+      TestUtils.mockPasswords(
+        FilesystemPath.fromString('vault1/network2/wallet2'),
+        List<PasswordModel>.generate(3, (_) => PasswordModel.defaultPassword()),
+      );
+
+      // Act
+      CborCryptoMultiAccounts actualMultiAccounts = await actualSolanaWalletConnectPageCubit.getCborCryptoMultiAccounts();
+
+      // Assert
+      CborCryptoHDKey expectedSolanaKey = CborCryptoHDKey(
+        isMaster: false,
+        isPrivate: false,
+        keyData: base64Decode('4UQS8URJGafQt0+N8dK3aIRHwCFf9zdY10IQlvYT6zs='),
+        origin: const CborCryptoKeypath(
+          components: <CborPathComponent>[
+            CborPathComponent(index: 44, hardened: true),
+            CborPathComponent(index: 501, hardened: true),
+            CborPathComponent(index: 0, hardened: true),
+            CborPathComponent(index: 0, hardened: true),
+          ],
+        ),
+        name: 'WALLET 0',
+      );
+
+      CborCryptoMultiAccounts expectedMultiAccounts = CborCryptoMultiAccounts(
+        cryptoHDKeyList: <CborCryptoHDKey>[expectedSolanaKey],
+      );
+
+      expect(actualMultiAccounts, expectedMultiAccounts);
     });
   });
 }
