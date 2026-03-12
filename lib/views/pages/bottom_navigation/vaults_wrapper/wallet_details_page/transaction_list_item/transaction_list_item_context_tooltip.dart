@@ -1,19 +1,20 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
+import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_content.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_item.dart';
 
 class TransactionListItemContextTooltip extends StatefulWidget {
-  final TransactionModel transactionModel;
+  final ATransactionModel transactionModel;
   final WalletDetailsPageCubit walletDetailsPageCubit;
   final Widget pageTooltip;
   final VoidCallback onCloseToolbar;
@@ -45,10 +46,7 @@ class _ListItemContextTooltipState extends State<TransactionListItemContextToolt
           children: <TextSpan>[
             const TextSpan(text: '  '),
             TextSpan(
-              text: switch (widget.transactionModel.signDataType) {
-                SignDataType.typedTransaction => 'TX',
-                SignDataType.rawBytes => 'TEXT',
-              },
+              text: widget.transactionModel.transactionLabel,
               style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
             ),
           ],
@@ -71,7 +69,24 @@ class _ListItemContextTooltipState extends State<TransactionListItemContextToolt
 
   void _navigateToTransactionDetails() {
     widget.onCloseToolbar();
-    AutoRouter.of(context).push(TransactionDetailsRoute(transactionModel: widget.transactionModel, networkTemplateModel: widget.networkTemplateModel));
+    ATransactionModel transactionModel = widget.transactionModel;
+    NetworkTemplateModel networkTemplateModel = widget.networkTemplateModel;
+
+    if (transactionModel is EthereumTransactionModel) {
+      AutoRouter.of(context).push(
+        EthereumTransactionDetailsRoute(
+          ethereumTransactionModel: transactionModel,
+          networkTemplateModel: networkTemplateModel,
+        ),
+      );
+    } else if (transactionModel is SolanaTransactionModel) {
+      AutoRouter.of(context).push(
+        SolanaTransactionDetailsRoute(
+          solanaTransactionModel: transactionModel,
+          networkTemplateModel: networkTemplateModel,
+        ),
+      );
+    }
   }
 
   void _selectTransaction() {

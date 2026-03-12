@@ -1,0 +1,139 @@
+import 'dart:typed_data';
+
+import 'package:codec_utils/codec_utils.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/a_solana_sign_tx_page_state.dart';
+import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/states/solana_sign_tx_page_confirm_tx_state.dart';
+import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/states/solana_sign_tx_page_signed_tx_state.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
+import 'package:snggle/infra/services/secrets_service.dart';
+import 'package:snggle/infra/services/transaction_service.dart';
+import 'package:snggle/infra/services/wallets_service.dart';
+import 'package:snggle/shared/controllers/active_wallet_controller.dart';
+import 'package:snggle/shared/controllers/password_controller.dart';
+import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
+import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
+import 'package:snggle/shared/models/password_model.dart';
+import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
+import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
+
+class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
+  final SecretsService _secretsService = globalLocator<SecretsService>();
+  final TransactionsService _transactionsService = globalLocator<TransactionsService>();
+  final WalletsService _walletsService = globalLocator<WalletsService>();
+
+  final bool _walletAutoDetectionEnabledBool;
+  final CborSolSignRequest _cborSolSignRequest;
+
+  late final PasswordModel _senderWalletPasswordModel;
+  late final WalletModel senderWalletModel;
+  late final SolanaTransactionModel solanaTransactionModel;
+  late final ASolanaMessage _solanaMessage;
+
+  SolanaSignTxPageCubit({
+    required bool walletAutoDetectionEnabledBool,
+    required CborSolSignRequest cborSolSignRequest,
+  })  : _walletAutoDetectionEnabledBool = walletAutoDetectionEnabledBool,
+        _cborSolSignRequest = cborSolSignRequest,
+        super(const SolanaSignTxPageConfirmTxState());
+
+  Future<void> init() async {
+    _solanaMessage = _getMessageFromCbor(_cborSolSignRequest);
+    senderWalletModel = await _determineSenderWalletModel();
+    _senderWalletPasswordModel = await _getPasswordForWallet(senderWalletModel);
+    solanaTransactionModel = SolanaTransactionModel.fromCborSolSignRequest(
+      senderWalletModel.id,
+      senderWalletModel.address,
+      _cborSolSignRequest,
+      _solanaMessage,
+    );
+  }
+
+  Future<void> signTransaction() async {
+    WalletSecretsModel walletSecretsModel = await _secretsService.get(senderWalletModel.filesystemPath, _senderWalletPasswordModel);
+
+    EDPrivateKey edPrivateKey = EDPrivateKey.fromBytes(walletSecretsModel.privateKey);
+
+    ED25519PrivateKey ed25519PrivateKey = ED25519PrivateKey(
+      edPrivateKey: edPrivateKey,
+      metadata: Bip32KeyMetadata.fromCompressedPublicKey(compressedPublicKey: edPrivateKey.edPublicKey.bytes),
+    );
+
+    ASignature signature = SolanaSigner(ed25519PrivateKey).sign(_cborSolSignRequest.signData);
+
+    SolanaTransactionModel signedTransactionModel = solanaTransactionModel.addSignature(signature.hex) as SolanaTransactionModel;
+    await _transactionsService.save(signedTransactionModel);
+
+    emit(SolanaSignTxPageSignedTxState(
+      transactionModel: signedTransactionModel,
+      cborSolSignature: CborSolSignature(
+        signature: signature.bytes,
+        requestId: _cborSolSignRequest.requestId ?? Uint8List(0),
+      ),
+    ));
+  }
+
+  ASolanaMessage _getMessageFromCbor(CborSolSignRequest cborSolSignRequest) {
+    SignDataType signDataType =
+        cborSolSignRequest.dataType == CborSolSignDataType.transaction ? SignDataType.typedTransaction : SignDataType.rawBytes;
+    ASolanaMessage solanaMessage = ASolanaMessage.fromSerializedData(signDataType, cborSolSignRequest.signData);
+
+    return solanaMessage;
+  }
+
+  Future<WalletModel> _determineSenderWalletModel() async {
+    if (_walletAutoDetectionEnabledBool == false) {
+      return _getActiveWallet();
+    } else {
+      return _getWalletFromMessage();
+    }
+  }
+
+  Future<WalletModel> _getActiveWallet() {
+    String address = globalLocator<ActiveWalletController>().walletModel!.address;
+    return _walletsService.getByAddress(address);
+  }
+
+  Future<WalletModel> _getWalletFromMessage() async {
+    String? receivedWalletAddress = _cborSolSignRequest.address?.toString().toLowerCase();
+    receivedWalletAddress =
+        (_solanaMessage is ASolanaTransactionMessage) ? (_getWalletFromInstructions(_solanaMessage) ?? receivedWalletAddress) : receivedWalletAddress;
+
+    if (receivedWalletAddress == null) {
+      throw const ScanQrException(ScanQrExceptionType.receivedAddressEmpty);
+    }
+
+    return _getWalletFromDatabase(receivedWalletAddress);
+  }
+
+  String? _getWalletFromInstructions(ASolanaTransactionMessage solanaTransactionMessage) {
+    String? signerAddress;
+    String? senderAddress;
+
+    for (ASolanaInstructionDecoded solanaInstructionDecoded in solanaTransactionMessage.decodedInstructions) {
+      signerAddress = solanaInstructionDecoded.getSignerAddress() ?? signerAddress;
+      senderAddress = solanaInstructionDecoded.getSenderAddress() ?? senderAddress;
+    }
+    return signerAddress ?? senderAddress;
+  }
+
+  Future<WalletModel> _getWalletFromDatabase(String signWalletAddress) async {
+    try {
+      return await _walletsService.getByAddress(signWalletAddress);
+    } on ChildKeyNotFoundException catch (_) {
+      throw const ScanQrException(ScanQrExceptionType.walletNotFound);
+    }
+  }
+
+  Future<PasswordModel> _getPasswordForWallet(WalletModel walletModel) async {
+    try {
+      return await globalLocator<PasswordController>().getPasswordByFilesystemPath(walletModel.filesystemPath);
+    } catch (_) {
+      // TODO(dominik): Exception may be replaced with a UI dialog to enter the password
+      throw const ScanQrException(ScanQrExceptionType.walletWithEncryptedParents);
+    }
+  }
+}

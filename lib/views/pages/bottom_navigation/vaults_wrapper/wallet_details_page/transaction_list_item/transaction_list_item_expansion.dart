@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
+import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
 import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/public_address_preview.dart';
 
 class TransactionListItemExpansion extends StatelessWidget {
-  final TransactionModel transactionModel;
+  final ATransactionModel transactionModel;
 
   const TransactionListItemExpansion({
     required this.transactionModel,
@@ -34,9 +36,12 @@ class TransactionListItemExpansion extends StatelessWidget {
     String? recipientAddress = transactionModel.recipientAddress;
     String? contractAddress = transactionModel.contractAddress;
     String? amount = transactionModel.amount?.toString();
-    String? fee = transactionModel.fee?.toString();
+    String? fee = transactionModel is EthereumTransactionModel ? (transactionModel as EthereumTransactionModel).fee?.toString() : null;
     String? message = transactionModel.message;
     String? signature = transactionModel.signature;
+    String? transactionData = transactionModel is SolanaTransactionModel ? (transactionModel as SolanaTransactionModel).transactionData : null;
+
+    bool emptyTransactionDetailsBool = recipientAddress == null && message == null && contractAddress == null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -100,6 +105,17 @@ class TransactionListItemExpansion extends StatelessWidget {
               label: 'Message',
               labelStyle: labelTextStyle,
               child: Text(message, style: valueTextStyle),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+        if (transactionData != null && emptyTransactionDetailsBool == true) ...<Widget>[
+          CopyWrapper(
+            value: transactionData,
+            child: LabelWrapperVertical(
+              label: 'Transaction data',
+              labelStyle: labelTextStyle,
+              child: Text(transactionData, style: valueTextStyle),
             ),
           ),
           const SizedBox(height: 16),

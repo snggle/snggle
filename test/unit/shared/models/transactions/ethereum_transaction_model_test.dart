@@ -4,14 +4,15 @@ import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
-import 'package:snggle/infra/entities/transaction_entity/transaction_entity.dart';
-import 'package:snggle/shared/models/transactions/transaction_model.dart';
+import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
+import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
+import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 
 void main() {
-  group('Tests of TransactionModel.fromEntity() constructor', () {
-    test('Should [return TransactionModel] from given TransactionEntity', () {
+  group('Tests of EthereumTransactionModel.fromEntity() constructor', () {
+    test('Should [return EthereumTransactionModel] from given EthereumTransactionEntity', () {
       // Arrange
-      TransactionEntity actualTransactionEntity = const TransactionEntity(
+      EthereumTransactionEntity actualEthereumTransactionEntity = const EthereumTransactionEntity(
         id: 1,
         walletId: 1,
         creationDate: '2024-07-01T13:45:41.420590Z',
@@ -22,15 +23,16 @@ void main() {
             '0x3593564c000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000667aac7700000000000000000000000000000000000000000000000000000000000000040b080604000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000280000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000044a4ddab603539000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000044a4ddab603539000000000000000000000000000000000000000000000000000000004ceda9bf00000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc200000000000000000000000016980b3b4a3f9d89e33311b5aa8f80303e5ca4f8000000000000000000000000000000000000000000000000000000000000006000000000000000000000000016980b3b4a3f9d89e33311b5aa8f80303e5ca4f8000000000000000000000000000000fee13a103a10d593b9ae06b3e05f2e7e1c0000000000000000000000000000000000000000000000000000000000000019000000000000000000000000000000000000000000000000000000000000006000000000000000000000000016980b3b4a3f9d89e33311b5aa8f80303e5ca4f80000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000004cbc6dcd',
         contractAddress: '0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad',
         senderAddress: '0x03f04cb5d332eccb602d8efe463c921140cfca09',
-        signature: '0x6f115b38753bddd14db7b9bb26b132be8f355abdde63dbcdf6fdbd94de774ce8058c544d50b5eed1936d57063cca5922eace9ffcb2b907c793a9c376d5bd6d6b00',
+        signature:
+            '0x6f115b38753bddd14db7b9bb26b132be8f355abdde63dbcdf6fdbd94de774ce8058c544d50b5eed1936d57063cca5922eace9ffcb2b907c793a9c376d5bd6d6b00',
         signDate: '2024-07-01T13:45:42.999751Z',
       );
 
       // Act
-      TransactionModel actualTransactionModel = TransactionModel.fromEntity(actualTransactionEntity);
+      EthereumTransactionModel actualEthereumTransactionModel = EthereumTransactionModel.fromEntity(actualEthereumTransactionEntity);
 
       // Assert
-      TransactionModel expectedTransactionModel = TransactionModel(
+      EthereumTransactionModel expectedEthereumTransactionModel = EthereumTransactionModel(
         id: 1,
         walletId: 1,
         creationDate: DateTime.parse('2024-07-01T13:45:41.420590Z'),
@@ -41,16 +43,17 @@ void main() {
             '0x3593564c000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000667aac7700000000000000000000000000000000000000000000000000000000000000040b080604000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000280000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000044a4ddab603539000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000044a4ddab603539000000000000000000000000000000000000000000000000000000004ceda9bf00000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc200000000000000000000000016980b3b4a3f9d89e33311b5aa8f80303e5ca4f8000000000000000000000000000000000000000000000000000000000000006000000000000000000000000016980b3b4a3f9d89e33311b5aa8f80303e5ca4f8000000000000000000000000000000fee13a103a10d593b9ae06b3e05f2e7e1c0000000000000000000000000000000000000000000000000000000000000019000000000000000000000000000000000000000000000000000000000000006000000000000000000000000016980b3b4a3f9d89e33311b5aa8f80303e5ca4f80000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000004cbc6dcd',
         contractAddress: '0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad',
         senderAddress: '0x03f04cb5d332eccb602d8efe463c921140cfca09',
-        signature: '0x6f115b38753bddd14db7b9bb26b132be8f355abdde63dbcdf6fdbd94de774ce8058c544d50b5eed1936d57063cca5922eace9ffcb2b907c793a9c376d5bd6d6b00',
+        signature:
+            '0x6f115b38753bddd14db7b9bb26b132be8f355abdde63dbcdf6fdbd94de774ce8058c544d50b5eed1936d57063cca5922eace9ffcb2b907c793a9c376d5bd6d6b00',
         signDate: DateTime.parse('2024-07-01T13:45:42.999751Z'),
       );
 
-      expect(actualTransactionModel, expectedTransactionModel);
+      expect(actualEthereumTransactionModel, expectedEthereumTransactionModel);
     });
   });
 
-  group('Tests of TransactionModel.fromCborEthSignRequest() constructor', () {
-    test('Should [return TransactionModel] from given CborEthSignRequest', () {
+  group('Tests of EthereumTransactionModel.fromCborEthSignRequest() constructor', () {
+    test('Should [return EthereumTransactionModel] from given CborEthSignRequest', () {
       // Arrange
       CborEthSignRequest actualCborEthSignRequest = CborEthSignRequest(
         requestId: base64Decode('ukI9tqeOQHKqM6StM6LwZw=='),
@@ -71,13 +74,14 @@ void main() {
       );
 
       // Act
-      TransactionModel actualTransactionModel = TransactionModel.fromCborEthSignRequest(1, '0xd6c63265857c51ee794964d2f98431b02db87ee7', actualCborEthSignRequest);
+      EthereumTransactionModel actualEthereumTransactionModel =
+          EthereumTransactionModel.fromCborEthSignRequest(1, '0xd6c63265857c51ee794964d2f98431b02db87ee7', actualCborEthSignRequest);
 
       // Assert
-      TransactionModel expectedTransactionModel = TransactionModel(
+      EthereumTransactionModel expectedEthereumTransactionModel = EthereumTransactionModel(
         id: Isar.autoIncrement,
         walletId: 1,
-        creationDate: actualTransactionModel.creationDate,
+        creationDate: actualEthereumTransactionModel.creationDate,
         signDataType: SignDataType.typedTransaction,
         amount: '0.005 ETH',
         fee: '0.000032320717821 ETH',
@@ -85,14 +89,14 @@ void main() {
         recipientAddress: '0x479b2970f03f9021cff00b6e5807ba544ea351f8',
       );
 
-      expect(actualTransactionModel, expectedTransactionModel);
+      expect(actualEthereumTransactionModel, expectedEthereumTransactionModel);
     });
   });
 
-  group('Tests of TransactionModel.toEntity()', () {
-    test('Should [return TransactionEntity] from given TransactionModel', () {
+  group('Tests of EthereumTransactionModel.toEntity()', () {
+    test('Should [return EthereumTransactionEntity] from given EthereumTransactionModel', () {
       // Arrange
-      TransactionModel actualTransactionModel = TransactionModel(
+      EthereumTransactionModel actualEthereumTransactionModel = EthereumTransactionModel(
         id: 1,
         walletId: 1,
         creationDate: DateTime.parse('2024-07-01T13:45:41.420590Z'),
@@ -103,15 +107,16 @@ void main() {
             '0x3593564c000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000667aac7700000000000000000000000000000000000000000000000000000000000000040b080604000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000280000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000044a4ddab603539000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000044a4ddab603539000000000000000000000000000000000000000000000000000000004ceda9bf00000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc200000000000000000000000016980b3b4a3f9d89e33311b5aa8f80303e5ca4f8000000000000000000000000000000000000000000000000000000000000006000000000000000000000000016980b3b4a3f9d89e33311b5aa8f80303e5ca4f8000000000000000000000000000000fee13a103a10d593b9ae06b3e05f2e7e1c0000000000000000000000000000000000000000000000000000000000000019000000000000000000000000000000000000000000000000000000000000006000000000000000000000000016980b3b4a3f9d89e33311b5aa8f80303e5ca4f80000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000004cbc6dcd',
         contractAddress: '0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad',
         senderAddress: '0x03f04cb5d332eccb602d8efe463c921140cfca09',
-        signature: '0x6f115b38753bddd14db7b9bb26b132be8f355abdde63dbcdf6fdbd94de774ce8058c544d50b5eed1936d57063cca5922eace9ffcb2b907c793a9c376d5bd6d6b00',
+        signature:
+            '0x6f115b38753bddd14db7b9bb26b132be8f355abdde63dbcdf6fdbd94de774ce8058c544d50b5eed1936d57063cca5922eace9ffcb2b907c793a9c376d5bd6d6b00',
         signDate: DateTime.parse('2024-07-01T13:45:42.999751Z'),
       );
 
       // Act
-      TransactionEntity actualTransactionEntity = actualTransactionModel.toEntity();
+      EthereumTransactionEntity actualEthereumTransactionEntity = actualEthereumTransactionModel.toEntity();
 
       // Assert
-      TransactionEntity expectedTransactionEntity = const TransactionEntity(
+      EthereumTransactionEntity expectedEthereumTransactionEntity = const EthereumTransactionEntity(
         id: 1,
         walletId: 1,
         creationDate: '2024-07-01T13:45:41.420590Z',
@@ -122,18 +127,19 @@ void main() {
             '0x3593564c000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000667aac7700000000000000000000000000000000000000000000000000000000000000040b080604000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000280000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000044a4ddab603539000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000044a4ddab603539000000000000000000000000000000000000000000000000000000004ceda9bf00000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc200000000000000000000000016980b3b4a3f9d89e33311b5aa8f80303e5ca4f8000000000000000000000000000000000000000000000000000000000000006000000000000000000000000016980b3b4a3f9d89e33311b5aa8f80303e5ca4f8000000000000000000000000000000fee13a103a10d593b9ae06b3e05f2e7e1c0000000000000000000000000000000000000000000000000000000000000019000000000000000000000000000000000000000000000000000000000000006000000000000000000000000016980b3b4a3f9d89e33311b5aa8f80303e5ca4f80000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000004cbc6dcd',
         contractAddress: '0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad',
         senderAddress: '0x03f04cb5d332eccb602d8efe463c921140cfca09',
-        signature: '0x6f115b38753bddd14db7b9bb26b132be8f355abdde63dbcdf6fdbd94de774ce8058c544d50b5eed1936d57063cca5922eace9ffcb2b907c793a9c376d5bd6d6b00',
+        signature:
+            '0x6f115b38753bddd14db7b9bb26b132be8f355abdde63dbcdf6fdbd94de774ce8058c544d50b5eed1936d57063cca5922eace9ffcb2b907c793a9c376d5bd6d6b00',
         signDate: '2024-07-01T13:45:42.999751Z',
       );
 
-      expect(actualTransactionEntity, expectedTransactionEntity);
+      expect(actualEthereumTransactionEntity, expectedEthereumTransactionEntity);
     });
   });
 
-  group('Tests of TransactionModel.addSignature()', () {
-    test('Should [return TransactionModel] with new signature', () {
+  group('Tests of EthereumTransactionModel.addSignature()', () {
+    test('Should [return EthereumTransactionModel] with new signature', () {
       // Arrange
-      TransactionModel actualTransactionModel = TransactionModel(
+      EthereumTransactionModel actualEthereumTransactionModel = EthereumTransactionModel(
         id: 1,
         walletId: 1,
         creationDate: DateTime.parse('2024-07-01T13:45:41.420590Z'),
@@ -147,10 +153,10 @@ void main() {
       );
 
       // Act
-      TransactionModel actualNewTransactionModel = actualTransactionModel.addSignature('signature');
+      ATransactionModel actualNewEthereumTransactionModel = actualEthereumTransactionModel.addSignature('signature');
 
       // Assert
-      TransactionModel expectedNewTransactionModel = TransactionModel(
+      EthereumTransactionModel expectedNewEthereumTransactionModel = EthereumTransactionModel(
         id: 1,
         walletId: 1,
         creationDate: DateTime.parse('2024-07-01T13:45:41.420590Z'),
@@ -162,12 +168,98 @@ void main() {
         contractAddress: '0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad',
         senderAddress: '0x03f04cb5d332eccb602d8efe463c921140cfca09',
         signature: 'signature',
-        signDate: actualNewTransactionModel.signDate,
+        signDate: actualNewEthereumTransactionModel.signDate,
       );
 
-      expect(actualNewTransactionModel, expectedNewTransactionModel);
+      expect(actualNewEthereumTransactionModel, expectedNewEthereumTransactionModel);
     });
   });
 
-  group('Tests of TransactionModel.title getter', () {});
+  group('Tests of EthereumTransactionModel.title getter', () {
+    test('Should [return shortened recipientAddress] by default', () {
+      // Arrange
+      EthereumTransactionModel actualEthereumTransactionModel = EthereumTransactionModel(
+        id: 1,
+        walletId: 1,
+        creationDate: DateTime.parse('2024-07-01T13:45:41.420590Z'),
+        signDataType: SignDataType.typedTransaction,
+        amount: '0.019321570386261305 ETH',
+        contractAddress: '0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad',
+        senderAddress: '0x03f04cb5d332eccb602d8efe463c921140cfca09',
+        recipientAddress: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD',
+      );
+
+      // Act
+      String actualTransactionTitle = actualEthereumTransactionModel.title;
+
+      // Assert
+      String expectedTransactionTitle = '0x1C37...06CD';
+
+      expect(actualTransactionTitle, expectedTransactionTitle);
+    });
+
+    test('Should [return shortened contractAddress] if recipientAddress is null', () {
+      // Arrange
+      EthereumTransactionModel actualEthereumTransactionModel = EthereumTransactionModel(
+        id: 1,
+        walletId: 1,
+        creationDate: DateTime.parse('2024-07-01T13:45:41.420590Z'),
+        signDataType: SignDataType.typedTransaction,
+        amount: '0.019321570386261305 ETH',
+        contractAddress: '0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad',
+        senderAddress: '0x03f04cb5d332eccb602d8efe463c921140cfca09',
+      );
+
+      // Act
+      String actualTransactionTitle = actualEthereumTransactionModel.title;
+
+      // Assert
+      String expectedTransactionTitle = '0x3fc9...7fad';
+
+      expect(actualTransactionTitle, expectedTransactionTitle);
+    });
+
+    test('Should [return message] if recipientAddress and contractAddress are null', () {
+      // Arrange
+      EthereumTransactionModel actualEthereumTransactionModel = EthereumTransactionModel(
+        id: 1,
+        walletId: 1,
+        creationDate: DateTime.parse('2024-07-01T13:45:41.420590Z'),
+        signDataType: SignDataType.typedTransaction,
+        message:
+            'Welcome to OpenSea!\n\nClick to sign in and accept the OpenSea Terms of Service (https://opensea.io/tos) and Privacy Policy (https://opensea.io/privacy).\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nWallet address:\n0x03f04cb5d332eccb602d8efe463c921140cfca09\n\nNonce:\n37b61cff-7238-457f-b9da-bdb78356f0b2',
+        amount: '0.019321570386261305 ETH',
+        senderAddress: '0x03f04cb5d332eccb602d8efe463c921140cfca09',
+      );
+
+      // Act
+      String actualTransactionTitle = actualEthereumTransactionModel.title;
+
+      // Assert
+      String expectedTransactionTitle =
+          'Welcome to OpenSea!\n\nClick to sign in and accept the OpenSea Terms of Service (https://opensea.io/tos) and Privacy Policy (https://opensea.io/privacy).\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nWallet address:\n0x03f04cb5d332eccb602d8efe463c921140cfca09\n\nNonce:\n37b61cff-7238-457f-b9da-bdb78356f0b2';
+
+      expect(actualTransactionTitle, expectedTransactionTitle);
+    });
+
+    test('Should [return (---)] if recipientAddress, contractAddress and message are null', () {
+      // Arrange
+      EthereumTransactionModel actualEthereumTransactionModel = EthereumTransactionModel(
+        id: 1,
+        walletId: 1,
+        creationDate: DateTime.parse('2024-07-01T13:45:41.420590Z'),
+        signDataType: SignDataType.typedTransaction,
+        amount: '0.019321570386261305 ETH',
+        senderAddress: '0x03f04cb5d332eccb602d8efe463c921140cfca09',
+      );
+
+      // Act
+      String actualTransactionTitle = actualEthereumTransactionModel.title;
+
+      // Assert
+      String expectedTransactionTitle = '---';
+
+      expect(actualTransactionTitle, expectedTransactionTitle);
+    });
+  });
 }

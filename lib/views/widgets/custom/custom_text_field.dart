@@ -142,7 +142,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               suffix: widget.suffix,
               suffixText: widget.suffixText,
               suffixStyle: suffixStyle?.copyWith(color: AppColors.middleGrey),
-              // The suffixIcon can be used as prefix text, because prefixText disappears if editable text is empty, but prefixIcon is always visible.
+              // The suffixIcon can be used as suffix text, because suffixText disappears if editable text is empty, but suffixIcon is always visible.
               suffixIcon: suffixExistsBool
                   ? Transform.translate(
                       offset: Offset(suffixOffset, 0),
