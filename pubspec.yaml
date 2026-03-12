@@ -1,7 +1,7 @@
 name: snggle
 description: Private keys manager
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.65
+version: 0.0.66
 
 environment:
   sdk: "3.2.6"
@@ -149,6 +149,7 @@ flutter:
 
   assets:
     - assets/
+    - assets/documents/
     - assets/fonts/
     - assets/fonts/bauhaus/
     - assets/icons/

@@ -71,6 +71,7 @@ class AppIcons {
   static const AssetIconData network_unknown_large = AssetIconData('assets/icons/network_unknown_large.svg');
   static const AssetIconData page_add_button = AssetIconData('assets/icons/page_add_button.svg');
   static const AssetIconData page_no_data = AssetIconData('assets/icons/page_no_data.svg');
+  static const AssetIconData settings_privacy_policy = AssetIconData('assets/icons/settings_privacy_policy.svg');
   static const AssetIconData settings_warning = AssetIconData('assets/icons/settings_warning.svg');
   static const AssetIconData settings_change_app_pin = AssetIconData('assets/icons/settings_change_app_pin.svg');
   static const AssetIconData switch_border = AssetIconData('assets/icons/switch_border.svg');
