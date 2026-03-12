@@ -13,7 +13,7 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/scan_qr_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/tx_data_receive_page/tx_data_receive_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_transaction_list.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
@@ -130,7 +130,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                     child: GradientOutlinedButton.small(
                       width: 176,
                       label: 'Sign Transaction',
-                      onPressed: _showScanQRPage,
+                      onPressed: _showTxDataReceivePage,
                     ),
                   ),
                 ),
@@ -201,13 +201,13 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
     );
   }
 
-  Future<void> _showScanQRPage() async {
+  Future<void> _showTxDataReceivePage() async {
     await showDialog(
       context: context,
       useRootNavigator: true,
       useSafeArea: false,
       builder: (BuildContext context) {
-        return const ScanQRPage(walletAutoDetectionEnabledBool: false);
+        return const TxDataReceivePage(walletAutoDetectionEnabledBool: false);
       },
     );
 

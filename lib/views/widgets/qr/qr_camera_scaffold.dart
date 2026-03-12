@@ -11,9 +11,9 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/views/widgets/custom/custom_app_bar.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
+import 'package:snggle/views/widgets/generic/custom_linear_progress_indicator.dart';
 import 'package:snggle/views/widgets/qr/qr_area_clipper.dart';
 import 'package:snggle/views/widgets/qr/qr_area_painter.dart';
-import 'package:snggle/views/widgets/qr/qr_camera_indicator.dart';
 import 'package:snggle/views/widgets/qr/qr_camera_tooltip.dart';
 
 class QRCameraScaffold extends StatefulWidget {
@@ -99,6 +99,7 @@ class _QRCameraScaffoldState extends State<QRCameraScaffold> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    const SizedBox(height: 40),
                     SizedBox(
                       height: 100,
                       child: Align(
@@ -122,7 +123,7 @@ class _QRCameraScaffoldState extends State<QRCameraScaffold> {
                       },
                     ),
                     const SizedBox(height: 10),
-                    SizedBox(height: 100, child: QRCameraIndicator(progressNotifier: widget.progressNotifier)),
+                    SizedBox(height: 100, child: CustomLinearProgressIndicator(progressNotifier: widget.progressNotifier)),
                   ],
                 ),
               ),

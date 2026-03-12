@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 
-class QRCameraIndicator extends StatelessWidget {
+class CustomLinearProgressIndicator extends StatelessWidget {
   final ValueNotifier<double> progressNotifier;
 
-  const QRCameraIndicator({
+  const CustomLinearProgressIndicator({
     required this.progressNotifier,
     super.key,
   });

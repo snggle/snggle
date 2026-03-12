@@ -8,11 +8,13 @@ class BottomTooltipItem extends StatelessWidget {
   final AssetIconData assetIconData;
   final String label;
   final VoidCallback? onTap;
+  final Color? foregroundColor;
 
   const BottomTooltipItem({
     required this.assetIconData,
     required this.label,
     required this.onTap,
+    this.foregroundColor,
     super.key,
   });
 
@@ -37,7 +39,7 @@ class BottomTooltipItem extends StatelessWidget {
                 assetIconData,
                 key: Key(assetIconData.assetName),
                 size: 16,
-                color: AppColors.body3,
+                color: foregroundColor ?? AppColors.body3,
               ),
             ),
             const SizedBox(height: 3),
@@ -46,7 +48,7 @@ class BottomTooltipItem extends StatelessWidget {
               child: Text(
                 label,
                 key: Key(label),
-                style: TextStyle(fontSize: 12, color: AppColors.body3, letterSpacing: 0),
+                style: TextStyle(fontSize: 12, color: foregroundColor, letterSpacing: 0),
               ),
             ),
           ],

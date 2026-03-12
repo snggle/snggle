@@ -1,4 +1,4 @@
-enum ScanQrExceptionType {
+enum ReadTxDataExceptionType {
   unsupported,
   receivedAddressEmpty,
   vaultNotFound,

@@ -1,16 +1,16 @@
 import 'package:codec_utils/codec_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/bloc/pages/scan_qr_page/scan_qr_page_state.dart';
+import 'package:snggle/bloc/pages/record_audio_page/record_audio_page_state.dart';
 
 void main() {
-  group('Tests of ScanQRPageState.canReceiveQRCode()', () {
-    test('Should [return TRUE] if [loadingBool == FALSE], [urRegistryRecord EMPTY] and [qrResultPage EMPTY]', () {
+  group('Tests of RecordAudioPageState.canReceiveAudio()', () {
+    test('Should [return TRUE] if [loadingBool == FALSE], [cborTaggedObject EMPTY] and [audioResultPage EMPTY]', () {
       // Arrange
-      ScanQRPageState actualScanQRPageState = const ScanQRPageState();
+      RecordAudioPageState actualRecordAudioPageState = const RecordAudioPageState();
 
       // Act
-      bool actualScanningEnabledBool = actualScanQRPageState.canReceiveQRCode();
+      bool actualScanningEnabledBool = actualRecordAudioPageState.canReceiveAudio();
 
       // Assert
       expect(actualScanningEnabledBool, true);
@@ -18,18 +18,18 @@ void main() {
 
     test('Should [return FALSE] if [loadingBool == TRUE]', () {
       // Arrange
-      ScanQRPageState actualScanQRPageState = const ScanQRPageState(loadingBool: true);
+      RecordAudioPageState actualRecordAudioPageState = const RecordAudioPageState(loadingBool: true);
 
       // Act
-      bool actualScanningEnabledBool = actualScanQRPageState.canReceiveQRCode();
+      bool actualScanningEnabledBool = actualRecordAudioPageState.canReceiveAudio();
 
       // Assert
       expect(actualScanningEnabledBool, false);
     });
 
-    test('Should [return FALSE] if [urRegistryRecord HAS VALUE]', () {
+    test('Should [return FALSE] if [cborTaggedObject HAS VALUE]', () {
       // Arrange
-      ScanQRPageState actualScanQRPageState = const ScanQRPageState(
+      RecordAudioPageState actualRecordAudioPageState = const RecordAudioPageState(
         cborTaggedObject: CborCryptoKeypath(
           components: <CborPathComponent>[
             CborPathComponent(index: 44, hardened: true),
@@ -43,28 +43,28 @@ void main() {
       );
 
       // Act
-      bool actualScanningEnabledBool = actualScanQRPageState.canReceiveQRCode();
+      bool actualScanningEnabledBool = actualRecordAudioPageState.canReceiveAudio();
 
       // Assert
       expect(actualScanningEnabledBool, false);
     });
 
-    test('Should [return FALSE] if [qrResultPage HAS VALUE]', () {
+    test('Should [return FALSE] if [audioResultPage HAS VALUE]', () {
       // Arrange
-      ScanQRPageState actualScanQRPageState = const ScanQRPageState(qrResultPage: SizedBox());
+      RecordAudioPageState actualRecordAudioPageState = const RecordAudioPageState(audioResultPage: SizedBox());
 
       // Act
-      bool actualScanningEnabledBool = actualScanQRPageState.canReceiveQRCode();
+      bool actualScanningEnabledBool = actualRecordAudioPageState.canReceiveAudio();
 
       // Assert
       expect(actualScanningEnabledBool, false);
     });
   });
 
-  group('Tests of ScanQRPageState.shouldLoadResultPage()', () {
-    test('Should [return TRUE] if [loadingBool == TRUE], [urRegistryRecord HAS VALUE] and [qrResultPage EMPTY]', () {
+  group('Tests of RecordAudioPageState.shouldLoadResultPage()', () {
+    test('Should [return TRUE] if [loadingBool == TRUE], [cborTaggedObject HAS VALUE] and [audioResultPage EMPTY]', () {
       // Arrange
-      ScanQRPageState actualScanQRPageState = const ScanQRPageState(
+      RecordAudioPageState actualRecordAudioPageState = const RecordAudioPageState(
         loadingBool: true,
         cborTaggedObject: CborCryptoKeypath(
           components: <CborPathComponent>[
@@ -79,15 +79,15 @@ void main() {
       );
 
       // Act
-      bool actualLoadResultBool = actualScanQRPageState.shouldLoadResultPage();
+      bool actualLoadResultBool = actualRecordAudioPageState.shouldLoadResultPage();
 
       // Assert
       expect(actualLoadResultBool, true);
     });
 
-    test('Should [return FALSE] if [loadingBool == TRUE], [urRegistryRecord HAS VALUE] and [qrResultPage HAS VALUES]', () {
+    test('Should [return FALSE] if [loadingBool == TRUE], [cborTaggedObject HAS VALUE] and [audioResultPage HAS VALUES]', () {
       // Arrange
-      ScanQRPageState actualScanQRPageState = const ScanQRPageState(
+      RecordAudioPageState actualRecordAudioPageState = const RecordAudioPageState(
         loadingBool: true,
         cborTaggedObject: CborCryptoKeypath(
           components: <CborPathComponent>[
@@ -99,32 +99,32 @@ void main() {
           ],
           sourceFingerprint: 2539474417,
         ),
-        qrResultPage: SizedBox(),
+        audioResultPage: SizedBox(),
       );
 
       // Act
-      bool actualLoadResultBool = actualScanQRPageState.shouldLoadResultPage();
+      bool actualLoadResultBool = actualRecordAudioPageState.shouldLoadResultPage();
 
       // Assert
       expect(actualLoadResultBool, false);
     });
 
-    test('Should [return FALSE] if [loadingBool == TRUE], [urRegistryRecord EMPTY] and [qrResultPage EMPTY]', () {
+    test('Should [return FALSE] if [loadingBool == TRUE], [cborTaggedObject EMPTY] and [audioResultPage EMPTY]', () {
       // Arrange
-      ScanQRPageState actualScanQRPageState = const ScanQRPageState(
+      RecordAudioPageState actualRecordAudioPageState = const RecordAudioPageState(
         loadingBool: true,
       );
 
       // Act
-      bool actualLoadResultBool = actualScanQRPageState.shouldLoadResultPage();
+      bool actualLoadResultBool = actualRecordAudioPageState.shouldLoadResultPage();
 
       // Assert
       expect(actualLoadResultBool, false);
     });
 
-    test('Should [return FALSE] if [loadingBool == FALSE], [urRegistryRecord HAS VALUE] and [qrResultPage EMPTY]', () {
+    test('Should [return FALSE] if [loadingBool == FALSE], [cborTaggedObject HAS VALUE] and [audioResultPage EMPTY]', () {
       // Arrange
-      ScanQRPageState actualScanQRPageState = const ScanQRPageState(
+      RecordAudioPageState actualRecordAudioPageState = const RecordAudioPageState(
         loadingBool: false,
         cborTaggedObject: CborCryptoKeypath(
           components: <CborPathComponent>[
@@ -139,7 +139,7 @@ void main() {
       );
 
       // Act
-      bool actualLoadResultBool = actualScanQRPageState.shouldLoadResultPage();
+      bool actualLoadResultBool = actualRecordAudioPageState.shouldLoadResultPage();
 
       // Assert
       expect(actualLoadResultBool, false);

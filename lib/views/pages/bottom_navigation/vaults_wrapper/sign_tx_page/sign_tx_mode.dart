@@ -1,0 +1,1 @@
+enum SignTxMode { qr, audio }
