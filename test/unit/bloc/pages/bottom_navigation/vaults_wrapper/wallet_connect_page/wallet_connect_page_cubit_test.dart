@@ -84,11 +84,11 @@ void main() {
 
     test('Should [return WalletConnectPageState] with WalletConnectOption.hardware', () {
       // Act
-      actualEthereumWalletConnectPageCubit.changeConnectOption(WalletConnectOption.hardware);
+      actualEthereumWalletConnectPageCubit.changeConnectOption(WalletConnectOption.audio);
       WalletConnectPageState actualWalletConnectPageState = actualEthereumWalletConnectPageCubit.state;
 
       // Assert
-      WalletConnectPageState expectedWalletConnectPageState = const WalletConnectPageState(walletConnectOption: WalletConnectOption.hardware);
+      WalletConnectPageState expectedWalletConnectPageState = const WalletConnectPageState(walletConnectOption: WalletConnectOption.audio);
 
       expect(actualWalletConnectPageState, expectedWalletConnectPageState);
     });
@@ -104,7 +104,7 @@ void main() {
       expect(actualWalletConnectPageState, expectedWalletConnectPageState);
     });
 
-    test('Should [return CborCryptoHDKey] with extended public key for all wallets (Ethereum)', () async {
+    test('Should [return CborCryptoHDKey] with extended public key for all wallets (Ethereum, depth == 3)', () async {
       // Arrange
       TestUtils.mockPasswords(
         FilesystemPath.fromString('vault1/network1/wallet1'),
@@ -112,7 +112,7 @@ void main() {
       );
 
       // Act
-      CborCryptoHDKey actualCborCryptoHDKey = await actualEthereumWalletConnectPageCubit.getCborCryptoHDKey(connectAllBool: true);
+      CborCryptoHDKey actualCborCryptoHDKey = await actualEthereumWalletConnectPageCubit.getCborCryptoHDKey(derivationPathDepth: 3);
 
       // Assert
       CborCryptoHDKey expectedCborCryptoHDKey = CborCryptoHDKey(
@@ -132,7 +132,7 @@ void main() {
       expect(actualCborCryptoHDKey, expectedCborCryptoHDKey);
     });
 
-    test('Should [return CborCryptoHDKey] with extended public key for single wallet (Ethereum)', () async {
+    test('Should [return CborCryptoHDKey] with extended public key for single wallet (Ethereum, depth == 4)', () async {
       // Arrange
       TestUtils.mockPasswords(
         FilesystemPath.fromString('vault1/network1/wallet1'),
@@ -140,7 +140,7 @@ void main() {
       );
 
       // Act
-      CborCryptoHDKey actualCborCryptoHDKey = await actualEthereumWalletConnectPageCubit.getCborCryptoHDKey(connectAllBool: false);
+      CborCryptoHDKey actualCborCryptoHDKey = await actualEthereumWalletConnectPageCubit.getCborCryptoHDKey(derivationPathDepth: 4);
 
       // Assert
       CborCryptoHDKey expectedCborCryptoHDKey = CborCryptoHDKey(
@@ -154,11 +154,6 @@ void main() {
           CborPathComponent(index: 0, hardened: true),
           CborPathComponent(index: 0, hardened: false),
         ], sourceFingerprint: 2455739192, depth: 4),
-        children: const CborCryptoKeypath(
-          components: <CborPathComponent>[
-            CborPathComponent(index: 0, hardened: false),
-          ],
-        ),
         parentFingerprint: 2429747484,
         name: 'WALLET 0',
       );

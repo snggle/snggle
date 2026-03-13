@@ -6,8 +6,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
+import 'package:snggle/views/widgets/generic/data_export_scaffold_layout.dart';
 import 'package:snggle/views/widgets/generic/gradient_scrollbar.dart';
-import 'package:snggle/views/widgets/qr/qr_result_scaffold_layout.dart';
 
 class QRResultScaffold extends StatefulWidget {
   final String title;
@@ -96,9 +96,9 @@ class _QRResultScaffoldState extends State<QRResultScaffold> {
       closeButtonVisible: widget.closeButtonVisible,
       popButtonVisible: widget.popButtonVisible,
       customPopCallback: widget.customPopCallback,
-      body: QRResultScaffoldLayout(
+      body: DataExportScaffoldLayout(
         tooltip: widget.tooltip,
-        addressPreview: widget.addressPreview,
+        footer: widget.addressPreview,
         body: GradientScrollbar(
           scrollController: scrollController,
           margin: const EdgeInsets.only(bottom: CustomBottomNavigationBar.height),

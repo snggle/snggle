@@ -60,6 +60,7 @@ class AppIcons {
   static const AssetIconData menu_unlock = AssetIconData('assets/icons/menu_unlock.svg');
   static const AssetIconData menu_unpin = AssetIconData('assets/icons/menu_unpin.svg');
   static const AssetIconData menu_unselect_all = AssetIconData('assets/icons/menu_unselect_all.svg');
+  static const AssetIconData mirage_logo = AssetIconData('assets/icons/mirage_logo.svg');
   static const AssetIconData network_bitcoin_large = AssetIconData('assets/icons/network_bitcoin_large.svg');
   static const AssetIconData network_cosmos_large = AssetIconData('assets/icons/network_cosmos_large.svg');
   static const AssetIconData network_ethereum_large = AssetIconData('assets/icons/network_ethereum_large.svg');
@@ -76,6 +77,8 @@ class AppIcons {
   static const AssetIconData text_space = AssetIconData('assets/icons/text_space.svg');
   static const AssetIconData text_tab = AssetIconData('assets/icons/text_tab.svg');
   static const AssetIconData text_wrap = AssetIconData('assets/icons/text_wrap.svg');
+  static const AssetIconData soundwave_big = AssetIconData('assets/icons/soundwave_big.svg');
+  static const AssetIconData soundwave_small = AssetIconData('assets/icons/soundwave_small.svg');
   static const AssetIconData wallet_metamask = AssetIconData('assets/icons/wallet_metamask.svg');
   static const AssetIconData wallet_solflare = AssetIconData('assets/icons/wallet_solflare.svg');
   static const AssetIconData wallet_trezor = AssetIconData('assets/icons/wallet_trezor.svg');

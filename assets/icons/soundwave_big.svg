@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="800px" height="800px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="bi bi-soundwave">
+
+  <defs>
+    <radialGradient id="soundwaveGradient"
+                    cx="0" cy="0" r="1"
+                    gradientUnits="userSpaceOnUse"
+                    gradientTransform="translate(20 -8) rotate(120) scale(40 36)">
+      <stop offset="0.08" />
+      <stop offset="0.25" stop-color="#42D2FF" />
+      <stop offset="0.55" stop-color="#939393" />
+      <stop offset="1" />
+    </radialGradient>
+  </defs>
+
+  <path fill="url(#soundwaveGradient)" fill-rule="evenodd" d="
+    M8.5 2a.25.5 0 0 1 .25.5v11a.25.5 0 0 1-.5 0v-11a.25.5 0 0 1 .25-.5z
+    M6.5 4a.25.5 0 0 1 .25.5v7a.25.5 0 0 1-.5 0v-7a.25.5 0 0 1 .25-.5z
+    M10.5 4a.25.5 0 0 1 .25.5v7a.25.5 0 0 1-.5 0v-7a.25.5 0 0 1 .25-.5z
+    M4.5 5.5a.25.5 0 0 1 .25.5v4a.25.5 0 0 1-.5 0V6a.25.5 0 0 1 .25-.5z
+    M12.5 5.5a.25.5 0 0 1 .25.5v4a.25.5 0 0 1-.5 0V6a.25.5 0 0 1 .25-.5z
+    M2.5 6.5a.25.5 0 0 1 .25.5v2a.25.5 0 0 1-.5 0V7a.25.5 0 0 1 .25-.5z
+    M14.5 6.5a.25.5 0 0 1 .25.5v2a.25.5 0 0 1-.5 0V7a.25.5 0 0 1 .25-.5z
+  "/>
+
+</svg>

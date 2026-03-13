@@ -28,15 +28,14 @@ class WalletConnectPageCubit extends Cubit<WalletConnectPageState> {
     emit(WalletConnectPageState(walletConnectOption: walletConnectOption));
   }
 
-  Future<CborCryptoHDKey> getCborCryptoHDKey({required bool connectAllBool}) async {
+  Future<CborCryptoHDKey> getCborCryptoHDKey({required int derivationPathDepth}) async {
     Secp256k1Derivator secp256k1Derivator = Secp256k1Derivator();
     LegacyDerivationPath legacyDerivationPath = LegacyDerivationPath.parse(_walletModel.derivationPath);
 
     List<LegacyDerivationPathElement> parentPathElements = legacyDerivationPath.pathElements.sublist(
       0,
-      legacyDerivationPath.pathElements.length - (connectAllBool ? 2 : 1),
+      derivationPathDepth,
     );
-    LegacyDerivationPathElement lastPathElement = legacyDerivationPath.pathElements.last;
 
     PasswordModel vaultPasswordModel = await globalLocator<PasswordController>().getPasswordByFilesystemPath(_vaultModel.filesystemPath);
     VaultSecretsModel vaultSecretsModel = await _secretsService.get<VaultSecretsModel>(_vaultModel.filesystemPath, vaultPasswordModel);
@@ -49,7 +48,7 @@ class WalletConnectPageCubit extends Cubit<WalletConnectPageState> {
       components: parentPathElements.map((LegacyDerivationPathElement e) {
         return CborPathComponent(index: e.rawIndex, hardened: e.isHardened);
       }).toList(),
-      depth: (connectAllBool ? 3 : 4),
+      depth: parentPathElements.length,
       sourceFingerprint: secp256k1PrivateKey.metadata.fingerprint.toInt(),
     );
 
@@ -59,13 +58,6 @@ class WalletConnectPageCubit extends Cubit<WalletConnectPageState> {
       keyData: secp256k1PrivateKey.publicKey.compressed,
       chainCode: secp256k1PrivateKey.metadata.chainCode,
       origin: cborCryptoKeypath,
-      children: connectAllBool
-          ? null
-          : CborCryptoKeypath(
-              components: <CborPathComponent>[
-                CborPathComponent(index: lastPathElement.rawIndex, hardened: lastPathElement.isHardened),
-              ],
-            ),
       parentFingerprint: secp256k1PrivateKey.metadata.parentFingerprint?.toInt(),
       name: _walletModel.name,
     );

@@ -3,15 +3,17 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 
-class QRResultScaffoldLayout extends StatelessWidget {
+class DataExportScaffoldLayout extends StatelessWidget {
   final Widget body;
+  final bool tooltipDisabledBool;
   final Widget? tooltip;
-  final Widget? addressPreview;
+  final Widget? footer;
 
-  const QRResultScaffoldLayout({
+  const DataExportScaffoldLayout({
     required this.body,
+    this.tooltipDisabledBool = false,
     this.tooltip,
-    this.addressPreview,
+    this.footer,
     super.key,
   });
 
@@ -20,7 +22,7 @@ class QRResultScaffoldLayout extends StatelessWidget {
     return Stack(
       children: <Widget>[
         Positioned.fill(child: body),
-        if (addressPreview != null) ...<Widget>[
+        if (footer != null) ...<Widget>[
           Positioned(
             bottom: 0,
             left: 0,
@@ -30,7 +32,7 @@ class QRResultScaffoldLayout extends StatelessWidget {
                 filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
                 child: Column(
                   children: <Widget>[
-                    addressPreview!,
+                    footer!,
                     const SizedBox(height: CustomBottomNavigationBar.height),
                   ],
                 ),
@@ -45,7 +47,13 @@ class QRResultScaffoldLayout extends StatelessWidget {
           child: SizedBox(
             height: CustomBottomNavigationBar.height,
             width: double.infinity,
-            child: tooltip,
+            child: Opacity(
+              opacity: tooltipDisabledBool ? 0.5 : 1.0,
+              child: IgnorePointer(
+                ignoring: tooltipDisabledBool,
+                child: tooltip,
+              ),
+            ),
           ),
         ),
       ],

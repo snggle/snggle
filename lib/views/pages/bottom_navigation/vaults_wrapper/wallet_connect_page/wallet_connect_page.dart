@@ -11,6 +11,7 @@ import 'package:snggle/shared/models/networks/network_type.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_connect_option.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_audio_connect_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_connect_option_button.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_qr_connect_page.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
@@ -72,11 +73,11 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                   ),
                   if (widget.networkTemplateModel.networkType == NetworkType.ethereum)
                     WalletConnectOptionButton(
-                      selectedBool: walletConnectPageState.walletConnectOption == WalletConnectOption.hardware,
-                      label: 'Hardware based',
-                      icon: AppIcons.connect_wallet_hardware,
-                      onTap: () => walletConnectPageCubit.changeConnectOption(WalletConnectOption.hardware),
-                    ),
+                    selectedBool: walletConnectPageState.walletConnectOption == WalletConnectOption.audio,
+                    label: 'Audio based',
+                    icon: AppIcons.soundwave_big,
+                    onTap: () => walletConnectPageCubit.changeConnectOption(WalletConnectOption.audio),
+                  ),
                 ],
               ),
               const SizedBox(height: 34),
@@ -87,19 +88,23 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
                       switch (widget.networkTemplateModel.networkType) {
                         NetworkType.ethereum => GradientOutlinedButton.large(
-                            label: 'Metamask QR',
-                            icon: const AssetIcon(AppIcons.wallet_metamask, size: 18),
-                            onPressed: () => _showQRConnectPage(true),
-                          ),
+                          label: 'Metamask QR',
+                          icon: const AssetIcon(AppIcons.wallet_metamask, size: 18),
+                          onPressed: _showQRConnectPage,
+                        ),
                         NetworkType.solana => GradientOutlinedButton.large(
-                            label: 'Solflare QR',
-                            icon: const AssetIcon(AppIcons.wallet_solflare, size: 18),
-                            onPressed: () => _showQRConnectPage(true),
-                          ),
+                          label: 'Solflare QR',
+                          icon: const AssetIcon(AppIcons.wallet_solflare, size: 18),
+                          onPressed: _showQRConnectPage,
+                        ),
                       }
                     ],
-                    if (walletConnectPageState.walletConnectOption == WalletConnectOption.hardware) ...<Widget>[
-                      const GradientOutlinedButton.large(label: 'Use Trezor interface', icon: AssetIcon(AppIcons.wallet_trezor, size: 18)),
+                    if (walletConnectPageState.walletConnectOption == WalletConnectOption.audio) ...<Widget>[
+                      GradientOutlinedButton.large(
+                        label: 'Mirage audio',
+                        icon: const AssetIcon(AppIcons.mirage_logo, size: 30),
+                        onPressed: _showAudioConnectPage,
+                      ),
                     ],
                   ],
                 ),
@@ -111,19 +116,18 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
     );
   }
 
-  Future<void> _showQRConnectPage(bool connectAllBool) async {
+  Future<void> _showQRConnectPage() async {
     await CustomLoadingDialog.show<ACborTaggedObject>(
       context: context,
       title: 'Loading...',
       futureFunction: () {
         switch (widget.networkTemplateModel.networkType) {
           case NetworkType.ethereum:
-            return walletConnectPageCubit.getCborCryptoHDKey(connectAllBool: connectAllBool);
+            return walletConnectPageCubit.getCborCryptoHDKey(derivationPathDepth: 3);
           case NetworkType.solana:
             return walletConnectPageCubit.getCborCryptoMultiAccounts();
         }
-      },
-      onSuccess: (ACborTaggedObject cborTaggedObject) async {
+      },      onSuccess: (ACborTaggedObject cborTaggedObject) async {
         bool? navigateBackBool = await showDialog<bool>(
           context: context,
           useSafeArea: false,
@@ -132,6 +136,31 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
               walletModel: widget.walletModel,
               networkTemplateModel: widget.networkTemplateModel,
               cborTaggedObject: cborTaggedObject,
+            );
+          },
+        );
+
+        if (navigateBackBool == true) {
+          await AutoRouter.of(context).pop();
+        }
+      },
+    );
+  }
+
+  Future<void> _showAudioConnectPage() async {
+    await CustomLoadingDialog.show<CborCryptoHDKey>(
+      context: context,
+      title: 'Loading...',
+      futureFunction: () => walletConnectPageCubit.getCborCryptoHDKey(derivationPathDepth: 4),
+      onSuccess: (CborCryptoHDKey cborCryptoHDKey) async {
+        bool? navigateBackBool = await showDialog<bool>(
+          context: context,
+          useSafeArea: false,
+          builder: (BuildContext context) {
+            return WalletAudioConnectPage(
+              walletModel: widget.walletModel,
+              networkTemplateModel: widget.networkTemplateModel,
+              cborCryptoHDKey: cborCryptoHDKey,
             );
           },
         );
