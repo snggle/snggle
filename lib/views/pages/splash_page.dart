@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +8,9 @@ import 'package:snggle/bloc/splash_page/states/splash_page_app_set_up_state.dart
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_master_key_removed_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_pin_auth_state.dart';
+import 'package:snggle/shared/native/app_launch_context.dart';
+import 'package:snggle/shared/native/app_launch_mode.dart';
+import 'package:snggle/shared/native/native_app_launch.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/widgets/custom/dialog/short_privacy_policy_dialog.dart';
 
@@ -56,13 +61,19 @@ class _SplashPageState extends State<SplashPage> {
     );
   }
 
-  void _handleBlocListener(BuildContext context, ASplashPageState? splashPageState) {
+  Future<void> _handleBlocListener(BuildContext context, ASplashPageState? splashPageState) async {
+    AppLaunchContext launchContext = await NativeAppLaunch.getContext();
+
     if (splashPageState is SplashPageAppSetUpState) {
-      _handleShortPolicyDialog();
+      if (launchContext.appLaunchMode == AppLaunchMode.main) {
+        _handleShortPolicyDialog();
+      } else {
+        await AutoRouter.of(context).replace(AppMasterKeyRemovedRoute(appLaunchMode: launchContext.appLaunchMode));
+      }
     } else if (splashPageState is SplashPageMasterKeyRemovedState) {
-      AutoRouter.of(context).replace(const AppMasterKeyRemovedRoute());
+      await AutoRouter.of(context).replace(AppMasterKeyRemovedRoute(appLaunchMode: launchContext.appLaunchMode));
     } else if (splashPageState is SplashPagePinAuthState) {
-      AutoRouter.of(context).replace(AppPinAuthRoute());
+      await AutoRouter.of(context).replace(AppPinAuthRoute());
     }
   }
 

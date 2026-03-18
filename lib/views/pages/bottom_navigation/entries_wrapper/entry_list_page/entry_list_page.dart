@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entries_wrapper/entry_list_page/entry_list_page_cubit.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/entry_list_page/entry_list_page_cubit.dart';
+import 'package:snggle/bloc/pages/entry_details_editable/entry_page_type.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/exceptions/invalid_master_key_exception.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_tab_dir.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
@@ -15,14 +15,13 @@ import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
+import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/entry_list_page/entry_create_edit_status.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/entry_list_page/entry_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_group_list_item.dart';
-import 'package:snggle/views/pages/entry_create_edit/entry_page_type.dart';
 import 'package:snggle/views/widgets/button/list_item_creation_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
-import 'package:snggle/views/widgets/custom/dialog/master_key_dialog.dart';
 import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_animation_wrapper.dart';
@@ -42,7 +41,7 @@ class EntryListPage extends StatefulWidget {
 class _EntryListPageState extends State<EntryListPage> {
   final String _tabDirName = FilesystemStorageTabDir.entries.name;
   late final FilesystemPath _entriesRootPath = FilesystemPath.fromString(_tabDirName);
-  late final String defaultPageTitle = 'PASSWORD MANAGER';
+  late final String defaultPageTitle = _tabDirName.toUpperCase();
   final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
   late final EntryListPageCubit entryListPageCubit = EntryListPageCubit(
     depth: 0,
@@ -58,7 +57,6 @@ class _EntryListPageState extends State<EntryListPage> {
 
   @override
   void dispose() {
-    draggedItemNotifier.dispose();
     entryListPageCubit.close();
     super.dispose();
   }
@@ -79,7 +77,7 @@ class _EntryListPageState extends State<EntryListPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: CustomBottomNavigationBar.contentHeight),
                     child: IconButton(
-                      onPressed: _navigateToEntryCreateRoute,
+                      onPressed: _navigateToEntryCreateEditRoute,
                       icon: const AssetIcon(AppIcons.page_add_button, size: 54),
                     ),
                   ),
@@ -87,16 +85,16 @@ class _EntryListPageState extends State<EntryListPage> {
               ),
             ] else ...<Widget>[
               SliverPageList(
-                addButtonVisibleBool: listState.isSelectionEnabled == false,
+                addButtonVisibleBool: true,
                 loadingBool: listState.loadingBool,
                 items: listState.visibleItems,
                 selectedItems: listState.selectedItems,
                 creationButton: HorizontalListItemLayout(
-                  iconWidget: ListItemCreationButton(
-                    size: HorizontalListItemLayout.listItemIconSize,
-                    onTap: _navigateToEntryCreateRoute,
-                  ),
-                ),
+                        iconWidget: ListItemCreationButton(
+                          size: HorizontalListItemLayout.listItemIconSize,
+                          onTap: _navigateToEntryCreateEditRoute,
+                        ),
+                      ),
                 itemBuilder: (AListItemModel listItemModel) {
                   return HorizontalListItemAnimationWrapper(
                     key: Key('item${listItemModel.filesystemPath.fullPath}'),
@@ -136,58 +134,53 @@ class _EntryListPageState extends State<EntryListPage> {
     );
   }
 
-  Future<void> _navigateToEntryCreateRoute() async {
-    bool creationSavedBool =
-        (await AutoRouter.of(context).push<bool>(
-          EntryCreateEditRoute(
-            parentFilesystemPath: entryListPageCubit.state.filesystemPath,
-            entryPageType: EntryPageType.create,
-          ),
-        )) ??
-        false;
+  Future<void> _navigateToEntryCreateEditRoute() async {
+    EntryCreateEditStatus? entryCreateRecoverStatus = await AutoRouter.of(context).push<EntryCreateEditStatus?>(
+      EntryDetailsEditableRoute(
+        parentFilesystemPath: entryListPageCubit.state.filesystemPath,
+        entryPageType: EntryPageType.entryPageCreate,
+      ),
+    );
 
-    if (creationSavedBool == false || mounted == false) {
+    await _handleEntryCreateEditStatus(entryCreateRecoverStatus);
+  }
+
+  Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
+    globalLocator<PasswordController>().addPassword(passwordModel, listItemModel.filesystemPath);
+
+    if (listItemModel is EntryModel) {
+      EntryCreateEditStatus? entryCreateEditStatus = await AutoRouter.of(context).push<EntryCreateEditStatus?>(
+        EntryDetailsRoute(
+          entryModel: listItemModel,
+        ),
+      );
+      await _handleEntryCreateEditStatus(entryCreateEditStatus);
+      if (entryCreateEditStatus == null) {
+        await entryListPageCubit.refreshAll();
+      }
+    } else if (listItemModel is GroupModel) {
+      await entryListPageCubit.navigateNext(
+        filesystemPath: listItemModel.filesystemPath,
+      );
+    }
+  }
+
+  Future<void> _handleEntryCreateEditStatus(EntryCreateEditStatus? entryCreateEditStatus) async {
+    if (entryCreateEditStatus == null) {
       return;
     }
 
     unawaited(entryListPageCubit.refreshAll());
-    _showCreationSuccessDialog();
-  }
-
-  Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
-    if (listItemModel is EntryModel) {
-      try {
-        await entryListPageCubit.isEntryPasswordValid(listItemModel, passwordModel);
-      } on InvalidMasterKeyException {
-        if (mounted == false) {
-          return;
-        }
-        await MasterKeyDialog.show(context);
-        return;
-      }
-    }
-
-    globalLocator<PasswordController>().addPassword(passwordModel, listItemModel.filesystemPath);
-
-    if (listItemModel is EntryModel) {
-      await AutoRouter.of(context).push<void>(EntryDetailsRoute(entryModel: listItemModel));
-
-      if (mounted) {
-        await entryListPageCubit.refreshAll();
-      }
-    } else if (listItemModel is GroupModel) {
-      await entryListPageCubit.navigateNext(filesystemPath: listItemModel.filesystemPath);
-    }
-  }
-
-  void _showCreationSuccessDialog() {
-    showDialog(
+    await showDialog(
       context: context,
       barrierColor: Colors.transparent,
       builder: (BuildContext context) => CustomDialog(
         title: 'Success',
-        content: const Text(
-          'The entry creation process has been completed.',
+        content: Text(
+          switch (entryCreateEditStatus) {
+            EntryCreateEditStatus.creationSuccessful => 'The entry creation process has been completed.',
+            EntryCreateEditStatus.modificationSuccessful => 'The entry modification process has been completed.',
+          },
           textAlign: TextAlign.center,
         ),
         options: <CustomDialogOption>[
