@@ -4,8 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/entry_list_page/entry_list_page_cubit.dart';
-import 'package:snggle/bloc/pages/entry_details_editable/entry_page_type.dart';
-import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
@@ -17,12 +15,10 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/entry_list_page/entry_create_edit_status.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/entry_list_page/entry_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_group_list_item.dart';
-import 'package:snggle/views/widgets/button/list_item_creation_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
-import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_animation_wrapper.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_layout.dart';
 import 'package:snggle/views/widgets/list/list_item_actions_wrapper.dart';
@@ -30,14 +26,14 @@ import 'package:snggle/views/widgets/list/list_page_scaffold.dart';
 import 'package:snggle/views/widgets/list/sliver_page_list.dart';
 
 @RoutePage()
-class EntryListPage extends StatefulWidget {
-  const EntryListPage({super.key});
+class ReadOnlyEntryListPage extends StatefulWidget {
+  const ReadOnlyEntryListPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _EntryListPageState();
+  State<StatefulWidget> createState() => _ReadOnlyEntryListPageState();
 }
 
-class _EntryListPageState extends State<EntryListPage> {
+class _ReadOnlyEntryListPageState extends State<ReadOnlyEntryListPage> {
   static const String defaultPageTitle = 'SECRETS';
   final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
 
@@ -70,29 +66,23 @@ class _EntryListPageState extends State<EntryListPage> {
           physics: listState.isScrollDisabled ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
           slivers: <Widget>[
             if (listState.isEmpty) ...<Widget>[
-              SliverFillRemaining(
+              const SliverFillRemaining(
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: CustomBottomNavigationBar.contentHeight),
-                    child: IconButton(
-                      onPressed: _navigateToEntryCreateEditRoute,
-                      icon: const AssetIcon(AppIcons.page_add_button, size: 54),
-                    ),
+                    padding: EdgeInsets.only(bottom: CustomBottomNavigationBar.contentHeight),
+                    child: Text(
+                      'There are no saved Secrets in Snggle',
+                    )
                   ),
                 ),
               ),
             ] else ...<Widget>[
               SliverPageList(
-                addButtonVisibleBool: true,
+                addButtonVisibleBool: false,
                 loadingBool: listState.loadingBool,
                 items: listState.visibleItems,
                 selectedItems: listState.selectedItems,
-                creationButton: HorizontalListItemLayout(
-                        iconWidget: ListItemCreationButton(
-                          size: HorizontalListItemLayout.listItemIconSize,
-                          onTap: _navigateToEntryCreateEditRoute,
-                        ),
-                      ),
+                creationButton: null,
                 itemBuilder: (AListItemModel listItemModel) {
                   return HorizontalListItemAnimationWrapper(
                     key: Key('item${listItemModel.filesystemPath.fullPath}'),
@@ -132,23 +122,12 @@ class _EntryListPageState extends State<EntryListPage> {
     );
   }
 
-  Future<void> _navigateToEntryCreateEditRoute() async {
-    EntryCreateEditStatus? entryCreateRecoverStatus = await AutoRouter.of(context).push<EntryCreateEditStatus?>(
-      EntryDetailsEditableRoute(
-        parentFilesystemPath: entryListPageCubit.state.filesystemPath,
-        entryPageType: EntryPageType.entryPageCreate,
-      ),
-    );
-
-    await _handleEntryCreateEditStatus(entryCreateRecoverStatus);
-  }
-
   Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
     globalLocator<PasswordController>().addPassword(passwordModel, listItemModel.filesystemPath);
 
     if (listItemModel is EntryModel) {
       EntryCreateEditStatus? entryCreateEditStatus = await AutoRouter.of(context).push<EntryCreateEditStatus?>(
-        EntryDetailsRoute(
+        ReadOnlyEntryDetailsRoute(
           entryModel: listItemModel,
         ),
       );
