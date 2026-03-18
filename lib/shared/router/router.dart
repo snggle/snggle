@@ -35,6 +35,13 @@ class AppRouter extends RootStackRouter {
         ],
       ),
       AutoRoute(page: WalletCreateRoute.page),
+      AutoRoute(
+        page: ReadOnlyEntriesSectionWrapperRoute.page,
+        children: <AutoRoute>[
+          AutoRoute(page: ReadOnlyEntryListRoute.page, initial: true),
+          AutoRoute(page: ReadOnlyEntryDetailsRoute.page),
+        ],
+      ),
       AutoRoute(page: EntryDetailsEditableRoute.page),
       AutoRoute(
         page: BottomNavigationRoute.page,
