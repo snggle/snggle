@@ -85,16 +85,16 @@ class _EntryListPageState extends State<EntryListPage> {
               ),
             ] else ...<Widget>[
               SliverPageList(
-                addButtonVisibleBool: listState.isSelectionEnabled == false,
+                addButtonVisibleBool: true,
                 loadingBool: listState.loadingBool,
                 items: listState.visibleItems,
                 selectedItems: listState.selectedItems,
                 creationButton: HorizontalListItemLayout(
-                  iconWidget: ListItemCreationButton(
-                    size: HorizontalListItemLayout.listItemIconSize,
-                    onTap: _navigateToEntryCreateEditRoute,
-                  ),
-                ),
+                        iconWidget: ListItemCreationButton(
+                          size: HorizontalListItemLayout.listItemIconSize,
+                          onTap: _navigateToEntryCreateEditRoute,
+                        ),
+                      ),
                 itemBuilder: (AListItemModel listItemModel) {
                   return HorizontalListItemAnimationWrapper(
                     key: Key('item${listItemModel.filesystemPath.fullPath}'),

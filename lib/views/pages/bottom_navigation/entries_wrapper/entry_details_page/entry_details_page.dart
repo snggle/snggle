@@ -64,14 +64,14 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
         return CustomScaffold(
           title: entryDetailsPageCubit.entryModel.name,
           actions: <Widget>[
-            InkWell(
-              onTap: _openEditEntryPage,
-              child: const Padding(
-                padding: EdgeInsets.only(right: 6),
-                child: AssetIcon(AppIcons.menu_rename),
-              ),
-            ),
-          ],
+                  InkWell(
+                    onTap: _openEditEntryPage,
+                    child: const Padding(
+                      padding: EdgeInsets.only(right: 6),
+                      child: AssetIcon(AppIcons.menu_rename),
+                    ),
+                  ),
+                ],
           body: GradientScrollbar(
             scrollController: scrollController,
             visibleBool: true,
