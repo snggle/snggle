@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/shared/native/app_launch_mode.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
@@ -76,7 +77,11 @@ class _ShortPrivacyPolicyDialogState extends State<ShortPrivacyPolicyDialog> {
         CustomDialogOption(
           label: 'Consent',
           autoCloseBool: false,
-          onPressed: () => AutoRouter.of(context).replace(const AppMasterKeyRemovedRoute()),
+          onPressed: () => AutoRouter.of(context).replace(
+            AppMasterKeyRemovedRoute(
+              appLaunchMode: AppLaunchMode.main,
+            ),
+          ),
         ),
       ],
     );
