@@ -144,7 +144,7 @@ class _EntryListPageState extends State<EntryListPage> {
             entryPageType: EntryPageType.create,
           ),
         )) ??
-        false;
+            false;
 
     if (creationSavedBool == false || mounted == false) {
       return;

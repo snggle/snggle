@@ -105,7 +105,7 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
             parentFilesystemPath: entryDetailsPageCubit.entryModel.filesystemPath,
           ),
         )) ??
-        false;
+            false;
 
     setState(() => _obscurePasswordBool = true);
 
