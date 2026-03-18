@@ -1,0 +1,5 @@
+<resources>
+    <string name="accessibility_service_description">
+        Snggle może wykrywać pola logowania, aby wspierać zapisywanie danych logowania.
+    </string>
+</resources>
