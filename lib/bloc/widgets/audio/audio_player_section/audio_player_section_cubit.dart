@@ -23,11 +23,11 @@ class AudioPlayerSectionCubit extends Cubit<AAudioPlayerSectionState> {
     await super.close();
   }
 
-  Future<void> playSound(Uint8List msgUint8list) async {
+  Future<void> playSound(Uint8List msgUint8List) async {
     _cancelledByUserBool = false;
     await _audioGenerator.startGenerating(AudioGeneratorParams(
       audioSettingsModel: _audioSettingsModel,
-      bytes: msgUint8list,
+      bytes: msgUint8List,
       audioSinkArgs: StreamAudioSinkArgs(),
     ));
     emit(AudioPlayerSectionEmittingState());

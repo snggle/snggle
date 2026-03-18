@@ -60,6 +60,8 @@ class AppIcons {
   static const AssetIconData menu_unlock = AssetIconData('assets/icons/menu_unlock.svg');
   static const AssetIconData menu_unpin = AssetIconData('assets/icons/menu_unpin.svg');
   static const AssetIconData menu_unselect_all = AssetIconData('assets/icons/menu_unselect_all.svg');
+  static const AssetIconData microphone = AssetIconData('assets/icons/microphone.svg');
+  static const AssetIconData microphone_muted = AssetIconData('assets/icons/microphone_muted.svg');
   static const AssetIconData mirage_logo = AssetIconData('assets/icons/mirage_logo.svg');
   static const AssetIconData network_bitcoin_large = AssetIconData('assets/icons/network_bitcoin_large.svg');
   static const AssetIconData network_cosmos_large = AssetIconData('assets/icons/network_cosmos_large.svg');

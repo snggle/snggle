@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:codec_utils/codec_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/bloc/pages/scan_tx_page/scan_qr_page_cubit.dart';
-import 'package:snggle/bloc/pages/scan_tx_page/scan_qr_page_state.dart';
+import 'package:snggle/bloc/pages/scan_qr_page/scan_qr_page_cubit.dart';
+import 'package:snggle/bloc/pages/scan_qr_page/scan_qr_page_state.dart';
 import 'package:snggle/shared/models/password_model.dart';
 
 import '../../../../utils/database_mock.dart';

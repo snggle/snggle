@@ -1,7 +1,7 @@
 import 'package:codec_utils/codec_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/pages/scan_tx_page/scan_qr_page_state.dart';
+import 'package:snggle/bloc/pages/scan_qr_page/scan_qr_page_state.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/shared/utils/logger/log_level.dart';
 

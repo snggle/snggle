@@ -3,7 +3,7 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/scan_qr_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/tx_data_receive_page/tx_data_receive_page.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class CustomBottomNavigationBarScanIcon extends StatefulWidget {
@@ -26,19 +26,19 @@ class _CustomBottomNavigationBarScanIconState extends State<CustomBottomNavigati
     return SizedBox(
       height: 64,
       child: IconButton(
-        onPressed: _showScanQRPage,
+        onPressed: _showTxDataReceivePage,
         icon: AssetIcon(AppIcons.bottom_navigation_scan, color: widget.foregroundColor ?? AppColors.darkGrey, size: 46),
       ),
     );
   }
 
-  Future<void> _showScanQRPage() async {
+  Future<void> _showTxDataReceivePage() async {
     await showDialog(
       context: context,
       useRootNavigator: true,
       useSafeArea: false,
       builder: (BuildContext context) {
-        return const ScanQRPage(walletAutoDetectionEnabledBool: true);
+        return const TxDataReceivePage(walletAutoDetectionEnabledBool: true);
       },
     );
 

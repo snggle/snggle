@@ -13,8 +13,8 @@ import 'package:snggle/infra/services/transaction_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
-import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
-import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
+import 'package:snggle/shared/exceptions/read_tx_data_exception.dart';
+import 'package:snggle/shared/exceptions/read_tx_data_exception_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
@@ -103,7 +103,7 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
         (_solanaMessage is ASolanaTransactionMessage) ? (_getWalletFromInstructions(_solanaMessage) ?? receivedWalletAddress) : receivedWalletAddress;
 
     if (receivedWalletAddress == null) {
-      throw const ScanQrException(ScanQrExceptionType.receivedAddressEmpty);
+      throw const ReadTxDataException(ReadTxDataExceptionType.receivedAddressEmpty);
     }
 
     return _getWalletFromDatabase(receivedWalletAddress);
@@ -124,7 +124,7 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
     try {
       return await _walletsService.getByAddress(signWalletAddress);
     } on ChildKeyNotFoundException catch (_) {
-      throw const ScanQrException(ScanQrExceptionType.walletNotFound);
+      throw const ReadTxDataException(ReadTxDataExceptionType.walletNotFound);
     }
   }
 
@@ -133,7 +133,7 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
       return await globalLocator<PasswordController>().getPasswordByFilesystemPath(walletModel.filesystemPath);
     } catch (_) {
       // TODO(dominik): Exception may be replaced with a UI dialog to enter the password
-      throw const ScanQrException(ScanQrExceptionType.walletWithEncryptedParents);
+      throw const ReadTxDataException(ReadTxDataExceptionType.walletWithEncryptedParents);
     }
   }
 }

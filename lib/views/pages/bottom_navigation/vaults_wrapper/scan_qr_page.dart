@@ -2,14 +2,15 @@ import 'package:codec_utils/codec_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:snggle/bloc/pages/scan_tx_page/scan_qr_page_cubit.dart';
-import 'package:snggle/bloc/pages/scan_tx_page/scan_qr_page_state.dart';
+import 'package:snggle/bloc/pages/scan_qr_page/scan_qr_page_cubit.dart';
+import 'package:snggle/bloc/pages/scan_qr_page/scan_qr_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
-import 'package:snggle/shared/exceptions/scan_qr_exception_msgs.dart';
-import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/sign_tx_page/ethereum_sign_tx_page.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/sign_tx_page/solana_sign_tx_page.dart';
+import 'package:snggle/shared/exceptions/read_tx_data_exception.dart';
+import 'package:snggle/shared/exceptions/read_tx_data_exception_msgs.dart';
+import 'package:snggle/shared/exceptions/read_tx_data_exception_type.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/sign_tx_page/ethereum_sign_tx_page.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/sign_tx_page/sign_tx_mode.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/sign_tx_page/solana_sign_tx_page.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
@@ -17,8 +18,13 @@ import 'package:snggle/views/widgets/qr/qr_camera_scaffold.dart';
 
 class ScanQRPage extends StatefulWidget {
   final bool walletAutoDetectionEnabledBool;
+  final VoidCallback onReceived;
 
-  const ScanQRPage({required this.walletAutoDetectionEnabledBool, super.key});
+  const ScanQRPage({
+    required this.walletAutoDetectionEnabledBool,
+    required this.onReceived,
+    super.key,
+  });
 
   @override
   _ScanQRPageState createState() => _ScanQRPageState();
@@ -26,7 +32,7 @@ class ScanQRPage extends StatefulWidget {
 
 class _ScanQRPageState extends State<ScanQRPage> {
   late final ScanQRPageCubit scanQRPageCubit = ScanQRPageCubit(
-    unsupportedOperationCallback: () => _showErrorDialog(ScanQrExceptionType.unsupported),
+    unsupportedOperationCallback: () => _showErrorDialog(ReadTxDataExceptionType.unsupported),
   );
 
   bool errorDialogVisibleBool = false;
@@ -42,17 +48,20 @@ class _ScanQRPageState extends State<ScanQRPage> {
     return Material(
       child: BlocConsumer<ScanQRPageCubit, ScanQRPageState>(
         bloc: scanQRPageCubit,
-        listener: (BuildContext context, ScanQRPageState scanTxPageState) {
-          _startLoadingResultPage(scanTxPageState);
+        listener: (BuildContext context, ScanQRPageState scanQRPageState) {
+          _startLoadingResultPage(scanQRPageState);
         },
         builder: (BuildContext context, ScanQRPageState scanTxPageState) {
           if (scanTxPageState.qrResultPage != null) {
             return scanTxPageState.qrResultPage!;
           }
           return QRCameraScaffold(
-            title: 'SCAN',
+            title: 'SCAN & SIGN',
             progressNotifier: scanQRPageCubit.progressNotifier,
-            onQRScanned: _handleQRScanned,
+            onQRScanned: (Barcode barcode) {
+              _handleQRScanned(barcode);
+              widget.onReceived.call();
+            },
           );
         },
       ),
@@ -72,8 +81,8 @@ class _ScanQRPageState extends State<ScanQRPage> {
           scanQRPageCubit.notifyViewLoaded(resultPage);
         },
         onError: (Object e) async {
-          if (e is ScanQrException) {
-            await _showErrorDialog(e.scanQrExceptionType);
+          if (e is ReadTxDataException) {
+            await _showErrorDialog(e.readTxDataExceptionType);
           }
         },
       );
@@ -86,6 +95,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
         return EthereumSignTxPage.load(
           walletAutoDetectionEnabledBool: widget.walletAutoDetectionEnabledBool,
           cborEthSignRequest: cborEthSignRequest,
+          signTxMode: SignTxMode.qr,
         );
       case CborSolSignRequest cborSolSignRequest:
         return SolanaSignTxPage.load(
@@ -93,11 +103,11 @@ class _ScanQRPageState extends State<ScanQRPage> {
           cborSolSignRequest: cborSolSignRequest,
         );
       default:
-        throw const ScanQrException(ScanQrExceptionType.unsupported);
+        throw const ReadTxDataException(ReadTxDataExceptionType.unsupported);
     }
   }
 
-  Future<void> _showErrorDialog(ScanQrExceptionType scanQrExceptionType) async {
+  Future<void> _showErrorDialog(ReadTxDataExceptionType readTxDataExceptionType) async {
     if (errorDialogVisibleBool) {
       return;
     }
@@ -108,9 +118,9 @@ class _ScanQRPageState extends State<ScanQRPage> {
       builder: (BuildContext context) {
         return CustomDialog(
           backgroundColor: AppColors.body2.withOpacity(0.5),
-          title: ScanQrExceptionMsgs.getTitle(scanQrExceptionType),
+          title: ReadTxDataExceptionMsgs.getTitle(readTxDataExceptionType),
           content: Text(
-            ScanQrExceptionMsgs.getDescription(scanQrExceptionType),
+            ReadTxDataExceptionMsgs.getDescriptionForQR(readTxDataExceptionType),
             textAlign: TextAlign.center,
           ),
           onPopInvoked: (_) => scanQRPageCubit.reset(),

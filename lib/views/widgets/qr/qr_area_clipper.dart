@@ -11,7 +11,7 @@ class QRAreaClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     double squareSize = size.width - (horizontalPadding * 2);
     double left = (size.width - squareSize) / 2;
-    double top = (size.height - squareSize) / 2;
+    double top = ((size.height - squareSize) / 2) + 20;
     double radius = 8;
 
     Path path = Path()

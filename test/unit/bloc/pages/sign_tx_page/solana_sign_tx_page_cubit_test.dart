@@ -11,15 +11,15 @@ import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/states/solana
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
-import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
-import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
+import 'package:snggle/shared/exceptions/read_tx_data_exception.dart';
+import 'package:snggle/shared/exceptions/read_tx_data_exception_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
-import '../../../../../utils/database_mock.dart';
-import '../../../../../utils/test_database.dart';
+import '../../../../utils/database_mock.dart';
+import '../../../../utils/test_database.dart';
 
 void main() {
   final TestDatabase testDatabase = TestDatabase();
@@ -163,7 +163,7 @@ void main() {
       // Assert
       expect(
         () => actualSolanaSignTxPageCubit.init(),
-        throwsA(const ScanQrException(ScanQrExceptionType.receivedAddressEmpty)),
+        throwsA(const ReadTxDataException(ReadTxDataExceptionType.receivedAddressEmpty)),
       );
     });
 

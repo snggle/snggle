@@ -13,8 +13,8 @@ import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
-import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
-import 'package:snggle/shared/exceptions/scan_qr_exception_type.dart';
+import 'package:snggle/shared/exceptions/read_tx_data_exception.dart';
+import 'package:snggle/shared/exceptions/read_tx_data_exception_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
@@ -87,7 +87,7 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
       return _getWalletByFingerprint(_cborEthSignRequest.derivationPath.sourceFingerprint!);
     }
 
-    throw const ScanQrException(ScanQrExceptionType.receivedAddressEmpty);
+    throw const ReadTxDataException(ReadTxDataExceptionType.receivedAddressEmpty);
   }
 
   Future<WalletModel> _getActiveWallet() {
@@ -115,7 +115,7 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
 
     return allVaultModels.firstWhere(
       (VaultModel vaultModel) => vaultModel.fingerprint == sourceFingerprint.toString(),
-      orElse: () => throw const ScanQrException(ScanQrExceptionType.vaultNotFound),
+      orElse: () => throw const ReadTxDataException(ReadTxDataExceptionType.vaultNotFound),
     );
   }
 
@@ -134,7 +134,7 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
 
     return walletModelList.firstWhere(
       (WalletModel walletModel) => walletModel.derivationPath == derivationPath,
-      orElse: () => throw const ScanQrException(ScanQrExceptionType.walletNotFound),
+      orElse: () => throw const ReadTxDataException(ReadTxDataExceptionType.walletNotFound),
     );
   }
 
@@ -143,7 +143,7 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
       return await globalLocator<PasswordController>().getPasswordByFilesystemPath(walletModel.filesystemPath);
     } catch (_) {
       // TODO(dominik): Exception may be replaced with a UI dialog to enter the password
-      throw const ScanQrException(ScanQrExceptionType.walletWithEncryptedParents);
+      throw const ReadTxDataException(ReadTxDataExceptionType.walletWithEncryptedParents);
     }
   }
 }

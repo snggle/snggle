@@ -7,9 +7,9 @@ import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/states/solana
 import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/states/solana_sign_tx_page_signed_tx_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
-import 'package:snggle/shared/exceptions/scan_qr_exception.dart';
+import 'package:snggle/shared/exceptions/read_tx_data_exception.dart';
 import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/scan_qr_page/tx_confirmation_scaffold.dart';
+import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/sign_tx_page/tx_confirmation_scaffold.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/public_address_preview.dart';
@@ -32,7 +32,7 @@ class SolanaSignTxPage extends StatefulWidget {
     try {
       await solanaSignTxPageCubit.init();
       return SolanaSignTxPage(solanaSignTxPageCubit: solanaSignTxPageCubit);
-    } on ScanQrException {
+    } on ReadTxDataException {
       await solanaSignTxPageCubit.close();
       rethrow;
     }
