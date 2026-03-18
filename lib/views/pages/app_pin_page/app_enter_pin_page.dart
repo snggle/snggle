@@ -5,6 +5,10 @@ import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/a_app_enter_pi
 import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/app_enter_pin_page_cubit.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/states/app_enter_invalid_pin_page_state.dart';
 import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_state.dart';
+import 'package:snggle/shared/native/app_launch_context.dart';
+import 'package:snggle/shared/native/app_launch_mode.dart';
+import 'package:snggle/shared/native/native_app_launch.dart';
+import 'package:snggle/shared/native/native_autofill_auth.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
@@ -44,7 +48,14 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
       bloc: _appEnterPinPageCubit,
       builder: (BuildContext context, AAppEnterPinPageState appEnterPinPageState) {
         String? textWarning = _getTextWarning(appPinTypeChangeBool: appPinTypeChangeBool, appEnterPinPageState: appEnterPinPageState);
-        return PinpadScaffold(
+        return PopScope(
+            canPop: true,
+            onPopInvokedWithResult: (bool didPop, Object? result) {
+          if (didPop) {
+            NativeAutofillAuth.cancel();
+          }
+        },
+        child: PinpadScaffold(
           header: textWarning != null ? PinpadBanner(text: textWarning) : null,
           errorBool: appEnterPinPageState is AppEnterInvalidPinPageState,
           title: title,
@@ -64,6 +75,7 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
           },
           onKeyboardChanged: _handleKeyboardChanged,
           initPinpadKeyboardState: _initPinpadKeyboardState,
+        ),
         );
       },
     );
@@ -95,12 +107,20 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
   }
 
   Future<void> _pressConfirmButton({required bool appPinTypeChangeBool}) async {
+    AppLaunchContext launchContext = await NativeAppLaunch.getContext();
+
     try {
       await _appEnterPinPageCubit.authenticate(appPinType: widget.appPinType);
       if (appPinTypeChangeBool) {
         await AutoRouter.of(context).replace(AppSetUpPinRoute(appPinType: AppPinType.changePin, initPinpadKeyboardState: _initPinpadKeyboardState));
       } else {
-        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
+        switch (launchContext.appLaunchMode) {
+          case AppLaunchMode.autofillAuth:
+            await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const ReadOnlyEntriesSectionWrapperRoute()]);
+
+          case AppLaunchMode.main:
+            await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
+        }
       }
     } catch (e) {
       AppLogger().log(message: 'Provided invalid PIN');
@@ -108,7 +128,7 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
       bool appPinTypeEnterBool = appPinTypeChangeBool == false;
       bool masterKeyRemovalBool = attemptsLeftBool && appPinTypeEnterBool;
       if (masterKeyRemovalBool) {
-        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const AppMasterKeyRemovedRoute()]);
+        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[AppMasterKeyRemovedRoute(appLaunchMode: launchContext.appLaunchMode)]);
       }
     }
   }
