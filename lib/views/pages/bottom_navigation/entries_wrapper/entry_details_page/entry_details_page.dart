@@ -8,12 +8,15 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/generic/gradient_scrollbar.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
+import 'package:snggle/views/widgets/generic/public_address_preview.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
+import 'package:snggle/views/widgets/qr/qr_result_scaffold.dart';
 
 @RoutePage<void>()
 class EntryDetailsPage extends StatefulWidget {
@@ -136,7 +139,43 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
                     ),
                   ),
                 ),
+                const SliverToBoxAdapter(child: SizedBox(height: 12)),
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: GradientOutlinedButton.small(
+                      width: 176,
+                      label: 'Log in using QR',
+                      onPressed: _showQrPage,
+                    ),
+                  ),
+                ),
               ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _showQrPage() async {
+    TextTheme textTheme = Theme.of(context).textTheme;
+
+    String qrData = entryDetailsPageCubit.buildQrData();
+
+    await showDialog(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return QRResultScaffold.fromPlaintext(
+          title: widget.entryModel.name,
+          plaintext: qrData,
+          qrCodeGap: 0,
+          child: LabelWrapperVertical(
+            label: '',
+            bottomBorderVisibleBool: false,
+            child: PublicAddressPreview(
+              address: widget.entryModel.name,
+              textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
             ),
           ),
         );

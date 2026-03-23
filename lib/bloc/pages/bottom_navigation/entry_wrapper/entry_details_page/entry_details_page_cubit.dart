@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,6 +56,19 @@ class EntryDetailsPageCubit extends Cubit<EntryDetailsPageState> {
     emit(state.copyWith(
       loadingBool: false,
     ));
+  }
+
+  String buildQrData() {
+    String login = usernameTextEditingController.text;
+    String password = passwordTextEditingController.text;
+
+    // TODO(kamil): reconsider content
+    Map<String, String> jsonPayload = <String, String>{
+      'login': login,
+      'password': password,
+    };
+
+    return jsonEncode(jsonPayload);
   }
 
   Future<void> save() async {
