@@ -7,6 +7,7 @@ import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/password_model.dart';
+import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
 
 class AppEnterPinPageCubit extends Cubit<AAppEnterPinPageState> {
   final AppService _appService = globalLocator<AppService>();
@@ -15,16 +16,27 @@ class AppEnterPinPageCubit extends Cubit<AAppEnterPinPageState> {
   AppEnterPinPageCubit() : super(const AppEnterPinPageState.empty());
 
   void updatePinNumbers(List<int> pinNumbers) {
-    emit(AppEnterPinPageState(pinNumbers: pinNumbers));
+    emit(AppEnterPinPageState(
+      pinNumbers: pinNumbers,
+      invalidAttemptsCount: state.invalidAttemptsCount,
+    ));
   }
 
-  Future<void> authenticate() async {
+  Future<void> authenticate({required AppPinType appPinType}) async {
     PasswordModel passwordModel = PasswordModel.fromPlaintext(state.pinNumbers.join(''));
     bool passwordValidBool = await _appService.isPasswordValid(passwordModel);
     if (passwordValidBool) {
       _masterKeyController.setPassword(passwordModel);
     } else {
-      emit(AppEnterInvalidPinPageState(pinNumbers: state.pinNumbers));
+      int invalidAttemptsCountTmp = state.invalidAttemptsCount;
+      bool enterPinBool = (appPinType == AppPinType.enterPin);
+      if (enterPinBool) {
+        invalidAttemptsCountTmp++;
+      }
+      if (invalidAttemptsCountTmp >= AAppEnterPinPageState.maxInvalidAttempts && enterPinBool) {
+        await _appService.wipeSecureStorage();
+      }
+      emit(AppEnterInvalidPinPageState(pinNumbers: state.pinNumbers, invalidAttemptsCount: invalidAttemptsCountTmp));
       throw InvalidPasswordException();
     }
   }

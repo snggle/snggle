@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
@@ -92,6 +94,84 @@ void main() {
       );
     });
   });
+  group('Tests of AppService.isDataBaseExist()', () {
+    test('Should [return FALSE] if [secrets directory NOT EXISTS]', () async {
+      // Arrange
+      RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
+      Directory rootDirectory = await rootDirectoryBuilder.call();
+      Directory secretsDir = Directory('${rootDirectory.path}/secrets');
 
+      if (await secretsDir.exists()) {
+        await secretsDir.delete(recursive: true);
+      }
+
+      // Act
+      bool actualDatabaseExistBool = await globalLocator<AppService>().isDataBaseExist();
+
+      // Assert
+      expect(actualDatabaseExistBool, false);
+    });
+
+    test('Should [return FALSE] if [secrets directory EXISTS] but contains [NO snggle files]', () async {
+      // Arrange
+      RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
+      Directory rootDirectory = await rootDirectoryBuilder.call();
+      Directory secretsDir = Directory('${rootDirectory.path}/secrets');
+
+      if (await secretsDir.exists()) {
+        await secretsDir.delete(recursive: true);
+      }
+
+      await secretsDir.create(recursive: true);
+      await File('${secretsDir.path}/not_a_vault_file.txt').writeAsString('some_data');
+
+      // Act
+      bool actualDatabaseExistBool = await globalLocator<AppService>().isDataBaseExist();
+
+      // Assert
+      expect(actualDatabaseExistBool, false);
+    });
+
+    test('Should [return FALSE] if [snggle file EXISTS] but has [size 0]', () async {
+      // Arrange
+      RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
+      Directory rootDirectory = await rootDirectoryBuilder.call();
+      Directory secretsDir = Directory('${rootDirectory.path}/secrets');
+
+      if (await secretsDir.exists()) {
+        await secretsDir.delete(recursive: true);
+      }
+
+      await secretsDir.create(recursive: true);
+      await File('${secretsDir.path}/vault.snggle').writeAsBytes(<int>[]);
+
+      // Act
+      bool actualDatabaseExistBool = await globalLocator<AppService>().isDataBaseExist();
+
+      // Assert
+      expect(actualDatabaseExistBool, false);
+    });
+
+    test('Should [return TRUE] if [vault file EXISTS] and has [size > 0]', () async {
+      // Arrange
+      RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
+      Directory rootDirectory = await rootDirectoryBuilder.call();
+      Directory secretsDir = Directory('${rootDirectory.path}/secrets');
+
+      if (await secretsDir.exists()) {
+        await secretsDir.delete(recursive: true);
+      }
+
+      Directory nestedDir = Directory('${secretsDir.path}/nested');
+      await nestedDir.create(recursive: true);
+      await File('${nestedDir.path}/vault.snggle').writeAsBytes(<int>[1, 2, 3]);
+
+      // Act
+      bool actualDatabaseExistBool = await globalLocator<AppService>().isDataBaseExist();
+
+      // Assert
+      expect(actualDatabaseExistBool, true);
+    });
+  });
   tearDownAll(testDatabase.close);
 }

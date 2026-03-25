@@ -21,6 +21,7 @@ class AppRouter extends $AppRouter {
         initial: true,
       ),
       AutoRoute(page: AppSetUpPinRoute.page),
+      AutoRoute(page: AppMasterKeyRemovedRoute.page),
       AutoRoute(page: AppEnterPinRoute.page),
       AutoRoute(
         page: VaultCreateRecoverRoute.page,

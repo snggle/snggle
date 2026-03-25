@@ -13,20 +13,46 @@ class AppService {
   final RootDirectoryBuilder _rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
   final MasterKeyService _masterKeyService = globalLocator<MasterKeyService>();
 
+  Future<bool> isDataBaseExist() async {
+    Directory rootDirectory = await _rootDirectoryBuilder.call();
+    Directory secretsDirectory = Directory('${rootDirectory.path}/secrets');
+
+    if (await secretsDirectory.exists()) {
+      await for (FileSystemEntity fileSystemEntity in secretsDirectory.list(recursive: true, followLinks: false)) {
+        if (fileSystemEntity is! File) {
+          continue;
+        }
+
+        String path = fileSystemEntity.path;
+        bool snggleFileBool = path.endsWith('.snggle');
+
+        if (snggleFileBool == false) {
+          continue;
+        }
+
+        int size = await fileSystemEntity.length();
+        if (size > 0) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   Future<bool> isPasswordValid(PasswordModel appPasswordModel) async {
     MasterKeyVO masterKeyVO = await _masterKeyService.getMasterKey();
     return appPasswordModel.isValidForData(masterKeyVO.encryptedMasterKey);
   }
 
   Future<void> wipeAll() async {
-    await _wipeSecureStorage();
+    await wipeSecureStorage();
     await _wipeFilesystemStorage();
     await _wipeIsarDatabase();
 
     globalLocator<ActiveWalletController>().clearActiveWallet();
   }
 
-  Future<void> _wipeSecureStorage() async {
+  Future<void> wipeSecureStorage() async {
     await _flutterSecureStorage.deleteAll();
   }
 
