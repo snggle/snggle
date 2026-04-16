@@ -5,15 +5,15 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_background.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_wrapper.dart';
 
+typedef CopyWrapperBuilder = Widget Function(BuildContext context);
+
 class CopyWrapper extends StatefulWidget {
   final String value;
-  final Widget child;
-  final VoidCallback? onTap;
+  final CopyWrapperBuilder copyWrapperBuilder;
 
   const CopyWrapper({
     required this.value,
-    required this.child,
-    this.onTap,
+    required this.copyWrapperBuilder,
     super.key,
   });
 
@@ -42,9 +42,8 @@ class _CopyWrapperState extends State<CopyWrapper> {
       ),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: widget.onTap,
-        onLongPress: _copy,
-        child: widget.child,
+        onTap: _copy,
+        child: widget.copyWrapperBuilder.call(context),
       ),
     );
   }

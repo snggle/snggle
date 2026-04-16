@@ -83,29 +83,47 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
               slivers: <Widget>[
                 SliverToBoxAdapter(
                   child: Center(
-                    child: CopyWrapper(
-                      value: widget.walletModel.address,
+                    child: GestureDetector(
                       onTap: _showQrPage,
-                      child: Column(
+                      child: QrImageView(data: widget.walletModel.address, size: 136),
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: CopyWrapper(
+                    value: widget.walletModel.address,
+                    copyWrapperBuilder: (BuildContext context) {
+                      return Column(
                         children: <Widget>[
-                          QrImageView(data: widget.walletModel.address, size: 136),
                           GradientText(
                             widget.walletModel.getShortAddress(8),
                             gradient: AppColors.primaryGradient,
                             textStyle: textTheme.bodyMedium?.copyWith(letterSpacing: 2.5, height: 1),
                           ),
                         ],
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
-                const SliverToBoxAdapter(child: SizedBox(height: 6)),
                 SliverToBoxAdapter(
-                  child: Center(
-                    child: Text(
-                      widget.walletModel.derivationPath,
-                      style: textTheme.labelMedium?.copyWith(letterSpacing: 2.5, height: 1, color: AppColors.darkGrey),
-                    ),
+                  child: CopyWrapper(
+                    value: widget.walletModel.address,
+                    copyWrapperBuilder: (BuildContext context) {
+                      return const SizedBox(height: 6);
+                    },
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: CopyWrapper(
+                    value: widget.walletModel.address,
+                    copyWrapperBuilder: (BuildContext context) {
+                      return Center(
+                        child: Text(
+                          widget.walletModel.derivationPath,
+                          style: textTheme.labelMedium?.copyWith(letterSpacing: 2.5, height: 1, color: AppColors.darkGrey),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: 16)),

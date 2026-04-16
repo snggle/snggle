@@ -23,40 +23,42 @@ class PublicAddressPreview extends StatelessWidget {
 
     return CopyWrapper(
       value: address,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          ClipOval(
-            child: SvgPicture.string(
-              Blockies(seed: address).toSvg(size: iconSize.toInt()),
-              fit: BoxFit.cover,
-              width: iconSize,
-              height: iconSize,
-            ),
-          ),
-          const SizedBox(width: 10),
-          if (finalTextStyle?.color != null)
-            Expanded(child: Text(address, style: finalTextStyle))
-          else
-            Expanded(
-              child: GradientText(
-                address,
-                gradient: const RadialGradient(
-                  radius: 10,
-                  center: Alignment(-0.6, -0.6),
-                  colors: <Color>[
-                    Color(0xFF000000),
-                    Color(0xFF42D2FF),
-                    Color(0xFF939393),
-                    Color(0xFF000000),
-                  ],
-                ),
-                textStyle: finalTextStyle,
+      copyWrapperBuilder: (BuildContext context) {
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            ClipOval(
+              child: SvgPicture.string(
+                Blockies(seed: address).toSvg(size: iconSize.toInt()),
+                fit: BoxFit.cover,
+                width: iconSize,
+                height: iconSize,
               ),
             ),
-        ],
-      ),
+            const SizedBox(width: 10),
+            if (finalTextStyle?.color != null)
+              Expanded(child: Text(address, style: finalTextStyle))
+            else
+              Expanded(
+                child: GradientText(
+                  address,
+                  gradient: const RadialGradient(
+                    radius: 10,
+                    center: Alignment(-0.6, -0.6),
+                    colors: <Color>[
+                      Color(0xFF000000),
+                      Color(0xFF42D2FF),
+                      Color(0xFF939393),
+                      Color(0xFF000000),
+                    ],
+                  ),
+                  textStyle: finalTextStyle,
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

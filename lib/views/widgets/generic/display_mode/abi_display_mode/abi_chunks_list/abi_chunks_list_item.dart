@@ -46,33 +46,35 @@ class _AbiChunksListItemState extends State<AbiChunksListItem> {
 
     return CopyWrapper(
       value: value,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          GestureDetector(
-            onTap: _showOptionsDialog,
-            child: Container(
-              margin: const EdgeInsets.only(top: 2, bottom: 4),
-              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
-              decoration: BoxDecoration(
-                color: const Color(0xfff3f3f3),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
-                switch (abiChunkType) {
-                  AbiChunkType.hex => 'Hex',
-                  AbiChunkType.text => 'Text',
-                  AbiChunkType.number => 'Number',
-                  AbiChunkType.address => 'Address',
-                },
-                style: theme.textTheme.labelMedium?.copyWith(color: AppColors.body3),
+      copyWrapperBuilder: (BuildContext context) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            GestureDetector(
+              onTap: _showOptionsDialog,
+              child: Container(
+                margin: const EdgeInsets.only(top: 2, bottom: 4),
+                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xfff3f3f3),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  switch (abiChunkType) {
+                    AbiChunkType.hex => 'Hex',
+                    AbiChunkType.text => 'Text',
+                    AbiChunkType.number => 'Number',
+                    AbiChunkType.address => 'Address',
+                  },
+                  style: theme.textTheme.labelMedium?.copyWith(color: AppColors.body3),
+                ),
               ),
             ),
-          ),
-          Text(value, style: widget.textStyle),
-          if (widget.lastChunkBool == false) const Divider(color: Color(0xfff3f3f3)),
-        ],
-      ),
+            Text(value, style: widget.textStyle),
+            if (widget.lastChunkBool == false) const Divider(color: Color(0xfff3f3f3)),
+          ],
+        );
+      },
     );
   }
 

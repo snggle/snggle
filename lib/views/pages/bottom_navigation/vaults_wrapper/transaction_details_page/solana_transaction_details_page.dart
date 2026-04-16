@@ -72,180 +72,204 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
               if (senderAddress != null) ...<Widget>[
                 CopyWrapper(
                   value: senderAddress,
-                  child: LabelWrapperAnimated(
-                    label: 'Signer',
-                    labelStyle: labelTextStyle,
-                    collapsedValue: GradientText(
-                      StringUtils.getShortPublicAddress(senderAddress, 6),
-                      gradient: AppColors.primaryGradient,
-                      textStyle: horizontalValueTextStyle,
-                    ),
-                    expandedValue: Text(
-                      senderAddress,
-                      style: verticalValueTextStyle,
-                    ),
-                  ),
+                  copyWrapperBuilder: (BuildContext context) {
+                    return LabelWrapperAnimated(
+                      label: 'Signer',
+                      labelStyle: labelTextStyle,
+                      collapsedValue: GradientText(
+                        StringUtils.getShortPublicAddress(senderAddress, 6),
+                        gradient: AppColors.primaryGradient,
+                        textStyle: horizontalValueTextStyle,
+                      ),
+                      expandedValue: Text(
+                        senderAddress,
+                        style: verticalValueTextStyle,
+                      ),
+                    );
+                  },
                 ),
               ],
               if (signDate != null) ...<Widget>[
                 CopyWrapper(
                   value: signDate,
-                  child: LabelWrapperHorizontal(
-                    label: 'Time',
-                    labelStyle: labelTextStyle,
-                    padding: EdgeInsets.zero,
-                    child: GradientText(
-                      signDate,
-                      gradient: AppColors.primaryGradient,
-                      textStyle: horizontalValueTextStyle,
-                    ),
-                  ),
+                  copyWrapperBuilder: (BuildContext context) {
+                    return LabelWrapperHorizontal(
+                      label: 'Time',
+                      labelStyle: labelTextStyle,
+                      padding: EdgeInsets.zero,
+                      child: GradientText(
+                        signDate,
+                        gradient: AppColors.primaryGradient,
+                        textStyle: horizontalValueTextStyle,
+                      ),
+                    );
+                  },
                 ),
               ],
               CopyWrapper(
                 value: signDataType,
-                child: LabelWrapperHorizontal(
-                  label: 'Format',
-                  labelStyle: labelTextStyle,
-                  padding: EdgeInsets.zero,
-                  child: GradientText(
-                    signDataType,
-                    gradient: AppColors.primaryGradient,
-                    textStyle: horizontalValueTextStyle,
-                  ),
-                ),
+                copyWrapperBuilder: (BuildContext context) {
+                  return LabelWrapperHorizontal(
+                    label: 'Format',
+                    labelStyle: labelTextStyle,
+                    padding: EdgeInsets.zero,
+                    child: GradientText(
+                      signDataType,
+                      gradient: AppColors.primaryGradient,
+                      textStyle: horizontalValueTextStyle,
+                    ),
+                  );
+                },
               ),
               if (contractAddress != null) ...<Widget>[
                 CopyWrapper(
                   value: contractAddress,
-                  child: LabelWrapperAnimated(
-                    label: 'Contract',
-                    labelStyle: labelTextStyle,
-                    collapsedValue: GradientText(
-                      StringUtils.getShortPublicAddress(contractAddress, 6),
-                      gradient: AppColors.primaryGradient,
-                      textStyle: horizontalValueTextStyle,
-                    ),
-                    expandedValue: Text(
-                      contractAddress,
-                      style: verticalValueTextStyle,
-                    ),
-                  ),
+                  copyWrapperBuilder: (BuildContext context) {
+                    return LabelWrapperAnimated(
+                      label: 'Contract',
+                      labelStyle: labelTextStyle,
+                      collapsedValue: GradientText(
+                        StringUtils.getShortPublicAddress(contractAddress, 6),
+                        gradient: AppColors.primaryGradient,
+                        textStyle: horizontalValueTextStyle,
+                      ),
+                      expandedValue: Text(
+                        contractAddress,
+                        style: verticalValueTextStyle,
+                      ),
+                    );
+                  },
                 ),
               ],
               if (recipientAddress != null) ...<Widget>[
                 CopyWrapper(
                   value: recipientAddress,
-                  child: LabelWrapperAnimated(
-                    label: 'Recipient',
-                    labelStyle: labelTextStyle,
-                    collapsedValue: GradientText(
-                      StringUtils.getShortPublicAddress(recipientAddress, 6),
-                      gradient: AppColors.primaryGradient,
-                      textStyle: horizontalValueTextStyle,
-                    ),
-                    expandedValue: Text(
-                      recipientAddress,
-                      style: verticalValueTextStyle,
-                    ),
-                  ),
+                  copyWrapperBuilder: (BuildContext context) {
+                    return LabelWrapperAnimated(
+                      label: 'Recipient',
+                      labelStyle: labelTextStyle,
+                      collapsedValue: GradientText(
+                        StringUtils.getShortPublicAddress(recipientAddress, 6),
+                        gradient: AppColors.primaryGradient,
+                        textStyle: horizontalValueTextStyle,
+                      ),
+                      expandedValue: Text(
+                        recipientAddress,
+                        style: verticalValueTextStyle,
+                      ),
+                    );
+                  },
                 ),
               ],
               if (amount != null) ...<Widget>[
                 CopyWrapper(
                   value: amount,
-                  child: LabelWrapperHorizontal(
-                    label: 'Amount',
-                    labelStyle: labelTextStyle,
-                    padding: EdgeInsets.zero,
-                    child: GradientText(
-                      amount,
-                      gradient: AppColors.primaryGradient,
-                      textStyle: horizontalValueTextStyle,
-                    ),
-                  ),
+                  copyWrapperBuilder: (BuildContext context) {
+                    return LabelWrapperHorizontal(
+                      label: 'Amount',
+                      labelStyle: labelTextStyle,
+                      padding: EdgeInsets.zero,
+                      child: GradientText(
+                        amount,
+                        gradient: AppColors.primaryGradient,
+                        textStyle: horizontalValueTextStyle,
+                      ),
+                    );
+                  },
                 ),
               ],
               if (message != null && messageLength != null) ...<Widget>[
                 CopyWrapper(
                   value: messageLength,
-                  child: LabelWrapperHorizontal(
-                    label: 'Length',
-                    labelStyle: labelTextStyle,
-                    padding: EdgeInsets.zero,
-                    child: GradientText(
-                      '${messageLength} Bytes',
-                      gradient: AppColors.primaryGradient,
-                      textStyle: horizontalValueTextStyle,
-                    ),
-                  ),
+                  copyWrapperBuilder: (BuildContext context) {
+                    return LabelWrapperHorizontal(
+                      label: 'Length',
+                      labelStyle: labelTextStyle,
+                      padding: EdgeInsets.zero,
+                      child: GradientText(
+                        '${messageLength} Bytes',
+                        gradient: AppColors.primaryGradient,
+                        textStyle: horizontalValueTextStyle,
+                      ),
+                    );
+                  },
                 ),
                 CopyWrapper(
                   value: message,
-                  child: TextDisplayModeSelector(
-                    label: 'Message',
-                    labelTextStyle: labelTextStyle,
-                    textStyle: verticalValueTextStyle,
-                    value: message,
-                  ),
+                  copyWrapperBuilder: (BuildContext context) {
+                    return TextDisplayModeSelector(
+                      label: 'Message',
+                      labelTextStyle: labelTextStyle,
+                      textStyle: verticalValueTextStyle,
+                      value: message,
+                    );
+                  },
                 ),
               ],
               if (transactionData != null) ...<Widget>[
                 CopyWrapper(
                   value: transactionData,
-                  child: LabelWrapperVertical(
-                    label: 'Transaction data',
-                    labelStyle: labelTextStyle,
-                    labelPadding: const EdgeInsets.only(top: 10, bottom: 6, left: 16, right: 16),
-                    padding: const EdgeInsets.only(bottom: 10),
-                    bottomBorderVisibleBool: false,
-                    child: Text(
-                      transactionData,
-                      style: verticalValueTextStyle,
-                    ),
-                  ),
+                  copyWrapperBuilder: (BuildContext context) {
+                    return LabelWrapperVertical(
+                      label: 'Transaction data',
+                      labelStyle: labelTextStyle,
+                      labelPadding: const EdgeInsets.only(top: 10, bottom: 6, left: 16, right: 16),
+                      padding: const EdgeInsets.only(bottom: 10),
+                      bottomBorderVisibleBool: false,
+                      child: Text(
+                        transactionData,
+                        style: verticalValueTextStyle,
+                      ),
+                    );
+                  },
                 ),
               ],
               if (signature != null && signatureLength != null) ...<Widget>[
                 CopyWrapper(
                   value: signatureAlgorithm,
-                  child: LabelWrapperHorizontal(
-                    label: 'Algorithm',
-                    labelStyle: labelTextStyle,
-                    padding: EdgeInsets.zero,
-                    child: GradientText(
-                      signatureAlgorithm,
-                      gradient: AppColors.primaryGradient,
-                      textStyle: horizontalValueTextStyle,
-                    ),
-                  ),
+                  copyWrapperBuilder: (BuildContext context) {
+                    return LabelWrapperHorizontal(
+                      label: 'Algorithm',
+                      labelStyle: labelTextStyle,
+                      padding: EdgeInsets.zero,
+                      child: GradientText(
+                        signatureAlgorithm,
+                        gradient: AppColors.primaryGradient,
+                        textStyle: horizontalValueTextStyle,
+                      ),
+                    );
+                  },
                 ),
                 CopyWrapper(
                   value: signatureLength,
-                  child: LabelWrapperHorizontal(
-                    label: 'Size',
-                    labelStyle: labelTextStyle,
-                    padding: EdgeInsets.zero,
-                    child: GradientText(
-                      '${HexCodec.decode(widget.solanaTransactionModel.signature!).length.toString()} Bytes',
-                      gradient: AppColors.primaryGradient,
-                      textStyle: horizontalValueTextStyle,
-                    ),
-                  ),
+                  copyWrapperBuilder: (BuildContext context) {
+                    return LabelWrapperHorizontal(
+                      label: 'Size',
+                      labelStyle: labelTextStyle,
+                      padding: EdgeInsets.zero,
+                      child: GradientText(
+                        '${HexCodec.decode(widget.solanaTransactionModel.signature!).length.toString()} Bytes',
+                        gradient: AppColors.primaryGradient,
+                        textStyle: horizontalValueTextStyle,
+                      ),
+                    );
+                  },
                 ),
                 CopyWrapper(
                   value: signature,
-                  child: LabelWrapperVertical(
-                    label: 'Signature',
-                    labelStyle: labelTextStyle,
-                    labelPadding: const EdgeInsets.only(top: 10, bottom: 6, left: 16, right: 16),
-                    padding: const EdgeInsets.only(bottom: 10),
-                    bottomBorderVisibleBool: false,
-                    child: Text(
-                      signature,
-                      style: verticalValueTextStyle,
-                    ),
-                  ),
+                  copyWrapperBuilder: (BuildContext context) {
+                    return LabelWrapperVertical(
+                      label: 'Signature',
+                      labelStyle: labelTextStyle,
+                      labelPadding: const EdgeInsets.only(top: 10, bottom: 6, left: 16, right: 16),
+                      padding: const EdgeInsets.only(bottom: 10),
+                      bottomBorderVisibleBool: false,
+                      child: Text(
+                        signature,
+                        style: verticalValueTextStyle,
+                      ),
+                    );
+                  },
                 ),
               ],
               const SizedBox(height: 100),
