@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:codec_utils/codec_utils.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_connec
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_connect_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/infra/exceptions/invalid_master_key_exception.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/networks/network_type.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
@@ -17,6 +20,7 @@ import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_conne
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
+import 'package:snggle/views/widgets/custom/dialog/master_key_dialog.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 @RoutePage()
@@ -73,11 +77,11 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                   ),
                   if (widget.networkTemplateModel.networkType == NetworkType.ethereum)
                     WalletConnectOptionButton(
-                    selectedBool: walletConnectPageState.walletConnectOption == WalletConnectOption.audio,
-                    label: 'Audio based',
-                    icon: AppIcons.soundwave_big,
-                    onTap: () => walletConnectPageCubit.changeConnectOption(WalletConnectOption.audio),
-                  ),
+                      selectedBool: walletConnectPageState.walletConnectOption == WalletConnectOption.audio,
+                      label: 'Audio based',
+                      icon: AppIcons.soundwave_big,
+                      onTap: () => walletConnectPageCubit.changeConnectOption(WalletConnectOption.audio),
+                    ),
                 ],
               ),
               const SizedBox(height: 34),
@@ -88,15 +92,15 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
                       switch (widget.networkTemplateModel.networkType) {
                         NetworkType.ethereum => GradientOutlinedButton.large(
-                          label: 'Metamask QR',
-                          icon: const AssetIcon(AppIcons.wallet_metamask, size: 18),
-                          onPressed: _showQRConnectPage,
-                        ),
+                            label: 'Metamask QR',
+                            icon: const AssetIcon(AppIcons.wallet_metamask, size: 18),
+                            onPressed: _showQRConnectPage,
+                          ),
                         NetworkType.solana => GradientOutlinedButton.large(
-                          label: 'Solflare QR',
-                          icon: const AssetIcon(AppIcons.wallet_solflare, size: 18),
-                          onPressed: _showQRConnectPage,
-                        ),
+                            label: 'Solflare QR',
+                            icon: const AssetIcon(AppIcons.wallet_solflare, size: 18),
+                            onPressed: _showQRConnectPage,
+                          ),
                       }
                     ],
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.audio) ...<Widget>[
@@ -127,7 +131,8 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
           case NetworkType.solana:
             return walletConnectPageCubit.getCborCryptoMultiAccounts();
         }
-      },      onSuccess: (ACborTaggedObject cborTaggedObject) async {
+      },
+      onSuccess: (ACborTaggedObject cborTaggedObject) async {
         bool? navigateBackBool = await showDialog<bool>(
           context: context,
           useSafeArea: false,
@@ -144,6 +149,7 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
           await AutoRouter.of(context).pop();
         }
       },
+      onError: _handleInvalidMasterKeyException,
     );
   }
 
@@ -169,6 +175,17 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
           await AutoRouter.of(context).pop();
         }
       },
+      onError: _handleInvalidMasterKeyException,
     );
+  }
+
+  void _handleInvalidMasterKeyException(Object error) {
+    if (mounted == false || error is! InvalidMasterKeyException) {
+      return;
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(MasterKeyDialog.show(context));
+    });
   }
 }

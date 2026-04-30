@@ -13,7 +13,7 @@ import 'package:snggle/views/widgets/list/list_item_context_tooltip.dart';
 import 'package:snggle/views/widgets/list/list_item_page_tooltip.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_wrapper.dart';
 
-typedef NavigatedCallback = void Function(AListItemModel listItemModel, PasswordModel passwordModel);
+typedef NavigatedCallback = Future<void> Function(AListItemModel listItemModel, PasswordModel passwordModel);
 
 class ListItemActionsWrapper<T extends AListItemModel, C extends AListCubit<T>> extends StatefulWidget {
   final Size listItemSize;
@@ -123,8 +123,8 @@ class _ListItemActionsWrapperState<T extends AListItemModel, C extends AListCubi
         builder: (BuildContext context) => SecretsAuthPage(
           title: 'ENTER PIN',
           listItemModel: widget.listItemModel,
-          passwordValidCallback: (PasswordModel passwordModel) {
-            widget.onNavigate(widget.listItemModel, passwordModel);
+          passwordValidCallback: (PasswordModel passwordModel) async {
+            await widget.onNavigate(widget.listItemModel, passwordModel);
           },
         ),
       );

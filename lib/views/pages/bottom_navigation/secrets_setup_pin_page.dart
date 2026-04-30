@@ -5,12 +5,14 @@ import 'package:snggle/bloc/pages/bottom_navigation/secrets_setup_pin_page/secre
 import 'package:snggle/bloc/pages/bottom_navigation/secrets_setup_pin_page/states/secrets_setup_pin_page_confirm_pin_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/secrets_setup_pin_page/states/secrets_setup_pin_page_enter_pin_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/secrets_setup_pin_page/states/secrets_setup_pin_page_invalid_pin_state.dart';
+import 'package:snggle/infra/exceptions/invalid_master_key_exception.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/views/widgets/button/custom_text_button.dart';
+import 'package:snggle/views/widgets/custom/dialog/master_key_dialog.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_scaffold.dart';
 
 class SecretsSetupPinPage extends StatefulWidget {
-  final ValueChanged<PasswordModel> passwordValidCallback;
+  final Future<void> Function(PasswordModel passwordModel) passwordValidCallback;
 
   const SecretsSetupPinPage({
     required this.passwordValidCallback,
@@ -86,9 +88,16 @@ class _SecretsSetupPinPageState extends State<SecretsSetupPinPage> {
     );
   }
 
-  void _handleValidPasswordEntered(PasswordModel passwordModel) {
+  Future<void> _handleValidPasswordEntered(PasswordModel passwordModel) async {
     Navigator.of(context).pop();
-    widget.passwordValidCallback(passwordModel);
+    try {
+      await widget.passwordValidCallback(passwordModel);
+    } on InvalidMasterKeyException {
+      if (mounted == false) {
+        return;
+      }
+      await MasterKeyDialog.show(context);
+    }
   }
 
   void _handleFirstPinChange(List<int> pinNumbers) {

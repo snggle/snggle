@@ -1,5 +1,6 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:snggle/infra/exceptions/invalid_master_key_exception.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -85,7 +86,7 @@ void main() {
         expect(actualDecryptedData, expectedDecryptedData);
       });
 
-      test('Should [throw ArgumentError] if used [MasterKeyVO INVALID]', () {
+      test('Should [throw InvalidMasterKeyException] if used [MasterKeyVO INVALID]', () {
         // Arrange
         // @formatter:off
         PasswordModel actualPasswordModel = PasswordModel.fromPlaintext('password');
@@ -96,7 +97,7 @@ void main() {
         // Assert
         expect(
           () => actualMasterKeyVO.decrypt(appPasswordModel: actualPasswordModel, encryptedData: actualEncryptedData),
-          throwsA(isA<ArgumentError>()),
+          throwsA(isA<InvalidMasterKeyException>()),
         );
       });
 

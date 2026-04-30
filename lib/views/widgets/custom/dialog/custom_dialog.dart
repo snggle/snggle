@@ -12,6 +12,8 @@ class CustomDialog extends StatelessWidget {
   final Color? backgroundColor;
   final Gradient? borderGradient;
   final PopInvokedCallback? onPopInvoked;
+  final double titleContentSpacing;
+  final double contentOptionsSpacing;
 
   const CustomDialog({
     required this.title,
@@ -20,6 +22,8 @@ class CustomDialog extends StatelessWidget {
     this.backgroundColor,
     this.borderGradient,
     this.onPopInvoked,
+    this.titleContentSpacing = 6,
+    this.contentOptionsSpacing = 16,
     super.key,
   });
 
@@ -94,9 +98,9 @@ class CustomDialog extends StatelessWidget {
                             title.toUpperCase(),
                             style: textTheme.bodyMedium!.copyWith(color: AppColors.body3),
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: titleContentSpacing),
                           content,
-                          const SizedBox(height: 16),
+                          SizedBox(height: contentOptionsSpacing),
                           optionButtonsSection
                         ],
                       ),

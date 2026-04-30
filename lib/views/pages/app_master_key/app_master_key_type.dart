@@ -1,0 +1,4 @@
+enum AppMasterKeyType {
+  create,
+  recover,
+}

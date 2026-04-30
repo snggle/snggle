@@ -9,7 +9,7 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/vault_create_recover/mnemonic_size_picker.dart';
-import 'package:snggle/views/pages/vault_create_recover/vault_recover_page/mnemonic_form_editable.dart';
+import 'package:snggle/views/pages/vault_create_recover/vault_recover_page/vault_mnemonic_form_editable.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/paginated_form/paginated_form.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
@@ -66,10 +66,9 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
             pages: <Widget>[
               MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected, advancedWarningBool: false),
               if (vaultRecoverPageState.confirmPageEnabledBool)
-                MnemonicFormEditable(
+                VaultMnemonicFormEditable(
                   mnemonicSize: vaultRecoverPageState.mnemonicSize!,
-                  keyboardValueNotifier: keyboardValueNotifier,
-                  textControllers: vaultRecoverPageState.textControllers!,
+                  textControllersList: vaultRecoverPageState.textControllers!,
                   mnemonicValidBool: vaultRecoverPageState.mnemonicValidBool,
                   mnemonicFilledBool: vaultRecoverPageState.mnemonicFilledBool,
                   vaultRecoverPageCubit: vaultRecoverPageCubit,

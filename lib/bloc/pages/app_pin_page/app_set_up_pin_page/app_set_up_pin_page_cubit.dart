@@ -5,20 +5,30 @@ import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_se
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_invalid_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_loading_state.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
+import 'package:snggle/views/pages/app_master_key/app_master_key_type.dart';
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
 
 class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
   final AppPinType appPinType;
+  final MnemonicModel? mnemonicModel;
+  final AppMasterKeyType? appMasterKeyType;
+
   final MasterKeyService _masterKeyService = globalLocator<MasterKeyService>();
   final MasterKeyController _masterKeyController = globalLocator<MasterKeyController>();
 
-  AppSetUpPinPageCubit({required this.appPinType}) : super(const AppSetUpPinPageEnterPinState.empty());
+  AppSetUpPinPageCubit({
+    required this.appPinType,
+    this.appMasterKeyType,
+    this.mnemonicModel,
+  }) : super(const AppSetUpPinPageEnterPinState.empty());
 
   void updateFirstPin(List<int> firstPinNumbers) {
     emit(AppSetUpPinPageEnterPinState(firstPinNumbers: firstPinNumbers));
@@ -44,10 +54,9 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
 
     assert(state is AppSetUpPinPageConfirmPinState, 'State must be [AppSetupPinPageConfirmPinState] to call this method');
     AppSetUpPinPageConfirmPinState appSetupPinPageConfirmPinState = state as AppSetUpPinPageConfirmPinState;
-
     if (appSetupPinPageConfirmPinState.arePasswordsEqual()) {
-      List<int> firstPinNumbers = appSetupPinPageConfirmPinState.firstPinNumbers;
-      PasswordModel passwordModel = PasswordModel.fromPlaintext(firstPinNumbers.join(''));
+      List<int> firstPinNumbersList = appSetupPinPageConfirmPinState.firstPinNumbers;
+      PasswordModel passwordModel = PasswordModel.fromPlaintext(firstPinNumbersList.join(''));
       await _submitEnteredPin(passwordModel);
       await minOperationTime;
     } else {
@@ -78,8 +87,14 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
 
   Future<void> _savePin(PasswordModel pinPasswordModel) async {
     emit(const AppSetUpPinPageLoadingState());
-    MnemonicModel mnemonicModel = MnemonicModel.generate();
-    MasterKeyVO masterKeyVO = await MasterKeyVO.create(passwordModel: pinPasswordModel, mnemonicModel: mnemonicModel);
+    if (appMasterKeyType == AppMasterKeyType.create) {
+      await AppService().wipeAll();
+      await globalLocator<IsarDatabaseManager>().initDatabase();
+    }
+    if (mnemonicModel == null) {
+      throw Exception('Mnemonic cannot be empty');
+    }
+    MasterKeyVO masterKeyVO = await MasterKeyVO.create(passwordModel: pinPasswordModel, mnemonicModel: mnemonicModel!);
     await _masterKeyService.setMasterKey(masterKeyVO);
 
     _masterKeyController.setPassword(pinPasswordModel);
