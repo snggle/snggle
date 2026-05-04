@@ -18,6 +18,7 @@ import 'package:snggle/shared/utils/formatters/legacy_derivation_path_input_form
 import 'package:snggle/shared/utils/string_utils.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/master_key_dialog.dart';
 import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
@@ -157,19 +158,25 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
 
   Future<void> _createNewWallet() async {
     try {
-      WalletModel? walletModel = await walletCreatePageCubit.createNewWallet();
+      await CustomLoadingDialog.show<WalletModel?>(
+        context: context,
+        title: 'Saving...',
+        futureFunction: walletCreatePageCubit.createNewWallet,
+        onSuccess: (WalletModel? walletModel) async {
+          if (mounted == false) {
+            return;
+          }
 
-      if (mounted == false) {
-        return;
-      }
-
-      if (walletModel != null) {
-        await AutoRouter.of(context).pop();
-      }
+          if (walletModel != null) {
+            await AutoRouter.of(context).pop();
+          }
+        },
+      );
     } on InvalidMasterKeyException {
       if (mounted == false) {
         return;
       }
+
       unawaited(MasterKeyDialog.show(context));
     }
   }

@@ -55,7 +55,7 @@ class _SecretsAuthPageState extends State<SecretsAuthPage> {
                 try {
                   await secretsAuthPageCubit.authenticate();
                 } on InvalidMasterKeyException {
-                  if (!mounted) {
+                  if (mounted == false) {
                     return;
                   }
                   await MasterKeyDialog.show(context);
@@ -70,7 +70,7 @@ class _SecretsAuthPageState extends State<SecretsAuthPage> {
   }
 
   Future<void> _handleValidPasswordEntered(PasswordModel passwordModel) async {
-    await widget.passwordValidCallback(passwordModel);
     Navigator.of(context).pop();
+    await widget.passwordValidCallback(passwordModel);
   }
 }
