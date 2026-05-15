@@ -1,13 +1,23 @@
 package com.snggle.mobile
 
+import android.os.Bundle
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
 
     companion object {
         private const val CHANNEL = "com.snggle.mobile/credentials"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        flutterEngine?.let {
+            FlutterEngineCache.getInstance().put("main_engine", it)
+        }
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {

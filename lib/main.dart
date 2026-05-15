@@ -3,10 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/theme_config.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/services/method_channel_service.dart';
 import 'package:snggle/shared/router/router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  MethodChannelService.initialize();
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
     statusBarColor: Colors.transparent,

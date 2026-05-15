@@ -19,10 +19,12 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   final SplashPageCubit splashPageCubit = SplashPageCubit();
+  late bool autofillBool;
 
   @override
   void initState() {
     splashPageCubit.init();
+    autofillBool = context.router.currentPath.contains('autofill');
     super.initState();
   }
 
@@ -62,7 +64,7 @@ class _SplashPageState extends State<SplashPage> {
     } else if (splashPageState is SplashPageMasterKeyRemovedState) {
       AutoRouter.of(context).replace(const AppMasterKeyRemovedRoute());
     } else if (splashPageState is SplashPageEnterPinState) {
-      AutoRouter.of(context).replace(AppEnterPinRoute());
+      AutoRouter.of(context).replace(AppEnterPinRoute(autofillBool: autofillBool));
     }
   }
 

@@ -17,11 +17,7 @@ class VaultListPageCubit extends AListCubit<VaultModel> {
     required ValueChanged<FilesystemPath> onGroupNavigateBack,
   }) : super(
           listItemsService: globalLocator<VaultsService>(),
-          childItemsServices: <IListItemsService<AListItemModel>>[
-            globalLocator<WalletsService>(),
-            globalLocator<NetworkGroupsService>(),
-            globalLocator<GroupsService>(),
-          ],
+          childItemsServices: <IListItemsService<AListItemModel>>[],
           onGroupNavigateBack: onGroupNavigateBack,
         );
 

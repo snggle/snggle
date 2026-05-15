@@ -14,8 +14,10 @@ import 'package:snggle/views/widgets/pinpad/pinpad_scaffold.dart';
 @RoutePage()
 class AppEnterPinPage extends StatefulWidget {
   final AppPinType appPinType;
+  final bool autofillBool;
 
   const AppEnterPinPage({
+    required this.autofillBool,
     super.key,
     this.appPinType = AppPinType.enterPin,
   });
@@ -68,7 +70,11 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
       if (changePinBool) {
         await AutoRouter.of(context).replace(AppSetUpPinRoute(appPinType: AppPinType.changePin));
       } else {
-        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
+        if (widget.autofillBool == false) {
+          await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
+        } else {
+          await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const AutofillCredentialPickerScreen()]);
+        }
       }
     } catch (e) {
       AppLogger().log(message: 'Provided invalid PIN');

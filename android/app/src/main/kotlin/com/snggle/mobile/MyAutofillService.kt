@@ -104,93 +104,136 @@ class MyAutofillService : AutofillService() {
         val responseBuilder = FillResponse.Builder()
         var addedDatasets = 0
 
-        storedCredentials.forEach { credential ->
+        if (usernameId != null || passwordId != null) {
+            val authPresentation =
+                RemoteViews(packageName, R.layout.autofill_dataset_item).apply {
+                    setTextViewText(android.R.id.text1, "Otwórz Snggle")
+                }
+
+            val authIntent = Intent(this, AutofillAuthActivity::class.java).apply {
+                putExtra(AutofillAuthActivity.EXTRA_PACKAGE_NAME, clientPackageName)
+
+                usernameId?.let {
+                    putExtra(AutofillAuthActivity.EXTRA_USERNAME_ID, it)
+                }
+
+                passwordId?.let {
+                    putExtra(AutofillAuthActivity.EXTRA_PASSWORD_ID, it)
+                }
+            }
+
+            val pendingIntent = PendingIntent.getActivity(
+                this,
+                clientPackageName?.hashCode() ?: 1001,
+                authIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
             val datasetBuilder = Dataset.Builder()
-            var hasAtLeastOneValue = false
+                .setAuthentication(pendingIntent.intentSender)
 
-            val displayTitle = credential.username.ifBlank { "Zapisane dane" }
-
-            val usernamePresentation =
-                RemoteViews(packageName, R.layout.autofill_dataset_item).apply {
-                    setTextViewText(
-                        android.R.id.text1,
-                        displayTitle
-                    )
-                }
-
-            val passwordPresentation =
-                RemoteViews(packageName, R.layout.autofill_dataset_item).apply {
-                    setTextViewText(
-                        android.R.id.text1,
-                        displayTitle
-                    )
-                }
-
-            val usernameInlinePresentation =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    createInlinePresentation(
-                        spec = firstInlineSpec,
-                        title = displayTitle,
-                        subtitle = clientPackageName ?: "Autofill"
-                    )
-                } else {
-                    null
-                }
-
-            val passwordInlinePresentation =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    createInlinePresentation(
-                        spec = firstInlineSpec,
-                        title = displayTitle,
-                        subtitle = clientPackageName ?: "Autofill"
-                    )
-                } else {
-                    null
-                }
-
-            if (usernameId != null && credential.username.isNotBlank()) {
-                hasAtLeastOneValue = true
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && usernameInlinePresentation != null) {
-                    datasetBuilder.setValue(
-                        usernameId,
-                        AutofillValue.forText(credential.username),
-                        usernamePresentation,
-                        usernameInlinePresentation
-                    )
-                } else {
-                    datasetBuilder.setValue(
-                        usernameId,
-                        AutofillValue.forText(credential.username),
-                        usernamePresentation
-                    )
-                }
+            if (usernameId != null) {
+                datasetBuilder.setValue(usernameId, null, authPresentation)
             }
 
-            if (passwordId != null && credential.password.isNotBlank()) {
-                hasAtLeastOneValue = true
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && passwordInlinePresentation != null) {
-                    datasetBuilder.setValue(
-                        passwordId,
-                        AutofillValue.forText(credential.password),
-                        passwordPresentation,
-                        passwordInlinePresentation
-                    )
-                } else {
-                    datasetBuilder.setValue(
-                        passwordId,
-                        AutofillValue.forText(credential.password),
-                        passwordPresentation
-                    )
-                }
+            if (passwordId != null) {
+                datasetBuilder.setValue(passwordId, null, authPresentation)
             }
 
-            if (hasAtLeastOneValue) {
-                responseBuilder.addDataset(datasetBuilder.build())
-                addedDatasets++
-            }
+            responseBuilder.addDataset(datasetBuilder.build())
+            addedDatasets++
+
+            Log.d(TAG, "AF: Added authenticated dataset for package=$clientPackageName")
         }
+
+
+//        storedCredentials.forEach { credential ->
+//            val datasetBuilder = Dataset.Builder()
+//            var hasAtLeastOneValue = false
+//
+//            val displayTitle = credential.username.ifBlank { "Zapisane dane" }
+//
+//            val usernamePresentation =
+//                RemoteViews(packageName, R.layout.autofill_dataset_item).apply {
+//                    setTextViewText(
+//                        android.R.id.text1,
+//                        displayTitle
+//                    )
+//                }
+//
+//            val passwordPresentation =
+//                RemoteViews(packageName, R.layout.autofill_dataset_item).apply {
+//                    setTextViewText(
+//                        android.R.id.text1,
+//                        displayTitle
+//                    )
+//                }
+//
+//            val usernameInlinePresentation =
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                    createInlinePresentation(
+//                        spec = firstInlineSpec,
+//                        title = displayTitle,
+//                        subtitle = clientPackageName ?: "Autofill"
+//                    )
+//                } else {
+//                    null
+//                }
+//
+//            val passwordInlinePresentation =
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                    createInlinePresentation(
+//                        spec = firstInlineSpec,
+//                        title = displayTitle,
+//                        subtitle = clientPackageName ?: "Autofill"
+//                    )
+//                } else {
+//                    null
+//                }
+//
+//            if (usernameId != null && credential.username.isNotBlank()) {
+//                hasAtLeastOneValue = true
+//
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && usernameInlinePresentation != null) {
+//                    datasetBuilder.setValue(
+//                        usernameId,
+//                        AutofillValue.forText(credential.username),
+//                        usernamePresentation,
+//                        usernameInlinePresentation
+//                    )
+//                } else {
+//                    datasetBuilder.setValue(
+//                        usernameId,
+//                        AutofillValue.forText(credential.username),
+//                        usernamePresentation
+//                    )
+//                }
+//            }
+//
+//            if (passwordId != null && credential.password.isNotBlank()) {
+//                hasAtLeastOneValue = true
+//
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && passwordInlinePresentation != null) {
+//                    datasetBuilder.setValue(
+//                        passwordId,
+//                        AutofillValue.forText(credential.password),
+//                        passwordPresentation,
+//                        passwordInlinePresentation
+//                    )
+//                } else {
+//                    datasetBuilder.setValue(
+//                        passwordId,
+//                        AutofillValue.forText(credential.password),
+//                        passwordPresentation
+//                    )
+//                }
+//            }
+//
+//            if (hasAtLeastOneValue) {
+//                responseBuilder.addDataset(datasetBuilder.build())
+//                addedDatasets++
+//            }
+//        }
 
         val saveInfo = when {
             passwordId != null && usernameId != null -> {
@@ -436,20 +479,40 @@ class MyAutofillService : AutofillService() {
         val autofillId = node.autofillId
 
         if (autofillId != null) {
-            if (parsed.passwordId == null && isPasswordField) {
-                parsed.passwordId = autofillId
-                if (valueText.isNotEmpty()) {
-                    parsed.passwordValue = valueText
+            if (isPasswordField) {
+                val shouldUseThisPassword =
+                    parsed.passwordId == null || node.isFocused
+
+                if (shouldUseThisPassword) {
+                    parsed.passwordId = autofillId
+
+                    if (valueText.isNotEmpty()) {
+                        parsed.passwordValue = valueText
+                    }
+
+                    Log.d(
+                        TAG,
+                        "AF: Detected password field: id=$autofillId focused=${node.isFocused} valuePresent=${valueText.isNotEmpty()}"
+                    )
                 }
-                Log.d(TAG, "AF: Detected password field: id=$autofillId valuePresent=${valueText.isNotEmpty()}")
             }
 
-            if (parsed.usernameId == null && isUsernameField) {
-                parsed.usernameId = autofillId
-                if (valueText.isNotEmpty()) {
-                    parsed.usernameValue = valueText
+            if (isUsernameField) {
+                val shouldUseThisUsername =
+                    parsed.usernameId == null || node.isFocused
+
+                if (shouldUseThisUsername) {
+                    parsed.usernameId = autofillId
+
+                    if (valueText.isNotEmpty()) {
+                        parsed.usernameValue = valueText
+                    }
+
+                    Log.d(
+                        TAG,
+                        "AF: Detected username field: id=$autofillId focused=${node.isFocused} value=$valueText"
+                    )
                 }
-                Log.d(TAG, "AF: Detected username field: id=$autofillId value=$valueText")
             }
         }
 

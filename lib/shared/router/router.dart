@@ -20,6 +20,11 @@ class AppRouter extends $AppRouter {
         page: SplashRoute.page,
         initial: true,
       ),
+      AutoRoute(
+        page: AutofillCredentialPickerScreen.page,
+        path: '/autofill',
+      ),
+      AutoRoute(page: AppSetUpPinRoute.page),
       AutoRoute(page: AppMasterKeyRemovedRoute.page),
       AutoRoute(page: AppMasterKeyCreateRoute.page),
       AutoRoute(page: AppMasterKeyRecoverRoute.page),

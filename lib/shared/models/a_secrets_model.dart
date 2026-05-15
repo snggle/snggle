@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:snggle/shared/models/credentials/credential_secrets_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
@@ -14,6 +15,8 @@ abstract class ASecretsModel extends Equatable {
         return VaultSecretsModel.fromJson(filesystemPath, json) as T;
       case WalletSecretsModel:
         return WalletSecretsModel.fromJson(filesystemPath, json) as T;
+      case CredentialSecretsModel:
+        return CredentialSecretsModel.fromJson(filesystemPath, json) as T;
       default:
         throw ArgumentError('Invalid type: $T');
     }

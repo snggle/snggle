@@ -1,6 +1,10 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:snggle/views/pages/bottom_navigation/native_credentials.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/services/credentials_service.dart';
+import 'package:snggle/shared/factories/credential_scream_factory.dart';
+import 'package:snggle/shared/models/credentials/credential_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
 @RoutePage()
 class AppsPage extends StatefulWidget {
@@ -11,289 +15,163 @@ class AppsPage extends StatefulWidget {
 }
 
 class _AppsPageState extends State<AppsPage> {
+  final CredentialsService _credentialsService = globalLocator<CredentialsService>();
+  final CredentialModelFactory _credentialModelFactory = globalLocator<CredentialModelFactory>();
+
+  final TextEditingController _packageController = TextEditingController();
+  final TextEditingController _displayNameController = TextEditingController();
+  final TextEditingController _websiteController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _packageController = TextEditingController();
 
-  bool _loading = false;
-  String _status = 'Gotowe';
-  List<NativeCredentials> _items = const <NativeCredentials>[];
+  bool _loading = true;
+  List<CredentialModel> _credentials = <CredentialModel>[];
 
   @override
   void initState() {
     super.initState();
-    _refresh();
+    _loadCredentials();
   }
 
   @override
   void dispose() {
+    _packageController.dispose();
+    _displayNameController.dispose();
+    _websiteController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
-    _packageController.dispose();
     super.dispose();
   }
 
-  Future<void> _refresh() async {
-    setState(() {
-      _loading = true;
-      _status = 'Pobieranie rekordów...';
-    });
+  Future<void> _loadCredentials() async {
+    setState(() => _loading = true);
 
-    try {
-      List<NativeCredentials> items = await NativeCredentialStore.getAllCredentials();
+    final List<CredentialModel> credentials = await _credentialsService.getAll();
 
-      if (!mounted) {
-        return;
-      }
-
-      setState(() {
-        _items = items;
-        _status = 'Pobrano ${items.length} rekordów';
-      });
-    } catch (e) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _status = 'Błąd pobierania: $e';
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _loading = false;
-        });
-      }
-    }
-  }
-
-  Future<void> _save() async {
-    String username = _usernameController.text.trim();
-    String password = _passwordController.text;
-    String packageName = _packageController.text.trim();
-
-    if (username.isEmpty || password.isEmpty) {
-      setState(() {
-        _status = 'Uzupełnij username i password';
-      });
+    if (!mounted) {
       return;
     }
 
     setState(() {
-      _loading = true;
-      _status = 'Zapisywanie rekordu...';
+      _credentials = credentials;
+      _loading = false;
     });
-
-    try {
-      await NativeCredentialStore.saveCredentials(
-        username: username,
-        password: password,
-        packageName: packageName.isEmpty ? null : packageName,
-      );
-
-      List<NativeCredentials> items = await NativeCredentialStore.getAllCredentials();
-
-      if (!mounted) {
-        return;
-      }
-
-      _usernameController.clear();
-      _passwordController.clear();
-
-      setState(() {
-        _items = items;
-        _status = 'Zapisano rekord. Łącznie: ${items.length}';
-      });
-    } catch (e) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _status = 'Błąd zapisu: $e';
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _loading = false;
-        });
-      }
-    }
   }
 
-  Future<void> _delete(String id) async {
-    setState(() {
-      _loading = true;
-      _status = 'Usuwanie rekordu...';
-    });
+  Future<void> _createCredential() async {
+    final String packageName = _packageController.text.trim();
+    final String username = _usernameController.text.trim();
+    final String password = _passwordController.text;
 
-    try {
-      await NativeCredentialStore.deleteCredential(id);
-      List<NativeCredentials> items = await NativeCredentialStore.getAllCredentials();
-
-      if (!mounted) {
-        return;
-      }
-
-      setState(() {
-        _items = items;
-        _status = 'Usunięto rekord. Łącznie: ${items.length}';
-      });
-    } catch (e) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _status = 'Błąd usuwania: $e';
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _loading = false;
-        });
-      }
+    if (packageName.isEmpty || password.isEmpty) {
+      return;
     }
+
+    await _credentialModelFactory.createNewCredential(
+      parentFilesystemPath: const FilesystemPath.empty(),
+      packageName: packageName,
+      username: username,
+      password: password,
+      displayName: _displayNameController.text.trim().isEmpty ? null : _displayNameController.text.trim(),
+      website: _websiteController.text.trim().isEmpty ? null : _websiteController.text.trim(),
+    );
+
+    _packageController.clear();
+    _displayNameController.clear();
+    _websiteController.clear();
+    _usernameController.clear();
+    _passwordController.clear();
+
+    await _loadCredentials();
   }
 
-  Future<void> _clear() async {
-    setState(() {
-      _loading = true;
-      _status = 'Czyszczenie wszystkich rekordów...';
-    });
-
-    try {
-      await NativeCredentialStore.clearCredentials();
-
-      if (!mounted) {
-        return;
-      }
-
-      _usernameController.clear();
-      _passwordController.clear();
-      _packageController.clear();
-
-      setState(() {
-        _items = const <NativeCredentials>[];
-        _status = 'Wyczyszczono wszystkie rekordy';
-      });
-    } catch (e) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _status = 'Błąd czyszczenia: $e';
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _loading = false;
-        });
-      }
-    }
+  Future<void> _deleteCredential(CredentialModel credential) async {
+    await _credentialsService.deleteById(credential.id);
+    await _loadCredentials();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Native autofill storage debug'),
+        title: const Text('Credentials'),
       ),
-      body: Column(
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
+        padding: const EdgeInsets.all(16),
         children: <Widget>[
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: <Widget>[
-                TextField(
-                  controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username / email',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _packageController,
-                  decoration: const InputDecoration(
-                    labelText: 'Target package name',
-                    hintText: 'np. com.snggle.mobile',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: _loading ? null : _save,
-                        child: const Text('Add record'),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: _loading ? null : _refresh,
-                        child: const Text('Refresh'),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: TextButton(
-                    onPressed: _loading ? null : _clear,
-                    child: const Text('Clear all'),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text('Status: $_status'),
-                const SizedBox(height: 24),
-                Text(
-                  'Zapisane rekordy (${_items.length})',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                if (_items.isEmpty)
-                  const Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text('Brak zapisanych rekordów'),
-                    ),
-                  )
-                else
-                  ..._items.map(
-                    (NativeCredentials item) => Card(
-                      child: ListTile(
-                        title: Text(item.username),
-                        subtitle: Text(
-                          'password=${item.password}\npackage=${item.packageName ?? "-"}',
-                        ),
-                        isThreeLine: true,
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete_outline),
-                          onPressed: _loading ? null : () => _delete(item.id),
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 100,
-          )
+          _buildCreateForm(),
+          const SizedBox(height: 24),
+          ..._credentials.map(_buildCredentialTile),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCreateForm() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: <Widget>[
+            TextField(
+              controller: _packageController,
+              decoration: const InputDecoration(
+                labelText: 'Package name',
+                hintText: 'com.discord',
+              ),
+            ),
+            TextField(
+              controller: _displayNameController,
+              decoration: const InputDecoration(
+                labelText: 'Display name',
+                hintText: 'Discord personal',
+              ),
+            ),
+            TextField(
+              controller: _websiteController,
+              decoration: const InputDecoration(
+                labelText: 'Website',
+                hintText: 'discord.com',
+              ),
+            ),
+            TextField(
+              controller: _usernameController,
+              decoration: const InputDecoration(
+                labelText: 'Username / email',
+              ),
+            ),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Password',
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: _createCredential,
+                child: const Text('Save credential'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCredentialTile(CredentialModel credential) {
+    return Card(
+      child: ListTile(
+        title: Text(credential.title),
+        subtitle: Text(credential.packageName),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete_outline),
+          onPressed: () => _deleteCredential(credential),
+        ),
       ),
     );
   }
