@@ -30,6 +30,11 @@ class _SettingsPageState extends State<SettingsPage> {
             onTap: () => context.router.push(AppEnterPinRoute(appPinType: AppPinType.changePin)),
           ),
           CustomLargeListTile(
+            leading: const AssetIcon(AppIcons.settings_privacy_policy, size: 42),
+            title: 'Privacy policy',
+            onTap: () => context.router.push(const PrivacyPolicyRoute()),
+          ),
+          CustomLargeListTile(
             leading: const AssetIcon(AppIcons.settings_warning, size: 42),
             title: 'Wipe Application',
             titleGradient: const LinearGradient(
