@@ -12,10 +12,9 @@ class ScanQRPageCubit extends Cubit<ScanQRPageState> {
   URDecoder _urDecoder = URDecoder();
 
   ScanQRPageCubit({
-    required void Function() unsupportedOperationCallback,
-  })  : _unsupportedOperationCallback = unsupportedOperationCallback,
-        progressNotifier = ValueNotifier<double>(0),
-        super(const ScanQRPageState());
+    required this._unsupportedOperationCallback,
+  }) : progressNotifier = ValueNotifier<double>(0),
+       super(const ScanQRPageState());
 
   void processQR(String data) {
     if (state.canReceiveQRCode() == false) {

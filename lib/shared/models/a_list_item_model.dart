@@ -14,8 +14,8 @@ abstract class AListItemModel with EquatableMixin {
     required this.encryptedBool,
     required this.pinnedBool,
     required this.filesystemPath,
-    String? name,
-  }) : _name = name;
+    this._name,
+  });
 
   AListItemModel copyWith({bool? encryptedBool, bool? pinnedBool, String? name});
 

@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/infra/entities/transaction_entity/solana_transaction_entity.dart';
 import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
@@ -27,7 +27,6 @@ class SolanaTransactionModel extends ATransactionModel {
     this.transactionData,
   });
 
-  @override
   factory SolanaTransactionModel.fromEntity(SolanaTransactionEntity transactionEntity) {
     return SolanaTransactionModel(
       id: transactionEntity.id,
@@ -47,9 +46,14 @@ class SolanaTransactionModel extends ATransactionModel {
   }
 
   factory SolanaTransactionModel.fromCborSolSignRequest(
-      int senderWalletId, String senderWalletAddress, CborSolSignRequest cborSolSignRequest, ASolanaMessage solanaMessage) {
-    SignDataType signDataType =
-        cborSolSignRequest.dataType == CborSolSignDataType.transaction ? SignDataType.typedTransaction : SignDataType.rawBytes;
+    int senderWalletId,
+    String senderWalletAddress,
+    CborSolSignRequest cborSolSignRequest,
+    ASolanaMessage solanaMessage,
+  ) {
+    SignDataType signDataType = cborSolSignRequest.dataType == CborSolSignDataType.transaction
+        ? SignDataType.typedTransaction
+        : SignDataType.rawBytes;
 
     if (solanaMessage is ASolanaTransactionMessage) {
       return _mapFromDecodedInstructions(
@@ -141,12 +145,13 @@ class SolanaTransactionModel extends ATransactionModel {
   @override
   String get transactionLabel => transactionData != null ? 'TX' : 'TEXT';
 
-  static SolanaTransactionModel _mapFromDecodedInstructions(
-      {required int senderWalletId,
-      required String senderWalletAddress,
-      required Uint8List signData,
-      required ASolanaTransactionMessage message,
-      required SignDataType signDataType}) {
+  static SolanaTransactionModel _mapFromDecodedInstructions({
+    required int senderWalletId,
+    required String senderWalletAddress,
+    required Uint8List signData,
+    required ASolanaTransactionMessage message,
+    required SignDataType signDataType,
+  }) {
     String? amount;
     String? mintAddress;
     String? senderAddress;
@@ -177,18 +182,18 @@ class SolanaTransactionModel extends ATransactionModel {
 
   @override
   List<Object?> get props => <Object?>[
-        id,
-        walletId,
-        creationDate,
-        signDataType,
-        signerAddress,
-        amount,
-        message,
-        contractAddress,
-        senderAddress,
-        recipientAddress,
-        signDate,
-        signature,
-        transactionData,
-      ];
+    id,
+    walletId,
+    creationDate,
+    signDataType,
+    signerAddress,
+    amount,
+    message,
+    contractAddress,
+    senderAddress,
+    recipientAddress,
+    signDate,
+    signature,
+    transactionData,
+  ];
 }

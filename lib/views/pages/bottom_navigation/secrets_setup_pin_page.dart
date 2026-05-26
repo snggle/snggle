@@ -76,7 +76,12 @@ class _SecretsSetupPinPageState extends State<SecretsSetupPinPage> {
 
         return PopScope(
           canPop: (secretsSetupPinPageState is SecretsSetupPinPageConfirmPinState) == false,
-          onPopInvoked: (_) => _handleBackButtonPressed(),
+          onPopInvokedWithResult: (bool didPop, _) {
+            if (didPop) {
+              return;
+            }
+            _handleBackButtonPressed();
+          },
           child: Material(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 100),

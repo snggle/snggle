@@ -1,6 +1,6 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/networks/network_type.dart';
@@ -61,13 +61,13 @@ class EmbeddedNetworkTemplateEntity extends Equatable {
 
   @override
   List<Object?> get props => <Object?>[
-        name,
-        addressEncoderType,
-        derivationPathTemplate,
-        derivatorType,
-        curveType,
-        networkIconType,
-        networkType,
-        walletType,
-      ];
+    name,
+    addressEncoderType,
+    derivationPathTemplate,
+    derivatorType,
+    curveType,
+    networkIconType,
+    networkType,
+    walletType,
+  ];
 }

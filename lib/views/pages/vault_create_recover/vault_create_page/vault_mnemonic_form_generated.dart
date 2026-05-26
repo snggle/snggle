@@ -58,7 +58,7 @@ class _VaultMnemonicFormGeneratedState extends State<VaultMnemonicFormGenerated>
             curve: Curves.easeInOut,
           );
         } else {
-          await AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.creationSuccessful);
+          AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.creationSuccessful);
         }
       },
     );

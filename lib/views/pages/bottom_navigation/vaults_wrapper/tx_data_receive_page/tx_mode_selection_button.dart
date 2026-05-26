@@ -18,26 +18,26 @@ class TxModeSelectionButton extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withOpacity(.5), width: 0.9),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 0.9),
         ),
         child: SegmentedButton<int>(
           style: ButtonStyle(
-            padding: MaterialStateProperty.all(
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             ),
-            minimumSize: MaterialStateProperty.all(const Size(0, 32)),
+            minimumSize: WidgetStateProperty.all(const Size(0, 32)),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
-            side: MaterialStateProperty.all(
+            side: WidgetStateProperty.all(
               const BorderSide(color: Colors.white, width: 0.9),
             ),
-            backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) => states.contains(MaterialState.selected) ? Colors.white : Colors.transparent,
+            backgroundColor: WidgetStateProperty.resolveWith<Color?>(
+              (Set<WidgetState> states) => states.contains(WidgetState.selected) ? Colors.white : Colors.transparent,
             ),
-            foregroundColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) => states.contains(MaterialState.selected) ? Colors.black : Colors.white,
+            foregroundColor: WidgetStateProperty.resolveWith<Color?>(
+              (Set<WidgetState> states) => states.contains(WidgetState.selected) ? Colors.black : Colors.white,
             ),
             visualDensity: VisualDensity.compact,
           ),

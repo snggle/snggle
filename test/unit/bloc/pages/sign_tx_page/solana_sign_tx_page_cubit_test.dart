@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/a_solana_sign_tx_page_state.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/solana_sign_tx_page_cubit.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/states/solana_sign_tx_page_confirm_tx_state.dart';
@@ -46,7 +46,7 @@ void main() {
               CborPathComponent(index: 44, hardened: true),
               CborPathComponent(index: 501, hardened: true),
               CborPathComponent(index: 0, hardened: true),
-              CborPathComponent(index: 0, hardened: true)
+              CborPathComponent(index: 0, hardened: true),
             ],
           ),
         ),
@@ -94,27 +94,26 @@ void main() {
 
       // Assert
       SolanaSignTxPageSignedTxState expectedSignTxPageState = SolanaSignTxPageSignedTxState(
-          transactionModel: SolanaTransactionModel(
-            id: Isar.autoIncrement,
-            walletId: 2,
-            creationDate: actualSignTxPageState.transactionModel.creationDate,
-            signature:
-                '0x693db5bf119ce9f2d9fe6de94c423641d9e7c61adbd3d9ec51782d308d7cfa7bdabe3565131336ada3e72a144d163be08cb7db65af0a200263075c43a16cf50c',
-            transactionData:
-                '0x010002041d03d401085ece51cf8df279aca8ed6d2d4a948417b90d4d1540545e141858f4519808055de375e1951892abb0b8341f73632ff23f9668773a30f4ca34cd7b5c00000000000000000000000000000000000000000000000000000000000000000306466fe5211732ffecadba72c39be7bc8ce5bbc5f7126b2c439b3a4000000022d6c5578d16247b3d17fb736685c2d20dc4e4d112db35536abc03c5426e47f90303000903002d31010000000003000502ef010000020200010c0200000000ca9a3b00000000',
-            signDate: actualSignTxPageState.transactionModel.signDate,
-            signDataType: SignDataType.typedTransaction,
-            amount: '1 SOL',
-            senderAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
-            recipientAddress: '6VWUtQiEbSXy6viXkxs7xywevQJXruVD1NmhX4akdC1Z',
-            signerAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
-          ),
-          cborSolSignature: CborSolSignature(
-            requestId: base64Decode('eGTmHNPqQ7S8Tr82B/gXJQ=='),
-            signature: base64Decode(
-              'aT21vxGc6fLZ/m3pTEI2Qdnnxhrb09nsUXgtMI18+nvavjVlExM2raPnKhRNFjvgjLfbZa8KIAJjB1xDoWz1DA==',
-            ),
-          ));
+        transactionModel: SolanaTransactionModel(
+          id: Isar.autoIncrement,
+          walletId: 2,
+          creationDate: actualSignTxPageState.transactionModel.creationDate,
+          signature:
+              '0x693db5bf119ce9f2d9fe6de94c423641d9e7c61adbd3d9ec51782d308d7cfa7bdabe3565131336ada3e72a144d163be08cb7db65af0a200263075c43a16cf50c',
+          transactionData:
+              '0x010002041d03d401085ece51cf8df279aca8ed6d2d4a948417b90d4d1540545e141858f4519808055de375e1951892abb0b8341f73632ff23f9668773a30f4ca34cd7b5c00000000000000000000000000000000000000000000000000000000000000000306466fe5211732ffecadba72c39be7bc8ce5bbc5f7126b2c439b3a4000000022d6c5578d16247b3d17fb736685c2d20dc4e4d112db35536abc03c5426e47f90303000903002d31010000000003000502ef010000020200010c0200000000ca9a3b00000000',
+          signDate: actualSignTxPageState.transactionModel.signDate,
+          signDataType: SignDataType.typedTransaction,
+          amount: '1 SOL',
+          senderAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
+          recipientAddress: '6VWUtQiEbSXy6viXkxs7xywevQJXruVD1NmhX4akdC1Z',
+          signerAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
+        ),
+        cborSolSignature: CborSolSignature(
+          requestId: base64Decode('eGTmHNPqQ7S8Tr82B/gXJQ=='),
+          signature: base64Decode('aT21vxGc6fLZ/m3pTEI2Qdnnxhrb09nsUXgtMI18+nvavjVlExM2raPnKhRNFjvgjLfbZa8KIAJjB1xDoWz1DA=='),
+        ),
+      );
 
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
@@ -228,27 +227,26 @@ void main() {
 
       // Assert
       SolanaSignTxPageSignedTxState expectedSignTxPageState = SolanaSignTxPageSignedTxState(
-          transactionModel: SolanaTransactionModel(
-            id: Isar.autoIncrement,
-            walletId: 2,
-            creationDate: actualSignTxPageState.transactionModel.creationDate,
-            signature:
-                '0x693db5bf119ce9f2d9fe6de94c423641d9e7c61adbd3d9ec51782d308d7cfa7bdabe3565131336ada3e72a144d163be08cb7db65af0a200263075c43a16cf50c',
-            transactionData:
-                '0x010002041d03d401085ece51cf8df279aca8ed6d2d4a948417b90d4d1540545e141858f4519808055de375e1951892abb0b8341f73632ff23f9668773a30f4ca34cd7b5c00000000000000000000000000000000000000000000000000000000000000000306466fe5211732ffecadba72c39be7bc8ce5bbc5f7126b2c439b3a4000000022d6c5578d16247b3d17fb736685c2d20dc4e4d112db35536abc03c5426e47f90303000903002d31010000000003000502ef010000020200010c0200000000ca9a3b00000000',
-            signDate: actualSignTxPageState.transactionModel.signDate,
-            signDataType: SignDataType.typedTransaction,
-            amount: '1 SOL',
-            senderAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
-            recipientAddress: '6VWUtQiEbSXy6viXkxs7xywevQJXruVD1NmhX4akdC1Z',
-            signerAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
-          ),
-          cborSolSignature: CborSolSignature(
-            requestId: base64Decode('eGTmHNPqQ7S8Tr82B/gXJQ=='),
-            signature: base64Decode(
-              'aT21vxGc6fLZ/m3pTEI2Qdnnxhrb09nsUXgtMI18+nvavjVlExM2raPnKhRNFjvgjLfbZa8KIAJjB1xDoWz1DA==',
-            ),
-          ));
+        transactionModel: SolanaTransactionModel(
+          id: Isar.autoIncrement,
+          walletId: 2,
+          creationDate: actualSignTxPageState.transactionModel.creationDate,
+          signature:
+              '0x693db5bf119ce9f2d9fe6de94c423641d9e7c61adbd3d9ec51782d308d7cfa7bdabe3565131336ada3e72a144d163be08cb7db65af0a200263075c43a16cf50c',
+          transactionData:
+              '0x010002041d03d401085ece51cf8df279aca8ed6d2d4a948417b90d4d1540545e141858f4519808055de375e1951892abb0b8341f73632ff23f9668773a30f4ca34cd7b5c00000000000000000000000000000000000000000000000000000000000000000306466fe5211732ffecadba72c39be7bc8ce5bbc5f7126b2c439b3a4000000022d6c5578d16247b3d17fb736685c2d20dc4e4d112db35536abc03c5426e47f90303000903002d31010000000003000502ef010000020200010c0200000000ca9a3b00000000',
+          signDate: actualSignTxPageState.transactionModel.signDate,
+          signDataType: SignDataType.typedTransaction,
+          amount: '1 SOL',
+          senderAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
+          recipientAddress: '6VWUtQiEbSXy6viXkxs7xywevQJXruVD1NmhX4akdC1Z',
+          signerAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
+        ),
+        cborSolSignature: CborSolSignature(
+          requestId: base64Decode('eGTmHNPqQ7S8Tr82B/gXJQ=='),
+          signature: base64Decode('aT21vxGc6fLZ/m3pTEI2Qdnnxhrb09nsUXgtMI18+nvavjVlExM2raPnKhRNFjvgjLfbZa8KIAJjB1xDoWz1DA=='),
+        ),
+      );
 
       expect(actualSignTxPageState, expectedSignTxPageState);
     });
@@ -329,7 +327,8 @@ void main() {
           creationDate: actualSignTxPageState.transactionModel.creationDate,
           signature:
               '0x2c246c695a5e45977b4865050a73a38639cc2aa013ed9908ab95ae6303eb8e8b2dd7a3214d6aa9d5649d489d87a08964d5d826a225119a0c956ad2100c29030b',
-          message: 'opensea.io wants you to sign in with your account:\n'
+          message:
+              'opensea.io wants you to sign in with your account:\n'
               '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19\n'
               '\n'
               'Click to sign in and accept the OpenSea Terms of Service (https://opensea.io/tos) and Privacy Policy (https://opensea.io/privacy).\n'
@@ -503,7 +502,8 @@ void main() {
           creationDate: actualSignTxPageState.transactionModel.creationDate,
           signature:
               '0x2c246c695a5e45977b4865050a73a38639cc2aa013ed9908ab95ae6303eb8e8b2dd7a3214d6aa9d5649d489d87a08964d5d826a225119a0c956ad2100c29030b',
-          message: 'opensea.io wants you to sign in with your account:\n'
+          message:
+              'opensea.io wants you to sign in with your account:\n'
               '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19\n'
               '\n'
               'Click to sign in and accept the OpenSea Terms of Service (https://opensea.io/tos) and Privacy Policy (https://opensea.io/privacy).\n'

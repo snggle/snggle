@@ -18,11 +18,9 @@ class WalletConnectPageCubit extends Cubit<WalletConnectPageState> {
   final WalletModel _walletModel;
 
   WalletConnectPageCubit({
-    required VaultModel vaultModel,
-    required WalletModel walletModel,
-  })  : _walletModel = walletModel,
-        _vaultModel = vaultModel,
-        super(const WalletConnectPageState());
+    required this._vaultModel,
+    required this._walletModel,
+  }) : super(const WalletConnectPageState());
 
   void changeConnectOption(WalletConnectOption walletConnectOption) {
     emit(WalletConnectPageState(walletConnectOption: walletConnectOption));
@@ -80,7 +78,8 @@ class WalletConnectPageCubit extends Cubit<WalletConnectPageState> {
     );
 
     CborCryptoKeypath cborCryptoKeypath = CborCryptoKeypath(
-      components: derivationPath.pathElements //
+      components: derivationPath
+          .pathElements //
           .map((LegacyDerivationPathElement e) => CborPathComponent(index: e.rawIndex, hardened: e.isHardened))
           .toList(),
     );

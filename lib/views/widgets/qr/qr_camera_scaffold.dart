@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:snggle/bloc/widgets/qr/qr_camera_scaffold_cubit/qr_camera_scaffold_cubit.dart';
 import 'package:snggle/bloc/widgets/qr/qr_camera_scaffold_cubit/states/a_qr_camera_scaffold_state.dart';
 import 'package:snggle/bloc/widgets/qr/qr_camera_scaffold_cubit/states/qr_camera_scaffold_loaded_state.dart';
@@ -47,7 +47,6 @@ class _QRCameraScaffoldState extends State<QRCameraScaffold> {
 
   @override
   void dispose() {
-    qrViewController?.dispose();
     qrCameraScaffoldCubit.close();
     super.dispose();
   }
@@ -90,7 +89,7 @@ class _QRCameraScaffoldState extends State<QRCameraScaffold> {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Container(
-                      color: AppColors.body1.withOpacity(0.3),
+                      color: AppColors.body1.withValues(alpha: 0.3),
                     ),
                   ),
                 ),
@@ -144,7 +143,7 @@ class _QRCameraScaffoldState extends State<QRCameraScaffold> {
               ),
               if (loadedBool && permissionGrantedBool == false)
                 CustomDialog(
-                  backgroundColor: AppColors.body2.withOpacity(1),
+                  backgroundColor: AppColors.body2.withValues(alpha: 1),
                   title: 'Allow camera',
                   content: const Text(
                     'In order to scan QR, you need to allow the camera permission',

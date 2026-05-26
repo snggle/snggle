@@ -39,7 +39,7 @@ class _ShortPrivacyPolicyDialogState extends State<ShortPrivacyPolicyDialog> {
 
     return CustomDialog(
       title: '',
-      backgroundColor: AppColors.body2.withOpacity(0.5),
+      backgroundColor: AppColors.body2.withValues(alpha: 0.5),
       content: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Text.rich(
@@ -50,7 +50,8 @@ class _ShortPrivacyPolicyDialogState extends State<ShortPrivacyPolicyDialog> {
             ),
             children: <InlineSpan>[
               const TextSpan(
-                text: 'Your data does not leave this device. '
+                text:
+                    'Your data does not leave this device. '
                     'Snggle works offline and does not use external services to store or sync your data online. '
                     'Camera is only used for actions you control, such as QR scanning. '
                     'You can read the full ',

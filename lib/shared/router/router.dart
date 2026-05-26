@@ -2,14 +2,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Page,Route')
-class AppRouter extends $AppRouter {
+class AppRouter extends RootStackRouter {
   @override
   RouteType get defaultRouteType {
-    return const RouteType.custom(
+    return RouteType.custom(
       opaque: false,
       transitionsBuilder: TransitionsBuilders.fadeIn,
-      durationInMilliseconds: 100,
-      reverseDurationInMilliseconds: 100,
+      duration: const Duration(milliseconds: 100),
+      reverseDuration: const Duration(milliseconds: 100),
     );
   }
 

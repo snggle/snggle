@@ -1,6 +1,6 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
@@ -396,7 +396,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<NetworkGroupsService>().getById(99999),
+            () => globalLocator<NetworkGroupsService>().getById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -1204,7 +1204,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<NetworkGroupsService>().deleteById(99999),
+            () => globalLocator<NetworkGroupsService>().deleteById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -1217,7 +1217,7 @@ void main() {
 
       // Act
       NetworkGroupModel? actualNetworkGroupModel =
-          await globalLocator<NetworkGroupsService>().updateFilesystemPath(1, FilesystemPath.fromString('new/network/path'));
+      await globalLocator<NetworkGroupsService>().updateFilesystemPath(1, FilesystemPath.fromString('new/network/path'));
 
       // Assert
       NetworkGroupModel expectedNetworkGroupModel = NetworkGroupModel(

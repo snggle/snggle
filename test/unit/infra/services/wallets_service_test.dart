@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
@@ -27,7 +27,7 @@ void main() {
 
       // Act
       List<WalletModel> actualWalletModelList =
-          await globalLocator<WalletsService>().getAllByParentPath(const FilesystemPath.empty(), firstLevelBool: false);
+      await globalLocator<WalletsService>().getAllByParentPath(const FilesystemPath.empty(), firstLevelBool: false);
 
       // Assert
       List<WalletModel> expectedWalletModelList = <WalletModel>[
@@ -127,7 +127,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<WalletsService>().getById(99999),
+            () => globalLocator<WalletsService>().getById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -422,7 +422,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<WalletsService>().deleteById(99999),
+            () => globalLocator<WalletsService>().deleteById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -456,7 +456,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<WalletsService>().getByAddress('0x000000000000000000000000000000000000dEaD'),
+            () => globalLocator<WalletsService>().getByAddress('0x000000000000000000000000000000000000dEaD'),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

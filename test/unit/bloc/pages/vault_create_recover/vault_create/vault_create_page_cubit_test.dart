@@ -1,6 +1,6 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_cubit.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_state.dart';
 import 'package:snggle/config/locator.dart';

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 

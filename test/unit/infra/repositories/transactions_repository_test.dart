@@ -1,6 +1,6 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/transaction_entity/a_transaction_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
@@ -80,7 +80,7 @@ void main() {
         senderAddress: '0x03f04cb5d332eccb602d8efe463c921140cfca09',
         recipientAddress: '0x53Bf0A18754873A8102625D8225AF6a15a43423C',
         signature:
-            '0x42eded7c70890e1a7ec6705745164875edeba29d985ebe9cf3cf8eae3b40b3455087553feeb1d5f9a8afd99411378ad2a833daeda9e7a628ac997ac629639ca101',
+        '0x42eded7c70890e1a7ec6705745164875edeba29d985ebe9cf3cf8eae3b40b3455087553feeb1d5f9a8afd99411378ad2a833daeda9e7a628ac997ac629639ca101',
       );
 
       // Act
@@ -116,7 +116,7 @@ void main() {
         recipientAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
         signerAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
         signature:
-            '0x42eded7c70890e1a7ec6705745164875edeba29d985ebe9cf3cf8eae3b40b3455087553feeb1d5f9a8afd99411378ad2a833daeda9e7a628ac997ac629639ca101',
+        '0x42eded7c70890e1a7ec6705745164875edeba29d985ebe9cf3cf8eae3b40b3455087553feeb1d5f9a8afd99411378ad2a833daeda9e7a628ac997ac629639ca101',
       );
 
       // Act
@@ -150,7 +150,7 @@ void main() {
         senderAddress: '0x03f04cb5d332eccb602d8efe463c921140cfca09',
         recipientAddress: '0x53Bf0A18754873A8102625D8225AF6a15a43423C',
         signature:
-            '0x42eded7c70890e1a7ec6705745164875edeba29d985ebe9cf3cf8eae3b40b3455087553feeb1d5f9a8afd99411378ad2a833daeda9e7a628ac997ac629639ca101',
+        '0x42eded7c70890e1a7ec6705745164875edeba29d985ebe9cf3cf8eae3b40b3455087553feeb1d5f9a8afd99411378ad2a833daeda9e7a628ac997ac629639ca101',
       );
 
       // Act
@@ -187,7 +187,7 @@ void main() {
         recipientAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
         signerAddress: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19',
         signature:
-            '0x42eded7c70890e1a7ec6705745164875edeba29d985ebe9cf3cf8eae3b40b3455087553feeb1d5f9a8afd99411378ad2a833daeda9e7a628ac997ac629639ca101',
+        '0x42eded7c70890e1a7ec6705745164875edeba29d985ebe9cf3cf8eae3b40b3455087553feeb1d5f9a8afd99411378ad2a833daeda9e7a628ac997ac629639ca101',
       );
 
       // Act

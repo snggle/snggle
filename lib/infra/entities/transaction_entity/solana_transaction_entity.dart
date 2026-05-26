@@ -1,5 +1,5 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/infra/entities/transaction_entity/a_transaction_entity.dart';
 
 part 'solana_transaction_entity.g.dart';
@@ -30,18 +30,18 @@ class SolanaTransactionEntity extends ATransactionEntity {
 
   @override
   List<Object?> get props => <Object?>[
-        id,
-        walletId,
-        creationDate,
-        signDataType,
-        signerAddress,
-        amount,
-        message,
-        contractAddress,
-        senderAddress,
-        recipientAddress,
-        signDate,
-        signature,
-        transactionData,
-      ];
+    id,
+    walletId,
+    creationDate,
+    signDataType,
+    signerAddress,
+    amount,
+    message,
+    contractAddress,
+    senderAddress,
+    recipientAddress,
+    signDate,
+    signature,
+    transactionData,
+  ];
 }

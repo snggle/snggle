@@ -8,7 +8,7 @@ import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 class PasswordModel extends Equatable {
   final String _hashedPassword;
 
-  const PasswordModel({required String hashedPassword}) : _hashedPassword = hashedPassword;
+  const PasswordModel({required this._hashedPassword});
 
   factory PasswordModel.fromPlaintext(String plaintextPassword) {
     List<int> hashedPasswordBytes = Sha256().convert(plaintextPassword.codeUnits).byteList;

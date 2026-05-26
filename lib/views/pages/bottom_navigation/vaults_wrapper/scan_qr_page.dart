@@ -1,7 +1,7 @@
 import 'package:codec_utils/codec_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:snggle/bloc/pages/scan_qr_page/scan_qr_page_cubit.dart';
 import 'package:snggle/bloc/pages/scan_qr_page/scan_qr_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
@@ -17,10 +17,10 @@ import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
 import 'package:snggle/views/widgets/qr/qr_camera_scaffold.dart';
 
 class ScanQRPage extends StatefulWidget {
-  final bool walletAutoDetectionEnabledBool;
+  final bool _walletAutoDetectionEnabledBool;
 
   const ScanQRPage({
-    required this.walletAutoDetectionEnabledBool,
+    required this._walletAutoDetectionEnabledBool,
     super.key,
   });
 
@@ -67,7 +67,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
     if (scanTxPageState.shouldLoadResultPage()) {
       await CustomLoadingDialog.show<Widget>(
         context: context,
-        barrierColor: AppColors.body2.withOpacity(0.3),
+        barrierColor: AppColors.body2.withValues(alpha: 0.3),
         title: 'Loading...',
         futureFunction: () {
           return _loadResultPage(scanTxPageState.cborTaggedObject!);
@@ -88,13 +88,13 @@ class _ScanQRPageState extends State<ScanQRPage> {
     switch (cborTaggedObject) {
       case CborEthSignRequest cborEthSignRequest:
         return EthereumSignTxPage.load(
-          walletAutoDetectionEnabledBool: widget.walletAutoDetectionEnabledBool,
+          walletAutoDetectionEnabledBool: widget._walletAutoDetectionEnabledBool,
           cborEthSignRequest: cborEthSignRequest,
           signTxMode: SignTxMode.qr,
         );
       case CborSolSignRequest cborSolSignRequest:
         return SolanaSignTxPage.load(
-          walletAutoDetectionEnabledBool: widget.walletAutoDetectionEnabledBool,
+          walletAutoDetectionEnabledBool: widget._walletAutoDetectionEnabledBool,
           cborSolSignRequest: cborSolSignRequest,
         );
       default:
@@ -109,16 +109,21 @@ class _ScanQRPageState extends State<ScanQRPage> {
     errorDialogVisibleBool = true;
     await showDialog(
       context: context,
-      barrierColor: AppColors.body2.withOpacity(0.3),
+      barrierColor: AppColors.body2.withValues(alpha: 0.3),
       builder: (BuildContext context) {
         return CustomDialog(
-          backgroundColor: AppColors.body2.withOpacity(0.5),
+          backgroundColor: AppColors.body2.withValues(alpha: 0.5),
           title: ReadTxDataExceptionMsgs.getTitle(readTxDataExceptionType),
           content: Text(
             ReadTxDataExceptionMsgs.getDescriptionForQR(readTxDataExceptionType),
             textAlign: TextAlign.center,
           ),
-          onPopInvoked: (_) => scanQRPageCubit.reset(),
+          onPopInvoked: (bool didPop, Object? _) {
+            if (didPop) {
+              return;
+            }
+            scanQRPageCubit.reset();
+          },
           options: <CustomDialogOption>[
             CustomDialogOption(
               label: 'Confirm',

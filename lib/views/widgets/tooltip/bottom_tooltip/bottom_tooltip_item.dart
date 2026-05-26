@@ -26,8 +26,8 @@ class BottomTooltipItem extends StatelessWidget {
       curve: Sprung.custom(mass: 1, stiffness: 100, damping: 15),
       child: TextButton(
         style: ButtonStyle(
-          padding: MaterialStateProperty.all(EdgeInsets.zero),
-          backgroundColor: MaterialStateProperty.all(Colors.transparent),
+          padding: WidgetStateProperty.all(EdgeInsets.zero),
+          backgroundColor: WidgetStateProperty.all(Colors.transparent),
         ),
         onPressed: onTap,
         child: Column(

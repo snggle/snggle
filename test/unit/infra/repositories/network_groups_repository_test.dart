@@ -1,6 +1,6 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
 import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
@@ -248,7 +248,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<NetworkGroupsRepository>().getById(99999),
+            () => globalLocator<NetworkGroupsRepository>().getById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -785,7 +785,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<NetworkGroupsRepository>().deleteById(99999),
+            () => globalLocator<NetworkGroupsRepository>().deleteById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

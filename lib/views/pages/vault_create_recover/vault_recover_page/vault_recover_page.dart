@@ -6,7 +6,6 @@ import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recov
 import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
-import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/vault_create_recover/mnemonic_size_picker.dart';
 import 'package:snggle/views/pages/vault_create_recover/vault_recover_page/vault_mnemonic_form_editable.dart';
@@ -15,25 +14,23 @@ import 'package:snggle/views/widgets/generic/paginated_form/paginated_form.dart'
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
 
-@RoutePage<VaultCreateRecoverStatus?>()
+@RoutePage()
 class VaultRecoverPage extends StatefulWidget {
-  final FilesystemPath parentFilesystemPath;
+  final FilesystemPath _parentFilesystemPath;
 
   const VaultRecoverPage({
-    required this.parentFilesystemPath,
+    required this._parentFilesystemPath,
     super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => _VaultRecoverPageState();
+  State<VaultRecoverPage> createState() => _VaultRecoverPageState();
 }
 
 class _VaultRecoverPageState extends State<VaultRecoverPage> {
   final KeyboardValueNotifier _keyboardValueNotifier = KeyboardValueNotifier();
   final PageController _pageController = PageController(keepPage: false);
-  late final VaultRecoverPageCubit _vaultRecoverPageCubit = VaultRecoverPageCubit(
-    parentFilesystemPath: widget.parentFilesystemPath,
-  );
+  late final VaultRecoverPageCubit _vaultRecoverPageCubit = VaultRecoverPageCubit(parentFilesystemPath: widget._parentFilesystemPath);
 
   @override
   void dispose() {
@@ -76,7 +73,7 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
                   keyboardValueNotifier: _keyboardValueNotifier,
                 )
               else
-                const SizedBox()
+                const SizedBox(),
             ],
           ),
         );
@@ -86,26 +83,43 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
 
   void _handleCustomPop() {
     FocusScope.of(context).unfocus();
+    _keyboardValueNotifier.hideKeyboard();
+
     if (_pageController.page != 0) {
-      _pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeIn,
+      );
     } else {
-      AutoRouter.of(context).popForced();
+      AutoRouter.of(context).pop();
     }
   }
 
   void _handleSystemPop() {
     FocusScope.of(context).unfocus();
-    if (_keyboardValueNotifier.isVisible()) {
-      _keyboardValueNotifier.hideKeyboard();
-    } else if (_pageController.page != 0) {
-      _pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
+    _keyboardValueNotifier.hideKeyboard();
+
+    if (_isFirstPage() == false) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeIn,
+      );
     } else {
-      AutoRouter.of(context).popForced();
+      context.router.pop();
     }
   }
 
   void _handleMnemonicSizeSelected(crypto_utils.MnemonicSize mnemonicSize) {
     _vaultRecoverPageCubit.init(mnemonicSize.wordCount);
     _pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
+  }
+
+  bool _isFirstPage() {
+    if (_pageController.hasClients == false) {
+      return true;
+    }
+
+    int pageIndex = _pageController.page?.round() ?? _pageController.initialPage;
+    return pageIndex == 0;
   }
 }

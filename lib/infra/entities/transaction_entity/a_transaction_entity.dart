@@ -1,6 +1,6 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 abstract class ATransactionEntity extends Equatable {
   final Id id;
@@ -32,16 +32,16 @@ abstract class ATransactionEntity extends Equatable {
 
   @override
   List<Object?> get props => <Object?>[
-        id,
-        walletId,
-        creationDate,
-        signDataType,
-        amount,
-        contractAddress,
-        message,
-        senderAddress,
-        recipientAddress,
-        signature,
-        signDate,
-      ];
+    id,
+    walletId,
+    creationDate,
+    signDataType,
+    amount,
+    contractAddress,
+    message,
+    senderAddress,
+    recipientAddress,
+    signature,
+    signDate,
+  ];
 }

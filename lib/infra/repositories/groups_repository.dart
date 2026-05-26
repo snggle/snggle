@@ -1,4 +1,4 @@
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/group_entity/group_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';

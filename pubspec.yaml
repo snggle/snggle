@@ -1,11 +1,11 @@
 name: snggle
 description: Private keys manager
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.71
+version: 0.0.72
 
 environment:
-  sdk: "3.2.6"
-  flutter: "3.16.9"
+  sdk: "3.12.2"
+  flutter: "3.44.7"
 
 dependencies:
   flutter:
@@ -16,7 +16,7 @@ dependencies:
 
   # AutoRoute is a declarative routing solution, where everything needed for navigation is automatically generated
   # https://pub.dev/packages/auto_route
-  auto_route: 7.8.4
+  auto_route: 11.1.0
 
   # A Dart package that helps to implement value based equality without needing to explicitly override == and hashCode
   # https://pub.dev/packages/equatable
@@ -24,7 +24,7 @@ dependencies:
 
   # Flutter Widgets that make it easy to implement the BLoC (Business Logic Component) design pattern
   # https://pub.dev/packages/flutter_bloc
-  flutter_bloc: 8.1.6
+  flutter_bloc: 9.1.1
 
   # Accessing Service Objects/View/AppModels/Managers/BLoCs from Flutter Views
   # https://pub.dev/packages/get_it
@@ -33,7 +33,7 @@ dependencies:
   # Contains code to deal with internationalized/localized messages, date and number formatting and parsing,
   # bidirectional text, and other internationalization issues.
   # https://pub.dev/packages/intl
-  intl: 0.18.1
+  intl: 0.20.2
 
   # Small, easy to use and extensible logger which prints beautiful logs.
   # https://pub.dev/packages/logger
@@ -42,11 +42,11 @@ dependencies:
   # Flutter Secure Storage provides API to store data in secure storage.
   # Keychain is used in iOS, KeyStore based solution is used in Android.
   # https://pub.dev/packages/flutter_secure_storage
-  flutter_secure_storage: 9.2.2
+  flutter_secure_storage: 10.3.1
 
   # RFC4122 (v1, v4, v5) UUID Generator and Parser for all Dart platforms (Web, VM, Flutter)
   # https://pub.dev/packages/uuid
-  uuid: 4.4.2
+  uuid: 4.5.3
 
   # An SVG rendering and widget library for Flutter, which allows painting and displaying Scalable Vector Graphics 1.1 files.
   # https://pub.dev/packages/flutter_svg
@@ -56,13 +56,9 @@ dependencies:
   # https://pub.dev/packages/blockies_svg
   blockies_svg: 1.0.2
 
-  # A basic toolkit for Cryptocurrency wallet in Dart. This package is used to generate and manage the Hierarchical Deterministic (HD) Wallet application.
-  # https://pub.dev/packages/hd_wallet
-  hd_wallet: 0.0.9
-
   # Flutter plugin for getting commonly used locations on host platform file systems, such as the temp and app data directories.
   # https://pub.dev/packages/path_provider
-  path_provider: 2.1.4
+  path_provider: 2.1.5
 
   # Spring curves for Flutter animations. Based on real physics equations with three damping curves.
   # https://pub.dev/packages/sprung
@@ -77,20 +73,20 @@ dependencies:
   custom_pop_up_menu: 1.2.4
 
   # Extremely fast, easy to use, and fully async NoSQL database for Flutter.
-  # https://pub.dev/packages/isar
-  isar: 3.1.0+1
+  # https://pub.dev/packages/isar_community:
+  isar_community: 3.3.2
 
   # Isar Core binaries for the Isar Database. Needs to be included for Flutter apps.
-  # https://pub.dev/packages/isar_flutter_libs
-  isar_flutter_libs: 3.1.0+1
+  # https://pub.dev/packages/isar_community_flutter_libs
+  isar_community_flutter_libs: 3.3.2
 
   # This plugin provides a cross-platform (iOS, Android) API to request permissions and check their status.
   # https://pub.dev/packages/permission_handler
   permission_handler: 11.3.1
 
   # QR code scanner that can be embedded inside flutter. It uses zxing in Android and MTBBarcode scanner in iOS.
-  # https://pub.dev/packages/qr_code_scanner
-  qr_code_scanner: 1.0.1
+  # https://pub.dev/packages/qr_code_scanner_plus
+  qr_code_scanner_plus: 2.2.0
 
   # QR.Flutter is a Flutter library for simple and fast QR code rendering via a Widget or custom painter.
   # https://pub.dev/packages/qr_flutter
@@ -124,19 +120,23 @@ dev_dependencies:
 
   # AutoRoute is a declarative routing solution, where everything needed for navigation is automatically generated
   # https://pub.dev/packages/auto_route_generator
-  auto_route_generator: 7.3.2
+  auto_route_generator: 10.5.0
 
   # A testing library which makes it easy to test blocs
   # https://pub.dev/packages/bloc_test
-  bloc_test: 9.1.7
+  bloc_test: 10.0.0
 
   # A build system for Dart code generation and modular compilation
   # https://pub.dev/packages/build_runner
-  build_runner: 2.4.9
+  build_runner: 2.15.0
 
   # Code generator for the Isar Database. Finds classes annotated with @Collection.
-  # https://pub.dev/packages/isar_generator
-  isar_generator: 3.1.0+1
+  # https://pub.dev/packages/isar_community_generator/versions
+  isar_community_generator: 3.3.2
+
+dependency_overrides:
+  flutter_secure_storage_windows: 4.2.0
+  win32: 6.0.0
 
 flutter:
   uses-material-design: true

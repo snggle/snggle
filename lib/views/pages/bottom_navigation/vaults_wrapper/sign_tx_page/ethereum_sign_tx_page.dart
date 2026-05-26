@@ -29,10 +29,15 @@ class EthereumSignTxPage extends StatefulWidget {
     super.key,
   });
 
-  static Future<EthereumSignTxPage> load(
-      {required bool walletAutoDetectionEnabledBool, required CborEthSignRequest cborEthSignRequest, required SignTxMode signTxMode}) async {
-    EthereumSignTxPageCubit ethereumSignTxPageCubit =
-        EthereumSignTxPageCubit(walletAutoDetectionEnabledBool: walletAutoDetectionEnabledBool, cborEthSignRequest: cborEthSignRequest);
+  static Future<EthereumSignTxPage> load({
+    required bool walletAutoDetectionEnabledBool,
+    required CborEthSignRequest cborEthSignRequest,
+    required SignTxMode signTxMode,
+  }) async {
+    EthereumSignTxPageCubit ethereumSignTxPageCubit = EthereumSignTxPageCubit(
+      walletAutoDetectionEnabledBool: walletAutoDetectionEnabledBool,
+      cborEthSignRequest: cborEthSignRequest,
+    );
 
     try {
       await ethereumSignTxPageCubit.init();
@@ -77,10 +82,21 @@ class _EthereumSignTxPageState extends State<EthereumSignTxPage> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    if (tx.senderAddress != null) LabelWrapperVertical(label: 'From', child: PublicAddressPreview(address: tx.senderAddress!)),
-                    if (tx.recipientAddress != null) LabelWrapperVertical(label: 'To', child: PublicAddressPreview(address: tx.recipientAddress!)),
+                    if (tx.senderAddress != null)
+                      LabelWrapperVertical(
+                        label: 'From',
+                        child: PublicAddressPreview(address: tx.senderAddress!),
+                      ),
+                    if (tx.recipientAddress != null)
+                      LabelWrapperVertical(
+                        label: 'To',
+                        child: PublicAddressPreview(address: tx.recipientAddress!),
+                      ),
                     if (tx.contractAddress != null)
-                      LabelWrapperVertical(label: 'Contract', child: PublicAddressPreview(address: tx.contractAddress!)),
+                      LabelWrapperVertical(
+                        label: 'Contract',
+                        child: PublicAddressPreview(address: tx.contractAddress!),
+                      ),
                     if (tx.amount != null)
                       LabelWrapperVertical(
                         label: 'Amount',
@@ -130,49 +146,37 @@ class _EthereumSignTxPageState extends State<EthereumSignTxPage> {
         } else if (signTxPageState is EthereumSignTxPageSignedTxState) {
           child = switch (widget.signTxMode) {
             _ => QRResultScaffold.fromUniformResource(
-                title: 'SIGNATURE',
-                closeButtonVisible: true,
-                ur: UR.fromCborTaggedObject(signTxPageState.cborEthSignature),
-                tooltip: BottomTooltip(
-                  actions: <Widget>[
-                    BottomTooltipItem(
-                      assetIconData: AppIcons.menu_save,
-                      label: 'Finish',
-                      onTap: () => Navigator.of(context).pop(),
-                    )
-                  ],
-                ),
-                child: Column(
-                  children: <Widget>[
-                    LabelWrapperVertical(
-                      label: 'Signed with',
-                      child: PublicAddressPreview(
-                        address: widget.ethereumSignTxPageCubit.senderWalletModel.address,
-                        textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
-                      ),
-                    ),
-                    LabelWrapperVertical(
-                      label: 'Signature',
-                      child: CopyWrapper(
-                        value: signTxPageState.transactionModel.signature!,
-                        copyWrapperBuilder: (BuildContext context) {
-                          return Text(
-                            signTxPageState.transactionModel.signature!,
-                            style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+              title: 'SIGNATURE',
+              closeButtonVisible: true,
+              ur: UR.fromCborTaggedObject(signTxPageState.cborEthSignature),
+              tooltip: BottomTooltip(
+                actions: <Widget>[BottomTooltipItem(assetIconData: AppIcons.menu_save, label: 'Finish', onTap: () => Navigator.of(context).pop())],
               ),
+              child: Column(
+                children: <Widget>[
+                  LabelWrapperVertical(
+                    label: 'Signed with',
+                    child: PublicAddressPreview(
+                      address: widget.ethereumSignTxPageCubit.senderWalletModel.address,
+                      textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+                    ),
+                  ),
+                  LabelWrapperVertical(
+                    label: 'Signature',
+                    child: CopyWrapper(
+                      value: signTxPageState.transactionModel.signature!,
+                      copyWrapperBuilder: (BuildContext context) {
+                        return Text(signTxPageState.transactionModel.signature!, style: textTheme.bodyMedium?.copyWith(color: AppColors.body3));
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           };
         }
 
-        return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: child,
-        );
+        return AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: child);
       },
     );
   }

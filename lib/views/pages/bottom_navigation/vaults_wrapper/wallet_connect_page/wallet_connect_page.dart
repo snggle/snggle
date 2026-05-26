@@ -84,16 +84,16 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                     if (walletConnectPageState.walletConnectOption == WalletConnectOption.qr) ...<Widget>[
                       switch (widget.networkTemplateModel.networkType) {
                         NetworkType.ethereum => GradientOutlinedButton.large(
-                            label: 'Metamask QR',
-                            icon: const AssetIcon(AppIcons.wallet_metamask, size: 18),
-                            onPressed: _showQRConnectPage,
-                          ),
+                          label: 'Metamask QR',
+                          icon: const AssetIcon(AppIcons.wallet_metamask, size: 18),
+                          onPressed: _showQRConnectPage,
+                        ),
                         NetworkType.solana => GradientOutlinedButton.large(
-                            label: 'Solflare QR',
-                            icon: const AssetIcon(AppIcons.wallet_solflare, size: 18),
-                            onPressed: _showQRConnectPage,
-                          ),
-                      }
+                          label: 'Solflare QR',
+                          icon: const AssetIcon(AppIcons.wallet_solflare, size: 18),
+                          onPressed: _showQRConnectPage,
+                        ),
+                      },
                     ],
                   ],
                 ),
@@ -131,7 +131,7 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
         );
 
         if (navigateBackBool == true) {
-          await AutoRouter.of(context).pop();
+          AutoRouter.of(context).pop();
         }
       },
       onError: _handleInvalidMasterKeyException,

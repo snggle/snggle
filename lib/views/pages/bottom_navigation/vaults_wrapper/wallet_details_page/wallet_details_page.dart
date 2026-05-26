@@ -25,7 +25,7 @@ import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/public_address_preview.dart';
 import 'package:snggle/views/widgets/qr/qr_result_scaffold.dart';
 
-@RoutePage<void>()
+@RoutePage()
 class WalletDetailsPage extends StatefulWidget {
   final VaultModel vaultModel;
   final NetworkGroupModel networkGroupModel;
@@ -75,7 +75,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
           body: GradientScrollbar(
             scrollController: scrollController,
             visibleBool: walletDetailsPageState.isEmpty == false,
-            margin: const EdgeInsets.only(bottom: CustomBottomNavigationBar.height),
+            margin: const EdgeInsets.only(bottom: CustomBottomNavigationBar.contentHeight),
             child: CustomScrollView(
               controller: scrollController,
               shrinkWrap: walletDetailsPageState.isScrollDisabled,
@@ -133,11 +133,13 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                       width: 176,
                       label: 'Connect Wallet',
                       onPressed: () {
-                        AutoRouter.of(context).navigate(WalletConnectRoute(
-                          walletModel: widget.walletModel,
-                          vaultModel: widget.vaultModel,
-                          networkTemplateModel: widget.networkGroupModel.networkTemplateModel,
-                        ));
+                        AutoRouter.of(context).navigate(
+                          WalletConnectRoute(
+                            walletModel: widget.walletModel,
+                            vaultModel: widget.vaultModel,
+                            networkTemplateModel: widget.networkGroupModel.networkTemplateModel,
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -175,7 +177,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                     networkGroupModel: widget.networkGroupModel,
                   ),
                 ),
-                const SliverToBoxAdapter(child: SizedBox(height: CustomBottomNavigationBar.height)),
+                const SliverToBoxAdapter(child: SizedBox(height: CustomBottomNavigationBar.contentHeight)),
               ],
             ),
           ),

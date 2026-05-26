@@ -60,6 +60,8 @@ class _AppMasterKeyRecoverPageState extends State<AppMasterKeyRecoverPage> {
             onSaveMnemonic: _appMasterKeyRecoverPageCubit.saveMnemonic,
             onFinish: (List<String> words, _) async {
               MnemonicModel? mnemonicModel = _appMasterKeyRecoverPageCubit.state.mnemonicModel;
+              _keyboardValueNotifier.hideKeyboard();
+
               await AutoRouter.of(context).push(
                 AppSetUpPinRoute(mnemonicModel: mnemonicModel, appMasterKeyType: AppMasterKeyType.recover),
               );

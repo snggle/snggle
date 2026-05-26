@@ -1,6 +1,6 @@
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
 import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
@@ -25,7 +25,6 @@ class EthereumTransactionModel extends ATransactionModel {
     super.signature,
   });
 
-  @override
   factory EthereumTransactionModel.fromEntity(EthereumTransactionEntity transactionEntity) {
     return EthereumTransactionModel(
       id: transactionEntity.id,
@@ -130,24 +129,24 @@ class EthereumTransactionModel extends ATransactionModel {
 
   @override
   String get transactionLabel => switch (signDataType) {
-        SignDataType.typedTransaction => 'TX',
-        SignDataType.rawBytes => 'TEXT',
-      };
+    SignDataType.typedTransaction => 'TX',
+    SignDataType.rawBytes => 'TEXT',
+  };
 
   @override
   List<Object?> get props => <Object?>[
-        id,
-        walletId,
-        creationDate,
-        signDataType,
-        amount,
-        fee,
-        functionData,
-        message,
-        contractAddress,
-        senderAddress,
-        recipientAddress,
-        signature,
-        signDate,
-      ];
+    id,
+    walletId,
+    creationDate,
+    signDataType,
+    amount,
+    fee,
+    functionData,
+    message,
+    contractAddress,
+    senderAddress,
+    recipientAddress,
+    signature,
+    signDate,
+  ];
 }

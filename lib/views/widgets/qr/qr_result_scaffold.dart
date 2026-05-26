@@ -101,7 +101,7 @@ class _QRResultScaffoldState extends State<QRResultScaffold> {
         footer: widget.addressPreview,
         body: GradientScrollbar(
           scrollController: scrollController,
-          margin: const EdgeInsets.only(bottom: CustomBottomNavigationBar.height),
+          margin: const EdgeInsets.only(bottom: CustomBottomNavigationBar.contentHeight),
           child: SingleChildScrollView(
             controller: scrollController,
             child: Container(

@@ -82,7 +82,7 @@ class _WalletListPageState extends State<WalletListPage> {
               SliverFillRemaining(
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: CustomBottomNavigationBar.height),
+                    padding: const EdgeInsets.only(bottom: CustomBottomNavigationBar.contentHeight),
                     child: IconButton(
                       onPressed: _navigateToWalletCreatePage,
                       icon: const AssetIcon(AppIcons.page_add_button, size: 54),
@@ -117,15 +117,15 @@ class _WalletListPageState extends State<WalletListPage> {
                         selectionPadding: const EdgeInsets.all(5),
                         child: switch (listItemModel) {
                           WalletModel walletModel => WalletListItem(
-                              walletModel: walletModel,
-                              fadeAnimationController: fadeAnimationController,
-                              slideAnimationController: slideAnimationController,
-                            ),
+                            walletModel: walletModel,
+                            fadeAnimationController: fadeAnimationController,
+                            slideAnimationController: slideAnimationController,
+                          ),
                           GroupModel groupModel => WalletGroupListItem(
-                              groupModel: groupModel,
-                              fadeAnimationController: fadeAnimationController,
-                              slideAnimationController: slideAnimationController,
-                            ),
+                            groupModel: groupModel,
+                            fadeAnimationController: fadeAnimationController,
+                            slideAnimationController: slideAnimationController,
+                          ),
                           (_) => const SizedBox(),
                         },
                       );
@@ -142,11 +142,13 @@ class _WalletListPageState extends State<WalletListPage> {
   }
 
   Future<void> _navigateToWalletCreatePage() async {
-    await AutoRouter.of(context).push<void>(WalletCreateRoute(
-      vaultModel: widget.vaultModel,
-      networkGroupModel: widget.networkGroupModel,
-      parentFilesystemPath: walletListPageCubit.state.filesystemPath,
-    ));
+    await AutoRouter.of(context).push<void>(
+      WalletCreateRoute(
+        vaultModel: widget.vaultModel,
+        networkGroupModel: widget.networkGroupModel,
+        parentFilesystemPath: walletListPageCubit.state.filesystemPath,
+      ),
+    );
     await walletListPageCubit.refreshAll();
   }
 
@@ -161,12 +163,14 @@ class _WalletListPageState extends State<WalletListPage> {
         walletModel: listItemModel,
         transactionSignedCallback: walletDetailsPageCubit.refresh,
       );
-      await AutoRouter.of(context).push<void>(WalletDetailsRoute(
-        vaultModel: widget.vaultModel,
-        networkGroupModel: widget.networkGroupModel,
-        walletModel: listItemModel,
-        walletDetailsPageCubit: walletDetailsPageCubit,
-      ));
+      await AutoRouter.of(context).push<void>(
+        WalletDetailsRoute(
+          vaultModel: widget.vaultModel,
+          networkGroupModel: widget.networkGroupModel,
+          walletModel: listItemModel,
+          walletDetailsPageCubit: walletDetailsPageCubit,
+        ),
+      );
 
       await walletDetailsPageCubit.close();
       activeWalletController.clearActiveWallet();

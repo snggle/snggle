@@ -29,14 +29,14 @@ import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.
 
 @RoutePage()
 class WalletCreatePage extends StatefulWidget {
-  final VaultModel vaultModel;
-  final FilesystemPath parentFilesystemPath;
-  final NetworkGroupModel networkGroupModel;
+  final NetworkGroupModel _networkGroupModel;
+  final FilesystemPath _parentFilesystemPath;
+  final VaultModel _vaultModel;
 
   const WalletCreatePage({
-    required this.vaultModel,
-    required this.parentFilesystemPath,
-    required this.networkGroupModel,
+    required this._networkGroupModel,
+    required this._parentFilesystemPath,
+    required this._vaultModel,
     super.key,
   });
 
@@ -48,9 +48,9 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
   final ScrollController scrollController = ScrollController();
 
   late final WalletCreatePageCubit walletCreatePageCubit = WalletCreatePageCubit(
-    vaultModel: widget.vaultModel,
-    networkGroupModel: widget.networkGroupModel,
-    parentFilesystemPath: widget.parentFilesystemPath,
+    networkGroupModel: widget._networkGroupModel,
+    parentFilesystemPath: widget._parentFilesystemPath,
+    vaultModel: widget._vaultModel,
   );
 
   @override
@@ -69,9 +69,14 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    ThemeData materialTheme = ThemeData.from(
+      colorScheme: theme.colorScheme,
+      textTheme: theme.textTheme,
+      useMaterial3: false,
+    );
 
-    String baseDerivationPath = '${widget.networkGroupModel.networkTemplateModel.baseDerivationPath}/';
-    bool networkIsSolanaBool = widget.networkGroupModel.networkTemplateModel.networkType == NetworkType.solana;
+    String baseDerivationPath = '${widget._networkGroupModel.networkTemplateModel.baseDerivationPath}/';
+    bool networkIsSolanaBool = widget._networkGroupModel.networkTemplateModel.networkType == NetworkType.solana;
     String? suffix = networkIsSolanaBool ? "'/0'" : null;
 
     TextScaler textScaler = MediaQuery.textScalerOf(context);
@@ -100,7 +105,7 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                     padding: EdgeInsets.zero,
                     label: 'Network Type',
                     child: GradientText(
-                      widget.networkGroupModel.networkTemplateModel.name,
+                      widget._networkGroupModel.networkTemplateModel.name,
                       gradient: AppColors.primaryGradient,
                       textStyle: theme.textTheme.labelMedium,
                     ),
@@ -119,19 +124,39 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                     ),
                   LabelWrapperVertical(
                     label: 'Derivation Path',
-                    child: CustomTextField(
-                      textEditingController: walletCreatePageCubit.derivationPathTextEditingController,
-                      inputBorder: InputBorder.none,
-                      keyboardType: TextInputType.number,
-                      prefixWidgetConstraints: BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: prefixWidth),
-                      prefixWidget: Text(baseDerivationPath, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)),
-                      suffixWidgetConstraints: networkIsSolanaBool ? BoxConstraints(minWidth: 0, minHeight: 0, maxWidth: suffixWidth!) : null,
-                      suffixWidget:
-                          networkIsSolanaBool ? Text(suffix!, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey)) : null,
-                      padding: EdgeInsets.zero,
-                      inputFormatters: <TextInputFormatter>[
-                        LegacyDerivationPathInputFormatter(),
-                      ],
+                    child: Theme(
+                      data: materialTheme,
+                      child: CustomTextField(
+                        textEditingController: walletCreatePageCubit.derivationPathTextEditingController,
+                        inputBorder: InputBorder.none,
+                        keyboardType: TextInputType.number,
+                        prefixWidgetConstraints: BoxConstraints(
+                          minWidth: 0,
+                          minHeight: 0,
+                          maxWidth: prefixWidth,
+                        ),
+                        prefixWidget: Text(
+                          baseDerivationPath,
+                          style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
+                        ),
+                        suffixWidgetConstraints: networkIsSolanaBool
+                            ? BoxConstraints(
+                                minWidth: 0,
+                                minHeight: 0,
+                                maxWidth: suffixWidth!,
+                              )
+                            : null,
+                        suffixWidget: networkIsSolanaBool
+                            ? Text(
+                                suffix!,
+                                style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
+                              )
+                            : null,
+                        padding: EdgeInsets.zero,
+                        inputFormatters: <TextInputFormatter>[
+                          LegacyDerivationPathInputFormatter(),
+                        ],
+                      ),
                     ),
                   ),
                   if (walletCreatePageState.emptyDerivationPathBool == true)
@@ -184,6 +209,6 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
     if (walletModel == null) {
       return;
     }
-    await AutoRouter.of(context).pop();
+    AutoRouter.of(context).pop();
   }
 }

@@ -10,10 +10,9 @@ class DragPopupScrollController extends ScrollController {
   Timer? _scrollTimer;
 
   DragPopupScrollController({
-    required DragPopupCursorController dragPopupCursorController,
-    required double scrollStep,
-  })  : _scrollStep = scrollStep,
-        _dragPopupCursorController = dragPopupCursorController {
+    required this._dragPopupCursorController,
+    required this._scrollStep,
+  }) {
     _dragPopupCursorController.addListener(_handleCursorMove);
   }
 

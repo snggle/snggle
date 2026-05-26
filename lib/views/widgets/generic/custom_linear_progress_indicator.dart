@@ -23,7 +23,7 @@ class CustomLinearProgressIndicator extends StatelessWidget {
                 child: Container(
                   height: 5,
                   width: double.infinity,
-                  color: AppColors.body2.withOpacity(0.2),
+                  color: AppColors.body2.withValues(alpha: 0.2),
                   child: LayoutBuilder(
                     builder: (BuildContext context, BoxConstraints constraints) {
                       if (progress == 0) {
@@ -56,7 +56,7 @@ class CustomLinearProgressIndicator extends StatelessWidget {
               Text(
                 '${progress == 0 ? 0 : (progress * 100).toStringAsPrecision(4)}%',
                 style: TextStyle(color: AppColors.body2, fontSize: 12),
-              )
+              ),
             ],
           ),
         );

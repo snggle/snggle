@@ -74,7 +74,7 @@ class _VaultListPageState extends State<VaultListPage> {
               SliverFillRemaining(
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: CustomBottomNavigationBar.height),
+                    padding: const EdgeInsets.only(bottom: CustomBottomNavigationBar.contentHeight),
                     child: IconButton(
                       onPressed: _navigateToVaultCreateRecoverRoute,
                       icon: const AssetIcon(AppIcons.page_add_button, size: 54),
@@ -125,9 +125,11 @@ class _VaultListPageState extends State<VaultListPage> {
 
   Future<void> _navigateToVaultCreateRecoverRoute() async {
     VaultCreateRecoverStatus? vaultCreateRecoverStatus = await AutoRouter.of(context).push<VaultCreateRecoverStatus?>(
-      VaultCreateRecoverRoute(children: <PageRouteInfo>[
-        VaultInitRoute(parentFilesystemPath: vaultListPageCubit.state.filesystemPath),
-      ]),
+      VaultCreateRecoverRoute(
+        children: <PageRouteInfo>[
+          VaultInitRoute(parentFilesystemPath: vaultListPageCubit.state.filesystemPath),
+        ],
+      ),
     );
     if (vaultCreateRecoverStatus != null) {
       unawaited(vaultListPageCubit.refreshAll());

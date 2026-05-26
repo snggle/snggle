@@ -34,11 +34,9 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
   late final ASolanaMessage _solanaMessage;
 
   SolanaSignTxPageCubit({
-    required bool walletAutoDetectionEnabledBool,
-    required CborSolSignRequest cborSolSignRequest,
-  })  : _walletAutoDetectionEnabledBool = walletAutoDetectionEnabledBool,
-        _cborSolSignRequest = cborSolSignRequest,
-        super(const SolanaSignTxPageConfirmTxState());
+    required this._walletAutoDetectionEnabledBool,
+    required this._cborSolSignRequest,
+  }) : super(const SolanaSignTxPageConfirmTxState());
 
   Future<void> init() async {
     _solanaMessage = _getMessageFromCbor(_cborSolSignRequest);
@@ -67,18 +65,18 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
     SolanaTransactionModel signedTransactionModel = solanaTransactionModel.addSignature(signature.hex) as SolanaTransactionModel;
     await _transactionsService.save(signedTransactionModel);
 
-    emit(SolanaSignTxPageSignedTxState(
-      transactionModel: signedTransactionModel,
-      cborSolSignature: CborSolSignature(
-        signature: signature.bytes,
-        requestId: _cborSolSignRequest.requestId ?? Uint8List(0),
+    emit(
+      SolanaSignTxPageSignedTxState(
+        transactionModel: signedTransactionModel,
+        cborSolSignature: CborSolSignature(signature: signature.bytes, requestId: _cborSolSignRequest.requestId ?? Uint8List(0)),
       ),
-    ));
+    );
   }
 
   ASolanaMessage _getMessageFromCbor(CborSolSignRequest cborSolSignRequest) {
-    SignDataType signDataType =
-        cborSolSignRequest.dataType == CborSolSignDataType.transaction ? SignDataType.typedTransaction : SignDataType.rawBytes;
+    SignDataType signDataType = cborSolSignRequest.dataType == CborSolSignDataType.transaction
+        ? SignDataType.typedTransaction
+        : SignDataType.rawBytes;
     ASolanaMessage solanaMessage = ASolanaMessage.fromSerializedData(signDataType, cborSolSignRequest.signData);
 
     return solanaMessage;
@@ -99,8 +97,9 @@ class SolanaSignTxPageCubit extends Cubit<ASolanaSignTxPageState> {
 
   Future<WalletModel> _getWalletFromMessage() async {
     String? receivedWalletAddress = _cborSolSignRequest.address?.toString().toLowerCase();
-    receivedWalletAddress =
-        (_solanaMessage is ASolanaTransactionMessage) ? (_getWalletFromInstructions(_solanaMessage) ?? receivedWalletAddress) : receivedWalletAddress;
+    receivedWalletAddress = (_solanaMessage is ASolanaTransactionMessage)
+        ? (_getWalletFromInstructions(_solanaMessage) ?? receivedWalletAddress)
+        : receivedWalletAddress;
 
     if (receivedWalletAddress == null) {
       throw const ReadTxDataException(ReadTxDataExceptionType.receivedAddressEmpty);

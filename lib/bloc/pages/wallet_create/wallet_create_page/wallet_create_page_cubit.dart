@@ -30,21 +30,17 @@ class WalletCreatePageCubit extends Cubit<WalletCreatePageState> {
   final NetworkTemplateModel _networkTemplateModel;
   final FilesystemPath _parentFilesystemPath;
 
-  WalletCreatePageCubit({
-    required VaultModel vaultModel,
-    required NetworkGroupModel networkGroupModel,
-    required FilesystemPath parentFilesystemPath,
-  })  : _parentFilesystemPath = parentFilesystemPath,
-        _networkGroupModel = networkGroupModel,
-        _vaultModel = vaultModel,
-        _networkTemplateModel = networkGroupModel.networkTemplateModel,
-        super(const WalletCreatePageState());
+  WalletCreatePageCubit({required this._vaultModel, required NetworkGroupModel networkGroupModel, required this._parentFilesystemPath})
+    : _networkGroupModel = networkGroupModel,
+      _networkTemplateModel = networkGroupModel.networkTemplateModel,
+      super(const WalletCreatePageState());
 
   Future<void> init({required String defaultWalletName}) async {
     nameTextEditingController.addListener(_updateWalletNameEmptyState);
 
-    DerivationPathIndexExtractor derivationPathIndexExtractor =
-        DerivationPathIndexExtractor.fromNetworkTemplateModel(_networkGroupModel.networkTemplateModel);
+    DerivationPathIndexExtractor derivationPathIndexExtractor = DerivationPathIndexExtractor.fromNetworkTemplateModel(
+      _networkGroupModel.networkTemplateModel,
+    );
     int lastDerivationIndex = await _walletsService.getHighestDerivationIndex(_networkGroupModel.filesystemPath, derivationPathIndexExtractor);
     int derivationIndex = lastDerivationIndex + 1;
 

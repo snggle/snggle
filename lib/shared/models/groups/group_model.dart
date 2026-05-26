@@ -11,8 +11,8 @@ class GroupModel extends AListItemModel {
     required super.encryptedBool,
     required super.filesystemPath,
     required this.listItemsPreview,
-    required String name,
-  }) : _name = name;
+    required this._name,
+  });
 
   @override
   GroupModel copyWith({

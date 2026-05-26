@@ -36,11 +36,9 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
   late final PasswordModel _senderWalletPasswordModel;
 
   EthereumSignTxPageCubit({
-    required bool walletAutoDetectionEnabledBool,
-    required CborEthSignRequest cborEthSignRequest,
-  })  : _walletAutoDetectionEnabledBool = walletAutoDetectionEnabledBool,
-        _cborEthSignRequest = cborEthSignRequest,
-        super(const EthereumSignTxPageConfirmTxState());
+    required this._walletAutoDetectionEnabledBool,
+    required this._cborEthSignRequest,
+  }) : super(const EthereumSignTxPageConfirmTxState());
 
   Future<void> init() async {
     senderWalletModel = await _determineSenderWalletModel();
@@ -57,21 +55,25 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
     WalletSecretsModel walletSecretsModel = await _secretsService.get(senderWalletModel.filesystemPath, _senderWalletPasswordModel);
 
     ECPrivateKey ecPrivateKey = ECPrivateKey.fromBytes(walletSecretsModel.privateKey, CurvePoints.generatorSecp256k1);
-    AEthereumTransaction ethereumTransaction =
-        AEthereumTransaction.fromSerializedData(ethereumTransactionModel.signDataType, _cborEthSignRequest.signData);
+    AEthereumTransaction ethereumTransaction = AEthereumTransaction.fromSerializedData(
+      ethereumTransactionModel.signDataType,
+      _cborEthSignRequest.signData,
+    );
 
     ASignature signature = ethereumTransaction.sign(ecPrivateKey);
     EthereumTransactionModel signedTransactionModel = ethereumTransactionModel.addSignature(signature.hex) as EthereumTransactionModel;
     await _transactionsService.save(signedTransactionModel);
 
-    emit(EthereumSignTxPageSignedTxState(
-      transactionModel: signedTransactionModel,
-      cborEthSignature: CborEthSignature(
-        signature: signature.bytes,
-        origin: _cborEthSignRequest.origin,
-        requestId: _cborEthSignRequest.requestId ?? Uint8List(0),
+    emit(
+      EthereumSignTxPageSignedTxState(
+        transactionModel: signedTransactionModel,
+        cborEthSignature: CborEthSignature(
+          signature: signature.bytes,
+          origin: _cborEthSignRequest.origin,
+          requestId: _cborEthSignRequest.requestId ?? Uint8List(0),
+        ),
       ),
-    ));
+    );
   }
 
   Future<WalletModel> _determineSenderWalletModel() async {
@@ -121,10 +123,12 @@ class EthereumSignTxPageCubit extends Cubit<AEthereumSignTxPageState> {
 
   // TODO(marcin): Optional extraction of derivation path conversion to codec_utils library
   String _convertDerivationPathToString(List<CborPathComponent> cborPathComponents) {
-    String path = cborPathComponents.map((CborPathComponent component) {
-      String formattedIndex = component.hardened ? "${component.index}'" : '${component.index}';
-      return formattedIndex;
-    }).join('/');
+    String path = cborPathComponents
+        .map((CborPathComponent component) {
+          String formattedIndex = component.hardened ? "${component.index}'" : '${component.index}';
+          return formattedIndex;
+        })
+        .join('/');
 
     return 'm/$path';
   }

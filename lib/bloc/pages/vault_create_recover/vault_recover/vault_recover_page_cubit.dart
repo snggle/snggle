@@ -23,9 +23,8 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
   final FilesystemPath _parentFilesystemPath;
 
   VaultRecoverPageCubit({
-    required FilesystemPath parentFilesystemPath,
-  })  : _parentFilesystemPath = parentFilesystemPath,
-        super(const VaultRecoverPageState());
+    required this._parentFilesystemPath,
+  }) : super(const VaultRecoverPageState());
 
   @override
   Future<void> close() async {
@@ -58,11 +57,7 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
       vaultNameTextEditingController.text = 'Vault ${lastVaultIndex + 1}';
     }
 
-    emit(VaultRecoverPageState(
-      confirmPageEnabledBool: true,
-      mnemonicSize: mnemonicSize,
-      textControllers: textControllers,
-    ));
+    emit(VaultRecoverPageState(confirmPageEnabledBool: true, mnemonicSize: mnemonicSize, textControllers: textControllers));
   }
 
   Future<void> saveMnemonic() async {
@@ -76,10 +71,7 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
       VaultModel repeatedVaultModel = await _vaultsService.getDuplicateVault(fingerprint);
       emit(state.copyWith(repeatedVaultModel: repeatedVaultModel));
     } catch (e) {
-      AppLogger().log(
-        message: 'Did not find the repeated vault, proceeded with vault recovery',
-        logLevel: LogLevel.info,
-      );
+      AppLogger().log(message: 'Did not find the repeated vault, proceeded with vault recovery', logLevel: LogLevel.info);
       await _createVault(mnemonicWords);
       emit(state.copyWith(mnemonicFilledBool: false));
     }
@@ -120,7 +112,10 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
     NetworkTemplateModel networkTemplateModelSolana = PredefinedNetworkTemplates.solana;
 
     await _networkGroupsModelFactory.createNewNetworkGroup(
-        vaultModel.filesystemPath, networkTemplateModelEthereum.name, networkTemplateModelEthereum);
+      vaultModel.filesystemPath,
+      networkTemplateModelEthereum.name,
+      networkTemplateModelEthereum,
+    );
     await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath, networkTemplateModelSolana.name, networkTemplateModelSolana);
   }
 }

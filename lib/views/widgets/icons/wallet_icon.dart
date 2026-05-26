@@ -31,7 +31,7 @@ class WalletIcon extends StatelessWidget {
     Widget backdropFilterWidget = BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
       child: Container(
-        decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
+        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.5)),
       ),
     );
 

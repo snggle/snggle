@@ -21,7 +21,7 @@ class ThemeConfig {
     );
   }
 
-  AppBarTheme get appBarTheme {
+  AppBarThemeData get appBarTheme {
     return _baseTheme.appBarTheme.copyWith(
       centerTitle: true,
       backgroundColor: Colors.transparent,

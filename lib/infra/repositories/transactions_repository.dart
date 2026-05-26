@@ -1,4 +1,4 @@
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/transaction_entity/a_transaction_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';

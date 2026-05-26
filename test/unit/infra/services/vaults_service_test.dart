@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
@@ -29,7 +29,8 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      List<VaultModel> actualVaultModelList = await globalLocator<VaultsService>().getAllByParentPath(const FilesystemPath.empty(), firstLevelBool: true);
+      List<VaultModel> actualVaultModelList = await globalLocator<VaultsService>().getAllByParentPath(
+          const FilesystemPath.empty(), firstLevelBool: true);
 
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[
@@ -89,7 +90,8 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      List<VaultModel> actualVaultModelList = await globalLocator<VaultsService>().getAllByParentPath(const FilesystemPath.empty(), firstLevelBool: false);
+      List<VaultModel> actualVaultModelList = await globalLocator<VaultsService>().getAllByParentPath(
+          const FilesystemPath.empty(), firstLevelBool: false);
 
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[
@@ -238,7 +240,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<VaultsService>().getById(99999),
+            () => globalLocator<VaultsService>().getById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -529,7 +531,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<VaultsService>().deleteById(99999),
+            () => globalLocator<VaultsService>().deleteById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

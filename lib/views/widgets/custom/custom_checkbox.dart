@@ -29,7 +29,7 @@ class CustomCheckbox extends StatelessWidget {
                 child: Container(
                   width: size,
                   height: size,
-                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
+                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.5)),
                 ),
               ),
             ),

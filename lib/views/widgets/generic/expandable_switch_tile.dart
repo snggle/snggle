@@ -70,7 +70,7 @@ class _ExpandableSwitchTileState extends State<ExpandableSwitchTile> with Single
         ),
         if (_expandedBool) ...<Widget>[
           SizeTransition(
-            axisAlignment: 1.0,
+            alignment: Alignment.bottomLeft,
             sizeFactor: animation,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -81,7 +81,7 @@ class _ExpandableSwitchTileState extends State<ExpandableSwitchTile> with Single
               child: widget.body,
             ),
           ),
-        ]
+        ],
       ],
     );
   }

@@ -14,14 +14,16 @@ class WalletDetailsPageCubit extends Cubit<WalletDetailsPageState> {
   final WalletModel _walletModel;
 
   WalletDetailsPageCubit({
-    required WalletModel walletModel,
-  })  : _walletModel = walletModel,
-        super(const WalletDetailsPageState.loading());
+    required this._walletModel,
+  }) : super(const WalletDetailsPageState.loading());
 
   Future<void> refresh() async {
     List<ATransactionModel> transactions = await _transactionsService.getByWallet(_walletModel.id);
-    emit(WalletDetailsPageState(
-        transactions: transactions..sort((ATransactionModel a, ATransactionModel b) => b.creationDate.compareTo(a.creationDate))));
+    emit(
+      WalletDetailsPageState(
+        transactions: transactions..sort((ATransactionModel a, ATransactionModel b) => b.creationDate.compareTo(a.creationDate)),
+      ),
+    );
   }
 
   Future<void> deleteSelected() async {
@@ -50,31 +52,36 @@ class WalletDetailsPageCubit extends Cubit<WalletDetailsPageState> {
     int allTransactionsCount = state.transactions.length;
 
     List<ATransactionModel> selectedItems = List<ATransactionModel>.from(state.selectedTransactions, growable: true)..add(transactionModel);
-    emit(state.copyWith(selectionModel: SimpleSelectionModel<ATransactionModel>(selectedItems: selectedItems, allItemsCount: allTransactionsCount)));
+    emit(
+      state.copyWith(
+        selectionModel: SimpleSelectionModel<ATransactionModel>(selectedItems: selectedItems, allItemsCount: allTransactionsCount),
+      ),
+    );
   }
 
   void selectAll() {
     int allTransactionsCount = state.transactions.length;
-    emit(state.copyWith(
-      selectionModel: SimpleSelectionModel<ATransactionModel>(
-        allItemsCount: allTransactionsCount,
-        selectedItems: state.transactions,
+    emit(
+      state.copyWith(
+        selectionModel: SimpleSelectionModel<ATransactionModel>(allItemsCount: allTransactionsCount, selectedItems: state.transactions),
       ),
-    ));
+    );
   }
 
   void unselectAll() {
     int allTransactionsCount = state.transactions.length;
-    emit(state.copyWith(
-      selectionModel: SimpleSelectionModel<ATransactionModel>.empty(allItemsCount: allTransactionsCount),
-    ));
+    emit(state.copyWith(selectionModel: SimpleSelectionModel<ATransactionModel>.empty(allItemsCount: allTransactionsCount)));
   }
 
   void unselect(ATransactionModel transactionModel) {
     int allTransactionsCount = state.transactions.length;
 
     List<ATransactionModel> selectedItems = List<ATransactionModel>.from(state.selectedTransactions, growable: true)..remove(transactionModel);
-    emit(state.copyWith(selectionModel: SimpleSelectionModel<ATransactionModel>(selectedItems: selectedItems, allItemsCount: allTransactionsCount)));
+    emit(
+      state.copyWith(
+        selectionModel: SimpleSelectionModel<ATransactionModel>(selectedItems: selectedItems, allItemsCount: allTransactionsCount),
+      ),
+    );
   }
 
   void disableSelection() {

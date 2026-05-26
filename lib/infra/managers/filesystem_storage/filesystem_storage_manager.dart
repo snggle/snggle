@@ -12,9 +12,8 @@ class FilesystemStorageManager {
   final Completer<Directory> _rootDirectoryCompleter;
 
   FilesystemStorageManager({
-    required FilesystemStorageKey filesystemStorageKey,
-  })  : _filesystemStorageKey = filesystemStorageKey,
-        _rootDirectoryCompleter = Completer<Directory>() {
+    required this._filesystemStorageKey,
+  }) : _rootDirectoryCompleter = Completer<Directory>() {
     _initStorage();
   }
 

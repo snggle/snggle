@@ -11,7 +11,7 @@ class CustomDialog extends StatelessWidget {
   final List<CustomDialogOption> options;
   final Color? backgroundColor;
   final Gradient? borderGradient;
-  final PopInvokedCallback? onPopInvoked;
+  final PopInvokedWithResultCallback<Object?>? onPopInvoked;
   final double titleContentSpacing;
   final double contentOptionsSpacing;
 
@@ -49,14 +49,16 @@ class CustomDialog extends StatelessWidget {
               acc.add(separator);
             }
             if (options.length == 1) {
-              acc.add(DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: AppColors.divider),
+              acc.add(
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: AppColors.divider),
+                    ),
                   ),
+                  child: option,
                 ),
-                child: option,
-              ));
+              );
             } else {
               acc.add(Expanded(child: option));
             }
@@ -67,7 +69,7 @@ class CustomDialog extends StatelessWidget {
     );
 
     return PopScope(
-      onPopInvoked: onPopInvoked,
+      onPopInvokedWithResult: onPopInvoked,
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Dialog(
@@ -86,9 +88,7 @@ class CustomDialog extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: backgroundColor,
                         borderRadius: BorderRadius.circular(22),
-                        border: gradientBorderEnabledBool
-                            ? GradientBoxBorder(gradient: borderGradient!)
-                            : Border.all(color: AppColors.middleGrey),
+                        border: gradientBorderEnabledBool ? GradientBoxBorder(gradient: borderGradient!) : Border.all(color: AppColors.middleGrey),
                       ),
                       padding: const EdgeInsets.only(top: 12, left: 12, right: 12),
                       child: Column(
@@ -101,7 +101,7 @@ class CustomDialog extends StatelessWidget {
                           SizedBox(height: titleContentSpacing),
                           content,
                           SizedBox(height: contentOptionsSpacing),
-                          optionButtonsSection
+                          optionButtonsSection,
                         ],
                       ),
                     ),

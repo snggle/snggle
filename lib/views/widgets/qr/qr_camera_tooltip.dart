@@ -31,8 +31,8 @@ class _QRCameraTooltipState extends State<QRCameraTooltip> {
       height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        color: AppColors.body2.withOpacity(0.11),
-        border: Border.all(color: AppColors.body2.withOpacity(0.06)),
+        color: AppColors.body2.withValues(alpha: 0.11),
+        border: Border.all(color: AppColors.body2.withValues(alpha: 0.06)),
         borderRadius: BorderRadius.circular(22),
       ),
       child: Row(
@@ -50,7 +50,7 @@ class _QRCameraTooltipState extends State<QRCameraTooltip> {
               ),
             ),
           ),
-          VerticalDivider(color: AppColors.body2.withOpacity(0.06)),
+          VerticalDivider(color: AppColors.body2.withValues(alpha: 0.06)),
           GestureDetector(
             onTap: _toggleFlash,
             child: Padding(
