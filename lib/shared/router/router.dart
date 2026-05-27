@@ -20,10 +20,10 @@ class AppRouter extends $AppRouter {
         page: SplashRoute.page,
         initial: true,
       ),
-      AutoRoute(page: AppSetUpPinRoute.page),
       AutoRoute(page: AppMasterKeyRemovedRoute.page),
       AutoRoute(page: AppMasterKeyCreateRoute.page),
       AutoRoute(page: AppMasterKeyRecoverRoute.page),
+      AutoRoute(page: AppSetUpPinRoute.page),
       AutoRoute(page: AppEnterPinRoute.page),
       AutoRoute(page: PrivacyPolicyRoute.page),
       AutoRoute(
@@ -35,8 +35,6 @@ class AppRouter extends $AppRouter {
         ],
       ),
       AutoRoute(page: WalletCreateRoute.page),
-      AutoRoute(page: EthereumTransactionDetailsRoute.page),
-      AutoRoute(page: SolanaTransactionDetailsRoute.page),
       AutoRoute(
         page: BottomNavigationRoute.page,
         maintainState: true,
@@ -49,10 +47,10 @@ class AppRouter extends $AppRouter {
               AutoRoute(page: WalletListRoute.page),
               AutoRoute(page: WalletDetailsRoute.page),
               AutoRoute(page: WalletConnectRoute.page),
+              AutoRoute(page: EthereumTransactionDetailsRoute.page),
+              AutoRoute(page: SolanaTransactionDetailsRoute.page),
             ],
           ),
-          AutoRoute(page: VaultListRoute.page),
-          AutoRoute(page: WalletListRoute.page),
           AutoRoute(page: SecretsRoute.page),
           AutoRoute(page: AppsRoute.page),
           AutoRoute(
