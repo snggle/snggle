@@ -162,8 +162,21 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
     bool appPinTypeChangeBool = widget._appPinType == AppPinType.changePin;
 
     if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState) {
+    }
+
+    if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState) {
       _appSetUpPinPageCubit.resetAllPins();
       return;
+    } else if (appPinTypeChangeBool && appSetUpPinPageState is AppSetUpPinPageEnterPinState) {
+      await context.router.root.replaceAll(
+        <PageRouteInfo>[
+          const BottomNavigationRoute(
+            children: <PageRouteInfo>[
+              SettingsSectionWrapperRoute(children: <PageRouteInfo>[SettingsRoute()]),
+            ],
+          ),
+        ],
+      );
     }
     if (appPinTypeChangeBool && appSetUpPinPageState is AppSetUpPinPageEnterPinState) {
       await context.router.root.replaceAll(
@@ -188,20 +201,31 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
         return;
       }
       if (widget._appPinType == AppPinType.changePin) {
-        context.router.pop();
+        await _showSuccessDialog(message: 'Your application PIN has been changed.');
+        await context.router.root.replaceAll(
+          <PageRouteInfo>[
+            const BottomNavigationRoute(
+              children: <PageRouteInfo>[
+                SettingsSectionWrapperRoute(children: <PageRouteInfo>[SettingsRoute()]),
+              ],
+            ),
+          ],
+        );
         return;
-      } else {
-        bool recoverTypeBool = widget._appMasterKeyType == AppMasterKeyType.recover;
-        await _showMasterKeySuccessDialog(recoverTypeBool: recoverTypeBool);
-
-        await context.router.replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
       }
+
+      bool masterKeyRecoverBool = widget._appMasterKeyType == AppMasterKeyType.recover;
+
+      await _showSuccessDialog(
+        message: masterKeyRecoverBool ? 'Your Master Key has been successfully recovered.' : 'Your new Master Key has been successfully created.',
+      );
+      await context.router.root.replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
     } catch (e) {
       AppLogger().log(message: 'Provided invalid confirm PIN');
     }
   }
 
-  Future<void> _showMasterKeySuccessDialog({required bool recoverTypeBool}) async {
+  Future<void> _showSuccessDialog({required String message}) async {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -210,8 +234,8 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
         return CustomDialog(
           title: 'Success',
           content: Text(
+            message,
             textAlign: TextAlign.center,
-            recoverTypeBool ? 'Your Master Key has been successfully recovered.' : 'Your new Master Key has been successfully created.',
           ),
           backgroundColor: Colors.white,
           options: <CustomDialogOption>[
