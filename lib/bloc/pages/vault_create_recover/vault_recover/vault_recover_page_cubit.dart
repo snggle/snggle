@@ -90,10 +90,10 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
   }
 
   void _updateVaultNameEmptyState() {
-    bool tmpVaultNameEmptyBool = vaultNameTextEditingController.text.trim().isEmpty;
+    bool tmpNameEmptyBool = vaultNameTextEditingController.text.trim().isEmpty;
 
-    if (state.vaultNameEmptyBool != tmpVaultNameEmptyBool) {
-      emit(state.copyWith(vaultNameEmptyBool: tmpVaultNameEmptyBool));
+    if (state.nameEmptyBool != tmpNameEmptyBool) {
+      emit(state.copyWith(nameEmptyBool: tmpNameEmptyBool));
     }
   }
 

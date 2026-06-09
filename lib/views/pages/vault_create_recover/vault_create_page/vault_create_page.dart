@@ -24,47 +24,46 @@ class VaultCreatePage extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _VaultCreatePageState();
+  State<VaultCreatePage> createState() => _VaultCreatePageState();
 }
 
 class _VaultCreatePageState extends State<VaultCreatePage> {
-  final PageController pageController = PageController(keepPage: false);
-  late final VaultCreatePageCubit vaultCreatePageCubit = VaultCreatePageCubit(
+  final PageController _pageController = PageController(keepPage: false);
+  late final VaultCreatePageCubit _vaultCreatePageCubit = VaultCreatePageCubit(
     parentFilesystemPath: widget.parentFilesystemPath,
   );
 
   @override
   void dispose() {
-    pageController.dispose();
-    vaultCreatePageCubit.close();
+    _pageController.dispose();
+    _vaultCreatePageCubit.close();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
     return BlocBuilder<VaultCreatePageCubit, VaultCreatePageState>(
-      bloc: vaultCreatePageCubit,
-      builder: (BuildContext context, VaultCreatePageState vaultCreatePageState) {
+      bloc: _vaultCreatePageCubit,
+      builder: (BuildContext buildContext, VaultCreatePageState vaultCreatePageState) {
         return CustomScaffold(
           title: 'Vault creation',
           popAvailableBool: false,
           popButtonVisible: true,
-          customPopCallback: _handleCustomPop,
+          customSystemPopCallback: _handleCustomPop,
           actions: <Widget>[
             IconButton(
-              onPressed: () => AutoRouter.of(context).root.pop(),
+              onPressed: () => AutoRouter.of(buildContext).root.pop(),
               icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
             ),
           ],
           body: PaginatedForm(
-            pageController: pageController,
+            pageController: _pageController,
             pages: <Widget>[
               MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected, advancedWarningBool: true),
-              if (vaultCreatePageState.confirmPageEnabledBool)
+              if (vaultCreatePageState.mnemonicFormVisibleBool)
                 VaultMnemonicFormGenerated(
-                  mnemonicSize: vaultCreatePageState.mnemonicSize!,
-                  mnemonicList: vaultCreatePageState.mnemonic!,
-                  vaultCreatePageCubit: vaultCreatePageCubit,
+                  mnemonicModel: vaultCreatePageState.mnemonicModel!,
+                  vaultCreatePageCubit: _vaultCreatePageCubit,
                   repeatedVaultModel: vaultCreatePageState.repeatedVaultModel,
                 )
               else
@@ -78,15 +77,15 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
 
   void _handleCustomPop() {
     FocusScope.of(context).unfocus();
-    if (pageController.page != 0) {
-      pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
+    if (_pageController.page != 0) {
+      _pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
     } else {
       AutoRouter.of(context).popForced();
     }
   }
 
   Future<void> _handleMnemonicSizeSelected(crypto_utils.MnemonicSize mnemonicSize) async {
-    await vaultCreatePageCubit.init(mnemonicSize);
-    await pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
+    await _vaultCreatePageCubit.init(mnemonicSize);
+    await _pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
   }
 }

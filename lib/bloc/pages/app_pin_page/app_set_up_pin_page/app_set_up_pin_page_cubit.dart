@@ -18,9 +18,10 @@ import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
 
 class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
   final AppPinType appPinType;
-  final MnemonicModel? mnemonicModel;
   final AppMasterKeyType? appMasterKeyType;
+  final MnemonicModel? mnemonicModel;
 
+  final AppService _appService = globalLocator<AppService>();
   final MasterKeyService _masterKeyService = globalLocator<MasterKeyService>();
   final MasterKeyController _masterKeyController = globalLocator<MasterKeyController>();
 
@@ -88,7 +89,7 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
   Future<void> _savePin(PasswordModel pinPasswordModel) async {
     emit(const AppSetUpPinPageLoadingState());
     if (appMasterKeyType == AppMasterKeyType.create) {
-      await AppService().wipeAll();
+      await _appService.wipeAll();
       await globalLocator<IsarDatabaseManager>().initDatabase();
     }
     if (mnemonicModel == null) {

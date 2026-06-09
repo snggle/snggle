@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:cryptography_utils/cryptography_utils.dart' as crypto_utils;
 import 'package:flutter/material.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
@@ -10,48 +9,48 @@ import 'package:snggle/views/widgets/mnemonic_form/mnemonic_form_generated.dart'
 
 @RoutePage()
 class AppMasterKeyCreatePage extends StatefulWidget {
-  final crypto_utils.MnemonicSize mnemonicSize = crypto_utils.MnemonicSize.words24;
-
-  AppMasterKeyCreatePage({
-    super.key,
-  });
+  const AppMasterKeyCreatePage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _AppMasterKeyCreatePage();
+  State<AppMasterKeyCreatePage> createState() => _AppMasterKeyCreatePageState();
 }
 
-class _AppMasterKeyCreatePage extends State<AppMasterKeyCreatePage> {
-  late MnemonicModel _mnemonicModel;
+class _AppMasterKeyCreatePageState extends State<AppMasterKeyCreatePage> {
+  final MnemonicModel mnemonicModel = MnemonicModel.masterKey();
 
   @override
-  void initState() {
-    super.initState();
-    _mnemonicModel = MnemonicModel.generate();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
     return CustomScaffold(
       title: 'SET UP MASTER KEY',
       popButtonVisible: true,
       customPopCallback: () {
-        context.router.pop();
+        buildContext.router.pop();
       },
       body: MnemonicFormGenerated(
-        mnemonicSize: widget.mnemonicSize,
-        mnemonicList: _mnemonicModel.mnemonicList,
-        onFinishPressed: (ScrollController _) => _pressFinishButton(),
+        mnemonicList: mnemonicModel.mnemonicList,
+        onFinishPressed: (_) => _pressFinishButton(
+          buildContext: buildContext,
+          mnemonicModel: mnemonicModel,
+        ),
       ),
     );
   }
 
-  Future<void> _pressFinishButton() async {
+  Future<void> _pressFinishButton({
+    required BuildContext buildContext,
+    required MnemonicModel mnemonicModel,
+  }) async {
     await CustomLoadingDialog.show<void>(
-      context: context,
+      context: buildContext,
       title: 'Saving...',
       futureFunction: () {},
       onSuccess: (_) async {
-        await AutoRouter.of(context).push(AppSetUpPinRoute(mnemonicModel: _mnemonicModel, appMasterKeyType: AppMasterKeyType.create));
+        await AutoRouter.of(buildContext).push(
+          AppSetUpPinRoute(
+            mnemonicModel: mnemonicModel,
+            appMasterKeyType: AppMasterKeyType.create,
+          ),
+        );
       },
     );
   }

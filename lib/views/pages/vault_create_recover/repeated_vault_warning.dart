@@ -2,45 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 
 class RepeatedVaultWarning extends StatelessWidget {
-  final VaultModel repeatedVaultModel;
+  final String? description;
   final String title;
   final IconData iconData;
-  final String? description;
+  final VaultModel repeatedVaultModel;
 
-  final double titleBottomSpacing;
-  final double descriptionBottomSpacing;
   final double bottomSpacing;
+  final double descriptionBottomSpacing;
+  final double titleBottomSpacing;
 
   const RepeatedVaultWarning({
-    required this.repeatedVaultModel,
+    required this.description,
     required this.title,
     required this.iconData,
-    required this.description,
-    this.titleBottomSpacing = 10,
-    this.descriptionBottomSpacing = 10,
+    required this.repeatedVaultModel,
     this.bottomSpacing = 0,
+    this.descriptionBottomSpacing = 10,
+    this.titleBottomSpacing = 10,
     super.key,
   });
 
   const RepeatedVaultWarning.simple({
     required this.repeatedVaultModel,
     super.key,
-  })  : title = 'The vault already exists',
+  })  : description = null,
         iconData = Icons.warning_amber_rounded,
-        description = null,
-        titleBottomSpacing = 10,
+        title = 'The vault already exists',
+        bottomSpacing = 10,
         descriptionBottomSpacing = 10,
-        bottomSpacing = 10;
+        titleBottomSpacing = 10;
 
   const RepeatedVaultWarning.critical({
     required this.repeatedVaultModel,
     super.key,
-  })  : title = 'CRITICAL WARNING',
+  })  : description = 'The vault already exists. The randomization algorithm on your device may be compromised.',
         iconData = Icons.error_outline,
-        description = 'The vault already exists. The randomization algorithm on your device may be compromised.',
-        titleBottomSpacing = 5,
+        title = 'CRITICAL WARNING',
+        bottomSpacing = 0,
         descriptionBottomSpacing = 10,
-        bottomSpacing = 0;
+        titleBottomSpacing = 5;
 
   @override
   Widget build(BuildContext context) {

@@ -43,12 +43,15 @@ class VaultMnemonicFormEditable extends StatelessWidget {
           ),
         VaultNameForm(
           textEditingController: vaultRecoverPageCubit.vaultNameTextEditingController,
-          showEmptyErrorBool: vaultRecoverPageCubit.state.vaultNameEmptyBool == true,
+          nameEmptyBool: vaultRecoverPageCubit.state.nameEmptyBool == true,
         ),
       ],
       onSaveMnemonic: vaultRecoverPageCubit.saveMnemonic,
       onFinish: (List<String> words, ScrollController scrollController) async {
-        if (vaultRecoverPageCubit.state.repeatedVaultModel != null || vaultRecoverPageCubit.state.vaultNameEmptyBool == true) {
+        bool repeatedVaultExistsBool = vaultRecoverPageCubit.state.repeatedVaultModel != null;
+        bool vaultNameEmptyBool = vaultRecoverPageCubit.state.nameEmptyBool == true;
+        bool formInvalidBool = repeatedVaultExistsBool || vaultNameEmptyBool;
+        if (formInvalidBool) {
           await scrollController.animateTo(
             scrollController.position.minScrollExtent,
             duration: const Duration(milliseconds: 200),
@@ -63,5 +66,5 @@ class VaultMnemonicFormEditable extends StatelessWidget {
   }
 
   bool get recoverButtonEnabledBool =>
-      mnemonicValidBool == true && mnemonicFilledBool == true && repeatedVaultModel == null && vaultRecoverPageCubit.state.vaultNameEmptyBool != true;
+      mnemonicValidBool == true && mnemonicFilledBool == true && repeatedVaultModel == null && vaultRecoverPageCubit.state.nameEmptyBool != true;
 }

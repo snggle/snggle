@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:snggle/config/app_icons/app_animated_icons.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/widgets/button/gif_button.dart';
@@ -31,7 +31,7 @@ class AppMasterKeyRemovedPage extends StatelessWidget {
           GifButton(
             label: 'CREATE',
             assetAnimatedIconData: AppAnimatedIcons.snggle_face,
-            onPressed: () => AutoRouter.of(context).push(AppMasterKeyCreateRoute()),
+            onPressed: () => AutoRouter.of(context).push(const AppMasterKeyCreateRoute()),
           ),
           const Spacer(flex: 30),
           GifButton(

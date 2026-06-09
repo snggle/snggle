@@ -9,16 +9,24 @@ class MnemonicModel extends Equatable {
 
   const MnemonicModel(this.mnemonicList);
 
-  factory MnemonicModel.generate([MnemonicSize? mnemonicSize]) {
-    Mnemonic mnemonic = Mnemonic.generate(mnemonicSize: mnemonicSize ?? MnemonicSize.words24);
+  factory MnemonicModel.masterKey() {
+    return MnemonicModel._generate(MnemonicSize.words24);
+  }
 
-    return MnemonicModel(mnemonic.mnemonicList);
+  factory MnemonicModel.vault(MnemonicSize mnemonicSize) {
+    return MnemonicModel._generate(mnemonicSize);
   }
 
   MnemonicModel.fromString(String mnemonicString, {String delimiter = ' '}) : mnemonicList = mnemonicString.split(delimiter);
 
   Future<Uint8List> calculateSeed({String passphrase = ''}) async {
     return compute(_computeMnemonicSeed, _ComputeMnemonicSeedProps(passphrase, toString()));
+  }
+
+  factory MnemonicModel._generate(MnemonicSize mnemonicSize) {
+    Mnemonic mnemonic = Mnemonic.generate(mnemonicSize: mnemonicSize);
+
+    return MnemonicModel(mnemonic.mnemonicList);
   }
 
   bool get isValid => Mnemonic.isValidMnemonic(mnemonicList);

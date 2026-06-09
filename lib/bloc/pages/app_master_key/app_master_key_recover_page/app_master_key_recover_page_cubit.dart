@@ -1,7 +1,7 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/pages/app_master_key_recover_page/app_master_key_recover_page_state.dart';
+import 'package:snggle/bloc/pages/app_master_key/app_master_key_recover_page/app_master_key_recover_page_state.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 
 class AppMasterKeyRecoverPageCubit extends Cubit<AppMasterKeyRecoverPageState> {

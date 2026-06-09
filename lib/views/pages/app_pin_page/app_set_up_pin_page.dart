@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,30 +22,30 @@ import 'package:snggle/views/widgets/pinpad/pinpad_scaffold.dart';
 
 @RoutePage()
 class AppSetUpPinPage extends StatefulWidget {
+  final AppMasterKeyType? _appMasterKeyType;
   final AppPinType _appPinType;
   final MnemonicModel? _mnemonicModel;
-  final AppMasterKeyType? _appMasterKeyType;
 
   const AppSetUpPinPage({
-    MnemonicModel? mnemonicModel,
-    AppPinType appPinType = AppPinType.setUpPin,
     AppMasterKeyType? appMasterKeyType,
+    AppPinType appPinType = AppPinType.setUpPin,
+    MnemonicModel? mnemonicModel,
     super.key,
   })  : _appMasterKeyType = appMasterKeyType,
-        _mnemonicModel = mnemonicModel,
-        _appPinType = appPinType;
+        _appPinType = appPinType,
+        _mnemonicModel = mnemonicModel;
 
   @override
   State<AppSetUpPinPage> createState() => _AppSetUpPinPageState();
 }
 
 class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
-  late final AppSetUpPinPageCubit appSetupPinPageCubit;
+  late final AppSetUpPinPageCubit _appSetUpPinPageCubit;
 
   @override
   void initState() {
     super.initState();
-    appSetupPinPageCubit = AppSetUpPinPageCubit(
+    _appSetUpPinPageCubit = AppSetUpPinPageCubit(
       appMasterKeyType: widget._appMasterKeyType,
       appPinType: widget._appPinType,
       mnemonicModel: widget._mnemonicModel,
@@ -52,7 +54,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
 
   @override
   void dispose() {
-    appSetupPinPageCubit.close();
+    _appSetUpPinPageCubit.close();
     super.dispose();
   }
 
@@ -62,7 +64,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
     Widget childWidget;
 
     return BlocBuilder<AppSetUpPinPageCubit, AAppSetUpPinPageState>(
-      bloc: appSetupPinPageCubit,
+      bloc: _appSetUpPinPageCubit,
       builder: (BuildContext context, AAppSetUpPinPageState appSetUpPinPageState) {
         bool canPopBool = appSetUpPinPageState is! AppSetUpPinPageConfirmPinState;
         if (appSetUpPinPageState is AppSetUpPinPageLoadingState) {
@@ -78,7 +80,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
               if (appSetUpPinPageState.firstPinNumbers.length >= 4)
                 CustomTextButton(
                   title: 'Confirm',
-                  onPressed: appSetupPinPageCubit.setUpFirstPin,
+                  onPressed: _appSetUpPinPageCubit.setUpFirstPin,
                 ),
             ],
             popButtonVisible: true,
@@ -97,7 +99,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
               if (appSetUpPinPageState.confirmPinNumbers.isEmpty)
                 CustomTextButton(
                   title: 'Return',
-                  onPressed: appSetupPinPageCubit.resetAllPins,
+                  onPressed: _appSetUpPinPageCubit.resetAllPins,
                 ),
             ],
             popButtonVisible: true,
@@ -108,7 +110,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
         return PopScope(
           canPop: canPopBool,
           onPopInvoked: (bool didPop) async {
-            await _handleBackButtonPressed(
+            await _pressBackButton(
               appSetUpPinPageState: appSetUpPinPageState,
               appPinTypeChangeBool: appPinTypeChangeBool,
               didPop: didPop,
@@ -125,7 +127,21 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
     );
   }
 
-  Future<void> _handleBackButtonPressed({
+  void _handleFirstPinChange(List<int> pinNumbers) {
+    _appSetUpPinPageCubit.updateFirstPin(pinNumbers);
+  }
+
+  void _handleConfirmPinChange(
+    List<int> firstPinNumbersList,
+    List<int> confirmPinNumbersList,
+  ) {
+    _appSetUpPinPageCubit.updateConfirmPin(confirmPinNumbersList);
+    if (firstPinNumbersList.length == confirmPinNumbersList.length) {
+      _trySetupPin();
+    }
+  }
+
+  Future<void> _pressBackButton({
     required AAppSetUpPinPageState appSetUpPinPageState,
     required bool appPinTypeChangeBool,
     required bool didPop,
@@ -133,7 +149,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
     if (didPop) {
       return;
     } else if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState) {
-      appSetupPinPageCubit.resetAllPins();
+      _appSetUpPinPageCubit.resetAllPins();
       return;
     } else if (appPinTypeChangeBool && appSetUpPinPageState is AppSetUpPinPageEnterPinState) {
       await context.router.replaceAll(<PageRouteInfo>[const SettingsRoute()]);
@@ -143,23 +159,9 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
     await context.router.pop();
   }
 
-  void _handleFirstPinChange(List<int> pinNumbers) {
-    appSetupPinPageCubit.updateFirstPin(pinNumbers);
-  }
-
-  void _handleConfirmPinChange(
-    List<int> firstPinNumbersList,
-    List<int> confirmPinNumbersList,
-  ) {
-    appSetupPinPageCubit.updateConfirmPin(confirmPinNumbersList);
-    if (firstPinNumbersList.length == confirmPinNumbersList.length) {
-      _trySetupPin();
-    }
-  }
-
   Future<void> _trySetupPin() async {
     try {
-      await appSetupPinPageCubit.setUpConfirmPin();
+      await _appSetUpPinPageCubit.setUpConfirmPin();
       if (mounted == false) {
         return;
       }

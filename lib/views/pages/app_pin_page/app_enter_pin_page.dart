@@ -16,8 +16,8 @@ class AppEnterPinPage extends StatefulWidget {
   final AppPinType appPinType;
 
   const AppEnterPinPage({
-    super.key,
     this.appPinType = AppPinType.enterPin,
+    super.key,
   });
 
   @override
@@ -25,11 +25,11 @@ class AppEnterPinPage extends StatefulWidget {
 }
 
 class _AppEnterPinPageState extends State<AppEnterPinPage> {
-  final AppEnterPinPageCubit appEnterPinPageCubit = AppEnterPinPageCubit();
+  final AppEnterPinPageCubit _appEnterPinPageCubit = AppEnterPinPageCubit();
 
   @override
   void dispose() {
-    appEnterPinPageCubit.close();
+    _appEnterPinPageCubit.close();
     super.dispose();
   }
 
@@ -39,7 +39,7 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
     String title = appPinTypeChangeBool ? 'Enter current PIN' : 'Enter PIN';
 
     return BlocBuilder<AppEnterPinPageCubit, AAppEnterPinPageState>(
-      bloc: appEnterPinPageCubit,
+      bloc: _appEnterPinPageCubit,
       builder: (BuildContext context, AAppEnterPinPageState appEnterPinPageState) {
         String? textWarning = _getTextWarning(appPinTypeChangeBool: appPinTypeChangeBool, appEnterPinPageState: appEnterPinPageState);
         return PinpadScaffold(
@@ -47,12 +47,12 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
           errorBool: appEnterPinPageState is AppEnterInvalidPinPageState,
           title: title,
           initialPinNumbers: appEnterPinPageState.pinNumbers,
-          onChanged: appEnterPinPageCubit.updatePinNumbers,
+          onChanged: _appEnterPinPageCubit.updatePinNumbers,
           actionButtons: <Widget>[
             CustomTextButton(
               title: 'Confirm',
-              onPressed: () => _handleConfirmButtonPressed(
-                changePinBool: appPinTypeChangeBool,
+              onPressed: () => _pressConfirmButton(
+                appPinTypeChangeBool: appPinTypeChangeBool,
               ),
             ),
           ],
@@ -60,22 +60,6 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
         );
       },
     );
-  }
-
-  Future<void> _handleConfirmButtonPressed({required bool changePinBool}) async {
-    try {
-      await appEnterPinPageCubit.authenticate(appPinType: widget.appPinType);
-      if (changePinBool) {
-        await AutoRouter.of(context).replace(AppSetUpPinRoute(appPinType: AppPinType.changePin));
-      } else {
-        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
-      }
-    } catch (e) {
-      AppLogger().log(message: 'Provided invalid PIN');
-      if (appEnterPinPageCubit.state.attemptsLeft == 0 && changePinBool == false) {
-        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const AppMasterKeyRemovedRoute()]);
-      }
-    }
   }
 
   String? _getTextWarning({required bool appPinTypeChangeBool, required AAppEnterPinPageState appEnterPinPageState}) {
@@ -95,5 +79,24 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
     }
 
     return warningText;
+  }
+
+  Future<void> _pressConfirmButton({required bool appPinTypeChangeBool}) async {
+    try {
+      await _appEnterPinPageCubit.authenticate(appPinType: widget.appPinType);
+      if (appPinTypeChangeBool) {
+        await AutoRouter.of(context).replace(AppSetUpPinRoute(appPinType: AppPinType.changePin));
+      } else {
+        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
+      }
+    } catch (e) {
+      AppLogger().log(message: 'Provided invalid PIN');
+      bool attemptsLeftBool = _appEnterPinPageCubit.state.attemptsLeft == 0;
+      bool appPinTypeEnterBool = appPinTypeChangeBool == false;
+      bool masterKeyRemovalBool = attemptsLeftBool && appPinTypeEnterBool;
+      if (masterKeyRemovalBool) {
+        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const AppMasterKeyRemovedRoute()]);
+      }
+    }
   }
 }

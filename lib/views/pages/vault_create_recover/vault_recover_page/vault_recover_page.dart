@@ -29,24 +29,24 @@ class VaultRecoverPage extends StatefulWidget {
 }
 
 class _VaultRecoverPageState extends State<VaultRecoverPage> {
-  final PageController pageController = PageController(keepPage: false);
-  final KeyboardValueNotifier keyboardValueNotifier = KeyboardValueNotifier();
-  late final VaultRecoverPageCubit vaultRecoverPageCubit = VaultRecoverPageCubit(
+  final KeyboardValueNotifier _keyboardValueNotifier = KeyboardValueNotifier();
+  final PageController _pageController = PageController(keepPage: false);
+  late final VaultRecoverPageCubit _vaultRecoverPageCubit = VaultRecoverPageCubit(
     parentFilesystemPath: widget.parentFilesystemPath,
   );
 
   @override
   void dispose() {
-    pageController.dispose();
-    keyboardValueNotifier.dispose();
-    vaultRecoverPageCubit.close();
+    _keyboardValueNotifier.dispose();
+    _pageController.dispose();
+    _vaultRecoverPageCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<VaultRecoverPageCubit, VaultRecoverPageState>(
-      bloc: vaultRecoverPageCubit,
+      bloc: _vaultRecoverPageCubit,
       builder: (BuildContext context, VaultRecoverPageState vaultRecoverPageState) {
         return CustomScaffold(
           title: 'Vault recovery',
@@ -62,7 +62,7 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
             ),
           ],
           body: PaginatedForm(
-            pageController: pageController,
+            pageController: _pageController,
             pages: <Widget>[
               MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected, advancedWarningBool: false),
               if (vaultRecoverPageState.confirmPageEnabledBool)
@@ -71,9 +71,9 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
                   textControllersList: vaultRecoverPageState.textControllers!,
                   mnemonicValidBool: vaultRecoverPageState.mnemonicValidBool,
                   mnemonicFilledBool: vaultRecoverPageState.mnemonicFilledBool,
-                  vaultRecoverPageCubit: vaultRecoverPageCubit,
+                  vaultRecoverPageCubit: _vaultRecoverPageCubit,
                   repeatedVaultModel: vaultRecoverPageState.repeatedVaultModel,
-                  keyboardValueNotifier: keyboardValueNotifier,
+                  keyboardValueNotifier: _keyboardValueNotifier,
                 )
               else
                 const SizedBox()
@@ -86,8 +86,8 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
 
   void _handleCustomPop() {
     FocusScope.of(context).unfocus();
-    if (pageController.page != 0) {
-      pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
+    if (_pageController.page != 0) {
+      _pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
     } else {
       AutoRouter.of(context).popForced();
     }
@@ -95,17 +95,17 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
 
   void _handleSystemPop() {
     FocusScope.of(context).unfocus();
-    if (keyboardValueNotifier.isVisible()) {
-      keyboardValueNotifier.hideKeyboard();
-    } else if (pageController.page != 0) {
-      pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
+    if (_keyboardValueNotifier.isVisible()) {
+      _keyboardValueNotifier.hideKeyboard();
+    } else if (_pageController.page != 0) {
+      _pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
     } else {
       AutoRouter.of(context).popForced();
     }
   }
 
   void _handleMnemonicSizeSelected(crypto_utils.MnemonicSize mnemonicSize) {
-    vaultRecoverPageCubit.init(mnemonicSize.wordCount);
-    pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
+    _vaultRecoverPageCubit.init(mnemonicSize.wordCount);
+    _pageController.animateToPage(1, duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
   }
 }
