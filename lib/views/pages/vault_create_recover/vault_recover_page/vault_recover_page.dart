@@ -73,6 +73,7 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
                   mnemonicFilledBool: vaultRecoverPageState.mnemonicFilledBool,
                   vaultRecoverPageCubit: vaultRecoverPageCubit,
                   repeatedVaultModel: vaultRecoverPageState.repeatedVaultModel,
+                  keyboardValueNotifier: keyboardValueNotifier,
                 )
               else
                 const SizedBox()
