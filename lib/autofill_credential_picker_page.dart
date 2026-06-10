@@ -30,14 +30,14 @@ import 'package:snggle/views/widgets/list/list_page_scaffold.dart';
 import 'package:snggle/views/widgets/list/sliver_page_list.dart';
 
 @RoutePage()
-class EntryListPage extends StatefulWidget {
-  const EntryListPage({super.key});
+class AutofillCredentialPickerPage extends StatefulWidget {
+  const AutofillCredentialPickerPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _EntryListPageState();
+  State<StatefulWidget> createState() => _AutofillCredentialPickerPageState();
 }
 
-class _EntryListPageState extends State<EntryListPage> {
+class _AutofillCredentialPickerPageState extends State<AutofillCredentialPickerPage> {
   static const String defaultPageTitle = 'SECRETS';
   final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
 
@@ -61,8 +61,6 @@ class _EntryListPageState extends State<EntryListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final bool readOnlyBool = context.routeData.parent!.argsAs<EntriesSectionWrapperRouteArgs>().readOnlyBool;
-
     return ListPageScaffold<EntryModel, EntryListPageCubit>(
       defaultPageTitle: defaultPageTitle,
       listCubit: entryListPageCubit,
@@ -76,32 +74,26 @@ class _EntryListPageState extends State<EntryListPage> {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: CustomBottomNavigationBar.height),
-                    child: readOnlyBool
-                        ? const Text(
-                            'There are no saved Secrets in Snggle',
-                          )
-                        : IconButton(
-                            onPressed: _navigateToEntryCreateEditRoute,
-                            icon: const AssetIcon(AppIcons.page_add_button, size: 54),
-                          ),
+                    child: IconButton(
+                      onPressed: _navigateToEntryCreateEditRoute,
+                      icon: const AssetIcon(AppIcons.page_add_button, size: 54),
+                    ),
                   ),
                 ),
               ),
             ] else ...<Widget>[
               SliverPageList(
-                addButtonVisibleBool: readOnlyBool == false,
+                addButtonVisibleBool: listState.isSelectionEnabled == false,
                 loadingBool: listState.loadingBool,
                 items: listState.visibleItems,
                 selectedItems: listState.selectedItems,
                 loadingPlaceholder: const HorizontalListItemLayout.loading(),
-                creationButton: readOnlyBool
-                    ? null
-                    : HorizontalListItemLayout(
-                        iconWidget: ListItemCreationButton(
-                          size: HorizontalListItemLayout.listItemIconSize,
-                          onTap: _navigateToEntryCreateEditRoute,
-                        ),
-                      ),
+                creationButton: HorizontalListItemLayout(
+                  iconWidget: ListItemCreationButton(
+                    size: HorizontalListItemLayout.listItemIconSize,
+                    onTap: _navigateToEntryCreateEditRoute,
+                  ),
+                ),
                 itemBuilder: (AListItemModel listItemModel) {
                   return HorizontalListItemAnimationWrapper(
                     key: Key('item${listItemModel.filesystemPath.fullPath}'),
@@ -117,15 +109,15 @@ class _EntryListPageState extends State<EntryListPage> {
                         selectionPadding: const EdgeInsets.all(5),
                         child: switch (listItemModel) {
                           EntryModel entryModel => EntryListItem(
-                              entryModel: entryModel,
-                              fadeAnimationController: fadeAnimationController,
-                              slideAnimationController: slideAnimationController,
-                            ),
+                            entryModel: entryModel,
+                            fadeAnimationController: fadeAnimationController,
+                            slideAnimationController: slideAnimationController,
+                          ),
                           GroupModel groupModel => WalletGroupListItem(
-                              groupModel: groupModel,
-                              fadeAnimationController: fadeAnimationController,
-                              slideAnimationController: slideAnimationController,
-                            ),
+                            groupModel: groupModel,
+                            fadeAnimationController: fadeAnimationController,
+                            slideAnimationController: slideAnimationController,
+                          ),
                           (_) => const SizedBox(),
                         },
                       );

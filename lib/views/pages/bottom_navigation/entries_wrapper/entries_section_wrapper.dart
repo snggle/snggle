@@ -3,7 +3,12 @@ import 'package:flutter/cupertino.dart';
 
 @RoutePage(name: 'EntriesSectionWrapperRoute')
 class EntriesSectionWrapper extends StatelessWidget {
-  const EntriesSectionWrapper({super.key});
+  final bool readOnlyBool;
+
+  const EntriesSectionWrapper({
+    required this.readOnlyBool,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

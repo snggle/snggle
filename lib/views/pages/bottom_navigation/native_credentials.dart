@@ -13,7 +13,7 @@ class NativeCredentials {
     required this.packageName,
   });
 
-  factory NativeCredentials.fromMap(Map<dynamic, dynamic> map) {
+  factory NativeCredentials.fromMap(Map<String, dynamic> map) {
     return NativeCredentials(
       id: map['id'] as String,
       username: map['username'] as String,
@@ -48,7 +48,7 @@ class NativeCredentialStore {
   }
 
   static Future<List<NativeCredentials>> getAllCredentials() async {
-    List? result = await _channel.invokeMethod<List<dynamic>>(
+    List<dynamic>? result = await _channel.invokeMethod<List<dynamic>>(
       'getAllCredentials',
     );
 
@@ -56,7 +56,7 @@ class NativeCredentialStore {
       return const <NativeCredentials>[];
     }
 
-    return result.map((item) => NativeCredentials.fromMap(item as Map<dynamic, dynamic>)).toList();
+    return result.map((dynamic item) => NativeCredentials.fromMap(item as Map<String, dynamic>)).toList();
   }
 
   static Future<bool> deleteCredential(String id) async {

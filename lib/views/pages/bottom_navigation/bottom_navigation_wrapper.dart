@@ -24,11 +24,11 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
   @override
   Widget build(BuildContext context) {
     return AutoTabsRouter(
-      routes: const <PageRouteInfo>[
-        VaultsSectionWrapperRoute(),
-        EntriesSectionWrapperRoute(),
-        AppsRoute(),
-        SettingsRoute(),
+      routes: <PageRouteInfo>[
+        const VaultsSectionWrapperRoute(),
+        EntriesSectionWrapperRoute(readOnlyBool: false),
+        const AppsRoute(),
+        const SettingsRoute(),
       ],
       builder: (BuildContext context, Widget child) {
         TabsRouter tabsRouter = AutoTabsRouter.of(context);

@@ -19,10 +19,10 @@ import 'package:snggle/views/widgets/pinpad/pinpad_scaffold.dart';
 @RoutePage()
 class AppEnterPinPage extends StatefulWidget {
   final AppPinType appPinType;
-  // final bool autofillBool;
+  final bool autofillBool;
 
   const AppEnterPinPage({
-    // required this.autofillBool,
+    required this.autofillBool,
     super.key,
     this.appPinType = AppPinType.enterPin,
   });
@@ -75,11 +75,6 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
       if (changePinBool) {
         await AutoRouter.of(context).replace(AppSetUpPinRoute(appPinType: AppPinType.changePin));
       } else {
-        // if (widget.autofillBool == false) {
-        //   await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
-        // } else {
-        //   await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const AutofillCredentialPickerScreen()]);
-        // }
         GroupSecretsModel vaultsRootSecretsModel = GroupSecretsModel.create3(FilesystemPath.fromString('id3'));
         await globalLocator<SecretsService>().save(vaultsRootSecretsModel, PasswordModel.defaultPassword());
         GroupSecretsModel entriesRootSecretsModel = GroupSecretsModel.createEntry(FilesystemPath.fromString('entries'));
@@ -87,10 +82,11 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
         GroupSecretsModel entriesRootSecretsModel2 = GroupSecretsModel.createVault(FilesystemPath.fromString('vaults'));
         await globalLocator<SecretsService>().save(entriesRootSecretsModel2, PasswordModel.defaultPassword());
 
-        print('Suchar: done');
-        await Future<void>.delayed(const Duration(days: 30));
-
-        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
+        if (widget.autofillBool == false) {
+          await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
+        } else {
+          await AutoRouter.of(context).replaceAll(<PageRouteInfo>[EntriesSectionWrapperRoute(readOnlyBool: true)]);
+        }
       }
     } catch (e) {
       AppLogger().log(message: 'Provided invalid PIN');

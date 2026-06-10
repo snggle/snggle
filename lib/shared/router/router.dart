@@ -21,7 +21,11 @@ class AppRouter extends $AppRouter {
         initial: true,
       ),
       AutoRoute(
-        page: AutofillCredentialPickerScreen.page,
+        page: EntriesSectionWrapperRoute.page,
+        children: <AutoRoute>[
+          AutoRoute(page: EntryListRoute.page, initial: true),
+          AutoRoute(page: EntryDetailsRoute.page),
+        ],
         path: '/autofill',
       ),
       AutoRoute(page: AppSetUpPinRoute.page),
