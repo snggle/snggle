@@ -51,84 +51,100 @@ class TransactionListItemExpansion extends StatelessWidget {
         if (senderAddress != null) ...<Widget>[
           CopyWrapper(
             value: senderAddress,
-            child: LabelWrapperVertical(
-              label: 'From',
-              labelStyle: labelTextStyle,
-              child: PublicAddressPreview(address: senderAddress, textStyle: valueTextStyle),
-            ),
+            copyWrapperBuilder: (BuildContext context) {
+              return LabelWrapperVertical(
+                label: 'From',
+                labelStyle: labelTextStyle,
+                child: PublicAddressPreview(address: senderAddress, textStyle: valueTextStyle),
+              );
+            },
           ),
         ],
         if (recipientAddress != null) ...<Widget>[
           CopyWrapper(
             value: recipientAddress,
-            child: LabelWrapperVertical(
-              label: 'To',
-              labelStyle: labelTextStyle,
-              child: PublicAddressPreview(address: recipientAddress, textStyle: valueTextStyle),
-            ),
+            copyWrapperBuilder: (BuildContext context) {
+              return LabelWrapperVertical(
+                label: 'To',
+                labelStyle: labelTextStyle,
+                child: PublicAddressPreview(address: recipientAddress, textStyle: valueTextStyle),
+              );
+            },
           ),
         ],
         if (contractAddress != null) ...<Widget>[
           CopyWrapper(
             value: contractAddress,
-            child: LabelWrapperVertical(
-              label: 'Contract',
-              labelStyle: labelTextStyle,
-              child: PublicAddressPreview(address: contractAddress, textStyle: valueTextStyle),
-            ),
+            copyWrapperBuilder: (BuildContext context) {
+              return LabelWrapperVertical(
+                label: 'Contract',
+                labelStyle: labelTextStyle,
+                child: PublicAddressPreview(address: contractAddress, textStyle: valueTextStyle),
+              );
+            },
           ),
         ],
         if (amount != null) ...<Widget>[
           CopyWrapper(
             value: amount,
-            child: LabelWrapperVertical(
-              label: 'Amount',
-              labelStyle: labelTextStyle,
-              child: Text(amount, style: valueTextStyle),
-            ),
+            copyWrapperBuilder: (BuildContext context) {
+              return LabelWrapperVertical(
+                label: 'Amount',
+                labelStyle: labelTextStyle,
+                child: Text(amount, style: valueTextStyle),
+              );
+            },
           ),
         ],
         if (fee != null) ...<Widget>[
           CopyWrapper(
             value: fee,
-            child: LabelWrapperVertical(
-              label: 'Fee',
-              labelStyle: labelTextStyle,
-              child: Text(fee, style: valueTextStyle),
-            ),
+            copyWrapperBuilder: (BuildContext context) {
+              return LabelWrapperVertical(
+                label: 'Fee',
+                labelStyle: labelTextStyle,
+                child: Text(fee, style: valueTextStyle),
+              );
+            },
           ),
         ],
         if (message != null) ...<Widget>[
           CopyWrapper(
             value: message,
-            child: LabelWrapperVertical(
-              label: 'Message',
-              labelStyle: labelTextStyle,
-              child: Text(message, style: valueTextStyle),
-            ),
+            copyWrapperBuilder: (BuildContext context) {
+              return LabelWrapperVertical(
+                label: 'Message',
+                labelStyle: labelTextStyle,
+                child: Text(message, style: valueTextStyle),
+              );
+            },
           ),
           const SizedBox(height: 16),
         ],
         if (transactionData != null && emptyTransactionDetailsBool == true) ...<Widget>[
           CopyWrapper(
             value: transactionData,
-            child: LabelWrapperVertical(
-              label: 'Transaction data',
-              labelStyle: labelTextStyle,
-              child: Text(transactionData, style: valueTextStyle),
-            ),
+            copyWrapperBuilder: (BuildContext context) {
+              return LabelWrapperVertical(
+                label: 'Transaction data',
+                labelStyle: labelTextStyle,
+                child: Text(transactionData, style: valueTextStyle),
+              );
+            },
           ),
           const SizedBox(height: 16),
         ],
         if (signature != null) ...<Widget>[
           CopyWrapper(
             value: signature,
-            child: LabelWrapperVertical(
-              label: 'Signature',
-              bottomBorderVisibleBool: false,
-              labelStyle: labelTextStyle,
-              child: Text(StringUtils.getShortPublicAddress(signature, 4), style: valueTextStyle),
-            ),
+            copyWrapperBuilder: (BuildContext context) {
+              return LabelWrapperVertical(
+                label: 'Signature',
+                bottomBorderVisibleBool: false,
+                labelStyle: labelTextStyle,
+                child: Text(StringUtils.getShortPublicAddress(signature, 4), style: valueTextStyle),
+              );
+            },
           ),
         ],
       ],
