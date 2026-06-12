@@ -44,12 +44,17 @@ const EntryEntitySchema = CollectionSchema(
       name: r'pinnedBool',
       type: IsarType.bool,
     ),
-    r'usernameExistsBool': PropertySchema(
+    r'totpExistsBool': PropertySchema(
       id: 7,
+      name: r'totpExistsBool',
+      type: IsarType.bool,
+    ),
+    r'usernameExistsBool': PropertySchema(
+      id: 8,
       name: r'usernameExistsBool',
       type: IsarType.bool,
     ),
-    r'website': PropertySchema(id: 8, name: r'website', type: IsarType.string),
+    r'website': PropertySchema(id: 9, name: r'website', type: IsarType.string),
   },
 
   estimateSize: _entryEntityEstimateSize,
@@ -119,8 +124,9 @@ void _entryEntitySerialize(
   writer.writeString(offsets[4], object.name);
   writer.writeBool(offsets[5], object.passwordExistsBool);
   writer.writeBool(offsets[6], object.pinnedBool);
-  writer.writeBool(offsets[7], object.usernameExistsBool);
-  writer.writeString(offsets[8], object.website);
+  writer.writeBool(offsets[7], object.totpExistsBool);
+  writer.writeBool(offsets[8], object.usernameExistsBool);
+  writer.writeString(offsets[9], object.website);
 }
 
 EntryEntity _entryEntityDeserialize(
@@ -138,8 +144,9 @@ EntryEntity _entryEntityDeserialize(
     name: reader.readString(offsets[4]),
     passwordExistsBool: reader.readBool(offsets[5]),
     pinnedBool: reader.readBool(offsets[6]),
-    usernameExistsBool: reader.readBool(offsets[7]),
-    website: reader.readString(offsets[8]),
+    totpExistsBool: reader.readBool(offsets[7]),
+    usernameExistsBool: reader.readBool(offsets[8]),
+    website: reader.readString(offsets[9]),
   );
   return object;
 }
@@ -168,6 +175,8 @@ P _entryEntityDeserializeProp<P>(
     case 7:
       return (reader.readBool(offset)) as P;
     case 8:
+      return (reader.readBool(offset)) as P;
+    case 9:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -884,6 +893,15 @@ extension EntryEntityQueryFilter
   }
 
   QueryBuilder<EntryEntity, EntryEntity, QAfterFilterCondition>
+  totpExistsBoolEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'totpExistsBool', value: value),
+      );
+    });
+  }
+
+  QueryBuilder<EntryEntity, EntryEntity, QAfterFilterCondition>
   usernameExistsBoolEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -1138,6 +1156,19 @@ extension EntryEntityQuerySortBy
     });
   }
 
+  QueryBuilder<EntryEntity, EntryEntity, QAfterSortBy> sortByTotpExistsBool() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totpExistsBool', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EntryEntity, EntryEntity, QAfterSortBy>
+  sortByTotpExistsBoolDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totpExistsBool', Sort.desc);
+    });
+  }
+
   QueryBuilder<EntryEntity, EntryEntity, QAfterSortBy>
   sortByUsernameExistsBool() {
     return QueryBuilder.apply(this, (query) {
@@ -1269,6 +1300,19 @@ extension EntryEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<EntryEntity, EntryEntity, QAfterSortBy> thenByTotpExistsBool() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totpExistsBool', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EntryEntity, EntryEntity, QAfterSortBy>
+  thenByTotpExistsBoolDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totpExistsBool', Sort.desc);
+    });
+  }
+
   QueryBuilder<EntryEntity, EntryEntity, QAfterSortBy>
   thenByUsernameExistsBool() {
     return QueryBuilder.apply(this, (query) {
@@ -1348,6 +1392,12 @@ extension EntryEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<EntryEntity, EntryEntity, QDistinct> distinctByTotpExistsBool() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'totpExistsBool');
+    });
+  }
+
   QueryBuilder<EntryEntity, EntryEntity, QDistinct>
   distinctByUsernameExistsBool() {
     return QueryBuilder.apply(this, (query) {
@@ -1413,6 +1463,12 @@ extension EntryEntityQueryProperty
   QueryBuilder<EntryEntity, bool, QQueryOperations> pinnedBoolProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pinnedBool');
+    });
+  }
+
+  QueryBuilder<EntryEntity, bool, QQueryOperations> totpExistsBoolProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'totpExistsBool');
     });
   }
 

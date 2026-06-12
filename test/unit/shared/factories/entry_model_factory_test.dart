@@ -29,6 +29,7 @@ void main() {
         'entry1@example.com',
         'entry_user_1',
         'entry_password_1',
+        '',
       );
 
       // Assert
@@ -57,6 +58,7 @@ void main() {
         'entry1@example.com',
         'entry_user_1',
         'entry_password_1',
+        '',
       );
 
       // Act
@@ -66,6 +68,7 @@ void main() {
         'https://snggle.com',
         '',
         'entry_user_2',
+        '',
         '',
       );
 
@@ -98,6 +101,7 @@ void main() {
           emailExistsBool: true,
           usernameExistsBool: true,
           passwordExistsBool: true,
+          totpExistsBool: false,
           index: 0,
           filesystemPathString: 'entries/entry1',
           name: 'ENTRY 0',
@@ -110,6 +114,7 @@ void main() {
           emailExistsBool: false,
           usernameExistsBool: true,
           passwordExistsBool: false,
+          totpExistsBool: false,
           index: 1,
           filesystemPathString: 'entries/group1/entry2',
           name: 'ENTRY 1',
@@ -162,6 +167,7 @@ void main() {
         emailExistsBool: true,
         usernameExistsBool: true,
         passwordExistsBool: true,
+        totpExistsBool: false,
         index: 0,
         filesystemPathString: 'entries/entry1',
         name: 'ENTRY 0',
