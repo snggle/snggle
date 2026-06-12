@@ -3,16 +3,16 @@ import 'dart:io';
 
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_root_dir.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class FilesystemStorageManager {
   final RootDirectoryBuilder _rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
-  final FilesystemStorageKey _filesystemStorageKey;
+  final FilesystemStorageRootDir _filesystemStorageRootDir;
   final Completer<Directory> _rootDirectoryCompleter;
 
   FilesystemStorageManager({
-    required this._filesystemStorageKey,
+    required this._filesystemStorageRootDir,
   }) : _rootDirectoryCompleter = Completer<Directory>() {
     _initStorage();
   }
@@ -62,6 +62,24 @@ class FilesystemStorageManager {
     bool parentDirectoryEmptyBool = parentDirectory.listSync().isEmpty;
     if (parentDirectoryEmptyBool) {
       await parentDirectory.delete();
+      await _deleteFilesystemStorageTab(parentDirectory);
+    }
+  }
+
+  Future<bool> isSecretExists(FilesystemPath filesystemPath) async {
+    File file = await _getFile(filesystemPath);
+    return file.exists();
+  }
+
+  Future<void> _deleteFilesystemStorageTab(Directory deletedDirectory) async {
+    String vaultsDirectoryPath = await _buildAbsolutePath(relativePath: 'vaults');
+    if (deletedDirectory.path != vaultsDirectoryPath) {
+      return;
+    }
+
+    File vaultsRootFile = File(await _buildAbsolutePath(relativePath: 'vaults.snggle'));
+    if (await vaultsRootFile.exists()) {
+      await vaultsRootFile.delete();
     }
   }
 
@@ -82,6 +100,6 @@ class FilesystemStorageManager {
 
   Future<String> _buildAbsolutePath({required String relativePath}) async {
     Directory rootDirectory = await _rootDirectoryCompleter.future;
-    return '${rootDirectory.path}/${_filesystemStorageKey.name}/$relativePath';
+    return '${rootDirectory.path}/${_filesystemStorageRootDir.name}/$relativePath';
   }
 }

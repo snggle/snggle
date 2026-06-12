@@ -1,6 +1,6 @@
 import 'package:snggle/infra/managers/filesystem_storage/encrypted_filesystem_storage_manager.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_manager.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_root_dir.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class SecretsRepository {
@@ -8,10 +8,15 @@ class SecretsRepository {
 
   SecretsRepository({
     FilesystemStorageManager? filesystemStorageManager,
-  }) : _filesystemStorageManager = filesystemStorageManager ?? EncryptedFilesystemStorageManager(filesystemStorageKey: FilesystemStorageKey.secrets);
+  }) : _filesystemStorageManager =
+      filesystemStorageManager ?? EncryptedFilesystemStorageManager(filesystemStorageRootDir: FilesystemStorageRootDir.filesystem_storage);
 
   Future<String> getEncrypted(FilesystemPath filesystemPath) async {
     return _filesystemStorageManager.read(filesystemPath);
+  }
+
+  Future<bool> isSecretExists(FilesystemPath filesystemPath) async {
+    return _filesystemStorageManager.isSecretExists(filesystemPath);
   }
 
   Future<void> saveEncrypted(FilesystemPath filesystemPath, String encryptedSecrets) async {

@@ -1,13 +1,17 @@
 import 'dart:convert';
 
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_tab_dir.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
 import 'package:snggle/shared/models/a_secrets_model.dart';
+import 'package:snggle/shared/models/groups/group_secrets_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
+import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class SecretsService {
   final SecretsRepository _secretsRepository = globalLocator<SecretsRepository>();
+  final FilesystemPath _vaultsRootPath = FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name);
 
   Future<void> changePassword(FilesystemPath filesystemPath, PasswordModel oldPasswordModel, PasswordModel newPasswordModel) async {
     String secrets = await _secretsRepository.getEncrypted(filesystemPath);
@@ -39,6 +43,15 @@ class SecretsService {
   }
 
   Future<void> save(ASecretsModel secretsModel, PasswordModel passwordModel) async {
+    bool vaultBool = secretsModel is VaultSecretsModel;
+    if (vaultBool) {
+      bool filesystemStorageTabExistsBool = await _isFilesystemStorageTabExists();
+
+      if (filesystemStorageTabExistsBool == false) {
+        await _createFilesystemStorageTab();
+      }
+    }
+
     Map<String, dynamic> secretsJson = secretsModel.toJson();
     String secretsJsonString = jsonEncode(secretsJson);
     String encryptedSecrets = passwordModel.encrypt(decryptedData: secretsJsonString);
@@ -56,5 +69,21 @@ class SecretsService {
   Future<bool> isPasswordValid(FilesystemPath filesystemPath, PasswordModel passwordModel) async {
     String encryptedSecrets = await _secretsRepository.getEncrypted(filesystemPath);
     return passwordModel.isValidForData(encryptedSecrets);
+  }
+
+  Future<bool> _isFilesystemStorageTabExists() async {
+    bool parentFilesystemStorageExistsBool = await _secretsRepository.isSecretExists(
+      _vaultsRootPath,
+    );
+
+    return parentFilesystemStorageExistsBool;
+  }
+
+  Future<void> _createFilesystemStorageTab() async {
+    GroupSecretsModel vaultsRootSecretsModel = GroupSecretsModel.generate(_vaultsRootPath);
+    String vaultsRootSecretsJsonString = jsonEncode(vaultsRootSecretsModel.toJson());
+    String encryptedVaultsRootSecrets = PasswordModel.defaultPassword().encrypt(decryptedData: vaultsRootSecretsJsonString);
+
+    await _secretsRepository.saveEncrypted(_vaultsRootPath, encryptedVaultsRootSecrets);
   }
 }
