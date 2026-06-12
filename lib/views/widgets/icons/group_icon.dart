@@ -32,7 +32,7 @@ class GroupIcon extends StatelessWidget {
       pinnedBool: pinnedBool,
       encryptedBool: encryptedBool,
       size: size,
-      child: ContainerIconGrid(
+      child: ContainerIconGrid.fromListItemsPreview(
         padding: EdgeInsets.only(left: size * 0.14, right: size * 0.14, top: size * 0.23, bottom: size * 0.096),
         listItemsPreview: listItemsPreview,
       ),

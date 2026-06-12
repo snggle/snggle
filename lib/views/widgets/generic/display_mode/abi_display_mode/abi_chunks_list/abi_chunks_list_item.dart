@@ -46,7 +46,7 @@ class _AbiChunksListItemState extends State<AbiChunksListItem> {
 
     return CopyWrapper(
       value: value,
-      copyWrapperBuilder: (BuildContext context) {
+      copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
