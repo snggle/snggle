@@ -15,27 +15,30 @@ class AppService {
 
   Future<bool> isDataBaseExist() async {
     Directory rootDirectory = await _rootDirectoryBuilder.call();
-    Directory secretsDirectory = Directory('${rootDirectory.path}/secrets');
+    Directory vaultsDirectory = Directory('${rootDirectory.path}/secrets/vaults');
 
-    if (await secretsDirectory.exists()) {
-      await for (FileSystemEntity fileSystemEntity in secretsDirectory.list(recursive: true, followLinks: false)) {
-        if (fileSystemEntity is! File) {
-          continue;
-        }
+    if (await vaultsDirectory.exists() == false) {
+      return false;
+    }
 
-        String path = fileSystemEntity.path;
-        bool snggleFileBool = path.endsWith('.snggle');
+    await for (FileSystemEntity fileSystemEntity in vaultsDirectory.list(recursive: true, followLinks: false)) {
+      if (fileSystemEntity is! File) {
+        continue;
+      }
 
-        if (snggleFileBool == false) {
-          continue;
-        }
+      String path = fileSystemEntity.path;
+      bool snggleFileBool = path.endsWith('.snggle');
 
-        int size = await fileSystemEntity.length();
-        if (size > 0) {
-          return true;
-        }
+      if (snggleFileBool == false) {
+        continue;
+      }
+
+      int size = await fileSystemEntity.length();
+      if (size > 0) {
+        return true;
       }
     }
+
     return false;
   }
 
