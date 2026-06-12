@@ -101,6 +101,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -124,6 +127,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'updated_value',
@@ -158,6 +164,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -182,6 +191,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
         'vaults': <String, dynamic>{
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
           'id1': <String, dynamic>{'id4.snggle': 'new_value', 'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle'},
@@ -218,6 +230,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -243,6 +258,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
         'vaults': <String, dynamic>{
           'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
@@ -304,6 +322,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -323,6 +344,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
         'vaults': <String, dynamic>{
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
           'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
@@ -341,7 +365,11 @@ void main() {
       Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'test');
 
       // Assert
-      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{};
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
+      };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
     });
