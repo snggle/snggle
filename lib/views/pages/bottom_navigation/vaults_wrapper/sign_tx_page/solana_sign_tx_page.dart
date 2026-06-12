@@ -81,7 +81,7 @@ class _SolanaSignTxPageState extends State<SolanaSignTxPage> {
                         label: 'Amount',
                         child: CopyWrapper(
                           value: tx.amount!,
-                          copyWrapperBuilder: (BuildContext context) {
+                          copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                             return GradientText(tx.amount!, gradient: AppColors.primaryGradient, textStyle: textTheme.bodyMedium);
                           },
                         ),
@@ -91,7 +91,7 @@ class _SolanaSignTxPageState extends State<SolanaSignTxPage> {
                         label: 'Message',
                         child: CopyWrapper(
                           value: tx.message!,
-                          copyWrapperBuilder: (BuildContext context) {
+                          copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                             return Text(tx.message!, style: textTheme.bodyMedium?.copyWith(color: AppColors.body3));
                           },
                         ),
@@ -101,7 +101,7 @@ class _SolanaSignTxPageState extends State<SolanaSignTxPage> {
                         label: 'Transaction data',
                         child: CopyWrapper(
                           value: tx.transactionData!,
-                          copyWrapperBuilder: (BuildContext context) {
+                          copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                             return Text(tx.transactionData!, style: textTheme.bodyMedium?.copyWith(color: AppColors.body3));
                           },
                         ),
@@ -139,7 +139,7 @@ class _SolanaSignTxPageState extends State<SolanaSignTxPage> {
                   label: 'Signature',
                   child: CopyWrapper(
                     value: signTxPageState.transactionModel.signature!,
-                    copyWrapperBuilder: (BuildContext context) {
+                    copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                       return Text(
                         signTxPageState.transactionModel.signature!,
                         style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
