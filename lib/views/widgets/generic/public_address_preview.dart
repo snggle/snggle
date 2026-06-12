@@ -23,7 +23,7 @@ class PublicAddressPreview extends StatelessWidget {
 
     return CopyWrapper(
       value: address,
-      copyWrapperBuilder: (BuildContext context) {
+      copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,

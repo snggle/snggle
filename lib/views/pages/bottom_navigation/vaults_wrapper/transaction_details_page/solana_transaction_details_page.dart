@@ -72,7 +72,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
               if (senderAddress != null) ...<Widget>[
                 CopyWrapper(
                   value: senderAddress,
-                  copyWrapperBuilder: (BuildContext context) {
+                  copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                     return LabelWrapperAnimated(
                       label: 'Signer',
                       labelStyle: labelTextStyle,
@@ -92,7 +92,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
               if (signDate != null) ...<Widget>[
                 CopyWrapper(
                   value: signDate,
-                  copyWrapperBuilder: (BuildContext context) {
+                  copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                     return LabelWrapperHorizontal(
                       label: 'Time',
                       labelStyle: labelTextStyle,
@@ -108,7 +108,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
               ],
               CopyWrapper(
                 value: signDataType,
-                copyWrapperBuilder: (BuildContext context) {
+                copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                   return LabelWrapperHorizontal(
                     label: 'Format',
                     labelStyle: labelTextStyle,
@@ -124,7 +124,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
               if (contractAddress != null) ...<Widget>[
                 CopyWrapper(
                   value: contractAddress,
-                  copyWrapperBuilder: (BuildContext context) {
+                  copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                     return LabelWrapperAnimated(
                       label: 'Contract',
                       labelStyle: labelTextStyle,
@@ -144,7 +144,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
               if (recipientAddress != null) ...<Widget>[
                 CopyWrapper(
                   value: recipientAddress,
-                  copyWrapperBuilder: (BuildContext context) {
+                  copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                     return LabelWrapperAnimated(
                       label: 'Recipient',
                       labelStyle: labelTextStyle,
@@ -164,7 +164,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
               if (amount != null) ...<Widget>[
                 CopyWrapper(
                   value: amount,
-                  copyWrapperBuilder: (BuildContext context) {
+                  copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                     return LabelWrapperHorizontal(
                       label: 'Amount',
                       labelStyle: labelTextStyle,
@@ -181,7 +181,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
               if (message != null && messageLength != null) ...<Widget>[
                 CopyWrapper(
                   value: messageLength,
-                  copyWrapperBuilder: (BuildContext context) {
+                  copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                     return LabelWrapperHorizontal(
                       label: 'Length',
                       labelStyle: labelTextStyle,
@@ -196,7 +196,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
                 ),
                 CopyWrapper(
                   value: message,
-                  copyWrapperBuilder: (BuildContext context) {
+                  copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                     return TextDisplayModeSelector(
                       label: 'Message',
                       labelTextStyle: labelTextStyle,
@@ -209,7 +209,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
               if (transactionData != null) ...<Widget>[
                 CopyWrapper(
                   value: transactionData,
-                  copyWrapperBuilder: (BuildContext context) {
+                  copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                     return LabelWrapperVertical(
                       label: 'Transaction data',
                       labelStyle: labelTextStyle,
@@ -227,7 +227,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
               if (signature != null && signatureLength != null) ...<Widget>[
                 CopyWrapper(
                   value: signatureAlgorithm,
-                  copyWrapperBuilder: (BuildContext context) {
+                  copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                     return LabelWrapperHorizontal(
                       label: 'Algorithm',
                       labelStyle: labelTextStyle,
@@ -242,7 +242,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
                 ),
                 CopyWrapper(
                   value: signatureLength,
-                  copyWrapperBuilder: (BuildContext context) {
+                  copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                     return LabelWrapperHorizontal(
                       label: 'Size',
                       labelStyle: labelTextStyle,
@@ -257,7 +257,7 @@ class _SolanaTransactionDetailsPageState extends State<SolanaTransactionDetailsP
                 ),
                 CopyWrapper(
                   value: signature,
-                  copyWrapperBuilder: (BuildContext context) {
+                  copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                     return LabelWrapperVertical(
                       label: 'Signature',
                       labelStyle: labelTextStyle,
