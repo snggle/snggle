@@ -20,7 +20,7 @@ void main() {
   late EntryListPageCubit actualEntryListPageCubit;
 
   // @formatter:off
-  EntryModel entryModel1 = EntryModel(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPath: FilesystemPath.fromString('entries/entry1'), name: 'ENTRY 0', website: 'https://snggle.com', emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true);
+  EntryModel entryModel1 = EntryModel(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPath: FilesystemPath.fromString('entries/entry1'), name: 'ENTRY 0', website: 'https://snggle.com', emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, totpExistsBool: true);
   EntryModel entryModel2 = EntryModel(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPath: FilesystemPath.fromString('entries/group1/entry2'), name: 'ENTRY 1', website: 'https://snggle.com', usernameExistsBool: true);
   EntryModel entryModel3 = EntryModel(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPath: FilesystemPath.fromString('entries/group1/entry3'), name: 'ENTRY 2', website: 'https://snggle.com', emailExistsBool: true, passwordExistsBool: true);
   late GroupModel groupModel = GroupModel(id: 4, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('entries/group1'), name: 'ENTRIES GROUP 1', listItemsPreview: <AListItemModel>[entryModel2, entryModel3]);

@@ -104,13 +104,13 @@ dependencies:
   codec_utils:
     git:
       url: https://github.com/snggle/codec_utils.git
-      ref: master
+      ref: ks-feature/base32-decoder
 
   # Dart package containing utility methods for common cryptographic and blockchain-specific operations.
   cryptography_utils:
     git:
       url: https://github.com/snggle/cryptography_utils.git
-      ref: master
+      ref: ks-feature/sha1-and-totp
 
 dev_dependencies:
   flutter_test:

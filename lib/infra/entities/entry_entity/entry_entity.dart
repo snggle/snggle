@@ -13,6 +13,7 @@ class EntryEntity extends Equatable {
   final bool emailExistsBool;
   final bool usernameExistsBool;
   final bool passwordExistsBool;
+  final bool totpExistsBool;
 
   @Index()
   final int index;
@@ -29,6 +30,7 @@ class EntryEntity extends Equatable {
     required this.emailExistsBool,
     required this.usernameExistsBool,
     required this.passwordExistsBool,
+    required this.totpExistsBool,
     required this.index,
     required this.filesystemPathString,
     required this.name,
@@ -43,6 +45,7 @@ class EntryEntity extends Equatable {
       emailExistsBool: entryModel.emailExistsBool,
       usernameExistsBool: entryModel.usernameExistsBool,
       passwordExistsBool: entryModel.passwordExistsBool,
+      totpExistsBool: entryModel.totpExistsBool,
       index: entryModel.index,
       filesystemPathString: entryModel.filesystemPath.fullPath,
       name: entryModel.name,
@@ -57,6 +60,7 @@ class EntryEntity extends Equatable {
     bool? emailExistsBool,
     bool? usernameExistsBool,
     bool? passwordExistsBool,
+    bool? totpExistsBool,
     String? fingerprint,
     int? index,
     String? filesystemPathString,
@@ -70,6 +74,7 @@ class EntryEntity extends Equatable {
       emailExistsBool: emailExistsBool ?? this.emailExistsBool,
       usernameExistsBool: usernameExistsBool ?? this.usernameExistsBool,
       passwordExistsBool: passwordExistsBool ?? this.passwordExistsBool,
+      totpExistsBool: totpExistsBool ?? this.totpExistsBool,
       index: index ?? this.index,
       filesystemPathString: filesystemPathString ?? this.filesystemPathString,
       name: name ?? this.name,
@@ -82,15 +87,16 @@ class EntryEntity extends Equatable {
 
   @override
   List<Object?> get props => <Object?>[
-    id,
-    encryptedBool,
-    pinnedBool,
-    emailExistsBool,
-    usernameExistsBool,
-    passwordExistsBool,
-    index,
-    filesystemPathString,
-    name,
-    website,
-  ];
+        id,
+        encryptedBool,
+        pinnedBool,
+        emailExistsBool,
+        usernameExistsBool,
+        passwordExistsBool,
+        totpExistsBool,
+        index,
+        filesystemPathString,
+        name,
+        website,
+      ];
 }
