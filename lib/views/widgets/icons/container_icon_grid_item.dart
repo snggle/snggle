@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
+import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
@@ -69,6 +70,19 @@ class ContainerIconGridItem extends StatelessWidget {
         unpinnedBorder = AppIcons.icon_container_vault_unpinned_medium,
         unpinnedBackground = AppIcons.icon_container_vault_unpinned_medium_background,
         icon = networkGroupModel.networkTemplateModel.networkIconType.listSmallIcon;
+
+  ContainerIconGridItem.fromEntryModel({
+    required EntryModel entryModel,
+    required this.size,
+    this.backgroundColor,
+    super.key,
+  })  : pinnedBool = entryModel.pinnedBool,
+        encryptedBool = entryModel.encryptedBool,
+        pinnedBorder = AppIcons.icon_container_vault_pinned_medium,
+        pinnedBackground = AppIcons.icon_container_vault_pinned_medium_background,
+        unpinnedBorder = AppIcons.icon_container_vault_unpinned_medium,
+        unpinnedBackground = AppIcons.icon_container_vault_unpinned_medium_background,
+        icon = null;
 
   @override
   Widget build(BuildContext context) {
