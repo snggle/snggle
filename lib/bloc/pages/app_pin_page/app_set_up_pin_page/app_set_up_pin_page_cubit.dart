@@ -112,8 +112,11 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
     Directory rootDirectory = await globalLocator<RootDirectoryBuilder>().call();
 
     await Directory('${rootDirectory.path}/secrets/vaults').create(recursive: true);
+    await Directory('${rootDirectory.path}/secrets/entries').create(recursive: true);
 
     GroupSecretsModel vaultsRootSecretsModel = GroupSecretsModel.generate(FilesystemPath.fromString('vaults'));
     await globalLocator<SecretsService>().save(vaultsRootSecretsModel, PasswordModel.defaultPassword());
+    GroupSecretsModel entriesRootSecretsModel = GroupSecretsModel.generate(FilesystemPath.fromString('entries'));
+    await globalLocator<SecretsService>().save(entriesRootSecretsModel, PasswordModel.defaultPassword());
   }
 }

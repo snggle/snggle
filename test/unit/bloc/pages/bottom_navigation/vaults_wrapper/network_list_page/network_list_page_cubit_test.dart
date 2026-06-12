@@ -589,15 +589,15 @@ void main() async {
               ],
             ),
             GroupModel(
-              id: 4,
+              id: 5,
               pinnedBool: false,
               encryptedBool: false,
-              filesystemPath: FilesystemPath.fromString('vaults/vault1/group4'),
+              filesystemPath: FilesystemPath.fromString('vaults/vault1/group5'),
               listItemsPreview: <AListItemModel>[
                 networkGroupModel2
-                    .copyWith(filesystemPath: FilesystemPath.fromString('vaults/vault1/group4/network7'), listItemsPreview: <AListItemModel>[]),
+                    .copyWith(filesystemPath: FilesystemPath.fromString('vaults/vault1/group5/network7'), listItemsPreview: <AListItemModel>[]),
                 networkGroupModel3
-                    .copyWith(filesystemPath: FilesystemPath.fromString('vaults/vault1/group4/network9'), listItemsPreview: <AListItemModel>[]),
+                    .copyWith(filesystemPath: FilesystemPath.fromString('vaults/vault1/group5/network9'), listItemsPreview: <AListItemModel>[]),
               ],
               name: 'TEST GROUP',
             ),
