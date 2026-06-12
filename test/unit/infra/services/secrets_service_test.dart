@@ -34,7 +34,7 @@ void main() {
     test('Should [UPDATE secrets password] if [secrets path EXISTS] in filesystem storage and [password VALID]', () async {
       // Act
       await globalLocator<SecretsService>().changePassword(
-        FilesystemPath.fromString('id1'),
+        FilesystemPath.fromString('vaults/id1'),
         PasswordModel.defaultPassword(),
         PasswordModel.fromPlaintext('1111'),
       );
@@ -43,28 +43,39 @@ void main() {
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
       Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'secrets');
 
-      actualUpdatedFilesystemStructure['id1.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id1.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults.snggle'] as String,
       );
 
-      actualUpdatedFilesystemStructure['id1']['id2.snggle'] = PasswordModel.defaultPassword().decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id1']['id2.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults']['id1.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id1.snggle'] as String,
       );
 
-      actualUpdatedFilesystemStructure['id3.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id3.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults']['id1']['id2.snggle'] = PasswordModel.defaultPassword().decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id1']['id2.snggle'] as String,
       );
 
-      actualUpdatedFilesystemStructure['id3']['id4.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id3']['id4.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults']['id3.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id3.snggle'] as String,
+      );
+
+      actualUpdatedFilesystemStructure['vaults']['id3']['id4.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id3']['id4.snggle'] as String,
       );
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id3.snggle': '{"mnemonic":"million transfer income satoshi save cross indoor text skirt share enough admit"}',
-        'id1.snggle': '{"mnemonic":"siren toward skate busy kit behave antenna hazard attract demand earth fence"}',
-        'id3': <String, String>{'id4.snggle': '{"mnemonic":"option pave flower ball mask burst hard cycle trigger dwarf apple pause"}'},
-        'id1': <String, String>{'id2.snggle': '{"mnemonic":"nature crack detail sustain ready burden require people toilet hazard verb chunk"}'}
+        'vaults': <String, dynamic>{
+          'id1': <String, String>{
+            'id2.snggle': '{"mnemonic":"nature crack detail sustain ready burden require people toilet hazard verb chunk"}',
+          },
+          'id1.snggle': '{"mnemonic":"siren toward skate busy kit behave antenna hazard attract demand earth fence"}',
+          'id3': <String, String>{
+            'id4.snggle': '{"mnemonic":"option pave flower ball mask burst hard cycle trigger dwarf apple pause"}',
+          },
+          'id3.snggle': '{"mnemonic":"million transfer income satoshi save cross indoor text skirt share enough admit"}',
+        },
+        'vaults.snggle': '{"mnemonic":"option pave flower ball mask burst hard cycle trigger dwarf apple pause"}',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -74,7 +85,7 @@ void main() {
       // Assert
       expect(
         () => globalLocator<SecretsService>().changePassword(
-          FilesystemPath.fromString('id1'),
+          FilesystemPath.fromString('vaults/id1'),
           PasswordModel.fromPlaintext('invalid_password'),
           PasswordModel.defaultPassword(),
         ),
@@ -86,7 +97,7 @@ void main() {
       // Assert
       expect(
         () => globalLocator<SecretsService>().changePassword(
-          FilesystemPath.fromString('invalid_path'),
+          FilesystemPath.fromString('vaults/invalid_path'),
           PasswordModel.fromPlaintext('1111'),
           PasswordModel.defaultPassword(),
         ),
@@ -98,7 +109,7 @@ void main() {
   group('Tests of SecretsService.get()', () {
     test('Should [return ASecretsModel] if [secrets path EXISTS] in filesystem storage and [password VALID]', () async {
       // Arrange
-      FilesystemPath filesystemPath = FilesystemPath.fromString('id1');
+      FilesystemPath filesystemPath = FilesystemPath.fromString('vaults/id1');
 
       // Act
       ASecretsModel actualSecretsModel = await globalLocator<SecretsService>().get<VaultSecretsModel>(
@@ -117,7 +128,7 @@ void main() {
 
     test('Should [throw InvalidPasswordException] if [secrets path EXIST] in filesystem storage and [password INVALID]', () {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id1');
 
       // Assert
       expect(
@@ -128,7 +139,7 @@ void main() {
 
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/not_existing_path');
 
       // Assert
       expect(
@@ -141,33 +152,33 @@ void main() {
   group('Tests of SecretsService.getEncryptedPath()', () {
     test('Should [return encrypted parents] if [secrets path has ENCRYPTED parents]', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id3/id4');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id3/id4');
 
       // Act
       FilesystemPath actualEncryptedParents = await globalLocator<SecretsService>().getEncryptedPath(actualFilesystemPath);
 
       // Assert
-      FilesystemPath expectedEncryptedParents = const FilesystemPath(<String>['id3', 'id4']);
+      FilesystemPath expectedEncryptedParents = const FilesystemPath(<String>['vaults', 'id3', 'id4']);
 
       expect(actualEncryptedParents, expectedEncryptedParents);
     });
 
     test('Should [return empty FilesystemPath] if [secrets path has DECRYPTED parents]', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/id2');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id1/id2');
 
       // Act
       FilesystemPath actualEncryptedParents = await globalLocator<SecretsService>().getEncryptedPath(actualFilesystemPath);
 
       // Assert
-      FilesystemPath expectedEncryptedParents = const FilesystemPath(<String>[]);
+      FilesystemPath expectedEncryptedParents = const FilesystemPath(<String>['vaults']);
 
       expect(actualEncryptedParents, expectedEncryptedParents);
     });
 
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/not_existing_path');
 
       // Assert
       expect(
@@ -181,7 +192,7 @@ void main() {
     test('Should [UPDATE secrets] if [secrets path EXISTS] in collection', () async {
       // Arrange
       ASecretsModel actualUpdatedSecretsModel = VaultSecretsModel(
-        filesystemPath: FilesystemPath.fromString('id1'),
+        filesystemPath: FilesystemPath.fromString('vaults/id1'),
         mnemonicModel: MnemonicModel.fromString(
           'mechanic win word session stamp pelican prison bachelor donate capital stuff love',
         ),
@@ -194,28 +205,39 @@ void main() {
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
       Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'secrets');
 
-      actualUpdatedFilesystemStructure['id1.snggle'] = PasswordModel.defaultPassword().decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id1.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults.snggle'] as String,
       );
 
-      actualUpdatedFilesystemStructure['id1']['id2.snggle'] = PasswordModel.defaultPassword().decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id1']['id2.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults']['id1.snggle'] = PasswordModel.defaultPassword().decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id1.snggle'] as String,
       );
 
-      actualUpdatedFilesystemStructure['id3.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id3.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults']['id1']['id2.snggle'] = PasswordModel.defaultPassword().decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id1']['id2.snggle'] as String,
       );
 
-      actualUpdatedFilesystemStructure['id3']['id4.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id3']['id4.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults']['id3.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id3.snggle'] as String,
+      );
+
+      actualUpdatedFilesystemStructure['vaults']['id3']['id4.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id3']['id4.snggle'] as String,
       );
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id3.snggle': '{"mnemonic":"million transfer income satoshi save cross indoor text skirt share enough admit"}',
-        'id1.snggle': '{"mnemonic":"mechanic win word session stamp pelican prison bachelor donate capital stuff love"}',
-        'id3': <String, String>{'id4.snggle': '{"mnemonic":"option pave flower ball mask burst hard cycle trigger dwarf apple pause"}'},
-        'id1': <String, String>{'id2.snggle': '{"mnemonic":"nature crack detail sustain ready burden require people toilet hazard verb chunk"}'}
+        'vaults': <String, dynamic>{
+          'id1': <String, String>{
+            'id2.snggle': '{"mnemonic":"nature crack detail sustain ready burden require people toilet hazard verb chunk"}',
+          },
+          'id1.snggle': '{"mnemonic":"mechanic win word session stamp pelican prison bachelor donate capital stuff love"}',
+          'id3': <String, String>{
+            'id4.snggle': '{"mnemonic":"option pave flower ball mask burst hard cycle trigger dwarf apple pause"}',
+          },
+          'id3.snggle': '{"mnemonic":"million transfer income satoshi save cross indoor text skirt share enough admit"}',
+        },
+        'vaults.snggle': '{"mnemonic":"option pave flower ball mask burst hard cycle trigger dwarf apple pause"}',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -224,7 +246,7 @@ void main() {
     test('Should [SAVE secrets] if [secrets path NOT EXISTS] in collection', () async {
       // Arrange
       ASecretsModel actualNewSecretsModel = VaultSecretsModel(
-        filesystemPath: FilesystemPath.fromString('id99999'),
+        filesystemPath: FilesystemPath.fromString('vaults/id99999'),
         mnemonicModel: MnemonicModel.fromString(
           'mechanic win word session stamp pelican prison bachelor donate capital stuff love',
         ),
@@ -237,33 +259,44 @@ void main() {
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
       Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'secrets');
 
-      actualUpdatedFilesystemStructure['id1.snggle'] = PasswordModel.defaultPassword().decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id1.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults.snggle'] as String,
       );
 
-      actualUpdatedFilesystemStructure['id1']['id2.snggle'] = PasswordModel.defaultPassword().decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id1']['id2.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults']['id1.snggle'] = PasswordModel.defaultPassword().decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id1.snggle'] as String,
       );
 
-      actualUpdatedFilesystemStructure['id3.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id3.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults']['id1']['id2.snggle'] = PasswordModel.defaultPassword().decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id1']['id2.snggle'] as String,
       );
 
-      actualUpdatedFilesystemStructure['id3']['id4.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id3']['id4.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults']['id3.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id3.snggle'] as String,
       );
 
-      actualUpdatedFilesystemStructure['id99999.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
-        encryptedData: actualUpdatedFilesystemStructure['id99999.snggle'] as String,
+      actualUpdatedFilesystemStructure['vaults']['id3']['id4.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id3']['id4.snggle'] as String,
+      );
+
+      actualUpdatedFilesystemStructure['vaults']['id99999.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
+        encryptedData: actualUpdatedFilesystemStructure['vaults']['id99999.snggle'] as String,
       );
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id3.snggle': '{"mnemonic":"million transfer income satoshi save cross indoor text skirt share enough admit"}',
-        'id1.snggle': '{"mnemonic":"siren toward skate busy kit behave antenna hazard attract demand earth fence"}',
-        'id3': <String, String>{'id4.snggle': '{"mnemonic":"option pave flower ball mask burst hard cycle trigger dwarf apple pause"}'},
-        'id99999.snggle': '{"mnemonic":"mechanic win word session stamp pelican prison bachelor donate capital stuff love"}',
-        'id1': <String, String>{'id2.snggle': '{"mnemonic":"nature crack detail sustain ready burden require people toilet hazard verb chunk"}'}
+        'vaults': <String, dynamic>{
+          'id1': <String, String>{
+            'id2.snggle': '{"mnemonic":"nature crack detail sustain ready burden require people toilet hazard verb chunk"}',
+          },
+          'id1.snggle': '{"mnemonic":"siren toward skate busy kit behave antenna hazard attract demand earth fence"}',
+          'id3': <String, String>{
+            'id4.snggle': '{"mnemonic":"option pave flower ball mask burst hard cycle trigger dwarf apple pause"}',
+          },
+          'id3.snggle': '{"mnemonic":"million transfer income satoshi save cross indoor text skirt share enough admit"}',
+          'id99999.snggle': '{"mnemonic":"mechanic win word session stamp pelican prison bachelor donate capital stuff love"}',
+        },
+        'vaults.snggle': '{"mnemonic":"option pave flower ball mask burst hard cycle trigger dwarf apple pause"}',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -273,7 +306,7 @@ void main() {
   group('Tests of SecretsService.move()', () {
     test('Should [UPDATE secrets] if [secrets path EXISTS] in filesystem storage', () async {
       // Act
-      await globalLocator<SecretsService>().move(FilesystemPath.fromString('id1'), FilesystemPath.fromString('new/path/id1'));
+      await globalLocator<SecretsService>().move(FilesystemPath.fromString('vaults/id1'), FilesystemPath.fromString('vaults/new/path/id1'));
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
@@ -281,12 +314,21 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'new': <String, Map<String, String>>{
-          'path': <String, String>{'id1.snggle': encryptedSecrets1}
+        'vaults': <String, dynamic>{
+          'id1': <String, String>{
+            'id2.snggle': encryptedSecrets2,
+          },
+          'id3': <String, String>{
+            'id4.snggle': encryptedSecrets4,
+          },
+          'id3.snggle': encryptedSecrets3,
+          'new': <String, dynamic>{
+            'path': <String, String>{
+              'id1.snggle': encryptedSecrets1,
+            },
+          },
         },
-        'id3.snggle': encryptedSecrets3,
-        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
-        'id1': <String, String>{'id2.snggle': encryptedSecrets2}
+        'vaults.snggle': encryptedSecrets4,
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -296,8 +338,8 @@ void main() {
       // Assert
       expect(
         () => globalLocator<SecretsService>().move(
-          FilesystemPath.fromString('not_existing_path'),
-          FilesystemPath.fromString('new/path/not_existing_path'),
+          FilesystemPath.fromString('vaults/not_existing_path'),
+          FilesystemPath.fromString('vaults/new/path/not_existing_path'),
         ),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
@@ -307,7 +349,7 @@ void main() {
   group('Tests of SecretsService.delete()', () {
     test('Should [REMOVE secrets] if [secrets path EXISTS] in filesystem storage', () async {
       // Act
-      await globalLocator<SecretsService>().delete(FilesystemPath.fromString('id1'));
+      await globalLocator<SecretsService>().delete(FilesystemPath.fromString('vaults/id1'));
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
@@ -315,13 +357,16 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id3.snggle': encryptedSecrets3,
-        'id3': <String, String>{
-          'id4.snggle': encryptedSecrets4,
+        'vaults': <String, dynamic>{
+          'id1': <String, String>{
+            'id2.snggle': encryptedSecrets2,
+          },
+          'id3': <String, String>{
+            'id4.snggle': encryptedSecrets4,
+          },
+          'id3.snggle': encryptedSecrets3,
         },
-        'id1': <String, String>{
-          'id2.snggle': encryptedSecrets2,
-        }
+        'vaults.snggle': encryptedSecrets4,
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -329,7 +374,7 @@ void main() {
 
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/not_existing_path');
 
       // Assert
       expect(
@@ -342,7 +387,7 @@ void main() {
   group('Tests of SecretsService.isPasswordValid()', () {
     test('Should [return TRUE] if [secrets path EXISTS] in filesystem storage and [password VALID]', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id1');
 
       // Act
       bool actualPasswordValidBool = await globalLocator<SecretsService>().isPasswordValid(
@@ -356,7 +401,7 @@ void main() {
 
     test('Should [return FALSE] if [secrets path EXISTS] in filesystem storage and [password INVALID]', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id1');
 
       // Act
       bool actualPasswordValidBool = await globalLocator<SecretsService>().isPasswordValid(
@@ -370,7 +415,7 @@ void main() {
 
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXISTS] in collection', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/not_existing_path');
 
       // Assert
       expect(
