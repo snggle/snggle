@@ -32,7 +32,7 @@ void main() {
         encryptedBool: false,
         pinnedBool: false,
         index: 0,
-        filesystemPath: FilesystemPath.fromString('vault1'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         fingerprint: '2429747484',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[],
@@ -43,7 +43,7 @@ void main() {
         pinnedBool: false,
         address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce',
         derivationPath: "m/44'/60'/0'/0/0",
-        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/wallet1'),
         name: 'WALLET 0',
       ),
     );
@@ -54,7 +54,7 @@ void main() {
         encryptedBool: false,
         pinnedBool: false,
         index: 0,
-        filesystemPath: FilesystemPath.fromString('vault1'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         fingerprint: 'o50XEfBazUYWOzGIr0PxLaijSkSunwKbAMkAjtlcGng=',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[],
@@ -65,7 +65,7 @@ void main() {
         pinnedBool: false,
         address: '4PBYLreUzbD92H4MVuGJvs6nbP3Ln7mx9GdtjyKryeW5',
         derivationPath: "m/44'/501'/0'/0'",
-        filesystemPath: FilesystemPath.fromString('vault1/network2/wallet2'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1/network2/wallet2'),
         name: 'WALLET 0',
       ),
     );
@@ -96,8 +96,8 @@ void main() {
     test('Should [return CborCryptoHDKey] with extended public key for all wallets (Ethereum, depth == 3)', () async {
       // Arrange
       TestUtils.mockPasswords(
-        FilesystemPath.fromString('vault1/network1/wallet1'),
-        List<PasswordModel>.generate(3, (_) => PasswordModel.defaultPassword()),
+        FilesystemPath.fromString('vaults/vault1/network1/wallet1'),
+        List<PasswordModel>.generate(4, (_) => PasswordModel.defaultPassword()),
       );
 
       // Act
@@ -124,8 +124,8 @@ void main() {
     test('Should [return CborCryptoHDKey] with extended public key for single wallet (Ethereum, depth == 4)', () async {
       // Arrange
       TestUtils.mockPasswords(
-        FilesystemPath.fromString('vault1/network1/wallet1'),
-        List<PasswordModel>.generate(3, (_) => PasswordModel.defaultPassword()),
+        FilesystemPath.fromString('vaults/vault1/network1/wallet1'),
+        List<PasswordModel>.generate(4, (_) => PasswordModel.defaultPassword()),
       );
 
       // Act
@@ -153,8 +153,8 @@ void main() {
     test('Should [return CborCryptoMultiAccounts] with extended public key for single wallet (Solana)', () async {
       // Arrange
       TestUtils.mockPasswords(
-        FilesystemPath.fromString('vault1/network2/wallet2'),
-        List<PasswordModel>.generate(3, (_) => PasswordModel.defaultPassword()),
+        FilesystemPath.fromString('vaults/vault1/network2/wallet2'),
+        List<PasswordModel>.generate(4, (_) => PasswordModel.defaultPassword()),
       );
 
       // Act
