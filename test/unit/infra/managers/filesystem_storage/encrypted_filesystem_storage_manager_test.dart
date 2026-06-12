@@ -107,6 +107,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'EK6V2sqmoln+q+9t0mkn7hY4LJTKaazKGMU9gd0KmfpkXkF627j9Nit6YmVBacqkiwFuy29w77/oVf2geT06SS1T5kxRWSiK0zir2mRP2OCdiEUt',
+        },
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -132,6 +135,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'EK6V2sqmoln+q+9t0mkn7hY4LJTKaazKGMU9gd0KmfpkXkF627j9Nit6YmVBacqkiwFuy29w77/oVf2geT06SS1T5kxRWSiK0zir2mRP2OCdiEUt',
+        },
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'updated_value',
@@ -168,6 +174,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'EK6V2sqmoln+q+9t0mkn7hY4LJTKaazKGMU9gd0KmfpkXkF627j9Nit6YmVBacqkiwFuy29w77/oVf2geT06SS1T5kxRWSiK0zir2mRP2OCdiEUt',
+        },
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -194,6 +203,9 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'EK6V2sqmoln+q+9t0mkn7hY4LJTKaazKGMU9gd0KmfpkXkF627j9Nit6YmVBacqkiwFuy29w77/oVf2geT06SS1T5kxRWSiK0zir2mRP2OCdiEUt',
+        },
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
