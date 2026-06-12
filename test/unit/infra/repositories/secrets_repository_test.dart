@@ -33,7 +33,7 @@ void main() {
   group('Tests of SecretsRepository.getEncrypted()', () {
     test('Should [return encrypted secrets] if [secrets path EXISTS] in filesystem storage (1st depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id1');
 
       // Act
       String actualEncryptedSecrets = await globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath);
@@ -46,7 +46,7 @@ void main() {
 
     test('Should [return encrypted secrets] if [secrets path EXISTS] in filesystem storage (2nd depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/id2');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id1/id2');
 
       // Act
       String actualEncryptedSecrets = await globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath);
@@ -59,22 +59,22 @@ void main() {
 
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXISTS] in filesystem storage (1st depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/not_existing_path');
 
       // Assert
-      await expectLater(
-        globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath),
+      expect(
+        () => globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
 
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXISTS] in filesystem storage (2nd depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/not_existing_path');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id1/not_existing_path');
 
       // Assert
-      await expectLater(
-        globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath),
+      expect(
+        () => globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -83,7 +83,7 @@ void main() {
   group('Tests of SecretsRepository.saveEncrypted()', () {
     test('Should [UPDATE secrets] if [secrets path EXISTS] in filesystem storage (1st depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id1');
 
       // Act
       await globalLocator<SecretsRepository>().saveEncrypted(actualFilesystemPath, 'updated_value');
@@ -94,10 +94,17 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id3.snggle': encryptedSecrets3,
-        'id1.snggle': 'updated_value',
-        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
-        'id1': <String, String>{'id2.snggle': encryptedSecrets2},
+        'vaults': <String, dynamic>{
+          'id1': <String, String>{
+            'id2.snggle': encryptedSecrets2,
+          },
+          'id1.snggle': 'updated_value',
+          'id3': <String, String>{
+            'id4.snggle': encryptedSecrets4,
+          },
+          'id3.snggle': encryptedSecrets3,
+        },
+        'vaults.snggle': encryptedSecrets4,
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -105,7 +112,7 @@ void main() {
 
     test('Should [UPDATE secrets] if [secrets path EXISTS] in filesystem storage (2nd depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/id2');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id1/id2');
 
       // Act
       await globalLocator<SecretsRepository>().saveEncrypted(actualFilesystemPath, 'updated_value');
@@ -116,10 +123,17 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id3.snggle': encryptedSecrets3,
-        'id1.snggle': encryptedSecrets1,
-        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
-        'id1': <String, String>{'id2.snggle': 'updated_value'}
+        'vaults': <String, dynamic>{
+          'id1': <String, String>{
+            'id2.snggle': 'updated_value',
+          },
+          'id1.snggle': encryptedSecrets1,
+          'id3': <String, String>{
+            'id4.snggle': encryptedSecrets4,
+          },
+          'id3.snggle': encryptedSecrets3,
+        },
+        'vaults.snggle': encryptedSecrets4,
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -127,7 +141,7 @@ void main() {
 
     test('Should [SAVE secrets] if [secrets path NOT EXIST] in filesystem storage (1st depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id99999');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id99999');
 
       // Act
       await globalLocator<SecretsRepository>().saveEncrypted(actualFilesystemPath, 'new_value');
@@ -138,11 +152,18 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id3.snggle': encryptedSecrets3,
-        'id1.snggle': encryptedSecrets1,
-        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
-        'id99999.snggle': 'new_value',
-        'id1': <String, String>{'id2.snggle': encryptedSecrets2}
+        'vaults': <String, dynamic>{
+          'id1': <String, String>{
+            'id2.snggle': encryptedSecrets2,
+          },
+          'id1.snggle': encryptedSecrets1,
+          'id3': <String, String>{
+            'id4.snggle': encryptedSecrets4,
+          },
+          'id99999.snggle': 'new_value',
+          'id3.snggle': encryptedSecrets3,
+        },
+        'vaults.snggle': encryptedSecrets4,
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -150,7 +171,7 @@ void main() {
 
     test('Should [SAVE secrets] if [secrets path NOT EXIST] in filesystem storage (2nd depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/id99999');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id1/id99999');
 
       // Act
       await globalLocator<SecretsRepository>().saveEncrypted(actualFilesystemPath, 'new_value');
@@ -161,13 +182,18 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id3.snggle': encryptedSecrets3,
-        'id1.snggle': encryptedSecrets1,
-        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
-        'id1': <String, String>{
-          'id99999.snggle': 'new_value',
-          'id2.snggle': encryptedSecrets2,
-        }
+        'vaults': <String, dynamic>{
+          'id1': <String, String>{
+            'id99999.snggle': 'new_value',
+            'id2.snggle': encryptedSecrets2,
+          },
+          'id1.snggle': encryptedSecrets1,
+          'id3': <String, String>{
+            'id4.snggle': encryptedSecrets4,
+          },
+          'id3.snggle': encryptedSecrets3,
+        },
+        'vaults.snggle': encryptedSecrets4,
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -178,8 +204,8 @@ void main() {
     test('Should [UPDATE secrets] if [secrets path EXISTS] in filesystem storage (1st depth)', () async {
       // Act
       await globalLocator<SecretsRepository>().move(
-        FilesystemPath.fromString('id3'),
-        FilesystemPath.fromString('id1/id3'),
+        FilesystemPath.fromString('vaults/id3'),
+        FilesystemPath.fromString('vaults/id1/id3'),
       );
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
@@ -188,12 +214,17 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id1.snggle': encryptedSecrets1,
-        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
-        'id1': <String, String>{
-          'id3.snggle': encryptedSecrets3,
-          'id2.snggle': encryptedSecrets2,
-        }
+        'vaults': <String, dynamic>{
+          'id1': <String, String>{
+            'id2.snggle': encryptedSecrets2,
+            'id3.snggle': encryptedSecrets3,
+          },
+          'id1.snggle': encryptedSecrets1,
+          'id3': <String, String>{
+            'id4.snggle': encryptedSecrets4,
+          },
+        },
+        'vaults.snggle': encryptedSecrets4,
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -202,8 +233,8 @@ void main() {
     test('Should [UPDATE secrets] if [secrets path EXISTS] in filesystem storage (2nd depth)', () async {
       // Act
       await globalLocator<SecretsRepository>().move(
-        FilesystemPath.fromString('id1/id2'),
-        FilesystemPath.fromString('id2'),
+        FilesystemPath.fromString('vaults/id1/id2'),
+        FilesystemPath.fromString('vaults/id2'),
       );
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
@@ -212,10 +243,15 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id3.snggle': encryptedSecrets3,
-        'id1.snggle': encryptedSecrets1,
-        'id3': <String, String>{'id4.snggle': encryptedSecrets4},
-        'id2.snggle': encryptedSecrets2,
+        'vaults': <String, dynamic>{
+          'id1.snggle': encryptedSecrets1,
+          'id2.snggle': encryptedSecrets2,
+          'id3': <String, String>{
+            'id4.snggle': encryptedSecrets4,
+          },
+          'id3.snggle': encryptedSecrets3,
+        },
+        'vaults.snggle': encryptedSecrets4,
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -224,11 +260,10 @@ void main() {
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage (1st depth)', () async {
       // Assert
       expect(
-            () =>
-            globalLocator<SecretsRepository>().move(
-              FilesystemPath.fromString('not_existing_path'),
-              FilesystemPath.fromString('id1/not_existing_path'),
-            ),
+        () => globalLocator<SecretsRepository>().move(
+          FilesystemPath.fromString('vaults/not_existing_path'),
+          FilesystemPath.fromString('vaults/id1/not_existing_path'),
+        ),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -236,11 +271,10 @@ void main() {
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage (2nd depth)', () async {
       // Assert
       expect(
-            () =>
-            globalLocator<SecretsRepository>().move(
-              FilesystemPath.fromString('id1/not_existing_path'),
-              FilesystemPath.fromString('not_existing_path'),
-            ),
+        () => globalLocator<SecretsRepository>().move(
+          FilesystemPath.fromString('vaults/id1/not_existing_path'),
+          FilesystemPath.fromString('vaults/not_existing_path'),
+        ),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -249,7 +283,7 @@ void main() {
   group('Tests of SecretsRepository.delete()', () {
     test('Should [REMOVE secrets] if [secrets path EXISTS] in filesystem storage (1st depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id3');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id3');
 
       // Act
       await globalLocator<SecretsRepository>().delete(actualFilesystemPath);
@@ -257,9 +291,16 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id1.snggle': encryptedFileContent1,
-        'id3': <String, String>{'id4.snggle': encryptedFileContent4},
-        'id1': <String, String>{'id2.snggle': encryptedFileContent2}
+        'vaults': <String, dynamic>{
+          'id1': <String, String>{
+            'id2.snggle': encryptedFileContent2,
+          },
+          'id1.snggle': encryptedFileContent1,
+          'id3': <String, String>{
+            'id4.snggle': encryptedFileContent4,
+          },
+        },
+        'vaults.snggle': encryptedFileContent4,
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -267,7 +308,7 @@ void main() {
 
     test('Should [REMOVE secrets] if [secrets path EXISTS] in filesystem storage (2nd depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/id2');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id1/id2');
 
       // Act
       await globalLocator<SecretsRepository>().delete(actualFilesystemPath);
@@ -275,9 +316,14 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
-        'id3.snggle': encryptedFileContent3,
-        'id1.snggle': encryptedFileContent1,
-        'id3': <String, String>{'id4.snggle': encryptedFileContent4},
+        'vaults': <String, dynamic>{
+          'id1.snggle': encryptedFileContent1,
+          'id3': <String, String>{
+            'id4.snggle': encryptedFileContent4,
+          },
+          'id3.snggle': encryptedFileContent3,
+        },
+        'vaults.snggle': encryptedFileContent4,
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -285,22 +331,22 @@ void main() {
 
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage (1st depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/not_existing_path');
 
       // Assert
       expect(
-            () => globalLocator<SecretsRepository>().delete(actualFilesystemPath),
+        () => globalLocator<SecretsRepository>().delete(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
 
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage (2nd depth)', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/not_existing_path');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/id1/not_existing_path');
 
       // Assert
       expect(
-            () => globalLocator<SecretsRepository>().delete(actualFilesystemPath),
+        () => globalLocator<SecretsRepository>().delete(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
