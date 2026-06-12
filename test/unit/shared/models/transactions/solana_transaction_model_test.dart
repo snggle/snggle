@@ -70,7 +70,7 @@ void main() {
       );
 
       // @formatter:off
-      WalletModel actualWalletModel = WalletModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network2/wallet1'), name: 'SOLANA WALLET', address: 'EX1oURpiPWWYUjVSK9KQR2qyqTBaR1EGfRNxkTsNk57Y', derivationPath: "m/44'/501'/0'/0'");
+      WalletModel actualWalletModel = WalletModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network2/wallet1'), name: 'SOLANA WALLET', address: 'EX1oURpiPWWYUjVSK9KQR2qyqTBaR1EGfRNxkTsNk57Y', derivationPath: "m/44'/501'/0'/0'");
       // @formatter:on
 
       SignDataType actualSignDataType =
