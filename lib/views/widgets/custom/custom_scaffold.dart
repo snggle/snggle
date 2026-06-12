@@ -56,7 +56,7 @@ class CustomScaffold extends StatelessWidget {
         body: SafeArea(
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: () => FocusScope.of(context).unfocus(),
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: SizedBox.expand(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,

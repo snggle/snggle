@@ -13,11 +13,11 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
     required super.filesystemPath,
     required ValueChanged<FilesystemPath> onGroupNavigateBack,
   }) : super(
-          listItemsService: globalLocator<WalletsService>(),
-          childItemsServices: <IListItemsService<AListItemModel>>[],
-          onGroupNavigateBack: onGroupNavigateBack,
-        );
+         listItemsService: globalLocator<WalletsService>(),
+         childItemsServices: <IListItemsService<AListItemModel>>[],
+         onGroupNavigateBack: onGroupNavigateBack,
+       );
 
   @override
-  bool get canBeRenamedBool => true;
+  bool canBeRenamedBool(AListItemModel item) => true;
 }
