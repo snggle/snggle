@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/entry_details_page/entry_details_page_cubit.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/entry_details_page/entry_details_page_state.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/services/entries_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/factories/entry_model_factory.dart';
@@ -16,12 +15,13 @@ import '../../../../../../utils/test_database.dart';
 
 void main() {
   final TestDatabase testDatabase = TestDatabase();
+  final DateTime totpTimestamp = DateTime.fromMicrosecondsSinceEpoch(1779174562796584);
   late EntryDetailsPageCubit actualEntryDetailsPageCubit;
   late EntryModel actualEntryModel;
 
   setUp(() async {
     await testDatabase.init(
-      databaseMock: DatabaseMock.masterKeyOnlyDatabaseMock,
+      databaseMock: DatabaseMock.fullDatabaseMock,
       appPasswordModel: PasswordModel.fromPlaintext('1111'),
     );
 
@@ -32,12 +32,8 @@ void main() {
       'entry1@example.com',
       'entry_user_1',
       'entry_password_1',
+      '',
     );
-
-    await globalLocator<EntriesService>().save(actualEntryModel.copyWith(
-      name: 'UPDATED ENTRY 0',
-      website: 'https://updated-entry1.example',
-    ));
 
     globalLocator<PasswordController>().addPassword(
       PasswordModel.defaultPassword(),
@@ -57,34 +53,115 @@ void main() {
   group('Tests of EntryDetailsPageCubit.init()', () {
     test('Should [load entry data and secrets into controllers]', () async {
       // Act
-      await actualEntryDetailsPageCubit.init();
+      await actualEntryDetailsPageCubit.init(timestamp: totpTimestamp);
 
       // Assert
-      EntryModel expectedEntryModel = EntryModel(
-        id: 1,
-        encryptedBool: false,
-        pinnedBool: false,
-        index: 0,
-        filesystemPath: FilesystemPath.fromString('entries/entry1'),
-        name: 'UPDATED ENTRY 0',
-        website: 'https://updated-entry1.example',
-        emailExistsBool: true,
-        usernameExistsBool: true,
-        passwordExistsBool: true,
+      EntryDetailsPageCubit expectedEntryDetailsPageCubit = EntryDetailsPageCubit(
+        entryModel: EntryModel(
+          id: 4,
+          encryptedBool: false,
+          pinnedBool: false,
+          index: 3,
+          filesystemPath: FilesystemPath.fromString('entries/entry4'),
+          name: 'ENTRY 0',
+          website: 'https://snggle.com',
+          emailExistsBool: true,
+          usernameExistsBool: true,
+          passwordExistsBool: true,
+          totpExistsBool: false,
+        ),
+      );
+      addTearDown(expectedEntryDetailsPageCubit.close);
+      await expectedEntryDetailsPageCubit.init(timestamp: totpTimestamp);
+
+      expect(actualEntryDetailsPageCubit.state, expectedEntryDetailsPageCubit.state);
+      expect(actualEntryDetailsPageCubit.entryModel, expectedEntryDetailsPageCubit.entryModel);
+      expect(
+        <String>[
+          actualEntryDetailsPageCubit.nameTextEditingController.text,
+          actualEntryDetailsPageCubit.websiteTextEditingController.text,
+          actualEntryDetailsPageCubit.emailTextEditingController.text,
+          actualEntryDetailsPageCubit.usernameTextEditingController.text,
+          actualEntryDetailsPageCubit.passwordTextEditingController.text,
+          actualEntryDetailsPageCubit.totpTextEditingController.text,
+        ],
+        <String>[
+          expectedEntryDetailsPageCubit.nameTextEditingController.text,
+          expectedEntryDetailsPageCubit.websiteTextEditingController.text,
+          expectedEntryDetailsPageCubit.emailTextEditingController.text,
+          expectedEntryDetailsPageCubit.usernameTextEditingController.text,
+          expectedEntryDetailsPageCubit.passwordTextEditingController.text,
+          expectedEntryDetailsPageCubit.totpTextEditingController.text,
+        ],
+      );
+    });
+
+    test('Should [load TOTP code] and [emit state] with [totpExistsBool == TRUE]', () async {
+      // Arrange
+      actualEntryModel = await globalLocator<EntryModelFactory>().createNewEntry(
+        FilesystemPath.fromString('entries'),
+        'ENTRY 0',
+        'https://snggle.com',
+        'entry1@example.com',
+        'entry_user_1',
+        'entry_password_1',
+        'jbswy3dpehpk3pxp',
       );
 
-      expect(actualEntryDetailsPageCubit.state, const EntryDetailsPageState(loadingBool: false));
-      expect(actualEntryDetailsPageCubit.entryModel, expectedEntryModel);
-      expect(actualEntryDetailsPageCubit.nameTextEditingController.text, 'UPDATED ENTRY 0');
-      expect(actualEntryDetailsPageCubit.websiteTextEditingController.text, 'https://updated-entry1.example');
-      expect(actualEntryDetailsPageCubit.emailTextEditingController.text, 'entry1@example.com');
-      expect(actualEntryDetailsPageCubit.usernameTextEditingController.text, 'entry_user_1');
-      expect(actualEntryDetailsPageCubit.passwordTextEditingController.text, 'entry_password_1');
+      globalLocator<PasswordController>().addPassword(
+        PasswordModel.defaultPassword(),
+        actualEntryModel.filesystemPath,
+      );
+
+      actualEntryDetailsPageCubit = EntryDetailsPageCubit(entryModel: actualEntryModel);
+
+      // Act
+      await actualEntryDetailsPageCubit.init(timestamp: totpTimestamp);
+
+      // Assert
+      EntryDetailsPageCubit expectedEntryDetailsPageCubit = EntryDetailsPageCubit(
+        entryModel: EntryModel(
+          id: 5,
+          encryptedBool: false,
+          pinnedBool: false,
+          index: 4,
+          filesystemPath: FilesystemPath.fromString('entries/entry5'),
+          name: 'ENTRY 0',
+          website: 'https://snggle.com',
+          emailExistsBool: true,
+          usernameExistsBool: true,
+          passwordExistsBool: true,
+          totpExistsBool: true,
+        ),
+      );
+      addTearDown(expectedEntryDetailsPageCubit.close);
+      await expectedEntryDetailsPageCubit.init(timestamp: totpTimestamp);
+
+      expect(actualEntryDetailsPageCubit.state, expectedEntryDetailsPageCubit.state);
+      expect(actualEntryDetailsPageCubit.state, const EntryDetailsPageState(loadingBool: false, totpExistsBool: true, totpRemainingSeconds: 8));
+      expect(actualEntryDetailsPageCubit.entryModel, expectedEntryDetailsPageCubit.entryModel);
+      expect(actualEntryDetailsPageCubit.totpTextEditingController.text, '541 411');
+      expect(
+        <String>[
+          actualEntryDetailsPageCubit.nameTextEditingController.text,
+          actualEntryDetailsPageCubit.websiteTextEditingController.text,
+          actualEntryDetailsPageCubit.emailTextEditingController.text,
+          actualEntryDetailsPageCubit.usernameTextEditingController.text,
+          actualEntryDetailsPageCubit.passwordTextEditingController.text,
+        ],
+        <String>[
+          expectedEntryDetailsPageCubit.nameTextEditingController.text,
+          expectedEntryDetailsPageCubit.websiteTextEditingController.text,
+          expectedEntryDetailsPageCubit.emailTextEditingController.text,
+          expectedEntryDetailsPageCubit.usernameTextEditingController.text,
+          expectedEntryDetailsPageCubit.passwordTextEditingController.text,
+        ],
+      );
     });
   });
 
   group('Tests of EntryDetailsPageCubit.save()', () {
-    test('Should [update entry secrets] and keep [loadingBool == FALSE] after save', () async {
+    test('Should keep seeded [entries/entry1] secrets unchanged and keep [loadingBool == FALSE] after save', () async {
       // Arrange
       await actualEntryDetailsPageCubit.init();
       actualEntryDetailsPageCubit.emailTextEditingController.text = 'updated-entry1@example.com';
@@ -99,18 +176,56 @@ void main() {
       );
 
       // Assert
+      EntryDetailsPageCubit expectedEntryDetailsPageCubit = EntryDetailsPageCubit(
+        entryModel: EntryModel(
+          id: 4,
+          encryptedBool: false,
+          pinnedBool: false,
+          index: 3,
+          filesystemPath: FilesystemPath.fromString('entries/entry4'),
+          name: 'ENTRY 0',
+          website: 'https://snggle.com',
+          emailExistsBool: true,
+          usernameExistsBool: true,
+          passwordExistsBool: true,
+          totpExistsBool: false,
+        ),
+      );
+      addTearDown(expectedEntryDetailsPageCubit.close);
+      await expectedEntryDetailsPageCubit.init();
+      expectedEntryDetailsPageCubit.emailTextEditingController.text = 'updated-entry1@example.com';
+      expectedEntryDetailsPageCubit.usernameTextEditingController.text = '';
+      expectedEntryDetailsPageCubit.passwordTextEditingController.text = '';
+
       EntrySecretsModel expectedEntrySecrets = EntrySecretsModel(
         filesystemPath: FilesystemPath.fromString('entries/entry1'),
-        email: 'updated-entry1@example.com',
-        username: '',
-        password: '',
+        email: 'entry1@example.com',
+        username: 'entry_user_1',
+        password: 'entry_password_1',
+        totpSecret: 'wxx5vbewifu4m4hljgilbewm',
       );
 
-      expect(actualEntryDetailsPageCubit.state, const EntryDetailsPageState(loadingBool: false));
+      expect(actualEntryDetailsPageCubit.state, expectedEntryDetailsPageCubit.state);
+      expect(actualEntryDetailsPageCubit.entryModel, expectedEntryDetailsPageCubit.entryModel);
+      expect(
+        <String>[
+          actualEntryDetailsPageCubit.nameTextEditingController.text,
+          actualEntryDetailsPageCubit.websiteTextEditingController.text,
+          actualEntryDetailsPageCubit.emailTextEditingController.text,
+          actualEntryDetailsPageCubit.usernameTextEditingController.text,
+          actualEntryDetailsPageCubit.passwordTextEditingController.text,
+          actualEntryDetailsPageCubit.totpTextEditingController.text,
+        ],
+        <String>[
+          expectedEntryDetailsPageCubit.nameTextEditingController.text,
+          expectedEntryDetailsPageCubit.websiteTextEditingController.text,
+          expectedEntryDetailsPageCubit.emailTextEditingController.text,
+          expectedEntryDetailsPageCubit.usernameTextEditingController.text,
+          expectedEntryDetailsPageCubit.passwordTextEditingController.text,
+          expectedEntryDetailsPageCubit.totpTextEditingController.text,
+        ],
+      );
       expect(actualEntrySecrets, expectedEntrySecrets);
-      expect(actualEntryDetailsPageCubit.emailTextEditingController.text, 'updated-entry1@example.com');
-      expect(actualEntryDetailsPageCubit.usernameTextEditingController.text, '');
-      expect(actualEntryDetailsPageCubit.passwordTextEditingController.text, '');
     });
   });
 

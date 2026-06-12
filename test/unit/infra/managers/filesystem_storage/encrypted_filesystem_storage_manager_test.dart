@@ -56,7 +56,7 @@ void main() {
       expect(actualFileContent, expectedFileContent);
     });
 
-    test('Should [return decrypted file content] if [file path EXISTS] (1st depth)', () async {
+    test('Should [return decrypted file content] if [file path EXISTS] (2nd depth)', () async {
       // Act
       String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults/id3'));
 
@@ -66,7 +66,7 @@ void main() {
       expect(actualFileContent, expectedFileContent);
     });
 
-    test('Should [return decrypted file content] if [file path EXISTS] (2nd depth)', () async {
+    test('Should [return decrypted file content] if [file path EXISTS] (3rd depth)', () async {
       // Act
       String actualFileContent = await actualFilesystemStorageManager.read(
         FilesystemPath.fromString('vaults/id1/id2'),
@@ -96,7 +96,7 @@ void main() {
       );
     });
 
-    test('Should [throw ChildKeyNotFoundException] if [file path NOT EXISTS] (2nd depth)', () async {
+    test('Should [throw ChildKeyNotFoundException] if [file path NOT EXISTS] (3rd depth)', () async {
       // Assert
 
       expect(
