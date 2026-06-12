@@ -35,6 +35,7 @@ class AppRouter extends RootStackRouter {
         ],
       ),
       AutoRoute(page: WalletCreateRoute.page),
+      AutoRoute(page: EntryDetailsEditableRoute.page),
       AutoRoute(
         page: BottomNavigationRoute.page,
         maintainState: true,
@@ -51,7 +52,13 @@ class AppRouter extends RootStackRouter {
               AutoRoute(page: SolanaTransactionDetailsRoute.page),
             ],
           ),
-          AutoRoute(page: SecretsRoute.page),
+          AutoRoute(
+            page: EntriesSectionWrapperRoute.page,
+            children: <AutoRoute>[
+              AutoRoute(page: EntryListRoute.page, initial: true),
+              AutoRoute(page: EntryDetailsRoute.page),
+            ],
+          ),
           AutoRoute(page: AppsRoute.page),
           AutoRoute(
             page: SettingsSectionWrapperRoute.page,

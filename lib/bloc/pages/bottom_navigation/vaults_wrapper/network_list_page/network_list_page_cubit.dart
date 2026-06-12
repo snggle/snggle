@@ -24,5 +24,5 @@ class NetworkListPageCubit extends AListCubit<NetworkGroupModel> {
         );
 
   @override
-  bool get canBeRenamedBool => false;
+  bool canBeRenamedBool(AListItemModel item) => false;
 }
