@@ -33,7 +33,7 @@ void main() {
 
       // Act
       List<GroupModel> actualGroupModelList =
-      await globalLocator<GroupsService>().getAllByParentPath(FilesystemPath.fromString('vaults'), firstLevelBool: true);
+          await globalLocator<GroupsService>().getAllByParentPath(FilesystemPath.fromString('vaults'), firstLevelBool: true);
 
       // Assert
       List<GroupModel> expectedGroupModelList = <GroupModel>[
