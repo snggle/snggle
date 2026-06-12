@@ -113,7 +113,7 @@ class TestListItem extends AListItemModel {
     required super.id,
     required super.encryptedBool,
     required super.pinnedBool,
-  }) : super(filesystemPath: FilesystemPath.fromString('id$id'));
+  }) : super(filesystemPath: FilesystemPath.fromString('vaults/id$id'));
 
   @override
   AListItemModel copyWith({bool? encryptedBool, bool? pinnedBool, String? name}) {

@@ -60,7 +60,8 @@ class FilesystemStorageManager {
 
     Directory parentDirectory = await _getParentDirectory(filesystemPath);
     bool parentDirectoryEmptyBool = parentDirectory.listSync().isEmpty;
-    if (parentDirectoryEmptyBool) {
+    bool parentDirectoryTopLevelBool = parentDirectory.path.endsWith('/vaults');
+    if (parentDirectoryEmptyBool && parentDirectoryTopLevelBool == false) {
       await parentDirectory.delete();
     }
   }

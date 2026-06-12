@@ -24,13 +24,13 @@ void main() {
     );
 
     actualWalletCreatePageCubit = WalletCreatePageCubit(
-      parentFilesystemPath: FilesystemPath.fromString('vault1/network1'),
+      parentFilesystemPath: FilesystemPath.fromString('vaults/vault1/network1'),
       vaultModel: VaultModel(
         id: 1,
         encryptedBool: false,
         pinnedBool: false,
         index: 0,
-        filesystemPath: FilesystemPath.fromString('vault1'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         fingerprint: '2429747484',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[],
@@ -39,7 +39,7 @@ void main() {
         pinnedBool: false,
         encryptedBool: false,
         id: 1,
-        filesystemPath: FilesystemPath.fromString('vault1/network1'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1/network1'),
         networkTemplateModel: PredefinedNetworkTemplates.ethereum,
         listItemsPreview: <AListItemModel>[],
         name: 'Ethereum1',
@@ -129,8 +129,8 @@ void main() {
       test('Should [return WalletModel] and [emit WalletCreatePageState] with [walletExistsErrorBool == FALSE]', () async {
         // Arrange
         TestUtils.mockPasswords(
-          FilesystemPath.fromString('vault1/network1/wallet1'),
-          List<PasswordModel>.generate(3, (_) => PasswordModel.defaultPassword()),
+          FilesystemPath.fromString('vaults/vault1/network1/wallet1'),
+          List<PasswordModel>.generate(4, (_) => PasswordModel.defaultPassword()),
         );
 
         // Act
@@ -146,7 +146,7 @@ void main() {
           pinnedBool: false,
           address: '0x58d66B2F427936f1245f181fAaAaC51A176BF485',
           derivationPath: "m/44'/60'/0'/0/99999",
-          filesystemPath: FilesystemPath.fromString('vault1/network1/wallet7'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/wallet7'),
           name: 'Wallet 5',
         );
         WalletCreatePageState expectedWalletCreatePageState = const WalletCreatePageState(walletExistsErrorBool: false);
