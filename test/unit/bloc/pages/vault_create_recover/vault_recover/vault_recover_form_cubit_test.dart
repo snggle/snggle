@@ -26,7 +26,7 @@ void main() {
       appPasswordModel: PasswordModel.fromPlaintext('1111'),
     );
 
-    actualVaultRecoverPageCubit = VaultRecoverPageCubit(parentFilesystemPath: const FilesystemPath.empty());
+    actualVaultRecoverPageCubit = VaultRecoverPageCubit(parentFilesystemPath: FilesystemPath.fromString('vaults'));
   });
 
   group('Tests of VaultRecoverPageCubit process', () {
@@ -174,9 +174,10 @@ void main() {
           });
 
       test(
-          'Should [return VaultRecoverPageState] with [mnemonicFilledBool == TRUE], [mnemonicValidBool == TRUE] if [fields FILLED] and [mnemonic VALID]', () {
-        // Arrange
-        // @formatter:off
+          'Should [return VaultRecoverPageState] with [mnemonicFilledBool == TRUE], [mnemonicValidBool == TRUE] if [fields FILLED] and [mnemonic VALID]',
+              () {
+            // Arrange
+            // @formatter:off
         List<String> actualMnemonic = <String>[
           'square', 'old', 'choose', 'soon', 'radar', 'used', 'index', 'wrong', 'cancel', 'frame', 'isolate', 'library'
         ];
@@ -192,7 +193,7 @@ void main() {
         // Assert
         expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, true);
         expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, true);
-      });
+          });
     });
 
     group('Tests of VaultRecoverPageCubit.saveMnemonic() method', () {
@@ -244,7 +245,7 @@ void main() {
 
         // Output is always a random string because AES changes the initialization vector with Random Secure
         // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-        Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem(path: 'secrets');
+        Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem(path: 'secrets/vaults');
 
         List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
           return isar.vaults.where().findAll();
@@ -253,12 +254,12 @@ void main() {
         // Assert
         List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
           // @formatter:off
-          const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
-          const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
-          const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
-          const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
-          const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5'),
-          const VaultEntity(id: 6, encryptedBool: false, pinnedBool: false, index: 5, filesystemPathString: 'vault6', fingerprint: '2583323534', name: 'Test vault')
+          const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vaults/vault1', fingerprint: '2429747484', name: 'VAULT 1'),
+          const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vaults/vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+          const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vaults/vault3', fingerprint: '405998762', name: 'VAULT 3'),
+          const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'vaults/group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
+          const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'vaults/group1/vault5', fingerprint: '1980042394', name: 'VAULT 5'),
+          const VaultEntity(id: 6, encryptedBool: false, pinnedBool: false, index: 5, filesystemPathString: 'vaults/vault6', fingerprint: '2583323534', name: 'Test vault')
           // @formatter:on
         ];
 
@@ -299,7 +300,7 @@ void main() {
 
         // Output is always a random string because AES changes the initialization vector with Random Secure
         // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-        Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem(path: 'secrets');
+        Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem(path: 'secrets/vaults');
 
         List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
           return isar.vaults.where().findAll();
@@ -308,12 +309,12 @@ void main() {
         // Assert
         List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
           // @formatter:off
-          const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
-          const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
-          const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
-          const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
-          const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5'),
-          const VaultEntity(id: 6, encryptedBool: false, pinnedBool: false, index: 5, filesystemPathString: 'vault6', fingerprint: '2583323534', name: 'Test vault')
+          const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vaults/vault1', fingerprint: '2429747484', name: 'VAULT 1'),
+          const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vaults/vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+          const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vaults/vault3', fingerprint: '405998762', name: 'VAULT 3'),
+          const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'vaults/group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
+          const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'vaults/group1/vault5', fingerprint: '1980042394', name: 'VAULT 5'),
+          const VaultEntity(id: 6, encryptedBool: false, pinnedBool: false, index: 5, filesystemPathString: 'vaults/vault6', fingerprint: '2583323534', name: 'Test vault')
           // @formatter:on
         ];
 
@@ -327,16 +328,16 @@ void main() {
             encryptedBool: false,
             pinnedBool: false,
             index: 0,
-            filesystemPath: FilesystemPath.fromString('vault1'),
+            filesystemPath: FilesystemPath.fromString('vaults/vault1'),
             fingerprint: '2429747484',
             name: 'VAULT 1',
             listItemsPreview: <AListItemModel>[
               // @formatter:off
-              GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
-              NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
-              NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
-              NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
-              NetworkGroupModel(id: 10, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network10'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.solana, name: 'Solana1'),
+              GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
+              NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
+              NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
+              NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
+              NetworkGroupModel(id: 10, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network10'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.solana, name: 'Solana1'),
               // @formatter:on
             ],
           ),
