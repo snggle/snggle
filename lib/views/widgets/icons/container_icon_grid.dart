@@ -1,15 +1,12 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
-import 'package:snggle/shared/models/groups/group_model.dart';
-import 'package:snggle/shared/models/groups/network_group_model.dart';
-import 'package:snggle/shared/models/vaults/vault_model.dart';
-import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/views/widgets/custom/custom_flexible_grid.dart';
-import 'package:snggle/views/widgets/icons/container_icon_grid_item.dart';
-import 'package:snggle/views/widgets/icons/wallet_icon.dart';
+import 'package:snggle/views/widgets/icons/container_icon_content_preview.dart';
 
 class ContainerIconGrid extends StatelessWidget {
+  final List<Widget> contentPreview;
   final List<AListItemModel> listItemsPreview;
   final EdgeInsets padding;
 
@@ -17,10 +14,19 @@ class ContainerIconGrid extends StatelessWidget {
     required this.listItemsPreview,
     required this.padding,
     super.key,
-  });
+  }) : contentPreview = const <Widget>[];
+
+  const ContainerIconGrid.fromContentPreview({
+    required this.contentPreview,
+    required this.padding,
+    super.key,
+  }) : listItemsPreview = const <AListItemModel>[];
 
   @override
   Widget build(BuildContext context) {
+    bool listItemsUsedBool = listItemsPreview.isNotEmpty;
+    int itemsCount = listItemsUsedBool ? listItemsPreview.length : contentPreview.length;
+
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         double innerWidth = constraints.maxWidth - padding.horizontal;
@@ -29,7 +35,7 @@ class ContainerIconGrid extends StatelessWidget {
         double gridSize = min(innerWidth, innerHeight);
         double spacing = gridSize * 0.13;
 
-        int slotsPerSide = _calcSlotsPerSide(listItemsPreview.length);
+        int slotsPerSide = _calcSlotsPerSide(itemsCount);
         int slotsCount = slotsPerSide * slotsPerSide;
 
         return Padding(
@@ -44,25 +50,15 @@ class ContainerIconGrid extends StatelessWidget {
                 horizontalGap: spacing,
                 childCount: slotsCount,
                 itemBuilder: (BuildContext context, int index) {
-                  if (index >= listItemsPreview.length) {
+                  if (index >= itemsCount) {
                     return const SizedBox.expand();
                   }
 
-                  AListItemModel listItemModel = listItemsPreview[index];
-                  double size = constraints.maxWidth;
-
-                  switch (listItemModel) {
-                    case VaultModel vaultModel:
-                      return ContainerIconGridItem.fromVaultModel(vaultModel: vaultModel, size: size);
-                    case NetworkGroupModel networkGroupModel:
-                      return ContainerIconGridItem.fromNetworkGroupModel(networkGroupModel: networkGroupModel, size: size);
-                    case GroupModel groupModel:
-                      return ContainerIconGridItem.fromGroupModel(groupModel: groupModel, size: size);
-                    case WalletModel walletModel:
-                      return WalletIcon(size: size, walletModel: walletModel, smallBool: true);
-                    default:
-                      throw Exception('Unknown AListItemModel');
+                  if (listItemsUsedBool) {
+                    return ContainerIconContentPreview(listItemModel: listItemsPreview[index]);
                   }
+
+                  return contentPreview[index];
                 },
               ),
             ),
@@ -73,7 +69,7 @@ class ContainerIconGrid extends StatelessWidget {
   }
 
   int _calcSlotsPerSide(int itemsCount) {
-    if (itemsCount == 1) {
+    if (itemsCount <= 1) {
       return 1;
     } else if (itemsCount <= 4) {
       return 2;
