@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
@@ -10,6 +11,9 @@ class EntryFormField extends StatelessWidget {
   final bool readOnlyBool;
   final bool obscureTextBool;
   final bool obscureClipboardContentBool;
+  final bool autofocusBool;
+  final FocusNode? focusNode;
+  final List<TextInputFormatter>? inputFormatters;
   final Widget? suffixWidget;
   final BoxConstraints? suffixWidgetConstraints;
 
@@ -19,6 +23,9 @@ class EntryFormField extends StatelessWidget {
     required this.readOnlyBool,
     this.obscureTextBool = false,
     this.obscureClipboardContentBool = false,
+    this.autofocusBool = false,
+    this.focusNode,
+    this.inputFormatters,
     this.suffixWidget,
     this.suffixWidgetConstraints,
     super.key,
@@ -47,6 +54,8 @@ class EntryFormField extends StatelessWidget {
                   keyboardType: TextInputType.text,
                   padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
                   obscureTextBool: obscureTextBool,
+                  focusNode: focusNode,
+                  inputFormatters: inputFormatters,
                   onTap: copy,
                   suffixWidget: suffixWidget,
                   suffixWidgetConstraints: suffixWidgetConstraints,
@@ -65,6 +74,9 @@ class EntryFormField extends StatelessWidget {
                 keyboardType: TextInputType.text,
                 padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
                 obscureTextBool: obscureTextBool,
+                autofocusBool: autofocusBool,
+                focusNode: focusNode,
+                inputFormatters: inputFormatters,
                 suffixWidget: suffixWidget,
                 suffixWidgetConstraints: suffixWidgetConstraints,
               ),

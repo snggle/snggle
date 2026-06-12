@@ -29,6 +29,7 @@ void main() {
         'entry1@example.com',
         'entry_user_1',
         'entry_password_1',
+        'entry_totp_1',
       );
 
       // Assert
@@ -43,6 +44,7 @@ void main() {
         emailExistsBool: true,
         usernameExistsBool: true,
         passwordExistsBool: true,
+        totpExistsBool: true,
       );
 
       expect(actualEntryModel, expectedEntryModel);
@@ -57,6 +59,7 @@ void main() {
         'entry1@example.com',
         'entry_user_1',
         'entry_password_1',
+        '',
       );
 
       // Act
@@ -67,6 +70,7 @@ void main() {
         '',
         'entry_user_2',
         '',
+        'entry_totp_2',
       );
 
       // Assert
@@ -81,6 +85,7 @@ void main() {
         emailExistsBool: false,
         usernameExistsBool: true,
         passwordExistsBool: false,
+        totpExistsBool: true,
       );
 
       expect(actualEntryModel, expectedEntryModel);
@@ -92,8 +97,8 @@ void main() {
       // Arrange
       List<EntryEntity> actualEntryEntityList = <EntryEntity>[
         // @formatter:off
-        const EntryEntity(id: 1, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'ENTRY 0', website: 'https://snggle.com'),
-        const EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
+        const EntryEntity(id: 1, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'ENTRY 0', website: 'https://snggle.com', totpExistsBool: false),
+        const EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com', totpExistsBool: false),
         // @formatter:on
       ];
 
@@ -146,6 +151,7 @@ void main() {
         filesystemPathString: 'entries/entry1',
         name: 'ENTRY 0',
         website: 'https://snggle.com',
+        totpExistsBool: false,
       );
 
       // Act

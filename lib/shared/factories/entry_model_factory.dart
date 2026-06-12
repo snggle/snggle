@@ -12,14 +12,13 @@ class EntryModelFactory {
   final EntriesService _entriesService = globalLocator<EntriesService>();
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
-  Future<EntryModel> createNewEntry(
-    FilesystemPath parentFilesystemPath,
-    String name,
-    String website,
-    String email,
-    String username,
-    String password,
-  ) async {
+  Future<EntryModel> createNewEntry(FilesystemPath parentFilesystemPath,
+      String name,
+      String website,
+      String email,
+      String username,
+      String password,
+      String totpSecret,) async {
     int lastEntryIndex = await _entriesService.getLastIndex();
 
     EntryModel entryModel = EntryModel(
@@ -33,6 +32,7 @@ class EntryModelFactory {
       emailExistsBool: email.isNotEmpty,
       usernameExistsBool: username.isNotEmpty,
       passwordExistsBool: password.isNotEmpty,
+      totpExistsBool: totpSecret.isNotEmpty,
     );
     int entryId = await _entriesService.save(entryModel);
     entryModel = await _entriesService.updateFilesystemPath(entryId, parentFilesystemPath);
@@ -42,6 +42,7 @@ class EntryModelFactory {
       email: email,
       username: username,
       password: password,
+      totpSecret: totpSecret,
     );
 
     await _secretsService.save(entrySecretsModel, PasswordModel.defaultPassword());
@@ -68,6 +69,7 @@ class EntryModelFactory {
       emailExistsBool: entryEntity.emailExistsBool,
       usernameExistsBool: entryEntity.usernameExistsBool,
       passwordExistsBool: entryEntity.passwordExistsBool,
+      totpExistsBool: entryEntity.totpExistsBool,
     );
   }
 }

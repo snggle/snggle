@@ -57,6 +57,7 @@ void main() {
         'entry1@example.com',
         'entry_user_1',
         'entry_password_1',
+        '',
       );
 
       // Act
@@ -172,6 +173,7 @@ void main() {
         email: 'entry1@example.com',
         username: 'entry_user_1',
         password: 'entry_password_1',
+        totpSecret: '',
       );
 
       expect(actualEntryModel, expectedEntryModel);
@@ -179,6 +181,70 @@ void main() {
       expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState());
     });
 
+    group('Tests of EntryCreateEditPageCubit.save() with TOTP', () {
+      test('Should [normalize and persist TOTP secret] if [secret VALID]', () async {
+        // Arrange
+        await actualEntryCreateEditPageCubit.init();
+        actualEntryCreateEditPageCubit.totpSecretTextEditingController.text = 'JBSW Y3DP EHPK3PXP';
+
+        // Act
+        EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
+        EntryModel actualSavedEntryModel = await globalLocator<EntriesService>().getById(1);
+        EntrySecretsModel actualSavedEntrySecrets = await globalLocator<SecretsService>().get(
+          FilesystemPath.fromString('entries/entry1'),
+          PasswordModel.defaultPassword(),
+        );
+
+        // Assert
+        EntryModel expectedEntryModel = EntryModel(
+          id: 1,
+          encryptedBool: false,
+          pinnedBool: false,
+          filesystemPath: FilesystemPath.fromString('entries/entry1'),
+          name: 'Entry',
+          index: 0,
+          website: '',
+          emailExistsBool: false,
+          usernameExistsBool: false,
+          passwordExistsBool: false,
+          totpExistsBool: true,
+        );
+        EntrySecretsModel expectedSavedEntrySecrets = EntrySecretsModel(
+          filesystemPath: FilesystemPath.fromString('entries/entry1'),
+          email: '',
+          username: '',
+          password: '',
+          totpSecret: 'jbswy3dpehpk3pxp',
+        );
+        const EntryCreateEditPageState expectedEntryCreateEditPageState = EntryCreateEditPageState(totpExistsBool: true);
+
+        expect(actualEntryModel, expectedEntryModel);
+        expect(actualSavedEntryModel, expectedEntryModel);
+        expect(actualSavedEntrySecrets, expectedSavedEntrySecrets);
+        expect(actualEntryCreateEditPageCubit.state, expectedEntryCreateEditPageState);
+        expect(actualEntryCreateEditPageCubit.totpSecretTextEditingController.text, 'jbswy3dpehpk3pxp');
+      });
+
+      test('Should [reject the save without creating an entry] if [TOTP secret INVALID]', () async {
+        // Arrange
+        await actualEntryCreateEditPageCubit.init();
+        actualEntryCreateEditPageCubit.totpSecretTextEditingController.text = '0000';
+
+        // Act
+        EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
+        int actualLastEntryIndex = await globalLocator<EntriesService>().getLastIndex();
+
+        // Assert
+        const EntryCreateEditPageState expectedEntryCreateEditPageState = EntryCreateEditPageState(
+          totpExistsBool: true,
+          totpInvalidBool: true,
+        );
+
+        expect(actualEntryModel, isNull);
+        expect(actualLastEntryIndex, -1);
+        expect(actualEntryCreateEditPageCubit.state, expectedEntryCreateEditPageState);
+      });
+    });
     tearDown(() async {
       await actualEntryCreateEditPageCubit.close();
       await testDatabase.close();
@@ -202,6 +268,7 @@ void main() {
         'entry1@example.com',
         'entry_user_1',
         'entry_password_1',
+        '',
       );
       globalLocator<PasswordController>().addPassword(
         PasswordModel.defaultPassword(),
@@ -231,6 +298,7 @@ void main() {
       expect(actualEntryCreateEditPageCubit.emailTextEditingController.text, 'entry1@example.com');
       expect(actualEntryCreateEditPageCubit.usernameTextEditingController.text, 'entry_user_1');
       expect(actualEntryCreateEditPageCubit.passwordTextEditingController.text, 'entry_password_1');
+      expect(actualEntryCreateEditPageCubit.totpSecretTextEditingController.text, '');
     });
 
     test('Should [return updated EntryModel] and update entry with secrets', () async {
@@ -268,6 +336,7 @@ void main() {
         email: 'updated-entry1@example.com',
         username: '',
         password: '',
+        totpSecret: '',
       );
 
       expect(actualUpdatedEntryModel, expectedUpdatedEntryModel);
@@ -276,9 +345,188 @@ void main() {
       expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState());
     });
 
+    test('Should [clear the draft TOTP secret] if [the editing session has an EMPTY backup]', () async {
+      // Arrange
+      await actualEntryCreateEditPageCubit.init();
+      actualEntryCreateEditPageCubit
+        ..startTotpEditingSession()
+        ..totpSecretTextEditingController.text = 'JBSW Y3DP EHPK3PXP';
+
+      // Act
+      // ignore: cascade_invocations
+      actualEntryCreateEditPageCubit.restorePreviousTotp();
+
+      // Assert
+      const EntryCreateEditPageState expectedEntryCreateEditPageState = EntryCreateEditPageState();
+
+      expect(actualEntryCreateEditPageCubit.state, expectedEntryCreateEditPageState);
+      expect(actualEntryCreateEditPageCubit.totpSecretTextEditingController.text, '');
+      expect(actualEntryCreateEditPageCubit.shouldConfirmTotpRemoval(), false);
+    });
+
     tearDown(() async {
       await actualEntryCreateEditPageCubit.close();
       await testDatabase.close();
+    });
+  });
+
+  group('Tests of EntryCreateEditPageCubit process (edit mode with TOTP)', () {
+    late EntryCreateEditPageCubit actualEntryCreateEditPageCubit;
+    late EntryModel actualEntryModel;
+
+    setUp(() async {
+      await testDatabase.init(
+        databaseMock: DatabaseMock.fullDatabaseMock,
+        appPasswordModel: PasswordModel.fromPlaintext('1111'),
+      );
+
+      actualEntryModel = await globalLocator<EntriesService>().getById(1);
+      globalLocator<PasswordController>().addPassword(
+        PasswordModel.defaultPassword(),
+        actualEntryModel.filesystemPath,
+      );
+
+      actualEntryCreateEditPageCubit = EntryCreateEditPageCubit(
+        parentFilesystemPath: actualEntryModel.filesystemPath,
+        entryModel: actualEntryModel,
+        entryPageType: EntryPageType.edit,
+      );
+    });
+
+    tearDown(() async {
+      await actualEntryCreateEditPageCubit.close();
+      await testDatabase.close();
+    });
+
+    group('Tests of EntryCreateEditPageCubit.init()', () {
+      test('Should [load the seeded TOTP secret] if [the entry has TOTP enabled]', () async {
+        // Act
+        await actualEntryCreateEditPageCubit.init();
+
+        // Assert
+        const EntryCreateEditPageState expectedEntryCreateEditPageState = EntryCreateEditPageState(totpExistsBool: true);
+
+        expect(actualEntryCreateEditPageCubit.state, expectedEntryCreateEditPageState);
+        expect(actualEntryCreateEditPageCubit.totpSecretTextEditingController.text, 'wxx5vbewifu4m4hljgilbewm');
+        expect(actualEntryCreateEditPageCubit.shouldConfirmTotpRemoval(), false);
+      });
+    });
+
+    group('Tests of EntryCreateEditPageCubit.save()', () {
+      test('Should [overwrite the saved TOTP secret] if [the replacement secret is VALID]', () async {
+        // Arrange
+        await actualEntryCreateEditPageCubit.init();
+        actualEntryCreateEditPageCubit.totpSecretTextEditingController.text = 'JBSW Y3DP EHPK3PXQ';
+
+        // Act
+        EntryModel? actualUpdatedEntryModel = await actualEntryCreateEditPageCubit.save();
+        EntryModel actualSavedEntryModel = await globalLocator<EntriesService>().getById(actualEntryModel.id);
+        EntrySecretsModel actualSavedEntrySecrets = await globalLocator<SecretsService>().get(
+          actualEntryModel.filesystemPath,
+          PasswordModel.defaultPassword(),
+        );
+
+        // Assert
+        EntryModel expectedEntryModel = EntryModel(
+          id: 1,
+          encryptedBool: false,
+          pinnedBool: false,
+          filesystemPath: FilesystemPath.fromString('entries/entry1'),
+          name: 'ENTRY 0',
+          index: 0,
+          website: 'https://snggle.com',
+          emailExistsBool: true,
+          usernameExistsBool: true,
+          passwordExistsBool: true,
+          totpExistsBool: true,
+        );
+        EntrySecretsModel expectedSavedEntrySecrets = EntrySecretsModel(
+          filesystemPath: FilesystemPath.fromString('entries/entry1'),
+          email: 'entry1@example.com',
+          username: 'entry_user_1',
+          password: 'entry_password_1',
+          totpSecret: 'jbswy3dpehpk3pxq',
+        );
+        const EntryCreateEditPageState expectedEntryCreateEditPageState = EntryCreateEditPageState(totpExistsBool: true);
+
+        expect(actualUpdatedEntryModel, expectedEntryModel);
+        expect(actualSavedEntryModel, expectedEntryModel);
+        expect(actualSavedEntrySecrets, expectedSavedEntrySecrets);
+        expect(actualEntryCreateEditPageCubit.state, expectedEntryCreateEditPageState);
+      });
+
+      test('Should [remove the saved TOTP secret] if [the replacement secret is EMPTY]', () async {
+        // Arrange
+        await actualEntryCreateEditPageCubit.init();
+        actualEntryCreateEditPageCubit.totpSecretTextEditingController.text = '   ';
+
+        // Act
+        bool actualConfirmationRequiredBool = actualEntryCreateEditPageCubit.shouldConfirmTotpRemoval();
+        EntryModel? actualUpdatedEntryModel = await actualEntryCreateEditPageCubit.save();
+        EntryModel actualSavedEntryModel = await globalLocator<EntriesService>().getById(actualEntryModel.id);
+        EntrySecretsModel actualSavedEntrySecrets = await globalLocator<SecretsService>().get(
+          actualEntryModel.filesystemPath,
+          PasswordModel.defaultPassword(),
+        );
+
+        // Assert
+        EntryModel expectedEntryModel = EntryModel(
+          id: 1,
+          encryptedBool: false,
+          pinnedBool: false,
+          filesystemPath: FilesystemPath.fromString('entries/entry1'),
+          name: 'ENTRY 0',
+          index: 0,
+          website: 'https://snggle.com',
+          emailExistsBool: true,
+          usernameExistsBool: true,
+          passwordExistsBool: true,
+          totpExistsBool: false,
+        );
+        EntrySecretsModel expectedSavedEntrySecrets = EntrySecretsModel(
+          filesystemPath: FilesystemPath.fromString('entries/entry1'),
+          email: 'entry1@example.com',
+          username: 'entry_user_1',
+          password: 'entry_password_1',
+          totpSecret: '',
+        );
+        const EntryCreateEditPageState expectedEntryCreateEditPageState = EntryCreateEditPageState();
+
+        expect(actualConfirmationRequiredBool, true);
+        expect(actualUpdatedEntryModel, expectedEntryModel);
+        expect(actualSavedEntryModel, expectedEntryModel);
+        expect(actualSavedEntrySecrets, expectedSavedEntrySecrets);
+        expect(actualEntryCreateEditPageCubit.state, expectedEntryCreateEditPageState);
+        expect(actualEntryCreateEditPageCubit.totpSecretTextEditingController.text, '');
+      });
+    });
+
+    group('Tests of EntryCreateEditPageCubit.restorePreviousTotp()', () {
+      test('Should [restore the seeded TOTP secret] if [the secret was removed during editing]', () async {
+        // Arrange
+        await actualEntryCreateEditPageCubit.init();
+
+        // Act
+        // ignore: cascade_invocations
+        actualEntryCreateEditPageCubit
+          ..startTotpEditingSession()
+          ..removeTotp();
+        EntryCreateEditPageState actualStateAfterRemoval = actualEntryCreateEditPageCubit.state;
+        String actualSecretAfterRemoval = actualEntryCreateEditPageCubit.totpSecretTextEditingController.text;
+
+        actualEntryCreateEditPageCubit
+          ..restorePreviousTotp()
+          ..finishTotpEditingSession();
+
+        // Assert
+        const EntryCreateEditPageState expectedStateAfterRemoval = EntryCreateEditPageState();
+        const EntryCreateEditPageState expectedStateAfterRestore = EntryCreateEditPageState(totpExistsBool: true);
+
+        expect(actualStateAfterRemoval, expectedStateAfterRemoval);
+        expect(actualSecretAfterRemoval, '');
+        expect(actualEntryCreateEditPageCubit.state, expectedStateAfterRestore);
+        expect(actualEntryCreateEditPageCubit.totpSecretTextEditingController.text, 'wxx5vbewifu4m4hljgilbewm');
+      });
     });
   });
 }

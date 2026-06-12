@@ -20,6 +20,7 @@ class EntryContentPreview extends StatelessWidget {
       EntryPreviewItemType.email => AppIcons.icon_entry_email,
       EntryPreviewItemType.password => AppIcons.icon_entry_password,
       EntryPreviewItemType.username => AppIcons.icon_entry_username,
+      EntryPreviewItemType.totp => AppIcons.icon_entry_totp,
     };
 
     return LayoutBuilder(

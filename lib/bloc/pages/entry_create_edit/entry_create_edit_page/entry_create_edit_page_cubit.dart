@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/entry_create_edit/entry_create_edit_page/entry_create_edit_page_state.dart';
@@ -12,6 +13,7 @@ import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/models/entries/entry_secrets_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
+import 'package:snggle/shared/utils/totp_secret_input_parser.dart';
 import 'package:snggle/views/pages/entry_create_edit/entry_page_type.dart';
 
 class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
@@ -25,12 +27,18 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
   final TextEditingController emailTextEditingController = TextEditingController();
   final TextEditingController usernameTextEditingController = TextEditingController();
   final TextEditingController passwordTextEditingController = TextEditingController();
+  final TextEditingController totpSecretTextEditingController = TextEditingController();
 
   final FilesystemPath _parentFilesystemPath;
   final EntryModel? _entryModel;
   final EntryPageType _entryPageType;
 
+  bool _preexistingTotpBool = false;
+
   EntrySecretsModel? _entrySecretsModel;
+  String _totpSecret = '';
+  String _totpSecretRestoreBackup = '';
+  bool _totpSecretRestoreBool = false;
 
   EntryCreateEditPageCubit({
     required this._parentFilesystemPath,
@@ -45,6 +53,7 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
     emailTextEditingController.dispose();
     usernameTextEditingController.dispose();
     passwordTextEditingController.dispose();
+    totpSecretTextEditingController.dispose();
 
     await super.close();
   }
@@ -52,6 +61,7 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
   Future<void> init() async {
     nameTextEditingController.addListener(_updateEntryNameEmptyState);
     emailTextEditingController.addListener(_validateEmail);
+    totpSecretTextEditingController.addListener(_handleSecretChanged);
 
     if (_entryPageType == EntryPageType.create) {
       int lastEntryIndex = await _entriesService.getLastIndex();
@@ -77,9 +87,18 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
       emailTextEditingController.text = entrySecretsModel.email;
       usernameTextEditingController.text = entrySecretsModel.username;
       passwordTextEditingController.text = entrySecretsModel.password;
+      _totpSecret = entrySecretsModel.totpSecret;
     }
 
-    emit(state.copyWith(loadingBool: false));
+    bool localTotpExistsBool = _totpSecret.isNotEmpty;
+    if (localTotpExistsBool) {
+      totpSecretTextEditingController.text = _totpSecret;
+    } else {
+      removeTotp();
+    }
+
+    _preexistingTotpBool = localTotpExistsBool;
+    emit(state.copyWith(loadingBool: false, totpExistsBool: localTotpExistsBool));
   }
 
   Future<EntryModel?> save() async {
@@ -90,11 +109,26 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
       return null;
     }
 
+    if (totpSecretTextEditingController.text.trim().isEmpty) {
+      removeTotp();
+    } else if (_isSecretValid()) {
+      _totpSecret = TotpSecretInputParser.fromInput(totpSecretTextEditingController.text);
+      totpSecretTextEditingController.text = _totpSecret;
+      emit(state.copyWith(totpExistsBool: true, totpInvalidBool: false));
+    } else {
+      emit(state.copyWith(totpExistsBool: true, totpInvalidBool: true));
+      return null;
+    }
+
     if (_entryPageType == EntryPageType.create) {
       return _createNewEntry();
     } else {
       return _updateEntry();
     }
+  }
+
+  bool shouldConfirmTotpRemoval() {
+    return _preexistingTotpBool && totpSecretTextEditingController.text.trim().isEmpty;
   }
 
   Future<EntryModel?> _createNewEntry() async {
@@ -105,6 +139,7 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
       emailTextEditingController.text,
       usernameTextEditingController.text,
       passwordTextEditingController.text,
+      _totpSecret,
     );
   }
 
@@ -115,6 +150,7 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
     String email = emailTextEditingController.text;
     String username = usernameTextEditingController.text;
     String password = passwordTextEditingController.text;
+    String totpSecret = _totpSecret;
 
     PasswordModel entryPasswordModel = await _passwordController.getPasswordByFilesystemPath(entryModel.filesystemPath);
 
@@ -123,7 +159,8 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
     Map<String, dynamic> json = currentSecrets.toJson()
       ..['email'] = email
       ..['username'] = username
-      ..['password'] = password;
+      ..['password'] = password
+      ..['totpSecret'] = totpSecret;
 
     EntrySecretsModel updatedSecrets = EntrySecretsModel.fromJson(entryModel.filesystemPath, json);
     EntryModel updatedEntryModel = entryModel.copyWith(
@@ -132,6 +169,7 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
       emailExistsBool: email.isNotEmpty,
       usernameExistsBool: username.isNotEmpty,
       passwordExistsBool: password.isNotEmpty,
+      totpExistsBool: totpSecret.isNotEmpty,
     );
 
     await _secretsService.save(updatedSecrets, entryPasswordModel);
@@ -157,5 +195,53 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
     if (state.entryNameEmptyBool != tmpEntryNameEmptyBool) {
       emit(state.copyWith(entryNameEmptyBool: tmpEntryNameEmptyBool));
     }
+  }
+
+  void restorePreviousTotp() {
+    if (_totpSecretRestoreBool == false) {
+      return;
+    }
+
+    if (_totpSecretRestoreBackup.isNotEmpty) {
+      _totpSecret = _totpSecretRestoreBackup;
+      totpSecretTextEditingController.text = _totpSecret;
+      emit(state.copyWith(totpExistsBool: true));
+    } else {
+      removeTotp();
+    }
+  }
+
+  void removeTotp() {
+    _totpSecret = '';
+    totpSecretTextEditingController.text = '';
+    emit(state.copyWith(totpExistsBool: false));
+  }
+
+  void startTotpEditingSession() {
+    if (_totpSecretRestoreBool == true) {
+      return;
+    }
+
+    _totpSecretRestoreBackup = _totpSecret;
+    _totpSecretRestoreBool = true;
+  }
+
+  void finishTotpEditingSession() {
+    _totpSecretRestoreBackup = '';
+    _totpSecretRestoreBool = false;
+  }
+
+  bool _isSecretValid() {
+    try {
+      String totpSecret = TotpSecretInputParser.fromInput(totpSecretTextEditingController.text);
+      TOTP.generate(totpSecret);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  void _handleSecretChanged() {
+    emit(state.copyWith(totpInvalidBool: false));
   }
 }
