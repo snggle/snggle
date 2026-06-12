@@ -10,6 +10,7 @@ void main() {
       // Assert
       EntryDetailsEditablePageState expectedEntryDetailsEditablePageState = const EntryDetailsEditablePageState(
         loadingBool: true,
+        totpExistsBool: false,
       );
 
       expect(actualEntryDetailsEditablePageState, expectedEntryDetailsEditablePageState);
