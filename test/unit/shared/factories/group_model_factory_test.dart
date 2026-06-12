@@ -34,10 +34,10 @@ void main() {
 
       // Assert
       GroupModel expectedGroupModel = GroupModel(
-        id: 4,
+        id: 5,
         pinnedBool: false,
         encryptedBool: false,
-        filesystemPath: FilesystemPath.fromString('vaults/test/path/group4'),
+        filesystemPath: FilesystemPath.fromString('vaults/test/path/group5'),
         listItemsPreview: <AListItemModel>[],
         name: 'NEW GROUP',
       );
