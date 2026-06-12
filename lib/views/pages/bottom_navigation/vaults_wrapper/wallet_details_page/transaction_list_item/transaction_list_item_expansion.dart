@@ -51,7 +51,7 @@ class TransactionListItemExpansion extends StatelessWidget {
         if (senderAddress != null) ...<Widget>[
           CopyWrapper(
             value: senderAddress,
-            copyWrapperBuilder: (BuildContext context) {
+            copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
               return LabelWrapperVertical(
                 label: 'From',
                 labelStyle: labelTextStyle,
@@ -63,7 +63,7 @@ class TransactionListItemExpansion extends StatelessWidget {
         if (recipientAddress != null) ...<Widget>[
           CopyWrapper(
             value: recipientAddress,
-            copyWrapperBuilder: (BuildContext context) {
+            copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
               return LabelWrapperVertical(
                 label: 'To',
                 labelStyle: labelTextStyle,
@@ -75,7 +75,7 @@ class TransactionListItemExpansion extends StatelessWidget {
         if (contractAddress != null) ...<Widget>[
           CopyWrapper(
             value: contractAddress,
-            copyWrapperBuilder: (BuildContext context) {
+            copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
               return LabelWrapperVertical(
                 label: 'Contract',
                 labelStyle: labelTextStyle,
@@ -87,7 +87,7 @@ class TransactionListItemExpansion extends StatelessWidget {
         if (amount != null) ...<Widget>[
           CopyWrapper(
             value: amount,
-            copyWrapperBuilder: (BuildContext context) {
+            copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
               return LabelWrapperVertical(
                 label: 'Amount',
                 labelStyle: labelTextStyle,
@@ -99,7 +99,7 @@ class TransactionListItemExpansion extends StatelessWidget {
         if (fee != null) ...<Widget>[
           CopyWrapper(
             value: fee,
-            copyWrapperBuilder: (BuildContext context) {
+            copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
               return LabelWrapperVertical(
                 label: 'Fee',
                 labelStyle: labelTextStyle,
@@ -111,7 +111,7 @@ class TransactionListItemExpansion extends StatelessWidget {
         if (message != null) ...<Widget>[
           CopyWrapper(
             value: message,
-            copyWrapperBuilder: (BuildContext context) {
+            copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
               return LabelWrapperVertical(
                 label: 'Message',
                 labelStyle: labelTextStyle,
@@ -124,7 +124,7 @@ class TransactionListItemExpansion extends StatelessWidget {
         if (transactionData != null && emptyTransactionDetailsBool == true) ...<Widget>[
           CopyWrapper(
             value: transactionData,
-            copyWrapperBuilder: (BuildContext context) {
+            copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
               return LabelWrapperVertical(
                 label: 'Transaction data',
                 labelStyle: labelTextStyle,
@@ -137,7 +137,7 @@ class TransactionListItemExpansion extends StatelessWidget {
         if (signature != null) ...<Widget>[
           CopyWrapper(
             value: signature,
-            copyWrapperBuilder: (BuildContext context) {
+            copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
               return LabelWrapperVertical(
                 label: 'Signature',
                 bottomBorderVisibleBool: false,

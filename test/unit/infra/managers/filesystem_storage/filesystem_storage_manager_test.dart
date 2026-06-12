@@ -40,6 +40,14 @@ void main() {
 
     test('Should [return file content] if [file path EXISTS] (1st depth)', () async {
       // Act
+      String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults'));
+
+      // Assert
+      expect(actualFileContent, 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle');
+    });
+
+    test('Should [return file content] if [file path EXISTS] (1st depth)', () async {
+      // Act
       String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults/id3'));
 
       // Assert
@@ -61,6 +69,14 @@ void main() {
     });
 
     test('Should [throw ChildKeyNotFoundException] if [file path NOT EXISTS] (1st depth)', () async {
+      // Assert
+      expect(
+        () => actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults/not_existing_path')),
+        throwsA(isA<ChildKeyNotFoundException>()),
+      );
+    });
+
+    test('Should [throw ChildKeyNotFoundException] if [file path NOT EXISTS] (2nd depth)', () async {
       // Assert
       expect(
         () => actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults/not_existing_path')),
