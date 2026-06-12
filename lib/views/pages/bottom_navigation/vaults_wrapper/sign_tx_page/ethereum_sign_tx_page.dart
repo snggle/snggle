@@ -11,7 +11,6 @@ import 'package:snggle/shared/exceptions/read_tx_data_exception.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/sign_tx_page/sign_tx_mode.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/sign_tx_page/tx_confirmation_scaffold.dart';
-import 'package:snggle/views/widgets/audio/audio_player_scaffold.dart';
 import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
 import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
@@ -129,83 +128,45 @@ class _EthereumSignTxPageState extends State<EthereumSignTxPage> {
             ),
           );
         } else if (signTxPageState is EthereumSignTxPageSignedTxState) {
-          child = widget.signTxMode == SignTxMode.qr
-              ? QRResultScaffold.fromUniformResource(
-                  title: 'SIGNATURE',
-                  closeButtonVisible: true,
-                  ur: UR.fromCborTaggedObject(signTxPageState.cborEthSignature),
-                  tooltip: BottomTooltip(
-                    actions: <Widget>[
-                      BottomTooltipItem(
-                        assetIconData: AppIcons.menu_save,
-                        label: 'Finish',
-                        onTap: () => Navigator.of(context).pop(),
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      LabelWrapperVertical(
-                        label: 'Signed with',
-                        child: PublicAddressPreview(
-                          address: widget.ethereumSignTxPageCubit.senderWalletModel.address,
-                          textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
-                        ),
+          child = switch (widget.signTxMode) {
+            _ => QRResultScaffold.fromUniformResource(
+                title: 'SIGNATURE',
+                closeButtonVisible: true,
+                ur: UR.fromCborTaggedObject(signTxPageState.cborEthSignature),
+                tooltip: BottomTooltip(
+                  actions: <Widget>[
+                    BottomTooltipItem(
+                      assetIconData: AppIcons.menu_save,
+                      label: 'Finish',
+                      onTap: () => Navigator.of(context).pop(),
+                    )
+                  ],
+                ),
+                child: Column(
+                  children: <Widget>[
+                    LabelWrapperVertical(
+                      label: 'Signed with',
+                      child: PublicAddressPreview(
+                        address: widget.ethereumSignTxPageCubit.senderWalletModel.address,
+                        textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
                       ),
-                      LabelWrapperVertical(
-                        label: 'Signature',
-                        child: CopyWrapper(
-                          value: signTxPageState.transactionModel.signature!,
-                          copyWrapperBuilder: (BuildContext context) {
-                            return Text(
-                              signTxPageState.transactionModel.signature!,
-                              style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
-                            );
-                          },
-                        ),
+                    ),
+                    LabelWrapperVertical(
+                      label: 'Signature',
+                      child: CopyWrapper(
+                        value: signTxPageState.transactionModel.signature!,
+                        copyWrapperBuilder: (BuildContext context) {
+                          return Text(
+                            signTxPageState.transactionModel.signature!,
+                            style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+                          );
+                        },
                       ),
-                    ],
-                  ),
-                )
-              : AudioPlayerScaffold(
-                  title: 'SIGNATURE',
-                  closeButtonVisibleBool: true,
-                  msgUint8List: signTxPageState.cborEthSignature.toSerializedCbor(includeTagBool: true),
-                  subtitle: 'Exporting extended public key',
-                  popButtonVisibleBool: true,
-                  tooltip: BottomTooltip(
-                    actions: <Widget>[
-                      BottomTooltipItem(
-                        assetIconData: AppIcons.menu_save,
-                        label: 'Finish',
-                        onTap: () => Navigator.of(context).pop(),
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      LabelWrapperVertical(
-                        label: 'Signed with',
-                        child: PublicAddressPreview(
-                          address: widget.ethereumSignTxPageCubit.senderWalletModel.address,
-                          textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
-                        ),
-                      ),
-                      LabelWrapperVertical(
-                        label: 'Signature',
-                        child: CopyWrapper(
-                          value: signTxPageState.transactionModel.signature!,
-                          copyWrapperBuilder: (BuildContext context) {
-                            return Text(
-                              signTxPageState.transactionModel.signature!,
-                              style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                    ),
+                  ],
+                ),
+              ),
+          };
         }
 
         return AnimatedSwitcher(

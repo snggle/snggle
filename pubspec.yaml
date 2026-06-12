@@ -1,7 +1,7 @@
 name: snggle
 description: Private keys manager
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
-version: 0.0.70
+version: 0.0.71
 
 environment:
   sdk: "3.2.6"
@@ -115,12 +115,6 @@ dependencies:
     git:
       url: https://github.com/snggle/cryptography_utils.git
       ref: master
-
-  # Data Over Audio
-  mrumru:
-    git:
-      url: git@github.com:snggle/mrumru.git
-      ref: dev
 
 dev_dependencies:
   flutter_test:

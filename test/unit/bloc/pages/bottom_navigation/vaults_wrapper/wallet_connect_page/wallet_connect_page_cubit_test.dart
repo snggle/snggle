@@ -82,17 +82,6 @@ void main() {
       expect(actualWalletConnectPageState, expectedWalletConnectPageState);
     });
 
-    test('Should [return WalletConnectPageState] with WalletConnectOption.hardware', () {
-      // Act
-      actualEthereumWalletConnectPageCubit.changeConnectOption(WalletConnectOption.audio);
-      WalletConnectPageState actualWalletConnectPageState = actualEthereumWalletConnectPageCubit.state;
-
-      // Assert
-      WalletConnectPageState expectedWalletConnectPageState = const WalletConnectPageState(walletConnectOption: WalletConnectOption.audio);
-
-      expect(actualWalletConnectPageState, expectedWalletConnectPageState);
-    });
-
     test('Should [return WalletConnectPageState] with WalletConnectOption.qr', () {
       // Act
       actualEthereumWalletConnectPageCubit.changeConnectOption(WalletConnectOption.qr);

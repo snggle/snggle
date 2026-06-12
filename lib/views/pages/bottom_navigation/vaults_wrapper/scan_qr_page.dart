@@ -18,11 +18,9 @@ import 'package:snggle/views/widgets/qr/qr_camera_scaffold.dart';
 
 class ScanQRPage extends StatefulWidget {
   final bool walletAutoDetectionEnabledBool;
-  final VoidCallback onReceived;
 
   const ScanQRPage({
     required this.walletAutoDetectionEnabledBool,
-    required this.onReceived,
     super.key,
   });
 
@@ -58,10 +56,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
           return QRCameraScaffold(
             title: 'SCAN & SIGN',
             progressNotifier: scanQRPageCubit.progressNotifier,
-            onQRScanned: (Barcode barcode) {
-              _handleQRScanned(barcode);
-              widget.onReceived.call();
-            },
+            onQRScanned: _handleQRScanned,
           );
         },
       ),

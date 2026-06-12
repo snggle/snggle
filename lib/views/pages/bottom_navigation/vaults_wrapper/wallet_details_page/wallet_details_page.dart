@@ -148,7 +148,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                     child: GradientOutlinedButton.small(
                       width: 176,
                       label: 'Sign Transaction',
-                      onPressed: _showTxDataReceivePage,
+                      onPressed: _showScanQRPage,
                     ),
                   ),
                 ),
@@ -219,7 +219,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
     );
   }
 
-  Future<void> _showTxDataReceivePage() async {
+  Future<void> _showScanQRPage() async {
     await showDialog(
       context: context,
       useRootNavigator: true,

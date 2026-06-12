@@ -1,4 +1,1 @@
-enum WalletConnectOption {
-  qr,
-  audio,
-}
+enum WalletConnectOption { qr }
