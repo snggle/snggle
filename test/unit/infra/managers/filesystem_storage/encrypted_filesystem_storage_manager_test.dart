@@ -23,7 +23,18 @@ void main() {
   });
 
   group('Tests of EncryptedFilesystemStorageManager.read()', () {
-    test('Should [return decrypted file content] if [file path EXISTS] (1st depth)', () async {
+    test('Should [return default-password encrypted content] if [file path is ENTRIES root path]', () async {
+      // Act
+      String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString('entries'));
+
+      // Assert
+      String expectedFileContent =
+          'Ps91ZcD3BKmRhAS5rzK87h0sUEBoAeTHoB7d6T7AECNmxcQfToV0p3xuvTh5TzvpksaCR4WMc9t1xIM1kPcWHqtjb9bQPkrqOSEz1weZmvsbwcY0NVQtkGoRSOfm4jxF7R2Vgw==';
+
+      expect(actualFileContent, expectedFileContent);
+    });
+
+    test('Should [return default-password encrypted content] if [file path is VAULTS root path]', () async {
       // Act
       String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults'));
 
@@ -34,7 +45,7 @@ void main() {
       expect(actualFileContent, expectedFileContent);
     });
 
-    test('Should [return decrypted file content] if [file path EXISTS] (2nd depth)', () async {
+    test('Should [return decrypted file content] if [file path EXISTS] (1st depth)', () async {
       // Act
       String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults/id3'));
 
@@ -44,7 +55,7 @@ void main() {
       expect(actualFileContent, expectedFileContent);
     });
 
-    test('Should [return decrypted file content] if [file path EXISTS] (3rd depth)', () async {
+    test('Should [return decrypted file content] if [file path EXISTS] (2nd depth)', () async {
       // Act
       String actualFileContent = await actualFilesystemStorageManager.read(
         FilesystemPath.fromString('vaults/id1/id2'),
@@ -60,21 +71,12 @@ void main() {
       // Assert
 
       expect(
-        () => actualFilesystemStorageManager.read(FilesystemPath.fromString('not_exists')),
-        throwsA(isA<ChildKeyNotFoundException>()),
-      );
-    });
-
-    test('Should [throw ChildKeyNotFoundException] if [file path NOT EXISTS] (2nd depth)', () async {
-      // Assert
-
-      expect(
         () => actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults/not_exists')),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
 
-    test('Should [throw ChildKeyNotFoundException] if [file path NOT EXISTS] (3rd depth)', () async {
+    test('Should [throw ChildKeyNotFoundException] if [file path NOT EXISTS] (2nd depth)', () async {
       // Assert
 
       expect(
@@ -95,6 +97,11 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'EK6V2sqmoln+q+9t0mkn7hY4LJTKaazKGMU9gd0KmfpkXkF627j9Nit6YmVBacqkiwFuy29w77/oVf2geT06SS1T5kxRWSiK0zir2mRP2OCdiEUt',
+        },
+        'entries.snggle':
+            'Ps91ZcD3BKmRhAS5rzK87h0sUEBoAeTHoB7d6T7AECNmxcQfToV0p3xuvTh5TzvpksaCR4WMc9t1xIM1kPcWHqtjb9bQPkrqOSEz1weZmvsbwcY0NVQtkGoRSOfm4jxF7R2Vgw==',
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -122,6 +129,11 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'EK6V2sqmoln+q+9t0mkn7hY4LJTKaazKGMU9gd0KmfpkXkF627j9Nit6YmVBacqkiwFuy29w77/oVf2geT06SS1T5kxRWSiK0zir2mRP2OCdiEUt',
+        },
+        'entries.snggle':
+            'Ps91ZcD3BKmRhAS5rzK87h0sUEBoAeTHoB7d6T7AECNmxcQfToV0p3xuvTh5TzvpksaCR4WMc9t1xIM1kPcWHqtjb9bQPkrqOSEz1weZmvsbwcY0NVQtkGoRSOfm4jxF7R2Vgw==',
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'updated_value',
@@ -149,6 +161,11 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'EK6V2sqmoln+q+9t0mkn7hY4LJTKaazKGMU9gd0KmfpkXkF627j9Nit6YmVBacqkiwFuy29w77/oVf2geT06SS1T5kxRWSiK0zir2mRP2OCdiEUt',
+        },
+        'entries.snggle':
+            'Ps91ZcD3BKmRhAS5rzK87h0sUEBoAeTHoB7d6T7AECNmxcQfToV0p3xuvTh5TzvpksaCR4WMc9t1xIM1kPcWHqtjb9bQPkrqOSEz1weZmvsbwcY0NVQtkGoRSOfm4jxF7R2Vgw==',
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -177,6 +194,11 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'EK6V2sqmoln+q+9t0mkn7hY4LJTKaazKGMU9gd0KmfpkXkF627j9Nit6YmVBacqkiwFuy29w77/oVf2geT06SS1T5kxRWSiK0zir2mRP2OCdiEUt',
+        },
+        'entries.snggle':
+            'Ps91ZcD3BKmRhAS5rzK87h0sUEBoAeTHoB7d6T7AECNmxcQfToV0p3xuvTh5TzvpksaCR4WMc9t1xIM1kPcWHqtjb9bQPkrqOSEz1weZmvsbwcY0NVQtkGoRSOfm4jxF7R2Vgw==',
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -207,6 +229,11 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'EK6V2sqmoln+q+9t0mkn7hY4LJTKaazKGMU9gd0KmfpkXkF627j9Nit6YmVBacqkiwFuy29w77/oVf2geT06SS1T5kxRWSiK0zir2mRP2OCdiEUt',
+        },
+        'entries.snggle':
+            'Ps91ZcD3BKmRhAS5rzK87h0sUEBoAeTHoB7d6T7AECNmxcQfToV0p3xuvTh5TzvpksaCR4WMc9t1xIM1kPcWHqtjb9bQPkrqOSEz1weZmvsbwcY0NVQtkGoRSOfm4jxF7R2Vgw==',
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -234,6 +261,11 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'EK6V2sqmoln+q+9t0mkn7hY4LJTKaazKGMU9gd0KmfpkXkF627j9Nit6YmVBacqkiwFuy29w77/oVf2geT06SS1T5kxRWSiK0zir2mRP2OCdiEUt',
+        },
+        'entries.snggle':
+            'Ps91ZcD3BKmRhAS5rzK87h0sUEBoAeTHoB7d6T7AECNmxcQfToV0p3xuvTh5TzvpksaCR4WMc9t1xIM1kPcWHqtjb9bQPkrqOSEz1weZmvsbwcY0NVQtkGoRSOfm4jxF7R2Vgw==',
         'vaults': <String, dynamic>{
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
           'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -278,6 +310,12 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle':
+              'UKYIiOrkO3S44WOsAkZ5m0unzyp9PhRIyosIg3PnEJEqvh2vv5N5TX/jKeotVQnuJneLzWOyUSpvJ5Rf6xuXuajn3BKfrxY0J3ryB/BqkJhbHCH0WuUOyTM+1MOSGsVNUwY89mKBUsegiVh4/auMCWMMvAkSM1AKpTFaMae0VybOnDqNBQVnd7Vmki3JnrR/tCvq2g==',
+        },
+        'entries.snggle':
+            'kj60/4YTVxdrNKp8UkVh0/NSpNVJOYueEfQ8bB9inxHG5xOKKMDFCGuRzvenxrOeMCBBkieq02v7J40G0RK8zMMKCPRT1vv/Zsz4/PKMaev4C0ehgKQq5pmJc5v2g7gPFtVdFx5aPltyfITyxlX8nhqFp1lBSPNC0BgXwI9GjWqEhfGKgwgoeyVsBW4WtC7GtujqA1dNzbkdl6QaENMmyntkzvk=',
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': '+VFi5MHH4LjniKnYOVdUtB7Nqi+qMvAkn+X30T/L/WH/Co1WICQ4qSg9Hn2xKbl6AAzSAYY3/u+hXLbcVk/xLyFxzxs=',
@@ -299,6 +337,12 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle':
+              'UKYIiOrkO3S44WOsAkZ5m0unzyp9PhRIyosIg3PnEJEqvh2vv5N5TX/jKeotVQnuJneLzWOyUSpvJ5Rf6xuXuajn3BKfrxY0J3ryB/BqkJhbHCH0WuUOyTM+1MOSGsVNUwY89mKBUsegiVh4/auMCWMMvAkSM1AKpTFaMae0VybOnDqNBQVnd7Vmki3JnrR/tCvq2g==',
+        },
+        'entries.snggle':
+            'kj60/4YTVxdrNKp8UkVh0/NSpNVJOYueEfQ8bB9inxHG5xOKKMDFCGuRzvenxrOeMCBBkieq02v7J40G0RK8zMMKCPRT1vv/Zsz4/PKMaev4C0ehgKQq5pmJc5v2g7gPFtVdFx5aPltyfITyxlX8nhqFp1lBSPNC0BgXwI9GjWqEhfGKgwgoeyVsBW4WtC7GtujqA1dNzbkdl6QaENMmyntkzvk=',
         'vaults': <String, dynamic>{
           'id1.snggle': 'ivLwwKeSXHFPJ0zn6Ho+p/GguNDqgiCY06q+m6yQtimC950HvCErT0Co2qvO883nlj63Sdtw3tZ+sPMmuAaxjuE0jTI=',
           'id3.snggle': 'ArG/y8mC0fAq4oB8bJrrLdiHhIJm+kv5JFueWL5+u2bc0YUb1QLlDKDkDPjwpSopHJOahBgqd8Z+ACAoiCusIQoQIE4=',
