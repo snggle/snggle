@@ -2,18 +2,21 @@ import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/shared/utils/custom_clipboard.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_background.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_wrapper.dart';
 
-typedef CopyWrapperBuilder = Widget Function(BuildContext context);
+typedef CopyWrapperBuilder = Widget Function(BuildContext context, VoidCallback callback);
 
 class CopyWrapper extends StatefulWidget {
   final String value;
   final CopyWrapperBuilder copyWrapperBuilder;
+  final bool obstructContentBool;
 
   const CopyWrapper({
     required this.value,
     required this.copyWrapperBuilder,
+    this.obstructContentBool = false,
     super.key,
   });
 
@@ -43,13 +46,17 @@ class _CopyWrapperState extends State<CopyWrapper> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: _copy,
-        child: widget.copyWrapperBuilder.call(context),
+        child: widget.copyWrapperBuilder.call(context, _copy),
       ),
     );
   }
 
   void _copy() {
-    Clipboard.setData(ClipboardData(text: widget.value));
+    if (widget.obstructContentBool == true) {
+      CustomClipboard.setDataObscuringPreview(text: widget.value);
+    } else {
+      Clipboard.setData(ClipboardData(text: widget.value));
+    }
     customPopupMenuController.showMenu();
     Future<void>.delayed(const Duration(seconds: 2)).then((_) {
       if (mounted) {
