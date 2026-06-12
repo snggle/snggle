@@ -60,7 +60,7 @@ void main() {
         pinnedBool: false,
         address: '0x03f04cb5D332ecCB602D8eFe463C921140CFcA09',
         derivationPath: "m/44'/60'/0'/0/0",
-        filesystemPath: FilesystemPath.fromString('vault1/network1/wallet1'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/wallet1'),
         name: 'WALLET 0',
       );
 
