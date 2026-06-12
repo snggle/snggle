@@ -10,6 +10,8 @@ void main() {
       // Assert
       EntryDetailsPageState expectedEntryDetailsPageState = const EntryDetailsPageState(
         loadingBool: true,
+        totpExistsBool: false,
+        totpRemainingSeconds: 30,
       );
 
       expect(actualEntryDetailsPageState, expectedEntryDetailsPageState);

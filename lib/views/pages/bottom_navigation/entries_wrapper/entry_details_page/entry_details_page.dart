@@ -117,6 +117,53 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
                         ),
                         suffixWidgetConstraints: const BoxConstraints(minWidth: 34, minHeight: 34),
                       ),
+                      if (entryDetailsPageState.totpExistsBool) ...<Widget>[
+                        const SizedBox(height: 12),
+                        _buildReadOnlyEntryField(
+                          textTheme: textTheme,
+                          label: 'One-Time Password',
+                          textEditingController: entryDetailsPageCubit.totpTextEditingController,
+                          copyValue: entryDetailsPageCubit.totpTextEditingController.text.replaceAll(' ', ''),
+                          suffixWidget: TweenAnimationBuilder<double>(
+                            key: ValueKey<String>(
+                              entryDetailsPageCubit.totpTextEditingController.text,
+                            ),
+                            tween: Tween<double>(
+                              begin: entryDetailsPageState.totpRemainingSeconds / 30.0,
+                              end: 0,
+                            ),
+                            duration: Duration(
+                              seconds: entryDetailsPageState.totpRemainingSeconds.clamp(0, 30),
+                            ),
+                            curve: Curves.linear,
+                            builder: (BuildContext context, double animatedProgress, _) {
+                              return Stack(
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  Transform.flip(
+                                    flipX: true,
+                                    child: CircularProgressIndicator(
+                                      value: animatedProgress,
+                                      strokeWidth: 2.2,
+                                      backgroundColor: AppColors.lightGrey3,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.warningOrange,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    '${entryDetailsPageState.totpRemainingSeconds}',
+                                    style: textTheme.labelLarge?.copyWith(
+                                      color: AppColors.body3,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                          suffixWidgetConstraints: const BoxConstraints(minWidth: 34, minHeight: 34),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -132,6 +179,7 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
     required TextTheme textTheme,
     required String label,
     required TextEditingController textEditingController,
+    String? copyValue,
     bool obscureTextBool = false,
     Widget? suffixWidget,
     BoxConstraints? suffixWidgetConstraints,
@@ -139,7 +187,7 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: CopyWrapper(
-        value: textEditingController.text,
+        value: copyValue ?? textEditingController.text,
         obstructContentBool: obscureTextBool,
         copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
           return LabelWrapperVertical.textField(

@@ -8,6 +8,7 @@ class EntryModel extends AListItemModel {
   final bool emailExistsBool;
   final bool usernameExistsBool;
   final bool passwordExistsBool;
+  final bool totpExistsBool;
 
   EntryModel({
     required super.id,
@@ -20,6 +21,7 @@ class EntryModel extends AListItemModel {
     this.emailExistsBool = false,
     this.usernameExistsBool = false,
     this.passwordExistsBool = false,
+    this.totpExistsBool = false,
   });
 
   @override
@@ -34,6 +36,7 @@ class EntryModel extends AListItemModel {
     bool? emailExistsBool,
     bool? usernameExistsBool,
     bool? passwordExistsBool,
+    bool? totpExistsBool,
   }) {
     return EntryModel(
       id: id ?? this.id,
@@ -46,6 +49,7 @@ class EntryModel extends AListItemModel {
       emailExistsBool: emailExistsBool ?? this.emailExistsBool,
       usernameExistsBool: usernameExistsBool ?? this.usernameExistsBool,
       passwordExistsBool: passwordExistsBool ?? this.passwordExistsBool,
+      totpExistsBool: totpExistsBool ?? this.totpExistsBool,
     );
   }
 
@@ -61,6 +65,7 @@ class EntryModel extends AListItemModel {
         if (emailExistsBool) EntryPreviewItemType.email,
         if (usernameExistsBool) EntryPreviewItemType.username,
         if (passwordExistsBool) EntryPreviewItemType.password,
+        if (totpExistsBool) EntryPreviewItemType.totp,
       ];
 
   @override
@@ -75,5 +80,6 @@ class EntryModel extends AListItemModel {
         emailExistsBool,
         usernameExistsBool,
         passwordExistsBool,
+        totpExistsBool,
       ];
 }
