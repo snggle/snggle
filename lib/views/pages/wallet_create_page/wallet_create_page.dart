@@ -152,6 +152,7 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
                                 style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.middleGrey),
                               )
                             : null,
+                        dynamicSuffixBool: true,
                         padding: EdgeInsets.zero,
                         inputFormatters: <TextInputFormatter>[
                           LegacyDerivationPathInputFormatter(),
