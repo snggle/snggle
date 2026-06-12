@@ -159,4 +159,5 @@ void main() {
       expect(actualDatabaseExistBool, true);
     });
   });
+  tearDownAll(testDatabase.close);
 }
