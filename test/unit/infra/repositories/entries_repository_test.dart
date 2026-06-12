@@ -53,9 +53,9 @@ void main() {
       // Assert
       const List<EntryEntity> expectedEntryEntityList = <EntryEntity>[
         // @formatter:off
-        EntryEntity(id: 1, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'ENTRY 0', website: 'https://snggle.com'),
-        EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
-        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
+        EntryEntity(id: 1, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, totpExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'ENTRY 0', website: 'https://snggle.com'),
+        EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, totpExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
+        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, totpExistsBool: false, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
         // @formatter:on
       ];
 
@@ -87,8 +87,8 @@ void main() {
 
       const List<EntryEntity> expectedEntryEntityList = <EntryEntity>[
         // @formatter:off
-        EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
-        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
+        EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, totpExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
+        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, totpExistsBool: false, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
         // @formatter:on
       ];
 
@@ -118,7 +118,7 @@ void main() {
 
       // Assert
       // @formatter:off
-      const EntryEntity expectedEntryEntity = EntryEntity(id: 1, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'ENTRY 0', website: 'https://snggle.com');
+      const EntryEntity expectedEntryEntity = EntryEntity(id: 1, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, totpExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'ENTRY 0', website: 'https://snggle.com');
       // @formatter:on
 
       expect(actualEntryEntity, expectedEntryEntity);
@@ -142,7 +142,7 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // @formatter:off
-      EntryEntity actualUpdatedEntryEntity = const EntryEntity(id: 1, encryptedBool: false, pinnedBool: true, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 0, filesystemPathString: 'entries/entry1', name: 'UPDATED ENTRY 0', website: 'https://updated-entry1.example');
+      EntryEntity actualUpdatedEntryEntity = const EntryEntity(id: 1, encryptedBool: false, pinnedBool: true, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, totpExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'UPDATED ENTRY 0', website: 'https://updated-entry1.example');
       // @formatter:on
 
       // Act
@@ -155,9 +155,9 @@ void main() {
       // Assert
       const List<EntryEntity> expectedEntryEntityList = <EntryEntity>[
         // @formatter:off
-        EntryEntity(id: 1, encryptedBool: false, pinnedBool: true, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 0, filesystemPathString: 'entries/entry1', name: 'UPDATED ENTRY 0', website: 'https://updated-entry1.example'),
-        EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
-        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
+        EntryEntity(id: 1, encryptedBool: false, pinnedBool: true, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, totpExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'UPDATED ENTRY 0', website: 'https://updated-entry1.example'),
+        EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, totpExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
+        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, totpExistsBool: false, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
         // @formatter:on
       ];
 
@@ -169,7 +169,7 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // @formatter:off
-      EntryEntity actualNewEntryEntity = const EntryEntity(id: 999999, encryptedBool: true, pinnedBool: true, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, index: 999999, filesystemPathString: 'entries/entry999999', name: 'NEW ENTRY 1', website: 'https://new-entry.example',);
+      EntryEntity actualNewEntryEntity = const EntryEntity(id: 999999, encryptedBool: true, pinnedBool: true, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, totpExistsBool: false, index: 999999, filesystemPathString: 'entries/entry999999', name: 'NEW ENTRY 1', website: 'https://new-entry.example',);
       // @formatter:on
 
       // Act
@@ -182,10 +182,10 @@ void main() {
       // Assert
       const List<EntryEntity> expectedEntryEntityList = <EntryEntity>[
         // @formatter:off
-        EntryEntity(id: 1, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'ENTRY 0', website: 'https://snggle.com'),
-        EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
-        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
-        EntryEntity(id: 999999, encryptedBool: true, pinnedBool: true, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, index: 999999, filesystemPathString: 'entries/entry999999', name: 'NEW ENTRY 1', website: 'https://new-entry.example'),
+        EntryEntity(id: 1, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, totpExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'ENTRY 0', website: 'https://snggle.com'),
+        EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, totpExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
+        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, totpExistsBool: false, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
+        EntryEntity(id: 999999, encryptedBool: true, pinnedBool: true, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, totpExistsBool: false, index: 999999, filesystemPathString: 'entries/entry999999', name: 'NEW ENTRY 1', website: 'https://new-entry.example'),
         // @formatter:on
       ];
 
@@ -200,8 +200,8 @@ void main() {
 
       const List<EntryEntity> actualEntriesToUpdate = <EntryEntity>[
         // @formatter:off
-        EntryEntity(id: 1, encryptedBool: false, pinnedBool: true, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'UPDATED ENTRY 1', website: 'https://snggle.com'),
-        EntryEntity(id: 2, encryptedBool: false, pinnedBool: true, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'UPDATED ENTRY 2', website: 'https://snggle.com'),
+        EntryEntity(id: 1, encryptedBool: false, pinnedBool: true, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, totpExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'UPDATED ENTRY 1', website: 'https://snggle.com'),
+        EntryEntity(id: 2, encryptedBool: false, pinnedBool: true, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, totpExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'UPDATED ENTRY 2', website: 'https://snggle.com'),
         // @formatter:on
       ];
 
@@ -215,9 +215,9 @@ void main() {
       // Assert
       const List<EntryEntity> expectedEntryEntityList = <EntryEntity>[
         // @formatter:off
-        EntryEntity(id: 1, encryptedBool: false, pinnedBool: true, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'UPDATED ENTRY 1', website: 'https://snggle.com'),
-        EntryEntity(id: 2, encryptedBool: false, pinnedBool: true, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'UPDATED ENTRY 2', website: 'https://snggle.com'),
-        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
+        EntryEntity(id: 1, encryptedBool: false, pinnedBool: true, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, totpExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'UPDATED ENTRY 1', website: 'https://snggle.com'),
+        EntryEntity(id: 2, encryptedBool: false, pinnedBool: true, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, totpExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'UPDATED ENTRY 2', website: 'https://snggle.com'),
+        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, totpExistsBool: false, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
         // @formatter:on
       ];
 
@@ -230,8 +230,8 @@ void main() {
 
       const List<EntryEntity> actualEntriesToSave = <EntryEntity>[
         // @formatter:off
-        EntryEntity(id: 999998, encryptedBool: true, pinnedBool: true, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: false, index: 999998, filesystemPathString: 'entries/entry999998', name: 'NEW ENTRY 1', website: ''),
-        EntryEntity(id: 999999, encryptedBool: false, pinnedBool: true, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: true, index: 999999, filesystemPathString: 'entries/entry999999', name: 'NEW ENTRY 2', website: 'https://new-entry2.example'),
+        EntryEntity(id: 999998, encryptedBool: true, pinnedBool: true, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: false, totpExistsBool: false, index: 999998, filesystemPathString: 'entries/entry999998', name: 'NEW ENTRY 1', website: ''),
+        EntryEntity(id: 999999, encryptedBool: false, pinnedBool: true, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: true, totpExistsBool: false, index: 999999, filesystemPathString: 'entries/entry999999', name: 'NEW ENTRY 2', website: 'https://new-entry2.example'),
         // @formatter:on
       ];
 
@@ -245,11 +245,11 @@ void main() {
       // Assert
       const List<EntryEntity> expectedEntryEntityList = <EntryEntity>[
         // @formatter:off
-        EntryEntity(id: 1, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'ENTRY 0', website: 'https://snggle.com'),
-        EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
-        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
-        EntryEntity(id: 999998, encryptedBool: true, pinnedBool: true, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: false, index: 999998, filesystemPathString: 'entries/entry999998', name: 'NEW ENTRY 1', website: ''),
-        EntryEntity(id: 999999, encryptedBool: false, pinnedBool: true, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: true, index: 999999, filesystemPathString: 'entries/entry999999', name: 'NEW ENTRY 2', website: 'https://new-entry2.example'),
+        EntryEntity(id: 1, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, totpExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'ENTRY 0', website: 'https://snggle.com'),
+        EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, totpExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
+        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, totpExistsBool: false, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
+        EntryEntity(id: 999998, encryptedBool: true, pinnedBool: true, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: false, totpExistsBool: false, index: 999998, filesystemPathString: 'entries/entry999998', name: 'NEW ENTRY 1', website: ''),
+        EntryEntity(id: 999999, encryptedBool: false, pinnedBool: true, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: true, totpExistsBool: false, index: 999999, filesystemPathString: 'entries/entry999999', name: 'NEW ENTRY 2', website: 'https://new-entry2.example'),
         // @formatter:on
       ];
 
@@ -272,8 +272,8 @@ void main() {
       // Assert
       const List<EntryEntity> expectedEntryEntityList = <EntryEntity>[
         // @formatter:off
-        EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
-        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
+        EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, totpExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
+        EntryEntity(id: 3, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: false, passwordExistsBool: true, totpExistsBool: false, index: 2, filesystemPathString: 'entries/group1/entry3', name: 'ENTRY 2', website: 'https://snggle.com'),
         // @formatter:on
       ];
 
