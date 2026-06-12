@@ -1,0 +1,4 @@
+enum EntryCreateEditStatus {
+  creationSuccessful,
+  modificationSuccessful,
+}
