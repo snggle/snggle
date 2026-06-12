@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:snggle/shared/models/entries/entry_secrets_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_secrets_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
@@ -10,6 +11,8 @@ abstract class ASecretsModel extends Equatable {
 
   static T fromJson<T extends ASecretsModel>(FilesystemPath filesystemPath, Map<String, dynamic> json) {
     switch (T) {
+      case EntrySecretsModel:
+        return EntrySecretsModel.fromJson(filesystemPath, json) as T;
       case VaultSecretsModel:
         return VaultSecretsModel.fromJson(filesystemPath, json) as T;
       case WalletSecretsModel:
