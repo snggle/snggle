@@ -129,7 +129,7 @@ void main() {
         depth: 1,
         loadingBool: false,
         allItems: actualTestListItems,
-        filesystemPath: FilesystemPath.fromString('4e66ba36-966e-49ed-b639-191388ce38de'),
+        filesystemPath: FilesystemPath.fromString('vaults/4e66ba36-966e-49ed-b639-191388ce38de'),
         selectionModel: SelectionModel(selectedItems: <TestListItem>[], allItemsCount: 3),
       );
 
@@ -157,7 +157,7 @@ void main() {
         depth: 1,
         loadingBool: false,
         allItems: actualTestListItems,
-        filesystemPath: FilesystemPath.fromString('4e66ba36-966e-49ed-b639-191388ce38de'),
+        filesystemPath: FilesystemPath.fromString('vaults/4e66ba36-966e-49ed-b639-191388ce38de'),
       );
 
       // Assert
