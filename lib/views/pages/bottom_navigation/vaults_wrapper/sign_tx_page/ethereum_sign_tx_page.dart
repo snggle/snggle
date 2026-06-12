@@ -102,7 +102,7 @@ class _EthereumSignTxPageState extends State<EthereumSignTxPage> {
                         label: 'Amount',
                         child: CopyWrapper(
                           value: tx.amount!,
-                          copyWrapperBuilder: (BuildContext context) {
+                          copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                             return GradientText(tx.amount!, gradient: AppColors.primaryGradient, textStyle: textTheme.bodyMedium);
                           },
                         ),
@@ -112,7 +112,7 @@ class _EthereumSignTxPageState extends State<EthereumSignTxPage> {
                         label: 'Fee',
                         child: CopyWrapper(
                           value: tx.fee!,
-                          copyWrapperBuilder: (BuildContext context) {
+                          copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                             return GradientText(tx.fee!, gradient: AppColors.primaryGradient, textStyle: textTheme.bodyMedium);
                           },
                         ),
@@ -122,7 +122,7 @@ class _EthereumSignTxPageState extends State<EthereumSignTxPage> {
                         label: 'Data',
                         child: CopyWrapper(
                           value: tx.functionData!,
-                          copyWrapperBuilder: (BuildContext context) {
+                          copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                             return Text(tx.functionData!, style: textTheme.bodyMedium?.copyWith(color: AppColors.body3));
                           },
                         ),
@@ -132,7 +132,7 @@ class _EthereumSignTxPageState extends State<EthereumSignTxPage> {
                         label: 'Message',
                         child: CopyWrapper(
                           value: tx.message!,
-                          copyWrapperBuilder: (BuildContext context) {
+                          copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                             return Text(tx.message!, style: textTheme.bodyMedium?.copyWith(color: AppColors.body3));
                           },
                         ),
@@ -146,33 +146,42 @@ class _EthereumSignTxPageState extends State<EthereumSignTxPage> {
         } else if (signTxPageState is EthereumSignTxPageSignedTxState) {
           child = switch (widget.signTxMode) {
             _ => QRResultScaffold.fromUniformResource(
-              title: 'SIGNATURE',
-              closeButtonVisible: true,
-              ur: UR.fromCborTaggedObject(signTxPageState.cborEthSignature),
-              tooltip: BottomTooltip(
-                actions: <Widget>[BottomTooltipItem(assetIconData: AppIcons.menu_save, label: 'Finish', onTap: () => Navigator.of(context).pop())],
-              ),
-              child: Column(
-                children: <Widget>[
-                  LabelWrapperVertical(
-                    label: 'Signed with',
-                    child: PublicAddressPreview(
-                      address: widget.ethereumSignTxPageCubit.senderWalletModel.address,
-                      textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+                title: 'SIGNATURE',
+                closeButtonVisible: true,
+                ur: UR.fromCborTaggedObject(signTxPageState.cborEthSignature),
+                tooltip: BottomTooltip(
+                  actions: <Widget>[
+                    BottomTooltipItem(
+                      assetIconData: AppIcons.menu_save,
+                      label: 'Finish',
+                      onTap: () => Navigator.of(context).pop(),
+                    )
+                  ],
+                ),
+                child: Column(
+                  children: <Widget>[
+                    LabelWrapperVertical(
+                      label: 'Signed with',
+                      child: PublicAddressPreview(
+                        address: widget.ethereumSignTxPageCubit.senderWalletModel.address,
+                        textStyle: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+                      ),
                     ),
-                  ),
-                  LabelWrapperVertical(
-                    label: 'Signature',
-                    child: CopyWrapper(
-                      value: signTxPageState.transactionModel.signature!,
-                      copyWrapperBuilder: (BuildContext context) {
-                        return Text(signTxPageState.transactionModel.signature!, style: textTheme.bodyMedium?.copyWith(color: AppColors.body3));
-                      },
+                    LabelWrapperVertical(
+                      label: 'Signature',
+                      child: CopyWrapper(
+                        value: signTxPageState.transactionModel.signature!,
+                        copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
+                          return Text(
+                            signTxPageState.transactionModel.signature!,
+                            style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
           };
         }
 
