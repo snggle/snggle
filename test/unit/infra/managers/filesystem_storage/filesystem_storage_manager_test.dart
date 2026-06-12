@@ -22,17 +22,23 @@ void main() {
   });
 
   group('Tests of FilesystemStorageManager.read()', () {
-    test('Should [return file content] if [file path EXISTS] (1st depth)', () async {
+    test('Should [return empty content] if [file path is ENTRIES root path]', () async {
+      // Act
+      String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString('entries'));
+
+      // Assert
+      expect(actualFileContent, 'odszyfrowanawartoscdlasecretowwplikuentries.snggle');
+    });
+
+    test('Should [return empty content] if [file path is VAULTS root path]', () async {
       // Act
       String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults'));
 
       // Assert
-      String expectedFileContent = 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle';
-
-      expect(actualFileContent, expectedFileContent);
+      expect(actualFileContent, 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle');
     });
 
-    test('Should [return file content] if [file path EXISTS] (2nd depth)', () async {
+    test('Should [return file content] if [file path EXISTS] (1st depth)', () async {
       // Act
       String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults/id3'));
 
@@ -42,7 +48,7 @@ void main() {
       expect(actualFileContent, expectedFileContent);
     });
 
-    test('Should [return file content] if [file path EXISTS] (3rd depth)', () async {
+    test('Should [return file content] if [file path EXISTS] (2nd depth)', () async {
       // Act
       String actualFileContent = await actualFilesystemStorageManager.read(
         FilesystemPath.fromString('vaults/id1/id2'),
@@ -57,20 +63,12 @@ void main() {
     test('Should [throw ChildKeyNotFoundException] if [file path NOT EXISTS] (1st depth)', () async {
       // Assert
       expect(
-        () => actualFilesystemStorageManager.read(FilesystemPath.fromString('not_existing_path')),
-        throwsA(isA<ChildKeyNotFoundException>()),
-      );
-    });
-
-    test('Should [throw ChildKeyNotFoundException] if [file path NOT EXISTS] (2nd depth)', () async {
-      // Assert
-      expect(
         () => actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults/not_existing_path')),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
 
-    test('Should [throw ChildKeyNotFoundException] if [file path NOT EXISTS] (3rd depth)', () async {
+    test('Should [throw ChildKeyNotFoundException] if [file path NOT EXISTS] (2nd depth)', () async {
       // Assert
       expect(
         () => actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults/id1/not_existing_path')),
@@ -91,6 +89,10 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
+        'entries.snggle': 'odszyfrowanawartoscdlasecretowwplikuentries.snggle',
         'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle',
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
@@ -115,6 +117,10 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
+        'entries.snggle': 'odszyfrowanawartoscdlasecretowwplikuentries.snggle',
         'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle',
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
@@ -139,6 +145,10 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
+        'entries.snggle': 'odszyfrowanawartoscdlasecretowwplikuentries.snggle',
         'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle',
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
@@ -164,6 +174,10 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
+        'entries.snggle': 'odszyfrowanawartoscdlasecretowwplikuentries.snggle',
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -193,6 +207,10 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
+        'entries.snggle': 'odszyfrowanawartoscdlasecretowwplikuentries.snggle',
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -219,6 +237,10 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
+        'entries.snggle': 'odszyfrowanawartoscdlasecretowwplikuentries.snggle',
         'vaults': <String, dynamic>{
           'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
@@ -262,6 +284,10 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
+        'entries.snggle': 'odszyfrowanawartoscdlasecretowwplikuentries.snggle',
         'vaults': <String, dynamic>{
           'id1': <String, dynamic>{
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
@@ -282,6 +308,10 @@ void main() {
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
+        'entries.snggle': 'odszyfrowanawartoscdlasecretowwplikuentries.snggle',
         'vaults': <String, dynamic>{
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
           'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
