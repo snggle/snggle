@@ -92,7 +92,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                 SliverToBoxAdapter(
                   child: CopyWrapper(
                     value: widget.walletModel.address,
-                    copyWrapperBuilder: (BuildContext context) {
+                    copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                       return Column(
                         children: <Widget>[
                           GradientText(
@@ -108,7 +108,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                 SliverToBoxAdapter(
                   child: CopyWrapper(
                     value: widget.walletModel.address,
-                    copyWrapperBuilder: (BuildContext context) {
+                    copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                       return const SizedBox(height: 6);
                     },
                   ),
@@ -116,7 +116,7 @@ class _WalletDetailsPageState extends State<WalletDetailsPage> {
                 SliverToBoxAdapter(
                   child: CopyWrapper(
                     value: widget.walletModel.address,
-                    copyWrapperBuilder: (BuildContext context) {
+                    copyWrapperBuilder: (BuildContext context, VoidCallback copy) {
                       return Center(
                         child: Text(
                           widget.walletModel.derivationPath,
