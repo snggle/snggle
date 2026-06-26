@@ -12,27 +12,31 @@ import 'package:snggle/views/widgets/keyboard/keyboard_wrapper.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
 
 class MnemonicFormEditable extends StatefulWidget {
+  final bool mnemonicErrorBool;
   final int mnemonicSize;
+  final KeyboardValueNotifier keyboardValueNotifier;
   final Future<void> Function(List<String> mnemonicList, ScrollController scrollController) onFinish;
   final Future<void> Function() onSaveMnemonic;
   final List<TextEditingController> textControllersList;
 
-  final int columnsCount;
-  final List<Widget> childrenList;
   final bool finishEnabledBool;
   final bool initialObscureTextBool;
+  final int columnsCount;
   final double topSpacing;
+  final List<Widget> childrenList;
 
   const MnemonicFormEditable({
+    required this.mnemonicErrorBool,
     required this.mnemonicSize,
+    required this.keyboardValueNotifier,
     required this.onFinish,
     required this.onSaveMnemonic,
     required this.textControllersList,
-    this.columnsCount = 3,
-    this.childrenList = const <Widget>[],
     this.finishEnabledBool = true,
     this.initialObscureTextBool = true,
+    this.columnsCount = 3,
     this.topSpacing = 14,
+    this.childrenList = const <Widget>[],
     Key? key,
   }) : super(key: key);
 
@@ -42,7 +46,6 @@ class MnemonicFormEditable extends StatefulWidget {
 
 class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
   final ScrollController _scrollController = ScrollController();
-  final KeyboardValueNotifier _keyboardValueNotifier = KeyboardValueNotifier();
   late List<GlobalObjectKey> _mnemonicWordKeyList;
   late List<FocusNode> _focusNodesList;
   bool _obscureTextBool = true;
@@ -84,11 +87,11 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
     }
 
     return KeyboardVisibilityBuilder(
-      keyboardValueNotifier: _keyboardValueNotifier,
+      keyboardValueNotifier: widget.keyboardValueNotifier,
       builder: ({required bool customKeyboardVisibleBool, required bool nativeKeyboardVisibleBool}) {
         bool anyKeyboardVisibleBool = customKeyboardVisibleBool || nativeKeyboardVisibleBool;
         return KeyboardWrapper(
-          keyboardValueNotifier: _keyboardValueNotifier,
+          keyboardValueNotifier: widget.keyboardValueNotifier,
           availableHints: crypto_utils.MnemonicDictionary.english,
           child: ScrollableLayout(
             tooltipVisibleBool: anyKeyboardVisibleBool == false,
@@ -123,6 +126,7 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
                     childCount: widget.mnemonicSize,
                     columnsCount: widget.columnsCount,
                     itemBuilder: (BuildContext context, int index) {
+                      bool errorVisibleBool = _isErrorVisible(index);
                       return LabelWrapperVertical.textField(
                         label: '${index + 1}',
                         labelPadding: const EdgeInsets.symmetric(horizontal: 10),
@@ -137,11 +141,12 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
                           textStyle: themeData.textTheme.bodyMedium,
                           textEditingController: widget.textControllersList[index],
                           focusNode: _focusNodesList[index],
-                          errorExistsBool: false,
+                          errorExistsBool: errorVisibleBool,
                         ),
                       );
                     },
                   ),
+                  SizedBox(height: anyKeyboardVisibleBool ? 50 : 120),
                 ],
               ),
             ),
@@ -151,13 +156,23 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
     );
   }
 
+  bool _isErrorVisible(int index) {
+    String word = widget.textControllersList[index].text;
+    bool textFieldFocusedBool = _focusNodesList[index].hasFocus;
+    bool wordCorrectBool = crypto_utils.MnemonicDictionary.english.contains(word);
+    bool lastTextFieldBool = index == widget.mnemonicSize - 1;
+    bool checksumErrorBool = lastTextFieldBool && widget.mnemonicErrorBool;
+
+    return (wordCorrectBool == false || checksumErrorBool) && textFieldFocusedBool == false && word.isNotEmpty;
+  }
+
   void _handleTextFieldFocusChange(bool focusBool, int index) {
     FocusNode currentFocusNode = _focusNodesList[index];
-    bool currentFocusChangedBool = _keyboardValueNotifier.isFocused(currentFocusNode);
+    bool currentFocusChangedBool = widget.keyboardValueNotifier.isFocused(currentFocusNode);
 
     setState(() {});
     if (focusBool) {
-      _keyboardValueNotifier.showKeyboard(
+      widget.keyboardValueNotifier.showKeyboard(
         previousFocusNode: _focusNodeAt(index - 1),
         currentFocusNode: currentFocusNode,
         nextFocusNode: _focusNodeAt(index + 1),
@@ -165,7 +180,7 @@ class _MnemonicFormEditableState extends State<MnemonicFormEditable> {
       );
       _ensureTextFieldVisible(index);
     } else if (currentFocusChangedBool) {
-      _keyboardValueNotifier.hideKeyboard();
+      widget.keyboardValueNotifier.hideKeyboard();
     }
   }
 

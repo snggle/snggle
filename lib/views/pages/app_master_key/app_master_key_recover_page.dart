@@ -7,6 +7,7 @@ import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/pages/app_master_key/app_master_key_type.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
+import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
 import 'package:snggle/views/widgets/mnemonic_form/mnemonic_form_editable.dart';
 
 @RoutePage()
@@ -19,24 +20,26 @@ class AppMasterKeyRecoverPage extends StatefulWidget {
 
 class _AppMasterKeyRecoverPageState extends State<AppMasterKeyRecoverPage> {
   final int mnemonicSize = 24;
-  late final AppMasterKeyRecoverPageCubit appMasterKeyRecoverCubit = AppMasterKeyRecoverPageCubit();
+  late final AppMasterKeyRecoverPageCubit appMasterKeyRecoverPageCubit = AppMasterKeyRecoverPageCubit();
+  final KeyboardValueNotifier keyboardValueNotifier = KeyboardValueNotifier();
 
   @override
   void initState() {
     super.initState();
-    appMasterKeyRecoverCubit.init(mnemonicSize);
+    appMasterKeyRecoverPageCubit.init(mnemonicSize);
   }
 
   @override
   void dispose() {
-    appMasterKeyRecoverCubit.close();
+    keyboardValueNotifier.dispose();
+    appMasterKeyRecoverPageCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppMasterKeyRecoverPageCubit, AppMasterKeyRecoverPageState>(
-      bloc: appMasterKeyRecoverCubit,
+      bloc: appMasterKeyRecoverPageCubit,
       builder: (BuildContext context, AppMasterKeyRecoverPageState appMasterKeyRecoverState) {
         List<TextEditingController>? textEditingControllerList = appMasterKeyRecoverState.textControllersList;
         if (textEditingControllerList.isEmpty) {
@@ -52,9 +55,11 @@ class _AppMasterKeyRecoverPageState extends State<AppMasterKeyRecoverPage> {
             mnemonicSize: mnemonicSize,
             textControllersList: textEditingControllerList,
             finishEnabledBool: recoverButtonEnabledBool,
-            onSaveMnemonic: appMasterKeyRecoverCubit.saveMnemonic,
+            keyboardValueNotifier: keyboardValueNotifier,
+            mnemonicErrorBool: appMasterKeyRecoverState.mnemonicFilledBool == true && appMasterKeyRecoverState.mnemonicValidBool == false,
+            onSaveMnemonic: appMasterKeyRecoverPageCubit.saveMnemonic,
             onFinish: (List<String> words, _) async {
-              MnemonicModel? mnemonicModel = appMasterKeyRecoverCubit.state.mnemonicModel;
+              MnemonicModel? mnemonicModel = appMasterKeyRecoverPageCubit.state.mnemonicModel;
               await AutoRouter.of(context).push(
                 AppSetUpPinRoute(mnemonicModel: mnemonicModel, appMasterKeyType: AppMasterKeyType.recover),
               );
@@ -66,5 +71,5 @@ class _AppMasterKeyRecoverPageState extends State<AppMasterKeyRecoverPage> {
   }
 
   bool get recoverButtonEnabledBool =>
-      appMasterKeyRecoverCubit.state.mnemonicFilledBool == true && appMasterKeyRecoverCubit.state.mnemonicValidBool == true;
+      appMasterKeyRecoverPageCubit.state.mnemonicFilledBool == true && appMasterKeyRecoverPageCubit.state.mnemonicValidBool == true;
 }
