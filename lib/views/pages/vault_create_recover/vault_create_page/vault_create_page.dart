@@ -9,6 +9,7 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/vault_create_recover/mnemonic_size_picker.dart';
 import 'package:snggle/views/pages/vault_create_recover/vault_create_page/vault_mnemonic_form_generated.dart';
+import 'package:snggle/views/pages/vault_create_recover/vault_discard_dialog.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/paginated_form/paginated_form.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
@@ -52,7 +53,7 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
           customSystemPopCallback: _handleCustomPop,
           actions: <Widget>[
             IconButton(
-              onPressed: () => context.router.root.pop(),
+              onPressed: () => _isFirstPage() ? context.router.root.pop() : _showDiscardDialog(onDiscardPressed: context.router.root.pop),
               icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
             ),
           ],
@@ -78,10 +79,19 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
   void _handleCustomPop() {
     FocusScope.of(context).unfocus();
     if (_isFirstPage() == false) {
-      _pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
+      _showDiscardDialog(onDiscardPressed: _navigateToPreviousPage);
     } else {
       context.router.pop();
     }
+  }
+
+  Future<void> _showDiscardDialog({required VoidCallback onDiscardPressed}) async {
+    await showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      useRootNavigator: true,
+      builder: (_) => VaultDiscardDialog(onDiscardPressed: onDiscardPressed),
+    );
   }
 
   Future<void> _handleMnemonicSizeSelected(crypto_utils.MnemonicSize mnemonicSize) async {
@@ -96,5 +106,9 @@ class _VaultCreatePageState extends State<VaultCreatePage> {
 
     int pageIndex = _pageController.page?.round() ?? _pageController.initialPage;
     return pageIndex == 0;
+  }
+
+  void _navigateToPreviousPage() {
+    _pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
   }
 }
