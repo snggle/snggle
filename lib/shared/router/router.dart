@@ -42,6 +42,7 @@ class AppRouter extends RootStackRouter {
           AutoRoute(page: ReadOnlyEntryDetailsRoute.page),
         ],
       ),
+      AutoRoute(page: AutofillSaveEntryRoute.page),
       AutoRoute(page: EntryDetailsEditableRoute.page),
       AutoRoute(
         page: BottomNavigationRoute.page,

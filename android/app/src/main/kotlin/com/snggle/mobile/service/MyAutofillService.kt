@@ -8,11 +8,12 @@ import android.service.autofill.SaveCallback
 import android.service.autofill.SaveRequest
 import com.snggle.mobile.autofill.AssistStructureParser
 import com.snggle.mobile.autofill.FillRequestHandler
+import com.snggle.mobile.autofill.SaveRequestHandler
 
 class MyAutofillService : AutofillService() {
 
     private val structureParser by lazy {
-        AssistStructureParser()
+        AssistStructureParser(this)
     }
 
     private val fillRequestHandler by lazy {
@@ -21,6 +22,14 @@ class MyAutofillService : AutofillService() {
             structureParser = structureParser
         )
     }
+
+    private val saveRequestHandler by lazy {
+        SaveRequestHandler(
+            context = applicationContext,
+            structureParser = structureParser
+        )
+    }
+
     override fun onFillRequest(
         request: FillRequest,
         cancellationSignal: CancellationSignal,
@@ -37,6 +46,9 @@ class MyAutofillService : AutofillService() {
         request: SaveRequest,
         callback: SaveCallback
     ) {
-        callback.onSuccess()
+        saveRequestHandler.handle(
+            request = request,
+            callback = callback
+        )
     }
 }

@@ -4,13 +4,13 @@ class NativeCredentials {
   final String id;
   final String username;
   final String password;
-  final String? packageName;
+  final String? appName;
 
   const NativeCredentials({
     required this.id,
     required this.username,
     required this.password,
-    required this.packageName,
+    required this.appName,
   });
 
   factory NativeCredentials.fromMap(Map<String, dynamic> map) {
@@ -18,7 +18,7 @@ class NativeCredentials {
       id: map['id'] as String,
       username: map['username'] as String,
       password: map['password'] as String,
-      packageName: map['packageName'] as String?,
+      appName: map['appName'] as String?,
     );
   }
 }
@@ -29,14 +29,14 @@ class NativeCredentialStore {
   static Future<NativeCredentials> saveCredentials({
     required String username,
     required String password,
-    String? packageName,
+    String? appName,
   }) async {
     Map<String, dynamic>? result = await _channel.invokeMapMethod<String, dynamic>(
       'saveCredentials',
       <String, String?>{
         'username': username,
         'password': password,
-        'packageName': packageName,
+        'appName': appName,
       },
     );
 

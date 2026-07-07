@@ -7,8 +7,8 @@ import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/states/app_ent
 import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_state.dart';
 import 'package:snggle/shared/native/app_launch_context.dart';
 import 'package:snggle/shared/native/app_launch_mode.dart';
+import 'package:snggle/shared/native/autofill_auth/native_autofill_auth.dart';
 import 'package:snggle/shared/native/native_app_launch.dart';
-import 'package:snggle/shared/native/native_autofill_auth.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
@@ -108,6 +108,9 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
         switch (launchContext.appLaunchMode) {
           case AppLaunchMode.autofillAuth:
             await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const ReadOnlyEntriesSectionWrapperRoute()]);
+
+          case AppLaunchMode.autofillSave:
+            await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const AutofillSaveEntryRoute()]);
 
           case AppLaunchMode.main:
             await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
