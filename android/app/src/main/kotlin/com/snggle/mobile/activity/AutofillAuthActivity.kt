@@ -19,8 +19,7 @@ class AutofillAuthActivity : FlutterActivity() {
 
     companion object {
         private const val TAG = "AutofillAuthActivity"
-
-        const val EXTRA_PACKAGE_NAME = "packageName"
+        const val EXTRA_APP_NAME = "appName"
         const val EXTRA_USERNAME_ID = "usernameId"
         const val EXTRA_PASSWORD_ID = "passwordId"
         const val EXTRA_USERNAME_FIELD_TYPE = "usernameFieldType"
@@ -218,8 +217,8 @@ class AutofillAuthActivity : FlutterActivity() {
             launchAction = intent.getStringExtra(
                 FlutterConstants.EXTRA_LAUNCH_ACTION
             ),
-            packageName = intent.getStringExtra(
-                EXTRA_PACKAGE_NAME
+            appName = intent.getStringExtra(
+                EXTRA_APP_NAME
             ),
             usernameId = intent.getAutofillIdExtra(
                 EXTRA_USERNAME_ID
@@ -247,7 +246,7 @@ class AutofillAuthActivity : FlutterActivity() {
             TAG,
             "AuthActivity onCreate " +
                     "launchAction=${autofillContext.launchAction} " +
-                    "package=${autofillContext.packageName} " +
+                    "appName=${autofillContext.appName} " +
                     "usernameId=${autofillContext.usernameId} " +
                     "passwordId=${autofillContext.passwordId} " +
                     "usernameFieldType=${autofillContext.usernameFieldType}"
@@ -263,7 +262,7 @@ class AutofillAuthActivity : FlutterActivity() {
     private fun AutofillAuthContext.toMap(): Map<String, String?> {
         return mapOf(
             "launchAction" to launchAction,
-            "packageName" to packageName,
+            "appName" to appName,
             "usernameFieldType" to usernameFieldType.name
         )
     }
@@ -274,7 +273,7 @@ class AutofillAuthActivity : FlutterActivity() {
 
     private data class AutofillAuthContext(
         val launchAction: String? = null,
-        val packageName: String? = null,
+        val appName: String? = null,
         val usernameId: AutofillId? = null,
         val passwordId: AutofillId? = null,
         val usernameFieldType: FieldType = FieldType.UNKNOWN

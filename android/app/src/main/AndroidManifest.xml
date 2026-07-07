@@ -1,5 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.snggle.mobile">
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application
             android:label="Snggle"
             android:name="${applicationName}"
@@ -26,6 +34,13 @@
                 android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
                 android:hardwareAccelerated="true"
                 android:windowSoftInputMode="adjustResize" />
+
+        <activity
+                android:name=".activity.AutofillSaveActivity"
+                android:exported="false"
+                android:excludeFromRecents="true"
+                android:taskAffinity=""
+                android:theme="@style/LaunchTheme" />
 
         <activity
                 android:name=".activity.MainActivity"
