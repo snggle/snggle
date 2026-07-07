@@ -70,4 +70,22 @@ class EntryModelFactory {
       passwordExistsBool: entryEntity.passwordExistsBool,
     );
   }
+
+  Future<EntryModel> createFromAutofill({
+    required String? packageName,
+    required String email,
+    required String username,
+    required String password,
+  }) {
+    final String fallbackName = packageName ?? 'Android app';
+
+    return createNewEntry(
+      const FilesystemPath.empty(),
+      fallbackName,
+      packageName ?? '',
+      email,
+      username,
+      password,
+    );
+  }
 }

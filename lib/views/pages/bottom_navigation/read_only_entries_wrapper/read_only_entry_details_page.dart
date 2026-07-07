@@ -11,7 +11,7 @@ import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/models/entries/entry_secrets_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/shared/native/native_autofill_auth.dart';
+import 'package:snggle/shared/native/autofill_auth/native_autofill_auth.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';

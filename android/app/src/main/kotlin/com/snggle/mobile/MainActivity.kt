@@ -14,7 +14,9 @@ import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
 
-    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+    override fun configureFlutterEngine(
+        flutterEngine: FlutterEngine
+    ) {
         super.configureFlutterEngine(flutterEngine)
 
         FlutterEngineCache.getInstance().put(
@@ -73,7 +75,8 @@ class MainActivity : FlutterActivity() {
                 FlutterConstants.METHOD_GET_APP_LAUNCH_CONTEXT -> {
                     result.success(
                         mapOf(
-                            "launchAction" to FlutterConstants.LAUNCH_ACTION_NONE
+                            "launchAction" to
+                                    FlutterConstants.LAUNCH_ACTION_NONE
                         )
                     )
                 }

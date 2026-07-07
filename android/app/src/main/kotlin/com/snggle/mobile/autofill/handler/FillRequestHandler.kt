@@ -8,12 +8,13 @@ import android.service.autofill.Dataset
 import android.service.autofill.FillCallback
 import android.service.autofill.FillRequest
 import android.service.autofill.FillResponse
+import android.service.autofill.SaveInfo
 import android.util.Log
 import android.widget.RemoteViews
 import com.snggle.mobile.R
 import com.snggle.mobile.autofill.activity.AutofillAuthActivity
 import com.snggle.mobile.autofill.model.FieldType
-import com.snggle.mobile.autofill.model.ParsedStructure
+import com.snggle.mobile.autofill.model.ParsedAuthStructure
 import com.snggle.mobile.autofill.parser.AssistStructureParser
 import com.snggle.mobile.common.FlutterConstants
 
@@ -49,7 +50,7 @@ class FillRequestHandler(
                     "usernameFieldType=${parsed.usernameFieldType}, " +
                     "usernamePresent=${!parsed.usernameValue.isNullOrBlank()}, " +
                     "passwordPresent=${!parsed.passwordValue.isNullOrBlank()}, " +
-                    "package=${parsed.packageName}"
+                    "appName=${parsed.appName}"
         )
 
         if (parsed.passwordId == null) {
@@ -64,22 +65,23 @@ class FillRequestHandler(
 
         Log.d(
             TAG,
-            "Returning FillResponse for package=${parsed.packageName}"
+            "Returning FillResponse for appName=${parsed.appName}"
         )
     }
 
     private fun buildFillResponse(
-        parsed: ParsedStructure
+        parsed: ParsedAuthStructure
     ): FillResponse {
         return FillResponse.Builder()
             .apply {
                 addAuthenticatedDataset(parsed)
+                buildSaveInfo(parsed)?.let(::setSaveInfo)
             }
             .build()
     }
 
     private fun FillResponse.Builder.addAuthenticatedDataset(
-        parsed: ParsedStructure
+        parsed: ParsedAuthStructure
     ) {
         val usernameId = parsed.usernameId
         val passwordId = parsed.passwordId
@@ -108,8 +110,8 @@ class FillRequestHandler(
             )
 
             putExtra(
-                AutofillAuthActivity.EXTRA_PACKAGE_NAME,
-                parsed.packageName
+                AutofillAuthActivity.EXTRA_APP_NAME,
+                parsed.appName
             )
 
             usernameId?.let {
@@ -135,7 +137,7 @@ class FillRequestHandler(
 
         val pendingIntent = PendingIntent.getActivity(
             context,
-            parsed.packageName?.hashCode()
+            parsed.appName?.hashCode()
                 ?: DEFAULT_AUTH_REQUEST_CODE,
             authIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or
@@ -170,9 +172,36 @@ class FillRequestHandler(
         Log.d(
             TAG,
             "Added authenticated dataset " +
-                    "for package=${parsed.packageName}, " +
+                    "for appName=${parsed.appName}, " +
                     "launchAction=${FlutterConstants.LAUNCH_ACTION_AUTOFILL}"
         )
+    }
+
+    private fun buildSaveInfo(parsed: ParsedAuthStructure): SaveInfo? {
+        val usernameId = parsed.usernameId
+        val passwordId = parsed.passwordId ?: return null
+
+        return if (usernameId != null) {
+            SaveInfo.Builder(
+                SaveInfo.SAVE_DATA_TYPE_USERNAME or
+                        SaveInfo.SAVE_DATA_TYPE_PASSWORD,
+                arrayOf(passwordId)
+            )
+                .setOptionalIds(arrayOf(usernameId))
+                .setFlags(
+                    SaveInfo.FLAG_SAVE_ON_ALL_VIEWS_INVISIBLE
+                )
+                .build()
+        } else {
+            SaveInfo.Builder(
+                SaveInfo.SAVE_DATA_TYPE_PASSWORD,
+                arrayOf(passwordId)
+            )
+                .setFlags(
+                    SaveInfo.FLAG_SAVE_ON_ALL_VIEWS_INVISIBLE
+                )
+                .build()
+        }
     }
 
     companion object {
