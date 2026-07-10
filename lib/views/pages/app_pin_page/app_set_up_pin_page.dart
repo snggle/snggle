@@ -169,8 +169,6 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
       } else {
         bool recoverTypeBool = widget._appMasterKeyType == AppMasterKeyType.recover;
         await _showMasterKeySuccessDialog(recoverTypeBool: recoverTypeBool);
-
-        await context.router.replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
       }
     } catch (e) {
       AppLogger().log(message: 'Provided invalid confirm PIN');
@@ -178,6 +176,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
   }
 
   Future<void> _showMasterKeySuccessDialog({required bool recoverTypeBool}) async {
+    StackRouter rootRouter = context.router.root;
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -193,7 +192,14 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
           options: <CustomDialogOption>[
             CustomDialogOption(
               label: 'Continue',
-              onPressed: () => Navigator.of(dialogContext).pop(),
+              onPressed: () async {
+                await rootRouter.replaceAll(
+                  <PageRouteInfo>[const BottomNavigationRoute()],
+                );
+                if (dialogContext.mounted && ModalRoute.of(dialogContext)?.isCurrent == true) {
+                  Navigator.of(dialogContext).pop();
+                }
+              },
             ),
           ],
         );

@@ -52,7 +52,6 @@ class AppRouter extends RootStackRouter {
             ],
           ),
           AutoRoute(page: SecretsRoute.page),
-          AutoRoute(page: AppsRoute.page),
           AutoRoute(
             page: SettingsSectionWrapperRoute.page,
             children: <AutoRoute>[

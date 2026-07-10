@@ -4,6 +4,8 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/app_wipe_dialog/app_wipe_dialog.dart';
+import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout_settings_tile.dart';
+import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/inactive_auto_logout_settings_tile.dart';
 import 'package:snggle/views/widgets/custom/custom_large_list_tile.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
@@ -29,6 +31,8 @@ class _SettingsPageState extends State<SettingsPage> {
             title: 'Change Application PIN',
             onTap: () => context.router.push(AppEnterPinRoute(appPinType: AppPinType.changePin)),
           ),
+          const AutoLogoutSettingsTile(),
+          const InactivityAutoLogoutSettingsTile(),
           CustomLargeListTile(
             leading: const AssetIcon(AppIcons.settings_privacy_policy, size: 42),
             title: 'Privacy policy',

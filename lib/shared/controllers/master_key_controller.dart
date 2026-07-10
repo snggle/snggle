@@ -11,6 +11,10 @@ class MasterKeyController {
     _masterKeyPasswordModel = passwordModel;
   }
 
+  void clearPassword() {
+    _masterKeyPasswordModel = null;
+  }
+
   Future<void> changePassword(PasswordModel newPasswordModel) async {
     PasswordModel? oldPasswordModel = _masterKeyPasswordModel;
     if (oldPasswordModel == null) {
