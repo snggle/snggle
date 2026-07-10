@@ -32,6 +32,16 @@ class _SettingsPageState extends State<SettingsPage> {
             onTap: _navigateAppPinChange,
           ),
           CustomLargeListTile(
+            leading: const AssetIcon(
+              AppIcons.bottom_navigation_logout,
+              size: 42,
+            ),
+            title: 'Auto-Logout',
+            onTap: () => context.router.push(
+              const AutoLogoutSettingsRoute(),
+            ),
+          ),
+          CustomLargeListTile(
             leading: const AssetIcon(AppIcons.settings_privacy_policy, size: 42),
             title: 'Privacy policy',
             onTap: () => context.router.push(const PrivacyPolicyRoute()),
