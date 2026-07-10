@@ -12,6 +12,7 @@ class AppIcons {
   static const AssetIconData app_bar_close = AssetIconData('assets/icons/app_bar_close.svg');
   static const AssetIconData bottom_navigation_apps = AssetIconData('assets/icons/bottom_navigation_apps.svg');
   static const AssetIconData bottom_navigation_crypto = AssetIconData('assets/icons/bottom_navigation_crypto.svg');
+  static const AssetIconData bottom_navigation_logout = AssetIconData('assets/icons/bottom_navigation_logout.svg');
   static const AssetIconData bottom_navigation_menu = AssetIconData('assets/icons/bottom_navigation_menu.svg');
   static const AssetIconData bottom_navigation_scan = AssetIconData('assets/icons/bottom_navigation_scan.svg');
   static const AssetIconData bottom_navigation_secrets = AssetIconData('assets/icons/bottom_navigation_secrets.svg');

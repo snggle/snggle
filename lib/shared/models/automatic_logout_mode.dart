@@ -1,0 +1,4 @@
+enum AutomaticLogoutMode {
+  on,
+  off,
+}
