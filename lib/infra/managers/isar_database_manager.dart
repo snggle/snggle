@@ -6,6 +6,7 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/entry_entity/entry_entity.dart';
 import 'package:snggle/infra/entities/group_entity/group_entity.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
+import 'package:snggle/infra/entities/settings_entity/settings_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/solana_transaction_entity.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
@@ -37,6 +38,7 @@ class IsarDatabaseManager {
         EthereumTransactionEntitySchema,
         SolanaTransactionEntitySchema,
         EntryEntitySchema,
+        SettingsEntitySchema,
       ],
       name: databaseName,
       directory: rootDirectory.path,
