@@ -14,6 +14,10 @@ class PasswordController {
     ));
   }
 
+  void clearPasswords() {
+    _listItemAccessModelList.clear();
+  }
+
   Future<PasswordModel> getPasswordByFilesystemPath(FilesystemPath filesystemPath) async {
     for (ListItemAccessModel accessInfo in _listItemAccessModelList) {
       if (accessInfo.filesystemPath == filesystemPath) {

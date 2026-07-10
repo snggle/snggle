@@ -100,7 +100,7 @@ class _AppPinAuthPageState extends State<AppPinAuthPage> {
       if (appPinTypeChangeBool) {
         await AutoRouter.of(context).replace(AppPinSetUpRoute(appPinType: AppPinType.change, initPinpadKeyboardState: _initPinpadKeyboardState));
       } else {
-        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
+        await AutoRouter.of(context).replaceAll(<PageRouteInfo>[BottomNavigationRoute()]);
       }
     } catch (e) {
       AppLogger().log(message: 'Provided invalid PIN');
