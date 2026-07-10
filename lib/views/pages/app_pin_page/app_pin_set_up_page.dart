@@ -16,8 +16,6 @@ import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/app_master_key/app_master_key_type.dart';
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
 import 'package:snggle/views/widgets/button/custom_text_button.dart';
-import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
-import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/generic/loading_scaffold.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_scaffold.dart';
 
@@ -156,7 +154,10 @@ class _AppPinSetUpPageState extends State<AppPinSetUpPage> {
   Future<void> _handleConfirmPinChange(List<int> firstPinNumbersList, List<int> confirmPinNumbersList) async {
     _appPinSetUpPageCubit.updateConfirmPin(confirmPinNumbersList);
     if (firstPinNumbersList.length == confirmPinNumbersList.length) {
-      await _tryPinSetUp();
+      bool pinSetUpSuccessfulBool = await _tryPinSetUp();
+      if (mounted == false || pinSetUpSuccessfulBool == false) {
+        return;
+      }
 
       bool appPinTypeChangeBool = widget._appPinType == AppPinType.change;
       if (appPinTypeChangeBool) {
@@ -169,8 +170,7 @@ class _AppPinSetUpPageState extends State<AppPinSetUpPage> {
           ? 'Your Master Key has been successfully recovered.'
           : 'Your new Master Key has been successfully created.';
 
-      await _showSuccessDialog(successDialogMessage: successDialogMessage);
-      await context.router.root.replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
+      await context.router.root.replaceAll(<PageRouteInfo>[BottomNavigationRoute(successDialogMessage: successDialogMessage)]);
     }
   }
 
@@ -188,8 +188,8 @@ class _AppPinSetUpPageState extends State<AppPinSetUpPage> {
     if (appPinTypeChangeBool && appPinSetUpPageState is AppPinSetUpPageEnterState) {
       await context.router.root.replaceAll(
         <PageRouteInfo>[
-          const BottomNavigationRoute(
-            children: <PageRouteInfo>[
+          BottomNavigationRoute(
+            children: const <PageRouteInfo>[
               SettingsSectionWrapperRoute(children: <PageRouteInfo>[SettingsRoute()]),
             ],
           ),
@@ -200,37 +200,13 @@ class _AppPinSetUpPageState extends State<AppPinSetUpPage> {
     context.router.pop();
   }
 
-  Future<void> _tryPinSetUp() async {
+  Future<bool> _tryPinSetUp() async {
     try {
       await _appPinSetUpPageCubit.setUpConfirmPin();
-      if (mounted == false) {
-        return;
-      }
+      return true;
     } catch (e) {
       AppLogger().log(message: 'Provided invalid confirm PIN');
+      return false;
     }
-  }
-
-  Future<void> _showSuccessDialog({required String successDialogMessage}) async {
-    await showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return CustomDialog(
-          title: 'Success',
-          content: Text(
-            successDialogMessage,
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: Colors.white,
-          options: <CustomDialogOption>[
-            CustomDialogOption(
-              label: 'Done',
-              onPressed: () => Navigator.of(dialogContext).pop(),
-            ),
-          ],
-        );
-      },
-    );
   }
 }

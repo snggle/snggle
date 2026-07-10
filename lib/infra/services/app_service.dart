@@ -6,13 +6,15 @@ import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_root
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
+import 'package:snggle/shared/controllers/master_key_controller.dart';
+import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/value_objects/master_key_vo.dart';
 
 class AppService {
   final FlutterSecureStorage _flutterSecureStorage = const FlutterSecureStorage();
-  final RootDirectoryBuilder _rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
   final MasterKeyService _masterKeyService = globalLocator<MasterKeyService>();
+  final RootDirectoryBuilder _rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
 
   Future<bool> isDataBaseExist() async {
     Directory rootDirectory = await _rootDirectoryBuilder.call();
@@ -48,10 +50,18 @@ class AppService {
   }
 
   Future<void> wipeAll() async {
-    await wipeSecureStorage();
-    await _wipeFilesystemStorage();
-    await _wipeIsarDatabase();
+    try {
+      await wipeSecureStorage();
+      await _wipeIsarDatabase();
+      await _wipeFilesystemStorage();
+    } finally {
+      logout();
+    }
+  }
 
+  void logout() {
+    globalLocator<MasterKeyController>().clearPassword();
+    globalLocator<PasswordController>().clearPasswords();
     globalLocator<ActiveWalletController>().clearActiveWallet();
   }
 

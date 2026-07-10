@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/entities/auto_logout_settings_entity/auto_logout_settings_entity.dart';
 import 'package:snggle/infra/entities/entry_entity/entry_entity.dart';
 import 'package:snggle/infra/entities/group_entity/group_entity.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
@@ -37,10 +38,12 @@ class IsarDatabaseManager {
         EthereumTransactionEntitySchema,
         SolanaTransactionEntitySchema,
         EntryEntitySchema,
+        AutoLogoutSettingsEntitySchema,
       ],
       name: databaseName,
       directory: rootDirectory.path,
     );
+
     initializedBool = true;
   }
 
@@ -59,6 +62,7 @@ class IsarDatabaseManager {
     if (initializedBool == true && _isar.isOpen) {
       await _isar.close(deleteFromDisk: true);
     }
+
     initializedBool = false;
   }
 }

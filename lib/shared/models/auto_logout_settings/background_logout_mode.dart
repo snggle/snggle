@@ -1,0 +1,4 @@
+enum BackgroundLogoutMode {
+  on,
+  off,
+}

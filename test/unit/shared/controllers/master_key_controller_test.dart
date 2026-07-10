@@ -8,7 +8,7 @@ import 'package:snggle/shared/value_objects/master_key_vo.dart';
 import '../../../utils/test_database.dart';
 
 void main() {
-  final TestDatabase testDatabase = TestDatabase();
+  TestDatabase testDatabase = TestDatabase();
   late MasterKeyController actualMasterKeyController;
 
   PasswordModel actualAppPasswordModel = PasswordModel.fromPlaintext('1111');
@@ -21,80 +21,132 @@ void main() {
     await testDatabase.init(appPasswordModel: actualAppPasswordModel);
   });
 
-  group('Tests of MasterKeyController.encrypt()', () {
-    setUpAll(() {
-      actualMasterKeyController = MasterKeyController();
-      testDatabase.updateSecureStorage(<String, String>{
-        SecureStorageKey.encryptedMasterKey.name:
-            '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-      });
+  setUp(() {
+    actualMasterKeyController = MasterKeyController();
+    testDatabase.updateSecureStorage(<String, String>{
+      SecureStorageKey.encryptedMasterKey.name: actualMasterKeyVO.encryptedMasterKey,
     });
+  });
 
-    test('Should [throw Exception] if [password NOT SET]', () {
+  group('Tests of MasterKeyController.encrypt()', () {
+    test('Should [throw Exception] if [password NOT SET]', () async {
       // Arrange
-      String actualValueToEncrypt = '';
+      String actualValueToEncrypt = 'some_value';
 
       // Assert
-      expect(() async => actualMasterKeyController.encrypt(actualValueToEncrypt), throwsException);
+      await expectLater(actualMasterKeyController.encrypt(actualValueToEncrypt), throwsException);
     });
 
-    test('Should [throw FormatException] if [decrypted value EMPTY]', () {
+    test('Should [throw FormatException] if [plaintext EMPTY]', () async {
       // Arrange
-      // Since [masterKeyPasswordModel] is a private variable, the only way to verify if it works correctly, is to repeat two tests: with and without password
       actualMasterKeyController.setPassword(actualAppPasswordModel);
       String actualValueToEncrypt = '';
 
       // Assert
-      expect(() async => actualMasterKeyController.encrypt(actualValueToEncrypt), throwsFormatException);
+      await expectLater(actualMasterKeyController.encrypt(actualValueToEncrypt), throwsFormatException);
     });
 
     test('Should [return ciphertext] encrypted by master key', () async {
       // Arrange
+      actualMasterKeyController.setPassword(actualAppPasswordModel);
       String actualValueToEncrypt = 'some_value';
 
       // Act
       String actualEncryptedValue = await actualMasterKeyController.encrypt(actualValueToEncrypt);
 
-      // Master key encryption always returns random value. For that reason, we can't assert the result.
-      // To check uf encryption works correctly, we need to decrypt the value.
-      String actualDecryptedValue = actualMasterKeyVO.decrypt(appPasswordModel: actualAppPasswordModel, encryptedData: actualEncryptedValue);
-
       // Assert
+      String actualDecryptedValue = actualMasterKeyVO.decrypt(
+        appPasswordModel: actualAppPasswordModel,
+        encryptedData: actualEncryptedValue,
+      );
       String expectedDecryptedValue = actualValueToEncrypt;
 
       expect(actualDecryptedValue, expectedDecryptedValue);
     });
   });
 
-  group('Tests of MasterKeyController.decrypt()', () {
-    setUpAll(() {
-      actualMasterKeyController = MasterKeyController();
-      testDatabase.updateSecureStorage(<String, String>{
-        SecureStorageKey.encryptedMasterKey.name:
-            '49KzNRK6zoqQArJHTHpVB+nsq60XbRqzddQ8C6CSvasVDPS4+Db+0tUislsx6WaraetLiZ2QXCulvbK6nmaHXpnPwHLK1FYvq11PpLWiAUlVF/KW+omOhD9bQFPIboxLxTnfsg==',
-      });
-    });
-
-    test('Should [throw Exception] if [password NOT SET]', () {
+  group('Tests of MasterKeyController.clearPassword()', () {
+    test('Should [throw Exception when encrypting] if [password CLEARED]', () async {
       // Arrange
-      String actualValueToDecrypt = '';
+      actualMasterKeyController
+        ..setPassword(actualAppPasswordModel)
+        // Act
+        ..clearPassword();
 
       // Assert
-      expect(() async => actualMasterKeyController.encrypt(actualValueToDecrypt), throwsException);
+      await expectLater(actualMasterKeyController.encrypt('some_value'), throwsException);
     });
 
-    test('Should [throw FormatException] if [encrypted value EMPTY]', () {
+    test('Should [throw Exception when decrypting] if [password CLEARED]', () async {
       // Arrange
-      // Since [masterKeyPasswordModel] is a private variable, the only way to verify if it works correctly, is to repeat two tests: with and without password
+      actualMasterKeyController.setPassword(actualAppPasswordModel);
+      String actualEncryptedValue = await actualMasterKeyController.encrypt('some_value');
+
+      // Act
+      actualMasterKeyController.clearPassword();
+
+      // Assert
+      await expectLater(actualMasterKeyController.decrypt(actualEncryptedValue), throwsException);
+    });
+
+    test('Should [throw Exception when changing password] if [password CLEARED]', () async {
+      // Arrange
+      actualMasterKeyController.setPassword(actualAppPasswordModel);
+      PasswordModel actualNewPasswordModel = PasswordModel.fromPlaintext('2222');
+
+      // Act
+      actualMasterKeyController.clearPassword();
+
+      // Assert
+      await expectLater(actualMasterKeyController.changePassword(actualNewPasswordModel), throwsException);
+      MasterKeyVO actualStoredMasterKeyVO = await MasterKeyService().getMasterKey();
+      expect(actualStoredMasterKeyVO.encryptedMasterKey, actualMasterKeyVO.encryptedMasterKey);
+    });
+
+    test('Should [encrypt and decrypt] if [password SET AGAIN after clearing]', () async {
+      // Arrange
+      actualMasterKeyController.setPassword(actualAppPasswordModel);
+      String expectedDecryptedValue = 'some_value';
+      String actualEncryptedValue = await actualMasterKeyController.encrypt(expectedDecryptedValue);
+      actualMasterKeyController
+        ..clearPassword()
+        // Act
+        ..setPassword(actualAppPasswordModel);
+
+      // Assert
+      String actualDecryptedValue = await actualMasterKeyController.decrypt(actualEncryptedValue);
+      expect(actualDecryptedValue, expectedDecryptedValue);
+
+      String actualNewEncryptedValue = await actualMasterKeyController.encrypt(expectedDecryptedValue);
+      String actualNewDecryptedValue = actualMasterKeyVO.decrypt(
+        appPasswordModel: actualAppPasswordModel,
+        encryptedData: actualNewEncryptedValue,
+      );
+      expect(actualNewDecryptedValue, expectedDecryptedValue);
+    });
+  });
+
+  group('Tests of MasterKeyController.decrypt()', () {
+    test('Should [throw Exception] if [password NOT SET]', () async {
+      // Arrange
+      String actualValueToDecrypt = 'ehxqO3FuQmNrrq1yr6afo0GlyewjxLrcC0EioYJ/wGPy19KJ';
+
+      // Assert
+      await expectLater(actualMasterKeyController.decrypt(actualValueToDecrypt), throwsException);
+    });
+
+    test('Should [throw FormatException] if [encrypted value EMPTY]', () async {
+      // Arrange
       actualMasterKeyController.setPassword(actualAppPasswordModel);
       String actualValueToDecrypt = '';
 
       // Assert
-      expect(() async => actualMasterKeyController.decrypt(actualValueToDecrypt), throwsFormatException);
+      await expectLater(actualMasterKeyController.decrypt(actualValueToDecrypt), throwsFormatException);
     });
 
     test('Should [return plaintext] decrypted using master key', () async {
       // Arrange
+      actualMasterKeyController.setPassword(actualAppPasswordModel);
       String actualValueToDecrypt = 'ehxqO3FuQmNrrq1yr6afo0GlyewjxLrcC0EioYJ/wGPy19KJ';
 
       // Act
@@ -108,39 +160,60 @@ void main() {
   });
 
   group('Tests of MasterKeyController.changePassword()', () {
-    setUp(() {
-      actualMasterKeyController = MasterKeyController();
-      testDatabase.updateSecureStorage(<String, String>{
-        SecureStorageKey.encryptedMasterKey.name: actualMasterKeyVO.encryptedMasterKey,
-      });
-    });
-
-    test('Should [encrypt and decrypt] if password was changed', () async {
+    test('Should [encrypt and decrypt existing data] if [password CHANGED]', () async {
       // Arrange
-      PasswordModel newPassword = PasswordModel.fromPlaintext('2222');
-
-      actualMasterKeyController.setPassword(PasswordModel.fromPlaintext('1111'));
+      PasswordModel actualNewPasswordModel = PasswordModel.fromPlaintext('2222');
+      actualMasterKeyController.setPassword(actualAppPasswordModel);
+      String expectedDecryptedValue = 'another_value';
+      String actualEncryptedValue = await actualMasterKeyController.encrypt(expectedDecryptedValue);
 
       // Act
-      await actualMasterKeyController.changePassword(newPassword);
+      await actualMasterKeyController.changePassword(actualNewPasswordModel);
 
       // Assert
-      MasterKeyVO actualMasterKey = await MasterKeyService().getMasterKey();
+      String actualDecryptedValue = await actualMasterKeyController.decrypt(actualEncryptedValue);
+      expect(actualDecryptedValue, expectedDecryptedValue);
 
-      String expectedDecrypted = 'another_value';
-      String newCiphertext = await actualMasterKeyController.encrypt(expectedDecrypted);
-      String actualDecrypted = actualMasterKey.decrypt(appPasswordModel: newPassword, encryptedData: newCiphertext);
-      expect(actualDecrypted, expectedDecrypted);
+      MasterKeyVO actualStoredMasterKeyVO = await MasterKeyService().getMasterKey();
+      String actualNewEncryptedValue = await actualMasterKeyController.encrypt(expectedDecryptedValue);
+      String actualNewDecryptedValue = actualStoredMasterKeyVO.decrypt(
+        appPasswordModel: actualNewPasswordModel,
+        encryptedData: actualNewEncryptedValue,
+      );
+      expect(actualNewDecryptedValue, expectedDecryptedValue);
     });
 
-    test('Should [throw Exception] if [password was NOT SET]', () async {
+    test('Should [throw Exception] if [password NOT SET]', () async {
       // Arrange
-      MasterKeyController actualMasterKeyController = MasterKeyController();
-      PasswordModel newPasswordModel = PasswordModel.fromPlaintext('2222');
+      PasswordModel actualNewPasswordModel = PasswordModel.fromPlaintext('2222');
 
       // Assert
-      expect(() async => actualMasterKeyController.changePassword(newPasswordModel), throwsException);
+      await expectLater(actualMasterKeyController.changePassword(actualNewPasswordModel), throwsException);
     });
+  });
+
+  test('Should [throw Exception when decrypting] if [password CLEARED]', () async {
+    // Arrange
+    actualMasterKeyController.setPassword(actualAppPasswordModel);
+    String actualEncryptedValue = await actualMasterKeyController.encrypt('some_value');
+
+    // Act
+    actualMasterKeyController.clearPassword();
+
+    // Assert
+    await expectLater(actualMasterKeyController.decrypt(actualEncryptedValue), throwsException);
+  });
+
+  test('Should [throw Exception when changing password] if [password CLEARED]', () async {
+    // Arrange
+    actualMasterKeyController.setPassword(actualAppPasswordModel);
+    PasswordModel actualNewPasswordModel = PasswordModel.fromPlaintext('2222');
+
+    // Act
+    actualMasterKeyController.clearPassword();
+
+    // Assert
+    await expectLater(actualMasterKeyController.changePassword(actualNewPasswordModel), throwsException);
   });
 
   tearDownAll(testDatabase.close);

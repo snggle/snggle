@@ -34,24 +34,19 @@ class _PinpadDotsAreaState extends State<PinpadDotsArea> {
             ],
           ),
         ),
-        if (widget.pinNumbers.length > 4)
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                for (int i = 4; i < 8; i++)
-                  Expanded(
-                    child: widget.pinNumbers.length > i
-                        ? PinpadDot(
-                            errorBool: widget.errorBool,
-                            number: widget.pinNumbers[i],
-                          )
-                        : const SizedBox(),
+        Expanded(
+          child: Row(
+            children: <Widget>[
+              for (int i = 4; i < 8; i++)
+                Expanded(
+                  child: PinpadDot(
+                    errorBool: widget.errorBool,
+                    number: widget.pinNumbers.length > i ? widget.pinNumbers[i] : null,
                   ),
-              ],
-            ),
-          )
-        else
-          const Spacer()
+                ),
+            ],
+          ),
+        ),
       ],
     );
   }

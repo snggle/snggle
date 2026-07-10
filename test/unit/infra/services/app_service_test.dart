@@ -4,11 +4,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/entities/auto_logout_settings_entity/auto_logout_settings_entity.dart';
 import 'package:snggle/infra/exceptions/parent_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_root_dir.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/app_service.dart';
+import 'package:snggle/shared/controllers/active_wallet_controller.dart';
+import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
+import 'package:snggle/shared/models/wallets/wallet_model.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 
 import '../../../utils/database_mock.dart';
 import '../../../utils/test_database.dart';
@@ -59,6 +64,28 @@ void main() {
     });
   });
 
+  group('Tests of AppService.logout()', () {
+    test('Should [preserve logout settings] if [user logs out]', () async {
+      // Arrange
+      await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+
+      // Act
+      globalLocator<AppService>().logout();
+
+      // Assert
+      AutoLogoutSettingsEntity? actualAutoLogoutSettingsEntity = await globalLocator<IsarDatabaseManager>().perform(
+        (Isar isar) => isar.autoLogoutSettings.get(
+          AutoLogoutSettingsEntity.autoLogoutSettingsId,
+        ),
+      );
+
+      expect(actualAutoLogoutSettingsEntity, isNotNull);
+      expect(actualAutoLogoutSettingsEntity?.backgroundLogoutModeName, 'off');
+      expect(actualAutoLogoutSettingsEntity?.inactivityLogoutEnabledBool, true);
+      expect(actualAutoLogoutSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');
+    });
+  });
+
   group('Tests of AppService.wipeAll()', () {
     setUp(() async {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
@@ -94,7 +121,73 @@ void main() {
         throwsA(isA<IsarError>()),
       );
     });
+
+    test('Should [wipe data] and [clear session data]', () async {
+      // Arrange
+      MasterKeyController actualMasterKeyController = globalLocator<MasterKeyController>()..setPassword(PasswordModel.fromPlaintext('1111'));
+
+      ActiveWalletController actualActiveWalletController = globalLocator<ActiveWalletController>();
+
+      WalletModel actualWalletModel = WalletModel(
+        id: 1,
+        encryptedBool: false,
+        pinnedBool: false,
+        address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce',
+        derivationPath: "m/44'/60'/0'/0/0",
+        filesystemPath: FilesystemPath.fromString(
+          'vault1/network1/wallet1',
+        ),
+        name: 'WALLET 0',
+      );
+
+      actualActiveWalletController.setActiveWallet(
+        walletModel: actualWalletModel,
+      );
+
+      // Act
+      await globalLocator<AppService>().wipeAll();
+
+      // Assert
+      expect(
+        () async => actualMasterKeyController.encrypt('some_value'),
+        throwsA(
+          isA<Exception>().having(
+            (Exception exception) => exception.toString(),
+            'message',
+            contains('does not contain password'),
+          ),
+        ),
+      );
+      expect(actualActiveWalletController.hasActiveWallet, false);
+      expect(actualActiveWalletController.walletModel, null);
+    });
+    test('Should [remove logout settings] if [app data is wiped]', () async {
+      // Arrange
+      IsarDatabaseManager actualIsarDatabaseManager = globalLocator<IsarDatabaseManager>();
+
+      AutoLogoutSettingsEntity? actualSettingsBeforeWipeEntity = await actualIsarDatabaseManager.perform(
+        (Isar isar) => isar.autoLogoutSettings.get(
+          AutoLogoutSettingsEntity.autoLogoutSettingsId,
+        ),
+      );
+      expect(actualSettingsBeforeWipeEntity, isNotNull);
+
+      // Act
+      await globalLocator<AppService>().wipeAll();
+      await actualIsarDatabaseManager.initDatabase(
+        name: testDatabase.testSessionUUID,
+      );
+
+      // Assert
+      AutoLogoutSettingsEntity? actualSettingsAfterWipeEntity = await actualIsarDatabaseManager.perform(
+        (Isar isar) => isar.autoLogoutSettings.get(
+          AutoLogoutSettingsEntity.autoLogoutSettingsId,
+        ),
+      );
+      expect(actualSettingsAfterWipeEntity, isNull);
+    });
   });
+
   group('Tests of AppService.isDataBaseExist()', () {
     setUp(() async {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
