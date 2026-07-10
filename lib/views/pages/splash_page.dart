@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/splash_page/splash_page_cubit.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_enter_pin_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
-import 'package:snggle/bloc/splash_page/states/splash_page_master_key_removed.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_master_key_removed_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_setup_app_state.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/widgets/custom/dialog/short_privacy_policy_dialog.dart';
@@ -18,17 +18,17 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final SplashPageCubit splashPageCubit = SplashPageCubit();
+  final SplashPageCubit _splashPageCubit = SplashPageCubit();
 
   @override
   void initState() {
-    splashPageCubit.init();
+    _splashPageCubit.init();
     super.initState();
   }
 
   @override
   void dispose() {
-    splashPageCubit.close();
+    _splashPageCubit.close();
     super.dispose();
   }
 
@@ -37,7 +37,7 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: BlocConsumer<SplashPageCubit, ASplashPageState>(
-        bloc: splashPageCubit,
+        bloc: _splashPageCubit,
         listener: _handleBlocListener,
         builder: (BuildContext context, ASplashPageState splashPageState) {
           if (splashPageState is SplashPageErrorState) {

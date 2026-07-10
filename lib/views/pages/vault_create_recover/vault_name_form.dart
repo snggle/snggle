@@ -4,12 +4,12 @@ import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 
 class VaultNameForm extends StatelessWidget {
+  final bool nameEmptyBool;
   final TextEditingController textEditingController;
-  final bool showEmptyErrorBool;
 
   const VaultNameForm({
+    required this.nameEmptyBool,
     required this.textEditingController,
-    required this.showEmptyErrorBool,
     super.key,
   });
 
@@ -28,7 +28,7 @@ class VaultNameForm extends StatelessWidget {
             textEditingController: textEditingController,
           ),
         ),
-        if (showEmptyErrorBool)
+        if (nameEmptyBool)
           const ErrorMessageListTile(
             message: 'Vault name cannot be empty',
           ),

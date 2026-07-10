@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_enter_pin_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_loading_state.dart';
-import 'package:snggle/bloc/splash_page/states/splash_page_master_key_removed.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_master_key_removed_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_setup_app_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/app_service.dart';

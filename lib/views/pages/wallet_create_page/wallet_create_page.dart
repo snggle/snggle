@@ -157,27 +157,33 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
       walletCreatePageCubit.state.walletExistsErrorBool == false;
 
   Future<void> _createNewWallet() async {
-    try {
-      await CustomLoadingDialog.show<WalletModel?>(
-        context: context,
-        title: 'Saving...',
-        futureFunction: walletCreatePageCubit.createNewWallet,
-        onSuccess: (WalletModel? walletModel) async {
-          if (mounted == false) {
-            return;
-          }
+    await CustomLoadingDialog.show<WalletModel?>(
+      context: context,
+      title: 'Saving...',
+      futureFunction: _createWalletOrShowMasterKeyDialog,
+      onSuccess: _handleWalletCreated,
+    );
+  }
 
-          if (walletModel != null) {
-            await AutoRouter.of(context).pop();
-          }
-        },
-      );
+  Future<WalletModel?> _createWalletOrShowMasterKeyDialog() async {
+    try {
+      return await walletCreatePageCubit.createNewWallet();
     } on InvalidMasterKeyException {
       if (mounted == false) {
-        return;
+        return null;
       }
-
-      unawaited(MasterKeyDialog.show(context));
+      await MasterKeyDialog.show(context);
+      return null;
     }
+  }
+
+  Future<void> _handleWalletCreated(WalletModel? walletModel) async {
+    if (mounted == false) {
+      return;
+    }
+    if (walletModel == null) {
+      return;
+    }
+    await AutoRouter.of(context).pop();
   }
 }

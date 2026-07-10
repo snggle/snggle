@@ -124,7 +124,7 @@ void main() {
 
         // Assert
         expect(
-          actualVaultRecoverPageCubit.state.vaultNameEmptyBool,
+          actualVaultRecoverPageCubit.state.nameEmptyBool,
           true,
         );
       });
@@ -138,7 +138,7 @@ void main() {
 
         // Assert
         expect(
-          actualVaultRecoverPageCubit.state.vaultNameEmptyBool,
+          actualVaultRecoverPageCubit.state.nameEmptyBool,
           false,
         );
       });

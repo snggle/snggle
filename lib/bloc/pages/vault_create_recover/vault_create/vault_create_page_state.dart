@@ -1,40 +1,39 @@
-import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
+import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 
 class VaultCreatePageState extends Equatable {
-  final bool confirmPageEnabledBool;
-  final MnemonicSize? mnemonicSize;
-  final List<String>? mnemonic;
+  final bool mnemonicFormVisibleBool;
+  final bool nameEmptyBool;
+  final MnemonicModel? mnemonicModel;
   final VaultModel? repeatedVaultModel;
-  final bool vaultNameEmptyBool;
 
   const VaultCreatePageState({
-    this.confirmPageEnabledBool = false,
-    this.mnemonicSize,
-    this.mnemonic,
+    this.mnemonicFormVisibleBool = false,
+    this.nameEmptyBool = false,
+    this.mnemonicModel,
     this.repeatedVaultModel,
-    this.vaultNameEmptyBool = false,
   });
 
   VaultCreatePageState copyWith({
-    bool? confirmPageEnabledBool,
-    bool? loadingBool,
-    int? lastVaultIndex,
-    MnemonicSize? mnemonicSize,
-    List<String>? mnemonic,
+    bool? mnemonicFormVisibleBool,
+    bool? nameEmptyBool,
+    MnemonicModel? mnemonicModel,
     VaultModel? repeatedVaultModel,
-    bool? vaultNameEmptyBool,
   }) {
     return VaultCreatePageState(
-      confirmPageEnabledBool: confirmPageEnabledBool ?? this.confirmPageEnabledBool,
-      mnemonicSize: mnemonicSize ?? this.mnemonicSize,
-      mnemonic: mnemonic ?? this.mnemonic,
+      mnemonicFormVisibleBool: mnemonicFormVisibleBool ?? this.mnemonicFormVisibleBool,
+      mnemonicModel: mnemonicModel ?? this.mnemonicModel,
       repeatedVaultModel: repeatedVaultModel ?? this.repeatedVaultModel,
-      vaultNameEmptyBool: vaultNameEmptyBool ?? this.vaultNameEmptyBool,
+      nameEmptyBool: nameEmptyBool ?? this.nameEmptyBool,
     );
   }
 
   @override
-  List<Object?> get props => <Object?>[confirmPageEnabledBool, mnemonicSize, mnemonic, repeatedVaultModel, vaultNameEmptyBool];
+  List<Object?> get props => <Object?>[
+        mnemonicFormVisibleBool,
+        nameEmptyBool,
+        mnemonicModel,
+        repeatedVaultModel,
+      ];
 }

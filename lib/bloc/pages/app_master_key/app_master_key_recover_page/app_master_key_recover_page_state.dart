@@ -15,6 +15,10 @@ class AppMasterKeyRecoverPageState extends Equatable {
     this.mnemonicModel,
   });
 
+  bool get mnemonicErrorBool => mnemonicFilledBool == true && mnemonicValidBool == false;
+
+  bool get recoverButtonEnabledBool => mnemonicFilledBool == true && mnemonicValidBool == true;
+
   AppMasterKeyRecoverPageState copyWith({
     bool? mnemonicValidBool,
     bool? mnemonicFilledBool,

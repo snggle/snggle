@@ -9,11 +9,11 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i26;
-import 'package:flutter/material.dart' as _i28;
+import 'package:flutter/material.dart' as _i29;
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart'
     as _i39;
 import 'package:snggle/shared/models/groups/network_group_model.dart' as _i38;
-import 'package:snggle/shared/models/mnemonic_model.dart' as _i30;
+import 'package:snggle/shared/models/mnemonic_model.dart' as _i31;
 import 'package:snggle/shared/models/networks/network_template_model.dart'
     as _i33;
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart'
@@ -25,18 +25,13 @@ import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart'
 import 'package:snggle/shared/models/vaults/vault_model.dart' as _i34;
 import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i37;
 import 'package:snggle/shared/utils/filesystem_path.dart' as _i35;
-import 'package:snggle/views/pages/app_master_key/app_master_key_create_page.dart'
-    as _i2;
-import 'package:snggle/views/pages/app_master_key/app_master_key_recover_page.dart'
-    as _i3;
-import 'package:snggle/views/pages/app_master_key/app_master_key_removed_page.dart'
-    as _i4;
-import 'package:snggle/views/pages/app_master_key/app_master_key_type.dart'
-    as _i31;
+import 'package:snggle/views/pages/app_master_key/app_master_key_create_page.dart' as _i2;
+import 'package:snggle/views/pages/app_master_key/app_master_key_recover_page.dart' as _i3;
+import 'package:snggle/views/pages/app_master_key/app_master_key_removed_page.dart' as _i4;
+import 'package:snggle/views/pages/app_master_key/app_master_key_type.dart' as _i30;
 import 'package:snggle/views/pages/app_pin_page/app_enter_pin_page.dart' as _i1;
-import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart' as _i29;
-import 'package:snggle/views/pages/app_pin_page/app_set_up_pin_page.dart'
-    as _i5;
+import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart' as _i28;
+import 'package:snggle/views/pages/app_pin_page/app_set_up_pin_page.dart' as _i5;
 import 'package:snggle/views/pages/bottom_navigation/apps_page.dart' as _i6;
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart'
     as _i7;
@@ -86,17 +81,15 @@ abstract class $AppRouter extends _i26.RootStackRouter {
       return _i26.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i1.AppEnterPinPage(
-          key: args.key,
           appPinType: args.appPinType,
+          key: args.key,
         ),
       );
     },
     AppMasterKeyCreateRoute.name: (routeData) {
-      final args = routeData.argsAs<AppMasterKeyCreateRouteArgs>(
-          orElse: () => const AppMasterKeyCreateRouteArgs());
       return _i26.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i2.AppMasterKeyCreatePage(key: args.key),
+        child: const _i2.AppMasterKeyCreatePage(),
       );
     },
     AppMasterKeyRecoverRoute.name: (routeData) {
@@ -117,9 +110,9 @@ abstract class $AppRouter extends _i26.RootStackRouter {
       return _i26.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i5.AppSetUpPinPage(
-          mnemonicModel: args.mnemonicModel,
-          appPinType: args.appPinType,
           appMasterKeyType: args.appMasterKeyType,
+          appPinType: args.appPinType,
+          mnemonicModel: args.mnemonicModel,
           key: args.key,
         ),
       );
@@ -305,14 +298,14 @@ abstract class $AppRouter extends _i26.RootStackRouter {
 /// [_i1.AppEnterPinPage]
 class AppEnterPinRoute extends _i26.PageRouteInfo<AppEnterPinRouteArgs> {
   AppEnterPinRoute({
-    _i28.Key? key,
-    _i29.AppPinType appPinType = _i29.AppPinType.enterPin,
+    _i28.AppPinType appPinType = _i28.AppPinType.enterPin,
+    _i29.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           AppEnterPinRoute.name,
           args: AppEnterPinRouteArgs(
-            key: key,
             appPinType: appPinType,
+            key: key,
           ),
           initialChildren: children,
         );
@@ -325,48 +318,32 @@ class AppEnterPinRoute extends _i26.PageRouteInfo<AppEnterPinRouteArgs> {
 
 class AppEnterPinRouteArgs {
   const AppEnterPinRouteArgs({
+    this.appPinType = _i28.AppPinType.enterPin,
     this.key,
-    this.appPinType = _i29.AppPinType.enterPin,
   });
 
-  final _i28.Key? key;
+  final _i28.AppPinType appPinType;
 
-  final _i29.AppPinType appPinType;
+  final _i29.Key? key;
 
   @override
   String toString() {
-    return 'AppEnterPinRouteArgs{key: $key, appPinType: $appPinType}';
+    return 'AppEnterPinRouteArgs{appPinType: $appPinType, key: $key}';
   }
 }
 
 /// generated route for
 /// [_i2.AppMasterKeyCreatePage]
-class AppMasterKeyCreateRoute
-    extends _i26.PageRouteInfo<AppMasterKeyCreateRouteArgs> {
-  AppMasterKeyCreateRoute({
-    _i28.Key? key,
-    List<_i26.PageRouteInfo>? children,
-  }) : super(
+class AppMasterKeyCreateRoute extends _i26.PageRouteInfo<void> {
+  const AppMasterKeyCreateRoute({List<_i26.PageRouteInfo>? children})
+      : super(
           AppMasterKeyCreateRoute.name,
-          args: AppMasterKeyCreateRouteArgs(key: key),
           initialChildren: children,
         );
 
   static const String name = 'AppMasterKeyCreateRoute';
 
-  static const _i26.PageInfo<AppMasterKeyCreateRouteArgs> page =
-      _i26.PageInfo<AppMasterKeyCreateRouteArgs>(name);
-}
-
-class AppMasterKeyCreateRouteArgs {
-  const AppMasterKeyCreateRouteArgs({this.key});
-
-  final _i28.Key? key;
-
-  @override
-  String toString() {
-    return 'AppMasterKeyCreateRouteArgs{key: $key}';
-  }
+  static const _i26.PageInfo<void> page = _i26.PageInfo<void>(name);
 }
 
 /// generated route for
@@ -401,17 +378,17 @@ class AppMasterKeyRemovedRoute extends _i26.PageRouteInfo<void> {
 /// [_i5.AppSetUpPinPage]
 class AppSetUpPinRoute extends _i26.PageRouteInfo<AppSetUpPinRouteArgs> {
   AppSetUpPinRoute({
-    _i30.MnemonicModel? mnemonicModel,
-    _i29.AppPinType appPinType = _i29.AppPinType.setUpPin,
-    _i31.AppMasterKeyType? appMasterKeyType,
-    _i28.Key? key,
+    _i30.AppMasterKeyType? appMasterKeyType,
+    _i28.AppPinType appPinType = _i28.AppPinType.setUpPin,
+    _i31.MnemonicModel? mnemonicModel,
+    _i29.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           AppSetUpPinRoute.name,
           args: AppSetUpPinRouteArgs(
-            mnemonicModel: mnemonicModel,
-            appPinType: appPinType,
             appMasterKeyType: appMasterKeyType,
+            appPinType: appPinType,
+            mnemonicModel: mnemonicModel,
             key: key,
           ),
           initialChildren: children,
@@ -425,23 +402,23 @@ class AppSetUpPinRoute extends _i26.PageRouteInfo<AppSetUpPinRouteArgs> {
 
 class AppSetUpPinRouteArgs {
   const AppSetUpPinRouteArgs({
-    this.mnemonicModel,
-    this.appPinType = _i29.AppPinType.setUpPin,
     this.appMasterKeyType,
+    this.appPinType = _i28.AppPinType.setUpPin,
+    this.mnemonicModel,
     this.key,
   });
 
-  final _i30.MnemonicModel? mnemonicModel;
+  final _i30.AppMasterKeyType? appMasterKeyType;
 
-  final _i29.AppPinType appPinType;
+  final _i28.AppPinType appPinType;
 
-  final _i31.AppMasterKeyType? appMasterKeyType;
+  final _i31.MnemonicModel? mnemonicModel;
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
-    return 'AppSetUpPinRouteArgs{mnemonicModel: $mnemonicModel, appPinType: $appPinType, appMasterKeyType: $appMasterKeyType, key: $key}';
+    return 'AppSetUpPinRouteArgs{appMasterKeyType: $appMasterKeyType, appPinType: $appPinType, mnemonicModel: $mnemonicModel, key: $key}';
   }
 }
 
@@ -480,7 +457,7 @@ class EthereumTransactionDetailsRoute
   EthereumTransactionDetailsRoute({
     required _i32.EthereumTransactionModel ethereumTransactionModel,
     required _i33.NetworkTemplateModel networkTemplateModel,
-    _i28.Key? key,
+    _i29.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           EthereumTransactionDetailsRoute.name,
@@ -509,7 +486,7 @@ class EthereumTransactionDetailsRouteArgs {
 
   final _i33.NetworkTemplateModel networkTemplateModel;
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -524,7 +501,7 @@ class NetworkListRoute extends _i26.PageRouteInfo<NetworkListRouteArgs> {
     required String name,
     required _i34.VaultModel vaultModel,
     required _i35.FilesystemPath filesystemPath,
-    _i28.Key? key,
+    _i29.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           NetworkListRoute.name,
@@ -557,7 +534,7 @@ class NetworkListRouteArgs {
 
   final _i35.FilesystemPath filesystemPath;
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -614,7 +591,7 @@ class SolanaTransactionDetailsRoute
   SolanaTransactionDetailsRoute({
     required _i36.SolanaTransactionModel solanaTransactionModel,
     required _i33.NetworkTemplateModel networkTemplateModel,
-    _i28.Key? key,
+    _i29.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           SolanaTransactionDetailsRoute.name,
@@ -643,7 +620,7 @@ class SolanaTransactionDetailsRouteArgs {
 
   final _i33.NetworkTemplateModel networkTemplateModel;
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -670,7 +647,7 @@ class SplashRoute extends _i26.PageRouteInfo<void> {
 class VaultCreateRoute extends _i26.PageRouteInfo<VaultCreateRouteArgs> {
   VaultCreateRoute({
     required _i35.FilesystemPath parentFilesystemPath,
-    _i28.Key? key,
+    _i29.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           VaultCreateRoute.name,
@@ -695,7 +672,7 @@ class VaultCreateRouteArgs {
 
   final _i35.FilesystemPath parentFilesystemPath;
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -722,7 +699,7 @@ class VaultCreateRecoverRoute extends _i26.PageRouteInfo<void> {
 class VaultInitRoute extends _i26.PageRouteInfo<VaultInitRouteArgs> {
   VaultInitRoute({
     required _i35.FilesystemPath parentFilesystemPath,
-    _i28.Key? key,
+    _i29.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           VaultInitRoute.name,
@@ -747,7 +724,7 @@ class VaultInitRouteArgs {
 
   final _i35.FilesystemPath parentFilesystemPath;
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -774,7 +751,7 @@ class VaultListRoute extends _i26.PageRouteInfo<void> {
 class VaultRecoverRoute extends _i26.PageRouteInfo<VaultRecoverRouteArgs> {
   VaultRecoverRoute({
     required _i35.FilesystemPath parentFilesystemPath,
-    _i28.Key? key,
+    _i29.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           VaultRecoverRoute.name,
@@ -799,7 +776,7 @@ class VaultRecoverRouteArgs {
 
   final _i35.FilesystemPath parentFilesystemPath;
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -842,7 +819,7 @@ class WalletConnectRoute extends _i26.PageRouteInfo<WalletConnectRouteArgs> {
     required _i34.VaultModel vaultModel,
     required _i37.WalletModel walletModel,
     required _i33.NetworkTemplateModel networkTemplateModel,
-    _i28.Key? key,
+    _i29.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           WalletConnectRoute.name,
@@ -875,7 +852,7 @@ class WalletConnectRouteArgs {
 
   final _i33.NetworkTemplateModel networkTemplateModel;
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -890,7 +867,7 @@ class WalletCreateRoute extends _i26.PageRouteInfo<WalletCreateRouteArgs> {
     required _i34.VaultModel vaultModel,
     required _i35.FilesystemPath parentFilesystemPath,
     required _i38.NetworkGroupModel networkGroupModel,
-    _i28.Key? key,
+    _i29.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           WalletCreateRoute.name,
@@ -923,7 +900,7 @@ class WalletCreateRouteArgs {
 
   final _i38.NetworkGroupModel networkGroupModel;
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -939,7 +916,7 @@ class WalletDetailsRoute extends _i26.PageRouteInfo<WalletDetailsRouteArgs> {
     required _i38.NetworkGroupModel networkGroupModel,
     required _i37.WalletModel walletModel,
     required _i39.WalletDetailsPageCubit walletDetailsPageCubit,
-    _i28.Key? key,
+    _i29.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           WalletDetailsRoute.name,
@@ -976,7 +953,7 @@ class WalletDetailsRouteArgs {
 
   final _i39.WalletDetailsPageCubit walletDetailsPageCubit;
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -992,7 +969,7 @@ class WalletListRoute extends _i26.PageRouteInfo<WalletListRouteArgs> {
     required _i34.VaultModel vaultModel,
     required _i35.FilesystemPath filesystemPath,
     required _i38.NetworkGroupModel networkGroupModel,
-    _i28.Key? key,
+    _i29.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           WalletListRoute.name,
@@ -1029,7 +1006,7 @@ class WalletListRouteArgs {
 
   final _i38.NetworkGroupModel networkGroupModel;
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {

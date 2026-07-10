@@ -1,3 +1,4 @@
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
@@ -59,14 +60,61 @@ void main() {
     });
   });
   
-  group('Tests of MnemonicModel.generate()', () {
+  group('Tests of MnemonicModel.masterKey()', () {
     test('Should return mnemonic with 24 words', () {
       // Act
-      MnemonicModel actualMnemonicModel = MnemonicModel.generate();
+      MnemonicModel actualMnemonicModel = MnemonicModel.masterKey();
 
       // Assert
       // Because the mnemonic is generated randomly, it is not possible to predict the result.
       // Therefore, the test checks only the length and correctness of generated mnemonic.
+      expect(actualMnemonicModel.mnemonicList.length, 24);
+      expect(actualMnemonicModel.isValid, true);
+    });
+  });
+
+  group('Tests of MnemonicModel.vault()', () {
+    test('Should return valid mnemonic with 12 words', () {
+      // Act
+      MnemonicModel actualMnemonicModel = MnemonicModel.vault(MnemonicSize.words12);
+
+      // Assert
+      expect(actualMnemonicModel.mnemonicList.length, 12);
+      expect(actualMnemonicModel.isValid, true);
+    });
+
+    test('Should return valid mnemonic with 15 words', () {
+      // Act
+      MnemonicModel actualMnemonicModel = MnemonicModel.vault(MnemonicSize.words15);
+
+      // Assert
+      expect(actualMnemonicModel.mnemonicList.length, 15);
+      expect(actualMnemonicModel.isValid, true);
+    });
+
+    test('Should return valid mnemonic with 18 words', () {
+      // Act
+      MnemonicModel actualMnemonicModel = MnemonicModel.vault(MnemonicSize.words18);
+
+      // Assert
+      expect(actualMnemonicModel.mnemonicList.length, 18);
+      expect(actualMnemonicModel.isValid, true);
+    });
+
+    test('Should return valid mnemonic with 21 words', () {
+      // Act
+      MnemonicModel actualMnemonicModel = MnemonicModel.vault(MnemonicSize.words21);
+
+      // Assert
+      expect(actualMnemonicModel.mnemonicList.length, 21);
+      expect(actualMnemonicModel.isValid, true);
+    });
+
+    test('Should return valid mnemonic with 24 words', () {
+      // Act
+      MnemonicModel actualMnemonicModel = MnemonicModel.vault(MnemonicSize.words24);
+
+      // Assert
       expect(actualMnemonicModel.mnemonicList.length, 24);
       expect(actualMnemonicModel.isValid, true);
     });

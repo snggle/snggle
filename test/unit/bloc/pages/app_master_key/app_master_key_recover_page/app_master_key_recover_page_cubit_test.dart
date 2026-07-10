@@ -1,7 +1,7 @@
 import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/bloc/pages/app_master_key_recover_page/app_master_key_recover_page_cubit.dart';
-import 'package:snggle/bloc/pages/app_master_key_recover_page/app_master_key_recover_page_state.dart';
+import 'package:snggle/bloc/pages/app_master_key/app_master_key_recover_page/app_master_key_recover_page_cubit.dart';
+import 'package:snggle/bloc/pages/app_master_key/app_master_key_recover_page/app_master_key_recover_page_state.dart';
 
 Future<void> main() async {
   const List<String> validMnemonicList = <String>[

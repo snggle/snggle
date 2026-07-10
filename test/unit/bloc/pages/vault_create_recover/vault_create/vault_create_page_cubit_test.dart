@@ -22,7 +22,9 @@ void main() {
       appPasswordModel: PasswordModel.fromPlaintext('1111'),
     );
 
-    actualVaultCreatePageCubit = VaultCreatePageCubit(parentFilesystemPath: const FilesystemPath.empty());
+    actualVaultCreatePageCubit = VaultCreatePageCubit(
+      parentFilesystemPath: const FilesystemPath.empty(),
+    );
   });
 
   group('Tests of VaultCreatePageCubit process', () {
@@ -43,9 +45,9 @@ void main() {
         // Assert
         // Since generated mnemonic phrase is random, predicting it's value is not possible.
         // For that reason values from [VaultCreatePageState] are checked one by one.
-        expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultCreatePageCubit.state.mnemonicSize, MnemonicSize.words12);
-        expect(actualVaultCreatePageCubit.state.mnemonic!.length, 12);
+        expect(actualVaultCreatePageCubit.state.mnemonicFormVisibleBool, true);
+        expect(actualVaultCreatePageCubit.state.mnemonicModel, isNotNull);
+        expect(actualVaultCreatePageCubit.state.mnemonicModel!.mnemonicList.length, 12);
       });
 
       test('Should [return VaultCreatePageState] containing info about current vault index and generated mnemonic phrase', () async {
@@ -55,9 +57,9 @@ void main() {
         // Assert
         // Since generated mnemonic phrase is random, predicting it's value is not possible.
         // For that reason values from [VaultCreatePageState] are checked one by one.
-        expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultCreatePageCubit.state.mnemonicSize, MnemonicSize.words15);
-        expect(actualVaultCreatePageCubit.state.mnemonic!.length, 15);
+        expect(actualVaultCreatePageCubit.state.mnemonicFormVisibleBool, true);
+        expect(actualVaultCreatePageCubit.state.mnemonicModel, isNotNull);
+        expect(actualVaultCreatePageCubit.state.mnemonicModel!.mnemonicList.length, 15);
       });
 
       test('Should [return VaultCreatePageState] containing info about current vault index and generated mnemonic phrase', () async {
@@ -67,9 +69,9 @@ void main() {
         // Assert
         // Since generated mnemonic phrase is random, predicting it's value is not possible.
         // For that reason values from [VaultCreatePageState] are checked one by one.
-        expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultCreatePageCubit.state.mnemonicSize, MnemonicSize.words18);
-        expect(actualVaultCreatePageCubit.state.mnemonic!.length, 18);
+        expect(actualVaultCreatePageCubit.state.mnemonicFormVisibleBool, true);
+        expect(actualVaultCreatePageCubit.state.mnemonicModel, isNotNull);
+        expect(actualVaultCreatePageCubit.state.mnemonicModel!.mnemonicList.length, 18);
       });
 
       test('Should [return VaultCreatePageState] containing info about current vault index and generated mnemonic phrase', () async {
@@ -79,9 +81,9 @@ void main() {
         // Assert
         // Since generated mnemonic phrase is random, predicting it's value is not possible.
         // For that reason values from [VaultCreatePageState] are checked one by one.
-        expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultCreatePageCubit.state.mnemonicSize, MnemonicSize.words21);
-        expect(actualVaultCreatePageCubit.state.mnemonic!.length, 21);
+        expect(actualVaultCreatePageCubit.state.mnemonicFormVisibleBool, true);
+        expect(actualVaultCreatePageCubit.state.mnemonicModel, isNotNull);
+        expect(actualVaultCreatePageCubit.state.mnemonicModel!.mnemonicList.length, 21);
       });
 
       test('Should [return VaultCreatePageState] with new values after calling method again (mnemonic size changed)', () async {
@@ -91,9 +93,9 @@ void main() {
         // Assert
         // Since generated mnemonic phrase is random, predicting it's value is not possible.
         // For that reason values from [VaultCreatePageState] are checked one by one.
-        expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultCreatePageCubit.state.mnemonicSize, MnemonicSize.words24);
-        expect(actualVaultCreatePageCubit.state.mnemonic!.length, 24);
+        expect(actualVaultCreatePageCubit.state.mnemonicFormVisibleBool, true);
+        expect(actualVaultCreatePageCubit.state.mnemonicModel, isNotNull);
+        expect(actualVaultCreatePageCubit.state.mnemonicModel!.mnemonicList.length, 24);
       });
 
       test('Should [emit VaultCreatePageState] with [vaultNameEmptyBool == TRUE] if a vault name is EMPTY', () async {
@@ -105,7 +107,7 @@ void main() {
 
         // Assert
         expect(
-          actualVaultCreatePageCubit.state.vaultNameEmptyBool,
+          actualVaultCreatePageCubit.state.nameEmptyBool,
           true,
         );
       });
@@ -119,7 +121,7 @@ void main() {
 
         // Assert
         expect(
-          actualVaultCreatePageCubit.state.vaultNameEmptyBool,
+          actualVaultCreatePageCubit.state.nameEmptyBool,
           false,
         );
       });
@@ -128,6 +130,7 @@ void main() {
     group('Tests of VaultCreatePageCubit.saveMnemonic() method', () {
       test('Should [return VaultCreatePageState] with new vault in database', () async {
         // Arrange
+        await actualVaultCreatePageCubit.init(MnemonicSize.words24);
         actualVaultCreatePageCubit.vaultNameTextEditingController.text = 'Test vault';
 
         // Act
@@ -142,21 +145,18 @@ void main() {
         });
 
         // Assert
-        VaultCreatePageState expectedVaultCreatePageState = VaultCreatePageState(
-          confirmPageEnabledBool: true,
-          repeatedVaultModel: null,
-          mnemonicSize: MnemonicSize.words24,
-          // not included expected mnemonic because of random value
-        );
-
-        expect(actualVaultCreatePageCubit.state.confirmPageEnabledBool, expectedVaultCreatePageState.confirmPageEnabledBool);
-        expect(actualVaultCreatePageCubit.state.repeatedVaultModel, expectedVaultCreatePageState.repeatedVaultModel);
-        expect(actualVaultCreatePageCubit.state.mnemonicSize, expectedVaultCreatePageState.mnemonicSize);
+        expect(actualVaultCreatePageCubit.state.mnemonicFormVisibleBool, true);
+        expect(actualVaultCreatePageCubit.state.repeatedVaultModel, null);
+        expect(actualVaultCreatePageCubit.state.mnemonicModel, isNotNull);
+        expect(actualVaultCreatePageCubit.state.mnemonicModel!.mnemonicList.length, 24);
         expect(actualSecretsFilesystemStructure.length, 10);
         expect(actualVaultsDatabaseValue.length, 6);
       });
     });
   });
 
-  tearDownAll(testDatabase.close);
+  tearDownAll(() async {
+    await actualVaultCreatePageCubit.close();
+    await testDatabase.close();
+  });
 }

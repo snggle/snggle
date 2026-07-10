@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:cryptography_utils/cryptography_utils.dart' as crypto_utils;
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_cubit.dart';
+import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/views/pages/vault_create_recover/repeated_vault_warning.dart';
@@ -10,30 +10,27 @@ import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
 import 'package:snggle/views/widgets/mnemonic_form/mnemonic_form_generated.dart';
 
 class VaultMnemonicFormGenerated extends StatefulWidget {
-  final crypto_utils.MnemonicSize mnemonicSize;
-  final List<String> mnemonicList;
-  final VaultCreatePageCubit vaultCreatePageCubit;
+  final MnemonicModel mnemonicModel;
+
   final VaultModel? repeatedVaultModel;
+  final VaultCreatePageCubit vaultCreatePageCubit;
 
   const VaultMnemonicFormGenerated({
-    required this.mnemonicSize,
-    required this.mnemonicList,
-    required this.vaultCreatePageCubit,
+    required this.mnemonicModel,
     required this.repeatedVaultModel,
+    required this.vaultCreatePageCubit,
     super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => _VaultMnemonicFormGeneratedState();
+  State<VaultMnemonicFormGenerated> createState() => _VaultMnemonicFormGeneratedState();
 }
 
 class _VaultMnemonicFormGeneratedState extends State<VaultMnemonicFormGenerated> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
     return MnemonicFormGenerated(
-      mnemonicSize: widget.mnemonicSize,
-      mnemonicList: widget.mnemonicList,
-      finishButtonEnabledBool: _finishButtonEnabledBool,
+      mnemonicList: widget.mnemonicModel.mnemonicList,
       childrenWidgetList: <Widget>[
         if (widget.repeatedVaultModel != null)
           RepeatedVaultWarning.critical(
@@ -41,9 +38,8 @@ class _VaultMnemonicFormGeneratedState extends State<VaultMnemonicFormGenerated>
           ),
         VaultNameForm(
           textEditingController: widget.vaultCreatePageCubit.vaultNameTextEditingController,
-          showEmptyErrorBool: widget.vaultCreatePageCubit.state.vaultNameEmptyBool == true,
+          nameEmptyBool: _nameEmptyBool,
         ),
-        // <<< CHANGED
       ],
       onFinishPressed: _pressFinishButton,
     );
@@ -68,5 +64,7 @@ class _VaultMnemonicFormGeneratedState extends State<VaultMnemonicFormGenerated>
     );
   }
 
-  bool get _finishButtonEnabledBool => widget.repeatedVaultModel == null && widget.vaultCreatePageCubit.state.vaultNameEmptyBool == false;
+  bool get _nameEmptyBool {
+    return widget.vaultCreatePageCubit.state.nameEmptyBool;
+  }
 }
