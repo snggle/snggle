@@ -1,11 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout_cubit/auto_logout_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/theme_config.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/services/app_service.dart';
+import 'package:snggle/shared/bindings/text_input_activity_binding.dart';
+import 'package:snggle/shared/controllers/auto_logout_controller.dart';
+import 'package:snggle/shared/platform/text_input_activity_messenger.dart';
 import 'package:snggle/shared/router/router.dart';
 
 Future<void> main() async {
+  TextInputActivityBinding();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setSystemUIOverlayStyle(
@@ -14,30 +24,78 @@ Future<void> main() async {
 
   initLocator();
   await globalLocator<IsarDatabaseManager>().initDatabase();
+  AutoLogoutCubit autoLogoutCubit = globalLocator<AutoLogoutCubit>();
+  await autoLogoutCubit.init();
 
-  runApp(const AppCore());
+  runApp(BlocProvider<AutoLogoutCubit>.value(value: autoLogoutCubit, child: const AppCore()));
 }
 
 class AppCore extends StatefulWidget {
   const AppCore({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AppCoreState();
+  State<AppCore> createState() => _AppCoreState();
 }
 
 class _AppCoreState extends State<AppCore> {
-  final AppRouter appRouter = AppRouter();
+  TextInputActivityMessenger? _textInputActivityMessenger;
+  final AppRouter _appRouter = AppRouter();
+  late AutoLogoutController _autoLogoutController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _autoLogoutController = AutoLogoutController(
+      appRouter: _appRouter,
+      appService: globalLocator<AppService>(),
+      autoLogoutCubit: context.read<AutoLogoutCubit>(),
+    );
+    _autoLogoutController.init();
+
+    BinaryMessenger binaryMessenger = ServicesBinding.instance.defaultBinaryMessenger;
+
+    if (binaryMessenger is TextInputActivityMessenger) {
+      _textInputActivityMessenger = binaryMessenger;
+      binaryMessenger.addListener(
+        _autoLogoutController.handleUserInteraction,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _textInputActivityMessenger?.removeListener(
+      _autoLogoutController.handleUserInteraction,
+    );
+    _autoLogoutController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routeInformationParser: appRouter.defaultRouteParser(),
-      routerDelegate: appRouter.delegate(),
-      theme: ThemeConfig().buildTheme(),
-      debugShowCheckedModeBanner: false,
-      builder: (_, Widget? routerWidget) {
-        return routerWidget as Widget;
-      },
+    return RepositoryProvider<AutoLogoutController>.value(
+      value: _autoLogoutController,
+      child: MaterialApp.router(
+        routeInformationParser: _appRouter.defaultRouteParser(),
+        routerDelegate: _appRouter.delegate(),
+        theme: ThemeConfig().buildTheme(),
+        debugShowCheckedModeBanner: false,
+        builder: (BuildContext context, Widget? routerWidget) {
+          return Listener(
+            behavior: HitTestBehavior.translucent,
+            onPointerDown: _handlePointerInteraction,
+            onPointerMove: _handlePointerInteraction,
+            onPointerSignal: _handlePointerInteraction,
+            onPointerPanZoomUpdate: _handlePointerInteraction,
+            child: routerWidget!,
+          );
+        },
+      ),
     );
+  }
+
+  void _handlePointerInteraction(PointerEvent pointerEvent) {
+    _autoLogoutController.handleUserInteraction();
   }
 }

@@ -7,11 +7,13 @@ class CustomBottomNavigationBarItem extends StatelessWidget {
   final bool selectedBool;
   final AssetIconData assetIconData;
   final VoidCallback onTap;
+  final double iconSize;
 
   const CustomBottomNavigationBarItem({
     required this.selectedBool,
     required this.assetIconData,
     required this.onTap,
+    this.iconSize = 34,
     super.key,
   });
 
@@ -19,7 +21,7 @@ class CustomBottomNavigationBarItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: onTap,
-      icon: AssetIcon(assetIconData, color: selectedBool ? null : AppColors.darkGrey, size: 34),
+      icon: AssetIcon(assetIconData, color: selectedBool ? null : AppColors.darkGrey, size: iconSize),
     );
   }
 }

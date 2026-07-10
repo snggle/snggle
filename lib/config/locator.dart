@@ -3,12 +3,14 @@ import 'dart:io';
 
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout_cubit/auto_logout_cubit.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/repositories/entries_repository.dart';
 import 'package:snggle/infra/repositories/groups_repository.dart';
 import 'package:snggle/infra/repositories/master_key_repository.dart';
 import 'package:snggle/infra/repositories/network_groups_repository.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
+import 'package:snggle/infra/repositories/settings_repository.dart';
 import 'package:snggle/infra/repositories/transactions_repository.dart';
 import 'package:snggle/infra/repositories/vaults_repository.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
@@ -18,6 +20,7 @@ import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/infra/services/network_groups_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
+import 'package:snggle/infra/services/settings_service.dart';
 import 'package:snggle/infra/services/transaction_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
@@ -42,6 +45,7 @@ void initLocator() {
 
   globalLocator
     ..registerLazySingleton<ActiveWalletController>(ActiveWalletController.new)
+    ..registerLazySingleton<AutoLogoutCubit>(AutoLogoutCubit.new)
     ..registerSingleton<RootDirectoryBuilder>(getApplicationSupportDirectory)
     ..registerSingleton<IsarDatabaseManager>(IsarDatabaseManager());
 }
@@ -57,6 +61,7 @@ void _initRepositories() {
     ..registerLazySingleton<NetworkGroupsRepository>(NetworkGroupsRepository.new)
     ..registerLazySingleton<MasterKeyRepository>(MasterKeyRepository.new)
     ..registerLazySingleton<SecretsRepository>(SecretsRepository.new)
+    ..registerLazySingleton<SettingsRepository>(SettingsRepository.new)
     ..registerLazySingleton<VaultsRepository>(VaultsRepository.new)
     ..registerLazySingleton<WalletsRepository>(WalletsRepository.new)
     ..registerLazySingleton<TransactionsRepository>(TransactionsRepository.new)
@@ -74,7 +79,8 @@ void _initServices() {
     ..registerLazySingleton<WalletsService>(WalletsService.new)
     ..registerLazySingleton<TransactionsService>(TransactionsService.new)
     ..registerLazySingleton<GroupsService>(GroupsService.new)
-    ..registerLazySingleton<EntriesService>(EntriesService.new);
+    ..registerLazySingleton<EntriesService>(EntriesService.new)
+    ..registerLazySingleton<SettingsService>(SettingsService.new);
 }
 
 void _initFactories() {

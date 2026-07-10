@@ -9,7 +9,6 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-
 import 'package:auto_route/auto_route.dart' as _i30;
 import 'package:flutter/material.dart' as _i32;
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart'
@@ -42,7 +41,6 @@ import 'package:snggle/views/pages/app_pin_page/app_pin_change_wrapper.dart'
 import 'package:snggle/views/pages/app_pin_page/app_pin_set_up_page.dart'
     as _i6;
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart' as _i31;
-import 'package:snggle/views/pages/bottom_navigation/apps_page.dart' as _i7;
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart'
     as _i8;
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/entries_section_wrapper.dart'
@@ -51,6 +49,8 @@ import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/entry_detai
     as _i11;
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/entry_list_page/entry_list_page.dart'
     as _i12;
+import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout/auto_logout_settings_page.dart'
+    as _i7;
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/privacy_policy_page/privacy_policy_page.dart'
     as _i15;
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/settings_page.dart'
@@ -290,35 +290,76 @@ class AppPinSetUpRouteArgs {
 }
 
 /// generated route for
-/// [_i7.AppsPage]
-class AppsRoute extends _i30.PageRouteInfo<void> {
-  const AppsRoute({List<_i30.PageRouteInfo>? children})
-    : super(AppsRoute.name, initialChildren: children);
+/// [_i7.AutoLogoutSettingsPage]
+class AutoLogoutSettingsRoute extends _i30.PageRouteInfo<void> {
+  const AutoLogoutSettingsRoute({List<_i30.PageRouteInfo>? children})
+    : super(AutoLogoutSettingsRoute.name, initialChildren: children);
 
-  static const String name = 'AppsRoute';
+  static const String name = 'AutoLogoutSettingsRoute';
 
   static _i30.PageInfo page = _i30.PageInfo(
     name,
     builder: (data) {
-      return const _i7.AppsPage();
+      return const _i7.AutoLogoutSettingsPage();
     },
   );
 }
 
 /// generated route for
 /// [_i8.BottomNavigationWrapper]
-class BottomNavigationRoute extends _i30.PageRouteInfo<void> {
-  const BottomNavigationRoute({List<_i30.PageRouteInfo>? children})
-    : super(BottomNavigationRoute.name, initialChildren: children);
+class BottomNavigationRoute
+    extends _i30.PageRouteInfo<BottomNavigationRouteArgs> {
+  BottomNavigationRoute({
+    String? successDialogMessage,
+    _i32.Key? key,
+    List<_i30.PageRouteInfo>? children,
+  }) : super(
+         BottomNavigationRoute.name,
+         args: BottomNavigationRouteArgs(
+           successDialogMessage: successDialogMessage,
+           key: key,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'BottomNavigationRoute';
 
   static _i30.PageInfo page = _i30.PageInfo(
     name,
     builder: (data) {
-      return const _i8.BottomNavigationWrapper();
+      final args = data.argsAs<BottomNavigationRouteArgs>(
+        orElse: () => const BottomNavigationRouteArgs(),
+      );
+      return _i8.BottomNavigationWrapper(
+        successDialogMessage: args.successDialogMessage,
+        key: args.key,
+      );
     },
   );
+}
+
+class BottomNavigationRouteArgs {
+  const BottomNavigationRouteArgs({this.successDialogMessage, this.key});
+
+  final String? successDialogMessage;
+
+  final _i32.Key? key;
+
+  @override
+  String toString() {
+    return 'BottomNavigationRouteArgs{successDialogMessage: $successDialogMessage, key: $key}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! BottomNavigationRouteArgs) return false;
+    return successDialogMessage == other.successDialogMessage &&
+        key == other.key;
+  }
+
+  @override
+  int get hashCode => successDialogMessage.hashCode ^ key.hashCode;
 }
 
 /// generated route for

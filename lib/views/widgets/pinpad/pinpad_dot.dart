@@ -55,13 +55,16 @@ class _PinpadDotState extends State<PinpadDot> {
         ),
       );
     } else {
-      child = Center(
-        child: Text(
-          '${widget.number}',
-          style: TextStyle(
-            color: AppColors.body1,
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
+      child = Opacity(
+        opacity: widget.number != null ? 1 : 0.22,
+        child: Center(
+          child: Text(
+            '${widget.number}',
+            style: TextStyle(
+              color: AppColors.body1,
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
       );

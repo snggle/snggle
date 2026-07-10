@@ -33,6 +33,7 @@ class AppRouter extends RootStackRouter {
       AutoRoute(page: AppPinSetUpRoute.page),
       AutoRoute(page: AppPinAuthRoute.page),
       AutoRoute(page: PrivacyPolicyRoute.page),
+      AutoRoute(page: AutoLogoutSettingsRoute.page),
       AutoRoute(
         page: VaultCreateRecoverRoute.page,
         children: <AutoRoute>[
@@ -66,7 +67,6 @@ class AppRouter extends RootStackRouter {
               AutoRoute(page: EntryDetailsRoute.page),
             ],
           ),
-          AutoRoute(page: AppsRoute.page),
           AutoRoute(
             page: SettingsSectionWrapperRoute.page,
             children: <AutoRoute>[

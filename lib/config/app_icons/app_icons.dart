@@ -12,6 +12,7 @@ class AppIcons {
   static const AssetIconData app_bar_close = AssetIconData('assets/icons/app_bar_close.svg');
   static const AssetIconData bottom_navigation_apps = AssetIconData('assets/icons/bottom_navigation_apps.svg');
   static const AssetIconData bottom_navigation_crypto = AssetIconData('assets/icons/bottom_navigation_crypto.svg');
+  static const AssetIconData bottom_navigation_logout = AssetIconData('assets/icons/bottom_navigation_logout.svg');
   static const AssetIconData bottom_navigation_menu = AssetIconData('assets/icons/bottom_navigation_menu.svg');
   static const AssetIconData bottom_navigation_scan = AssetIconData('assets/icons/bottom_navigation_scan.svg');
   static const AssetIconData bottom_navigation_secrets = AssetIconData('assets/icons/bottom_navigation_secrets.svg');
@@ -86,6 +87,7 @@ class AppIcons {
   static const AssetIconData text_wrap = AssetIconData('assets/icons/text_wrap.svg');
   static const AssetIconData soundwave_big = AssetIconData('assets/icons/soundwave_big.svg');
   static const AssetIconData soundwave_small = AssetIconData('assets/icons/soundwave_small.svg');
+  static const AssetIconData settings_logout = AssetIconData('assets/icons/settings_logout.svg');
   static const AssetIconData wallet_metamask = AssetIconData('assets/icons/wallet_metamask.svg');
   static const AssetIconData wallet_solflare = AssetIconData('assets/icons/wallet_solflare.svg');
   static const AssetIconData wallet_trezor = AssetIconData('assets/icons/wallet_trezor.svg');
