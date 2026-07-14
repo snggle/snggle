@@ -46,10 +46,11 @@ jobs:
     steps:
       # https://github.com/marketplace/actions/checkout
       - uses: actions/checkout@main
+      # Previously used only for Audio Protocol
       # https://github.com/webfactory/ssh-agent
-      - uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SNGGLE_SSH_PRIVATE_KEY }}
+      # - uses: webfactory/ssh-agent@v0.9.0
+      #   with:
+      #     ssh-private-key: ${{ secrets.SNGGLE_SSH_PRIVATE_KEY }}
       # https://github.com/marketplace/actions/flutter-action
       - name: Extract flutter SDK version from FVM
         run: echo "FLUTTER_SDK_VERSION=$(jq -r '.flutterSdkVersion' .fvm/fvm_config.json)" >> $GITHUB_ENV

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Previously this widget was under TxDataReceivePage and allowed selecting between QR and audio mode
 class TxModeSelectionButton extends StatelessWidget {
   final int index;
   final ValueChanged<int> onChanged;

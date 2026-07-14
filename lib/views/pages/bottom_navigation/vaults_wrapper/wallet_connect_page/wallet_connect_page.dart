@@ -14,7 +14,6 @@ import 'package:snggle/shared/models/networks/network_type.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_connect_option.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
-import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_audio_connect_page.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_connect_option_button.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_qr_connect_page.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
@@ -75,13 +74,6 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                     icon: AppIcons.connect_wallet_qr,
                     onTap: () => walletConnectPageCubit.changeConnectOption(WalletConnectOption.qr),
                   ),
-                  if (widget.networkTemplateModel.networkType == NetworkType.ethereum)
-                    WalletConnectOptionButton(
-                      selectedBool: walletConnectPageState.walletConnectOption == WalletConnectOption.audio,
-                      label: 'Audio based',
-                      icon: AppIcons.soundwave_big,
-                      onTap: () => walletConnectPageCubit.changeConnectOption(WalletConnectOption.audio),
-                    ),
                 ],
               ),
               const SizedBox(height: 34),
@@ -102,13 +94,6 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
                             onPressed: _showQRConnectPage,
                           ),
                       }
-                    ],
-                    if (walletConnectPageState.walletConnectOption == WalletConnectOption.audio) ...<Widget>[
-                      GradientOutlinedButton.large(
-                        label: 'Mirage audio',
-                        icon: const AssetIcon(AppIcons.mirage_logo, size: 30),
-                        onPressed: _showAudioConnectPage,
-                      ),
                     ],
                   ],
                 ),
@@ -141,32 +126,6 @@ class _WalletConnectPageState extends State<WalletConnectPage> {
               walletModel: widget.walletModel,
               networkTemplateModel: widget.networkTemplateModel,
               cborTaggedObject: cborTaggedObject,
-            );
-          },
-        );
-
-        if (navigateBackBool == true) {
-          await AutoRouter.of(context).pop();
-        }
-      },
-      onError: _handleInvalidMasterKeyException,
-    );
-  }
-
-  Future<void> _showAudioConnectPage() async {
-    await CustomLoadingDialog.show<CborCryptoHDKey>(
-      context: context,
-      title: 'Loading...',
-      futureFunction: () => walletConnectPageCubit.getCborCryptoHDKey(derivationPathDepth: 4),
-      onSuccess: (CborCryptoHDKey cborCryptoHDKey) async {
-        bool? navigateBackBool = await showDialog<bool>(
-          context: context,
-          useSafeArea: false,
-          builder: (BuildContext context) {
-            return WalletAudioConnectPage(
-              walletModel: widget.walletModel,
-              networkTemplateModel: widget.networkTemplateModel,
-              cborCryptoHDKey: cborCryptoHDKey,
             );
           },
         );
