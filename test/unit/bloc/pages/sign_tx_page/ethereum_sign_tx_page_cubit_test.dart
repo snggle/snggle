@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/a_ethereum_sign_tx_page_state.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/ethereum_sign_tx_page_cubit.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/states/ethereum_sign_tx_page_confirm_tx_state.dart';
@@ -96,7 +95,7 @@ void main() {
       // Assert
       EthereumSignTxPageSignedTxState expectedSignTxPageState = EthereumSignTxPageSignedTxState(
         transactionModel: EthereumTransactionModel(
-          id: Isar.autoIncrement,
+          id: 0,
           walletId: 1,
           creationDate: actualSignTxPageState.transactionModel.creationDate,
           signDataType: SignDataType.rawBytes,
@@ -177,7 +176,7 @@ void main() {
       // Assert
       EthereumSignTxPageSignedTxState expectedSignTxPageState = EthereumSignTxPageSignedTxState(
         transactionModel: EthereumTransactionModel(
-          id: Isar.autoIncrement,
+          id: 0,
           walletId: 1,
           creationDate: actualSignTxPageState.transactionModel.creationDate,
           signDataType: SignDataType.rawBytes,
@@ -410,7 +409,7 @@ void main() {
       // Assert
       EthereumSignTxPageSignedTxState expectedSignTxPageState = EthereumSignTxPageSignedTxState(
         transactionModel: EthereumTransactionModel(
-          id: Isar.autoIncrement,
+          id: 0,
           walletId: 1,
           creationDate: actualSignTxPageState.transactionModel.creationDate,
           signDataType: SignDataType.rawBytes,
@@ -492,7 +491,7 @@ void main() {
       // Assert
       EthereumSignTxPageSignedTxState expectedSignTxPageState = EthereumSignTxPageSignedTxState(
         transactionModel: EthereumTransactionModel(
-          id: Isar.autoIncrement,
+          id: 0,
           walletId: 1,
           creationDate: actualSignTxPageState.transactionModel.creationDate,
           signDataType: SignDataType.rawBytes,

@@ -1,39 +1,73 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cryptography_utils/cryptography_utils.dart';
-import 'package:isar/isar.dart';
+import 'package:equatable/equatable.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/infra/entities/transaction_entity/a_transaction_entity.dart';
 
-part 'solana_transaction_entity.g.dart';
-
-@Collection(
-  accessor: 'solanaTransactions',
-  ignore: <String>{'props', 'stringify', 'hashCode'},
-)
-class SolanaTransactionEntity extends ATransactionEntity {
+@Entity()
+class SolanaTransactionEntity extends Equatable implements ATransactionEntity {
+  @override
+  @Id()
+  int id;
+  @override
+  @Index()
+  final int walletId;
+  @override
+  final String creationDate;
+  String? dbSignDataType;
+  @override
+  final String? amount;
+  @override
+  final String? message;
+  @override
+  final String? contractAddress;
+  @override
+  final String? senderAddress;
+  @override
+  final String? recipientAddress;
+  @override
+  final String? signature;
+  @override
+  final String? signDate;
   final String signerAddress;
   final String? transactionData;
 
-  const SolanaTransactionEntity({
-    required super.id,
-    required super.walletId,
-    required super.creationDate,
-    required super.signDataType,
+  @Transient()
+  @override
+  SignDataType get signDataType => enumByNameOrNull<SignDataType>(SignDataType.values, dbSignDataType)!;
+
+  set signDataType(SignDataType value) {
+    dbSignDataType = value.name;
+  }
+
+  SolanaTransactionEntity({
+    required this.id,
+    required this.walletId,
+    required this.creationDate,
     required this.signerAddress,
-    super.amount,
-    super.message,
-    super.contractAddress,
-    super.senderAddress,
-    super.recipientAddress,
-    super.signDate,
-    super.signature,
+    SignDataType? signDataType,
+    this.dbSignDataType,
+    this.amount,
+    this.message,
+    this.contractAddress,
+    this.senderAddress,
+    this.recipientAddress,
+    this.signDate,
+    this.signature,
     this.transactionData,
-  });
+  }) {
+    if (signDataType != null) {
+      this.signDataType = signDataType;
+    }
+  }
 
   @override
   List<Object?> get props => <Object?>[
         id,
         walletId,
         creationDate,
-        signDataType,
+        dbSignDataType,
         signerAddress,
         amount,
         message,
@@ -42,6 +76,7 @@ class SolanaTransactionEntity extends ATransactionEntity {
         recipientAddress,
         signDate,
         signature,
+        signDataType,
         transactionData,
       ];
 }

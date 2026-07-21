@@ -1,29 +1,32 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
-part 'network_group_entity.g.dart';
-
-@Collection(accessor: 'networkGroups', ignore: <String>{'props', 'stringify', 'hashCode', 'networkTemplateEntity'})
+@Entity()
 class NetworkGroupEntity extends Equatable {
-  final Id id;
+  @Id()
+  int id;
   final bool encryptedBool;
   final bool pinnedBool;
   @Index()
   final String filesystemPathString;
   final String name;
-  final EmbeddedNetworkTemplateEntity embeddedNetworkTemplate;
+  final ToOne<EmbeddedNetworkTemplateEntity> embeddedNetworkTemplateRelation = ToOne<EmbeddedNetworkTemplateEntity>();
 
-  const NetworkGroupEntity({
+  NetworkGroupEntity({
     required this.id,
     required this.encryptedBool,
     required this.pinnedBool,
     required this.filesystemPathString,
     required this.name,
-    required this.embeddedNetworkTemplate,
-  });
+    EmbeddedNetworkTemplateEntity? embeddedNetworkTemplate,
+  }) {
+    embeddedNetworkTemplateRelation.target = embeddedNetworkTemplate;
+  }
 
   factory NetworkGroupEntity.fromNetworkGroupModel(NetworkGroupModel networkGroupModel) {
     return NetworkGroupEntity(
@@ -37,7 +40,7 @@ class NetworkGroupEntity extends Equatable {
   }
 
   NetworkGroupEntity copyWith({
-    Id? id,
+    int? id,
     bool? encryptedBool,
     bool? pinnedBool,
     String? filesystemPathString,
@@ -54,9 +57,18 @@ class NetworkGroupEntity extends Equatable {
     );
   }
 
-  @ignore
+  @Transient()
+  EmbeddedNetworkTemplateEntity? get embeddedNetworkTemplate {
+    return embeddedNetworkTemplateRelation.target;
+  }
+
+  set embeddedNetworkTemplate(EmbeddedNetworkTemplateEntity? embeddedNetworkTemplateEntity) {
+    embeddedNetworkTemplateRelation.target = embeddedNetworkTemplateEntity;
+  }
+
+  @Transient()
   FilesystemPath get filesystemPath => FilesystemPath.fromString(filesystemPathString);
 
   @override
-  List<Object?> get props => <Object>[id, encryptedBool, pinnedBool, embeddedNetworkTemplate, filesystemPathString, name];
+  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, embeddedNetworkTemplate, filesystemPathString, name];
 }

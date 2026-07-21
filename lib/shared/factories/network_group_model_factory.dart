@@ -1,4 +1,3 @@
-import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
 import 'package:snggle/infra/services/groups_service.dart';
@@ -25,7 +24,7 @@ class NetworkGroupModelFactory {
 
   Future<NetworkGroupModel> createNewNetworkGroup(FilesystemPath parentFilesystemPath, String name, NetworkTemplateModel networkTemplateModel) async {
     NetworkGroupModel networkGroupModel = NetworkGroupModel(
-      id: Isar.autoIncrement,
+      id: 0,
       pinnedBool: false,
       encryptedBool: false,
       filesystemPath: const FilesystemPath.empty(),
@@ -74,7 +73,9 @@ class NetworkGroupModelFactory {
       encryptedBool: networkGroupEntity.encryptedBool,
       filesystemPath: networkGroupEntity.filesystemPath,
       name: networkGroupEntity.name,
-      networkTemplateModel: NetworkTemplateModel.fromEntity(networkGroupEntity.embeddedNetworkTemplate),
+      networkTemplateModel: NetworkTemplateModel.fromEntity(
+        networkGroupEntity.embeddedNetworkTemplate!,
+      ),
       listItemsPreview: listItemsPreview,
     );
   }

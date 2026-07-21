@@ -78,11 +78,11 @@ dependencies:
 
   # Extremely fast, easy to use, and fully async NoSQL database for Flutter.
   # https://pub.dev/packages/isar
-  isar: 3.1.0+1
+  #isar: 3.1.0+1
 
   # Isar Core binaries for the Isar Database. Needs to be included for Flutter apps.
   # https://pub.dev/packages/isar_flutter_libs
-  isar_flutter_libs: 3.1.0+1
+  #isar_flutter_libs: 3.1.0+1
 
   # This plugin provides a cross-platform (iOS, Android) API to request permissions and check their status.
   # https://pub.dev/packages/permission_handler
@@ -104,6 +104,10 @@ dependencies:
   # https://pub.dev/packages/sliver_tools
   sliver_tools: 0.2.12
 
+
+  objectbox: ^4.1.0
+  objectbox_flutter_libs: any
+
   # Dart package containing utility methods for data encoding and decoding.
   codec_utils:
     git:
@@ -122,6 +126,9 @@ dev_dependencies:
   integration_test:
     sdk: flutter
 
+
+  objectbox_generator: any
+
   # AutoRoute is a declarative routing solution, where everything needed for navigation is automatically generated
   # https://pub.dev/packages/auto_route_generator
   auto_route_generator: 7.3.2
@@ -136,7 +143,7 @@ dev_dependencies:
 
   # Code generator for the Isar Database. Finds classes annotated with @Collection.
   # https://pub.dev/packages/isar_generator
-  isar_generator: 3.1.0+1
+  #isar_generator: 3.1.0+1
 
 flutter:
   uses-material-design: true

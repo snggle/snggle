@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
 import 'package:snggle/infra/entities/transaction_entity/solana_transaction_entity.dart';
 import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/models/transactions/solana_transaction_model.dart';
@@ -14,7 +13,7 @@ void main() {
   group('Tests of SolanaTransactionModel.fromEntity() constructor', () {
     test('Should [return SolanaTransactionModel] from given TransactionEntity', () {
       // Arrange
-      SolanaTransactionEntity actualSolanaTransactionEntity = const SolanaTransactionEntity(
+      SolanaTransactionEntity actualSolanaTransactionEntity = SolanaTransactionEntity(
         id: 1,
         walletId: 1,
         creationDate: '2024-07-01T13:45:41.420590Z',
@@ -83,7 +82,7 @@ void main() {
 
       // Assert
       SolanaTransactionModel expectedSolanaTransactionModel = SolanaTransactionModel(
-        id: Isar.autoIncrement,
+        id: 0,
         walletId: 1,
         creationDate: actualSolanaTransactionModel.creationDate,
         signDataType: SignDataType.typedTransaction,
@@ -122,7 +121,7 @@ void main() {
       SolanaTransactionEntity actualSolanaTransactionEntity = actualSolanaTransactionModel.toEntity();
 
       // Assert
-      SolanaTransactionEntity expectedSolanaTransactionEntity = const SolanaTransactionEntity(
+      SolanaTransactionEntity expectedSolanaTransactionEntity = SolanaTransactionEntity(
         id: 1,
         walletId: 1,
         creationDate: '2024-07-01T13:45:41.420590Z',

@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/object_box_database_manager.dart';
 import 'package:snggle/infra/repositories/vaults_repository.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
@@ -55,11 +55,11 @@ void main() {
       // Assert
       List<VaultEntity> expectedVaultEntityList = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
+        VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
+        VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+        VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
+        VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
+        VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
         // @formatter:on
       ];
 
@@ -91,8 +91,8 @@ void main() {
       // Assert
       List<VaultEntity> expectedVaultEntityList = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
+        VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
+        VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
         // @formatter:on
       ];
 
@@ -122,7 +122,7 @@ void main() {
       VaultEntity actualVaultEntity = await globalLocator<VaultsRepository>().getById(1);
 
       // Assert
-      VaultEntity expectedVaultEntity = const VaultEntity(
+      VaultEntity expectedVaultEntity = VaultEntity(
         id: 1,
         encryptedBool: false,
         pinnedBool: false,
@@ -156,7 +156,7 @@ void main() {
       VaultEntity? actualVaultEntity = await globalLocator<VaultsRepository>().getByFingerprint('2429747484');
 
       // Assert
-      VaultEntity expectedVaultEntity = const VaultEntity(
+      VaultEntity expectedVaultEntity = VaultEntity(
         id: 1,
         encryptedBool: false,
         pinnedBool: false,
@@ -186,7 +186,7 @@ void main() {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      VaultEntity actualUpdatedVaultEntity = const VaultEntity(
+      VaultEntity actualUpdatedVaultEntity = VaultEntity(
         id: 1,
         encryptedBool: true,
         pinnedBool: true,
@@ -199,18 +199,18 @@ void main() {
       // Act
       await globalLocator<VaultsRepository>().save(actualUpdatedVaultEntity);
 
-      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.vaults.where().findAll();
+      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<VaultEntity>().getAll();
       });
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'UPDATED VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
+        VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'UPDATED VAULT 1'),
+        VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+        VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
+        VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
+        VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
         // @formatter:on
       ];
 
@@ -221,8 +221,8 @@ void main() {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      VaultEntity actualNewVaultEntity = const VaultEntity(
-        id: 999999,
+      VaultEntity actualNewVaultEntity = VaultEntity(
+        id: 0,
         encryptedBool: true,
         pinnedBool: true,
         index: 999999,
@@ -234,19 +234,19 @@ void main() {
       // Act
       await globalLocator<VaultsRepository>().save(actualNewVaultEntity);
 
-      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.vaults.where().findAll();
+      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<VaultEntity>().getAll();
       });
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5'),
-        const VaultEntity(id: 999999, encryptedBool: true, pinnedBool: true, index: 999999, filesystemPathString: 'vault999999', fingerprint: 'NEW_FINGERPRINT', name: 'NEW VAULT 1')
+        VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
+        VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+        VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
+        VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
+        VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5'),
+        VaultEntity(id: 6, encryptedBool: true, pinnedBool: true, index: 999999, filesystemPathString: 'vault999999', fingerprint: 'NEW_FINGERPRINT', name: 'NEW VAULT 1')
         // @formatter:on
       ];
 
@@ -261,26 +261,26 @@ void main() {
 
       List<VaultEntity> actualVaultsToUpdate = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'UPDATED VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: true, pinnedBool: true, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'UPDATED VAULT 2'),
+        VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'UPDATED VAULT 1'),
+        VaultEntity(id: 2, encryptedBool: true, pinnedBool: true, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'UPDATED VAULT 2'),
         // @formatter:on
       ];
 
       // Act
       await globalLocator<VaultsRepository>().saveAll(actualVaultsToUpdate);
 
-      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.vaults.where().findAll();
+      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<VaultEntity>().getAll();
       });
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'UPDATED VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: true, pinnedBool: true, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'UPDATED VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
+        VaultEntity(id: 1, encryptedBool: true, pinnedBool: true, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'UPDATED VAULT 1'),
+        VaultEntity(id: 2, encryptedBool: true, pinnedBool: true, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'UPDATED VAULT 2'),
+        VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
+        VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
+        VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
         // @formatter:on
       ];
 
@@ -293,28 +293,28 @@ void main() {
 
       List<VaultEntity> actualVaultsToUpdate = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 999998, encryptedBool: true, pinnedBool: true, index: 999998, filesystemPathString: 'vault999998', fingerprint: '', name: 'NEW VAULT 1'),
-        const VaultEntity(id: 999999, encryptedBool: true, pinnedBool: true, index: 999999, filesystemPathString: 'vault999999', fingerprint: '', name: 'NEW VAULT 2'),
+        VaultEntity(id: 0, encryptedBool: true, pinnedBool: true, index: 999998, filesystemPathString: 'vault999998', fingerprint: '', name: 'NEW VAULT 1'),
+        VaultEntity(id: 0, encryptedBool: true, pinnedBool: true, index: 999999, filesystemPathString: 'vault999999', fingerprint: '', name: 'NEW VAULT 2'),
         // @formatter:on
       ];
 
       // Act
       await globalLocator<VaultsRepository>().saveAll(actualVaultsToUpdate);
 
-      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.vaults.where().findAll();
+      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<VaultEntity>().getAll();
       });
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5'),
-        const VaultEntity(id: 999998, encryptedBool: true, pinnedBool: true, index: 999998, filesystemPathString: 'vault999998', fingerprint: '', name: 'NEW VAULT 1'),
-        const VaultEntity(id: 999999, encryptedBool: true, pinnedBool: true, index: 999999, filesystemPathString: 'vault999999', fingerprint: '', name: 'NEW VAULT 2'),
+        VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
+        VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+        VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
+        VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
+        VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5'),
+        VaultEntity(id: 6, encryptedBool: true, pinnedBool: true, index: 999998, filesystemPathString: 'vault999998', fingerprint: '', name: 'NEW VAULT 1'),
+        VaultEntity(id: 7, encryptedBool: true, pinnedBool: true, index: 999999, filesystemPathString: 'vault999999', fingerprint: '', name: 'NEW VAULT 2'),
         // @formatter:on
       ];
 
@@ -330,17 +330,17 @@ void main() {
       // Act
       await globalLocator<VaultsRepository>().deleteById(1);
 
-      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.vaults.where().findAll();
+      List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<VaultEntity>().getAll();
       });
 
       // Assert
       List<VaultEntity> expectedVaultsDatabaseValue = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
+        VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+        VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
+        VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286', name: 'VAULT 4'),
+        VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
         // @formatter:on
       ];
 

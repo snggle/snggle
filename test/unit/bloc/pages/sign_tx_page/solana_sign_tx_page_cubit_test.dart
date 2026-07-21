@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/a_solana_sign_tx_page_state.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/solana_sign_tx_page_cubit.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/solana_sign_tx_page/states/solana_sign_tx_page_confirm_tx_state.dart';
@@ -95,7 +94,7 @@ void main() {
       // Assert
       SolanaSignTxPageSignedTxState expectedSignTxPageState = SolanaSignTxPageSignedTxState(
           transactionModel: SolanaTransactionModel(
-            id: Isar.autoIncrement,
+            id: 0,
             walletId: 2,
             creationDate: actualSignTxPageState.transactionModel.creationDate,
             signature:
@@ -229,7 +228,7 @@ void main() {
       // Assert
       SolanaSignTxPageSignedTxState expectedSignTxPageState = SolanaSignTxPageSignedTxState(
           transactionModel: SolanaTransactionModel(
-            id: Isar.autoIncrement,
+            id: 0,
             walletId: 2,
             creationDate: actualSignTxPageState.transactionModel.creationDate,
             signature:
@@ -324,7 +323,7 @@ void main() {
       // Assert
       SolanaSignTxPageSignedTxState expectedSignTxPageState = SolanaSignTxPageSignedTxState(
         transactionModel: SolanaTransactionModel(
-          id: Isar.autoIncrement,
+          id: 0,
           walletId: 2,
           creationDate: actualSignTxPageState.transactionModel.creationDate,
           signature:
@@ -498,7 +497,7 @@ void main() {
       // Assert
       SolanaSignTxPageSignedTxState expectedSignTxPageState = SolanaSignTxPageSignedTxState(
         transactionModel: SolanaTransactionModel(
-          id: Isar.autoIncrement,
+          id: 0,
           walletId: 2,
           creationDate: actualSignTxPageState.transactionModel.creationDate,
           signature:

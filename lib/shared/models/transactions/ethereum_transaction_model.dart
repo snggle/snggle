@@ -1,6 +1,5 @@
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
-import 'package:isar/isar.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
 import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/utils/string_utils.dart';
@@ -49,7 +48,7 @@ class EthereumTransactionModel extends ATransactionModel {
     AEthereumTransaction? ethereumTransaction = AEthereumTransaction.fromSerializedData(signDataType, cborEthSignRequest.signData);
 
     return EthereumTransactionModel(
-      id: Isar.autoIncrement,
+      id: 0,
       walletId: walletId,
       creationDate: DateTime.now(),
       signDataType: signDataType,

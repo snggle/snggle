@@ -1,11 +1,11 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_cubit.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/object_box_database_manager.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
@@ -140,8 +140,8 @@ void main() {
         // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
         Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem(path: 'secrets');
 
-        List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-          return isar.vaults.where().findAll();
+        List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+          return store.box<VaultEntity>().getAll();
         });
 
         // Assert

@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/object_box_database_manager.dart';
 import 'package:snggle/infra/repositories/groups_repository.dart';
 import 'package:snggle/infra/repositories/master_key_repository.dart';
 import 'package:snggle/infra/repositories/network_groups_repository.dart';
@@ -40,7 +40,7 @@ void initLocator() {
   globalLocator
     ..registerLazySingleton<ActiveWalletController>(ActiveWalletController.new)
     ..registerSingleton<RootDirectoryBuilder>(getApplicationSupportDirectory)
-    ..registerSingleton<IsarDatabaseManager>(IsarDatabaseManager());
+    ..registerSingleton<ObjectBoxDatabaseManager>(ObjectBoxDatabaseManager());
 }
 
 void _initControllers() {

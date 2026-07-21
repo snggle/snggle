@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
 import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
@@ -12,7 +11,7 @@ void main() {
   group('Tests of EthereumTransactionModel.fromEntity() constructor', () {
     test('Should [return EthereumTransactionModel] from given EthereumTransactionEntity', () {
       // Arrange
-      EthereumTransactionEntity actualEthereumTransactionEntity = const EthereumTransactionEntity(
+      EthereumTransactionEntity actualEthereumTransactionEntity = EthereumTransactionEntity(
         id: 1,
         walletId: 1,
         creationDate: '2024-07-01T13:45:41.420590Z',
@@ -79,7 +78,7 @@ void main() {
 
       // Assert
       EthereumTransactionModel expectedEthereumTransactionModel = EthereumTransactionModel(
-        id: Isar.autoIncrement,
+        id: 0,
         walletId: 1,
         creationDate: actualEthereumTransactionModel.creationDate,
         signDataType: SignDataType.typedTransaction,
@@ -116,7 +115,7 @@ void main() {
       EthereumTransactionEntity actualEthereumTransactionEntity = actualEthereumTransactionModel.toEntity();
 
       // Assert
-      EthereumTransactionEntity expectedEthereumTransactionEntity = const EthereumTransactionEntity(
+      EthereumTransactionEntity expectedEthereumTransactionEntity = EthereumTransactionEntity(
         id: 1,
         walletId: 1,
         creationDate: '2024-07-01T13:45:41.420590Z',

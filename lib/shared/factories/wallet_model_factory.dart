@@ -1,4 +1,3 @@
-import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
@@ -15,7 +14,7 @@ class WalletModelFactory {
 
   Future<WalletModel> createNewWallet(WalletCreationRequestModel walletCreationRequestModel) async {
     WalletModel walletModel = WalletModel(
-      id: Isar.autoIncrement,
+      id: 0,
       encryptedBool: false,
       pinnedBool: false,
       name: walletCreationRequestModel.name,

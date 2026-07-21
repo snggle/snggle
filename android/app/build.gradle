@@ -60,6 +60,19 @@ android {
     }
 }
 
+// ObjectBox Admin for debug builds only.
+// This removes the normal Android ObjectBox lib from debug,
+// then replaces it with the Admin-enabled one.
+configurations {
+    debugImplementation {
+        exclude group: 'io.objectbox', module: 'objectbox-android'
+    }
+}
+
+dependencies {
+    debugImplementation "io.objectbox:objectbox-android-objectbrowser:4.1.0"
+}
+
 flutter {
     source '../..'
 }

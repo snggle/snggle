@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/theme_config.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/object_box_database_manager.dart';
 import 'package:snggle/shared/router/router.dart';
 
 Future<void> main() async {
@@ -14,7 +14,7 @@ Future<void> main() async {
   ));
 
   initLocator();
-  await globalLocator<IsarDatabaseManager>().initDatabase();
+  await globalLocator<ObjectBoxDatabaseManager>().initDatabase();
 
   runApp(const AppCore());
 }

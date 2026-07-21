@@ -1,0 +1,400 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:1774996566666262887",
+      "lastPropertyId": "9:4136124407320652930",
+      "name": "EmbeddedNetworkTemplateEntity",
+      "properties": [
+        {
+          "id": "1:7025979842183983582",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2889695118373630697",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:644748028817213181",
+          "name": "addressEncoderType",
+          "type": 9
+        },
+        {
+          "id": "4:4406444236889477175",
+          "name": "derivationPathTemplate",
+          "type": 9
+        },
+        {
+          "id": "5:5615877775262925084",
+          "name": "derivatorType",
+          "type": 9
+        },
+        {
+          "id": "6:8716687839791356098",
+          "name": "dbCurveType",
+          "type": 9
+        },
+        {
+          "id": "7:3918227823515093243",
+          "name": "dbNetworkIconType",
+          "type": 9
+        },
+        {
+          "id": "8:7287636458286131439",
+          "name": "dbNetworkType",
+          "type": 9
+        },
+        {
+          "id": "9:4136124407320652930",
+          "name": "dbWalletType",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:5889461611495230369",
+      "lastPropertyId": "13:4086678592471639992",
+      "name": "EthereumTransactionEntity",
+      "properties": [
+        {
+          "id": "1:8942720249562406608",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8526779378666861991",
+          "name": "walletId",
+          "type": 6,
+          "flags": 8,
+          "indexId": "1:5815857230926402670"
+        },
+        {
+          "id": "3:7472142011631004640",
+          "name": "creationDate",
+          "type": 9
+        },
+        {
+          "id": "4:579939404191755247",
+          "name": "dbSignDataType",
+          "type": 9
+        },
+        {
+          "id": "5:8934118006750395043",
+          "name": "amount",
+          "type": 9
+        },
+        {
+          "id": "6:1235884691715924130",
+          "name": "message",
+          "type": 9
+        },
+        {
+          "id": "7:5059213848707892441",
+          "name": "contractAddress",
+          "type": 9
+        },
+        {
+          "id": "8:6375860030626889437",
+          "name": "senderAddress",
+          "type": 9
+        },
+        {
+          "id": "9:313469463859207839",
+          "name": "recipientAddress",
+          "type": 9
+        },
+        {
+          "id": "10:4914410254469345238",
+          "name": "signature",
+          "type": 9
+        },
+        {
+          "id": "11:3850240698160088990",
+          "name": "signDate",
+          "type": 9
+        },
+        {
+          "id": "12:6250986636446302546",
+          "name": "fee",
+          "type": 9
+        },
+        {
+          "id": "13:4086678592471639992",
+          "name": "functionData",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:1540742749332832753",
+      "lastPropertyId": "5:5821377126606120923",
+      "name": "GroupEntity",
+      "properties": [
+        {
+          "id": "1:4731000701272297772",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:877629658358681699",
+          "name": "pinnedBool",
+          "type": 1
+        },
+        {
+          "id": "3:6571732721339367678",
+          "name": "encryptedBool",
+          "type": 1
+        },
+        {
+          "id": "4:3782009884801433566",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "5:5821377126606120923",
+          "name": "filesystemPathString",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "2:3746926402829725407"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:2409085661495747848",
+      "lastPropertyId": "6:6850140807544129749",
+      "name": "NetworkGroupEntity",
+      "properties": [
+        {
+          "id": "1:5670617246447766133",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7644042244757322608",
+          "name": "encryptedBool",
+          "type": 1
+        },
+        {
+          "id": "3:5081159682173217855",
+          "name": "pinnedBool",
+          "type": 1
+        },
+        {
+          "id": "4:2694218654459358694",
+          "name": "filesystemPathString",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "3:1225262591126719919"
+        },
+        {
+          "id": "5:2403889494550068949",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "6:6850140807544129749",
+          "name": "embeddedNetworkTemplateRelationId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "4:2715677212815006985",
+          "relationTarget": "EmbeddedNetworkTemplateEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:4213015340856443009",
+      "lastPropertyId": "13:1213694909643706931",
+      "name": "SolanaTransactionEntity",
+      "properties": [
+        {
+          "id": "1:3270117083530724715",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1872301306318524909",
+          "name": "walletId",
+          "type": 6,
+          "flags": 8,
+          "indexId": "5:3119961423127491761"
+        },
+        {
+          "id": "3:8692915355876250524",
+          "name": "creationDate",
+          "type": 9
+        },
+        {
+          "id": "4:2466070167724346391",
+          "name": "dbSignDataType",
+          "type": 9
+        },
+        {
+          "id": "5:6641596683088185436",
+          "name": "amount",
+          "type": 9
+        },
+        {
+          "id": "6:40661573558621220",
+          "name": "message",
+          "type": 9
+        },
+        {
+          "id": "7:1408459035942144317",
+          "name": "contractAddress",
+          "type": 9
+        },
+        {
+          "id": "8:8249695951803877777",
+          "name": "senderAddress",
+          "type": 9
+        },
+        {
+          "id": "9:1122769616275460211",
+          "name": "recipientAddress",
+          "type": 9
+        },
+        {
+          "id": "10:7764968086502296534",
+          "name": "signature",
+          "type": 9
+        },
+        {
+          "id": "11:9100000372751011407",
+          "name": "signDate",
+          "type": 9
+        },
+        {
+          "id": "12:4647511155473738773",
+          "name": "signerAddress",
+          "type": 9
+        },
+        {
+          "id": "13:1213694909643706931",
+          "name": "transactionData",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:2675735059774266259",
+      "lastPropertyId": "7:2190379841135159501",
+      "name": "VaultEntity",
+      "properties": [
+        {
+          "id": "1:3727212209038245282",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1646770866136258555",
+          "name": "encryptedBool",
+          "type": 1
+        },
+        {
+          "id": "3:2503082705472956244",
+          "name": "pinnedBool",
+          "type": 1
+        },
+        {
+          "id": "4:8293869639426050623",
+          "name": "fingerprint",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "6:766510572278196614"
+        },
+        {
+          "id": "5:4648759422514694058",
+          "name": "index",
+          "type": 6,
+          "flags": 8,
+          "indexId": "7:4691426966708213695"
+        },
+        {
+          "id": "6:319217413038332813",
+          "name": "filesystemPathString",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "8:3424096840970688228"
+        },
+        {
+          "id": "7:2190379841135159501",
+          "name": "name",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:4789022395378864534",
+      "lastPropertyId": "7:364936521075446267",
+      "name": "WalletEntity",
+      "properties": [
+        {
+          "id": "1:3819551962649753253",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5363216954386559815",
+          "name": "encryptedBool",
+          "type": 1
+        },
+        {
+          "id": "3:8118378559770081650",
+          "name": "pinnedBool",
+          "type": 1
+        },
+        {
+          "id": "4:8789915662918697124",
+          "name": "address",
+          "type": 9
+        },
+        {
+          "id": "5:3984512483579054376",
+          "name": "derivationPath",
+          "type": 9
+        },
+        {
+          "id": "6:1015114016208198706",
+          "name": "filesystemPathString",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "9:751473337797489028"
+        },
+        {
+          "id": "7:364936521075446267",
+          "name": "name",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "7:4789022395378864534",
+  "lastIndexId": "9:751473337797489028",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

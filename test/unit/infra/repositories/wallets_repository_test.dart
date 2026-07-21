@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/object_box_database_manager.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
@@ -44,7 +44,8 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      List<String> actualDerivationPaths = await globalLocator<WalletsRepository>().getAllDerivationPaths(FilesystemPath.fromString('vault1/network1/group3/'));
+      List<String> actualDerivationPaths =
+          await globalLocator<WalletsRepository>().getAllDerivationPaths(FilesystemPath.fromString('vault1/network1/group3/'));
 
       // Assert
       List<String> expectedDerivationPaths = <String>[
@@ -80,12 +81,12 @@ void main() {
       // Assert
       List<WalletEntity> expectedWalletEntityList = <WalletEntity>[
         // @formatter:off
-        const WalletEntity(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'WALLET 0'),
-        const WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
-        const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
-        const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
-        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
-        const WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5')
+        WalletEntity(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'WALLET 0'),
+        WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
+        WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
+        WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
+        WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5')
         // @formatter:on
       ];
 
@@ -119,8 +120,8 @@ void main() {
       // Assert
       List<WalletEntity> expectedWalletEntityList = <WalletEntity>[
         // @formatter:off
-        const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
-        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4')
+        WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
+        WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4')
         // @formatter:on
       ];
 
@@ -132,7 +133,8 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
 
       // Act
-      List<WalletEntity> actualWalletEntityList = await globalLocator<WalletsRepository>().getAllByParentPath(FilesystemPath.fromString('vault1/network1'));
+      List<WalletEntity> actualWalletEntityList =
+          await globalLocator<WalletsRepository>().getAllByParentPath(FilesystemPath.fromString('vault1/network1'));
 
       // Assert
       List<WalletEntity> expectedWalletEntityList = <WalletEntity>[];
@@ -150,7 +152,7 @@ void main() {
       WalletEntity actualWalletEntity = await globalLocator<WalletsRepository>().getById(1);
 
       // Assert
-      WalletEntity expectedWalletEntity = const WalletEntity(
+      WalletEntity expectedWalletEntity = WalletEntity(
         id: 1,
         encryptedBool: false,
         pinnedBool: false,
@@ -180,7 +182,7 @@ void main() {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      WalletEntity actualUpdatedWalletEntity = const WalletEntity(
+      WalletEntity actualUpdatedWalletEntity = WalletEntity(
         id: 1,
         encryptedBool: true,
         pinnedBool: true,
@@ -193,19 +195,19 @@ void main() {
       // Act
       await globalLocator<WalletsRepository>().save(actualUpdatedWalletEntity);
 
-      List<WalletEntity> actualWalletsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.wallets.where().findAll();
+      List<WalletEntity> actualWalletsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<WalletEntity>().getAll();
       });
 
       // Assert
       List<WalletEntity> expectedWalletsDatabaseValue = <WalletEntity>[
         // @formatter:off
-        const WalletEntity(id: 1, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'UPDATED WALLET 0'),
-        const WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
-        const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
-        const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
-        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
-        const WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5')
+        WalletEntity(id: 1, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'UPDATED WALLET 0'),
+        WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
+        WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
+        WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
+        WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5')
         // @formatter:on
       ];
 
@@ -216,8 +218,8 @@ void main() {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      WalletEntity actualNewWalletEntity = const WalletEntity(
-        id: 999999,
+      WalletEntity actualNewWalletEntity = WalletEntity(
+        id: 0,
         encryptedBool: true,
         pinnedBool: true,
         address: '0x0000000000000000000000000000000000000000',
@@ -229,20 +231,20 @@ void main() {
       // Act
       await globalLocator<WalletsRepository>().save(actualNewWalletEntity);
 
-      List<WalletEntity> actualWalletsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.wallets.where().findAll();
+      List<WalletEntity> actualWalletsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<WalletEntity>().getAll();
       });
 
       // Assert
       List<WalletEntity> expectedWalletsDatabaseValue = <WalletEntity>[
         // @formatter:off
-        const WalletEntity(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'WALLET 0'),
-        const WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
-        const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
-        const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
-        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
-        const WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5'),
-        const WalletEntity(id: 999999, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet999999', name: 'NEW WALLET 0')
+        WalletEntity(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'WALLET 0'),
+        WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
+        WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
+        WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
+        WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5'),
+        WalletEntity(id: 7, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet999999', name: 'NEW WALLET 0')
         // @formatter:on
       ];
 
@@ -257,27 +259,27 @@ void main() {
 
       List<WalletEntity> actualWalletsToUpdate = <WalletEntity>[
         // @formatter:off
-        const WalletEntity(id: 1, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'UPDATED WALLET 0'),
-        const WalletEntity(id: 2, encryptedBool: true, pinnedBool: true, address: '0x1111111111111111111111111111111111111111', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'UPDATED WALLET 1'),
+        WalletEntity(id: 1, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'UPDATED WALLET 0'),
+        WalletEntity(id: 2, encryptedBool: true, pinnedBool: true, address: '0x1111111111111111111111111111111111111111', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'UPDATED WALLET 1'),
         // @formatter:on
       ];
 
       // Act
       await globalLocator<WalletsRepository>().saveAll(actualWalletsToUpdate);
 
-      List<WalletEntity> actualWalletsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.wallets.where().findAll();
+      List<WalletEntity> actualWalletsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<WalletEntity>().getAll();
       });
 
       // Assert
       List<WalletEntity> expectedWalletsDatabaseValue = <WalletEntity>[
         // @formatter:off
-        const WalletEntity(id: 1, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'UPDATED WALLET 0'),
-        const WalletEntity(id: 2, encryptedBool: true, pinnedBool: true, address: '0x1111111111111111111111111111111111111111', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'UPDATED WALLET 1'),
-        const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
-        const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
-        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
-        const WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5')
+        WalletEntity(id: 1, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'UPDATED WALLET 0'),
+        WalletEntity(id: 2, encryptedBool: true, pinnedBool: true, address: '0x1111111111111111111111111111111111111111', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'UPDATED WALLET 1'),
+        WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
+        WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
+        WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5')
         // @formatter:on
       ];
 
@@ -290,29 +292,29 @@ void main() {
 
       List<WalletEntity> actualWalletsToSave = <WalletEntity>[
         // @formatter:off
-        const WalletEntity(id: 999998, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet999998', name: 'NEW WALLET 0'),
-        const WalletEntity(id: 999999, encryptedBool: true, pinnedBool: true, address: '0x1111111111111111111111111111111111111111', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet999999', name: 'NEW WALLET 1'),
+        WalletEntity(id: 0, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet999998', name: 'NEW WALLET 0'),
+        WalletEntity(id: 0, encryptedBool: true, pinnedBool: true, address: '0x1111111111111111111111111111111111111111', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet999999', name: 'NEW WALLET 1'),
         // @formatter:on
       ];
 
       // Act
       await globalLocator<WalletsRepository>().saveAll(actualWalletsToSave);
 
-      List<WalletEntity> actualWalletsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.wallets.where().findAll();
+      List<WalletEntity> actualWalletsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<WalletEntity>().getAll();
       });
 
       // Assert
       List<WalletEntity> expectedWalletsDatabaseValue = <WalletEntity>[
         // @formatter:off
-        const WalletEntity(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'WALLET 0'),
-        const WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
-        const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
-        const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
-        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
-        const WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5'),
-        const WalletEntity(id: 999998, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet999998', name: 'NEW WALLET 0'),
-        const WalletEntity(id: 999999, encryptedBool: true, pinnedBool: true, address: '0x1111111111111111111111111111111111111111', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet999999', name: 'NEW WALLET 1'),
+        WalletEntity(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'WALLET 0'),
+        WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
+        WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
+        WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
+        WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5'),
+        WalletEntity(id: 7, encryptedBool: true, pinnedBool: true, address: '0x0000000000000000000000000000000000000000', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet999998', name: 'NEW WALLET 0'),
+        WalletEntity(id: 8, encryptedBool: true, pinnedBool: true, address: '0x1111111111111111111111111111111111111111', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet999999', name: 'NEW WALLET 1'),
         // @formatter:on
       ];
 
@@ -328,18 +330,18 @@ void main() {
       // Act
       await globalLocator<WalletsRepository>().deleteById(1);
 
-      List<WalletEntity> actualWalletsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.wallets.where().findAll();
+      List<WalletEntity> actualWalletsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<WalletEntity>().getAll();
       });
 
       // Assert
       List<WalletEntity> expectedWalletsDatabaseValue = <WalletEntity>[
         // @formatter:off
-        const WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
-        const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
-        const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
-        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
-        const WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5')
+        WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
+        WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
+        WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
+        WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        WalletEntity(id: 6, encryptedBool: false, pinnedBool: false, address: '2xGD7cWtwpmCpW2NvT9EJt96eDavS3suVgQNVaBU4A19', derivationPath: "m/44'/501'/0'/0'", filesystemPathString: 'vault1/network10/wallet6', name: 'WALLET 5')
         // @formatter:on
       ];
 

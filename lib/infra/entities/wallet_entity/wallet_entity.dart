@@ -1,13 +1,14 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
-part 'wallet_entity.g.dart';
-
-@Collection(accessor: 'wallets', ignore: <String>{'props', 'stringify', 'hashCode'})
+@Entity()
 class WalletEntity extends Equatable {
-  final Id id;
+  @Id()
+  int id;
   final bool encryptedBool;
   final bool pinnedBool;
   final String address;
@@ -16,7 +17,7 @@ class WalletEntity extends Equatable {
   final String filesystemPathString;
   final String name;
 
-  const WalletEntity({
+  WalletEntity({
     required this.id,
     required this.encryptedBool,
     required this.pinnedBool,
@@ -39,7 +40,7 @@ class WalletEntity extends Equatable {
   }
 
   WalletEntity copyWith({
-    Id? id,
+    int? id,
     bool? encryptedBool,
     bool? pinnedBool,
     String? address,
@@ -58,7 +59,7 @@ class WalletEntity extends Equatable {
     );
   }
 
-  @ignore
+  @Transient()
   FilesystemPath get filesystemPath => FilesystemPath.fromString(filesystemPathString);
 
   @override

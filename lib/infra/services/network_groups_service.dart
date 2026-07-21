@@ -12,7 +12,8 @@ class NetworkGroupsService implements IListItemsService<NetworkGroupModel> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
   @override
-  Future<List<NetworkGroupModel>> getAllByParentPath(FilesystemPath parentFilesystemPath, {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
+  Future<List<NetworkGroupModel>> getAllByParentPath(FilesystemPath parentFilesystemPath,
+      {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
     NetworkGroupModelFactory networkGroupModelFactory = globalLocator<NetworkGroupModelFactory>();
 
     List<NetworkGroupEntity> networkGroupEntityList = await _networkGroupsRepository.getAllByParentPath(parentFilesystemPath);
@@ -42,7 +43,8 @@ class NetworkGroupsService implements IListItemsService<NetworkGroupModel> {
 
   @override
   Future<void> moveAllByParentPath(FilesystemPath previousFilesystemPath, FilesystemPath newFilesystemPath) async {
-    List<NetworkGroupModel> networkGroupModelsToMove = await getAllByParentPath(previousFilesystemPath, firstLevelBool: false, previewEmptyBool: true);
+    List<NetworkGroupModel> networkGroupModelsToMove =
+        await getAllByParentPath(previousFilesystemPath, firstLevelBool: false, previewEmptyBool: true);
     for (int i = 0; i < networkGroupModelsToMove.length; i++) {
       NetworkGroupModel networkGroupModel = networkGroupModelsToMove[i];
       NetworkGroupModel updatedNetworkGroupModel = networkGroupModel.copyWith(
@@ -71,7 +73,8 @@ class NetworkGroupsService implements IListItemsService<NetworkGroupModel> {
     List<NetworkGroupModel> networkGroupModels = await getAllByParentPath(parentFilesystemPath, firstLevelBool: false);
 
     // Sort networks by the length of their paths, ensuring the deepest network group is deleted first
-    networkGroupModels.sort((NetworkGroupModel a, NetworkGroupModel b) => b.filesystemPath.fullPath.length.compareTo(a.filesystemPath.fullPath.length));
+    networkGroupModels
+        .sort((NetworkGroupModel a, NetworkGroupModel b) => b.filesystemPath.fullPath.length.compareTo(a.filesystemPath.fullPath.length));
 
     for (NetworkGroupModel networkGroupModel in networkGroupModels) {
       await _secretsService.delete(networkGroupModel.filesystemPath);

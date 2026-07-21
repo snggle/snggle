@@ -25,13 +25,18 @@ import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart'
 import 'package:snggle/shared/models/vaults/vault_model.dart' as _i34;
 import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i37;
 import 'package:snggle/shared/utils/filesystem_path.dart' as _i35;
-import 'package:snggle/views/pages/app_master_key/app_master_key_create_page.dart' as _i2;
-import 'package:snggle/views/pages/app_master_key/app_master_key_recover_page.dart' as _i3;
-import 'package:snggle/views/pages/app_master_key/app_master_key_removed_page.dart' as _i4;
-import 'package:snggle/views/pages/app_master_key/app_master_key_type.dart' as _i30;
+import 'package:snggle/views/pages/app_master_key/app_master_key_create_page.dart'
+    as _i2;
+import 'package:snggle/views/pages/app_master_key/app_master_key_recover_page.dart'
+    as _i3;
+import 'package:snggle/views/pages/app_master_key/app_master_key_removed_page.dart'
+    as _i4;
+import 'package:snggle/views/pages/app_master_key/app_master_key_type.dart'
+    as _i30;
 import 'package:snggle/views/pages/app_pin_page/app_enter_pin_page.dart' as _i1;
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart' as _i28;
-import 'package:snggle/views/pages/app_pin_page/app_set_up_pin_page.dart' as _i5;
+import 'package:snggle/views/pages/app_pin_page/app_set_up_pin_page.dart'
+    as _i5;
 import 'package:snggle/views/pages/bottom_navigation/apps_page.dart' as _i6;
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart'
     as _i7;
@@ -41,7 +46,7 @@ import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_p
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/settings_page.dart'
     as _i12;
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_section_wrapper.dart'
-    as _i21;
+    as _i20;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/network_list_page/network_list_page.dart'
     as _i9;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/transaction_details_page/ethereum_transaction_details_page.dart'
@@ -51,7 +56,7 @@ import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/transaction_
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page.dart'
     as _i18;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/vaults_section_wrapper.dart'
-    as _i20;
+    as _i21;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_connect_page/wallet_connect_page.dart'
     as _i22;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page.dart'
@@ -229,13 +234,13 @@ abstract class $AppRouter extends _i26.RootStackRouter {
         ),
       );
     },
-    VaultsSectionWrapperRoute.name: (routeData) {
+    SettingsSectionWrapperRoute.name: (routeData) {
       return _i26.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const _i20.VaultsSectionWrapper(),
       );
     },
-    SettingsSectionWrapperRoute.name: (routeData) {
+    VaultsSectionWrapperRoute.name: (routeData) {
       return _i26.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const _i21.VaultsSectionWrapper(),
@@ -786,20 +791,6 @@ class VaultRecoverRouteArgs {
 
 /// generated route for
 /// [_i20.VaultsSectionWrapper]
-class VaultsSectionWrapperRoute extends _i26.PageRouteInfo<void> {
-  const VaultsSectionWrapperRoute({List<_i26.PageRouteInfo>? children})
-      : super(
-          VaultsSectionWrapperRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'VaultsSectionWrapperRoute';
-
-  static const _i26.PageInfo<void> page = _i26.PageInfo<void>(name);
-}
-
-/// generated route for
-/// [_i21.VaultsSectionWrapper]
 class SettingsSectionWrapperRoute extends _i26.PageRouteInfo<void> {
   const SettingsSectionWrapperRoute({List<_i26.PageRouteInfo>? children})
       : super(
@@ -808,6 +799,20 @@ class SettingsSectionWrapperRoute extends _i26.PageRouteInfo<void> {
         );
 
   static const String name = 'SettingsSectionWrapperRoute';
+
+  static const _i26.PageInfo<void> page = _i26.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i21.VaultsSectionWrapper]
+class VaultsSectionWrapperRoute extends _i26.PageRouteInfo<void> {
+  const VaultsSectionWrapperRoute({List<_i26.PageRouteInfo>? children})
+      : super(
+          VaultsSectionWrapperRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'VaultsSectionWrapperRoute';
 
   static const _i26.PageInfo<void> page = _i26.PageInfo<void>(name);
 }

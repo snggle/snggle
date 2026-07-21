@@ -1,20 +1,21 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
-part 'group_entity.g.dart';
-
-@Collection(accessor: 'groups', ignore: <String>{'props', 'stringify', 'hashCode'})
+@Entity()
 class GroupEntity extends Equatable {
-  final Id id;
+  @Id()
+  int id;
   final bool pinnedBool;
   final bool encryptedBool;
   final String name;
   @Index()
   final String filesystemPathString;
 
-  const GroupEntity({
+  GroupEntity({
     required this.id,
     required this.pinnedBool,
     required this.encryptedBool,
@@ -33,7 +34,7 @@ class GroupEntity extends Equatable {
   }
 
   GroupEntity copyWith({
-    Id? id,
+    int? id,
     bool? pinnedBool,
     bool? encryptedBool,
     String? name,
@@ -48,7 +49,7 @@ class GroupEntity extends Equatable {
     );
   }
 
-  @ignore
+  @Transient()
   FilesystemPath get filesystemPath => FilesystemPath.fromString(filesystemPathString);
 
   @override

@@ -1,4 +1,3 @@
-import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/group_entity/group_entity.dart';
 import 'package:snggle/infra/services/groups_service.dart';
@@ -24,7 +23,7 @@ class GroupModelFactory {
 
   Future<GroupModel> createNewGroup({required FilesystemPath parentFilesystemPath, required String name}) async {
     GroupModel groupModel = GroupModel(
-      id: Isar.autoIncrement,
+      id: 0,
       pinnedBool: false,
       encryptedBool: false,
       listItemsPreview: List<AListItemModel>.empty(),

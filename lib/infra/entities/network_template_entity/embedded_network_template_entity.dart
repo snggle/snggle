@@ -1,52 +1,86 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
 import 'package:snggle/shared/models/networks/network_type.dart';
 
-part 'embedded_network_template_entity.g.dart';
-
-@Embedded(ignore: <String>{'props', 'stringify', 'hashCode'})
+@Entity()
 class EmbeddedNetworkTemplateEntity extends Equatable {
-  /// Isar requires all fields in embedded objects not to have required parameters.
-  /// Any attempts at adding required parameters will result in the following error when running build_runner:
-  /// "Constructors of embedded objects must not have required parameters"
-  ///
-  /// There are 2 possible solutions to this issue:
-  /// 1. Enabling null fields
-  /// 2. Assigning default values
-  /// Assigning correct default values is impossible when we support more than 1 network.
-  /// For this reason, we enable null fields everywhere in this class.
-  final String? name;
-  final String? addressEncoderType;
-  final String? derivationPathTemplate;
-  final String? derivatorType;
+  @Id()
+  int id;
 
-  @Enumerated(EnumType.name)
-  final CurveType? curveType;
+  String? name;
+  String? addressEncoderType;
+  String? derivationPathTemplate;
+  String? derivatorType;
+  String? dbCurveType;
+  String? dbNetworkIconType;
+  String? dbNetworkType;
+  String? dbWalletType;
 
-  @Enumerated(EnumType.name)
-  final NetworkIconType? networkIconType;
+  @Transient()
+  CurveType? get curveType => _enumByNameOrNull<CurveType>(CurveType.values, dbCurveType);
 
-  @Enumerated(EnumType.name)
-  final NetworkType? networkType;
+  set curveType(CurveType? value) {
+    dbCurveType = value?.name;
+  }
 
-  @Enumerated(EnumType.name)
-  final WalletType? walletType;
+  @Transient()
+  NetworkIconType? get networkIconType => _enumByNameOrNull<NetworkIconType>(NetworkIconType.values, dbNetworkIconType);
 
-  const EmbeddedNetworkTemplateEntity({
+  set networkIconType(NetworkIconType? value) {
+    dbNetworkIconType = value?.name;
+  }
+
+  @Transient()
+  NetworkType? get networkType => _enumByNameOrNull<NetworkType>(NetworkType.values, dbNetworkType);
+
+  set networkType(NetworkType? value) {
+    dbNetworkType = value?.name;
+  }
+
+  @Transient()
+  WalletType? get walletType => _enumByNameOrNull<WalletType>(WalletType.values, dbWalletType);
+
+  set walletType(WalletType? value) {
+    dbWalletType = value?.name;
+  }
+
+  EmbeddedNetworkTemplateEntity({
+    this.id = 0,
     this.name,
     this.addressEncoderType,
     this.derivationPathTemplate,
     this.derivatorType,
-    this.curveType,
-    this.networkIconType,
-    this.networkType,
-    this.walletType,
-  });
+    CurveType? curveType,
+    NetworkIconType? networkIconType,
+    NetworkType? networkType,
+    WalletType? walletType,
+    this.dbCurveType,
+    this.dbNetworkIconType,
+    this.dbNetworkType,
+    this.dbWalletType,
+  }) {
+    if (curveType != null) {
+      this.curveType = curveType;
+    }
+    if (networkIconType != null) {
+      this.networkIconType = networkIconType;
+    }
+    if (networkType != null) {
+      this.networkType = networkType;
+    }
+    if (walletType != null) {
+      this.walletType = walletType;
+    }
+  }
 
-  factory EmbeddedNetworkTemplateEntity.fromNetworkTemplateModel(NetworkTemplateModel networkTemplateModel) {
+  factory EmbeddedNetworkTemplateEntity.fromNetworkTemplateModel(
+    NetworkTemplateModel networkTemplateModel,
+  ) {
     return EmbeddedNetworkTemplateEntity(
       name: networkTemplateModel.name,
       addressEncoderType: networkTemplateModel.addressEncoder.serializeType(),
@@ -59,15 +93,34 @@ class EmbeddedNetworkTemplateEntity extends Equatable {
     );
   }
 
+  @Transient()
   @override
   List<Object?> get props => <Object?>[
         name,
         addressEncoderType,
         derivationPathTemplate,
         derivatorType,
+        dbCurveType,
+        dbNetworkIconType,
+        dbNetworkType,
+        dbWalletType,
         curveType,
         networkIconType,
         networkType,
         walletType,
       ];
+}
+
+T? _enumByNameOrNull<T extends Enum>(List<T> values, String? name) {
+  if (name == null) {
+    return null;
+  }
+
+  for (final T value in values) {
+    if (value.name == name) {
+      return value;
+    }
+  }
+
+  return null;
 }

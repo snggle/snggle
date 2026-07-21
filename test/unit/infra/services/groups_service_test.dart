@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/group_entity/group_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/object_box_database_manager.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
@@ -32,7 +32,8 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      List<GroupModel> actualGroupModelList = await globalLocator<GroupsService>().getAllByParentPath(const FilesystemPath.empty(), firstLevelBool: true);
+      List<GroupModel> actualGroupModelList =
+          await globalLocator<GroupsService>().getAllByParentPath(const FilesystemPath.empty(), firstLevelBool: true);
 
       // Assert
       List<GroupModel> expectedGroupModelList = <GroupModel>[
@@ -59,7 +60,8 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      List<GroupModel> actualGroupModelList = await globalLocator<GroupsService>().getAllByParentPath(const FilesystemPath.empty(), firstLevelBool: false);
+      List<GroupModel> actualGroupModelList =
+          await globalLocator<GroupsService>().getAllByParentPath(const FilesystemPath.empty(), firstLevelBool: false);
 
       // Assert
       List<GroupModel> expectedGroupModelList = <GroupModel>[
@@ -194,15 +196,15 @@ void main() {
         FilesystemPath.fromString('new/path/group1'),
       );
 
-      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.groups.where().findAll();
+      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<GroupEntity>().getAll();
       });
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'new/path/group1', name: 'VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
+        GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'new/path/group1', name: 'VAULTS GROUP 1'),
+        GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
+        GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -220,15 +222,15 @@ void main() {
         FilesystemPath.fromString('new/path/vault1'),
       );
 
-      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.groups.where().findAll();
+      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<GroupEntity>().getAll();
       });
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'new/path/vault1/group2', name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'new/path/vault1/network1/group3', name: 'WALLETS GROUP 1')
+        GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'VAULTS GROUP 1'),
+        GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'new/path/vault1/group2', name: 'NETWORKS GROUP 1'),
+        GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'new/path/vault1/network1/group3', name: 'WALLETS GROUP 1')
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -252,15 +254,15 @@ void main() {
       // Act
       await globalLocator<GroupsService>().save(actualUpdatedGroupModel);
 
-      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.groups.where().findAll();
+      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<GroupEntity>().getAll();
       });
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: true, pinnedBool: true, filesystemPathString: 'group1', name: 'UPDATED VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
+        GroupEntity(id: 1, encryptedBool: true, pinnedBool: true, filesystemPathString: 'group1', name: 'UPDATED VAULTS GROUP 1'),
+        GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
+        GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -271,7 +273,7 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       GroupModel actualUpdatedGroupModel = GroupModel(
-        id: 99999,
+        id: 0,
         encryptedBool: true,
         pinnedBool: true,
         filesystemPath: FilesystemPath.fromString('group1'),
@@ -282,16 +284,16 @@ void main() {
       // Act
       await globalLocator<GroupsService>().save(actualUpdatedGroupModel);
 
-      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.groups.where().findAll();
+      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<GroupEntity>().getAll();
       });
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1'),
-        const GroupEntity(id: 99999, encryptedBool: true, pinnedBool: true, filesystemPathString: 'group1', name: 'NEW VAULTS GROUP 1'),
+        GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'VAULTS GROUP 1'),
+        GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
+        GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1'),
+        GroupEntity(id: 4, encryptedBool: true, pinnedBool: true, filesystemPathString: 'group1', name: 'NEW VAULTS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -313,15 +315,15 @@ void main() {
       // Act
       await globalLocator<GroupsService>().saveAll(actualGroupsToUpdate);
 
-      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.groups.where().findAll();
+      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<GroupEntity>().getAll();
       });
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: true, pinnedBool: true, filesystemPathString: 'group1', name: 'UPDATED VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: true, pinnedBool: true, filesystemPathString: 'vault1/group2', name: 'UPDATED NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
+        GroupEntity(id: 1, encryptedBool: true, pinnedBool: true, filesystemPathString: 'group1', name: 'UPDATED VAULTS GROUP 1'),
+        GroupEntity(id: 2, encryptedBool: true, pinnedBool: true, filesystemPathString: 'vault1/group2', name: 'UPDATED NETWORKS GROUP 1'),
+        GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -333,25 +335,25 @@ void main() {
 
       List<GroupModel> actualGroupsToUpdate = <GroupModel>[
         // @formatter:off
-        GroupModel(id: 99998, encryptedBool: true, pinnedBool: true, filesystemPath: FilesystemPath.fromString('group1'), name: 'NEW VAULTS GROUP 1', listItemsPreview: <AListItemModel>[]),
-        GroupModel(id: 99999, encryptedBool: true, pinnedBool: true, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NEW NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
+        GroupModel(id: 0, encryptedBool: true, pinnedBool: true, filesystemPath: FilesystemPath.fromString('group1'), name: 'NEW VAULTS GROUP 1', listItemsPreview: <AListItemModel>[]),
+        GroupModel(id: 0, encryptedBool: true, pinnedBool: true, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NEW NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
         // @formatter:on
       ];
 
       // Act
       await globalLocator<GroupsService>().saveAll(actualGroupsToUpdate);
 
-      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.groups.where().findAll();
+      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<GroupEntity>().getAll();
       });
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1'),
-        const GroupEntity(id: 99998, encryptedBool: true, pinnedBool: true, filesystemPathString: 'group1', name: 'NEW VAULTS GROUP 1'),
-        const GroupEntity(id: 99999, encryptedBool: true, pinnedBool: true, filesystemPathString: 'vault1/group2', name: 'NEW NETWORKS GROUP 1'),
+        GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'VAULTS GROUP 1'),
+        GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
+        GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1'),
+        GroupEntity(id: 4, encryptedBool: true, pinnedBool: true, filesystemPathString: 'group1', name: 'NEW VAULTS GROUP 1'),
+        GroupEntity(id: 5, encryptedBool: true, pinnedBool: true, filesystemPathString: 'vault1/group2', name: 'NEW NETWORKS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -366,13 +368,13 @@ void main() {
       // Act
       await globalLocator<GroupsService>().deleteAllByParentPath(FilesystemPath.fromString('vault1'));
 
-      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.groups.where().findAll();
+      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<GroupEntity>().getAll();
       });
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'VAULTS GROUP 1'),
+        GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'VAULTS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -385,8 +387,8 @@ void main() {
       // Act
       await globalLocator<GroupsService>().deleteAllByParentPath(const FilesystemPath.empty());
 
-      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.groups.where().findAll();
+      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<GroupEntity>().getAll();
       });
 
       // Assert
@@ -404,14 +406,14 @@ void main() {
       // Act
       await globalLocator<GroupsService>().deleteById(1);
 
-      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.groups.where().findAll();
+      List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<GroupEntity>().getAll();
       });
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
+        GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
+        GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);

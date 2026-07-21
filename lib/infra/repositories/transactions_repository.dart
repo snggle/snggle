@@ -1,28 +1,47 @@
-import 'package:isar/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/transaction_entity/a_transaction_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/solana_transaction_entity.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/object_box_database_manager.dart';
+import 'package:snggle/objectbox.g.dart';
 
 class TransactionsRepository {
-  final IsarDatabaseManager isarDatabaseManager = globalLocator<IsarDatabaseManager>();
+  final ObjectBoxDatabaseManager objectBoxDatabaseManager = globalLocator<ObjectBoxDatabaseManager>();
 
   Future<List<ATransactionEntity>> getByWallet(int walletId) async {
-    return isarDatabaseManager.perform((Isar isar) async {
-      List<EthereumTransactionEntity> ethereumTransactionList = await isar.ethereumTransactions.filter().walletIdEqualTo(walletId).findAll();
-      List<SolanaTransactionEntity> solanaTransactionList = await isar.solanaTransactions.filter().walletIdEqualTo(walletId).findAll();
-      return <ATransactionEntity>[...ethereumTransactionList, ...solanaTransactionList];
+    return objectBoxDatabaseManager.perform((Store store) {
+      Query<EthereumTransactionEntity> ethereumQuery = store
+          .box<EthereumTransactionEntity>()
+          .query(
+            EthereumTransactionEntity_.walletId.equals(walletId),
+          )
+          .build();
+      Query<SolanaTransactionEntity> solanaQuery = store
+          .box<SolanaTransactionEntity>()
+          .query(
+            SolanaTransactionEntity_.walletId.equals(walletId),
+          )
+          .build();
+
+      try {
+        List<EthereumTransactionEntity> ethereumTransactionList = ethereumQuery.find();
+        List<SolanaTransactionEntity> solanaTransactionList = solanaQuery.find();
+
+        return <ATransactionEntity>[...ethereumTransactionList, ...solanaTransactionList];
+      } finally {
+        ethereumQuery.close();
+        solanaQuery.close();
+      }
     });
   }
 
   Future<int> save(ATransactionEntity transactionEntity) async {
-    return isarDatabaseManager.perform((Isar isar) async {
-      return isar.writeTxn(() async {
+    return objectBoxDatabaseManager.perform((Store store) {
+      return store.runInTransaction(TxMode.write, () {
         if (transactionEntity is EthereumTransactionEntity) {
-          return isar.ethereumTransactions.put(transactionEntity);
+          return store.box<EthereumTransactionEntity>().put(transactionEntity);
         } else if (transactionEntity is SolanaTransactionEntity) {
-          return isar.solanaTransactions.put(transactionEntity);
+          return store.box<SolanaTransactionEntity>().put(transactionEntity);
         } else {
           throw UnsupportedError('Unsupported transaction type: ${transactionEntity.runtimeType}');
         }
@@ -31,27 +50,52 @@ class TransactionsRepository {
   }
 
   Future<void> deleteAll(List<ATransactionEntity> txEntityList) async {
-    return isarDatabaseManager.perform((Isar isar) async {
-      await isar.writeTxn(() async {
-        List<Id> ethereumTransactionIdList = txEntityList.whereType<EthereumTransactionEntity>().map((EthereumTransactionEntity e) => e.id).toList();
-        List<Id> solanaTransactionIdList = txEntityList.whereType<SolanaTransactionEntity>().map((SolanaTransactionEntity e) => e.id).toList();
+    objectBoxDatabaseManager.perform((Store store) {
+      store.runInTransaction(TxMode.write, () {
+        List<int> ethereumTransactionIdList = txEntityList.whereType<EthereumTransactionEntity>().map((EthereumTransactionEntity e) => e.id).toList();
+        List<int> solanaTransactionIdList = txEntityList.whereType<SolanaTransactionEntity>().map((SolanaTransactionEntity e) => e.id).toList();
 
         if (ethereumTransactionIdList.isNotEmpty) {
-          await isar.ethereumTransactions.deleteAll(ethereumTransactionIdList);
+          store.box<EthereumTransactionEntity>().removeMany(ethereumTransactionIdList);
         }
         if (solanaTransactionIdList.isNotEmpty) {
-          await isar.solanaTransactions.deleteAll(solanaTransactionIdList);
+          store.box<SolanaTransactionEntity>().removeMany(solanaTransactionIdList);
         }
       });
     });
   }
 
   Future<void> deleteByWallet(int walletId) async {
-    await isarDatabaseManager.perform((Isar isar) async {
-      await isar.writeTxn(() async {
-        await isar.ethereumTransactions.filter().walletIdEqualTo(walletId).deleteAll();
-        await isar.solanaTransactions.filter().walletIdEqualTo(walletId).deleteAll();
-      });
+    objectBoxDatabaseManager.perform((Store store) {
+      Query<EthereumTransactionEntity> ethereumQuery = store
+          .box<EthereumTransactionEntity>()
+          .query(
+            EthereumTransactionEntity_.walletId.equals(walletId),
+          )
+          .build();
+      Query<SolanaTransactionEntity> solanaQuery = store
+          .box<SolanaTransactionEntity>()
+          .query(
+            SolanaTransactionEntity_.walletId.equals(walletId),
+          )
+          .build();
+
+      try {
+        List<int> ethereumIds = ethereumQuery.findIds();
+        List<int> solanaIds = solanaQuery.findIds();
+
+        store.runInTransaction(TxMode.write, () {
+          if (ethereumIds.isNotEmpty) {
+            store.box<EthereumTransactionEntity>().removeMany(ethereumIds);
+          }
+          if (solanaIds.isNotEmpty) {
+            store.box<SolanaTransactionEntity>().removeMany(solanaIds);
+          }
+        });
+      } finally {
+        ethereumQuery.close();
+        solanaQuery.close();
+      }
     });
   }
 }

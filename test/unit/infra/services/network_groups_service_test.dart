@@ -1,12 +1,12 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
 import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/object_box_database_manager.dart';
 import 'package:snggle/infra/services/network_groups_service.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
@@ -23,7 +23,7 @@ import '../../../utils/test_database.dart';
 void main() {
   final TestDatabase testDatabase = TestDatabase();
 
-  EmbeddedNetworkTemplateEntity ethereumEmbeddedNetworkTemplateEntity = const EmbeddedNetworkTemplateEntity(
+  EmbeddedNetworkTemplateEntity ethereumEmbeddedNetworkTemplateEntity = EmbeddedNetworkTemplateEntity(
     addressEncoderType: 'ethereum(false)',
     curveType: CurveType.secp256k1,
     derivationPathTemplate: "m/44'/60'/0'/0/{{i}}",
@@ -33,7 +33,7 @@ void main() {
     name: 'Ethereum',
     walletType: WalletType.legacy,
   );
-  EmbeddedNetworkTemplateEntity solanaEmbeddedNetworkTemplateEntity = const EmbeddedNetworkTemplateEntity(
+  EmbeddedNetworkTemplateEntity solanaEmbeddedNetworkTemplateEntity = EmbeddedNetworkTemplateEntity(
     addressEncoderType: 'solana()',
     curveType: CurveType.ed25519,
     derivationPathTemplate: "m/44'/501'/{{i}}'/0'",
@@ -421,8 +421,8 @@ void main() {
         FilesystemPath.fromString('new/network/path/network1'),
       );
 
-      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.networkGroups.where().findAll();
+      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<NetworkGroupEntity>().getAll();
       });
 
       // Assert
@@ -516,8 +516,8 @@ void main() {
         FilesystemPath.fromString('new/network/path/vault1'),
       );
 
-      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.networkGroups.where().findAll();
+      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<NetworkGroupEntity>().getAll();
       });
 
       // Assert
@@ -618,8 +618,8 @@ void main() {
       // Act
       await globalLocator<NetworkGroupsService>().save(actualUpdatedNetworkGroupModel);
 
-      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.networkGroups.where().findAll();
+      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<NetworkGroupEntity>().getAll();
       });
 
       // Assert
@@ -706,7 +706,7 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       NetworkGroupModel actualUpdatedNetworkGroupModel = NetworkGroupModel(
-        id: 99999,
+        id: 0,
         pinnedBool: true,
         encryptedBool: true,
         filesystemPath: FilesystemPath.fromString('vault1/network99999'),
@@ -718,8 +718,8 @@ void main() {
       // Act
       await globalLocator<NetworkGroupsService>().save(actualUpdatedNetworkGroupModel);
 
-      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.networkGroups.where().findAll();
+      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<NetworkGroupEntity>().getAll();
       });
 
       // Assert
@@ -796,7 +796,7 @@ void main() {
             name: 'Solana1',
             filesystemPathString: 'vault1/network10'),
         NetworkGroupEntity(
-            id: 99999,
+            id: 11,
             embeddedNetworkTemplate: ethereumEmbeddedNetworkTemplateEntity,
             encryptedBool: true,
             pinnedBool: true,
@@ -838,8 +838,8 @@ void main() {
       // Act
       await globalLocator<NetworkGroupsService>().saveAll(actualGroupsToUpdate);
 
-      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.networkGroups.where().findAll();
+      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<NetworkGroupEntity>().getAll();
       });
 
       // Assert
@@ -928,7 +928,7 @@ void main() {
       List<NetworkGroupModel> actualGroupsToUpdate = <NetworkGroupModel>[
         // @formatter:off
         NetworkGroupModel(
-            id: 99998,
+            id: 0,
             encryptedBool: true,
             pinnedBool: true,
             networkTemplateModel: PredefinedNetworkTemplates.ethereum,
@@ -936,7 +936,7 @@ void main() {
             listItemsPreview: <AListItemModel>[],
             name: 'Ethereum99998'),
         NetworkGroupModel(
-            id: 99999,
+            id: 0,
             encryptedBool: true,
             pinnedBool: true,
             networkTemplateModel: PredefinedNetworkTemplates.ethereum,
@@ -949,8 +949,8 @@ void main() {
       // Act
       await globalLocator<NetworkGroupsService>().saveAll(actualGroupsToUpdate);
 
-      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.networkGroups.where().findAll();
+      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<NetworkGroupEntity>().getAll();
       });
 
       // Assert
@@ -1027,14 +1027,14 @@ void main() {
             name: 'Solana1',
             filesystemPathString: 'vault1/network10'),
         NetworkGroupEntity(
-            id: 99998,
+            id: 11,
             embeddedNetworkTemplate: ethereumEmbeddedNetworkTemplateEntity,
             encryptedBool: true,
             pinnedBool: true,
             name: 'Ethereum99998',
             filesystemPathString: 'vault1/network99998'),
         NetworkGroupEntity(
-            id: 99999,
+            id: 12,
             embeddedNetworkTemplate: ethereumEmbeddedNetworkTemplateEntity,
             encryptedBool: true,
             pinnedBool: true,
@@ -1055,8 +1055,8 @@ void main() {
       // Act
       await globalLocator<NetworkGroupsService>().deleteAllByParentPath(FilesystemPath.fromString('vault1'));
 
-      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.networkGroups.where().findAll();
+      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<NetworkGroupEntity>().getAll();
       });
 
       // Assert
@@ -1103,8 +1103,8 @@ void main() {
       // Act
       await globalLocator<NetworkGroupsService>().deleteAllByParentPath(const FilesystemPath.empty());
 
-      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.networkGroups.where().findAll();
+      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<NetworkGroupEntity>().getAll();
       });
 
       // Assert
@@ -1122,8 +1122,8 @@ void main() {
       // Act
       await globalLocator<NetworkGroupsService>().deleteById(1);
 
-      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
-        return isar.networkGroups.where().findAll();
+      List<NetworkGroupEntity> actualNetworksDatabaseValue = await globalLocator<ObjectBoxDatabaseManager>().perform((Store store) {
+        return store.box<NetworkGroupEntity>().getAll();
       });
 
       // Assert
