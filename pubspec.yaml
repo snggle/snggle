@@ -72,13 +72,13 @@ dependencies:
   # https://pub.dev/packages/custom_pop_up_menu
   custom_pop_up_menu: 1.2.4
 
-  # Extremely fast, easy to use, and fully async NoSQL database for Flutter.
-  # https://pub.dev/packages/isar_community:
-  isar_community: 3.3.2
+  # Flutter database for Dart-native objects and on-device vector management
+  # https://pub.dev/packages/objectbox
+  objectbox: 5.3.2
 
-  # Isar Core binaries for the Isar Database. Needs to be included for Flutter apps.
-  # https://pub.dev/packages/isar_community_flutter_libs
-  isar_community_flutter_libs: 3.3.2
+  # ObjectBox Core binaries for the ObjectBox Database. Needs to be included for Flutter apps.
+  # https://pub.dev/packages/objectbox_flutter_libs
+  objectbox_flutter_libs: 5.3.2
 
   # This plugin provides a cross-platform (iOS, Android) API to request permissions and check their status.
   # https://pub.dev/packages/permission_handler
@@ -130,9 +130,12 @@ dev_dependencies:
   # https://pub.dev/packages/build_runner
   build_runner: 2.15.0
 
-  # Code generator for the Isar Database. Finds classes annotated with @Collection.
-  # https://pub.dev/packages/isar_community_generator/versions
-  isar_community_generator: 3.3.2
+  # Code generator for the ObjectBox Database. Finds classes annotated with @Collection.
+  # https://pub.dev/packages/objectbox_generator
+  objectbox_generator: 5.3.2
+
+objectbox:
+  output_dir: shared/objectbox
 
 dependency_overrides:
   flutter_secure_storage_windows: 4.2.0

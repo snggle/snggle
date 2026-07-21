@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/objectbox_database_manager.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -46,8 +46,8 @@ class AppService {
 
   Future<void> wipeAll() async {
     await wipeSecureStorage();
+    await _wipeObjectBoxDatabase();
     await _wipeFilesystemStorage();
-    await _wipeIsarDatabase();
 
     globalLocator<ActiveWalletController>().clearActiveWallet();
   }
@@ -61,7 +61,7 @@ class AppService {
     rootDirectory.listSync().forEach((FileSystemEntity e) => e.deleteSync(recursive: true));
   }
 
-  Future<void> _wipeIsarDatabase() async {
-    await globalLocator<IsarDatabaseManager>().close();
+  Future<void> _wipeObjectBoxDatabase() async {
+    await globalLocator<ObjectboxDatabaseManager>().close();
   }
 }

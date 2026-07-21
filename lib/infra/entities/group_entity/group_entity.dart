@@ -1,20 +1,26 @@
 import 'package:equatable/equatable.dart';
-import 'package:isar_community/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
-part 'group_entity.g.dart';
-
-@Collection(accessor: 'groups', ignore: <String>{'props', 'stringify', 'hashCode'})
+@Entity()
+// ignore_for_file: must_be_immutable
+/*
+All fields of a class which extends Equatable should be immutable, but ObjectBox
+requires the `id` field to be mutable because its value is set after an instance of
+the class has been created.  Because of this, we ignore the linter rule
+"must_be_immutable" on all ObjectBox entities.
+*/
 class GroupEntity extends Equatable {
-  final Id id;
+  @Id()
+  int id;
   final bool pinnedBool;
   final bool encryptedBool;
   final String name;
   @Index()
   final String filesystemPathString;
 
-  const GroupEntity({
+  GroupEntity({
     required this.id,
     required this.pinnedBool,
     required this.encryptedBool,
@@ -33,7 +39,7 @@ class GroupEntity extends Equatable {
   }
 
   GroupEntity copyWith({
-    Id? id,
+    int? id,
     bool? pinnedBool,
     bool? encryptedBool,
     String? name,
@@ -48,7 +54,7 @@ class GroupEntity extends Equatable {
     );
   }
 
-  @ignore
+  @Transient()
   FilesystemPath get filesystemPath => FilesystemPath.fromString(filesystemPathString);
 
   @override

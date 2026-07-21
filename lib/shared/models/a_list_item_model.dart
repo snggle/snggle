@@ -3,7 +3,7 @@ import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 abstract class AListItemModel with EquatableMixin {
-  final int id;
+  int id;
   final bool encryptedBool;
   final bool pinnedBool;
   final FilesystemPath filesystemPath;

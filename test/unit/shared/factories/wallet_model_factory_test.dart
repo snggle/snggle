@@ -88,11 +88,11 @@ void main() async {
       // Arrange
       List<WalletEntity> actualWalletEntityList = <WalletEntity>[
         // @formatter:off
-        const WalletEntity(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'WALLET 0'),
-        const WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
-        const WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
-        const WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
-        const WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
+        WalletEntity(id: 1, encryptedBool: false, pinnedBool: false, address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce', derivationPath: "m/44'/60'/0'/0/0", filesystemPathString: 'vault1/network1/wallet1', name: 'WALLET 0'),
+        WalletEntity(id: 2, encryptedBool: false, pinnedBool: false, address: '0xd5fb453b321901a1d74Ba3FE93929AED57CA8686', derivationPath: "m/44'/60'/0'/0/1", filesystemPathString: 'vault1/network1/wallet2', name: 'WALLET 1'),
+        WalletEntity(id: 3, encryptedBool: false, pinnedBool: false, address: '0x1C37924f1416fF39F74A7284429a18dbbbcc06CD', derivationPath: "m/44'/60'/0'/0/2", filesystemPathString: 'vault1/network1/wallet3', name: 'WALLET 2'),
+        WalletEntity(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPathString: 'vault1/network1/group3/wallet4', name: 'WALLET 3'),
+        WalletEntity(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPathString: 'vault1/network1/group3/wallet5', name: 'WALLET 4'),
         // @formatter:on
       ];
 
@@ -117,7 +117,7 @@ void main() async {
   group('Tests of WalletModelFactory.createFromEntity()', () {
     test('Should [return WalletModel] from given WalletEntity', () async {
       // Arrange
-      WalletEntity actualWalletEntity = const WalletEntity(
+      WalletEntity actualWalletEntity = WalletEntity(
         id: 1,
         encryptedBool: false,
         pinnedBool: false,

@@ -5,7 +5,7 @@ import 'package:snggle/bloc/pages/app_pin_page/app_pin_set_up_page/states/app_pi
 import 'package:snggle/bloc/pages/app_pin_page/app_pin_set_up_page/states/app_pin_set_up_page_invalid_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_pin_set_up_page/states/app_pin_set_up_page_loading_state.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/objectbox_database_manager.dart';
 import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
@@ -90,7 +90,7 @@ class AppPinSetUpPageCubit extends Cubit<AAppPinSetUpPageState> {
     emit(const AppPinSetUpPageLoadingState());
     if (appMasterKeyType == AppMasterKeyType.create) {
       await _appService.wipeAll();
-      await globalLocator<IsarDatabaseManager>().initDatabase();
+      await globalLocator<ObjectboxDatabaseManager>().initDatabase();
     }
     if (mnemonicModel == null) {
       throw Exception('Mnemonic cannot be empty');

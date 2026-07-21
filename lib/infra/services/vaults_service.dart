@@ -12,7 +12,11 @@ class VaultsService implements IListItemsService<VaultModel> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
   @override
-  Future<List<VaultModel>> getAllByParentPath(FilesystemPath parentFilesystemPath, {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
+  Future<List<VaultModel>> getAllByParentPath(
+    FilesystemPath parentFilesystemPath, {
+    bool firstLevelBool = false,
+    bool previewEmptyBool = false,
+  }) async {
     VaultModelFactory vaultModelFactory = globalLocator<VaultModelFactory>();
 
     List<VaultEntity> vaultEntityList = await _vaultsRepository.getAllByParentPath(parentFilesystemPath);

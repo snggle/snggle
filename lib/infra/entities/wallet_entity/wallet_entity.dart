@@ -1,13 +1,19 @@
 import 'package:equatable/equatable.dart';
-import 'package:isar_community/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
-part 'wallet_entity.g.dart';
-
-@Collection(accessor: 'wallets', ignore: <String>{'props', 'stringify', 'hashCode'})
+@Entity()
+// ignore_for_file: must_be_immutable
+/*
+All fields of a class which extends Equatable should be immutable, but ObjectBox
+requires the `id` field to be mutable because its value is set after an instance of
+the class has been created.  Because of this, we ignore the linter rule
+"must_be_immutable" on all ObjectBox entities.
+*/
 class WalletEntity extends Equatable {
-  final Id id;
+  @Id()
+  int id;
   final bool encryptedBool;
   final bool pinnedBool;
   final String address;
@@ -16,7 +22,7 @@ class WalletEntity extends Equatable {
   final String filesystemPathString;
   final String name;
 
-  const WalletEntity({
+  WalletEntity({
     required this.id,
     required this.encryptedBool,
     required this.pinnedBool,
@@ -39,7 +45,7 @@ class WalletEntity extends Equatable {
   }
 
   WalletEntity copyWith({
-    Id? id,
+    int? id,
     bool? encryptedBool,
     bool? pinnedBool,
     String? address,
@@ -58,7 +64,7 @@ class WalletEntity extends Equatable {
     );
   }
 
-  @ignore
+  @Transient()
   FilesystemPath get filesystemPath => FilesystemPath.fromString(filesystemPathString);
 
   @override

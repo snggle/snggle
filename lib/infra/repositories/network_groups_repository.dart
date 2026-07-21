@@ -1,33 +1,32 @@
-import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/objectbox_database_manager.dart';
+import 'package:snggle/shared/objectbox/objectbox.g.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class NetworkGroupsRepository {
-  final IsarDatabaseManager isarDatabaseManager = globalLocator<IsarDatabaseManager>();
+  final ObjectboxDatabaseManager objectBoxDatabaseManager = globalLocator<ObjectboxDatabaseManager>();
 
-  Future<List<NetworkGroupEntity>> getAll() async {
-    List<NetworkGroupEntity> networkGroupEntities = await isarDatabaseManager.perform((Isar isar) {
-      return isar.networkGroups.where().findAll();
-    });
-
-    return networkGroupEntities;
-  }
+  Future<List<NetworkGroupEntity>> getAll() async => objectBoxDatabaseManager.perform((Store store) => store.box<NetworkGroupEntity>().getAll());
 
   Future<List<NetworkGroupEntity>> getAllByParentPath(FilesystemPath parentFilesystemPath) async {
-    List<NetworkGroupEntity> networkGroupEntities = await isarDatabaseManager.perform((Isar isar) {
-      return isar.networkGroups.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).findAll();
-    });
+    return objectBoxDatabaseManager.perform((Store store) {
+      Query<NetworkGroupEntity> query = store
+          .box<NetworkGroupEntity>()
+          .query(NetworkGroupEntity_.filesystemPathString.startsWith(parentFilesystemPath.fullPath))
+          .build();
 
-    return networkGroupEntities;
+      try {
+        return query.find();
+      } finally {
+        query.close();
+      }
+    });
   }
 
-  Future<NetworkGroupEntity> getById(Id id) async {
-    NetworkGroupEntity? networkGroupEntity = await isarDatabaseManager.perform((Isar isar) {
-      return isar.networkGroups.get(id);
-    });
+  Future<NetworkGroupEntity> getById(int id) async {
+    NetworkGroupEntity? networkGroupEntity = objectBoxDatabaseManager.perform((Store store) => store.box<NetworkGroupEntity>().get(id));
 
     if (networkGroupEntity == null) {
       throw ChildKeyNotFoundException();
@@ -35,29 +34,25 @@ class NetworkGroupsRepository {
     return networkGroupEntity;
   }
 
-  Future<Id> save(NetworkGroupEntity networkGroupEntity) async {
-    return isarDatabaseManager.perform((Isar isar) async {
-      Id createdId = await isar.writeTxn(() async {
-        return isar.networkGroups.put(networkGroupEntity);
-      });
-      return createdId;
+  Future<int> save(NetworkGroupEntity networkGroupEntity) async {
+    return objectBoxDatabaseManager.perform((Store store) {
+      Box<NetworkGroupEntity> box = store.box<NetworkGroupEntity>();
+      return store.runInTransaction(TxMode.write, () => box.put(networkGroupEntity));
     });
   }
 
-  Future<List<Id>> saveAll(List<NetworkGroupEntity> networkGroupEntityList) async {
-    return isarDatabaseManager.perform((Isar isar) async {
-      List<Id> createdIds = await isar.writeTxn(() async {
-        return isar.networkGroups.putAll(networkGroupEntityList);
-      });
-      return createdIds;
+  Future<List<int>> saveAll(List<NetworkGroupEntity> networkGroupEntityList) async {
+    return objectBoxDatabaseManager.perform((Store store) {
+      Box<NetworkGroupEntity> box = store.box<NetworkGroupEntity>();
+      return store.runInTransaction(TxMode.write, () => box.putMany(networkGroupEntityList));
     });
   }
 
-  Future<void> deleteById(Id id) async {
-    await isarDatabaseManager.perform((Isar isar) async {
-      bool deletedBool = await isar.writeTxn(() async {
-        return isar.networkGroups.delete(id);
-      });
+  Future<void> deleteById(int id) async {
+    objectBoxDatabaseManager.perform((Store store) {
+      Box<NetworkGroupEntity> box = store.box<NetworkGroupEntity>();
+      bool deletedBool = store.runInTransaction(TxMode.write, () => box.remove(id));
+
       if (deletedBool == false) {
         throw ChildKeyNotFoundException();
       }

@@ -1,5 +1,5 @@
-import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/network_groups_service.dart';
@@ -11,6 +11,7 @@ import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/groups/group_secrets_model.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
 import 'package:snggle/shared/models/networks/network_template_model.dart';
+import 'package:snggle/shared/models/networks/network_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
@@ -25,7 +26,7 @@ class NetworkGroupModelFactory {
 
   Future<NetworkGroupModel> createNewNetworkGroup(FilesystemPath parentFilesystemPath, String name, NetworkTemplateModel networkTemplateModel) async {
     NetworkGroupModel networkGroupModel = NetworkGroupModel(
-      id: Isar.autoIncrement,
+      id: 0,
       pinnedBool: false,
       encryptedBool: false,
       filesystemPath: const FilesystemPath.empty(),
@@ -74,7 +75,10 @@ class NetworkGroupModelFactory {
       encryptedBool: networkGroupEntity.encryptedBool,
       filesystemPath: networkGroupEntity.filesystemPath,
       name: networkGroupEntity.name,
-      networkTemplateModel: NetworkTemplateModel.fromEntity(networkGroupEntity.embeddedNetworkTemplate),
+      networkTemplateModel: switch (networkGroupEntity.networkType) {
+        NetworkType.ethereum => PredefinedNetworkTemplates.ethereum,
+        NetworkType.solana => PredefinedNetworkTemplates.solana,
+      },
       listItemsPreview: listItemsPreview,
     );
   }

@@ -30,7 +30,8 @@ void main() {
       Mnemonic actualMnemonic = Mnemonic.fromMnemonicPhrase('practice bundle birth birth invite route loop spy weapon suffer truck bounce');
 
       // Act
-      VaultModel actualVaultModel = await globalLocator<VaultModelFactory>().createNewVault(const FilesystemPath.empty(), actualMnemonic, 'NEW VAULT');
+      VaultModel actualVaultModel =
+          await globalLocator<VaultModelFactory>().createNewVault(const FilesystemPath.empty(), actualMnemonic, 'NEW VAULT');
 
       // Assert
       VaultModel expectedVaultModel = VaultModel(
@@ -53,7 +54,8 @@ void main() {
       Mnemonic actualMnemonic = Mnemonic.fromMnemonicPhrase('practice bundle birth birth invite route loop spy weapon suffer truck bounce');
 
       // Act
-      VaultModel actualVaultModel = await globalLocator<VaultModelFactory>().createNewVault(const FilesystemPath.empty(), actualMnemonic, 'NEW VAULT');
+      VaultModel actualVaultModel =
+          await globalLocator<VaultModelFactory>().createNewVault(const FilesystemPath.empty(), actualMnemonic, 'NEW VAULT');
 
       // Assert
       VaultModel expectedVaultModel = VaultModel(
@@ -78,16 +80,17 @@ void main() {
 
       List<VaultEntity> actualVaultEntityList = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286=', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
+        VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
+        VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+        VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
+        VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286=', name: 'VAULT 4'),
+        VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
         // @formatter:on
       ];
 
       // Act
-      List<VaultModel> actualVaultModelList = await globalLocator<VaultModelFactory>().createFromEntities(actualVaultEntityList, previewEmptyBool: false);
+      List<VaultModel> actualVaultModelList =
+          await globalLocator<VaultModelFactory>().createFromEntities(actualVaultEntityList, previewEmptyBool: false);
 
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[
@@ -176,16 +179,17 @@ void main() {
 
       List<VaultEntity> actualVaultEntityList = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286=', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
+        VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
+        VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+        VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
+        VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286=', name: 'VAULT 4'),
+        VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
         // @formatter:on
       ];
 
       // Act
-      List<VaultModel> actualVaultModelList = await globalLocator<VaultModelFactory>().createFromEntities(actualVaultEntityList, previewEmptyBool: true);
+      List<VaultModel> actualVaultModelList =
+          await globalLocator<VaultModelFactory>().createFromEntities(actualVaultEntityList, previewEmptyBool: true);
 
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[
@@ -207,7 +211,7 @@ void main() {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      VaultEntity actualVaultEntity = const VaultEntity(
+      VaultEntity actualVaultEntity = VaultEntity(
         id: 1,
         encryptedBool: false,
         pinnedBool: false,
@@ -247,7 +251,7 @@ void main() {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      VaultEntity actualVaultEntity = const VaultEntity(
+      VaultEntity actualVaultEntity = VaultEntity(
         id: 1,
         encryptedBool: false,
         pinnedBool: false,
