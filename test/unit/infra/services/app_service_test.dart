@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar_community/isar.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
 import 'package:snggle/infra/exceptions/parent_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/objectbox_database_manager.dart';
 import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/shared/models/password_model.dart';
 
@@ -81,19 +82,26 @@ void main() {
       expect(actualDatabaseValue, <String, String>{});
     });
 
-    test('Should [close Isar] and [prevent further DB operations] if [Isar OPEN]', () async {
+    test('Should [close ObjectBox] and [prevent further DB operations] if [ObjectBox OPEN]', () async {
+      // Arrange
+      RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
+      Directory rootDirectory = await rootDirectoryBuilder.call();
+      String databaseDirectoryPath = '${rootDirectory.path}${Platform.pathSeparator}${testDatabase.testSessionUUID}';
+      ObjectboxDatabaseManager objectboxDatabaseManager = globalLocator<ObjectboxDatabaseManager>();
+
       // Act
       await globalLocator<AppService>().wipeAll();
 
       // Assert
-      expect(Isar.getInstance(testDatabase.testSessionUUID), isNull);
+      expect(Store.isOpen(databaseDirectoryPath), false);
 
       expect(
-        () => globalLocator<IsarDatabaseManager>().perform((Isar isar) => isar.getSize()),
-        throwsA(isA<IsarError>()),
+        () => objectboxDatabaseManager.perform((Store store) => store.box<VaultEntity>().getAll()),
+        throwsA(isA<StateError>()),
       );
     });
   });
+
   group('Tests of AppService.isDataBaseExist()', () {
     test('Should [return FALSE] if [secrets directory NOT EXISTS]', () async {
       // Arrange

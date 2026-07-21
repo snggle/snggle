@@ -1,48 +1,76 @@
 import 'package:equatable/equatable.dart';
-import 'package:isar_community/isar.dart';
-import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
+import 'package:snggle/shared/models/networks/network_type.dart';
+import 'package:snggle/shared/utils/enum_storage_codec.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
-part 'network_group_entity.g.dart';
-
-@Collection(accessor: 'networkGroups', ignore: <String>{'props', 'stringify', 'hashCode', 'networkTemplateEntity'})
+@Entity()
+// ignore_for_file: must_be_immutable
+/*
+All fields of a class which extends Equatable should be immutable, but ObjectBox
+requires the `id` field to be mutable because its value is set after an instance of
+the class has been created.  Because of this, we ignore the linter rule
+"must_be_immutable" on all ObjectBox entities.
+*/
 class NetworkGroupEntity extends Equatable {
-  final Id id;
+  // ObjectBox persists `networkType` via the `dbNetworkType` string column,
+  // so this codec maps stable storage IDs to `NetworkType` enum values.
+  static final EnumStorageCodec<NetworkType> _networkTypeCodec = EnumStorageCodec<NetworkType>(<NetworkType, String>{
+    NetworkType.ethereum: 'ethereum',
+    NetworkType.solana: 'solana',
+  });
+
+  @Id()
+  int id;
   final bool encryptedBool;
   final bool pinnedBool;
   @Index()
   final String filesystemPathString;
   final String name;
-  final EmbeddedNetworkTemplateEntity embeddedNetworkTemplate;
+  String? dbNetworkType;
 
-  const NetworkGroupEntity({
+  NetworkGroupEntity({
     required this.id,
     required this.encryptedBool,
     required this.pinnedBool,
     required this.filesystemPathString,
     required this.name,
-    required this.embeddedNetworkTemplate,
-  });
+    required this.dbNetworkType,
+    NetworkType? networkType,
+  }) {
+    if (networkType != null) {
+      this.networkType = networkType;
+    }
+  }
+
+  @Transient()
+  NetworkType get networkType => _networkTypeCodec.fromStorageValue(dbNetworkType)!;
+
+  set networkType(NetworkType? networkType) {
+    dbNetworkType = _networkTypeCodec.toStorageValue(networkType);
+  }
 
   factory NetworkGroupEntity.fromNetworkGroupModel(NetworkGroupModel networkGroupModel) {
     return NetworkGroupEntity(
       id: networkGroupModel.id,
       encryptedBool: networkGroupModel.encryptedBool,
       pinnedBool: networkGroupModel.pinnedBool,
-      embeddedNetworkTemplate: EmbeddedNetworkTemplateEntity.fromNetworkTemplateModel(networkGroupModel.networkTemplateModel),
       filesystemPathString: networkGroupModel.filesystemPath.fullPath,
       name: networkGroupModel.name,
+      networkType: networkGroupModel.networkTemplateModel.networkType,
+      dbNetworkType: _networkTypeCodec.toStorageValue(networkGroupModel.networkTemplateModel.networkType),
     );
   }
 
   NetworkGroupEntity copyWith({
-    Id? id,
+    int? id,
     bool? encryptedBool,
     bool? pinnedBool,
     String? filesystemPathString,
     String? name,
-    EmbeddedNetworkTemplateEntity? embeddedNetworkTemplate,
+    NetworkType? networkType,
+    String? dbNetworkType,
   }) {
     return NetworkGroupEntity(
       id: id ?? this.id,
@@ -50,13 +78,14 @@ class NetworkGroupEntity extends Equatable {
       pinnedBool: pinnedBool ?? this.pinnedBool,
       filesystemPathString: filesystemPathString ?? this.filesystemPathString,
       name: name ?? this.name,
-      embeddedNetworkTemplate: embeddedNetworkTemplate ?? this.embeddedNetworkTemplate,
+      networkType: networkType,
+      dbNetworkType: dbNetworkType ?? this.dbNetworkType,
     );
   }
 
-  @ignore
+  @Transient()
   FilesystemPath get filesystemPath => FilesystemPath.fromString(filesystemPathString);
 
   @override
-  List<Object?> get props => <Object>[id, encryptedBool, pinnedBool, embeddedNetworkTemplate, filesystemPathString, name];
+  List<Object?> get props => <Object?>[id, encryptedBool, pinnedBool, filesystemPathString, name, dbNetworkType];
 }

@@ -1,5 +1,4 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
-import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
 import 'package:snggle/infra/services/groups_service.dart';
@@ -26,7 +25,7 @@ class VaultModelFactory {
     int lastVaultIndex = await _vaultsService.getLastIndex();
 
     VaultModel vaultModel = VaultModel(
-      id: Isar.autoIncrement,
+      id: 0,
       index: lastVaultIndex + 1,
       pinnedBool: false,
       encryptedBool: false,

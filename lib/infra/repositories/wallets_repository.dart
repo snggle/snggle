@@ -1,46 +1,72 @@
 import 'dart:async';
 
-import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/objectbox_database_manager.dart';
+import 'package:snggle/shared/objectbox/objectbox.g.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class WalletsRepository {
-  final IsarDatabaseManager isarDatabaseManager = globalLocator<IsarDatabaseManager>();
+  final ObjectboxDatabaseManager objectBoxDatabaseManager = globalLocator<ObjectboxDatabaseManager>();
 
   Future<List<String>> getAllDerivationPaths(FilesystemPath parentFilesystemPath) async {
-    List<String> derivationPaths = await isarDatabaseManager.perform((Isar isar) {
+    return objectBoxDatabaseManager.perform((Store store) {
+      Box<WalletEntity> box = store.box<WalletEntity>();
       bool hasParentsBool = parentFilesystemPath.fullPath.isEmpty;
+
       if (hasParentsBool) {
-        return isar.wallets.where().derivationPathProperty().findAll();
-      } else {
-        String baseDerivationPath = '${parentFilesystemPath.fullPath}/';
-        return isar.wallets.where().filter().filesystemPathStringStartsWith(baseDerivationPath).derivationPathProperty().findAll();
+        return box.getAll().map((WalletEntity entity) => entity.derivationPath).toList();
+      }
+
+      String baseDerivationPath = '${parentFilesystemPath.fullPath}/';
+      Query<WalletEntity> query = box
+          .query(
+            WalletEntity_.filesystemPathString.startsWith(baseDerivationPath),
+          )
+          .build();
+
+      try {
+        return query.find().map((WalletEntity entity) => entity.derivationPath).toList();
+      } finally {
+        query.close();
       }
     });
-    return derivationPaths;
   }
 
-  Future<List<WalletEntity>> getAll() async {
-    List<WalletEntity> walletEntities = await isarDatabaseManager.perform((Isar isar) {
-      return isar.wallets.where().findAll();
-    });
-
-    return walletEntities;
-  }
+  Future<List<WalletEntity>> getAll() async => objectBoxDatabaseManager.perform((Store store) => store.box<WalletEntity>().getAll());
 
   Future<List<WalletEntity>> getAllByParentPath(FilesystemPath parentFilesystemPath) async {
-    List<WalletEntity> walletEntities = await isarDatabaseManager.perform((Isar isar) {
-      return isar.wallets.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).findAll();
+    return objectBoxDatabaseManager.perform((Store store) {
+      Query<WalletEntity> query = store
+          .box<WalletEntity>()
+          .query(
+            WalletEntity_.filesystemPathString.startsWith(parentFilesystemPath.fullPath),
+          )
+          .build();
+
+      try {
+        return query.find();
+      } finally {
+        query.close();
+      }
     });
-    return walletEntities;
   }
 
   Future<WalletEntity> getByAddress(String address) async {
-    WalletEntity? walletEntity = await isarDatabaseManager.perform((Isar isar) {
-      return isar.wallets.where().filter().addressEqualTo(address, caseSensitive: false).findFirst();
+    WalletEntity? walletEntity = objectBoxDatabaseManager.perform((Store store) {
+      Query<WalletEntity> query = store
+          .box<WalletEntity>()
+          .query(
+            WalletEntity_.address.equals(address, caseSensitive: false),
+          )
+          .build();
+
+      try {
+        return query.findFirst();
+      } finally {
+        query.close();
+      }
     });
 
     if (walletEntity == null) {
@@ -50,10 +76,8 @@ class WalletsRepository {
     return walletEntity;
   }
 
-  Future<WalletEntity> getById(Id id) async {
-    WalletEntity? walletEntity = await isarDatabaseManager.perform((Isar isar) {
-      return isar.wallets.get(id);
-    });
+  Future<WalletEntity> getById(int id) async {
+    WalletEntity? walletEntity = objectBoxDatabaseManager.perform((Store store) => store.box<WalletEntity>().get(id));
 
     if (walletEntity == null) {
       throw ChildKeyNotFoundException();
@@ -61,29 +85,25 @@ class WalletsRepository {
     return walletEntity;
   }
 
-  Future<Id> save(WalletEntity walletEntity) async {
-    return isarDatabaseManager.perform((Isar isar) async {
-      Id createdId = await isar.writeTxn(() async {
-        return isar.wallets.put(walletEntity);
-      });
-      return createdId;
+  Future<int> save(WalletEntity walletEntity) async {
+    return objectBoxDatabaseManager.perform((Store store) {
+      Box<WalletEntity> box = store.box<WalletEntity>();
+      return store.runInTransaction(TxMode.write, () => box.put(walletEntity));
     });
   }
 
-  Future<List<Id>> saveAll(List<WalletEntity> walletEntityList) async {
-    return isarDatabaseManager.perform((Isar isar) async {
-      List<Id> createdIds = await isar.writeTxn(() async {
-        return isar.wallets.putAll(walletEntityList);
-      });
-      return createdIds;
+  Future<List<int>> saveAll(List<WalletEntity> walletEntityList) async {
+    return objectBoxDatabaseManager.perform((Store store) {
+      Box<WalletEntity> box = store.box<WalletEntity>();
+      return store.runInTransaction(TxMode.write, () => box.putMany(walletEntityList));
     });
   }
 
-  Future<void> deleteById(Id id) async {
-    await isarDatabaseManager.perform((Isar isar) async {
-      bool deletedBool = await isar.writeTxn(() async {
-        return isar.wallets.delete(id);
-      });
+  Future<void> deleteById(int id) async {
+    objectBoxDatabaseManager.perform((Store store) {
+      Box<WalletEntity> box = store.box<WalletEntity>();
+      bool deletedBool = store.runInTransaction(TxMode.write, () => box.remove(id));
+
       if (deletedBool == false) {
         throw ChildKeyNotFoundException();
       }

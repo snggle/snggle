@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/settings_wrapper/settings_page/app_wipe_dialog/app_wipe_dialog_state.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/objectbox_database_manager.dart';
 import 'package:snggle/infra/services/app_service.dart';
 
 class AppWipeDialogCubit extends Cubit<AppWipeDialogState> {
@@ -22,7 +22,7 @@ class AppWipeDialogCubit extends Cubit<AppWipeDialogState> {
       emit(state.copyWith(wipeInProgressBool: true));
 
       await _appService.wipeAll();
-      await globalLocator<IsarDatabaseManager>().initDatabase();
+      await globalLocator<ObjectboxDatabaseManager>().initDatabase();
       _applicationWipedCallback();
     }
   }

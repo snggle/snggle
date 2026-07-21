@@ -75,7 +75,7 @@ void main() {
       // Assert
       AppWipeDialogState expectedAppWipeDialogState = const AppWipeDialogState(confirmationsCount: 3, wipeInProgressBool: true);
 
-      Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{};
+      Map<String, dynamic> expectedFilesystemStructure = <String, dynamic>{'objectbox': <String, dynamic>{}};
       Map<String, dynamic> expectedDatabaseValue = <String, dynamic>{};
 
       expect(actualAppWipeDialogState, expectedAppWipeDialogState);
