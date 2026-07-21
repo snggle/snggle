@@ -1,6 +1,5 @@
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:equatable/equatable.dart';
-import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
 import 'package:snggle/shared/models/networks/network_icon_type.dart';
 import 'package:snggle/shared/models/networks/network_type.dart';
 
@@ -27,19 +26,6 @@ class NetworkTemplateModel extends Equatable {
     required this.networkType,
     required this.walletType,
   });
-
-  factory NetworkTemplateModel.fromEntity(EmbeddedNetworkTemplateEntity embeddedNetworkTemplateEntity) {
-    return NetworkTemplateModel(
-      name: embeddedNetworkTemplateEntity.name!,
-      derivationPathTemplate: embeddedNetworkTemplateEntity.derivationPathTemplate!,
-      addressEncoder: ABlockchainAddressEncoder.fromSerializedType(embeddedNetworkTemplateEntity.addressEncoderType!),
-      derivator: ADerivator.fromSerializedType(embeddedNetworkTemplateEntity.derivatorType!),
-      curveType: embeddedNetworkTemplateEntity.curveType!,
-      networkIconType: embeddedNetworkTemplateEntity.networkIconType!,
-      networkType: embeddedNetworkTemplateEntity.networkType!,
-      walletType: embeddedNetworkTemplateEntity.walletType!,
-    );
-  }
 
   NetworkTemplateModel copyWith({
     String? name,
@@ -111,13 +97,13 @@ class NetworkTemplateModel extends Equatable {
 
   @override
   List<Object?> get props => <Object?>[
-        name,
-        derivationPathTemplate,
-        addressEncoder.serializeType(),
-        derivator.serializeType(),
-        curveType.name,
-        networkIconType.name,
-        networkType.name,
-        walletType.name,
-      ];
+    name,
+    derivationPathTemplate,
+    addressEncoder.serializeType(),
+    derivator.serializeType(),
+    curveType.name,
+    networkIconType.name,
+    networkType.name,
+    walletType.name,
+  ];
 }

@@ -69,4 +69,17 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.5"
+    // Add the Android library with ObjectBox Admin only for debug builds.
+    // Note: when the objectbox package updates, check update notes to see
+    // if the Android library below needs to be updated as well.
+    debugImplementation "io.objectbox:objectbox-android-objectbrowser:5.4.2"
+}
+
+
+configurations {
+    debugImplementation {
+        // Tell Gradle to exclude the ObjectBox Android library (without Admin)
+        // that is added by the objectbox_flutter_libs package for debug builds.
+        exclude group: 'io.objectbox', module: 'objectbox-android'
+    }
 }

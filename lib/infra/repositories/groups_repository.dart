@@ -1,33 +1,29 @@
-import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/group_entity/group_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/isar_database_manager.dart';
+import 'package:snggle/infra/managers/objectbox_database_manager.dart';
+import 'package:snggle/shared/objectbox/objectbox.g.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class GroupsRepository {
-  final IsarDatabaseManager isarDatabaseManager = globalLocator<IsarDatabaseManager>();
+  final ObjectboxDatabaseManager objectBoxDatabaseManager = globalLocator<ObjectboxDatabaseManager>();
 
-  Future<List<GroupEntity>> getAll() async {
-    List<GroupEntity> groupEntities = await isarDatabaseManager.perform((Isar isar) {
-      return isar.groups.where().findAll();
-    });
-
-    return groupEntities;
-  }
+  Future<List<GroupEntity>> getAll() async => objectBoxDatabaseManager.perform((Store store) => store.box<GroupEntity>().getAll());
 
   Future<List<GroupEntity>> getAllByParentPath(FilesystemPath parentFilesystemPath) async {
-    List<GroupEntity> groupEntities = await isarDatabaseManager.perform((Isar isar) {
-      return isar.groups.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).findAll();
-    });
+    return objectBoxDatabaseManager.perform((Store store) {
+      Query<GroupEntity> query = store.box<GroupEntity>().query(GroupEntity_.filesystemPathString.startsWith(parentFilesystemPath.fullPath)).build();
 
-    return groupEntities;
+      try {
+        return query.find();
+      } finally {
+        query.close();
+      }
+    });
   }
 
-  Future<GroupEntity> getById(Id id) async {
-    GroupEntity? groupEntity = await isarDatabaseManager.perform((Isar isar) {
-      return isar.groups.get(id);
-    });
+  Future<GroupEntity> getById(int id) async {
+    GroupEntity? groupEntity = objectBoxDatabaseManager.perform((Store store) => store.box<GroupEntity>().get(id));
 
     if (groupEntity == null) {
       throw ChildKeyNotFoundException();
@@ -36,8 +32,14 @@ class GroupsRepository {
   }
 
   Future<GroupEntity> getByPath(FilesystemPath filesystemPath) async {
-    GroupEntity? groupEntity = await isarDatabaseManager.perform((Isar isar) {
-      return isar.groups.where().filesystemPathStringEqualTo(filesystemPath.fullPath).findFirst();
+    GroupEntity? groupEntity = objectBoxDatabaseManager.perform((Store store) {
+      Query<GroupEntity> query = store.box<GroupEntity>().query(GroupEntity_.filesystemPathString.equals(filesystemPath.fullPath)).build();
+
+      try {
+        return query.findFirst();
+      } finally {
+        query.close();
+      }
     });
 
     if (groupEntity == null) {
@@ -46,29 +48,25 @@ class GroupsRepository {
     return groupEntity;
   }
 
-  Future<Id> save(GroupEntity groupEntity) async {
-    return isarDatabaseManager.perform((Isar isar) async {
-      Id createdId = await isar.writeTxn(() async {
-        return isar.groups.put(groupEntity);
-      });
-      return createdId;
+  Future<int> save(GroupEntity groupEntity) async {
+    return objectBoxDatabaseManager.perform((Store store) {
+      Box<GroupEntity> box = store.box<GroupEntity>();
+      return store.runInTransaction(TxMode.write, () => box.put(groupEntity));
     });
   }
 
-  Future<List<Id>> saveAll(List<GroupEntity> groupEntityList) async {
-    return isarDatabaseManager.perform((Isar isar) async {
-      List<Id> createdIds = await isar.writeTxn(() async {
-        return isar.groups.putAll(groupEntityList);
-      });
-      return createdIds;
+  Future<List<int>> saveAll(List<GroupEntity> groupEntityList) async {
+    return objectBoxDatabaseManager.perform((Store store) {
+      Box<GroupEntity> box = store.box<GroupEntity>();
+      return store.runInTransaction(TxMode.write, () => box.putMany(groupEntityList));
     });
   }
 
-  Future<void> deleteById(Id id) async {
-    await isarDatabaseManager.perform((Isar isar) async {
-      bool deletedBool = await isar.writeTxn(() async {
-        return isar.groups.delete(id);
-      });
+  Future<void> deleteById(int id) async {
+    objectBoxDatabaseManager.perform((Store store) {
+      Box<GroupEntity> box = store.box<GroupEntity>();
+      bool deletedBool = store.runInTransaction(TxMode.write, () => box.remove(id));
+
       if (deletedBool == false) {
         throw ChildKeyNotFoundException();
       }

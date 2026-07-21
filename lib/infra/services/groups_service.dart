@@ -12,7 +12,11 @@ class GroupsService implements IListItemsService<GroupModel> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
   @override
-  Future<List<GroupModel>> getAllByParentPath(FilesystemPath parentFilesystemPath, {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
+  Future<List<GroupModel>> getAllByParentPath(
+    FilesystemPath parentFilesystemPath, {
+    bool firstLevelBool = false,
+    bool previewEmptyBool = false,
+  }) async {
     GroupModelFactory groupModelFactory = globalLocator<GroupModelFactory>();
 
     List<GroupEntity> groupEntityList = await _groupsRepository.getAllByParentPath(parentFilesystemPath);
