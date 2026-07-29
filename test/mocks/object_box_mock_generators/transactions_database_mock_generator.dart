@@ -4,12 +4,11 @@ import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
-import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/solana_transaction_entity.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
-import 'package:snggle/objectbox.g.dart';
+import 'package:snggle/shared/objectbox/objectbox.g.dart';
 
 void main() {
   test('generates TransactionsDatabaseMock ObjectBox fixture', () async {
@@ -59,7 +58,7 @@ void seedTransactionsDatabaseMock(Store store) {
     final Box<VaultEntity> vaultBox = store.box<VaultEntity>();
     final Box<WalletEntity> walletBox = store.box<WalletEntity>();
     final Box<NetworkGroupEntity> networkGroupBox = store.box<NetworkGroupEntity>();
-    final Box<EmbeddedNetworkTemplateEntity> embeddedNetworkTemplateBox = store.box<EmbeddedNetworkTemplateEntity>();
+    //final Box<EmbeddedNetworkTemplateEntity> embeddedNetworkTemplateBox = store.box<EmbeddedNetworkTemplateEntity>();
     final Box<EthereumTransactionEntity> ethereumTransactionBox = store.box<EthereumTransactionEntity>();
     final Box<SolanaTransactionEntity> solanaTransactionBox = store.box<SolanaTransactionEntity>();
 
@@ -67,7 +66,7 @@ void seedTransactionsDatabaseMock(Store store) {
     solanaTransactionBox.removeAll();
     walletBox.removeAll();
     networkGroupBox.removeAll();
-    embeddedNetworkTemplateBox.removeAll();
+    //embeddedNetworkTemplateBox.removeAll();
     vaultBox
       ..removeAll()
       ..put(
@@ -82,52 +81,11 @@ void seedTransactionsDatabaseMock(Store store) {
         ),
       );
 
-    final EmbeddedNetworkTemplateEntity ethereumTemplate = EmbeddedNetworkTemplateEntity(
-      id: 0,
-      addressEncoderType: 'ethereum(false)',
-      dbCurveType: 'secp256k1',
-      derivationPathTemplate: "m/44'/60'/0'/0/{{i}}",
-      derivatorType: 'secp256k1',
-      name: 'Ethereum',
-      dbNetworkIconType: 'ethereum',
-      dbNetworkType: 'ethereum',
-      dbWalletType: 'legacy',
-    );
-
-    final EmbeddedNetworkTemplateEntity solanaTemplate = EmbeddedNetworkTemplateEntity(
-      id: 0,
-      addressEncoderType: 'solana()',
-      dbCurveType: 'ed25519',
-      derivationPathTemplate: "m/44'/501'/{{i}}'/0'",
-      derivatorType: 'ed25519',
-      name: 'Solana',
-      dbNetworkIconType: 'solana',
-      dbNetworkType: 'solana',
-      dbWalletType: 'legacy',
-    );
-
-    embeddedNetworkTemplateBox.putMany(<EmbeddedNetworkTemplateEntity>[
-      ethereumTemplate,
-      solanaTemplate,
-    ]);
-
     networkGroupBox.putMany(<NetworkGroupEntity>[
       NetworkGroupEntity(
-        id: 0,
-        encryptedBool: false,
-        filesystemPathString: 'vault1/network1',
-        name: 'Ethereum',
-        pinnedBool: false,
-        embeddedNetworkTemplate: ethereumTemplate,
-      ),
+          id: 0, encryptedBool: false, filesystemPathString: 'vault1/network1', name: 'Ethereum', pinnedBool: false, dbNetworkType: 'ethereum'),
       NetworkGroupEntity(
-        id: 0,
-        encryptedBool: false,
-        filesystemPathString: 'vault1/network2',
-        name: 'Solana',
-        pinnedBool: false,
-        embeddedNetworkTemplate: solanaTemplate,
-      ),
+          id: 0, encryptedBool: false, filesystemPathString: 'vault1/network2', name: 'Solana', pinnedBool: false, dbNetworkType: 'solana'),
     ]);
 
     final List<int> walletIds = walletBox.putMany(<WalletEntity>[

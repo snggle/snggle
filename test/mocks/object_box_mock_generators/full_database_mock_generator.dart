@@ -4,12 +4,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:snggle/infra/entities/group_entity/group_entity.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
-import 'package:snggle/infra/entities/network_template_entity/embedded_network_template_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/solana_transaction_entity.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
-import 'package:snggle/objectbox.g.dart';
+import 'package:snggle/shared/objectbox/objectbox.g.dart';
 
 void main() {
   test('generates TransactionsDatabaseMock ObjectBox fixture', () async {
@@ -60,7 +59,7 @@ void seedTransactionsDatabaseMock(Store store) {
     final Box<WalletEntity> walletBox = store.box<WalletEntity>();
     final Box<NetworkGroupEntity> networkGroupBox = store.box<NetworkGroupEntity>();
     final Box<GroupEntity> groupBox = store.box<GroupEntity>();
-    final Box<EmbeddedNetworkTemplateEntity> embeddedNetworkTemplateBox = store.box<EmbeddedNetworkTemplateEntity>();
+    //final Box<EmbeddedNetworkTemplateEntity> embeddedNetworkTemplateBox = store.box<EmbeddedNetworkTemplateEntity>();
     final Box<EthereumTransactionEntity> ethereumTransactionBox = store.box<EthereumTransactionEntity>();
     final Box<SolanaTransactionEntity> solanaTransactionBox = store.box<SolanaTransactionEntity>();
 
@@ -68,7 +67,7 @@ void seedTransactionsDatabaseMock(Store store) {
     solanaTransactionBox.removeAll();
     walletBox.removeAll();
     networkGroupBox.removeAll();
-    embeddedNetworkTemplateBox.removeAll();
+    //embeddedNetworkTemplateBox.removeAll();
     vaultBox
       ..removeAll()
       ..putMany(
@@ -121,116 +120,47 @@ void seedTransactionsDatabaseMock(Store store) {
         ],
       );
 
-    EmbeddedNetworkTemplateEntity ethereumTemplate = EmbeddedNetworkTemplateEntity(
-      id: 0,
-      addressEncoderType: 'ethereum(false)',
-      dbCurveType: 'secp256k1',
-      derivationPathTemplate: "m/44'/60'/0'/0/{{i}}",
-      derivatorType: 'secp256k1',
-      name: 'Ethereum',
-      dbNetworkIconType: 'ethereum',
-      dbNetworkType: 'ethereum',
-      dbWalletType: 'legacy',
-    );
-
-    EmbeddedNetworkTemplateEntity solanaTemplate = EmbeddedNetworkTemplateEntity(
-      id: 0,
-      addressEncoderType: 'solana()',
-      dbCurveType: 'ed25519',
-      derivationPathTemplate: "m/44'/501'/{{i}}'/0'",
-      derivatorType: 'ed25519',
-      name: 'Solana',
-      dbNetworkIconType: 'solana',
-      dbNetworkType: 'solana',
-      dbWalletType: 'legacy',
-    );
-
-    embeddedNetworkTemplateBox.putMany(<EmbeddedNetworkTemplateEntity>[
-      ethereumTemplate,
-      solanaTemplate,
-    ]);
-
     networkGroupBox.putMany(<NetworkGroupEntity>[
       NetworkGroupEntity(
-        id: 0,
-        encryptedBool: false,
-        filesystemPathString: 'vault1/network1',
-        name: 'Ethereum1',
-        pinnedBool: false,
-        embeddedNetworkTemplate: ethereumTemplate,
-      ),
+          id: 0, encryptedBool: false, filesystemPathString: 'vault1/network1', name: 'Ethereum1', pinnedBool: false, dbNetworkType: 'ethereum'),
       NetworkGroupEntity(
-        id: 0,
-        encryptedBool: false,
-        filesystemPathString: 'vault2/network2',
-        name: 'Ethereum2',
-        pinnedBool: false,
-        embeddedNetworkTemplate: ethereumTemplate,
-      ),
+          id: 0, encryptedBool: false, filesystemPathString: 'vault2/network2', name: 'Ethereum2', pinnedBool: false, dbNetworkType: 'ethereum'),
       NetworkGroupEntity(
-        id: 0,
-        encryptedBool: false,
-        filesystemPathString: 'vault3/network3',
-        name: 'Ethereum3',
-        pinnedBool: false,
-        embeddedNetworkTemplate: ethereumTemplate,
-      ),
+          id: 0, encryptedBool: false, filesystemPathString: 'vault3/network3', name: 'Ethereum3', pinnedBool: false, dbNetworkType: 'ethereum'),
       NetworkGroupEntity(
-        id: 0,
-        encryptedBool: false,
-        filesystemPathString: 'group1/vault4/network4',
-        name: 'Ethereum4',
-        pinnedBool: false,
-        embeddedNetworkTemplate: ethereumTemplate,
-      ),
+          id: 0,
+          encryptedBool: false,
+          filesystemPathString: 'group1/vault4/network4',
+          name: 'Ethereum4',
+          pinnedBool: false,
+          dbNetworkType: 'ethereum'),
       NetworkGroupEntity(
-        id: 0,
-        encryptedBool: false,
-        filesystemPathString: 'group1/vault5/network5',
-        name: 'Ethereum5',
-        pinnedBool: false,
-        embeddedNetworkTemplate: ethereumTemplate,
-      ),
+          id: 0,
+          encryptedBool: false,
+          filesystemPathString: 'group1/vault5/network5',
+          name: 'Ethereum5',
+          pinnedBool: false,
+          dbNetworkType: 'ethereum'),
       NetworkGroupEntity(
-        id: 0,
-        encryptedBool: false,
-        filesystemPathString: 'vault1/group2/network6',
-        name: 'Ethereum6',
-        pinnedBool: false,
-        embeddedNetworkTemplate: ethereumTemplate,
-      ),
+          id: 0,
+          encryptedBool: false,
+          filesystemPathString: 'vault1/group2/network6',
+          name: 'Ethereum6',
+          pinnedBool: false,
+          dbNetworkType: 'ethereum'),
       NetworkGroupEntity(
-        id: 0,
-        encryptedBool: false,
-        filesystemPathString: 'vault1/network7',
-        name: 'Ethereum7',
-        pinnedBool: false,
-        embeddedNetworkTemplate: ethereumTemplate,
-      ),
+          id: 0, encryptedBool: false, filesystemPathString: 'vault1/network7', name: 'Ethereum7', pinnedBool: false, dbNetworkType: 'ethereum'),
       NetworkGroupEntity(
-        id: 0,
-        encryptedBool: false,
-        filesystemPathString: 'vault1/group2/network8',
-        name: 'Ethereum8',
-        pinnedBool: false,
-        embeddedNetworkTemplate: ethereumTemplate,
-      ),
+          id: 0,
+          encryptedBool: false,
+          filesystemPathString: 'vault1/group2/network8',
+          name: 'Ethereum8',
+          pinnedBool: false,
+          dbNetworkType: 'ethereum'),
       NetworkGroupEntity(
-        id: 0,
-        encryptedBool: false,
-        filesystemPathString: 'vault1/network9',
-        name: 'Ethereum9',
-        pinnedBool: false,
-        embeddedNetworkTemplate: ethereumTemplate,
-      ),
+          id: 0, encryptedBool: false, filesystemPathString: 'vault1/network9', name: 'Ethereum9', pinnedBool: false, dbNetworkType: 'ethereum'),
       NetworkGroupEntity(
-        id: 0,
-        encryptedBool: false,
-        filesystemPathString: 'vault1/network10',
-        name: 'Solana1',
-        pinnedBool: false,
-        embeddedNetworkTemplate: solanaTemplate,
-      ),
+          id: 0, encryptedBool: false, filesystemPathString: 'vault1/network10', name: 'Solana1', pinnedBool: false, dbNetworkType: 'solana'),
     ]);
 
     groupBox.putMany(
