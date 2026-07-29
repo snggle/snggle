@@ -62,8 +62,8 @@ void main() {
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
 
       // Assert
-      expect(
-        () => globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath),
+      await expectLater(
+        globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -73,8 +73,8 @@ void main() {
       FilesystemPath actualFilesystemPath = FilesystemPath.fromString('id1/not_existing_path');
 
       // Assert
-      expect(
-        () => globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath),
+      await expectLater(
+        globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -224,10 +224,11 @@ void main() {
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage (1st depth)', () async {
       // Assert
       expect(
-        () => globalLocator<SecretsRepository>().move(
-          FilesystemPath.fromString('not_existing_path'),
-          FilesystemPath.fromString('id1/not_existing_path'),
-        ),
+            () =>
+            globalLocator<SecretsRepository>().move(
+              FilesystemPath.fromString('not_existing_path'),
+              FilesystemPath.fromString('id1/not_existing_path'),
+            ),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -235,10 +236,11 @@ void main() {
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage (2nd depth)', () async {
       // Assert
       expect(
-        () => globalLocator<SecretsRepository>().move(
-          FilesystemPath.fromString('id1/not_existing_path'),
-          FilesystemPath.fromString('not_existing_path'),
-        ),
+            () =>
+            globalLocator<SecretsRepository>().move(
+              FilesystemPath.fromString('id1/not_existing_path'),
+              FilesystemPath.fromString('not_existing_path'),
+            ),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -287,7 +289,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<SecretsRepository>().delete(actualFilesystemPath),
+            () => globalLocator<SecretsRepository>().delete(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -298,7 +300,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<SecretsRepository>().delete(actualFilesystemPath),
+            () => globalLocator<SecretsRepository>().delete(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

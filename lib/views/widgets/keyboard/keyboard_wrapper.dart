@@ -3,14 +3,14 @@ import 'package:snggle/views/widgets/keyboard/keyboard.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
 
 class KeyboardWrapper extends StatefulWidget {
-  final List<String> availableHints;
-  final KeyboardValueNotifier keyboardValueNotifier;
-  final Widget child;
+  final List<String> _availableHints;
+  final KeyboardValueNotifier _keyboardValueNotifier;
+  final Widget _child;
 
   const KeyboardWrapper({
-    required this.availableHints,
-    required this.keyboardValueNotifier,
-    required this.child,
+    required this._availableHints,
+    required this._keyboardValueNotifier,
+    required this._child,
     super.key,
   });
 
@@ -19,7 +19,7 @@ class KeyboardWrapper extends StatefulWidget {
 }
 
 class _KeyboardWrapperState extends State<KeyboardWrapper> with SingleTickerProviderStateMixin {
-  late final AnimationController animationController = AnimationController(
+  late final AnimationController _animationController = AnimationController(
     duration: const Duration(milliseconds: 150),
     vsync: this,
   );
@@ -27,13 +27,13 @@ class _KeyboardWrapperState extends State<KeyboardWrapper> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-    widget.keyboardValueNotifier.addListener(_handleKeyboardVisibilityChange);
+    widget._keyboardValueNotifier.addListener(_handleKeyboardVisibilityChange);
   }
 
   @override
   void dispose() {
-    animationController.dispose();
-    widget.keyboardValueNotifier.removeListener(_handleKeyboardVisibilityChange);
+    _animationController.dispose();
+    widget._keyboardValueNotifier.removeListener(_handleKeyboardVisibilityChange);
     super.dispose();
   }
 
@@ -42,13 +42,13 @@ class _KeyboardWrapperState extends State<KeyboardWrapper> with SingleTickerProv
     return Stack(
       children: <Widget>[
         ValueListenableBuilder<bool>(
-          valueListenable: widget.keyboardValueNotifier,
+          valueListenable: widget._keyboardValueNotifier,
           builder: (BuildContext context, bool customKeyboardVisibleBool, _) {
             return Positioned.fill(
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 100),
                 padding: customKeyboardVisibleBool ? const EdgeInsets.only(bottom: Keyboard.height) : EdgeInsets.zero,
-                child: widget.child,
+                child: widget._child,
               ),
             );
           },
@@ -57,16 +57,18 @@ class _KeyboardWrapperState extends State<KeyboardWrapper> with SingleTickerProv
           bottom: 0,
           left: 0,
           right: 0,
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 1),
-              end: Offset.zero,
-            ).animate(animationController),
-            child: GestureDetector(
-              onTap: () {},
-              child: Keyboard(
-                keyboardValueNotifier: widget.keyboardValueNotifier,
-                availableHints: widget.availableHints,
+          child: ClipRect(
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, 1),
+                end: Offset.zero,
+              ).animate(_animationController),
+              child: GestureDetector(
+                onTap: () {},
+                child: Keyboard(
+                  keyboardValueNotifier: widget._keyboardValueNotifier,
+                  availableHints: widget._availableHints,
+                ),
               ),
             ),
           ),
@@ -76,11 +78,11 @@ class _KeyboardWrapperState extends State<KeyboardWrapper> with SingleTickerProv
   }
 
   Future<void> _handleKeyboardVisibilityChange() async {
-    bool keyboardVisibleBool = widget.keyboardValueNotifier.isVisible();
+    bool keyboardVisibleBool = widget._keyboardValueNotifier.isVisible();
     if (keyboardVisibleBool) {
-      await animationController.forward();
+      await _animationController.forward();
     } else {
-      await animationController.reverse();
+      await _animationController.reverse();
     }
   }
 }

@@ -24,9 +24,8 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
   final FilesystemPath _parentFilesystemPath;
 
   VaultCreatePageCubit({
-    required FilesystemPath parentFilesystemPath,
-  })  : _parentFilesystemPath = parentFilesystemPath,
-        super(const VaultCreatePageState());
+    required this._parentFilesystemPath,
+  }) : super(const VaultCreatePageState());
 
   @override
   Future<void> close() async {
@@ -51,10 +50,12 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
       vaultNameTextEditingController.text = 'Vault ${lastVaultIndex + 1}';
     }
 
-    emit(state.copyWith(
-      mnemonicFormVisibleBool: true,
-      mnemonicModel: mnemonicModel,
-    ));
+    emit(
+      state.copyWith(
+        mnemonicFormVisibleBool: true,
+        mnemonicModel: mnemonicModel,
+      ),
+    );
   }
 
   Future<void> saveMnemonic() async {
@@ -99,7 +100,10 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
     NetworkTemplateModel networkTemplateModelSolana = PredefinedNetworkTemplates.solana;
 
     await _networkGroupsModelFactory.createNewNetworkGroup(
-        vaultModel.filesystemPath, networkTemplateModelEthereum.name, networkTemplateModelEthereum);
+      vaultModel.filesystemPath,
+      networkTemplateModelEthereum.name,
+      networkTemplateModelEthereum,
+    );
     await _networkGroupsModelFactory.createNewNetworkGroup(vaultModel.filesystemPath, networkTemplateModelSolana.name, networkTemplateModelSolana);
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_cubit.dart';
 import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recover_page_state.dart';
 import 'package:snggle/config/locator.dart';
@@ -160,24 +160,26 @@ void main() {
         expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
       });
 
-      test('Should [return VaultRecoverPageState] with [mnemonicFilledBool == TRUE], [mnemonicValidBool == FALSE] if [fields FILLED] but [mnemonic INVALID]',
-          () {
-        // Arrange
-        List<String> actualMnemonic = List<String>.generate(12, (int index) => 'assist');
+      test(
+          'Should [return VaultRecoverPageState] with [mnemonicFilledBool == TRUE], [mnemonicValidBool == FALSE] if [fields FILLED] but [mnemonic INVALID]',
+              () {
+            // Arrange
+            List<String> actualMnemonic = List<String>.generate(12, (int index) => 'assist');
 
-        // Act
-        // Imitate entering mnemonic words
-        for (int i = 0; i < 12; i++) {
-          actualVaultRecoverPageCubit.state.textControllers![i].text = actualMnemonic[i];
-          actualVaultRecoverPageCubit.state.textControllers![i].notifyListeners();
-        }
+            // Act
+            // Imitate entering mnemonic words
+            for (int i = 0; i < 12; i++) {
+              actualVaultRecoverPageCubit.state.textControllers![i].text = actualMnemonic[i];
+              actualVaultRecoverPageCubit.state.textControllers![i].notifyListeners();
+            }
 
-        // Assert
-        expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, true);
-        expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
-      });
+            // Assert
+            expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, true);
+            expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
+          });
 
-      test('Should [return VaultRecoverPageState] with [mnemonicFilledBool == TRUE], [mnemonicValidBool == TRUE] if [fields FILLED] and [mnemonic VALID]', () {
+      test(
+          'Should [return VaultRecoverPageState] with [mnemonicFilledBool == TRUE], [mnemonicValidBool == TRUE] if [fields FILLED] and [mnemonic VALID]', () {
         // Arrange
         // @formatter:off
         List<String> actualMnemonic = <String>[
@@ -199,24 +201,25 @@ void main() {
     });
 
     group('Tests of VaultRecoverPageCubit.saveMnemonic() method', () {
-      test('Should [return VaultRecoverPageState] with [mnemonicFilledBool == TRUE], [mnemonicValidBool == FALSE] if [fields FILLED] but [mnemonic INVALID]',
-          () async {
-        // Arrange
-        List<String> actualMnemonic = List<String>.generate(12, (int index) => 'assist');
+      test(
+          'Should [return VaultRecoverPageState] with [mnemonicFilledBool == TRUE], [mnemonicValidBool == FALSE] if [fields FILLED] but [mnemonic INVALID]',
+              () async {
+            // Arrange
+            List<String> actualMnemonic = List<String>.generate(12, (int index) => 'assist');
 
-        // Act
-        // Imitate entering mnemonic words
-        for (int i = 0; i < 12; i++) {
-          actualVaultRecoverPageCubit.state.textControllers![i].text = actualMnemonic[i];
-          actualVaultRecoverPageCubit.state.textControllers![i].notifyListeners();
-        }
+            // Act
+            // Imitate entering mnemonic words
+            for (int i = 0; i < 12; i++) {
+              actualVaultRecoverPageCubit.state.textControllers![i].text = actualMnemonic[i];
+              actualVaultRecoverPageCubit.state.textControllers![i].notifyListeners();
+            }
 
-        // Assert
-        expect(
-          () async => actualVaultRecoverPageCubit.saveMnemonic(),
-          throwsA(isA<Exception>()),
-        );
-      });
+            // Assert
+            expect(
+                  () async => actualVaultRecoverPageCubit.saveMnemonic(),
+              throwsA(isA<Exception>()),
+            );
+          });
 
       test('Should [return VaultRecoverPageState] with new vault in database', () async {
         // Arrange

@@ -14,14 +14,14 @@ Use git clone to download [Snggle](https://github.com/snggle/snggle) project.
 git clone git@github.com:snggle/snggle.git
 ```
 
-The project runs on flutter version **3.16.9**. You can
+The project runs on flutter version **3.44.7**. You can
 use [fvm](https://fvm.app/documentation/getting-started/installation)
 for easy switching between versions otherwise see [flutter installation](https://docs.flutter.dev/get-started/install)
 
 ```bash
 # Install and use required flutter version
-fvm install 3.16.9
-fvm use 3.16.9
+fvm install 3.44.7
+fvm use 3.44.7
 
 # Install required packages in pubspec.yaml
 fvm flutter pub get

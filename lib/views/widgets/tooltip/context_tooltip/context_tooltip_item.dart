@@ -18,7 +18,7 @@ class ContextTooltipItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget buttonWidget = TextButton(
-      style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero)),
+      style: ButtonStyle(padding: WidgetStateProperty.all(EdgeInsets.zero)),
       onPressed: onTap,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

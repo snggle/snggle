@@ -29,8 +29,8 @@ class VaultContainerIcon extends StatelessWidget {
     this.backgroundColor,
     this.child,
     super.key,
-  })  : pinnedBool = vaultModel.pinnedBool,
-        encryptedBool = vaultModel.encryptedBool;
+  }) : pinnedBool = vaultModel.pinnedBool,
+       encryptedBool = vaultModel.encryptedBool;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class VaultContainerIcon extends StatelessWidget {
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
                   child: Container(
-                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
+                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.5)),
                   ),
                 ),
               ),

@@ -65,7 +65,6 @@ analyzer:
     # Group: STYLES
     always_declare_return_types: error # // pedantic
     always_put_control_body_on_new_line: error
-    always_require_non_null_named_parameters: error # recommended flutter // pedantic
     annotate_overrides: error # recommended flutter // pedantic
     # avoid_catches_without_on_clauses: ignore # doesn't catch all exceptions when using "on" clause // effective_dart
     avoid_catching_errors: error # // effective_dart
@@ -73,12 +72,10 @@ analyzer:
     # avoid_equals_and_hash_code_on_mutable_classes: ignore # // effective_dart
     avoid_function_literals_in_foreach_calls: error # recommended flutter // effective_dart
     avoid_init_to_null: error # recommended flutter // pedantic effective_dart
-    avoid_null_checks_in_equality_operators: error # recommended flutter // pedantic effective_dart
     avoid_positional_boolean_parameters: error # // effective_dart
     # avoid_private_typedef_functions: ignore # // effective_dart
     avoid_renaming_method_parameters: error # recommended flutter
     avoid_return_types_on_setters: error # recommended flutter // pedantic effective_dart
-    avoid_returning_null: error # // effective_dart
     avoid_returning_null_for_void: error # recommended flutter
     avoid_returning_this: error # // effective_dart
     # avoid_setters_without_getters: error # // effective_dart
@@ -108,7 +105,6 @@ analyzer:
     #omit_local_variable_types: ignore # // pedantic effective_dart
     # one_member_abstracts: error # // effective_dart
     overridden_fields: error # recommended flutter
-    package_api_docs: error # // effective_dart
     package_prefixed_library_names: error # core recommended flutter
     prefer_adjacent_string_concatenation: error # recommended flutter // pedantic effective_dart
     prefer_collection_literals: error # recommended flutter // pedantic effective_dart
@@ -118,7 +114,6 @@ analyzer:
     prefer_const_declarations: error # flutter
     prefer_const_literals_to_create_immutables: error # flutter
     prefer_contains: error # recommended flutter // pedantic
-    prefer_equal_for_default_values: error # recommended flutter // pedantic effective_dart
     prefer_final_fields: error # recommended flutter // pedantic effective_dart
     prefer_for_elements_to_map_fromIterable: error # recommended flutter // pedantic
     prefer_function_declarations_over_variables: error # recommended flutter // effective_dart
@@ -178,7 +173,6 @@ analyzer:
     avoid_double_and_int_checks: error
     avoid_escaping_inner_quotes: error
     avoid_js_rounded_ints: error
-    avoid_returning_null_for_future: error
     avoid_unused_constructor_parameters: error
     avoid_void_async: error
     cascade_invocations: error
@@ -200,6 +194,9 @@ analyzer:
     use_named_constants: error
     use_raw_strings: error
     use_string_buffers: error
+
+formatter:
+  trailing_commas: preserve
 
 linter:
   rules:
@@ -226,10 +223,6 @@ linter:
     # Avoid relative imports for files in lib/.
     # core recommended flutter // pedantic effective_dart
     #- avoid_relative_lib_imports # overlaps with always_use_package_imports
-
-    # Dart SDK: >= 2.1.1-dev.0.0 • (Linter v0.1.72)
-    # Avoid returning null for Future.
-    - avoid_returning_null_for_future
 
     # Dart SDK: >= 2.0.0 • (Linter v0.1.30)
     # Avoid slow async dart:io methods.
@@ -374,11 +367,6 @@ linter:
     # Put @required named parameters first.
     - always_put_required_named_parameters_first
 
-    # Dart SDK: >= 2.0.0 • (Linter v0.1.31)
-    # Specify @required on named parameters without defaults.
-    # recommended flutter // pedantic
-    - always_require_non_null_named_parameters
-
     # Dart SDK: >= 2.0.0 • (Linter v0.1.4)
     # Specify type annotations.
     - always_specify_types
@@ -454,10 +442,6 @@ linter:
     # Don't declare multiple variables on a single line.
     #- avoid_multiple_declarations_per_line
 
-    # dart Don't check for null in custom == operators.
-    # recommended flutter // pedantic effective_dart
-    - avoid_null_checks_in_equality_operators
-
     # Dart SDK: >= 2.0.0 • (Linter v0.1.31)
     # Avoid positional boolean parameters.
     # // effective_dart
@@ -481,11 +465,6 @@ linter:
     # Avoid return types on setters.
     # recommended flutter // pedantic effective_dart
     - avoid_return_types_on_setters
-
-    # Dart SDK: >= 2.0.0 • (Linter v0.1.31)
-    # Avoid returning null from members whose return type is bool, double, int, or num.
-    # // effective_dart
-    - avoid_returning_null
 
     # Dart SDK: >= 2.1.0-dev.8.0 • (Linter v0.1.69)
     # Avoid returning null for void.
@@ -713,11 +692,6 @@ linter:
     - overridden_fields
 
     # Dart SDK: >= 2.0.0 • (Linter v0.1.1)
-    # Provide doc comments for all public APIs.
-    # // effective_dart
-    - package_api_docs
-
-    # Dart SDK: >= 2.0.0 • (Linter v0.1.1)
     # Prefix library names with the package name and a dot-separated path.
     # core recommended flutter
     - package_prefixed_library_names
@@ -785,11 +759,6 @@ linter:
     # Dart SDK: >= 2.3.2-dev.0.0 • (Linter v0.1.88)
     # Prefer double quotes where they won't require escape sequences.
     #- prefer_double_quotes
-
-    # Dart SDK: >= 2.0.0 • (Linter v0.1.46)
-    # Use = to separate a named parameter from its default value.
-    # recommended flutter // pedantic effective_dart
-    - prefer_equal_for_default_values
 
     # Dart SDK: >= 2.0.0 • (Linter v0.1.30)
     # Use => for short members whose body is a single return statement.

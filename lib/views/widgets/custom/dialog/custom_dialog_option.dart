@@ -25,16 +25,17 @@ class CustomDialogOption extends StatelessWidget {
     return SizedBox(
       height: 36,
       child: TextButton(
-        style: TextButton.styleFrom(
-          splashFactory: NoSplash.splashFactory,
-          shadowColor: Colors.transparent,
-          padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 5),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-          ),
-        ).copyWith(
-          overlayColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) => Colors.transparent),
-        ),
+        style:
+            TextButton.styleFrom(
+              splashFactory: NoSplash.splashFactory,
+              shadowColor: Colors.transparent,
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 5),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
+            ).copyWith(
+              overlayColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) => Colors.transparent),
+            ),
         onPressed: _buttonEnabledBool ? () => _pressButton(context) : null,
         child: Text(
           label,

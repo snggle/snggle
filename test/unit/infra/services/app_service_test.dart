@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/parent_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
@@ -78,7 +78,7 @@ void main() {
 
       // Assert
       Map<String, String> actualDatabaseValue = await const FlutterSecureStorage().readAll();
-      expect(actualDatabaseValue, <String, dynamic>{});
+      expect(actualDatabaseValue, <String, String>{});
     });
 
     test('Should [close Isar] and [prevent further DB operations] if [Isar OPEN]', () async {
@@ -173,5 +173,4 @@ void main() {
       expect(actualDatabaseExistBool, true);
     });
   });
-  tearDownAll(testDatabase.close);
 }

@@ -21,6 +21,7 @@ const NetworkGroupEntitySchema = CollectionSchema(
       id: 0,
       name: r'embeddedNetworkTemplate',
       type: IsarType.object,
+
       target: r'EmbeddedNetworkTemplateEntity',
     ),
     r'encryptedBool': PropertySchema(
@@ -33,17 +34,14 @@ const NetworkGroupEntitySchema = CollectionSchema(
       name: r'filesystemPathString',
       type: IsarType.string,
     ),
-    r'name': PropertySchema(
-      id: 3,
-      name: r'name',
-      type: IsarType.string,
-    ),
+    r'name': PropertySchema(id: 3, name: r'name', type: IsarType.string),
     r'pinnedBool': PropertySchema(
       id: 4,
       name: r'pinnedBool',
       type: IsarType.bool,
-    )
+    ),
   },
+
   estimateSize: _networkGroupEntityEstimateSize,
   serialize: _networkGroupEntitySerialize,
   deserialize: _networkGroupEntityDeserialize,
@@ -60,18 +58,19 @@ const NetworkGroupEntitySchema = CollectionSchema(
           name: r'filesystemPathString',
           type: IndexType.hash,
           caseSensitive: true,
-        )
+        ),
       ],
-    )
+    ),
   },
   links: {},
   embeddedSchemas: {
-    r'EmbeddedNetworkTemplateEntity': EmbeddedNetworkTemplateEntitySchema
+    r'EmbeddedNetworkTemplateEntity': EmbeddedNetworkTemplateEntitySchema,
   },
+
   getId: _networkGroupEntityGetId,
   getLinks: _networkGroupEntityGetLinks,
   attach: _networkGroupEntityAttach,
-  version: '3.1.0+1',
+  version: '3.3.2',
 );
 
 int _networkGroupEntityEstimateSize(
@@ -80,11 +79,13 @@ int _networkGroupEntityEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 +
+  bytesCount +=
+      3 +
       EmbeddedNetworkTemplateEntitySchema.estimateSize(
-          object.embeddedNetworkTemplate,
-          allOffsets[EmbeddedNetworkTemplateEntity]!,
-          allOffsets);
+        object.embeddedNetworkTemplate,
+        allOffsets[EmbeddedNetworkTemplateEntity]!,
+        allOffsets,
+      );
   bytesCount += 3 + object.filesystemPathString.length * 3;
   bytesCount += 3 + object.name.length * 3;
   return bytesCount;
@@ -117,11 +118,11 @@ NetworkGroupEntity _networkGroupEntityDeserialize(
   final object = NetworkGroupEntity(
     embeddedNetworkTemplate:
         reader.readObjectOrNull<EmbeddedNetworkTemplateEntity>(
-              offsets[0],
-              EmbeddedNetworkTemplateEntitySchema.deserialize,
-              allOffsets,
-            ) ??
-            EmbeddedNetworkTemplateEntity(),
+          offsets[0],
+          EmbeddedNetworkTemplateEntitySchema.deserialize,
+          allOffsets,
+        ) ??
+        EmbeddedNetworkTemplateEntity(),
     encryptedBool: reader.readBool(offsets[1]),
     filesystemPathString: reader.readString(offsets[2]),
     id: id,
@@ -140,11 +141,12 @@ P _networkGroupEntityDeserializeProp<P>(
   switch (propertyId) {
     case 0:
       return (reader.readObjectOrNull<EmbeddedNetworkTemplateEntity>(
-            offset,
-            EmbeddedNetworkTemplateEntitySchema.deserialize,
-            allOffsets,
-          ) ??
-          EmbeddedNetworkTemplateEntity()) as P;
+                offset,
+                EmbeddedNetworkTemplateEntitySchema.deserialize,
+                allOffsets,
+              ) ??
+              EmbeddedNetworkTemplateEntity())
+          as P;
     case 1:
       return (reader.readBool(offset)) as P;
     case 2:
@@ -163,12 +165,16 @@ Id _networkGroupEntityGetId(NetworkGroupEntity object) {
 }
 
 List<IsarLinkBase<dynamic>> _networkGroupEntityGetLinks(
-    NetworkGroupEntity object) {
+  NetworkGroupEntity object,
+) {
   return [];
 }
 
 void _networkGroupEntityAttach(
-    IsarCollection<dynamic> col, Id id, NetworkGroupEntity object) {}
+  IsarCollection<dynamic> col,
+  Id id,
+  NetworkGroupEntity object,
+) {}
 
 extension NetworkGroupEntityQueryWhereSort
     on QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QWhere> {
@@ -182,17 +188,14 @@ extension NetworkGroupEntityQueryWhereSort
 extension NetworkGroupEntityQueryWhere
     on QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QWhereClause> {
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterWhereClause>
-      idEqualTo(Id id) {
+  idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
-      ));
+      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterWhereClause>
-      idNotEqualTo(Id id) {
+  idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -215,7 +218,7 @@ extension NetworkGroupEntityQueryWhere
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterWhereClause>
-      idGreaterThan(Id id, {bool include = false}) {
+  idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -224,7 +227,7 @@ extension NetworkGroupEntityQueryWhere
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterWhereClause>
-      idLessThan(Id id, {bool include = false}) {
+  idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -233,63 +236,75 @@ extension NetworkGroupEntityQueryWhere
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterWhereClause>
-      idBetween(
+  idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
-        includeLower: includeLower,
-        upper: upperId,
-        includeUpper: includeUpper,
-      ));
+      return query.addWhereClause(
+        IdWhereClause.between(
+          lower: lowerId,
+          includeLower: includeLower,
+          upper: upperId,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterWhereClause>
-      filesystemPathStringEqualTo(String filesystemPathString) {
+  filesystemPathStringEqualTo(String filesystemPathString) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'filesystemPathString',
-        value: [filesystemPathString],
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(
+          indexName: r'filesystemPathString',
+          value: [filesystemPathString],
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterWhereClause>
-      filesystemPathStringNotEqualTo(String filesystemPathString) {
+  filesystemPathStringNotEqualTo(String filesystemPathString) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'filesystemPathString',
-              lower: [],
-              upper: [filesystemPathString],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'filesystemPathString',
-              lower: [filesystemPathString],
-              includeLower: false,
-              upper: [],
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'filesystemPathString',
+                lower: [],
+                upper: [filesystemPathString],
+                includeUpper: false,
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'filesystemPathString',
+                lower: [filesystemPathString],
+                includeLower: false,
+                upper: [],
+              ),
+            );
       } else {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'filesystemPathString',
-              lower: [filesystemPathString],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'filesystemPathString',
-              lower: [],
-              upper: [filesystemPathString],
-              includeUpper: false,
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'filesystemPathString',
+                lower: [filesystemPathString],
+                includeLower: false,
+                upper: [],
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'filesystemPathString',
+                lower: [],
+                upper: [filesystemPathString],
+                includeUpper: false,
+              ),
+            );
       }
     });
   }
@@ -298,63 +313,65 @@ extension NetworkGroupEntityQueryWhere
 extension NetworkGroupEntityQueryFilter
     on QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QFilterCondition> {
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      encryptedBoolEqualTo(bool value) {
+  encryptedBoolEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'encryptedBool',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'encryptedBool', value: value),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      filesystemPathStringEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  filesystemPathStringEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'filesystemPathString',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'filesystemPathString',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      filesystemPathStringGreaterThan(
+  filesystemPathStringGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'filesystemPathString',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'filesystemPathString',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      filesystemPathStringLessThan(
+  filesystemPathStringLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'filesystemPathString',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'filesystemPathString',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      filesystemPathStringBetween(
+  filesystemPathStringBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -362,191 +379,198 @@ extension NetworkGroupEntityQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'filesystemPathString',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'filesystemPathString',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      filesystemPathStringStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  filesystemPathStringStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'filesystemPathString',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'filesystemPathString',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      filesystemPathStringEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  filesystemPathStringEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'filesystemPathString',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'filesystemPathString',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      filesystemPathStringContains(String value, {bool caseSensitive = true}) {
+  filesystemPathStringContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'filesystemPathString',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'filesystemPathString',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      filesystemPathStringMatches(String pattern, {bool caseSensitive = true}) {
+  filesystemPathStringMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'filesystemPathString',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'filesystemPathString',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      filesystemPathStringIsEmpty() {
+  filesystemPathStringIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'filesystemPathString',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'filesystemPathString', value: ''),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      filesystemPathStringIsNotEmpty() {
+  filesystemPathStringIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'filesystemPathString',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          property: r'filesystemPathString',
+          value: '',
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      idEqualTo(Id value) {
+  idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'id', value: value),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      idGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
+  idGreaterThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      idLessThan(
-    Id value, {
-    bool include = false,
-  }) {
+  idLessThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      idBetween(
+  idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'id',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      nameEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  nameEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      nameGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      nameLessThan(
+  nameGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      nameBetween(
+  nameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
+  nameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -554,94 +578,95 @@ extension NetworkGroupEntityQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'name',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'name',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      nameStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  nameStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      nameEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  nameEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      nameContains(String value, {bool caseSensitive = true}) {
+  nameContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      nameMatches(String pattern, {bool caseSensitive = true}) {
+  nameMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'name',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'name',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      nameIsEmpty() {
+  nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'name', value: ''),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      nameIsNotEmpty() {
+  nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'name',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'name', value: ''),
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      pinnedBoolEqualTo(bool value) {
+  pinnedBoolEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'pinnedBool',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'pinnedBool', value: value),
+      );
     });
   }
 }
@@ -649,7 +674,7 @@ extension NetworkGroupEntityQueryFilter
 extension NetworkGroupEntityQueryObject
     on QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QFilterCondition> {
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterFilterCondition>
-      embeddedNetworkTemplate(FilterQuery<EmbeddedNetworkTemplateEntity> q) {
+  embeddedNetworkTemplate(FilterQuery<EmbeddedNetworkTemplateEntity> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'embeddedNetworkTemplate');
     });
@@ -662,56 +687,56 @@ extension NetworkGroupEntityQueryLinks
 extension NetworkGroupEntityQuerySortBy
     on QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QSortBy> {
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      sortByEncryptedBool() {
+  sortByEncryptedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'encryptedBool', Sort.asc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      sortByEncryptedBoolDesc() {
+  sortByEncryptedBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'encryptedBool', Sort.desc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      sortByFilesystemPathString() {
+  sortByFilesystemPathString() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filesystemPathString', Sort.asc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      sortByFilesystemPathStringDesc() {
+  sortByFilesystemPathStringDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filesystemPathString', Sort.desc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      sortByName() {
+  sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      sortByNameDesc() {
+  sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      sortByPinnedBool() {
+  sortByPinnedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinnedBool', Sort.asc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      sortByPinnedBoolDesc() {
+  sortByPinnedBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinnedBool', Sort.desc);
     });
@@ -721,70 +746,70 @@ extension NetworkGroupEntityQuerySortBy
 extension NetworkGroupEntityQuerySortThenBy
     on QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QSortThenBy> {
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      thenByEncryptedBool() {
+  thenByEncryptedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'encryptedBool', Sort.asc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      thenByEncryptedBoolDesc() {
+  thenByEncryptedBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'encryptedBool', Sort.desc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      thenByFilesystemPathString() {
+  thenByFilesystemPathString() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filesystemPathString', Sort.asc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      thenByFilesystemPathStringDesc() {
+  thenByFilesystemPathStringDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filesystemPathString', Sort.desc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      thenById() {
+  thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      thenByIdDesc() {
+  thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      thenByName() {
+  thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      thenByNameDesc() {
+  thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      thenByPinnedBool() {
+  thenByPinnedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinnedBool', Sort.asc);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QAfterSortBy>
-      thenByPinnedBoolDesc() {
+  thenByPinnedBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinnedBool', Sort.desc);
     });
@@ -794,29 +819,31 @@ extension NetworkGroupEntityQuerySortThenBy
 extension NetworkGroupEntityQueryWhereDistinct
     on QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QDistinct> {
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QDistinct>
-      distinctByEncryptedBool() {
+  distinctByEncryptedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'encryptedBool');
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QDistinct>
-      distinctByFilesystemPathString({bool caseSensitive = true}) {
+  distinctByFilesystemPathString({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'filesystemPathString',
-          caseSensitive: caseSensitive);
+      return query.addDistinctBy(
+        r'filesystemPathString',
+        caseSensitive: caseSensitive,
+      );
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QDistinct>
-      distinctByName({bool caseSensitive = true}) {
+  distinctByName({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<NetworkGroupEntity, NetworkGroupEntity, QDistinct>
-      distinctByPinnedBool() {
+  distinctByPinnedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'pinnedBool');
     });
@@ -831,22 +858,26 @@ extension NetworkGroupEntityQueryProperty
     });
   }
 
-  QueryBuilder<NetworkGroupEntity, EmbeddedNetworkTemplateEntity,
-      QQueryOperations> embeddedNetworkTemplateProperty() {
+  QueryBuilder<
+    NetworkGroupEntity,
+    EmbeddedNetworkTemplateEntity,
+    QQueryOperations
+  >
+  embeddedNetworkTemplateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'embeddedNetworkTemplate');
     });
   }
 
   QueryBuilder<NetworkGroupEntity, bool, QQueryOperations>
-      encryptedBoolProperty() {
+  encryptedBoolProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'encryptedBool');
     });
   }
 
   QueryBuilder<NetworkGroupEntity, String, QQueryOperations>
-      filesystemPathStringProperty() {
+  filesystemPathStringProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'filesystemPathString');
     });
@@ -859,7 +890,7 @@ extension NetworkGroupEntityQueryProperty
   }
 
   QueryBuilder<NetworkGroupEntity, bool, QQueryOperations>
-      pinnedBoolProperty() {
+  pinnedBoolProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pinnedBool');
     });

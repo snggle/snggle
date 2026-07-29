@@ -1,4 +1,4 @@
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
 import 'package:snggle/infra/services/secrets_service.dart';

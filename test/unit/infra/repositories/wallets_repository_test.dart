@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/wallet_entity/wallet_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
@@ -44,7 +44,8 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      List<String> actualDerivationPaths = await globalLocator<WalletsRepository>().getAllDerivationPaths(FilesystemPath.fromString('vault1/network1/group3/'));
+      List<String> actualDerivationPaths = await globalLocator<WalletsRepository>().getAllDerivationPaths(
+          FilesystemPath.fromString('vault1/network1/group3/'));
 
       // Assert
       List<String> expectedDerivationPaths = <String>[
@@ -132,7 +133,8 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
 
       // Act
-      List<WalletEntity> actualWalletEntityList = await globalLocator<WalletsRepository>().getAllByParentPath(FilesystemPath.fromString('vault1/network1'));
+      List<WalletEntity> actualWalletEntityList = await globalLocator<WalletsRepository>().getAllByParentPath(
+          FilesystemPath.fromString('vault1/network1'));
 
       // Assert
       List<WalletEntity> expectedWalletEntityList = <WalletEntity>[];
@@ -169,7 +171,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<WalletsRepository>().getById(99999999),
+            () => globalLocator<WalletsRepository>().getById(99999999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -352,7 +354,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<WalletsRepository>().deleteById(99999),
+            () => globalLocator<WalletsRepository>().deleteById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

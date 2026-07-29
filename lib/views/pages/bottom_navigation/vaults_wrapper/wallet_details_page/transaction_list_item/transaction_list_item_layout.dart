@@ -21,7 +21,7 @@ class TransactionListItemLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA).withOpacity(backgroundOpacity),
+        color: const Color(0xFFFAFAFA).withValues(alpha: backgroundOpacity),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

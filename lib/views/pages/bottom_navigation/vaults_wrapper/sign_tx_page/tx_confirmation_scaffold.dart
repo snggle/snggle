@@ -49,7 +49,7 @@ class TxConfirmationScaffold extends StatelessWidget {
         ),
         child: GradientScrollbar(
           scrollController: scrollController,
-          margin: const EdgeInsets.only(bottom: CustomBottomNavigationBar.height),
+          margin: const EdgeInsets.only(bottom: CustomBottomNavigationBar.contentHeight),
           child: SingleChildScrollView(
             controller: scrollController,
             padding: const EdgeInsets.all(16),

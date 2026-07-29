@@ -12,9 +12,8 @@ class AppWipeDialogCubit extends Cubit<AppWipeDialogState> {
   final VoidCallback _applicationWipedCallback;
 
   AppWipeDialogCubit({
-    required void Function() applicationWipedCallback,
-  })  : _applicationWipedCallback = applicationWipedCallback,
-        super(const AppWipeDialogState(confirmationsCount: 0));
+    required this._applicationWipedCallback,
+  }) : super(const AppWipeDialogState(confirmationsCount: 0));
 
   Future<void> confirm() async {
     if (state.confirmationsCount < AppWipeDialogState.requiredConfirmationsCount) {

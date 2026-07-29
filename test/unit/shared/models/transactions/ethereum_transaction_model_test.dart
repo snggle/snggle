@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
 import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart';
@@ -66,7 +66,7 @@ void main() {
             CborPathComponent(index: 60, hardened: true),
             CborPathComponent(index: 0, hardened: true),
             CborPathComponent(index: 0, hardened: false),
-            CborPathComponent(index: 0, hardened: false)
+            CborPathComponent(index: 0, hardened: false),
           ],
           sourceFingerprint: 2539474417,
         ),
@@ -74,8 +74,11 @@ void main() {
       );
 
       // Act
-      EthereumTransactionModel actualEthereumTransactionModel =
-          EthereumTransactionModel.fromCborEthSignRequest(1, '0xd6c63265857c51ee794964d2f98431b02db87ee7', actualCborEthSignRequest);
+      EthereumTransactionModel actualEthereumTransactionModel = EthereumTransactionModel.fromCborEthSignRequest(
+        1,
+        '0xd6c63265857c51ee794964d2f98431b02db87ee7',
+        actualCborEthSignRequest,
+      );
 
       // Assert
       EthereumTransactionModel expectedEthereumTransactionModel = EthereumTransactionModel(

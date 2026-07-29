@@ -34,11 +34,7 @@ const EmbeddedNetworkTemplateEntitySchema = Schema(
       name: r'derivatorType',
       type: IsarType.string,
     ),
-    r'name': PropertySchema(
-      id: 4,
-      name: r'name',
-      type: IsarType.string,
-    ),
+    r'name': PropertySchema(id: 4, name: r'name', type: IsarType.string),
     r'networkIconType': PropertySchema(
       id: 5,
       name: r'networkIconType',
@@ -56,8 +52,9 @@ const EmbeddedNetworkTemplateEntitySchema = Schema(
       name: r'walletType',
       type: IsarType.string,
       enumMap: _EmbeddedNetworkTemplateEntitywalletTypeEnumValueMap,
-    )
+    ),
   },
+
   estimateSize: _embeddedNetworkTemplateEntityEstimateSize,
   serialize: _embeddedNetworkTemplateEntitySerialize,
   deserialize: _embeddedNetworkTemplateEntityDeserialize,
@@ -145,17 +142,21 @@ EmbeddedNetworkTemplateEntity _embeddedNetworkTemplateEntityDeserialize(
 ) {
   final object = EmbeddedNetworkTemplateEntity(
     addressEncoderType: reader.readStringOrNull(offsets[0]),
-    curveType: _EmbeddedNetworkTemplateEntitycurveTypeValueEnumMap[
-        reader.readStringOrNull(offsets[1])],
+    curveType:
+        _EmbeddedNetworkTemplateEntitycurveTypeValueEnumMap[reader
+            .readStringOrNull(offsets[1])],
     derivationPathTemplate: reader.readStringOrNull(offsets[2]),
     derivatorType: reader.readStringOrNull(offsets[3]),
     name: reader.readStringOrNull(offsets[4]),
-    networkIconType: _EmbeddedNetworkTemplateEntitynetworkIconTypeValueEnumMap[
-        reader.readStringOrNull(offsets[5])],
-    networkType: _EmbeddedNetworkTemplateEntitynetworkTypeValueEnumMap[
-        reader.readStringOrNull(offsets[6])],
-    walletType: _EmbeddedNetworkTemplateEntitywalletTypeValueEnumMap[
-        reader.readStringOrNull(offsets[7])],
+    networkIconType:
+        _EmbeddedNetworkTemplateEntitynetworkIconTypeValueEnumMap[reader
+            .readStringOrNull(offsets[5])],
+    networkType:
+        _EmbeddedNetworkTemplateEntitynetworkTypeValueEnumMap[reader
+            .readStringOrNull(offsets[6])],
+    walletType:
+        _EmbeddedNetworkTemplateEntitywalletTypeValueEnumMap[reader
+            .readStringOrNull(offsets[7])],
   );
   return object;
 }
@@ -170,8 +171,9 @@ P _embeddedNetworkTemplateEntityDeserializeProp<P>(
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (_EmbeddedNetworkTemplateEntitycurveTypeValueEnumMap[
-          reader.readStringOrNull(offset)]) as P;
+      return (_EmbeddedNetworkTemplateEntitycurveTypeValueEnumMap[reader
+              .readStringOrNull(offset)])
+          as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
@@ -179,14 +181,17 @@ P _embeddedNetworkTemplateEntityDeserializeProp<P>(
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (_EmbeddedNetworkTemplateEntitynetworkIconTypeValueEnumMap[
-          reader.readStringOrNull(offset)]) as P;
+      return (_EmbeddedNetworkTemplateEntitynetworkIconTypeValueEnumMap[reader
+              .readStringOrNull(offset)])
+          as P;
     case 6:
-      return (_EmbeddedNetworkTemplateEntitynetworkTypeValueEnumMap[
-          reader.readStringOrNull(offset)]) as P;
+      return (_EmbeddedNetworkTemplateEntitynetworkTypeValueEnumMap[reader
+              .readStringOrNull(offset)])
+          as P;
     case 7:
-      return (_EmbeddedNetworkTemplateEntitywalletTypeValueEnumMap[
-          reader.readStringOrNull(offset)]) as P;
+      return (_EmbeddedNetworkTemplateEntitywalletTypeValueEnumMap[reader
+              .readStringOrNull(offset)])
+          as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -229,76 +234,106 @@ const _EmbeddedNetworkTemplateEntitywalletTypeValueEnumMap = {
   r'legacy': WalletType.legacy,
 };
 
-extension EmbeddedNetworkTemplateEntityQueryFilter on QueryBuilder<
+extension EmbeddedNetworkTemplateEntityQueryFilter
+    on
+        QueryBuilder<
+          EmbeddedNetworkTemplateEntity,
+          EmbeddedNetworkTemplateEntity,
+          QFilterCondition
+        > {
+  QueryBuilder<
     EmbeddedNetworkTemplateEntity,
     EmbeddedNetworkTemplateEntity,
-    QFilterCondition> {
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> addressEncoderTypeIsNull() {
+    QAfterFilterCondition
+  >
+  addressEncoderTypeIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'addressEncoderType',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'addressEncoderType'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> addressEncoderTypeIsNotNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  addressEncoderTypeIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'addressEncoderType',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'addressEncoderType'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> addressEncoderTypeEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  addressEncoderTypeEqualTo(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'addressEncoderType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'addressEncoderType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> addressEncoderTypeGreaterThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  addressEncoderTypeGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'addressEncoderType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'addressEncoderType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> addressEncoderTypeLessThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  addressEncoderTypeLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'addressEncoderType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'addressEncoderType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> addressEncoderTypeBetween(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  addressEncoderTypeBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -306,155 +341,206 @@ extension EmbeddedNetworkTemplateEntityQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'addressEncoderType',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'addressEncoderType',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> addressEncoderTypeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  addressEncoderTypeStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'addressEncoderType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'addressEncoderType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> addressEncoderTypeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  addressEncoderTypeEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'addressEncoderType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'addressEncoderType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      addressEncoderTypeContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  addressEncoderTypeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'addressEncoderType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'addressEncoderType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      addressEncoderTypeMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  addressEncoderTypeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'addressEncoderType',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'addressEncoderType',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> addressEncoderTypeIsEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  addressEncoderTypeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'addressEncoderType',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'addressEncoderType', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> addressEncoderTypeIsNotEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  addressEncoderTypeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'addressEncoderType',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'addressEncoderType', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> curveTypeIsNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  curveTypeIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'curveType',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'curveType'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> curveTypeIsNotNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  curveTypeIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'curveType',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'curveType'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> curveTypeEqualTo(
-    CurveType? value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  curveTypeEqualTo(CurveType? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'curveType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'curveType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> curveTypeGreaterThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  curveTypeGreaterThan(
     CurveType? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'curveType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'curveType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> curveTypeLessThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  curveTypeLessThan(
     CurveType? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'curveType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'curveType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> curveTypeBetween(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  curveTypeBetween(
     CurveType? lower,
     CurveType? upper, {
     bool includeLower = true,
@@ -462,155 +548,206 @@ extension EmbeddedNetworkTemplateEntityQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'curveType',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'curveType',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> curveTypeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  curveTypeStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'curveType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'curveType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> curveTypeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  curveTypeEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'curveType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'curveType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      curveTypeContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  curveTypeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'curveType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'curveType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      curveTypeMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  curveTypeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'curveType',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'curveType',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> curveTypeIsEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  curveTypeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'curveType',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'curveType', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> curveTypeIsNotEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  curveTypeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'curveType',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'curveType', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivationPathTemplateIsNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivationPathTemplateIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'derivationPathTemplate',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'derivationPathTemplate'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivationPathTemplateIsNotNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivationPathTemplateIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'derivationPathTemplate',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'derivationPathTemplate'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivationPathTemplateEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivationPathTemplateEqualTo(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'derivationPathTemplate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'derivationPathTemplate',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivationPathTemplateGreaterThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivationPathTemplateGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'derivationPathTemplate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'derivationPathTemplate',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivationPathTemplateLessThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivationPathTemplateLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'derivationPathTemplate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'derivationPathTemplate',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivationPathTemplateBetween(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivationPathTemplateBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -618,157 +755,209 @@ extension EmbeddedNetworkTemplateEntityQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'derivationPathTemplate',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'derivationPathTemplate',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivationPathTemplateStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivationPathTemplateStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'derivationPathTemplate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'derivationPathTemplate',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivationPathTemplateEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivationPathTemplateEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'derivationPathTemplate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'derivationPathTemplate',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      derivationPathTemplateContains(String value,
-          {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivationPathTemplateContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'derivationPathTemplate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'derivationPathTemplate',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      derivationPathTemplateMatches(String pattern,
-          {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivationPathTemplateMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'derivationPathTemplate',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'derivationPathTemplate',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivationPathTemplateIsEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivationPathTemplateIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'derivationPathTemplate',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'derivationPathTemplate', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivationPathTemplateIsNotEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivationPathTemplateIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'derivationPathTemplate',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          property: r'derivationPathTemplate',
+          value: '',
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivatorTypeIsNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivatorTypeIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'derivatorType',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'derivatorType'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivatorTypeIsNotNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivatorTypeIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'derivatorType',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'derivatorType'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivatorTypeEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivatorTypeEqualTo(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'derivatorType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'derivatorType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivatorTypeGreaterThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivatorTypeGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'derivatorType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'derivatorType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivatorTypeLessThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivatorTypeLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'derivatorType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'derivatorType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivatorTypeBetween(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivatorTypeBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -776,155 +965,206 @@ extension EmbeddedNetworkTemplateEntityQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'derivatorType',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'derivatorType',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivatorTypeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivatorTypeStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'derivatorType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'derivatorType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivatorTypeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivatorTypeEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'derivatorType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'derivatorType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      derivatorTypeContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivatorTypeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'derivatorType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'derivatorType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      derivatorTypeMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivatorTypeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'derivatorType',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'derivatorType',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivatorTypeIsEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivatorTypeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'derivatorType',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'derivatorType', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> derivatorTypeIsNotEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  derivatorTypeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'derivatorType',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'derivatorType', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> nameIsNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  nameIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'name',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'name'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> nameIsNotNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  nameIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'name',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'name'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> nameEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  nameEqualTo(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> nameGreaterThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  nameGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> nameLessThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  nameLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> nameBetween(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  nameBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -932,155 +1172,206 @@ extension EmbeddedNetworkTemplateEntityQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'name',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'name',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> nameStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  nameStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> nameEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  nameEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      nameContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  nameContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      nameMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  nameMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'name',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'name',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> nameIsEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'name', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> nameIsNotEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'name',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'name', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkIconTypeIsNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkIconTypeIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'networkIconType',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'networkIconType'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkIconTypeIsNotNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkIconTypeIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'networkIconType',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'networkIconType'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkIconTypeEqualTo(
-    NetworkIconType? value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkIconTypeEqualTo(NetworkIconType? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'networkIconType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'networkIconType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkIconTypeGreaterThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkIconTypeGreaterThan(
     NetworkIconType? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'networkIconType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'networkIconType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkIconTypeLessThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkIconTypeLessThan(
     NetworkIconType? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'networkIconType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'networkIconType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkIconTypeBetween(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkIconTypeBetween(
     NetworkIconType? lower,
     NetworkIconType? upper, {
     bool includeLower = true,
@@ -1088,155 +1379,206 @@ extension EmbeddedNetworkTemplateEntityQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'networkIconType',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'networkIconType',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkIconTypeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkIconTypeStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'networkIconType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'networkIconType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkIconTypeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkIconTypeEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'networkIconType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'networkIconType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      networkIconTypeContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkIconTypeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'networkIconType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'networkIconType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      networkIconTypeMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkIconTypeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'networkIconType',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'networkIconType',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkIconTypeIsEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkIconTypeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'networkIconType',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'networkIconType', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkIconTypeIsNotEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkIconTypeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'networkIconType',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'networkIconType', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkTypeIsNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkTypeIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'networkType',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'networkType'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkTypeIsNotNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkTypeIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'networkType',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'networkType'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkTypeEqualTo(
-    NetworkType? value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkTypeEqualTo(NetworkType? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'networkType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'networkType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkTypeGreaterThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkTypeGreaterThan(
     NetworkType? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'networkType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'networkType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkTypeLessThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkTypeLessThan(
     NetworkType? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'networkType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'networkType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkTypeBetween(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkTypeBetween(
     NetworkType? lower,
     NetworkType? upper, {
     bool includeLower = true,
@@ -1244,155 +1586,206 @@ extension EmbeddedNetworkTemplateEntityQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'networkType',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'networkType',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkTypeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkTypeStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'networkType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'networkType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkTypeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkTypeEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'networkType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'networkType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      networkTypeContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkTypeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'networkType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'networkType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      networkTypeMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkTypeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'networkType',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'networkType',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkTypeIsEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkTypeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'networkType',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'networkType', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> networkTypeIsNotEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  networkTypeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'networkType',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'networkType', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> walletTypeIsNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  walletTypeIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'walletType',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'walletType'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> walletTypeIsNotNull() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  walletTypeIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'walletType',
-      ));
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'walletType'),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> walletTypeEqualTo(
-    WalletType? value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  walletTypeEqualTo(WalletType? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'walletType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'walletType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> walletTypeGreaterThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  walletTypeGreaterThan(
     WalletType? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'walletType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'walletType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> walletTypeLessThan(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  walletTypeLessThan(
     WalletType? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'walletType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'walletType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> walletTypeBetween(
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  walletTypeBetween(
     WalletType? lower,
     WalletType? upper, {
     bool includeLower = true,
@@ -1400,91 +1793,118 @@ extension EmbeddedNetworkTemplateEntityQueryFilter on QueryBuilder<
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'walletType',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'walletType',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> walletTypeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  walletTypeStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'walletType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'walletType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> walletTypeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  walletTypeEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'walletType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'walletType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      walletTypeContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  walletTypeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'walletType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'walletType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-          QAfterFilterCondition>
-      walletTypeMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  walletTypeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'walletType',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'walletType',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> walletTypeIsEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  walletTypeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'walletType',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'walletType', value: ''),
+      );
     });
   }
 
-  QueryBuilder<EmbeddedNetworkTemplateEntity, EmbeddedNetworkTemplateEntity,
-      QAfterFilterCondition> walletTypeIsNotEmpty() {
+  QueryBuilder<
+    EmbeddedNetworkTemplateEntity,
+    EmbeddedNetworkTemplateEntity,
+    QAfterFilterCondition
+  >
+  walletTypeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'walletType',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'walletType', value: ''),
+      );
     });
   }
 }
 
-extension EmbeddedNetworkTemplateEntityQueryObject on QueryBuilder<
-    EmbeddedNetworkTemplateEntity,
-    EmbeddedNetworkTemplateEntity,
-    QFilterCondition> {}
+extension EmbeddedNetworkTemplateEntityQueryObject
+    on
+        QueryBuilder<
+          EmbeddedNetworkTemplateEntity,
+          EmbeddedNetworkTemplateEntity,
+          QFilterCondition
+        > {}

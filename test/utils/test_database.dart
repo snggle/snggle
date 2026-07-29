@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
@@ -16,30 +17,31 @@ import 'database_mock.dart';
 
 class TestDatabase {
   static Directory testRootDirectory = Directory('${Directory.systemTemp.path}/snggle/test');
+  static bool isarCoreInitializedBool = false;
 
   final FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
 
   late PasswordModel? appPasswordModel;
-  late String testSessionUUID;
+  String? _testSessionUUID;
+
+  String get testSessionUUID => _testSessionUUID!;
   late MasterKeyVO? masterKeyVO;
   bool testInitializedBool = false;
 
   TestDatabase();
 
-  Future<void> init({
-    required PasswordModel appPasswordModel,
-    DatabaseMock? databaseMock,
-  }) async {
-    await Isar.initializeIsarCore(download: true);
-
-    testSessionUUID = const Uuid().v4();
+  Future<void> init({required PasswordModel appPasswordModel, DatabaseMock? databaseMock}) async {
+    _testSessionUUID = const Uuid().v4();
     this.appPasswordModel = appPasswordModel;
 
     Directory rootDirectory = Directory('${testRootDirectory.path}/$testSessionUUID')..createSync(recursive: true);
 
     initLocator();
     globalLocator.allowReassignment = true;
-    globalLocator.registerLazySingleton<RootDirectoryBuilder>(() => () => rootDirectory);
+    globalLocator.registerLazySingleton<RootDirectoryBuilder>(
+      () =>
+          () => rootDirectory,
+    );
 
     if (databaseMock != null) {
       await updateDatabaseMock(databaseMock);
@@ -64,9 +66,12 @@ class TestDatabase {
   }
 
   Future<void> close() async {
-    await globalLocator<IsarDatabaseManager>().close();
+    if (globalLocator.isRegistered<IsarDatabaseManager>()) {
+      await globalLocator<IsarDatabaseManager>().close();
+    }
 
-    Directory cacheDirectory = Directory('${testRootDirectory.path}/$testSessionUUID');
+    String? tmpTestSessionUUID = _testSessionUUID;
+    Directory cacheDirectory = Directory('${testRootDirectory.path}/$tmpTestSessionUUID');
     if (cacheDirectory.existsSync()) {
       cacheDirectory.deleteSync(recursive: true);
     }
@@ -116,25 +121,41 @@ class TestDatabase {
 
   Future<Map<String, dynamic>> readEncryptedSecureStorage(SecureStorageKey secureStorageKey) async {
     String? actualEncryptedVaultsKeyValue = await flutterSecureStorage.read(key: secureStorageKey.name);
-    String actualDecryptedVaultsKeyValue = masterKeyVO!.decrypt(
-      appPasswordModel: appPasswordModel!,
-      encryptedData: actualEncryptedVaultsKeyValue!,
-    );
+    String actualDecryptedVaultsKeyValue = masterKeyVO!.decrypt(appPasswordModel: appPasswordModel!, encryptedData: actualEncryptedVaultsKeyValue!);
     Map<String, dynamic> actualVaultsMap = jsonDecode(actualDecryptedVaultsKeyValue) as Map<String, dynamic>;
     return actualVaultsMap;
   }
 
+  Future<void> _initializeIsarCore() async {
+    if (isarCoreInitializedBool == true) {
+      return;
+    }
+
+    String pubCachePath = Platform.environment['PUB_CACHE'] ?? '${Platform.environment['HOME']}/.pub-cache';
+
+    await Isar.initializeIsarCore(
+      libraries: <Abi, String>{
+        Abi.linuxX64: '$pubCachePath/hosted/pub.dev/isar_community_flutter_libs-3.3.2/linux/libisar.so',
+      },
+    );
+
+    isarCoreInitializedBool = true;
+  }
+
   Future<void> _setupIsarDatabase(DatabaseMock databaseMock) async {
+    await _initializeIsarCore();
     if (testInitializedBool) {
       await globalLocator<IsarDatabaseManager>().close();
     }
 
+    String tmpTestSessionUUID = testSessionUUID;
+
     Directory rootDirectory = await globalLocator<RootDirectoryBuilder>().call();
     File databaseMockFile = File('test/mocks/${databaseMock.name}/isar_mock.isar');
     if (databaseMockFile.existsSync()) {
-      await databaseMockFile.copy('${rootDirectory.path}/$testSessionUUID.isar');
+      await databaseMockFile.copy('${rootDirectory.path}/$tmpTestSessionUUID.isar');
     }
-    await globalLocator<IsarDatabaseManager>().initDatabase(name: testSessionUUID);
+    await globalLocator<IsarDatabaseManager>().initDatabase(name: tmpTestSessionUUID);
   }
 
   void _setupSecureStorage(DatabaseMock databaseMock) {
@@ -150,10 +171,7 @@ class TestDatabase {
     Directory rootDirectory = await globalLocator<RootDirectoryBuilder>().call();
     Directory filesystemMockDirectory = Directory('test/mocks/${databaseMock.name}/filesystem_mock');
     if (filesystemMockDirectory.existsSync()) {
-      _copyDirectory(
-        filesystemMockDirectory,
-        rootDirectory,
-      );
+      _copyDirectory(filesystemMockDirectory, rootDirectory);
     }
   }
 

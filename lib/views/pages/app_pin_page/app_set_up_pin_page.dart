@@ -27,13 +27,11 @@ class AppSetUpPinPage extends StatefulWidget {
   final MnemonicModel? _mnemonicModel;
 
   const AppSetUpPinPage({
-    AppMasterKeyType? appMasterKeyType,
-    AppPinType appPinType = AppPinType.setUpPin,
-    MnemonicModel? mnemonicModel,
+    this._appMasterKeyType,
+    this._appPinType = AppPinType.setUpPin,
+    this._mnemonicModel,
     super.key,
-  })  : _appMasterKeyType = appMasterKeyType,
-        _appPinType = appPinType,
-        _mnemonicModel = mnemonicModel;
+  });
 
   @override
   State<AppSetUpPinPage> createState() => _AppSetUpPinPageState();
@@ -107,9 +105,9 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
         } else {
           childWidget = const SizedBox.shrink();
         }
-        return PopScope(
+        return PopScope<void>(
           canPop: canPopBool,
-          onPopInvoked: (bool didPop) async {
+          onPopInvokedWithResult: (bool didPop, _) async {
             await _pressBackButton(
               appSetUpPinPageState: appSetUpPinPageState,
               appPinTypeChangeBool: appPinTypeChangeBool,
@@ -156,7 +154,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
       return;
     }
 
-    await context.router.pop();
+    context.router.pop();
   }
 
   Future<void> _trySetupPin() async {
@@ -166,7 +164,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
         return;
       }
       if (widget._appPinType == AppPinType.changePin) {
-        await context.router.pop();
+        context.router.pop();
         return;
       } else {
         bool recoverTypeBool = widget._appMasterKeyType == AppMasterKeyType.recover;

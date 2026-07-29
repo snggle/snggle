@@ -11,7 +11,7 @@ import 'package:snggle/shared/utils/logger/app_logger.dart';
 class MasterKeyVO extends Equatable {
   final String _encryptedMasterKey;
 
-  const MasterKeyVO({required String encryptedMasterKey}) : _encryptedMasterKey = encryptedMasterKey;
+  const MasterKeyVO({required this._encryptedMasterKey});
 
   MasterKeyVO change({required PasswordModel oldPassword, required PasswordModel newPassword}) {
     String decryptedData = oldPassword.decrypt(encryptedData: encryptedMasterKey);

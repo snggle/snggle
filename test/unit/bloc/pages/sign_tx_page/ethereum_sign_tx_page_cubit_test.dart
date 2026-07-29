@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:codec_utils/codec_utils.dart';
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/a_ethereum_sign_tx_page_state.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/ethereum_sign_tx_page_cubit.dart';
 import 'package:snggle/bloc/pages/scan_tx_page/ethereum_sign_tx_page/states/ethereum_sign_tx_page_confirm_tx_state.dart';
@@ -46,7 +46,7 @@ void main() {
               CborPathComponent(index: 60, hardened: true),
               CborPathComponent(index: 0, hardened: true),
               CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 0, hardened: false)
+              CborPathComponent(index: 0, hardened: false),
             ],
             sourceFingerprint: 1024969286,
           ),
@@ -121,10 +121,7 @@ void main() {
 
   group('Tests of EthereumSignTxPageCubit process [auto-detection ON] and [Transaction VALID]', () {
     setUpAll(() async {
-      await testDatabase.init(
-        databaseMock: DatabaseMock.transactionsDatabaseMock,
-        appPasswordModel: PasswordModel.fromPlaintext('1111'),
-      );
+      await testDatabase.init(databaseMock: DatabaseMock.transactionsDatabaseMock, appPasswordModel: PasswordModel.fromPlaintext('1111'));
 
       actualEthereumSignTxPageCubit = EthereumSignTxPageCubit(
         cborEthSignRequest: CborEthSignRequest(
@@ -139,7 +136,7 @@ void main() {
               CborPathComponent(index: 60, hardened: true),
               CborPathComponent(index: 0, hardened: true),
               CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 0, hardened: false)
+              CborPathComponent(index: 0, hardened: false),
             ],
             sourceFingerprint: 1024969286,
           ),
@@ -220,7 +217,7 @@ void main() {
               CborPathComponent(index: 60, hardened: true),
               CborPathComponent(index: 0, hardened: true),
               CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 0, hardened: false)
+              CborPathComponent(index: 0, hardened: false),
             ],
             sourceFingerprint: 1024969286,
           ),
@@ -270,7 +267,7 @@ void main() {
               CborPathComponent(index: 60, hardened: true),
               CborPathComponent(index: 0, hardened: true),
               CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 10, hardened: false)
+              CborPathComponent(index: 10, hardened: false),
             ],
             sourceFingerprint: 1024969286,
           ),
@@ -320,7 +317,7 @@ void main() {
               CborPathComponent(index: 60, hardened: true),
               CborPathComponent(index: 0, hardened: true),
               CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 0, hardened: false)
+              CborPathComponent(index: 0, hardened: false),
             ],
             sourceFingerprint: 0123456789,
           ),
@@ -371,7 +368,7 @@ void main() {
               CborPathComponent(index: 60, hardened: true),
               CborPathComponent(index: 0, hardened: true),
               CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 0, hardened: false)
+              CborPathComponent(index: 0, hardened: false),
             ],
             sourceFingerprint: null,
           ),
@@ -453,7 +450,7 @@ void main() {
               CborPathComponent(index: 60, hardened: true),
               CborPathComponent(index: 0, hardened: true),
               CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 0, hardened: false)
+              CborPathComponent(index: 0, hardened: false),
             ],
             sourceFingerprint: 1024969286,
           ),
@@ -535,7 +532,7 @@ void main() {
               CborPathComponent(index: 60, hardened: true),
               CborPathComponent(index: 0, hardened: true),
               CborPathComponent(index: 0, hardened: false),
-              CborPathComponent(index: 0, hardened: false)
+              CborPathComponent(index: 0, hardened: false),
             ],
             sourceFingerprint: null,
           ),

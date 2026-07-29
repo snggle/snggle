@@ -44,7 +44,7 @@ class WalletDetailsTransactionList extends StatelessWidget {
                 Spacer(),
                 Center(child: AssetIcon(AppIcons.page_no_data, size: 34)),
                 Spacer(),
-                SizedBox(height: CustomBottomNavigationBar.height),
+                SizedBox(height: CustomBottomNavigationBar.contentHeight),
               ],
             ),
           ),

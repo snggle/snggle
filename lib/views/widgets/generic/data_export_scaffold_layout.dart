@@ -33,7 +33,7 @@ class DataExportScaffoldLayout extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     footer!,
-                    const SizedBox(height: CustomBottomNavigationBar.height),
+                    const SizedBox(height: CustomBottomNavigationBar.contentHeight),
                   ],
                 ),
               ),
@@ -45,7 +45,7 @@ class DataExportScaffoldLayout extends StatelessWidget {
           left: 0,
           right: 0,
           child: SizedBox(
-            height: CustomBottomNavigationBar.height,
+            height: CustomBottomNavigationBar.contentHeight,
             width: double.infinity,
             child: Opacity(
               opacity: tooltipDisabledBool ? 0.5 : 1.0,

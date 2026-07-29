@@ -1,13 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_icons/app_animated_icons.dart';
-import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/widgets/button/gif_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 
-@RoutePage<VaultCreateRecoverStatus?>()
+@RoutePage()
 class VaultInitPage extends StatelessWidget {
   final FilesystemPath parentFilesystemPath;
 
@@ -23,6 +22,13 @@ class VaultInitPage extends StatelessWidget {
       closeButtonVisible: true,
       popAvailableBool: true,
       popButtonVisible: true,
+      customPopCallback: () {
+        StackRouter? parentRouter = context.router.parent<StackRouter>();
+
+        if (parentRouter != null) {
+          parentRouter.maybePop();
+        }
+      },
       body: Column(
         children: <Widget>[
           const Text(
@@ -44,7 +50,7 @@ class VaultInitPage extends StatelessWidget {
           GifButton(
             label: 'RECOVER',
             assetAnimatedIconData: AppAnimatedIcons.vault_recover,
-            onPressed: () => AutoRouter.of(context).push(VaultRecoverRoute(parentFilesystemPath: parentFilesystemPath)),
+            onPressed: () => context.router.push(VaultRecoverRoute(parentFilesystemPath: parentFilesystemPath)),
           ),
           const Spacer(flex: 200),
         ],

@@ -8,14 +8,11 @@ class FolderShapeBorder extends ShapeBorder {
   final double _scale;
 
   const FolderShapeBorder({
-    required bool pinnedBool,
-    required Color borderColor,
-    double borderWidth = 1.0,
-    double scale = 1.0,
-  })  : _pinnedBool = pinnedBool,
-        _borderColor = borderColor,
-        _borderWidth = borderWidth,
-        _scale = scale;
+    required this._pinnedBool,
+    required this._borderColor,
+    this._borderWidth = 1.0,
+    this._scale = 1.0,
+  });
 
   @override
   EdgeInsetsGeometry get dimensions => EdgeInsets.zero;
@@ -70,23 +67,59 @@ class FolderShapeBorder extends ShapeBorder {
 
     Path path = Path()
       ..moveTo(offset.dx + 7 * scaledWidth, offset.dy + 0.6796875 * scaledHeight)
-      ..cubicTo(offset.dx + 3.5133528 * scaledWidth, offset.dy + 0.6796875 * scaledHeight, offset.dx + 0.6796875 * scaledWidth,
-          offset.dy + 3.5133528 * scaledHeight, offset.dx + 0.6796875 * scaledWidth, offset.dy + 7 * scaledHeight)
+      ..cubicTo(
+        offset.dx + 3.5133528 * scaledWidth,
+        offset.dy + 0.6796875 * scaledHeight,
+        offset.dx + 0.6796875 * scaledWidth,
+        offset.dy + 3.5133528 * scaledHeight,
+        offset.dx + 0.6796875 * scaledWidth,
+        offset.dy + 7 * scaledHeight,
+      )
       ..lineTo(offset.dx + 0.6796875 * scaledWidth, offset.dy + 47 * scaledHeight)
-      ..cubicTo(offset.dx + 0.6796875 * scaledWidth, offset.dy + 50.486638 * scaledHeight, offset.dx + 3.5133522 * scaledWidth,
-          offset.dy + 53.3203125 * scaledHeight, offset.dx + 7 * scaledWidth, offset.dy + 53.3203125 * scaledHeight)
+      ..cubicTo(
+        offset.dx + 0.6796875 * scaledWidth,
+        offset.dy + 50.486638 * scaledHeight,
+        offset.dx + 3.5133522 * scaledWidth,
+        offset.dy + 53.3203125 * scaledHeight,
+        offset.dx + 7 * scaledWidth,
+        offset.dy + 53.3203125 * scaledHeight,
+      )
       ..lineTo(offset.dx + 47 * scaledWidth, offset.dy + 53.3203125 * scaledHeight)
-      ..cubicTo(offset.dx + 50.486638 * scaledWidth, offset.dy + 53.3203125 * scaledHeight, offset.dx + 53.320312 * scaledWidth,
-          offset.dy + 50.486638 * scaledHeight, offset.dx + 53.320312 * scaledWidth, offset.dy + 47 * scaledHeight)
+      ..cubicTo(
+        offset.dx + 50.486638 * scaledWidth,
+        offset.dy + 53.3203125 * scaledHeight,
+        offset.dx + 53.320312 * scaledWidth,
+        offset.dy + 50.486638 * scaledHeight,
+        offset.dx + 53.320312 * scaledWidth,
+        offset.dy + 47 * scaledHeight,
+      )
       ..lineTo(offset.dx + 53.320312 * scaledWidth, offset.dy + 13 * scaledHeight)
-      ..cubicTo(offset.dx + 53.320312 * scaledWidth, offset.dy + 9.5133522 * scaledHeight, offset.dx + 50.486638 * scaledWidth,
-          offset.dy + 6.6796875 * scaledHeight, offset.dx + 47 * scaledWidth, offset.dy + 6.6796875 * scaledHeight)
+      ..cubicTo(
+        offset.dx + 53.320312 * scaledWidth,
+        offset.dy + 9.5133522 * scaledHeight,
+        offset.dx + 50.486638 * scaledWidth,
+        offset.dy + 6.6796875 * scaledHeight,
+        offset.dx + 47 * scaledWidth,
+        offset.dy + 6.6796875 * scaledHeight,
+      )
       ..lineTo(offset.dx + 26.957031 * scaledWidth, offset.dy + 6.6796875 * scaledHeight)
-      ..cubicTo(offset.dx + 25.752545 * scaledWidth, offset.dy + 6.6796875 * scaledHeight, offset.dx + 24.580056 * scaledWidth,
-          offset.dy + 6.2963843 * scaledHeight, offset.dx + 23.607422 * scaledWidth, offset.dy + 5.5859375 * scaledHeight)
+      ..cubicTo(
+        offset.dx + 25.752545 * scaledWidth,
+        offset.dy + 6.6796875 * scaledHeight,
+        offset.dx + 24.580056 * scaledWidth,
+        offset.dy + 6.2963843 * scaledHeight,
+        offset.dx + 23.607422 * scaledWidth,
+        offset.dy + 5.5859375 * scaledHeight,
+      )
       ..lineTo(offset.dx + 18.554687 * scaledWidth, offset.dy + 1.8964844 * scaledHeight)
-      ..cubicTo(offset.dx + 17.472523 * scaledWidth, offset.dy + 1.1060327 * scaledHeight, offset.dx + 16.168142 * scaledWidth,
-          offset.dy + 0.6796875 * scaledHeight, offset.dx + 14.828125 * scaledWidth, offset.dy + 0.6796875 * scaledHeight)
+      ..cubicTo(
+        offset.dx + 17.472523 * scaledWidth,
+        offset.dy + 1.1060327 * scaledHeight,
+        offset.dx + 16.168142 * scaledWidth,
+        offset.dy + 0.6796875 * scaledHeight,
+        offset.dx + 14.828125 * scaledWidth,
+        offset.dy + 0.6796875 * scaledHeight,
+      )
       ..close();
     return path;
   }

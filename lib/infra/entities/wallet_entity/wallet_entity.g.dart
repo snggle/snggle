@@ -17,11 +17,7 @@ const WalletEntitySchema = CollectionSchema(
   name: r'WalletEntity',
   id: 495311719639707741,
   properties: {
-    r'address': PropertySchema(
-      id: 0,
-      name: r'address',
-      type: IsarType.string,
-    ),
+    r'address': PropertySchema(id: 0, name: r'address', type: IsarType.string),
     r'derivationPath': PropertySchema(
       id: 1,
       name: r'derivationPath',
@@ -37,17 +33,14 @@ const WalletEntitySchema = CollectionSchema(
       name: r'filesystemPathString',
       type: IsarType.string,
     ),
-    r'name': PropertySchema(
-      id: 4,
-      name: r'name',
-      type: IsarType.string,
-    ),
+    r'name': PropertySchema(id: 4, name: r'name', type: IsarType.string),
     r'pinnedBool': PropertySchema(
       id: 5,
       name: r'pinnedBool',
       type: IsarType.bool,
-    )
+    ),
   },
+
   estimateSize: _walletEntityEstimateSize,
   serialize: _walletEntitySerialize,
   deserialize: _walletEntityDeserialize,
@@ -64,16 +57,17 @@ const WalletEntitySchema = CollectionSchema(
           name: r'filesystemPathString',
           type: IndexType.hash,
           caseSensitive: true,
-        )
+        ),
       ],
-    )
+    ),
   },
   links: {},
   embeddedSchemas: {},
+
   getId: _walletEntityGetId,
   getLinks: _walletEntityGetLinks,
   attach: _walletEntityAttach,
-  version: '3.1.0+1',
+  version: '3.3.2',
 );
 
 int _walletEntityEstimateSize(
@@ -154,7 +148,10 @@ List<IsarLinkBase<dynamic>> _walletEntityGetLinks(WalletEntity object) {
 }
 
 void _walletEntityAttach(
-    IsarCollection<dynamic> col, Id id, WalletEntity object) {}
+  IsarCollection<dynamic> col,
+  Id id,
+  WalletEntity object,
+) {}
 
 extension WalletEntityQueryWhereSort
     on QueryBuilder<WalletEntity, WalletEntity, QWhere> {
@@ -169,15 +166,13 @@ extension WalletEntityQueryWhere
     on QueryBuilder<WalletEntity, WalletEntity, QWhereClause> {
   QueryBuilder<WalletEntity, WalletEntity, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
-      ));
+      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterWhereClause> idNotEqualTo(
-      Id id) {
+    Id id,
+  ) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -200,8 +195,9 @@ extension WalletEntityQueryWhere
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterWhereClause> idGreaterThan(
-      Id id,
-      {bool include = false}) {
+    Id id, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -209,8 +205,10 @@ extension WalletEntityQueryWhere
     });
   }
 
-  QueryBuilder<WalletEntity, WalletEntity, QAfterWhereClause> idLessThan(Id id,
-      {bool include = false}) {
+  QueryBuilder<WalletEntity, WalletEntity, QAfterWhereClause> idLessThan(
+    Id id, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -225,56 +223,68 @@ extension WalletEntityQueryWhere
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
-        includeLower: includeLower,
-        upper: upperId,
-        includeUpper: includeUpper,
-      ));
+      return query.addWhereClause(
+        IdWhereClause.between(
+          lower: lowerId,
+          includeLower: includeLower,
+          upper: upperId,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterWhereClause>
-      filesystemPathStringEqualTo(String filesystemPathString) {
+  filesystemPathStringEqualTo(String filesystemPathString) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'filesystemPathString',
-        value: [filesystemPathString],
-      ));
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(
+          indexName: r'filesystemPathString',
+          value: [filesystemPathString],
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterWhereClause>
-      filesystemPathStringNotEqualTo(String filesystemPathString) {
+  filesystemPathStringNotEqualTo(String filesystemPathString) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'filesystemPathString',
-              lower: [],
-              upper: [filesystemPathString],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'filesystemPathString',
-              lower: [filesystemPathString],
-              includeLower: false,
-              upper: [],
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'filesystemPathString',
+                lower: [],
+                upper: [filesystemPathString],
+                includeUpper: false,
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'filesystemPathString',
+                lower: [filesystemPathString],
+                includeLower: false,
+                upper: [],
+              ),
+            );
       } else {
         return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'filesystemPathString',
-              lower: [filesystemPathString],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'filesystemPathString',
-              lower: [],
-              upper: [filesystemPathString],
-              includeUpper: false,
-            ));
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'filesystemPathString',
+                lower: [filesystemPathString],
+                includeLower: false,
+                upper: [],
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'filesystemPathString',
+                lower: [],
+                upper: [filesystemPathString],
+                includeUpper: false,
+              ),
+            );
       }
     });
   }
@@ -283,53 +293,56 @@ extension WalletEntityQueryWhere
 extension WalletEntityQueryFilter
     on QueryBuilder<WalletEntity, WalletEntity, QFilterCondition> {
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      addressEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  addressEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'address',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'address',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      addressGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'address',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      addressLessThan(
+  addressGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'address',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'address',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      addressBetween(
+  addressLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'address',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
+  addressBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -337,135 +350,140 @@ extension WalletEntityQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'address',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'address',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      addressStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  addressStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'address',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'address',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      addressEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  addressEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'address',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'address',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      addressContains(String value, {bool caseSensitive = true}) {
+  addressContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'address',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'address',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      addressMatches(String pattern, {bool caseSensitive = true}) {
+  addressMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'address',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'address',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      addressIsEmpty() {
+  addressIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'address',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'address', value: ''),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      addressIsNotEmpty() {
+  addressIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'address',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'address', value: ''),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      derivationPathEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  derivationPathEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'derivationPath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'derivationPath',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      derivationPathGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'derivationPath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      derivationPathLessThan(
+  derivationPathGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'derivationPath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'derivationPath',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      derivationPathBetween(
+  derivationPathLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'derivationPath',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
+  derivationPathBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -473,145 +491,149 @@ extension WalletEntityQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'derivationPath',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'derivationPath',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      derivationPathStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  derivationPathStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'derivationPath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'derivationPath',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      derivationPathEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  derivationPathEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'derivationPath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'derivationPath',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      derivationPathContains(String value, {bool caseSensitive = true}) {
+  derivationPathContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'derivationPath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'derivationPath',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      derivationPathMatches(String pattern, {bool caseSensitive = true}) {
+  derivationPathMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'derivationPath',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'derivationPath',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      derivationPathIsEmpty() {
+  derivationPathIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'derivationPath',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'derivationPath', value: ''),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      derivationPathIsNotEmpty() {
+  derivationPathIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'derivationPath',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'derivationPath', value: ''),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      encryptedBoolEqualTo(bool value) {
+  encryptedBoolEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'encryptedBool',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'encryptedBool', value: value),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      filesystemPathStringEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  filesystemPathStringEqualTo(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'filesystemPathString',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'filesystemPathString',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      filesystemPathStringGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'filesystemPathString',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      filesystemPathStringLessThan(
+  filesystemPathStringGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'filesystemPathString',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'filesystemPathString',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      filesystemPathStringBetween(
+  filesystemPathStringLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'filesystemPathString',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
+  filesystemPathStringBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -619,94 +641,99 @@ extension WalletEntityQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'filesystemPathString',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'filesystemPathString',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      filesystemPathStringStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  filesystemPathStringStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'filesystemPathString',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'filesystemPathString',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      filesystemPathStringEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  filesystemPathStringEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'filesystemPathString',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'filesystemPathString',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      filesystemPathStringContains(String value, {bool caseSensitive = true}) {
+  filesystemPathStringContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'filesystemPathString',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'filesystemPathString',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      filesystemPathStringMatches(String pattern, {bool caseSensitive = true}) {
+  filesystemPathStringMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'filesystemPathString',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'filesystemPathString',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      filesystemPathStringIsEmpty() {
+  filesystemPathStringIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'filesystemPathString',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'filesystemPathString', value: ''),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      filesystemPathStringIsNotEmpty() {
+  filesystemPathStringIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'filesystemPathString',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          property: r'filesystemPathString',
+          value: '',
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition> idEqualTo(
-      Id value) {
+    Id value,
+  ) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'id', value: value),
+      );
     });
   }
 
@@ -715,11 +742,13 @@ extension WalletEntityQueryFilter
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
@@ -728,11 +757,13 @@ extension WalletEntityQueryFilter
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'id',
+          value: value,
+        ),
+      );
     });
   }
 
@@ -743,13 +774,15 @@ extension WalletEntityQueryFilter
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'id',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
     });
   }
 
@@ -758,27 +791,31 @@ extension WalletEntityQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      nameGreaterThan(
+  nameGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
@@ -788,12 +825,14 @@ extension WalletEntityQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
@@ -805,28 +844,29 @@ extension WalletEntityQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'name',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'name',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      nameStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  nameStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
@@ -835,65 +875,70 @@ extension WalletEntityQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition> nameContains(
-      String value,
-      {bool caseSensitive = true}) {
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'name',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition> nameMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'name',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'name',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      nameIsEmpty() {
+  nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'name', value: ''),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      nameIsNotEmpty() {
+  nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'name',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'name', value: ''),
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterFilterCondition>
-      pinnedBoolEqualTo(bool value) {
+  pinnedBoolEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'pinnedBool',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'pinnedBool', value: value),
+      );
     });
   }
 }
@@ -919,14 +964,14 @@ extension WalletEntityQuerySortBy
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterSortBy>
-      sortByDerivationPath() {
+  sortByDerivationPath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'derivationPath', Sort.asc);
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterSortBy>
-      sortByDerivationPathDesc() {
+  sortByDerivationPathDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'derivationPath', Sort.desc);
     });
@@ -939,21 +984,21 @@ extension WalletEntityQuerySortBy
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterSortBy>
-      sortByEncryptedBoolDesc() {
+  sortByEncryptedBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'encryptedBool', Sort.desc);
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterSortBy>
-      sortByFilesystemPathString() {
+  sortByFilesystemPathString() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filesystemPathString', Sort.asc);
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterSortBy>
-      sortByFilesystemPathStringDesc() {
+  sortByFilesystemPathStringDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filesystemPathString', Sort.desc);
     });
@@ -978,7 +1023,7 @@ extension WalletEntityQuerySortBy
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterSortBy>
-      sortByPinnedBoolDesc() {
+  sortByPinnedBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinnedBool', Sort.desc);
     });
@@ -1000,14 +1045,14 @@ extension WalletEntityQuerySortThenBy
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterSortBy>
-      thenByDerivationPath() {
+  thenByDerivationPath() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'derivationPath', Sort.asc);
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterSortBy>
-      thenByDerivationPathDesc() {
+  thenByDerivationPathDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'derivationPath', Sort.desc);
     });
@@ -1020,21 +1065,21 @@ extension WalletEntityQuerySortThenBy
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterSortBy>
-      thenByEncryptedBoolDesc() {
+  thenByEncryptedBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'encryptedBool', Sort.desc);
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterSortBy>
-      thenByFilesystemPathString() {
+  thenByFilesystemPathString() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filesystemPathString', Sort.asc);
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterSortBy>
-      thenByFilesystemPathStringDesc() {
+  thenByFilesystemPathStringDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'filesystemPathString', Sort.desc);
     });
@@ -1071,7 +1116,7 @@ extension WalletEntityQuerySortThenBy
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QAfterSortBy>
-      thenByPinnedBoolDesc() {
+  thenByPinnedBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinnedBool', Sort.desc);
     });
@@ -1080,38 +1125,45 @@ extension WalletEntityQuerySortThenBy
 
 extension WalletEntityQueryWhereDistinct
     on QueryBuilder<WalletEntity, WalletEntity, QDistinct> {
-  QueryBuilder<WalletEntity, WalletEntity, QDistinct> distinctByAddress(
-      {bool caseSensitive = true}) {
+  QueryBuilder<WalletEntity, WalletEntity, QDistinct> distinctByAddress({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'address', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<WalletEntity, WalletEntity, QDistinct> distinctByDerivationPath(
-      {bool caseSensitive = true}) {
+  QueryBuilder<WalletEntity, WalletEntity, QDistinct> distinctByDerivationPath({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'derivationPath',
-          caseSensitive: caseSensitive);
+      return query.addDistinctBy(
+        r'derivationPath',
+        caseSensitive: caseSensitive,
+      );
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QDistinct>
-      distinctByEncryptedBool() {
+  distinctByEncryptedBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'encryptedBool');
     });
   }
 
   QueryBuilder<WalletEntity, WalletEntity, QDistinct>
-      distinctByFilesystemPathString({bool caseSensitive = true}) {
+  distinctByFilesystemPathString({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'filesystemPathString',
-          caseSensitive: caseSensitive);
+      return query.addDistinctBy(
+        r'filesystemPathString',
+        caseSensitive: caseSensitive,
+      );
     });
   }
 
-  QueryBuilder<WalletEntity, WalletEntity, QDistinct> distinctByName(
-      {bool caseSensitive = true}) {
+  QueryBuilder<WalletEntity, WalletEntity, QDistinct> distinctByName({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
@@ -1139,7 +1191,7 @@ extension WalletEntityQueryProperty
   }
 
   QueryBuilder<WalletEntity, String, QQueryOperations>
-      derivationPathProperty() {
+  derivationPathProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'derivationPath');
     });
@@ -1152,7 +1204,7 @@ extension WalletEntityQueryProperty
   }
 
   QueryBuilder<WalletEntity, String, QQueryOperations>
-      filesystemPathStringProperty() {
+  filesystemPathStringProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'filesystemPathString');
     });

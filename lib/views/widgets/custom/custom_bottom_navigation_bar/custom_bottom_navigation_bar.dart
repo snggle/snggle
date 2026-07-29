@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
-  static const double height = 80;
+  static const double contentHeight = 80;
 
   final List<Widget> bottomNavigationBarItems;
 
@@ -15,20 +15,30 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: CustomBottomNavigationBar.height,
-      width: double.infinity,
-      child: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
-          child: Container(
-            color: AppColors.body2.withOpacity(0.3),
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: bottomNavigationBarItems.map((Widget item) {
-                return Expanded(child: Center(child: item));
-              }).toList(),
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 12,
+          sigmaY: 12,
+        ),
+        child: ColoredBox(
+          color: AppColors.body2.withValues(alpha: 0.3),
+          child: SafeArea(
+            top: false,
+            child: SizedBox(
+              height: CustomBottomNavigationBar.contentHeight,
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: bottomNavigationBarItems.map((Widget item) {
+                    return Expanded(
+                      child: Center(child: item),
+                    );
+                  }).toList(),
+                ),
+              ),
             ),
           ),
         ),

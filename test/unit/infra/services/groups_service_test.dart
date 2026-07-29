@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/group_entity/group_entity.dart';
@@ -32,7 +32,8 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      List<GroupModel> actualGroupModelList = await globalLocator<GroupsService>().getAllByParentPath(const FilesystemPath.empty(), firstLevelBool: true);
+      List<GroupModel> actualGroupModelList = await globalLocator<GroupsService>().getAllByParentPath(
+          const FilesystemPath.empty(), firstLevelBool: true);
 
       // Assert
       List<GroupModel> expectedGroupModelList = <GroupModel>[
@@ -59,7 +60,8 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      List<GroupModel> actualGroupModelList = await globalLocator<GroupsService>().getAllByParentPath(const FilesystemPath.empty(), firstLevelBool: false);
+      List<GroupModel> actualGroupModelList = await globalLocator<GroupsService>().getAllByParentPath(
+          const FilesystemPath.empty(), firstLevelBool: false);
 
       // Assert
       List<GroupModel> expectedGroupModelList = <GroupModel>[
@@ -170,7 +172,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<GroupsService>().getById(99999),
+            () => globalLocator<GroupsService>().getById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -200,9 +202,21 @@ void main() {
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'new/path/group1', name: 'VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
+        const GroupEntity(id: 1,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'new/path/group1',
+            name: 'VAULTS GROUP 1'),
+        const GroupEntity(id: 2,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vault1/group2',
+            name: 'NETWORKS GROUP 1'),
+        const GroupEntity(id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vault1/network1/group3',
+            name: 'WALLETS GROUP 1')
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -226,9 +240,21 @@ void main() {
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'new/path/vault1/group2', name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'new/path/vault1/network1/group3', name: 'WALLETS GROUP 1')
+        const GroupEntity(id: 1,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'group1',
+            name: 'VAULTS GROUP 1'),
+        const GroupEntity(id: 2,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'new/path/vault1/group2',
+            name: 'NETWORKS GROUP 1'),
+        const GroupEntity(id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'new/path/vault1/network1/group3',
+            name: 'WALLETS GROUP 1')
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -258,9 +284,21 @@ void main() {
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: true, pinnedBool: true, filesystemPathString: 'group1', name: 'UPDATED VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
+        const GroupEntity(id: 1,
+            encryptedBool: true,
+            pinnedBool: true,
+            filesystemPathString: 'group1',
+            name: 'UPDATED VAULTS GROUP 1'),
+        const GroupEntity(id: 2,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vault1/group2',
+            name: 'NETWORKS GROUP 1'),
+        const GroupEntity(id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vault1/network1/group3',
+            name: 'WALLETS GROUP 1')
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -288,10 +326,26 @@ void main() {
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1'),
-        const GroupEntity(id: 99999, encryptedBool: true, pinnedBool: true, filesystemPathString: 'group1', name: 'NEW VAULTS GROUP 1'),
+        const GroupEntity(id: 1,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'group1',
+            name: 'VAULTS GROUP 1'),
+        const GroupEntity(id: 2,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vault1/group2',
+            name: 'NETWORKS GROUP 1'),
+        const GroupEntity(id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
+        const GroupEntity(id: 99999,
+            encryptedBool: true,
+            pinnedBool: true,
+            filesystemPathString: 'group1',
+            name: 'NEW VAULTS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -319,9 +373,21 @@ void main() {
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: true, pinnedBool: true, filesystemPathString: 'group1', name: 'UPDATED VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: true, pinnedBool: true, filesystemPathString: 'vault1/group2', name: 'UPDATED NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
+        const GroupEntity(id: 1,
+            encryptedBool: true,
+            pinnedBool: true,
+            filesystemPathString: 'group1',
+            name: 'UPDATED VAULTS GROUP 1'),
+        const GroupEntity(id: 2,
+            encryptedBool: true,
+            pinnedBool: true,
+            filesystemPathString: 'vault1/group2',
+            name: 'UPDATED NETWORKS GROUP 1'),
+        const GroupEntity(id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vault1/network1/group3',
+            name: 'WALLETS GROUP 1')
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -347,11 +413,31 @@ void main() {
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1'),
-        const GroupEntity(id: 99998, encryptedBool: true, pinnedBool: true, filesystemPathString: 'group1', name: 'NEW VAULTS GROUP 1'),
-        const GroupEntity(id: 99999, encryptedBool: true, pinnedBool: true, filesystemPathString: 'vault1/group2', name: 'NEW NETWORKS GROUP 1'),
+        const GroupEntity(id: 1,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'group1',
+            name: 'VAULTS GROUP 1'),
+        const GroupEntity(id: 2,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vault1/group2',
+            name: 'NETWORKS GROUP 1'),
+        const GroupEntity(id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
+        const GroupEntity(id: 99998,
+            encryptedBool: true,
+            pinnedBool: true,
+            filesystemPathString: 'group1',
+            name: 'NEW VAULTS GROUP 1'),
+        const GroupEntity(id: 99999,
+            encryptedBool: true,
+            pinnedBool: true,
+            filesystemPathString: 'vault1/group2',
+            name: 'NEW NETWORKS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -372,7 +458,11 @@ void main() {
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'group1', name: 'VAULTS GROUP 1'),
+        const GroupEntity(id: 1,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'group1',
+            name: 'VAULTS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -410,8 +500,16 @@ void main() {
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/group2', name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vault1/network1/group3', name: 'WALLETS GROUP 1')
+        const GroupEntity(id: 2,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vault1/group2',
+            name: 'NETWORKS GROUP 1'),
+        const GroupEntity(id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vault1/network1/group3',
+            name: 'WALLETS GROUP 1')
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -423,7 +521,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<GroupsService>().deleteById(99999),
+            () => globalLocator<GroupsService>().deleteById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

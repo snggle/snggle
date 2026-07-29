@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
@@ -141,7 +141,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<VaultsRepository>().getById(99999999),
+            () => globalLocator<VaultsRepository>().getById(99999999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -353,7 +353,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<VaultsRepository>().deleteById(99999),
+            () => globalLocator<VaultsRepository>().deleteById(99999),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
