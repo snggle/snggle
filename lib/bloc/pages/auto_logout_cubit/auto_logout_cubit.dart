@@ -1,35 +1,33 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/infra/repositories/settings_repository.dart';
-import 'package:snggle/shared/models/automatic_logout_mode.dart';
-import 'package:snggle/shared/models/inactive_logout_timeout.dart';
+import 'package:snggle/shared/models/auto_logout_settings/auto_logout_settings_model.dar.dart';
+import 'package:snggle/shared/models/auto_logout_settings/automatic_logout_mode.dart';
+import 'package:snggle/shared/models/auto_logout_settings/inactive_logout_timeout.dart';
 
 part 'auto_logout_state.dart';
 
 class AutoLogoutCubit extends Cubit<AutoLogoutState> {
-  AutoLogoutCubit()
-    : super(
+  AutoLogoutCubit({SettingsRepository? settingsRepository})
+    : _settingsRepository = settingsRepository ?? SettingsRepository(),
+      super(
         const AutoLogoutState(
-          automaticLogoutMode: SettingsRepository.defaultAutomaticLogoutMode,
-          inactivityLogoutEnabledBool: SettingsRepository.defaultInactivityLogoutEnabledBool,
-          inactivityLogoutTimeout: SettingsRepository.defaultInactivityLogoutTimeout,
+          inactivityLogoutTimeout: AutoLogoutSettingsModel.defaultInactivityLogoutTimeout,
+          automaticLogoutMode: AutoLogoutSettingsModel.defaultAutomaticLogoutMode,
+          inactivityLogoutEnabledBool: AutoLogoutSettingsModel.defaultInactivityLogoutBool,
         ),
       );
 
-  final SettingsRepository _settingsRepository = SettingsRepository();
+  final SettingsRepository _settingsRepository;
 
   Future<void> init() async {
-    final AutomaticLogoutMode automaticLogoutMode = await _settingsRepository.getAutomaticLogoutMode();
-
-    final bool inactivityLogoutEnabledBool = await _settingsRepository.getInactivityLogoutEnabledBool();
-
-    final InactivityLogoutTimeout inactivityLogoutTimeout = await _settingsRepository.getInactivityLogoutTimeout();
+    AutoLogoutSettingsModel autoLogoutSettingsModel = await _settingsRepository.getAutoLogoutSettings();
 
     emit(
       state.copyWith(
-        automaticLogoutMode: automaticLogoutMode,
-        inactivityLogoutEnabledBool: inactivityLogoutEnabledBool,
-        inactivityLogoutTimeout: inactivityLogoutTimeout,
+        automaticLogoutMode: autoLogoutSettingsModel.automaticLogoutMode,
+        inactivityLogoutEnabledBool: autoLogoutSettingsModel.inactivityLogoutBool,
+        inactivityLogoutTimeout: autoLogoutSettingsModel.inactivityLogoutTimeout,
       ),
     );
   }
@@ -41,38 +39,20 @@ class AutoLogoutCubit extends Cubit<AutoLogoutState> {
       automaticLogoutMode,
     );
 
-    emit(
-      state.copyWith(
-        automaticLogoutMode: automaticLogoutMode,
-      ),
-    );
+    emit(state.copyWith(automaticLogoutMode: automaticLogoutMode));
   }
 
-  Future<void> setInactivityLogoutEnabledBool({
-    required bool inactivityLogoutEnabledBool,
-  }) async {
-    await _settingsRepository.saveInactivityLogoutEnabledBool(
-      inactivityLogoutEnabledBool: inactivityLogoutEnabledBool,
-    );
+  Future<void> setInactivityEnabledBool({required bool inactivityLogoutEnabledBool}) async {
+    await _settingsRepository.saveInactivityEnabledBool(inactivityLogoutEnabledBool: inactivityLogoutEnabledBool);
 
-    emit(
-      state.copyWith(
-        inactivityLogoutEnabledBool: inactivityLogoutEnabledBool,
-      ),
-    );
+    emit(state.copyWith(inactivityLogoutEnabledBool: inactivityLogoutEnabledBool));
   }
 
-  Future<void> setInactivityLogoutTimeout({
-    required InactivityLogoutTimeout inactivityLogoutTimeout,
-  }) async {
-    await _settingsRepository.saveInactivityLogoutTimeout(
-      inactivityLogoutTimeout,
-    );
+  Future<void> setInactivityLogoutTimeout({required InactivityLogoutTimeout inactivityLogoutTimeout}) async {
+    await _settingsRepository.saveInactivityLogoutTimeout(inactivityLogoutTimeout);
 
     emit(
-      state.copyWith(
-        inactivityLogoutTimeout: inactivityLogoutTimeout,
-      ),
+      state.copyWith(inactivityLogoutTimeout: inactivityLogoutTimeout),
     );
   }
 }

@@ -9,8 +9,9 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/theme_config.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/app_service.dart';
-import 'package:snggle/shared/models/automatic_logout_mode.dart';
-import 'package:snggle/shared/models/inactive_logout_timeout.dart';
+import 'package:snggle/shared/controllers/auto_logout_controller.dart';
+import 'package:snggle/shared/models/auto_logout_settings/automatic_logout_mode.dart';
+import 'package:snggle/shared/models/auto_logout_settings/inactive_logout_timeout.dart';
 import 'package:snggle/shared/router/router.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 
@@ -32,10 +33,10 @@ Future<void> main() async {
 }
 
 class AppCore extends StatefulWidget {
-  const AppCore({Key? key}) : super(key: key);
+  const AppCore({super.key});
 
   @override
-  State<StatefulWidget> createState() => _AppCoreState();
+  State<AppCore> createState() => _AppCoreState();
 }
 
 // class _AppCoreState extends State<AppCore> {
@@ -80,60 +81,46 @@ class AppCore extends StatefulWidget {
 //   }
 
 class _AppCoreState extends State<AppCore> {
-  final AppRouter appRouter = AppRouter();
-
-  late final AppLifecycleListener appLifecycleListener;
-
-  Timer? inactivityLogoutTimer;
-
-  bool logoutInProgressBool = false;
+  final AppRouter _appRouter = AppRouter();
+  late final AutoLogoutController _autoLogoutController;
 
   @override
   void initState() {
     super.initState();
-
-    appLifecycleListener = AppLifecycleListener(
-      onHide: _handleAppHidden,
+    _autoLogoutController = AutoLogoutController(
+      appRouter: _appRouter,
+      appService: globalLocator<AppService>(),
+      autoLogoutCubit: context.read<AutoLogoutCubit>(),
     );
+    _autoLogoutController.init();
   }
 
   @override
   void dispose() {
-    inactivityLogoutTimer?.cancel();
-    appLifecycleListener.dispose();
+    _autoLogoutController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routeInformationParser: appRouter.defaultRouteParser(),
-      routerDelegate: appRouter.delegate(),
+      routeInformationParser: _appRouter.defaultRouteParser(),
+      routerDelegate: _appRouter.delegate(),
       theme: ThemeConfig().buildTheme(),
       debugShowCheckedModeBanner: false,
       builder: (BuildContext context, Widget? routerWidget) {
         return BlocListener<AutoLogoutCubit, AutoLogoutState>(
-          listenWhen:
-              (
-                AutoLogoutState previousState,
-                AutoLogoutState currentState,
-              ) {
-                return previousState.inactivityLogoutEnabledBool != currentState.inactivityLogoutEnabledBool ||
-                    previousState.inactivityLogoutTimeout != currentState.inactivityLogoutTimeout;
-              },
-          listener:
-              (
-                BuildContext context,
-                AutoLogoutState state,
-              ) {
-                _restartInactivityLogoutTimer(state);
-              },
+          listenWhen: (AutoLogoutState previousState, AutoLogoutState currentState) {
+            return previousState.inactivityLogoutEnabledBool != currentState.inactivityLogoutEnabledBool ||
+                previousState.inactivityLogoutTimeout != currentState.inactivityLogoutTimeout;
+          },
+          listener: (BuildContext context, AutoLogoutState state) {
+            _restartInactivityLogoutTimer(state);
+          },
           child: Listener(
             behavior: HitTestBehavior.translucent,
             onPointerDown: (_) {
-              _restartInactivityLogoutTimer(
-                context.read<AutoLogoutCubit>().state,
-              );
+              _restartInactivityLogoutTimer(context.read<AutoLogoutCubit>().state);
             },
             child: routerWidget ?? const SizedBox.shrink(),
           ),
@@ -173,10 +160,7 @@ class _AppCoreState extends State<AppCore> {
       return;
     }
 
-    inactivityLogoutTimer = Timer(
-      timeout,
-      () => unawaited(_logout()),
-    );
+    inactivityLogoutTimer = Timer(timeout, () => unawaited(_logout()));
   }
 
   Future<void> _logout() async {
@@ -191,9 +175,7 @@ class _AppCoreState extends State<AppCore> {
     try {
       globalLocator<AppService>().logout();
 
-      await appRouter.replaceAll(
-        <PageRouteInfo>[const SplashRoute()],
-      );
+      await _appRouter.replaceAll(<PageRouteInfo>[const SplashRoute()]);
     } finally {
       logoutInProgressBool = false;
     }
