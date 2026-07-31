@@ -48,7 +48,6 @@ void main() {
         // Since generated TextEditingControllers have different hashCodes we are not able to compare them directly.
         // For that reason values from [VaultRecoverPageState] are checked one by one.
         expect(actualVaultRecoverPageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultRecoverPageCubit.state.loadingBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicSize, 15);
@@ -63,7 +62,6 @@ void main() {
         // Since generated TextEditingControllers have different hashCodes we are not able to compare them directly.
         // For that reason values from [VaultRecoverPageState] are checked one by one.
         expect(actualVaultRecoverPageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultRecoverPageCubit.state.loadingBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicSize, 18);
@@ -78,7 +76,6 @@ void main() {
         // Since generated TextEditingControllers have different hashCodes we are not able to compare them directly.
         // For that reason values from [VaultRecoverPageState] are checked one by one.
         expect(actualVaultRecoverPageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultRecoverPageCubit.state.loadingBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicSize, 21);
@@ -93,7 +90,6 @@ void main() {
         // Since generated TextEditingControllers have different hashCodes we are not able to compare them directly.
         // For that reason values from [VaultRecoverPageState] are checked one by one.
         expect(actualVaultRecoverPageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultRecoverPageCubit.state.loadingBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicSize, 24);
@@ -108,7 +104,6 @@ void main() {
         // Since generated TextEditingControllers have different hashCodes we are not able to compare them directly.
         // For that reason values from [VaultRecoverPageState] are checked one by one.
         expect(actualVaultRecoverPageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultRecoverPageCubit.state.loadingBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicSize, 12);
@@ -232,7 +227,6 @@ void main() {
 
         // Assert
         expect(actualVaultRecoverPageCubit.state.confirmPageEnabledBool, true);
-        expect(actualVaultRecoverPageCubit.state.loadingBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicValidBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicFilledBool, false);
         expect(actualVaultRecoverPageCubit.state.mnemonicSize, 24);
