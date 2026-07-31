@@ -2,84 +2,70 @@ import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/settings_entity/settings_entity.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
-import 'package:snggle/shared/models/automatic_logout_mode.dart';
-import 'package:snggle/shared/models/inactive_logout_timeout.dart';
+import 'package:snggle/shared/models/auto_logout_settings/auto_logout_settings_model.dar.dart';
+import 'package:snggle/shared/models/auto_logout_settings/automatic_logout_mode.dart';
+import 'package:snggle/shared/models/auto_logout_settings/inactive_logout_timeout.dart';
 
 class SettingsRepository {
-  final IsarDatabaseManager isarDatabaseManager = globalLocator<IsarDatabaseManager>();
+  final IsarDatabaseManager _isarDatabaseManager;
 
-  static const AutomaticLogoutMode defaultAutomaticLogoutMode = AutomaticLogoutMode.on;
+  SettingsRepository({IsarDatabaseManager? isarDatabaseManager}) : _isarDatabaseManager = isarDatabaseManager ?? globalLocator<IsarDatabaseManager>();
 
-  static const bool defaultInactivityLogoutEnabledBool = true;
+  Future<AutoLogoutSettingsModel> getAutoLogoutSettings() async {
+    SettingsEntity? settingsEntity = await _getSettingsEntity();
+    bool inactivityLogoutEnabledBool = settingsEntity?.inactivityLogoutEnabledBool ?? AutoLogoutSettingsModel.defaultInactivityLogoutBool;
 
-  static const InactivityLogoutTimeout defaultInactivityLogoutTimeout = InactivityLogoutTimeout.oneMinute;
+    AutomaticLogoutMode automaticLogoutMode = AutomaticLogoutMode.values.firstWhere((AutomaticLogoutMode automaticLogoutMode) {
+      return automaticLogoutMode.name == settingsEntity?.automaticLogoutModeName;
+    }, orElse: () => AutoLogoutSettingsModel.defaultAutomaticLogoutMode);
 
-  Future<AutomaticLogoutMode> getAutomaticLogoutMode() async {
-    final SettingsEntity? settingsEntity = await _getSettingsEntity();
+    InactivityLogoutTimeout inactivityLogoutTimeout = InactivityLogoutTimeout.values.firstWhere((InactivityLogoutTimeout inactivityLogoutTimeout) {
+      return inactivityLogoutTimeout.name == settingsEntity?.inactivityLogoutTimeoutName;
+    }, orElse: () => AutoLogoutSettingsModel.defaultInactivityLogoutTimeout);
 
-    return AutomaticLogoutMode.values.firstWhere(
-      (AutomaticLogoutMode mode) => mode.name == settingsEntity?.automaticLogoutModeName,
-      orElse: () => defaultAutomaticLogoutMode,
-    );
-  }
-
-  Future<bool> getInactivityLogoutEnabledBool() async {
-    final SettingsEntity? settingsEntity = await _getSettingsEntity();
-
-    return settingsEntity?.inactivityLogoutEnabledBool ?? defaultInactivityLogoutEnabledBool;
-  }
-
-  Future<InactivityLogoutTimeout> getInactivityLogoutTimeout() async {
-    final SettingsEntity? settingsEntity = await _getSettingsEntity();
-
-    return InactivityLogoutTimeout.values.firstWhere(
-      (InactivityLogoutTimeout timeout) => timeout.name == settingsEntity?.inactivityLogoutTimeoutName,
-      orElse: () => defaultInactivityLogoutTimeout,
+    return AutoLogoutSettingsModel(
+      inactivityLogoutBool: inactivityLogoutEnabledBool,
+      automaticLogoutMode: automaticLogoutMode,
+      inactivityLogoutTimeout: inactivityLogoutTimeout,
     );
   }
 
   Future<void> saveAutomaticLogoutMode(
     AutomaticLogoutMode automaticLogoutMode,
   ) async {
-    await _updateSettingsEntity(
-      (SettingsEntity settingsEntity) {
-        settingsEntity.automaticLogoutModeName = automaticLogoutMode.name;
-      },
-    );
+    await _updateSettings((SettingsEntity settingsEntity) {
+      settingsEntity.automaticLogoutModeName = automaticLogoutMode.name;
+    });
   }
 
-  Future<void> saveInactivityLogoutEnabledBool({required bool inactivityLogoutEnabledBool}) async {
-    await _updateSettingsEntity(
-      (SettingsEntity settingsEntity) {
-        settingsEntity.inactivityLogoutEnabledBool = inactivityLogoutEnabledBool;
-      },
-    );
+  Future<void> saveInactivityEnabledBool({required bool inactivityLogoutEnabledBool}) async {
+    await _updateSettings((SettingsEntity settingsEntity) {
+      settingsEntity.inactivityLogoutEnabledBool = inactivityLogoutEnabledBool;
+    });
   }
 
   Future<void> saveInactivityLogoutTimeout(
     InactivityLogoutTimeout inactivityLogoutTimeout,
   ) async {
-    await _updateSettingsEntity(
-      (SettingsEntity settingsEntity) {
-        settingsEntity.inactivityLogoutTimeoutName = inactivityLogoutTimeout.name;
-      },
-    );
+    await _updateSettings((SettingsEntity settingsEntity) {
+      settingsEntity.inactivityLogoutTimeoutName = inactivityLogoutTimeout.name;
+    });
   }
 
   Future<SettingsEntity?> _getSettingsEntity() {
-    return isarDatabaseManager.perform((Isar isar) {
+    return _isarDatabaseManager.perform((Isar isar) {
       return isar.settings.get(SettingsEntity.settingsId);
     });
   }
 
-  Future<void> _updateSettingsEntity(
-    void Function(SettingsEntity settingsEntity) update,
+  Future<void> _updateSettings(
+    void Function(SettingsEntity settingsEntity) updateSettingsEntity,
   ) async {
-    await isarDatabaseManager.perform((Isar isar) async {
+    await _isarDatabaseManager.perform((Isar isar) async {
       await isar.writeTxn(() async {
         final SettingsEntity settingsEntity = await isar.settings.get(SettingsEntity.settingsId) ?? SettingsEntity();
 
-        update(settingsEntity);
+        updateSettingsEntity(settingsEntity);
 
         await isar.settings.put(settingsEntity);
       });
