@@ -2,31 +2,27 @@ part of 'auto_logout_cubit.dart';
 
 class AutoLogoutState extends Equatable {
   const AutoLogoutState({
-    required this.automaticLogoutMode,
     required this.inactivityLogoutEnabledBool,
+    required this.automaticLogoutMode,
     required this.inactivityLogoutTimeout,
   });
 
-  final AutomaticLogoutMode automaticLogoutMode;
   final bool inactivityLogoutEnabledBool;
+  final AutomaticLogoutMode automaticLogoutMode;
   final InactivityLogoutTimeout inactivityLogoutTimeout;
 
   AutoLogoutState copyWith({
-    AutomaticLogoutMode? automaticLogoutMode,
     bool? inactivityLogoutEnabledBool,
+    AutomaticLogoutMode? automaticLogoutMode,
     InactivityLogoutTimeout? inactivityLogoutTimeout,
   }) {
     return AutoLogoutState(
-      automaticLogoutMode: automaticLogoutMode ?? this.automaticLogoutMode,
       inactivityLogoutEnabledBool: inactivityLogoutEnabledBool ?? this.inactivityLogoutEnabledBool,
+      automaticLogoutMode: automaticLogoutMode ?? this.automaticLogoutMode,
       inactivityLogoutTimeout: inactivityLogoutTimeout ?? this.inactivityLogoutTimeout,
     );
   }
 
   @override
-  List<Object> get props => <Object>[
-    automaticLogoutMode,
-    inactivityLogoutEnabledBool,
-    inactivityLogoutTimeout,
-  ];
+  List<Object> get props => <Object>[inactivityLogoutEnabledBool, automaticLogoutMode, inactivityLogoutTimeout];
 }
