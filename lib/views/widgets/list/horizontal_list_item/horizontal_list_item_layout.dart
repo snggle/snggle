@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/views/widgets/generic/loading_container.dart';
 
 class HorizontalListItemLayout extends StatelessWidget {
   static const Size listItemSize = Size(double.infinity, 95);
@@ -20,13 +19,6 @@ class HorizontalListItemLayout extends StatelessWidget {
     this.trailingWidget,
     super.key,
   });
-
-  const HorizontalListItemLayout.loading({super.key})
-      : iconWidget = const LoadingContainer(radius: 26),
-        lockedBool = false,
-        titleWidget = const LoadingContainer(height: 28, width: 64, radius: 8),
-        subtitleWidget = const LoadingContainer(height: 28, width: 128, radius: 8),
-        trailingWidget = const LoadingContainer(height: 28, width: 64, radius: 8);
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +57,7 @@ class HorizontalListItemLayout extends StatelessWidget {
             children: <Widget>[
               if (trailingWidget != null) trailingWidget!,
             ],
-          )
+          ),
         ],
       ),
     );

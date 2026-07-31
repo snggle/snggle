@@ -7,12 +7,9 @@ import 'package:snggle/shared/models/simple_selection_model.dart';
 import 'package:snggle/shared/models/transactions/a_transaction_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_details_page/transaction_list_item/transaction_list_item.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
-import 'package:snggle/views/widgets/generic/loading_container.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class WalletDetailsTransactionList extends StatelessWidget {
-  static const int _loadingItemsCount = 24;
-
   final bool emptyBool;
   final bool loadingBool;
   final bool selectionEnabledBool;
@@ -50,14 +47,8 @@ class WalletDetailsTransactionList extends StatelessWidget {
           ),
         ] else ...<Widget>[
           SliverList.builder(
-            itemCount: loadingBool ? _loadingItemsCount : transactions.length,
+            itemCount: transactions.length,
             itemBuilder: (BuildContext context, int index) {
-              if (loadingBool) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5),
-                  child: LoadingContainer(height: 30),
-                );
-              }
               ATransactionModel transactionModel = transactions[index];
               return TransactionListItem(
                 key: ValueKey<int>(transactionModel.id),

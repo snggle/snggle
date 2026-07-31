@@ -93,10 +93,8 @@ class _WalletListPageState extends State<WalletListPage> {
             ] else ...<Widget>[
               SliverPageList(
                 addButtonVisibleBool: listState.isSelectionEnabled == false,
-                loadingBool: listState.loadingBool,
                 items: listState.visibleItems,
                 selectedItems: listState.selectedItems,
-                loadingPlaceholder: const HorizontalListItemLayout.loading(),
                 creationButton: HorizontalListItemLayout(
                   iconWidget: ListItemCreationButton(
                     size: HorizontalListItemLayout.listItemIconSize,

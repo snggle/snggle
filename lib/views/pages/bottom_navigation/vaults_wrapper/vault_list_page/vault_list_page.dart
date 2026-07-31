@@ -86,10 +86,8 @@ class _VaultListPageState extends State<VaultListPage> {
               SliverPageGrid(
                 listItemSize: VaultListItemLayout.listItemSize,
                 addButtonVisibleBool: listState.isSelectionEnabled == false,
-                loadingBool: listState.loadingBool,
                 items: listState.visibleItems,
                 selectedItems: listState.selectedItems,
-                loadingPlaceholder: VaultListItemLayout.loading(),
                 vaultCreationButton: VaultListItemLayout(
                   icon: ListItemCreationButton(
                     size: VaultListItemLayout.listItemIconSize,
