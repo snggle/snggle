@@ -20,6 +20,13 @@ class HorizontalListItemLayout extends StatelessWidget {
     super.key,
   });
 
+  const HorizontalListItemLayout.loading({super.key})
+    : iconWidget = const SizedBox(),
+      lockedBool = false,
+      titleWidget = null,
+      subtitleWidget = null,
+      trailingWidget = null;
+
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -16,6 +16,8 @@ class VaultListItemLayout extends StatelessWidget {
     super.key,
   });
 
+  const VaultListItemLayout.loading({super.key}) : title = '', icon = const SizedBox(), titleWidget = null;
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);

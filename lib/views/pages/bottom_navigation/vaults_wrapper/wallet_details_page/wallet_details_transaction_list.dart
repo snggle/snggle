@@ -10,6 +10,8 @@ import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class WalletDetailsTransactionList extends StatelessWidget {
+  static const int _loadingItemsCount = 0;
+
   final bool emptyBool;
   final bool loadingBool;
   final bool selectionEnabledBool;
@@ -47,7 +49,7 @@ class WalletDetailsTransactionList extends StatelessWidget {
           ),
         ] else ...<Widget>[
           SliverList.builder(
-            itemCount: transactions.length,
+            itemCount: loadingBool ? _loadingItemsCount : transactions.length,
             itemBuilder: (BuildContext context, int index) {
               ATransactionModel transactionModel = transactions[index];
               return TransactionListItem(

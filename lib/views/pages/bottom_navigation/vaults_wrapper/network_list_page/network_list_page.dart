@@ -70,8 +70,10 @@ class _NetworkListPageState extends State<NetworkListPage> {
           physics: listState.isScrollDisabled ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
           slivers: <Widget>[
             SliverPageList(
+              loadingBool: listState.loadingBool,
               items: listState.visibleItems,
               selectedItems: listState.selectedItems,
+              loadingPlaceholder: const HorizontalListItemLayout.loading(),
               itemBuilder: (AListItemModel listItemModel) {
                 return HorizontalListItemAnimationWrapper(
                   key: Key('item${listItemModel.filesystemPath.fullPath}'),
@@ -88,15 +90,15 @@ class _NetworkListPageState extends State<NetworkListPage> {
                       selectionPadding: const EdgeInsets.all(5),
                       child: switch (listItemModel) {
                         NetworkGroupModel networkGroupModel => NetworkListItem(
-                          networkGroupModel: networkGroupModel,
-                          fadeAnimationController: fadeAnimationController,
-                          slideAnimationController: slideAnimationController,
-                        ),
+                            networkGroupModel: networkGroupModel,
+                            fadeAnimationController: fadeAnimationController,
+                            slideAnimationController: slideAnimationController,
+                          ),
                         GroupModel groupModel => NetworkGroupListItem(
-                          groupModel: groupModel,
-                          fadeAnimationController: fadeAnimationController,
-                          slideAnimationController: slideAnimationController,
-                        ),
+                            groupModel: groupModel,
+                            fadeAnimationController: fadeAnimationController,
+                            slideAnimationController: slideAnimationController,
+                          ),
                         (_) => const SizedBox(),
                       },
                     );
