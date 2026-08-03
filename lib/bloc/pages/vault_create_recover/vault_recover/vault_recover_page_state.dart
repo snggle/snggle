@@ -4,7 +4,6 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 
 class VaultRecoverPageState extends Equatable {
   final bool confirmPageEnabledBool;
-  final bool loadingBool;
   final bool mnemonicValidBool;
   final bool mnemonicFilledBool;
   final int? mnemonicSize;
@@ -14,7 +13,6 @@ class VaultRecoverPageState extends Equatable {
 
   const VaultRecoverPageState({
     this.confirmPageEnabledBool = false,
-    this.loadingBool = false,
     this.mnemonicValidBool = false,
     this.mnemonicFilledBool = false,
     this.mnemonicSize,
@@ -22,8 +20,6 @@ class VaultRecoverPageState extends Equatable {
     this.repeatedVaultModel,
     this.nameEmptyBool = false,
   });
-
-  const VaultRecoverPageState.loading() : this(loadingBool: true);
 
   VaultRecoverPageState copyWith({
     bool? confirmPageEnabledBool,
@@ -50,12 +46,12 @@ class VaultRecoverPageState extends Equatable {
 
   @override
   List<Object?> get props => <Object?>[
-        confirmPageEnabledBool,
-        mnemonicValidBool,
-        mnemonicFilledBool,
-        mnemonicSize,
-        textControllers,
-        repeatedVaultModel,
-        nameEmptyBool,
-      ];
+    confirmPageEnabledBool,
+    mnemonicValidBool,
+    mnemonicFilledBool,
+    mnemonicSize,
+    textControllers,
+    repeatedVaultModel,
+    nameEmptyBool,
+  ];
 }
