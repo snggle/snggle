@@ -102,28 +102,20 @@ class _AppCoreState extends State<AppCore> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
     return MaterialApp.router(
       routeInformationParser: _appRouter.defaultRouteParser(),
       routerDelegate: _appRouter.delegate(),
       theme: ThemeConfig().buildTheme(),
       debugShowCheckedModeBanner: false,
-      builder: (BuildContext context, Widget? routerWidget) {
-        return BlocListener<AutoLogoutCubit, AutoLogoutState>(
-          listenWhen: (AutoLogoutState previousState, AutoLogoutState currentState) {
-            return previousState.inactivityLogoutEnabledBool != currentState.inactivityLogoutEnabledBool ||
-                previousState.inactivityLogoutTimeout != currentState.inactivityLogoutTimeout;
+      builder: (BuildContext buildContext, Widget? routerWidget) {
+        return Listener(
+          behavior: HitTestBehavior.translucent,
+          onPointerDown: (PointerDownEvent pointerDownEvent) {
+            _autoLogoutController.handleUserInteraction();
           },
-          listener: (BuildContext context, AutoLogoutState state) {
-            _restartInactivityLogoutTimer(state);
-          },
-          child: Listener(
-            behavior: HitTestBehavior.translucent,
-            onPointerDown: (_) {
-              _restartInactivityLogoutTimer(context.read<AutoLogoutCubit>().state);
-            },
-            child: routerWidget ?? const SizedBox.shrink(),
-          ),
+
+          child: routerWidget ?? const SizedBox.shrink(),
         );
       },
     );
