@@ -41,7 +41,8 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                child: tooltipWidget ??
+                child:
+                    tooltipWidget ??
                     ListenableBuilder(
                       listenable: tabsRouter,
                       builder: (BuildContext context, _) {
@@ -82,7 +83,9 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
 
   void showTooltip(Widget tooltip) {
     setState(() {
-      tooltipWidget = tooltip;
+      tooltipWidget = SafeArea(
+        child: tooltip,
+      );
     });
   }
 
