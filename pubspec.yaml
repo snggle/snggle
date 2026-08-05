@@ -134,6 +134,10 @@ dev_dependencies:
   # https://pub.dev/packages/isar_community_generator/versions
   isar_community_generator: 3.3.2
 
+  # A comprehensive, cross-platform path manipulation library for Dart.
+  # https://pub.dev/packages/path
+  path: 1.9.1
+
 dependency_overrides:
   flutter_secure_storage_windows: 4.2.0
   win32: 6.0.0

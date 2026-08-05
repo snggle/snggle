@@ -49,8 +49,8 @@ class AppService {
 
   Future<void> wipeAll() async {
     await wipeSecureStorage();
-    await _wipeFilesystemStorage();
     await _wipeIsarDatabase();
+    await _wipeFilesystemStorage();
 
     globalLocator<ActiveWalletController>().clearActiveWallet();
   }
