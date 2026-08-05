@@ -12,18 +12,20 @@
 import 'package:auto_route/auto_route.dart' as _i26;
 import 'package:flutter/material.dart' as _i28;
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart'
-    as _i38;
-import 'package:snggle/shared/models/groups/network_group_model.dart' as _i37;
+    as _i39;
+import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_state.dart'
+    as _i31;
+import 'package:snggle/shared/models/groups/network_group_model.dart' as _i38;
 import 'package:snggle/shared/models/mnemonic_model.dart' as _i30;
 import 'package:snggle/shared/models/networks/network_template_model.dart'
-    as _i32;
+    as _i33;
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart'
-    as _i31;
+    as _i32;
 import 'package:snggle/shared/models/transactions/solana_transaction_model.dart'
-    as _i35;
-import 'package:snggle/shared/models/vaults/vault_model.dart' as _i33;
-import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i36;
-import 'package:snggle/shared/utils/filesystem_path.dart' as _i34;
+    as _i36;
+import 'package:snggle/shared/models/vaults/vault_model.dart' as _i34;
+import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i37;
+import 'package:snggle/shared/utils/filesystem_path.dart' as _i35;
 import 'package:snggle/views/pages/app_master_key/app_master_key_create_page.dart'
     as _i2;
 import 'package:snggle/views/pages/app_master_key/app_master_key_recover_page.dart'
@@ -181,6 +183,8 @@ class AppSetUpPinRoute extends _i26.PageRouteInfo<AppSetUpPinRouteArgs> {
     _i29.AppMasterKeyType? appMasterKeyType,
     _i27.AppPinType appPinType = _i27.AppPinType.setUpPin,
     _i30.MnemonicModel? mnemonicModel,
+    _i31.PinpadKeyboardState initPinpadKeyboardState =
+        _i31.PinpadKeyboardState.initPinpadKeyboardState,
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
@@ -189,6 +193,7 @@ class AppSetUpPinRoute extends _i26.PageRouteInfo<AppSetUpPinRouteArgs> {
            appMasterKeyType: appMasterKeyType,
            appPinType: appPinType,
            mnemonicModel: mnemonicModel,
+           initPinpadKeyboardState: initPinpadKeyboardState,
            key: key,
          ),
          initialChildren: children,
@@ -206,6 +211,7 @@ class AppSetUpPinRoute extends _i26.PageRouteInfo<AppSetUpPinRouteArgs> {
         appMasterKeyType: args.appMasterKeyType,
         appPinType: args.appPinType,
         mnemonicModel: args.mnemonicModel,
+        initPinpadKeyboardState: args.initPinpadKeyboardState,
         key: args.key,
       );
     },
@@ -217,6 +223,8 @@ class AppSetUpPinRouteArgs {
     this.appMasterKeyType,
     this.appPinType = _i27.AppPinType.setUpPin,
     this.mnemonicModel,
+    this.initPinpadKeyboardState =
+        _i31.PinpadKeyboardState.initPinpadKeyboardState,
     this.key,
   });
 
@@ -226,11 +234,13 @@ class AppSetUpPinRouteArgs {
 
   final _i30.MnemonicModel? mnemonicModel;
 
+  final _i31.PinpadKeyboardState initPinpadKeyboardState;
+
   final _i28.Key? key;
 
   @override
   String toString() {
-    return 'AppSetUpPinRouteArgs{appMasterKeyType: $appMasterKeyType, appPinType: $appPinType, mnemonicModel: $mnemonicModel, key: $key}';
+    return 'AppSetUpPinRouteArgs{appMasterKeyType: $appMasterKeyType, appPinType: $appPinType, mnemonicModel: $mnemonicModel, initPinpadKeyboardState: $initPinpadKeyboardState, key: $key}';
   }
 
   @override
@@ -240,6 +250,7 @@ class AppSetUpPinRouteArgs {
     return appMasterKeyType == other.appMasterKeyType &&
         appPinType == other.appPinType &&
         mnemonicModel == other.mnemonicModel &&
+        initPinpadKeyboardState == other.initPinpadKeyboardState &&
         key == other.key;
   }
 
@@ -248,6 +259,7 @@ class AppSetUpPinRouteArgs {
       appMasterKeyType.hashCode ^
       appPinType.hashCode ^
       mnemonicModel.hashCode ^
+      initPinpadKeyboardState.hashCode ^
       key.hashCode;
 }
 
@@ -288,8 +300,8 @@ class BottomNavigationRoute extends _i26.PageRouteInfo<void> {
 class EthereumTransactionDetailsRoute
     extends _i26.PageRouteInfo<EthereumTransactionDetailsRouteArgs> {
   EthereumTransactionDetailsRoute({
-    required _i31.EthereumTransactionModel ethereumTransactionModel,
-    required _i32.NetworkTemplateModel networkTemplateModel,
+    required _i32.EthereumTransactionModel ethereumTransactionModel,
+    required _i33.NetworkTemplateModel networkTemplateModel,
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
@@ -324,9 +336,9 @@ class EthereumTransactionDetailsRouteArgs {
     this.key,
   });
 
-  final _i31.EthereumTransactionModel ethereumTransactionModel;
+  final _i32.EthereumTransactionModel ethereumTransactionModel;
 
-  final _i32.NetworkTemplateModel networkTemplateModel;
+  final _i33.NetworkTemplateModel networkTemplateModel;
 
   final _i28.Key? key;
 
@@ -356,8 +368,8 @@ class EthereumTransactionDetailsRouteArgs {
 class NetworkListRoute extends _i26.PageRouteInfo<NetworkListRouteArgs> {
   NetworkListRoute({
     required String name,
-    required _i33.VaultModel vaultModel,
-    required _i34.FilesystemPath filesystemPath,
+    required _i34.VaultModel vaultModel,
+    required _i35.FilesystemPath filesystemPath,
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
@@ -397,9 +409,9 @@ class NetworkListRouteArgs {
 
   final String name;
 
-  final _i33.VaultModel vaultModel;
+  final _i34.VaultModel vaultModel;
 
-  final _i34.FilesystemPath filesystemPath;
+  final _i35.FilesystemPath filesystemPath;
 
   final _i28.Key? key;
 
@@ -479,8 +491,8 @@ class SettingsRoute extends _i26.PageRouteInfo<void> {
 class SolanaTransactionDetailsRoute
     extends _i26.PageRouteInfo<SolanaTransactionDetailsRouteArgs> {
   SolanaTransactionDetailsRoute({
-    required _i35.SolanaTransactionModel solanaTransactionModel,
-    required _i32.NetworkTemplateModel networkTemplateModel,
+    required _i36.SolanaTransactionModel solanaTransactionModel,
+    required _i33.NetworkTemplateModel networkTemplateModel,
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
@@ -515,9 +527,9 @@ class SolanaTransactionDetailsRouteArgs {
     this.key,
   });
 
-  final _i35.SolanaTransactionModel solanaTransactionModel;
+  final _i36.SolanaTransactionModel solanaTransactionModel;
 
-  final _i32.NetworkTemplateModel networkTemplateModel;
+  final _i33.NetworkTemplateModel networkTemplateModel;
 
   final _i28.Key? key;
 
@@ -562,7 +574,7 @@ class SplashRoute extends _i26.PageRouteInfo<void> {
 /// [_i15.VaultCreatePage]
 class VaultCreateRoute extends _i26.PageRouteInfo<VaultCreateRouteArgs> {
   VaultCreateRoute({
-    required _i34.FilesystemPath parentFilesystemPath,
+    required _i35.FilesystemPath parentFilesystemPath,
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
@@ -591,7 +603,7 @@ class VaultCreateRoute extends _i26.PageRouteInfo<VaultCreateRouteArgs> {
 class VaultCreateRouteArgs {
   const VaultCreateRouteArgs({required this.parentFilesystemPath, this.key});
 
-  final _i34.FilesystemPath parentFilesystemPath;
+  final _i35.FilesystemPath parentFilesystemPath;
 
   final _i28.Key? key;
 
@@ -632,7 +644,7 @@ class VaultCreateRecoverRoute extends _i26.PageRouteInfo<void> {
 /// [_i17.VaultInitPage]
 class VaultInitRoute extends _i26.PageRouteInfo<VaultInitRouteArgs> {
   VaultInitRoute({
-    required _i34.FilesystemPath parentFilesystemPath,
+    required _i35.FilesystemPath parentFilesystemPath,
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
@@ -661,7 +673,7 @@ class VaultInitRoute extends _i26.PageRouteInfo<VaultInitRouteArgs> {
 class VaultInitRouteArgs {
   const VaultInitRouteArgs({required this.parentFilesystemPath, this.key});
 
-  final _i34.FilesystemPath parentFilesystemPath;
+  final _i35.FilesystemPath parentFilesystemPath;
 
   final _i28.Key? key;
 
@@ -702,7 +714,7 @@ class VaultListRoute extends _i26.PageRouteInfo<void> {
 /// [_i19.VaultRecoverPage]
 class VaultRecoverRoute extends _i26.PageRouteInfo<VaultRecoverRouteArgs> {
   VaultRecoverRoute({
-    required _i34.FilesystemPath parentFilesystemPath,
+    required _i35.FilesystemPath parentFilesystemPath,
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
@@ -731,7 +743,7 @@ class VaultRecoverRoute extends _i26.PageRouteInfo<VaultRecoverRouteArgs> {
 class VaultRecoverRouteArgs {
   const VaultRecoverRouteArgs({required this.parentFilesystemPath, this.key});
 
-  final _i34.FilesystemPath parentFilesystemPath;
+  final _i35.FilesystemPath parentFilesystemPath;
 
   final _i28.Key? key;
 
@@ -788,9 +800,9 @@ class VaultsSectionWrapperRoute extends _i26.PageRouteInfo<void> {
 /// [_i22.WalletConnectPage]
 class WalletConnectRoute extends _i26.PageRouteInfo<WalletConnectRouteArgs> {
   WalletConnectRoute({
-    required _i33.VaultModel vaultModel,
-    required _i36.WalletModel walletModel,
-    required _i32.NetworkTemplateModel networkTemplateModel,
+    required _i34.VaultModel vaultModel,
+    required _i37.WalletModel walletModel,
+    required _i33.NetworkTemplateModel networkTemplateModel,
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
@@ -828,11 +840,11 @@ class WalletConnectRouteArgs {
     this.key,
   });
 
-  final _i33.VaultModel vaultModel;
+  final _i34.VaultModel vaultModel;
 
-  final _i36.WalletModel walletModel;
+  final _i37.WalletModel walletModel;
 
-  final _i32.NetworkTemplateModel networkTemplateModel;
+  final _i33.NetworkTemplateModel networkTemplateModel;
 
   final _i28.Key? key;
 
@@ -863,9 +875,9 @@ class WalletConnectRouteArgs {
 /// [_i23.WalletCreatePage]
 class WalletCreateRoute extends _i26.PageRouteInfo<WalletCreateRouteArgs> {
   WalletCreateRoute({
-    required _i37.NetworkGroupModel networkGroupModel,
-    required _i34.FilesystemPath parentFilesystemPath,
-    required _i33.VaultModel vaultModel,
+    required _i38.NetworkGroupModel networkGroupModel,
+    required _i35.FilesystemPath parentFilesystemPath,
+    required _i34.VaultModel vaultModel,
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
@@ -903,11 +915,11 @@ class WalletCreateRouteArgs {
     this.key,
   });
 
-  final _i37.NetworkGroupModel networkGroupModel;
+  final _i38.NetworkGroupModel networkGroupModel;
 
-  final _i34.FilesystemPath parentFilesystemPath;
+  final _i35.FilesystemPath parentFilesystemPath;
 
-  final _i33.VaultModel vaultModel;
+  final _i34.VaultModel vaultModel;
 
   final _i28.Key? key;
 
@@ -938,10 +950,10 @@ class WalletCreateRouteArgs {
 /// [_i24.WalletDetailsPage]
 class WalletDetailsRoute extends _i26.PageRouteInfo<WalletDetailsRouteArgs> {
   WalletDetailsRoute({
-    required _i33.VaultModel vaultModel,
-    required _i37.NetworkGroupModel networkGroupModel,
-    required _i36.WalletModel walletModel,
-    required _i38.WalletDetailsPageCubit walletDetailsPageCubit,
+    required _i34.VaultModel vaultModel,
+    required _i38.NetworkGroupModel networkGroupModel,
+    required _i37.WalletModel walletModel,
+    required _i39.WalletDetailsPageCubit walletDetailsPageCubit,
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
@@ -982,13 +994,13 @@ class WalletDetailsRouteArgs {
     this.key,
   });
 
-  final _i33.VaultModel vaultModel;
+  final _i34.VaultModel vaultModel;
 
-  final _i37.NetworkGroupModel networkGroupModel;
+  final _i38.NetworkGroupModel networkGroupModel;
 
-  final _i36.WalletModel walletModel;
+  final _i37.WalletModel walletModel;
 
-  final _i38.WalletDetailsPageCubit walletDetailsPageCubit;
+  final _i39.WalletDetailsPageCubit walletDetailsPageCubit;
 
   final _i28.Key? key;
 
@@ -1022,9 +1034,9 @@ class WalletDetailsRouteArgs {
 class WalletListRoute extends _i26.PageRouteInfo<WalletListRouteArgs> {
   WalletListRoute({
     required String name,
-    required _i33.VaultModel vaultModel,
-    required _i34.FilesystemPath filesystemPath,
-    required _i37.NetworkGroupModel networkGroupModel,
+    required _i34.VaultModel vaultModel,
+    required _i35.FilesystemPath filesystemPath,
+    required _i38.NetworkGroupModel networkGroupModel,
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
@@ -1067,11 +1079,11 @@ class WalletListRouteArgs {
 
   final String name;
 
-  final _i33.VaultModel vaultModel;
+  final _i34.VaultModel vaultModel;
 
-  final _i34.FilesystemPath filesystemPath;
+  final _i35.FilesystemPath filesystemPath;
 
-  final _i37.NetworkGroupModel networkGroupModel;
+  final _i38.NetworkGroupModel networkGroupModel;
 
   final _i28.Key? key;
 

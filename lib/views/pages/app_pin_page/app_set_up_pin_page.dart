@@ -9,6 +9,7 @@ import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_se
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_enter_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_invalid_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_loading_state.dart';
+import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_state.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
@@ -25,11 +26,13 @@ class AppSetUpPinPage extends StatefulWidget {
   final AppMasterKeyType? _appMasterKeyType;
   final AppPinType _appPinType;
   final MnemonicModel? _mnemonicModel;
+  final PinpadKeyboardState _initPinpadKeyboardState;
 
   const AppSetUpPinPage({
     this._appMasterKeyType,
     this._appPinType = AppPinType.setUpPin,
     this._mnemonicModel,
+    this._initPinpadKeyboardState = PinpadKeyboardState.initPinpadKeyboardState,
     super.key,
   });
 
@@ -38,11 +41,13 @@ class AppSetUpPinPage extends StatefulWidget {
 }
 
 class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
-  late final AppSetUpPinPageCubit _appSetUpPinPageCubit;
+  late AppSetUpPinPageCubit _appSetUpPinPageCubit;
+  late PinpadKeyboardState _pinpadKeyboardState;
 
   @override
   void initState() {
     super.initState();
+    _pinpadKeyboardState = widget._initPinpadKeyboardState;
     _appSetUpPinPageCubit = AppSetUpPinPageCubit(
       appMasterKeyType: widget._appMasterKeyType,
       appPinType: widget._appPinType,
@@ -65,16 +70,17 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
       bloc: _appSetUpPinPageCubit,
       builder: (BuildContext context, AAppSetUpPinPageState appSetUpPinPageState) {
         bool canPopBool = appSetUpPinPageState is! AppSetUpPinPageConfirmPinState && appPinTypeChangeBool == false;
-
         if (appSetUpPinPageState is AppSetUpPinPageLoadingState) {
           return const LoadingScaffold();
         }
         if (appSetUpPinPageState is AppSetUpPinPageEnterPinState) {
           childWidget = PinpadScaffold(
+            initPinpadKeyboardState: _pinpadKeyboardState,
+            onKeyboardChanged: _handleKeyboardChanged,
             errorBool: false,
             title: 'Set up Access PIN',
             initialPinNumbersList: appSetUpPinPageState.firstPinNumbers,
-            onChanged: _handleFirstPinChange,
+            onChanged: _handleFirstPinChanged,
             actionButtonsList: <Widget>[
               if (appSetUpPinPageState.firstPinNumbers.length >= 4)
                 CustomTextButton(
@@ -86,6 +92,8 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
           );
         } else if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState) {
           childWidget = PinpadScaffold(
+            initPinpadKeyboardState: _pinpadKeyboardState,
+            onKeyboardChanged: _handleKeyboardChanged,
             maxPinLength: appSetUpPinPageState.firstPinNumbers.length,
             errorBool: appSetUpPinPageState is AppSetUpPinPageInvalidPinState,
             title: 'Confirm PIN',
@@ -131,24 +139,22 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
     );
   }
 
-  void _handleFirstPinChange(List<int> pinNumbers) {
-    _appSetUpPinPageCubit.updateFirstPin(pinNumbers);
+  void _handleFirstPinChanged(List<int> pinNumbersList) {
+    _appSetUpPinPageCubit.updateFirstPin(pinNumbersList);
   }
 
-  void _handleConfirmPinChange(
-    List<int> firstPinNumbersList,
-    List<int> confirmPinNumbersList,
-  ) {
+  void _handleKeyboardChanged(PinpadKeyboardState pinpadKeyboardState) {
+    _pinpadKeyboardState = pinpadKeyboardState;
+  }
+
+  void _handleConfirmPinChange(List<int> firstPinNumbersList, List<int> confirmPinNumbersList) {
     _appSetUpPinPageCubit.updateConfirmPin(confirmPinNumbersList);
     if (firstPinNumbersList.length == confirmPinNumbersList.length) {
       _trySetupPin();
     }
   }
 
-  Future<void> _pressBackButton({
-    required AAppSetUpPinPageState appSetUpPinPageState,
-    required bool didPop,
-  }) async {
+  Future<void> _pressBackButton({required AAppSetUpPinPageState appSetUpPinPageState, required bool didPop}) async {
     if (didPop) {
       return;
     }

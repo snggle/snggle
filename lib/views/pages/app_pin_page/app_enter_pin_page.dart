@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/a_app_enter_pin_page_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/app_enter_pin_page_cubit.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_enter_pin_page/states/app_enter_invalid_pin_page_state.dart';
+import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_state.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
@@ -26,6 +27,7 @@ class AppEnterPinPage extends StatefulWidget {
 
 class _AppEnterPinPageState extends State<AppEnterPinPage> {
   final AppEnterPinPageCubit _appEnterPinPageCubit = AppEnterPinPageCubit();
+  late PinpadKeyboardState _initPinpadKeyboardState = PinpadKeyboardState.initPinpadKeyboardState;
 
   @override
   void dispose() {
@@ -57,6 +59,8 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
             ),
           ],
           popButtonVisibleBool: appPinTypeChangeBool,
+          onKeyboardChanged: _handleKeyboardChanged,
+          initPinpadKeyboardState: _initPinpadKeyboardState,
         );
       },
     );
@@ -85,7 +89,7 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
     try {
       await _appEnterPinPageCubit.authenticate(appPinType: widget.appPinType);
       if (appPinTypeChangeBool) {
-        await AutoRouter.of(context).replace(AppSetUpPinRoute(appPinType: AppPinType.changePin));
+        await AutoRouter.of(context).replace(AppSetUpPinRoute(appPinType: AppPinType.changePin, initPinpadKeyboardState: _initPinpadKeyboardState));
       } else {
         await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
       }
@@ -98,5 +102,9 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
         await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const AppMasterKeyRemovedRoute()]);
       }
     }
+  }
+
+  void _handleKeyboardChanged(PinpadKeyboardState pinpadKeyboardState) {
+    _initPinpadKeyboardState = pinpadKeyboardState;
   }
 }
