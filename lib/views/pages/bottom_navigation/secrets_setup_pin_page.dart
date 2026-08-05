@@ -45,32 +45,33 @@ class _SecretsSetupPinPageState extends State<SecretsSetupPinPage> {
           child = PinpadScaffold(
             errorBool: false,
             title: 'Setup Access PIN',
-            initialPinNumbers: secretsSetupPinPageState.firstPinNumbers,
+            initialPinNumbersList: secretsSetupPinPageState.firstPinNumbers,
             onChanged: _handleFirstPinChange,
-            actionButtons: <Widget>[
+            actionButtonsList: <Widget>[
               if (secretsSetupPinPageState.firstPinNumbers.length >= 4)
                 CustomTextButton(
                   title: 'Confirm',
                   onPressed: secretsSetupPinPageCubit.setupFirstPin,
                 ),
             ],
-            popButtonVisible: false,
+            popButtonVisibleBool: false,
           );
         } else if (secretsSetupPinPageState is SecretsSetupPinPageConfirmPinState) {
           child = PinpadScaffold(
             maxPinLength: secretsSetupPinPageState.firstPinNumbers.length,
             errorBool: secretsSetupPinPageState is SecretsSetupPinPageInvalidPinState,
             title: 'Confirm PIN',
-            initialPinNumbers: secretsSetupPinPageState.confirmPinNumbers,
+            initialPinNumbersList: secretsSetupPinPageState.confirmPinNumbers,
             onChanged: (List<int> confirmPinNumbers) => _handleConfirmPinChange(secretsSetupPinPageState.firstPinNumbers, confirmPinNumbers),
-            actionButtons: <Widget>[
+            actionButtonsList: <Widget>[
               if (secretsSetupPinPageState.confirmPinNumbers.isEmpty)
                 CustomTextButton(
                   title: 'Return',
                   onPressed: secretsSetupPinPageCubit.resetAllPins,
                 ),
             ],
-            popButtonVisible: true,
+            popButtonVisibleBool: true,
+            customPopVoidCallback: _handleBackButtonPressed,
           );
         }
 
@@ -105,13 +106,13 @@ class _SecretsSetupPinPageState extends State<SecretsSetupPinPage> {
     }
   }
 
-  void _handleFirstPinChange(List<int> pinNumbers) {
-    secretsSetupPinPageCubit.updateFirstPin(pinNumbers);
+  void _handleFirstPinChange(List<int> pinNumbersList) {
+    secretsSetupPinPageCubit.updateFirstPin(pinNumbersList);
   }
 
-  void _handleConfirmPinChange(List<int> firstPinNumbers, List<int> confirmPinNumbers) {
-    secretsSetupPinPageCubit.updateConfirmPin(confirmPinNumbers);
-    if (firstPinNumbers.length == confirmPinNumbers.length) {
+  void _handleConfirmPinChange(List<int> firstPinNumbersList, List<int> confirmPinNumbersList) {
+    secretsSetupPinPageCubit.updateConfirmPin(confirmPinNumbersList);
+    if (firstPinNumbersList.length == confirmPinNumbersList.length) {
       secretsSetupPinPageCubit.setupConfirmPin();
     }
   }

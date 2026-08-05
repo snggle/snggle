@@ -64,7 +64,8 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
     return BlocBuilder<AppSetUpPinPageCubit, AAppSetUpPinPageState>(
       bloc: _appSetUpPinPageCubit,
       builder: (BuildContext context, AAppSetUpPinPageState appSetUpPinPageState) {
-        bool canPopBool = appSetUpPinPageState is! AppSetUpPinPageConfirmPinState;
+        bool canPopBool = appSetUpPinPageState is! AppSetUpPinPageConfirmPinState && appPinTypeChangeBool == false;
+
         if (appSetUpPinPageState is AppSetUpPinPageLoadingState) {
           return const LoadingScaffold();
         }
@@ -72,35 +73,41 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
           childWidget = PinpadScaffold(
             errorBool: false,
             title: 'Set up Access PIN',
-            initialPinNumbers: appSetUpPinPageState.firstPinNumbers,
+            initialPinNumbersList: appSetUpPinPageState.firstPinNumbers,
             onChanged: _handleFirstPinChange,
-            actionButtons: <Widget>[
+            actionButtonsList: <Widget>[
               if (appSetUpPinPageState.firstPinNumbers.length >= 4)
                 CustomTextButton(
                   title: 'Confirm',
                   onPressed: _appSetUpPinPageCubit.setUpFirstPin,
                 ),
             ],
-            popButtonVisible: true,
+            popButtonVisibleBool: true,
           );
         } else if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState) {
           childWidget = PinpadScaffold(
             maxPinLength: appSetUpPinPageState.firstPinNumbers.length,
             errorBool: appSetUpPinPageState is AppSetUpPinPageInvalidPinState,
             title: 'Confirm PIN',
-            initialPinNumbers: appSetUpPinPageState.confirmPinNumbers,
+            initialPinNumbersList: appSetUpPinPageState.confirmPinNumbers,
             onChanged: (List<int> confirmPinNumbers) => _handleConfirmPinChange(
               appSetUpPinPageState.firstPinNumbers,
               confirmPinNumbers,
             ),
-            actionButtons: <Widget>[
+            actionButtonsList: <Widget>[
               if (appSetUpPinPageState.confirmPinNumbers.isEmpty)
                 CustomTextButton(
                   title: 'Return',
                   onPressed: _appSetUpPinPageCubit.resetAllPins,
                 ),
             ],
-            popButtonVisible: true,
+            popButtonVisibleBool: true,
+            customPopVoidCallback: () async {
+              await _pressBackButton(
+                appSetUpPinPageState: appSetUpPinPageState,
+                didPop: false,
+              );
+            },
           );
         } else {
           childWidget = const SizedBox.shrink();
@@ -110,7 +117,6 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
           onPopInvokedWithResult: (bool didPop, _) async {
             await _pressBackButton(
               appSetUpPinPageState: appSetUpPinPageState,
-              appPinTypeChangeBool: appPinTypeChangeBool,
               didPop: didPop,
             );
           },
@@ -141,16 +147,28 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
 
   Future<void> _pressBackButton({
     required AAppSetUpPinPageState appSetUpPinPageState,
-    required bool appPinTypeChangeBool,
     required bool didPop,
   }) async {
     if (didPop) {
       return;
-    } else if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState) {
+    }
+
+    bool appPinTypeChangeBool = widget._appPinType == AppPinType.changePin;
+
+    if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState) {
       _appSetUpPinPageCubit.resetAllPins();
       return;
-    } else if (appPinTypeChangeBool && appSetUpPinPageState is AppSetUpPinPageEnterPinState) {
-      await context.router.replaceAll(<PageRouteInfo>[const SettingsRoute()]);
+    }
+    if (appPinTypeChangeBool && appSetUpPinPageState is AppSetUpPinPageEnterPinState) {
+      await context.router.root.replaceAll(
+        <PageRouteInfo>[
+          const BottomNavigationRoute(
+            children: <PageRouteInfo>[
+              SettingsSectionWrapperRoute(children: <PageRouteInfo>[SettingsRoute()]),
+            ],
+          ),
+        ],
+      );
       return;
     }
 
