@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar_community/isar.dart';
+import 'package:path/path.dart' as p;
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
@@ -100,11 +101,7 @@ class TestDatabase {
     }
 
     for (FileSystemEntity fileSystemEntity in tmpDirectory.listSync(followLinks: false)) {
-      String fileName = fileSystemEntity.path.replaceFirst(tmpDirectory.path, '');
-      if (fileName.startsWith('/')) {
-        fileName = fileName.substring(1);
-      }
-
+      String fileName = p.basename(fileSystemEntity.path);
       String nextPath = path.isEmpty ? fileName : '$path/$fileName';
 
       if (fileSystemEntity is Directory) {
@@ -131,11 +128,14 @@ class TestDatabase {
       return;
     }
 
-    String pubCachePath = Platform.environment['PUB_CACHE'] ?? '${Platform.environment['HOME']}/.pub-cache';
+    String pubCachePath =
+        Platform.environment['PUB_CACHE'] ??
+        (Platform.isLinux ? '${Platform.environment['HOME']}/.pub-cache' : '${Platform.environment['LOCALAPPDATA']}/Pub/Cache');
 
     await Isar.initializeIsarCore(
       libraries: <Abi, String>{
         Abi.linuxX64: '$pubCachePath/hosted/pub.dev/isar_community_flutter_libs-3.3.2/linux/libisar.so',
+        Abi.windowsX64: '$pubCachePath/hosted/pub.dev/isar_community_flutter_libs-3.3.2/windows/libisar.dll',
       },
     );
 
@@ -181,11 +181,13 @@ class TestDatabase {
     }
 
     source.listSync().forEach((FileSystemEntity entity) {
+      String entityName = p.basename(entity.path);
+
       if (entity is Directory) {
-        Directory newDirectory = Directory('${destination.path}/${entity.path.split('/').last}');
+        Directory newDirectory = Directory('${destination.path}/${entityName}');
         _copyDirectory(entity, newDirectory);
       } else if (entity is File) {
-        File newFile = File('${destination.path}/${entity.uri.pathSegments.last}');
+        File newFile = File('${destination.path}/${entityName}');
         entity.copySync(newFile.path);
       }
     });
