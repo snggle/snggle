@@ -863,17 +863,17 @@ class WalletConnectRouteArgs {
 /// [_i23.WalletCreatePage]
 class WalletCreateRoute extends _i26.PageRouteInfo<WalletCreateRouteArgs> {
   WalletCreateRoute({
-    required _i33.VaultModel vaultModel,
-    required _i34.FilesystemPath parentFilesystemPath,
     required _i37.NetworkGroupModel networkGroupModel,
+    required _i34.FilesystemPath parentFilesystemPath,
+    required _i33.VaultModel vaultModel,
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
          WalletCreateRoute.name,
          args: WalletCreateRouteArgs(
-           vaultModel: vaultModel,
-           parentFilesystemPath: parentFilesystemPath,
            networkGroupModel: networkGroupModel,
+           parentFilesystemPath: parentFilesystemPath,
+           vaultModel: vaultModel,
            key: key,
          ),
          initialChildren: children,
@@ -886,9 +886,9 @@ class WalletCreateRoute extends _i26.PageRouteInfo<WalletCreateRouteArgs> {
     builder: (data) {
       final args = data.argsAs<WalletCreateRouteArgs>();
       return _i23.WalletCreatePage(
-        vaultModel: args.vaultModel,
-        parentFilesystemPath: args.parentFilesystemPath,
         networkGroupModel: args.networkGroupModel,
+        parentFilesystemPath: args.parentFilesystemPath,
+        vaultModel: args.vaultModel,
         key: args.key,
       );
     },
@@ -897,40 +897,40 @@ class WalletCreateRoute extends _i26.PageRouteInfo<WalletCreateRouteArgs> {
 
 class WalletCreateRouteArgs {
   const WalletCreateRouteArgs({
-    required this.vaultModel,
-    required this.parentFilesystemPath,
     required this.networkGroupModel,
+    required this.parentFilesystemPath,
+    required this.vaultModel,
     this.key,
   });
 
-  final _i33.VaultModel vaultModel;
+  final _i37.NetworkGroupModel networkGroupModel;
 
   final _i34.FilesystemPath parentFilesystemPath;
 
-  final _i37.NetworkGroupModel networkGroupModel;
+  final _i33.VaultModel vaultModel;
 
   final _i28.Key? key;
 
   @override
   String toString() {
-    return 'WalletCreateRouteArgs{vaultModel: $vaultModel, parentFilesystemPath: $parentFilesystemPath, networkGroupModel: $networkGroupModel, key: $key}';
+    return 'WalletCreateRouteArgs{networkGroupModel: $networkGroupModel, parentFilesystemPath: $parentFilesystemPath, vaultModel: $vaultModel, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! WalletCreateRouteArgs) return false;
-    return vaultModel == other.vaultModel &&
+    return networkGroupModel == other.networkGroupModel &&
         parentFilesystemPath == other.parentFilesystemPath &&
-        networkGroupModel == other.networkGroupModel &&
+        vaultModel == other.vaultModel &&
         key == other.key;
   }
 
   @override
   int get hashCode =>
-      vaultModel.hashCode ^
-      parentFilesystemPath.hashCode ^
       networkGroupModel.hashCode ^
+      parentFilesystemPath.hashCode ^
+      vaultModel.hashCode ^
       key.hashCode;
 }
 

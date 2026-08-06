@@ -8,6 +8,7 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/vault_create_recover/mnemonic_size_picker.dart';
+import 'package:snggle/views/pages/vault_create_recover/vault_discard_dialog.dart';
 import 'package:snggle/views/pages/vault_create_recover/vault_recover_page/vault_mnemonic_form_editable.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/paginated_form/paginated_form.dart';
@@ -54,7 +55,7 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
           customSystemPopCallback: _handleSystemPop,
           actions: <Widget>[
             IconButton(
-              onPressed: () => AutoRouter.of(context).root.pop(),
+              onPressed: () => _isFirstPage() ? context.router.root.pop() : _showDiscardDialog(onDiscardPressed: context.router.root.pop),
               icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
             ),
           ],
@@ -86,10 +87,7 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
     _keyboardValueNotifier.hideKeyboard();
 
     if (_pageController.page != 0) {
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 150),
-        curve: Curves.easeIn,
-      );
+      _showDiscardDialog(onDiscardPressed: _navigateToPreviousPage);
     } else {
       AutoRouter.of(context).pop();
     }
@@ -100,13 +98,19 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
     _keyboardValueNotifier.hideKeyboard();
 
     if (_isFirstPage() == false) {
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 150),
-        curve: Curves.easeIn,
-      );
+      _showDiscardDialog(onDiscardPressed: _navigateToPreviousPage);
     } else {
       context.router.pop();
     }
+  }
+
+  Future<void> _showDiscardDialog({required VoidCallback onDiscardPressed}) async {
+    await showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      useRootNavigator: true,
+      builder: (_) => VaultDiscardDialog(onDiscardPressed: onDiscardPressed),
+    );
   }
 
   void _handleMnemonicSizeSelected(crypto_utils.MnemonicSize mnemonicSize) {
@@ -121,5 +125,9 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
 
     int pageIndex = _pageController.page?.round() ?? _pageController.initialPage;
     return pageIndex == 0;
+  }
+
+  void _navigateToPreviousPage() {
+    _pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
   }
 }

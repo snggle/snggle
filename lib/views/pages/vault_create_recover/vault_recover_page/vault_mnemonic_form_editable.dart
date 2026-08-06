@@ -60,7 +60,7 @@ class VaultMnemonicFormEditable extends StatelessWidget {
           return;
         }
 
-        AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.creationSuccessful);
+        AutoRouter.of(context).root.pop(VaultCreateRecoverStatus.recoverySuccessful);
       },
     );
   }

@@ -19,7 +19,6 @@ class VaultInitPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScaffold(
       title: '',
-      closeButtonVisible: true,
       popAvailableBool: true,
       popButtonVisible: true,
       customPopCallback: () {

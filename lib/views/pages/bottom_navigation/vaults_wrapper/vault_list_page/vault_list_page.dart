@@ -140,8 +140,8 @@ class _VaultListPageState extends State<VaultListPage> {
           title: 'Success',
           content: Text(
             switch (vaultCreateRecoverStatus) {
-              VaultCreateRecoverStatus.creationSuccessful => 'The vault creation process has been completed',
-              VaultCreateRecoverStatus.recoverySuccessful => 'The vault recovery process has been completed',
+              VaultCreateRecoverStatus.creationSuccessful => 'The vault creation process has been completed.',
+              VaultCreateRecoverStatus.recoverySuccessful => 'The vault recovery process has been completed.',
             },
             textAlign: TextAlign.center,
           ),

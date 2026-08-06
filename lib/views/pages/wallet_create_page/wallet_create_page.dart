@@ -209,6 +209,6 @@ class _WalletCreatePageState extends State<WalletCreatePage> {
     if (walletModel == null) {
       return;
     }
-    AutoRouter.of(context).pop();
+    AutoRouter.of(context).pop<bool>(true);
   }
 }

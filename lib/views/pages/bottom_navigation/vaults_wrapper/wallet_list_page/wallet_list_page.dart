@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
@@ -19,6 +21,8 @@ import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_item.dart';
 import 'package:snggle/views/widgets/button/list_item_creation_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_animation_wrapper.dart';
@@ -142,14 +146,34 @@ class _WalletListPageState extends State<WalletListPage> {
   }
 
   Future<void> _navigateToWalletCreatePage() async {
-    await AutoRouter.of(context).push<void>(
+    bool? walletCreatedBool = await AutoRouter.of(context).push<bool?>(
       WalletCreateRoute(
         vaultModel: widget.vaultModel,
         networkGroupModel: widget.networkGroupModel,
         parentFilesystemPath: walletListPageCubit.state.filesystemPath,
       ),
     );
-    await walletListPageCubit.refreshAll();
+
+    if (walletCreatedBool == true) {
+      unawaited(walletListPageCubit.refreshAll());
+      await showDialog(
+        context: context,
+        barrierColor: Colors.transparent,
+        builder: (BuildContext context) => CustomDialog(
+          title: 'Success',
+          content: const Text(
+            'The wallet creation process has been completed.',
+            textAlign: TextAlign.center,
+          ),
+          options: <CustomDialogOption>[
+            CustomDialogOption(
+              label: 'Done',
+              onPressed: () {},
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
