@@ -39,6 +39,9 @@ class CustomLoadingDialog extends StatefulWidget {
         context: context,
         barrierDismissible: false,
         barrierColor: barrierColor,
+        animationStyle: const AnimationStyle(
+          reverseDuration: Duration(milliseconds: 50),
+        ),
         builder: (BuildContext context) {
           return CustomLoadingDialog(key: dialogKey, title: title);
         },

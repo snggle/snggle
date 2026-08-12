@@ -4,6 +4,7 @@ import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_se
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_enter_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_invalid_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_loading_state.dart';
+import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_success_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/app_service.dart';
@@ -44,10 +45,12 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
 
   void setUpFirstPin() {
     AppSetUpPinPageEnterPinState appSetupPinPageEnterPinState = state as AppSetUpPinPageEnterPinState;
-    emit(AppSetUpPinPageConfirmPinState(
-      firstPinNumbers: appSetupPinPageEnterPinState.firstPinNumbers,
-      confirmPinNumbers: const <int>[],
-    ));
+    emit(
+      AppSetUpPinPageConfirmPinState(
+        firstPinNumbers: appSetupPinPageEnterPinState.firstPinNumbers,
+        confirmPinNumbers: const <int>[],
+      ),
+    );
   }
 
   Future<void> setUpConfirmPin() async {
@@ -60,11 +63,14 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
       PasswordModel passwordModel = PasswordModel.fromPlaintext(firstPinNumbersList.join(''));
       await _submitEnteredPin(passwordModel);
       await minOperationTime;
+      emit(const AppSetUpPinPageSuccessState());
     } else {
-      emit(AppSetUpPinPageInvalidPinState(
-        firstPinNumbers: appSetupPinPageConfirmPinState.firstPinNumbers,
-        confirmPinNumbers: appSetupPinPageConfirmPinState.confirmPinNumbers,
-      ));
+      emit(
+        AppSetUpPinPageInvalidPinState(
+          firstPinNumbers: appSetupPinPageConfirmPinState.firstPinNumbers,
+          confirmPinNumbers: appSetupPinPageConfirmPinState.confirmPinNumbers,
+        ),
+      );
       throw InvalidPasswordException('PIN numbers are not equal');
     }
   }
@@ -79,10 +85,13 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
     } else {
       await _savePin(passwordModel);
     }
+    emit(const AppSetUpPinPageLoadingState());
+
   }
 
   Future<void> _changePin(PasswordModel passwordModel) async {
     emit(const AppSetUpPinPageLoadingState());
+
     await _masterKeyController.changePassword(passwordModel);
   }
 
