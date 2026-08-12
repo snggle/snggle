@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/views/widgets/generic/loading_container.dart';
 
 class VaultListItemLayout extends StatelessWidget {
   static const Size listItemSize = Size(96, 144);
@@ -16,11 +15,6 @@ class VaultListItemLayout extends StatelessWidget {
     this.titleWidget,
     super.key,
   });
-
-  VaultListItemLayout.loading({super.key})
-      : title = '',
-        icon = LoadingContainer(radius: 26, width: listItemIconSize.width, height: listItemIconSize.height),
-        titleWidget = const LoadingContainer(height: 16, width: 30, radius: 8);
 
   @override
   Widget build(BuildContext context) {

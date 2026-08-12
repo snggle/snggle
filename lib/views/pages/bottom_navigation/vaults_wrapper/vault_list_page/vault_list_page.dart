@@ -89,7 +89,6 @@ class _VaultListPageState extends State<VaultListPage> {
                 loadingBool: listState.loadingBool,
                 items: listState.visibleItems,
                 selectedItems: listState.selectedItems,
-                loadingPlaceholder: VaultListItemLayout.loading(),
                 vaultCreationButton: VaultListItemLayout(
                   icon: ListItemCreationButton(
                     size: VaultListItemLayout.listItemIconSize,

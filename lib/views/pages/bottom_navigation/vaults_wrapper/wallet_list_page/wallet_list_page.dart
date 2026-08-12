@@ -100,7 +100,6 @@ class _WalletListPageState extends State<WalletListPage> {
                 loadingBool: listState.loadingBool,
                 items: listState.visibleItems,
                 selectedItems: listState.selectedItems,
-                loadingPlaceholder: const HorizontalListItemLayout.loading(),
                 creationButton: HorizontalListItemLayout(
                   iconWidget: ListItemCreationButton(
                     size: HorizontalListItemLayout.listItemIconSize,
