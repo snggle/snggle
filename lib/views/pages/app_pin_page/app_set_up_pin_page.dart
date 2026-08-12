@@ -10,6 +10,7 @@ import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_se
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_invalid_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_loading_state.dart';
 import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_state.dart';
+import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_success_state.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
@@ -200,7 +201,9 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
       if (mounted == false) {
         return;
       }
-      if (widget._appPinType == AppPinType.changePin) {
+
+      await WidgetsBinding.instance.endOfFrame;
+      if (widget._appPinType == AppPinType.changePin && _appSetUpPinPageCubit.state is AppSetUpPinPageSuccessState) {
         await _showSuccessDialog(message: 'Your application PIN has been changed.');
         await context.router.root.replaceAll(
           <PageRouteInfo>[
@@ -229,7 +232,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.white,
+      barrierColor: Colors.transparent,
       builder: (BuildContext dialogContext) {
         return CustomDialog(
           title: 'Success',
