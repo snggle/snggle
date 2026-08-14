@@ -208,7 +208,7 @@ void main() {
 
     test('Should [return SolanaSignTxPageCubit] with initialized wallet and wallet password', () async {
       // Arrange
-      globalLocator<PasswordController>().addPassword(PasswordModel.defaultPassword(), const FilesystemPath(<String>['vault1']));
+      globalLocator<PasswordController>().addPassword(PasswordModel.defaultPassword(), FilesystemPath.fromString('vaults/vault1'));
 
       // Act
       await actualSolanaSignTxPageCubit.init();
@@ -477,7 +477,7 @@ void main() {
 
     test('Should [return SolanaSignTxPageCubit] with initialized wallet and wallet password', () async {
       // Arrange
-      globalLocator<PasswordController>().addPassword(PasswordModel.defaultPassword(), const FilesystemPath(<String>['vault1']));
+      globalLocator<PasswordController>().addPassword(PasswordModel.defaultPassword(), FilesystemPath.fromString('vaults/vault1'));
 
       // Act
       await actualSolanaSignTxPageCubit.init();

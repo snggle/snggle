@@ -41,7 +41,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'secrets');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
 
       actualUpdatedFilesystemStructure['vaults.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
         encryptedData: actualUpdatedFilesystemStructure['vaults.snggle'] as String,
@@ -203,7 +203,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'secrets');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
 
       actualUpdatedFilesystemStructure['vaults.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
         encryptedData: actualUpdatedFilesystemStructure['vaults.snggle'] as String,
@@ -257,7 +257,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'secrets');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
 
       actualUpdatedFilesystemStructure['vaults.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
         encryptedData: actualUpdatedFilesystemStructure['vaults.snggle'] as String,
@@ -301,6 +301,27 @@ void main() {
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
     });
+
+    test('Should [SAVE secrets] and [CREATE vaults.snggle] if [first vault CREATED]', () async {
+      // Arrange
+      await testDatabase.close();
+      await testDatabase.init(databaseMock: DatabaseMock.masterKeyOnlyDatabaseMock, appPasswordModel: PasswordModel.fromPlaintext('1111'));
+
+      ASecretsModel actualNewSecretsModel = VaultSecretsModel(
+        filesystemPath: FilesystemPath.fromString('vaults/vault1'),
+        mnemonicModel: MnemonicModel.fromString(
+          'mechanic win word session stamp pelican prison bachelor donate capital stuff love',
+        ),
+      );
+
+      // Act
+      await globalLocator<SecretsService>().save(actualNewSecretsModel, PasswordModel.defaultPassword());
+
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
+
+      // Assert
+      expect(actualUpdatedFilesystemStructure.keys, contains('vaults.snggle'));
+    });
   });
 
   group('Tests of SecretsService.move()', () {
@@ -310,7 +331,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'secrets');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -353,7 +374,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'secrets');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{

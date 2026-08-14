@@ -14,6 +14,10 @@ class SecretsRepository {
     return _filesystemStorageManager.read(filesystemPath);
   }
 
+  Future<bool> isSecretExists(FilesystemPath filesystemPath) async {
+    return _filesystemStorageManager.isSecretExists(filesystemPath);
+  }
+
   Future<void> saveEncrypted(FilesystemPath filesystemPath, String encryptedSecrets) async {
     await _filesystemStorageManager.write(filesystemPath, encryptedSecrets);
   }

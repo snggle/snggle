@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
 import 'package:snggle/shared/models/a_secrets_model.dart';
+import 'package:snggle/shared/models/groups/group_secrets_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
@@ -39,6 +40,11 @@ class SecretsService {
   }
 
   Future<void> save(ASecretsModel secretsModel, PasswordModel passwordModel) async {
+    bool parentFilesystemStorageExistsBool = await _secretsRepository.isSecretExists(FilesystemPath.fromString('vaults'));
+    if (parentFilesystemStorageExistsBool == false) {
+      await _createParentFilesystemStorage(secretsModel.filesystemPath);
+    }
+
     Map<String, dynamic> secretsJson = secretsModel.toJson();
     String secretsJsonString = jsonEncode(secretsJson);
     String encryptedSecrets = passwordModel.encrypt(decryptedData: secretsJsonString);
@@ -56,5 +62,15 @@ class SecretsService {
   Future<bool> isPasswordValid(FilesystemPath filesystemPath, PasswordModel passwordModel) async {
     String encryptedSecrets = await _secretsRepository.getEncrypted(filesystemPath);
     return passwordModel.isValidForData(encryptedSecrets);
+  }
+
+  Future<void> _createParentFilesystemStorage(FilesystemPath filesystemPath) async {
+    FilesystemPath vaultsRootPath = FilesystemPath.fromString('vaults');
+
+    GroupSecretsModel vaultsRootSecretsModel = GroupSecretsModel.generate(vaultsRootPath);
+    String vaultsRootSecretsJsonString = jsonEncode(vaultsRootSecretsModel.toJson());
+    String encryptedVaultsRootSecrets = PasswordModel.defaultPassword().encrypt(decryptedData: vaultsRootSecretsJsonString);
+
+    await _secretsRepository.saveEncrypted(vaultsRootPath, encryptedVaultsRootSecrets);
   }
 }

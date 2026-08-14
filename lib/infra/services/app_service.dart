@@ -15,7 +15,7 @@ class AppService {
 
   Future<bool> isDataBaseExist() async {
     Directory rootDirectory = await _rootDirectoryBuilder.call();
-    Directory vaultsDirectory = Directory('${rootDirectory.path}/secrets/vaults');
+    Directory vaultsDirectory = Directory('${rootDirectory.path}/filesystem_storage/vaults');
 
     if (await vaultsDirectory.exists() == false) {
       return false;

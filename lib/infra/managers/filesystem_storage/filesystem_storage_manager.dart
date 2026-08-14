@@ -60,9 +60,26 @@ class FilesystemStorageManager {
 
     Directory parentDirectory = await _getParentDirectory(filesystemPath);
     bool parentDirectoryEmptyBool = parentDirectory.listSync().isEmpty;
-    bool parentDirectoryTopLevelBool = parentDirectory.path.endsWith('/vaults');
-    if (parentDirectoryEmptyBool && parentDirectoryTopLevelBool == false) {
+    if (parentDirectoryEmptyBool) {
       await parentDirectory.delete();
+      await _deleteParentFilesystemStorage(parentDirectory);
+    }
+  }
+
+  Future<bool> isSecretExists(FilesystemPath filesystemPath) async {
+    File file = await _getFile(filesystemPath);
+    return file.exists();
+  }
+
+  Future<void> _deleteParentFilesystemStorage(Directory deletedDirectory) async {
+    String vaultsDirectoryPath = await _buildAbsolutePath(relativePath: 'vaults');
+    if (deletedDirectory.path != vaultsDirectoryPath) {
+      return;
+    }
+
+    File vaultsRootFile = File(await _buildAbsolutePath(relativePath: 'vaults.snggle'));
+    if (await vaultsRootFile.exists()) {
+      await vaultsRootFile.delete();
     }
   }
 
@@ -83,6 +100,10 @@ class FilesystemStorageManager {
 
   Future<String> _buildAbsolutePath({required String relativePath}) async {
     Directory rootDirectory = await _rootDirectoryCompleter.future;
-    return '${rootDirectory.path}/${_filesystemStorageKey.name}/$relativePath';
+    String storageDirectoryName = switch (_filesystemStorageKey) {
+      FilesystemStorageKey.secrets => 'filesystem_storage',
+      _ => _filesystemStorageKey.name,
+    };
+    return '${rootDirectory.path}/$storageDirectoryName/$relativePath';
   }
 }

@@ -103,7 +103,7 @@ void main() {
       // Arrange
       RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
       Directory rootDirectory = await rootDirectoryBuilder.call();
-      Directory secretsDir = Directory('${rootDirectory.path}/secrets');
+      Directory secretsDir = Directory('${rootDirectory.path}/filesystem_storage');
 
       if (await secretsDir.exists()) {
         await secretsDir.delete(recursive: true);
@@ -120,7 +120,7 @@ void main() {
       // Arrange
       RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
       Directory rootDirectory = await rootDirectoryBuilder.call();
-      Directory secretsDir = Directory('${rootDirectory.path}/secrets');
+      Directory secretsDir = Directory('${rootDirectory.path}/filesystem_storage');
 
       if (await secretsDir.exists()) {
         await secretsDir.delete(recursive: true);
@@ -140,8 +140,8 @@ void main() {
       // Arrange
       RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
       Directory rootDirectory = await rootDirectoryBuilder.call();
-      Directory secretsDir = Directory('${rootDirectory.path}/secrets');
-      Directory vaultsDir = Directory('${rootDirectory.path}/secrets/vaults');
+      Directory secretsDir = Directory('${rootDirectory.path}/filesystem_storage');
+      Directory vaultsDir = Directory('${rootDirectory.path}/filesystem_storage/vaults');
 
       if (await secretsDir.exists()) {
         await secretsDir.delete(recursive: true);
@@ -162,7 +162,7 @@ void main() {
       RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
       Directory rootDirectory = await rootDirectoryBuilder.call();
 
-      Directory vaultsDirectory = Directory('${rootDirectory.path}/secrets/vaults');
+      Directory vaultsDirectory = Directory('${rootDirectory.path}/filesystem_storage/vaults');
 
       if (await vaultsDirectory.exists()) {
         await for (FileSystemEntity entity in vaultsDirectory.list()) {
@@ -184,7 +184,7 @@ void main() {
       RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
       Directory rootDirectory = await rootDirectoryBuilder.call();
 
-      Directory vaultsDirectory = Directory('${rootDirectory.path}/secrets/vaults');
+      Directory vaultsDirectory = Directory('${rootDirectory.path}/filesystem_storage/vaults');
 
       if (await vaultsDirectory.exists()) {
         await for (FileSystemEntity entity in vaultsDirectory.list()) {
@@ -194,7 +194,7 @@ void main() {
         }
       }
 
-      await File('${rootDirectory.path}/secrets/vaults/vault.snggle').writeAsBytes(<int>[]);
+      await File('${rootDirectory.path}/filesystem_storage/vaults/vault.snggle').writeAsBytes(<int>[]);
 
       // Act
       bool actualDatabaseExistBool = await globalLocator<AppService>().isDataBaseExist();
@@ -207,7 +207,7 @@ void main() {
       // Arrange
       RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
       Directory rootDirectory = await rootDirectoryBuilder.call();
-      Directory secretsDir = Directory('${rootDirectory.path}/secrets');
+      Directory secretsDir = Directory('${rootDirectory.path}/filesystem_storage');
 
       if (await secretsDir.exists()) {
         await secretsDir.delete(recursive: true);
