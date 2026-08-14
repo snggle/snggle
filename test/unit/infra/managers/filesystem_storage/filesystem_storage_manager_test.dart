@@ -97,8 +97,8 @@ void main() {
             'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
           },
           'id1.snggle': 'updated_value',
-          'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle'
-        }
+          'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
+        },
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -121,8 +121,8 @@ void main() {
             'id2.snggle': 'updated_value',
           },
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
-          'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle'
-        }
+          'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
+        },
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -146,8 +146,8 @@ void main() {
           },
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
           'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
-          'id4.snggle': 'new_value'
-        }
+          'id4.snggle': 'new_value',
+        },
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -172,7 +172,7 @@ void main() {
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
           'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
         },
-        'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle'
+        'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -200,7 +200,7 @@ void main() {
           },
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
         },
-        'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle'
+        'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -224,7 +224,7 @@ void main() {
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
           'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
         },
-        'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle'
+        'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -268,7 +268,7 @@ void main() {
           },
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
         },
-        'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle'
+        'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -286,8 +286,22 @@ void main() {
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
           'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
         },
-        'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle'
+        'vaults.snggle': 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle',
       };
+
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
+    });
+
+    test('Should [DELETE vaults root file] if [vaults directory becomes EMPTY]', () async {
+      // Act
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1'));
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1/id2'));
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id3'));
+
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'test');
+
+      // Assert
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{};
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
     });
