@@ -10,7 +10,6 @@ import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_se
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_invalid_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_loading_state.dart';
 import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_state.dart';
-import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_success_state.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/logger/app_logger.dart';
@@ -90,6 +89,12 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
                 ),
             ],
             popButtonVisibleBool: true,
+            customPopVoidCallback: () async {
+              await _pressBackButton(
+                appSetUpPinPageState: appSetUpPinPageState,
+                didPop: false,
+              );
+            },
           );
         } else if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState) {
           childWidget = PinpadScaffold(
@@ -161,24 +166,11 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
     }
 
     bool appPinTypeChangeBool = widget._appPinType == AppPinType.changePin;
-
-    if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState) {
-    }
-
     if (appSetUpPinPageState is AppSetUpPinPageConfirmPinState) {
       _appSetUpPinPageCubit.resetAllPins();
       return;
-    } else if (appPinTypeChangeBool && appSetUpPinPageState is AppSetUpPinPageEnterPinState) {
-      await context.router.root.replaceAll(
-        <PageRouteInfo>[
-          const BottomNavigationRoute(
-            children: <PageRouteInfo>[
-              SettingsSectionWrapperRoute(children: <PageRouteInfo>[SettingsRoute()]),
-            ],
-          ),
-        ],
-      );
     }
+
     if (appPinTypeChangeBool && appSetUpPinPageState is AppSetUpPinPageEnterPinState) {
       await context.router.root.replaceAll(
         <PageRouteInfo>[
@@ -191,7 +183,6 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
       );
       return;
     }
-
     context.router.pop();
   }
 
@@ -202,26 +193,17 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
         return;
       }
 
-      await WidgetsBinding.instance.endOfFrame;
-      if (widget._appPinType == AppPinType.changePin && _appSetUpPinPageCubit.state is AppSetUpPinPageSuccessState) {
-        await _showSuccessDialog(message: 'Your application PIN has been changed.');
-        await context.router.root.replaceAll(
-          <PageRouteInfo>[
-            const BottomNavigationRoute(
-              children: <PageRouteInfo>[
-                SettingsSectionWrapperRoute(children: <PageRouteInfo>[SettingsRoute()]),
-              ],
-            ),
-          ],
-        );
+      bool appPinTypeChangeBool = widget._appPinType == AppPinType.changePin;
+      if (appPinTypeChangeBool) {
+        context.router.root.pop(true);
         return;
       }
 
       bool masterKeyRecoverBool = widget._appMasterKeyType == AppMasterKeyType.recover;
-
       await _showSuccessDialog(
         message: masterKeyRecoverBool ? 'Your Master Key has been successfully recovered.' : 'Your new Master Key has been successfully created.',
       );
+
       await context.router.root.replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
     } catch (e) {
       AppLogger().log(message: 'Provided invalid confirm PIN');
@@ -233,6 +215,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
       context: context,
       barrierDismissible: false,
       barrierColor: Colors.transparent,
+      useRootNavigator: true,
       builder: (BuildContext dialogContext) {
         return CustomDialog(
           title: 'Success',

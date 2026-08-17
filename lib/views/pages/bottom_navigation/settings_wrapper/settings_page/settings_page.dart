@@ -6,6 +6,8 @@ import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/app_wipe_dialog/app_wipe_dialog.dart';
 import 'package:snggle/views/widgets/custom/custom_large_list_tile.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 @RoutePage()
@@ -27,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
           CustomLargeListTile(
             leading: const AssetIcon(AppIcons.settings_change_app_pin, size: 42),
             title: 'Change Application PIN',
-            onTap: () => context.router.push(AppEnterPinRoute(appPinType: AppPinType.changePin)),
+            onTap: _navigateAppPinChange,
           ),
           CustomLargeListTile(
             leading: const AssetIcon(AppIcons.settings_privacy_policy, size: 42),
@@ -53,6 +55,47 @@ class _SettingsPageState extends State<SettingsPage> {
       barrierColor: Colors.transparent,
       useRootNavigator: true,
       builder: (_) => const AppWipeDialog(),
+    );
+  }
+
+  Future<void> _navigateAppPinChange() async {
+    bool? appPinChangedBool = await context.router.root.push<bool?>(
+      AppPinChangeRoute(
+        children: <PageRouteInfo>[
+          AppEnterPinRoute(appPinType: AppPinType.changePin),
+        ],
+      ),
+    );
+
+    bool successDialogAvailableBool = mounted && appPinChangedBool == true;
+    if (successDialogAvailableBool == false) {
+      return;
+    }
+    await _showSuccessDialog();
+  }
+
+  Future<void> _showSuccessDialog() async {
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.transparent,
+      useRootNavigator: false,
+      builder: (BuildContext dialogContext) {
+        return CustomDialog(
+          title: 'Success',
+          content: const Text(
+            'Your application PIN has been changed.',
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Colors.transparent,
+          options: <CustomDialogOption>[
+            CustomDialogOption(
+              label: 'Continue',
+              onPressed: () {},
+            ),
+          ],
+        );
+      },
     );
   }
 }

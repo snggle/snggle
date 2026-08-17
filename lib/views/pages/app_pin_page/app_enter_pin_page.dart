@@ -59,6 +59,9 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
             ),
           ],
           popButtonVisibleBool: appPinTypeChangeBool,
+          customPopVoidCallback: () async {
+            await _pressedBackButon(appPinTypeChangeBool: appPinTypeChangeBool);
+          },
           onKeyboardChanged: _handleKeyboardChanged,
           initPinpadKeyboardState: _initPinpadKeyboardState,
         );
@@ -83,6 +86,12 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
     }
 
     return warningText;
+  }
+
+  Future<void> _pressedBackButon({required bool appPinTypeChangeBool}) async {
+    if (appPinTypeChangeBool) {
+      await context.router.root.maybePop();
+    }
   }
 
   Future<void> _pressConfirmButton({required bool appPinTypeChangeBool}) async {

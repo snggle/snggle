@@ -23,6 +23,13 @@ class AppRouter extends RootStackRouter {
       AutoRoute(page: AppMasterKeyRemovedRoute.page),
       AutoRoute(page: AppMasterKeyCreateRoute.page),
       AutoRoute(page: AppMasterKeyRecoverRoute.page),
+      AutoRoute(
+        page: AppPinChangeRoute.page,
+        children: <AutoRoute>[
+          AutoRoute(page: AppEnterPinRoute.page, initial: true),
+          AutoRoute(page: AppSetUpPinRoute.page),
+        ],
+      ),
       AutoRoute(page: AppSetUpPinRoute.page),
       AutoRoute(page: AppEnterPinRoute.page),
       AutoRoute(page: PrivacyPolicyRoute.page),
