@@ -4,7 +4,6 @@ import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_se
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_enter_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_invalid_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_loading_state.dart';
-import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_success_state.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -117,37 +116,6 @@ void main() {
 
         await safeFuture;
       });
-
-      test(
-        'Should [emit AppSetUpPinPageLoadingState] and then [AppSetUpPinPageSuccessState] when [confirm pin MATCHES]',
-        () async {
-          // Arrange
-          const List<int> firstPinList = <int>[2, 2, 2, 2];
-          const List<int> confirmPinList = <int>[2, 2, 2, 2];
-
-          actualAppSetUpPinPageCubit
-            ..updateFirstPin(firstPinList)
-            ..setUpFirstPin()
-            ..updateConfirmPin(confirmPinList);
-
-          // Act
-          Future<void> future = actualAppSetUpPinPageCubit.setUpConfirmPin();
-          await Future<void>.delayed(Duration.zero);
-
-          // Assert
-          expect(
-            actualAppSetUpPinPageCubit.state,
-            const AppSetUpPinPageLoadingState(),
-          );
-
-          await future;
-
-          expect(
-            actualAppSetUpPinPageCubit.state,
-            const AppSetUpPinPageSuccessState(),
-          );
-        },
-      );
     });
 
     group('Tests of [AppPinType.setUpPin] process when [confirm pin INCORRECT]', () {

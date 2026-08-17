@@ -4,7 +4,6 @@ import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_se
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_enter_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_invalid_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_loading_state.dart';
-import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_success_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/app_service.dart';
@@ -63,7 +62,6 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
       PasswordModel passwordModel = PasswordModel.fromPlaintext(firstPinNumbersList.join(''));
       await _submitEnteredPin(passwordModel);
       await minOperationTime;
-      emit(const AppSetUpPinPageSuccessState());
     } else {
       emit(
         AppSetUpPinPageInvalidPinState(
@@ -86,7 +84,6 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
       await _savePin(passwordModel);
     }
     emit(const AppSetUpPinPageLoadingState());
-
   }
 
   Future<void> _changePin(PasswordModel passwordModel) async {
