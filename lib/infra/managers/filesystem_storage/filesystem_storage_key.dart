@@ -1,4 +1,5 @@
+// ignore_for_file: constant_identifier_names
 enum FilesystemStorageKey {
-  secrets,
-  test,
+  filesystem_storage,
+  filesystem_storage_mock,
 }
