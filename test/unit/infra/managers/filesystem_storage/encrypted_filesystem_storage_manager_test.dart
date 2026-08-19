@@ -19,7 +19,7 @@ void main() {
       appPasswordModel: PasswordModel.fromPlaintext('1111'),
     );
 
-    actualFilesystemStorageManager = EncryptedFilesystemStorageManager(filesystemStorageKey: FilesystemStorageKey.test);
+    actualFilesystemStorageManager = EncryptedFilesystemStorageManager(filesystemStorageKey: FilesystemStorageKey.filesystem_storage_mock);
   });
 
   group('Tests of EncryptedFilesystemStorageManager.read()', () {
@@ -91,7 +91,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'test');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage_mock');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -103,7 +103,7 @@ void main() {
           'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
         },
         'vaults.snggle':
-            'k2D6OS12JThgZ25GeB/xHFg4HsqC4E3+9KNDOmtWGwT2ZPQz+FZ0UxA/8gcrVA3VOCo/ZgfXSvSia3Q5f5w1/KSUatm0LZ5qR2JdW1UELPAZwqLjcnUXuh5MX6Xl/CbHMSAVtA=='
+            'k2D6OS12JThgZ25GeB/xHFg4HsqC4E3+9KNDOmtWGwT2ZPQz+FZ0UxA/8gcrVA3VOCo/ZgfXSvSia3Q5f5w1/KSUatm0LZ5qR2JdW1UELPAZwqLjcnUXuh5MX6Xl/CbHMSAVtA==',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -118,7 +118,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'test');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage_mock');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -130,7 +130,7 @@ void main() {
           'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
         },
         'vaults.snggle':
-            'k2D6OS12JThgZ25GeB/xHFg4HsqC4E3+9KNDOmtWGwT2ZPQz+FZ0UxA/8gcrVA3VOCo/ZgfXSvSia3Q5f5w1/KSUatm0LZ5qR2JdW1UELPAZwqLjcnUXuh5MX6Xl/CbHMSAVtA=='
+            'k2D6OS12JThgZ25GeB/xHFg4HsqC4E3+9KNDOmtWGwT2ZPQz+FZ0UxA/8gcrVA3VOCo/ZgfXSvSia3Q5f5w1/KSUatm0LZ5qR2JdW1UELPAZwqLjcnUXuh5MX6Xl/CbHMSAVtA==',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -145,7 +145,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'test');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage_mock');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -158,7 +158,7 @@ void main() {
           'id4.snggle': 'new_value',
         },
         'vaults.snggle':
-            'k2D6OS12JThgZ25GeB/xHFg4HsqC4E3+9KNDOmtWGwT2ZPQz+FZ0UxA/8gcrVA3VOCo/ZgfXSvSia3Q5f5w1/KSUatm0LZ5qR2JdW1UELPAZwqLjcnUXuh5MX6Xl/CbHMSAVtA=='
+            'k2D6OS12JThgZ25GeB/xHFg4HsqC4E3+9KNDOmtWGwT2ZPQz+FZ0UxA/8gcrVA3VOCo/ZgfXSvSia3Q5f5w1/KSUatm0LZ5qR2JdW1UELPAZwqLjcnUXuh5MX6Xl/CbHMSAVtA==',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -173,7 +173,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'test');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage_mock');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -186,7 +186,7 @@ void main() {
           'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
         },
         'vaults.snggle':
-            'k2D6OS12JThgZ25GeB/xHFg4HsqC4E3+9KNDOmtWGwT2ZPQz+FZ0UxA/8gcrVA3VOCo/ZgfXSvSia3Q5f5w1/KSUatm0LZ5qR2JdW1UELPAZwqLjcnUXuh5MX6Xl/CbHMSAVtA=='
+            'k2D6OS12JThgZ25GeB/xHFg4HsqC4E3+9KNDOmtWGwT2ZPQz+FZ0UxA/8gcrVA3VOCo/ZgfXSvSia3Q5f5w1/KSUatm0LZ5qR2JdW1UELPAZwqLjcnUXuh5MX6Xl/CbHMSAVtA==',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -203,7 +203,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'test');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage_mock');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -215,7 +215,7 @@ void main() {
           'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
         },
         'vaults.snggle':
-            'k2D6OS12JThgZ25GeB/xHFg4HsqC4E3+9KNDOmtWGwT2ZPQz+FZ0UxA/8gcrVA3VOCo/ZgfXSvSia3Q5f5w1/KSUatm0LZ5qR2JdW1UELPAZwqLjcnUXuh5MX6Xl/CbHMSAVtA=='
+            'k2D6OS12JThgZ25GeB/xHFg4HsqC4E3+9KNDOmtWGwT2ZPQz+FZ0UxA/8gcrVA3VOCo/ZgfXSvSia3Q5f5w1/KSUatm0LZ5qR2JdW1UELPAZwqLjcnUXuh5MX6Xl/CbHMSAVtA==',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -230,7 +230,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'test');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage_mock');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -240,7 +240,7 @@ void main() {
           'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
         },
         'vaults.snggle':
-            'k2D6OS12JThgZ25GeB/xHFg4HsqC4E3+9KNDOmtWGwT2ZPQz+FZ0UxA/8gcrVA3VOCo/ZgfXSvSia3Q5f5w1/KSUatm0LZ5qR2JdW1UELPAZwqLjcnUXuh5MX6Xl/CbHMSAVtA=='
+            'k2D6OS12JThgZ25GeB/xHFg4HsqC4E3+9KNDOmtWGwT2ZPQz+FZ0UxA/8gcrVA3VOCo/ZgfXSvSia3Q5f5w1/KSUatm0LZ5qR2JdW1UELPAZwqLjcnUXuh5MX6Xl/CbHMSAVtA==',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -274,7 +274,7 @@ void main() {
       // Act
       await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id3'));
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'test');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage_mock');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -285,7 +285,7 @@ void main() {
           'id1.snggle': 'ivLwwKeSXHFPJ0zn6Ho+p/GguNDqgiCY06q+m6yQtimC950HvCErT0Co2qvO883nlj63Sdtw3tZ+sPMmuAaxjuE0jTI=',
         },
         'vaults.snggle':
-            '6Aa3eQJZyAHU6lT8RB9+/Xk9Vgj6ItcQY7XTFQZ8klOFN8FW0ru6R4qpU4Fu4U+Lfkk7ueQZbF66riGfjLxuo+4htZHP44T6p1rD57mhfIpdRYe3LV2bFF50McboHzvXlntohIyKbMHDXgeM/fE5nRKefLgIogbx5/Zm0eeJEPui6FsrWFJT8jvYuBWV5HMEo5pW2kRPHSC+0zmxz0NMfA8p6FA='
+            '6Aa3eQJZyAHU6lT8RB9+/Xk9Vgj6ItcQY7XTFQZ8klOFN8FW0ru6R4qpU4Fu4U+Lfkk7ueQZbF66riGfjLxuo+4htZHP44T6p1rD57mhfIpdRYe3LV2bFF50McboHzvXlntohIyKbMHDXgeM/fE5nRKefLgIogbx5/Zm0eeJEPui6FsrWFJT8jvYuBWV5HMEo5pW2kRPHSC+0zmxz0NMfA8p6FA=',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
@@ -295,7 +295,7 @@ void main() {
       // Act
       await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1/id2'));
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'test');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage_mock');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -304,7 +304,7 @@ void main() {
           'id3.snggle': 'ArG/y8mC0fAq4oB8bJrrLdiHhIJm+kv5JFueWL5+u2bc0YUb1QLlDKDkDPjwpSopHJOahBgqd8Z+ACAoiCusIQoQIE4=',
         },
         'vaults.snggle':
-            '6Aa3eQJZyAHU6lT8RB9+/Xk9Vgj6ItcQY7XTFQZ8klOFN8FW0ru6R4qpU4Fu4U+Lfkk7ueQZbF66riGfjLxuo+4htZHP44T6p1rD57mhfIpdRYe3LV2bFF50McboHzvXlntohIyKbMHDXgeM/fE5nRKefLgIogbx5/Zm0eeJEPui6FsrWFJT8jvYuBWV5HMEo5pW2kRPHSC+0zmxz0NMfA8p6FA='
+            '6Aa3eQJZyAHU6lT8RB9+/Xk9Vgj6ItcQY7XTFQZ8klOFN8FW0ru6R4qpU4Fu4U+Lfkk7ueQZbF66riGfjLxuo+4htZHP44T6p1rD57mhfIpdRYe3LV2bFF50McboHzvXlntohIyKbMHDXgeM/fE5nRKefLgIogbx5/Zm0eeJEPui6FsrWFJT8jvYuBWV5HMEo5pW2kRPHSC+0zmxz0NMfA8p6FA=',
       };
 
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);

@@ -100,10 +100,6 @@ class FilesystemStorageManager {
 
   Future<String> _buildAbsolutePath({required String relativePath}) async {
     Directory rootDirectory = await _rootDirectoryCompleter.future;
-    String storageDirectoryName = switch (_filesystemStorageKey) {
-      FilesystemStorageKey.secrets => 'filesystem_storage',
-      _ => _filesystemStorageKey.name,
-    };
-    return '${rootDirectory.path}/$storageDirectoryName/$relativePath';
+    return '${rootDirectory.path}/${_filesystemStorageKey.name}/$relativePath';
   }
 }
