@@ -8,7 +8,8 @@ class SecretsRepository {
 
   SecretsRepository({
     FilesystemStorageManager? filesystemStorageManager,
-  }) : _filesystemStorageManager = filesystemStorageManager ?? EncryptedFilesystemStorageManager(filesystemStorageKey: FilesystemStorageKey.secrets);
+  }) : _filesystemStorageManager =
+           filesystemStorageManager ?? EncryptedFilesystemStorageManager(filesystemStorageKey: FilesystemStorageKey.filesystem_storage);
 
   Future<String> getEncrypted(FilesystemPath filesystemPath) async {
     return _filesystemStorageManager.read(filesystemPath);
