@@ -169,7 +169,7 @@ class TestDatabase {
 
   Future<void> _setupFilesystemStorage(DatabaseMock databaseMock) async {
     Directory rootDirectory = await globalLocator<RootDirectoryBuilder>().call();
-    Directory filesystemMockDirectory = Directory('test/mocks/${databaseMock.name}');
+    Directory filesystemMockDirectory = Directory('test/mocks/${databaseMock.name}/filesystem_mock');
     if (filesystemMockDirectory.existsSync()) {
       _copyDirectory(filesystemMockDirectory, rootDirectory);
     }
