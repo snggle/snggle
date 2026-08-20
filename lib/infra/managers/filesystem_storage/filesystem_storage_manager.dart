@@ -3,17 +3,13 @@ import 'dart:io';
 
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class FilesystemStorageManager {
   final RootDirectoryBuilder _rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
-  final FilesystemStorageKey _filesystemStorageKey;
   final Completer<Directory> _rootDirectoryCompleter;
 
-  FilesystemStorageManager({
-    required this._filesystemStorageKey,
-  }) : _rootDirectoryCompleter = Completer<Directory>() {
+  FilesystemStorageManager() : _rootDirectoryCompleter = Completer<Directory>() {
     _initStorage();
   }
 
@@ -100,6 +96,6 @@ class FilesystemStorageManager {
 
   Future<String> _buildAbsolutePath({required String relativePath}) async {
     Directory rootDirectory = await _rootDirectoryCompleter.future;
-    return '${rootDirectory.path}/${_filesystemStorageKey.name}/$relativePath';
+    return '${rootDirectory.path}/filesystem_storage/$relativePath';
   }
 }

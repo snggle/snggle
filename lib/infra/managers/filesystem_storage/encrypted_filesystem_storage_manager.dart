@@ -8,9 +8,7 @@ import 'package:snggle/shared/utils/filesystem_path.dart';
 class EncryptedFilesystemStorageManager extends FilesystemStorageManager {
   final MasterKeyController _masterKeyController = globalLocator<MasterKeyController>();
 
-  EncryptedFilesystemStorageManager({
-    required super.filesystemStorageKey,
-  });
+  EncryptedFilesystemStorageManager();
 
   @override
   Future<String> read(FilesystemPath filesystemPath) async {

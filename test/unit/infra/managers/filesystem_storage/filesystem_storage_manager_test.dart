@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_manager.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
@@ -18,7 +17,7 @@ void main() {
       appPasswordModel: PasswordModel.fromPlaintext('1111'),
     );
 
-    actualFilesystemStorageManager = FilesystemStorageManager(filesystemStorageKey: FilesystemStorageKey.filesystem_storage_mock);
+    actualFilesystemStorageManager = FilesystemStorageManager();
   });
 
   group('Tests of FilesystemStorageManager.read()', () {
@@ -87,7 +86,7 @@ void main() {
         'updated_value',
       );
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage_mock');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -111,7 +110,7 @@ void main() {
         'updated_value',
       );
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage_mock');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -135,7 +134,7 @@ void main() {
         'new_value',
       );
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage_mock');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -160,7 +159,7 @@ void main() {
         'new_value',
       );
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage_mock');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -189,7 +188,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage_mock');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -215,7 +214,7 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage_mock');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -258,7 +257,7 @@ void main() {
       // Act
       await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id3'));
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage_mock');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -278,7 +277,7 @@ void main() {
       // Act
       await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1/id2'));
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage_mock');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -298,7 +297,7 @@ void main() {
       await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1/id2'));
       await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id3'));
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage_mock');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{};
