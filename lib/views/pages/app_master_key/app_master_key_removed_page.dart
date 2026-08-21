@@ -14,7 +14,7 @@ class AppMasterKeyRemovedPage extends StatelessWidget {
     return CustomScaffold(
       title: '',
       closeButtonVisible: false,
-      popAvailableBool: false,
+      popAvailableBool: true,
       popButtonVisible: false,
       body: Column(
         children: <Widget>[

@@ -46,9 +46,9 @@ class _SecretsAuthPageState extends State<SecretsAuthPage> {
         return PinpadScaffold(
           errorBool: secretsAuthPageState is SecretsAuthPageInvalidPinState,
           title: widget.title,
-          initialPinNumbers: secretsAuthPageState.pinNumbers,
+          initialPinNumbersList: secretsAuthPageState.pinNumbers,
           onChanged: secretsAuthPageCubit.updatePinNumbers,
-          actionButtons: <Widget>[
+          actionButtonsList: <Widget>[
             CustomTextButton(
               title: 'Confirm',
               onPressed: () async {
@@ -63,7 +63,7 @@ class _SecretsAuthPageState extends State<SecretsAuthPage> {
               },
             ),
           ],
-          popButtonVisible: true,
+          popButtonVisibleBool: true,
         );
       },
     );

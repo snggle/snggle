@@ -5,21 +5,23 @@ import 'package:snggle/views/widgets/pinpad/pinpad_keyboard.dart';
 
 class PinpadScaffold extends StatefulWidget {
   final bool errorBool;
-  final bool popButtonVisible;
+  final bool popButtonVisibleBool;
   final String title;
-  final List<int> initialPinNumbers;
-  final List<Widget> actionButtons;
+  final List<int> initialPinNumbersList;
+  final List<Widget> actionButtonsList;
   final ValueChanged<List<int>> onChanged;
+  final VoidCallback? customPopVoidCallback;
   final int maxPinLength;
   final Widget? header;
 
   const PinpadScaffold({
     required this.errorBool,
-    required this.popButtonVisible,
+    required this.popButtonVisibleBool,
     required this.title,
-    required this.initialPinNumbers,
-    required this.actionButtons,
+    required this.initialPinNumbersList,
+    required this.actionButtonsList,
     required this.onChanged,
+    this.customPopVoidCallback,
     this.maxPinLength = 8,
     this.header,
     super.key,
@@ -34,8 +36,8 @@ class _PinpadScaffoldState extends State<PinpadScaffold> {
 
   @override
   void didUpdateWidget(covariant PinpadScaffold oldWidget) {
-    if (widget.initialPinNumbers != oldWidget.initialPinNumbers) {
-      pinNumbersNotifier.value = widget.initialPinNumbers;
+    if (widget.initialPinNumbersList != oldWidget.initialPinNumbersList) {
+      pinNumbersNotifier.value = widget.initialPinNumbersList;
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -49,7 +51,8 @@ class _PinpadScaffoldState extends State<PinpadScaffold> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      popButtonVisible: widget.popButtonVisible,
+      popButtonVisible: widget.popButtonVisibleBool,
+      customPopCallback: widget.customPopVoidCallback,
       title: widget.title,
       body: Center(
         child: Container(
@@ -88,7 +91,7 @@ class _PinpadScaffoldState extends State<PinpadScaffold> {
                 const SizedBox(height: 24),
                 SizedBox(
                   height: 50,
-                  child: Row(children: widget.actionButtons.map((Widget widget) => Expanded(child: widget)).toList()),
+                  child: Row(children: widget.actionButtonsList.map((Widget widget) => Expanded(child: widget)).toList()),
                 ),
               ],
             ),

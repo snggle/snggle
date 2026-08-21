@@ -46,9 +46,9 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
           header: textWarning != null ? PinpadBanner(text: textWarning) : null,
           errorBool: appEnterPinPageState is AppEnterInvalidPinPageState,
           title: title,
-          initialPinNumbers: appEnterPinPageState.pinNumbers,
+          initialPinNumbersList: appEnterPinPageState.pinNumbers,
           onChanged: _appEnterPinPageCubit.updatePinNumbers,
-          actionButtons: <Widget>[
+          actionButtonsList: <Widget>[
             CustomTextButton(
               title: 'Confirm',
               onPressed: () => _pressConfirmButton(
@@ -56,7 +56,7 @@ class _AppEnterPinPageState extends State<AppEnterPinPage> {
               ),
             ),
           ],
-          popButtonVisible: appPinTypeChangeBool,
+          popButtonVisibleBool: appPinTypeChangeBool,
         );
       },
     );
