@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
 import 'package:snggle/shared/models/a_secrets_model.dart';
+import 'package:snggle/shared/models/entries/entry_secrets_model.dart';
 import 'package:snggle/shared/models/groups/group_secrets_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
@@ -41,10 +42,7 @@ class SecretsService {
   }
 
   Future<void> save(ASecretsModel secretsModel, PasswordModel passwordModel) async {
-    bool vaultBool = secretsModel is VaultSecretsModel;
-    if (vaultBool) {
-      await _verifyParentFilesystem(secretsModel);
-    }
+    await _verifyParentFilesystemStorage(secretsModel);
 
     Map<String, dynamic> secretsJson = secretsModel.toJson();
     String secretsJsonString = jsonEncode(secretsJson);
@@ -65,20 +63,28 @@ class SecretsService {
     return passwordModel.isValidForData(encryptedSecrets);
   }
 
-  Future<void> _verifyParentFilesystem(ASecretsModel secretsModel) async {
-    bool parentFilesystemStorageExistsBool = await _secretsRepository.isSecretExists(FilesystemPath.fromString('vaults'));
+  Future<void> _verifyParentFilesystemStorage(ASecretsModel secretsModel) async {
+    FilesystemPath? parentFilesystemPath = switch (secretsModel) {
+      VaultSecretsModel() => FilesystemPath.fromString('vaults'),
+      EntrySecretsModel() => FilesystemPath.fromString('entries'),
+      _ => null,
+    };
+
+    if (parentFilesystemPath == null) {
+      return;
+    }
+
+    bool parentFilesystemStorageExistsBool = await _secretsRepository.isSecretExists(parentFilesystemPath);
     if (parentFilesystemStorageExistsBool == false) {
-      await _createParentFilesystemStorage(secretsModel.filesystemPath);
+      await _createParentFilesystemStorage(parentFilesystemPath);
     }
   }
 
-  Future<void> _createParentFilesystemStorage(FilesystemPath filesystemPath) async {
-    FilesystemPath vaultsRootPath = FilesystemPath.fromString('vaults');
+  Future<void> _createParentFilesystemStorage(FilesystemPath parentFilesystemPath) async {
+    GroupSecretsModel parentSecretsModel = GroupSecretsModel.generate(parentFilesystemPath);
+    String parentSecretsJsonString = jsonEncode(parentSecretsModel.toJson());
+    String encryptedParentSecrets = PasswordModel.defaultPassword().encrypt(decryptedData: parentSecretsJsonString);
 
-    GroupSecretsModel vaultsRootSecretsModel = GroupSecretsModel.generate(vaultsRootPath);
-    String vaultsRootSecretsJsonString = jsonEncode(vaultsRootSecretsModel.toJson());
-    String encryptedVaultsRootSecrets = PasswordModel.defaultPassword().encrypt(decryptedData: vaultsRootSecretsJsonString);
-
-    await _secretsRepository.saveEncrypted(vaultsRootPath, encryptedVaultsRootSecrets);
+    await _secretsRepository.saveEncrypted(parentFilesystemPath, encryptedParentSecrets);
   }
 }
