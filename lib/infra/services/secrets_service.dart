@@ -43,7 +43,7 @@ class SecretsService {
   Future<void> save(ASecretsModel secretsModel, PasswordModel passwordModel) async {
     bool vaultBool = secretsModel is VaultSecretsModel;
     if (vaultBool) {
-      await _verifyParentFilesystem(secretsModel);
+      await _verifyParentFilesystemPath(secretsModel);
     }
 
     Map<String, dynamic> secretsJson = secretsModel.toJson();
@@ -65,7 +65,7 @@ class SecretsService {
     return passwordModel.isValidForData(encryptedSecrets);
   }
 
-  Future<void> _verifyParentFilesystem(ASecretsModel secretsModel) async {
+  Future<void> _verifyParentFilesystemPath(ASecretsModel secretsModel) async {
     bool parentFilesystemStorageExistsBool = await _secretsRepository.isSecretExists(FilesystemPath.fromString('vaults'));
     if (parentFilesystemStorageExistsBool == false) {
       await _createParentFilesystemStorage(secretsModel.filesystemPath);
