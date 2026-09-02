@@ -5,8 +5,10 @@ import 'package:snggle/bloc/pages/entry_create_edit/entry_create_edit_page/entry
 import 'package:snggle/bloc/pages/entry_create_edit/entry_create_edit_page/entry_create_edit_page_state.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/entries/entry_model.dart';
+import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/entry_create_edit/entry_page_type.dart';
+import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
@@ -110,6 +112,23 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
                         obscurePasswordBool: _obscurePasswordBool,
                         onTogglePasswordVisibility: () => setState(() => _obscurePasswordBool = _obscurePasswordBool == false),
                       ),
+                      const SizedBox(height: 12),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 22.5, vertical: 25),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: <Widget>[
+                              GradientOutlinedButton.small(
+                                width: 186,
+                                label: 'Generate password',
+                                onPressed: _showGeneratePasswordPage,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       SizedBox(height: anyKeyboardVisibleBool ? 40 : 100),
                     ],
                   ),
@@ -167,5 +186,16 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _showGeneratePasswordPage() async {
+    String? generatedPassword = await AutoRouter.of(context).push<String>(
+      const PasswordGeneratorRoute(),
+    );
+
+    bool passwordApplicableBool = mounted && generatedPassword != null;
+    if (passwordApplicableBool) {
+      entryCreateEditPageCubit.updatePassword(generatedPassword);
+    }
   }
 }

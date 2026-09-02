@@ -18,11 +18,15 @@ class AppIcons {
   static const AssetIconData camera_flash = AssetIconData('assets/icons/camera_flash.svg');
   static const AssetIconData camera_reverse = AssetIconData('assets/icons/camera_reverse.svg');
   static const AssetIconData checkbox_selected = AssetIconData('assets/icons/checkbox_selected.svg');
+  static const AssetIconData checkbox_selected_square = AssetIconData('assets/icons/checkbox_selected_square.svg');
   static const AssetIconData checkbox_unselected = AssetIconData('assets/icons/checkbox_unselected.svg');
+  static const AssetIconData checkbox_unselected_square = AssetIconData('assets/icons/checkbox_unselected_square.svg');
+  static const AssetIconData radio_selected = AssetIconData('assets/icons/radio_selected.svg');
   static const AssetIconData connect_wallet_hardware = AssetIconData('assets/icons/connect_wallet_hardware.svg');
   static const AssetIconData connect_wallet_qr = AssetIconData('assets/icons/connect_wallet_qr.svg');
   static const AssetIconData details_hide = AssetIconData('assets/icons/details_hide.svg');
   static const AssetIconData details_show = AssetIconData('assets/icons/details_show.svg');
+  static const AssetIconData dice = AssetIconData('assets/icons/dice.svg');
   static const AssetIconData horizontal_tile_network_bitcoin = AssetIconData('assets/icons/horizontal_tile_network_bitcoin.svg');
   static const AssetIconData horizontal_tile_network_cosmos = AssetIconData('assets/icons/horizontal_tile_network_cosmos.svg');
   static const AssetIconData horizontal_tile_network_ethereum = AssetIconData('assets/icons/horizontal_tile_network_ethereum.svg');
@@ -45,6 +49,7 @@ class AppIcons {
   static const AssetIconData icon_entry_email = AssetIconData('assets/icons/icon_entry_email.svg');
   static const AssetIconData icon_entry_password = AssetIconData('assets/icons/icon_entry_password.svg');
   static const AssetIconData icon_entry_username = AssetIconData('assets/icons/icon_entry_username.svg');
+  static const AssetIconData icon_help = AssetIconData('assets/icons/icon_help.svg');
   static const AssetIconData keyboard_arrow_left = AssetIconData('assets/icons/keyboard_arrow_left.svg');
   static const AssetIconData keyboard_arrow_right = AssetIconData('assets/icons/keyboard_arrow_right.svg');
   static const AssetIconData keyboard_collapse = AssetIconData('assets/icons/keyboard_collapse.svg');
@@ -74,6 +79,9 @@ class AppIcons {
   static const AssetIconData network_unknown_large = AssetIconData('assets/icons/network_unknown_large.svg');
   static const AssetIconData page_add_button = AssetIconData('assets/icons/page_add_button.svg');
   static const AssetIconData page_no_data = AssetIconData('assets/icons/page_no_data.svg');
+  static const AssetIconData password_generator_advanced = AssetIconData('assets/icons/password_generator_advanced.svg');
+  static const AssetIconData password_generator_snggle = AssetIconData('assets/icons/password_generator_snggle.svg');
+  static const AssetIconData password_generator_standard = AssetIconData('assets/icons/password_generator_standard.svg');
   static const AssetIconData settings_privacy_policy = AssetIconData('assets/icons/settings_privacy_policy.svg');
   static const AssetIconData settings_warning = AssetIconData('assets/icons/settings_warning.svg');
   static const AssetIconData settings_change_app_pin = AssetIconData('assets/icons/settings_change_app_pin.svg');

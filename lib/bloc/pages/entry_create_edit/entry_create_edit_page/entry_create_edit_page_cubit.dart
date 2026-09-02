@@ -97,6 +97,10 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
     }
   }
 
+  void updatePassword(String password) {
+    passwordTextEditingController.text = password;
+  }
+
   Future<EntryModel?> _createNewEntry() async {
     return _entryModelFactory.createNewEntry(
       _parentFilesystemPath,

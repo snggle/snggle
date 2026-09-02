@@ -10,8 +10,16 @@ class AppColors {
   static Color lightGrey3 = const Color(0xFFFBFBFB);
   static Color middleGrey = const Color(0xFFC7C7C7);
   static Color darkGrey = const Color(0xFF969696);
+  static Color blue = const Color(0xff00a6ff);
+  static Color purple = const Color(0xff9900ff);
   static Color warningOrange = const Color(0xFFFF9100);
   static Color warningRed = const Color(0xFFFF5050);
+
+  /*static Color lightGreen = const Color(0xff00E000);
+  static Color darkGreen = const Color(0xff087B08);*/
+
+  static Color excellent = const Color(0xff007700);
+  static Color magnificent = const Color(0xff00E000);
 
   static Color divider = const Color(0xFFC7C7C7);
   static Color lineNumbers = const Color(0xFFF3F3F3);
@@ -49,6 +57,23 @@ class AppColors {
     colors: <Color>[
       const Color(0xFF939393),
       warningRed,
+    ],
+  );
+
+  static Gradient customPasswordGradient = LinearGradient(
+    colors: <Color>[
+      warningRed,
+      warningOrange,
+      darkGrey,
+      blue,
+      purple,
+    ],
+    stops: const <double>[
+      0.05,
+      0.20,
+      0.50,
+      0.70,
+      0.85,
     ],
   );
 }
