@@ -36,6 +36,7 @@ class AppRouter extends RootStackRouter {
       ),
       AutoRoute(page: WalletCreateRoute.page),
       AutoRoute(page: EntryDetailsEditableRoute.page),
+      AutoRoute(page: GeneratePasswordRoute.page),
       AutoRoute(
         page: BottomNavigationRoute.page,
         maintainState: true,
