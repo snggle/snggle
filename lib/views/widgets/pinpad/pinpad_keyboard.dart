@@ -12,10 +12,14 @@ import 'package:snggle/views/widgets/pinpad/pinpad_keyboard_button.dart';
 class PinpadKeyboard extends StatefulWidget {
   final ValueChanged<int> onNumberPressed;
   final VoidCallback onBackspacePressed;
+  final PinpadKeyboardState initPinpadKeyboardState;
+  final ValueChanged<PinpadKeyboardState>? onKeyboardChanged;
 
   const PinpadKeyboard({
     required this.onNumberPressed,
     required this.onBackspacePressed,
+    this.initPinpadKeyboardState = PinpadKeyboardState.initPinpadKeyboardState,
+    this.onKeyboardChanged,
     super.key,
   });
 
@@ -24,7 +28,16 @@ class PinpadKeyboard extends StatefulWidget {
 }
 
 class _PinpadKeyboardState extends State<PinpadKeyboard> {
-  final PinpadKeyboardCubit pinpadKeyboardCubit = PinpadKeyboardCubit();
+  late final PinpadKeyboardCubit pinpadKeyboardCubit;
+
+  @override
+  void initState() {
+    super.initState();
+
+    pinpadKeyboardCubit = PinpadKeyboardCubit(
+      initPinpadKeyboardState: widget.initPinpadKeyboardState,
+    );
+  }
 
   @override
   void dispose() {
@@ -37,12 +50,12 @@ class _PinpadKeyboardState extends State<PinpadKeyboard> {
     return BlocBuilder<PinpadKeyboardCubit, PinpadKeyboardState>(
       bloc: pinpadKeyboardCubit,
       builder: (BuildContext context, PinpadKeyboardState pinpadKeyboardState) {
-        List<int> visibleNumbers = pinpadKeyboardState.visibleNumbers;
+        List<int> visibleNumbers = pinpadKeyboardState.visibleNumbersList;
 
         return Column(
           children: <Widget>[
             ShuffleButton(
-              onPressed: pinpadKeyboardCubit.toggleShuffling,
+              onPressed: _handleShufflePressed,
               shuffleEnabledBool: pinpadKeyboardState.shuffleEnabledBool,
             ),
             const SizedBox(height: 10),
@@ -79,6 +92,16 @@ class _PinpadKeyboardState extends State<PinpadKeyboard> {
     widget.onNumberPressed.call(number);
     if (pinpadKeyboardCubit.state.shuffleEnabledBool) {
       pinpadKeyboardCubit.shuffle();
+      _notifyKeyboardChanged();
     }
+  }
+
+  void _handleShufflePressed() {
+    pinpadKeyboardCubit.toggleShuffling();
+    _notifyKeyboardChanged();
+  }
+
+  void _notifyKeyboardChanged() {
+    widget.onKeyboardChanged?.call(pinpadKeyboardCubit.state);
   }
 }

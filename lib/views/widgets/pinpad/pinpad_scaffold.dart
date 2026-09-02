@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_state.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_dots_area.dart';
 import 'package:snggle/views/widgets/pinpad/pinpad_keyboard.dart';
@@ -11,6 +12,8 @@ class PinpadScaffold extends StatefulWidget {
   final List<Widget> actionButtonsList;
   final ValueChanged<List<int>> onChanged;
   final VoidCallback? customPopVoidCallback;
+  final PinpadKeyboardState initPinpadKeyboardState;
+  final ValueChanged<PinpadKeyboardState>? onKeyboardChanged;
   final int maxPinLength;
   final Widget? header;
 
@@ -22,6 +25,8 @@ class PinpadScaffold extends StatefulWidget {
     required this.actionButtonsList,
     required this.onChanged,
     this.customPopVoidCallback,
+    this.initPinpadKeyboardState = PinpadKeyboardState.initPinpadKeyboardState,
+    this.onKeyboardChanged,
     this.maxPinLength = 8,
     this.header,
     super.key,
@@ -86,6 +91,8 @@ class _PinpadScaffoldState extends State<PinpadScaffold> {
                   child: PinpadKeyboard(
                     onNumberPressed: _addPinNumber,
                     onBackspacePressed: _removePinLastNumber,
+                    initPinpadKeyboardState: widget.initPinpadKeyboardState,
+                    onKeyboardChanged: widget.onKeyboardChanged,
                   ),
                 ),
                 const SizedBox(height: 24),

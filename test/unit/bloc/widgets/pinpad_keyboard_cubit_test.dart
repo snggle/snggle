@@ -12,10 +12,27 @@ void main() {
       // Assert
       PinpadKeyboardState expectedPinpadKeyboardState = PinpadKeyboardState(
         shuffleEnabledBool: false,
-        visibleNumbers: sortedKeyboardNumbers,
+        visibleNumbersList: sortedKeyboardNumbers,
       );
 
       expect(actualPinpadKeyboardCubit.state, expectedPinpadKeyboardState);
+    });
+
+    test('Should use provided initial keyboard state', () async {
+      // Arrange
+      const PinpadKeyboardState expectedPinpadKeyboardState =
+      PinpadKeyboardState(
+        shuffleEnabledBool: true,
+        visibleNumbersList: <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+      );
+      PinpadKeyboardCubit pinpadKeyboardCubit = PinpadKeyboardCubit(
+        initPinpadKeyboardState: expectedPinpadKeyboardState,
+      );
+
+      // Assert
+      expect(pinpadKeyboardCubit.state, expectedPinpadKeyboardState);
+
+      await pinpadKeyboardCubit.close();
     });
 
     test('Should [return PinpadKeyboardState] with shuffled numbers', () {
@@ -24,7 +41,7 @@ void main() {
 
       // Assert
       expect(actualPinpadKeyboardCubit.state.shuffleEnabledBool, true);
-      expect(actualPinpadKeyboardCubit.state.visibleNumbers, isNot(sortedKeyboardNumbers));
+      expect(actualPinpadKeyboardCubit.state.visibleNumbersList, isNot(sortedKeyboardNumbers));
     });
 
     test('Should [return PinpadKeyboardState] with unshuffled numbers (sorted again)', () {
@@ -33,7 +50,7 @@ void main() {
 
       // Assert
       expect(actualPinpadKeyboardCubit.state.shuffleEnabledBool, false);
-      expect(actualPinpadKeyboardCubit.state.visibleNumbers, sortedKeyboardNumbers);
+      expect(actualPinpadKeyboardCubit.state.visibleNumbersList, sortedKeyboardNumbers);
     });
 
     test('Should [return PinpadKeyboardState] with shuffled numbers (different arrangement)', () {
@@ -42,29 +59,29 @@ void main() {
 
       // Assert
       expect(actualPinpadKeyboardCubit.state.shuffleEnabledBool, true);
-      expect(actualPinpadKeyboardCubit.state.visibleNumbers, isNot(sortedKeyboardNumbers));
+      expect(actualPinpadKeyboardCubit.state.visibleNumbersList, isNot(sortedKeyboardNumbers));
 
       // ******************************************************************************************
 
       // Act
-      List<int> actualPreviousNumbers = actualPinpadKeyboardCubit.state.visibleNumbers;
+      List<int> actualPreviousNumbers = actualPinpadKeyboardCubit.state.visibleNumbersList;
       actualPinpadKeyboardCubit.shuffle();
 
       // Assert
       expect(actualPinpadKeyboardCubit.state.shuffleEnabledBool, true);
-      expect(actualPinpadKeyboardCubit.state.visibleNumbers, isNot(actualPreviousNumbers));
-      expect(actualPinpadKeyboardCubit.state.visibleNumbers, isNot(sortedKeyboardNumbers));
+      expect(actualPinpadKeyboardCubit.state.visibleNumbersList, isNot(actualPreviousNumbers));
+      expect(actualPinpadKeyboardCubit.state.visibleNumbersList, isNot(sortedKeyboardNumbers));
 
       // ******************************************************************************************
 
       // Act
-      actualPreviousNumbers = actualPinpadKeyboardCubit.state.visibleNumbers;
+      actualPreviousNumbers = actualPinpadKeyboardCubit.state.visibleNumbersList;
       actualPinpadKeyboardCubit.shuffle();
 
       // Assert
       expect(actualPinpadKeyboardCubit.state.shuffleEnabledBool, true);
-      expect(actualPinpadKeyboardCubit.state.visibleNumbers, isNot(actualPreviousNumbers));
-      expect(actualPinpadKeyboardCubit.state.visibleNumbers, isNot(sortedKeyboardNumbers));
+      expect(actualPinpadKeyboardCubit.state.visibleNumbersList, isNot(actualPreviousNumbers));
+      expect(actualPinpadKeyboardCubit.state.visibleNumbersList, isNot(sortedKeyboardNumbers));
     });
   });
 }
