@@ -128,6 +128,7 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
     await showDialog(
       context: context,
       useSafeArea: false,
+      barrierColor: Colors.transparent,
       builder: (BuildContext context) {
         return SecretsSetupPinPage(
           passwordValidCallback: (PasswordModel passwordModel) async {
@@ -143,6 +144,7 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
     await showDialog(
       context: context,
       useSafeArea: false,
+      barrierColor: Colors.transparent,
       builder: (BuildContext context) {
         return SecretsAuthPage(
           title: 'REMOVE PIN',
