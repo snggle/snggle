@@ -7,8 +7,10 @@ import 'package:snggle/bloc/pages/entry_details_editable/entry_page_type.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/entries/entry_model.dart';
+import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/entry_list_page/entry_create_edit_status.dart';
+import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
@@ -146,6 +148,23 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
                         ),
                         suffixWidgetConstraints: const BoxConstraints(minWidth: 34, minHeight: 34),
                       ),
+                      const SizedBox(height: 12),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 22.5, vertical: 25),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: <Widget>[
+                              GradientOutlinedButton.small(
+                                width: 186,
+                                label: 'Generate password',
+                                onPressed: _showGeneratePasswordPage,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       SizedBox(height: anyKeyboardVisibleBool ? 40 : 100),
                     ],
                   ),
@@ -210,5 +229,15 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
         }
       },
     );
+  }
+
+  Future<void> _showGeneratePasswordPage() async {
+    String? generatedPassword = await AutoRouter.of(context).push<String>(
+      GeneratePasswordRoute(parentFilesystemPath: widget.parentFilesystemPath),
+    );
+
+    if (generatedPassword != null) {
+      entryDetailsEditablePageCubit.passwordTextEditingController.text = generatedPassword;
+    }
   }
 }
