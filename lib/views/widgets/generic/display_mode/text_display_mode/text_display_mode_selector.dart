@@ -45,7 +45,6 @@ class _TextDisplayModeSelectorState extends State<TextDisplayModeSelector> {
   Future<void> _showOptionsDialog() async {
     TextDisplayModeConfig? textDisplayModeConfig = await showDialog(
       context: context,
-      barrierColor: Colors.transparent,
       builder: (BuildContext context) {
         return TextDisplayModeConfigDialog(textDisplayModeConfig: this.textDisplayModeConfig);
       },

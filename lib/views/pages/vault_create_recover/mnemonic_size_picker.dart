@@ -83,40 +83,40 @@ class _MnemonicSizePickerState extends State<MnemonicSizePicker> {
           ...advancedMnemonicSizes.map(
             (MnemonicSize mnemonicSize) {
               return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: GradientOutlinedButton.large(
-                    onPressed: () {
-                      if (!widget.advancedWarningBool) {
-                        widget.onSizeSelected(mnemonicSize);
-                        return;
-                      }
+                padding: const EdgeInsets.only(bottom: 10),
+                child: GradientOutlinedButton.large(
+                  onPressed: () {
+                    if (!widget.advancedWarningBool) {
+                      widget.onSizeSelected(mnemonicSize);
+                      return;
+                    }
 
-                      showDialog(
-                        context: context,
-                        barrierColor: Colors.transparent,
-                        builder: (BuildContext context) => CustomDialog(
-                          title: 'WARNING',
-                          borderGradient: AppColors.warningOrangeGradient,
-                          content: const Text(
-                            'Non-standard mnemonic length may not be compatible with other wallets or signers.\nProceed?',
-                            textAlign: TextAlign.center,
-                          ),
-                          options: <CustomDialogOption>[
-                            CustomDialogOption(
-                              label: 'No',
-                              onPressed: () {},
-                            ),
-                            CustomDialogOption(
-                              label: 'Yes',
-                              labelColor: AppColors.warningOrange,
-                              onPressed: () => widget.onSizeSelected(mnemonicSize),
-                            ),
-                          ],
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => CustomDialog(
+                        title: 'WARNING',
+                        borderGradient: AppColors.warningOrangeGradient,
+                        content: const Text(
+                          'Non-standard mnemonic length may not be compatible with other wallets or signers.\nProceed?',
+                          textAlign: TextAlign.center,
                         ),
-                      );
-                    },
-                    label: mnemonicSize.wordCount.toString(),
-                  ));
+                        options: <CustomDialogOption>[
+                          CustomDialogOption(
+                            label: 'No',
+                            onPressed: () {},
+                          ),
+                          CustomDialogOption(
+                            label: 'Yes',
+                            labelColor: AppColors.warningOrange,
+                            onPressed: () => widget.onSizeSelected(mnemonicSize),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  label: mnemonicSize.wordCount.toString(),
+                ),
+              );
             },
           ),
         ],

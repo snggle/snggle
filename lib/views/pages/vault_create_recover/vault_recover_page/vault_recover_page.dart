@@ -107,7 +107,6 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
   Future<void> _showDiscardDialog({required VoidCallback onDiscardPressed}) async {
     await showDialog(
       context: context,
-      barrierColor: Colors.transparent,
       useRootNavigator: true,
       builder: (_) => VaultDiscardDialog(onDiscardPressed: onDiscardPressed),
     );

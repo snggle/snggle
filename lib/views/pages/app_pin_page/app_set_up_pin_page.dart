@@ -205,7 +205,6 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.transparent,
       builder: (BuildContext dialogContext) {
         return CustomDialog(
           title: 'Success',
