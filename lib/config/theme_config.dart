@@ -6,6 +6,9 @@ class ThemeConfig {
   ThemeData _baseTheme = ThemeData(
     fontFamily: 'Bauhaus',
     brightness: Brightness.light,
+    dialogTheme: const DialogThemeData(
+      barrierColor: Colors.transparent,
+    ),
   );
 
   ThemeData buildTheme() {

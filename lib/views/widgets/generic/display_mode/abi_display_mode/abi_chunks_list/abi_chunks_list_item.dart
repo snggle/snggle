@@ -81,7 +81,6 @@ class _AbiChunksListItemState extends State<AbiChunksListItem> {
   Future<void> _showOptionsDialog() async {
     AbiChunkType? selectedAbiChunkType = await showDialog(
       context: context,
-      barrierColor: Colors.transparent,
       builder: (BuildContext context) {
         return AbiChunksListItemTypeDialog(
           chunkBytes: widget.value,

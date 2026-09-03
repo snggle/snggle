@@ -70,7 +70,6 @@ class _SplashPageState extends State<SplashPage> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.transparent,
       useRootNavigator: true,
       builder: (_) => const ShortPrivacyPolicyDialog(),
     );

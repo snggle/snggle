@@ -119,7 +119,6 @@ class _ListItemActionsWrapperState<T extends AListItemModel, C extends AListCubi
     if (widget.listItemModel.encryptedBool) {
       showDialog(
         context: context,
-        barrierColor: Colors.transparent,
         builder: (BuildContext context) => SecretsAuthPage(
           title: 'ENTER PIN',
           listItemModel: widget.listItemModel,

@@ -72,7 +72,6 @@ class _ListItemPageTooltipState<T extends AListItemModel, C extends AListCubit<T
   void _pressPinButton(SelectionModel selectionModel, bool pinnedBool) {
     showDialog(
       context: context,
-      barrierColor: Colors.transparent,
       builder: (BuildContext context) => CustomAgreementDialog(
         title: pinnedBool ? 'Pin' : 'Unpin',
         content: 'Are you sure you want to ${pinnedBool ? 'pin' : 'unpin'} selected items?',
@@ -87,7 +86,6 @@ class _ListItemPageTooltipState<T extends AListItemModel, C extends AListCubit<T
   void _pressLockButton(SelectionModel selectionModel) {
     showDialog(
       context: context,
-      barrierColor: Colors.transparent,
       builder: (BuildContext context) => CustomAgreementDialog(
         title: 'Lock',
         content: 'Are you sure you want to lock selected items?',

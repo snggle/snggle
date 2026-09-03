@@ -68,6 +68,6 @@ class _AppWipeDialogState extends State<AppWipeDialog> {
   }
 
   void _resetRouter() {
-    AutoRouter.of(context).pushAndPopUntil(const SplashRoute(), predicate: (_) => false);
+    AutoRouter.of(context).replaceAll(<PageRouteInfo>[const SplashRoute()]);
   }
 }

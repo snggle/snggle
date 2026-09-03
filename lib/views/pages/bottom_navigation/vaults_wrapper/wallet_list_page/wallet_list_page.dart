@@ -157,7 +157,6 @@ class _WalletListPageState extends State<WalletListPage> {
       unawaited(walletListPageCubit.refreshAll());
       await showDialog(
         context: context,
-        barrierColor: Colors.transparent,
         builder: (BuildContext context) => CustomDialog(
           title: 'Success',
           content: const Text(
