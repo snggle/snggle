@@ -108,7 +108,6 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
     widget.onCloseToolbar.call();
     showDialog(
       context: context,
-      barrierColor: Colors.transparent,
       builder: (BuildContext context) => NameDialog(
         title: 'Rename ${widget.listItemModel.defaultItemName.toLowerCase()}',
         defaultName: widget.listItemModel.name,
@@ -160,7 +159,6 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
     widget.onCloseToolbar.call();
     showDialog(
       context: context,
-      barrierColor: Colors.transparent,
       builder: (BuildContext context) => CustomAgreementDialog(
         title: 'Delete',
         content: 'Are you sure you want to delete this item?',

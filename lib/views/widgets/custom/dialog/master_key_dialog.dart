@@ -33,7 +33,6 @@ class MasterKeyDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) {
     return showDialog<void>(
       context: context,
-      barrierColor: Colors.transparent,
       useRootNavigator: true,
       builder: (BuildContext context) {
         return const MasterKeyDialog();
