@@ -5,6 +5,7 @@ import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_subdirectory_type.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
@@ -23,7 +24,7 @@ void main() {
     );
 
     actualVaultCreatePageCubit = VaultCreatePageCubit(
-      parentFilesystemPath: FilesystemPath.fromString('vaults'),
+      parentFilesystemPath: FilesystemPath.fromString(FilesystemStorageSubdirectoryType.vaults.name),
     );
   });
 

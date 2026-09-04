@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
@@ -65,7 +66,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath),
+            () => globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -76,7 +77,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath),
+            () => globalLocator<SecretsRepository>().getEncrypted(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -116,7 +117,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(
+          path: FilesystemStorageKey.filesystem_storage.name);
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -145,7 +147,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(
+          path: FilesystemStorageKey.filesystem_storage.name);
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -174,7 +177,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(
+          path: FilesystemStorageKey.filesystem_storage.name);
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -204,7 +208,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(
+          path: FilesystemStorageKey.filesystem_storage.name);
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -236,7 +241,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(
+          path: FilesystemStorageKey.filesystem_storage.name);
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -265,7 +271,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(
+          path: FilesystemStorageKey.filesystem_storage.name);
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -286,10 +293,11 @@ void main() {
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage (1st depth)', () async {
       // Assert
       expect(
-        () => globalLocator<SecretsRepository>().move(
-          FilesystemPath.fromString('vaults/not_existing_path'),
-          FilesystemPath.fromString('vaults/id1/not_existing_path'),
-        ),
+            () =>
+            globalLocator<SecretsRepository>().move(
+              FilesystemPath.fromString('vaults/not_existing_path'),
+              FilesystemPath.fromString('vaults/id1/not_existing_path'),
+            ),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -297,10 +305,11 @@ void main() {
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage (2nd depth)', () async {
       // Assert
       expect(
-        () => globalLocator<SecretsRepository>().move(
-          FilesystemPath.fromString('vaults/id1/not_existing_path'),
-          FilesystemPath.fromString('vaults/not_existing_path'),
-        ),
+            () =>
+            globalLocator<SecretsRepository>().move(
+              FilesystemPath.fromString('vaults/id1/not_existing_path'),
+              FilesystemPath.fromString('vaults/not_existing_path'),
+            ),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -313,7 +322,7 @@ void main() {
 
       // Act
       await globalLocator<SecretsRepository>().delete(actualFilesystemPath);
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: FilesystemStorageKey.filesystem_storage.name);
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -338,7 +347,7 @@ void main() {
 
       // Act
       await globalLocator<SecretsRepository>().delete(actualFilesystemPath);
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: FilesystemStorageKey.filesystem_storage.name);
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -361,7 +370,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<SecretsRepository>().delete(actualFilesystemPath),
+            () => globalLocator<SecretsRepository>().delete(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -372,7 +381,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<SecretsRepository>().delete(actualFilesystemPath),
+            () => globalLocator<SecretsRepository>().delete(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

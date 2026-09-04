@@ -4,6 +4,7 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_subdirectory_type.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
@@ -30,7 +31,8 @@ void main() {
 
       // Act
       List<VaultModel> actualVaultModelList =
-      await globalLocator<VaultsService>().getAllByParentPath(FilesystemPath.fromString('vaults'), firstLevelBool: true);
+      await globalLocator<VaultsService>().getAllByParentPath(
+          FilesystemPath.fromString(FilesystemStorageSubdirectoryType.vaults.name), firstLevelBool: true);
 
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_manager.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_subdirectory_type.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
@@ -24,7 +25,7 @@ void main() {
   group('Tests of FilesystemStorageManager.read()', () {
     test('Should [return file content] if [file path EXISTS] (1st depth)', () async {
       // Act
-      String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString('vaults'));
+      String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString(FilesystemStorageSubdirectoryType.vaults.name));
 
       // Assert
       String expectedFileContent = 'odszyfrowanawartoscdlasecretowwplikuvaults.snggle';

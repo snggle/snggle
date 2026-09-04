@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_subdirectory_type.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
@@ -31,7 +32,8 @@ void main() {
 
       // Act
       VaultModel actualVaultModel =
-          await globalLocator<VaultModelFactory>().createNewVault(FilesystemPath.fromString('vaults'), actualMnemonic, 'NEW VAULT');
+      await globalLocator<VaultModelFactory>().createNewVault(
+          FilesystemPath.fromString(FilesystemStorageSubdirectoryType.vaults.name), actualMnemonic, 'NEW VAULT');
 
       // Assert
       VaultModel expectedVaultModel = VaultModel(
@@ -55,7 +57,8 @@ void main() {
 
       // Act
       VaultModel actualVaultModel =
-          await globalLocator<VaultModelFactory>().createNewVault(FilesystemPath.fromString('vaults'), actualMnemonic, 'NEW VAULT');
+      await globalLocator<VaultModelFactory>().createNewVault(
+          FilesystemPath.fromString(FilesystemStorageSubdirectoryType.vaults.name), actualMnemonic, 'NEW VAULT');
 
       // Assert
       VaultModel expectedVaultModel = VaultModel(
@@ -90,7 +93,7 @@ void main() {
 
       // Act
       List<VaultModel> actualVaultModelList =
-          await globalLocator<VaultModelFactory>().createFromEntities(actualVaultEntityList, previewEmptyBool: false);
+      await globalLocator<VaultModelFactory>().createFromEntities(actualVaultEntityList, previewEmptyBool: false);
 
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[
@@ -189,7 +192,7 @@ void main() {
 
       // Act
       List<VaultModel> actualVaultModelList =
-          await globalLocator<VaultModelFactory>().createFromEntities(actualVaultEntityList, previewEmptyBool: true);
+      await globalLocator<VaultModelFactory>().createFromEntities(actualVaultEntityList, previewEmptyBool: true);
 
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[
