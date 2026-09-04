@@ -90,7 +90,7 @@ class _SettingsPageState extends State<SettingsPage> {
           backgroundColor: Colors.transparent,
           options: <CustomDialogOption>[
             CustomDialogOption(
-              label: 'Continue',
+              label: 'Done',
               onPressed: () {},
             ),
           ],

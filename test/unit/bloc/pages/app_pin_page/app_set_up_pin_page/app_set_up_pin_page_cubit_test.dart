@@ -5,7 +5,6 @@ import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_se
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_invalid_pin_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_set_up_pin_page/states/app_set_up_pin_page_loading_state.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
-import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
 
@@ -25,14 +24,7 @@ void main() {
           appPasswordModel: PasswordModel.defaultPassword(),
         );
 
-        String mnemonicString = 'brave pair belt judge visual tunnel dinner siren dentist craft effort decrease';
-
-        MnemonicModel mnemonicModel = MnemonicModel.fromString(mnemonicString);
-
-        actualAppSetUpPinPageCubit = AppSetUpPinPageCubit(
-          appPinType: AppPinType.setUpPin,
-          mnemonicModel: mnemonicModel,
-        );
+        actualAppSetUpPinPageCubit = AppSetUpPinPageCubit(appPinType: AppPinType.setUpPin);
       });
 
       tearDown(() async {

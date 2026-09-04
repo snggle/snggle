@@ -215,7 +215,6 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
       context: context,
       barrierDismissible: false,
       barrierColor: Colors.transparent,
-      useRootNavigator: true,
       builder: (BuildContext dialogContext) {
         return CustomDialog(
           title: 'Success',
@@ -226,7 +225,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
           backgroundColor: Colors.white,
           options: <CustomDialogOption>[
             CustomDialogOption(
-              label: 'Continue',
+              label: 'Done',
               onPressed: () => Navigator.of(dialogContext).pop(),
             ),
           ],
