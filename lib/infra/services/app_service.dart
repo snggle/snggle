@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
@@ -15,13 +16,13 @@ class AppService {
 
   Future<bool> isDataBaseExist() async {
     Directory rootDirectory = await _rootDirectoryBuilder.call();
-    Directory vaultsDirectory = Directory('${rootDirectory.path}/filesystem_storage/vaults');
+    Directory filesystemStorageDirectory = Directory('${rootDirectory.path}/${FilesystemStorageKey.filesystem_storage.name}');
 
-    if (await vaultsDirectory.exists() == false) {
+    if (await filesystemStorageDirectory.exists() == false) {
       return false;
     }
 
-    await for (FileSystemEntity fileSystemEntity in vaultsDirectory.list(recursive: true, followLinks: false)) {
+    await for (FileSystemEntity fileSystemEntity in filesystemStorageDirectory.list(recursive: true, followLinks: false)) {
       if (fileSystemEntity is! File) {
         continue;
       }

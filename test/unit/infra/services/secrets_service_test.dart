@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/shared/exceptions/invalid_password_exception.dart';
 import 'package:snggle/shared/models/a_secrets_model.dart';
@@ -41,7 +42,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(
+          path: FilesystemStorageKey.filesystem_storage.name);
 
       actualUpdatedFilesystemStructure['vaults.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
         encryptedData: actualUpdatedFilesystemStructure['vaults.snggle'] as String,
@@ -84,11 +86,12 @@ void main() {
     test('Should [throw InvalidPasswordException] if [secrets path EXISTS] in filesystem storage and [password INVALID]', () async {
       // Assert
       expect(
-        () => globalLocator<SecretsService>().changePassword(
-          FilesystemPath.fromString('vaults/id1'),
-          PasswordModel.fromPlaintext('invalid_password'),
-          PasswordModel.defaultPassword(),
-        ),
+            () =>
+            globalLocator<SecretsService>().changePassword(
+              FilesystemPath.fromString('vaults/id1'),
+              PasswordModel.fromPlaintext('invalid_password'),
+              PasswordModel.defaultPassword(),
+            ),
         throwsA(isA<InvalidPasswordException>()),
       );
     });
@@ -96,11 +99,12 @@ void main() {
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXISTS] in filesystem storage', () async {
       // Assert
       expect(
-        () => globalLocator<SecretsService>().changePassword(
-          FilesystemPath.fromString('vaults/invalid_path'),
-          PasswordModel.fromPlaintext('1111'),
-          PasswordModel.defaultPassword(),
-        ),
+            () =>
+            globalLocator<SecretsService>().changePassword(
+              FilesystemPath.fromString('vaults/invalid_path'),
+              PasswordModel.fromPlaintext('1111'),
+              PasswordModel.defaultPassword(),
+            ),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -132,7 +136,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<SecretsService>().get(actualFilesystemPath, PasswordModel.fromPlaintext('invalid_password')),
+            () => globalLocator<SecretsService>().get(actualFilesystemPath, PasswordModel.fromPlaintext('invalid_password')),
         throwsA(isA<InvalidPasswordException>()),
       );
     });
@@ -143,7 +147,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<SecretsService>().get(actualFilesystemPath, PasswordModel.fromPlaintext('1111')),
+            () => globalLocator<SecretsService>().get(actualFilesystemPath, PasswordModel.fromPlaintext('1111')),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -182,7 +186,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<SecretsService>().get(actualFilesystemPath, PasswordModel.fromPlaintext('1111')),
+            () => globalLocator<SecretsService>().get(actualFilesystemPath, PasswordModel.fromPlaintext('1111')),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -203,7 +207,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(
+          path: FilesystemStorageKey.filesystem_storage.name);
 
       actualUpdatedFilesystemStructure['vaults.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
         encryptedData: actualUpdatedFilesystemStructure['vaults.snggle'] as String,
@@ -257,7 +262,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(
+          path: FilesystemStorageKey.filesystem_storage.name);
 
       actualUpdatedFilesystemStructure['vaults.snggle'] = PasswordModel.fromPlaintext('1111').decrypt(
         encryptedData: actualUpdatedFilesystemStructure['vaults.snggle'] as String,
@@ -317,7 +323,7 @@ void main() {
       // Act
       await globalLocator<SecretsService>().save(actualNewSecretsModel, PasswordModel.defaultPassword());
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: FilesystemStorageKey.filesystem_storage.name);
 
       // Assert
       expect(actualUpdatedFilesystemStructure.keys, contains('vaults.snggle'));
@@ -331,7 +337,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(
+          path: FilesystemStorageKey.filesystem_storage.name);
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -358,10 +365,11 @@ void main() {
     test('Should [throw ChildKeyNotFoundException] if [secrets path NOT EXIST] in filesystem storage', () async {
       // Assert
       expect(
-        () => globalLocator<SecretsService>().move(
-          FilesystemPath.fromString('vaults/not_existing_path'),
-          FilesystemPath.fromString('vaults/new/path/not_existing_path'),
-        ),
+            () =>
+            globalLocator<SecretsService>().move(
+              FilesystemPath.fromString('vaults/not_existing_path'),
+              FilesystemPath.fromString('vaults/new/path/not_existing_path'),
+            ),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -374,7 +382,8 @@ void main() {
 
       // Output is always a random string because AES changes the initialization vector with Random Secure
       // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(path: 'filesystem_storage');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readDecryptedFilesystem(
+          path: FilesystemStorageKey.filesystem_storage.name);
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
@@ -399,7 +408,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<SecretsService>().delete(actualFilesystemPath),
+            () => globalLocator<SecretsService>().delete(actualFilesystemPath),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
@@ -440,7 +449,7 @@ void main() {
 
       // Assert
       expect(
-        () => globalLocator<SecretsService>().isPasswordValid(actualFilesystemPath, PasswordModel.fromPlaintext('1111')),
+            () => globalLocator<SecretsService>().isPasswordValid(actualFilesystemPath, PasswordModel.fromPlaintext('1111')),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });
