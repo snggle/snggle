@@ -83,12 +83,10 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
     } else {
       await _savePin(passwordModel);
     }
-    emit(const AppSetUpPinPageLoadingState());
   }
 
   Future<void> _changePin(PasswordModel passwordModel) async {
     emit(const AppSetUpPinPageLoadingState());
-
     await _masterKeyController.changePassword(passwordModel);
   }
 
