@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/theme_config.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
@@ -37,10 +36,7 @@ class _AppCoreState extends State<AppCore> {
       theme: ThemeConfig().buildTheme(),
       debugShowCheckedModeBanner: false,
       builder: (_, Widget? routerWidget) {
-        return ColoredBox(
-          color: AppColors.body2,
-          child: routerWidget as Widget,
-        );
+        return routerWidget as Widget;
       },
     );
   }
