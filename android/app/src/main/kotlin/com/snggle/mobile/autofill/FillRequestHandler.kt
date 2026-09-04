@@ -44,8 +44,6 @@ class FillRequestHandler(
             "FILL parsed usernameId=${parsed.usernameId}, " +
                     "passwordId=${parsed.passwordId}, " +
                     "usernameFieldType=${parsed.usernameFieldType}, " +
-                    "usernamePresent=${!parsed.usernameValue.isNullOrBlank()}, " +
-                    "passwordPresent=${!parsed.passwordValue.isNullOrBlank()}, " +
                     "package=${parsed.packageName}"
         )
 

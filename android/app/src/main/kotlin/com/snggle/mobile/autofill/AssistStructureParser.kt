@@ -22,8 +22,6 @@ class AssistStructureParser(
                 TAG,
                 "Context[$index] parsed usernameId=${parsed.usernameId}, " +
                         "passwordId=${parsed.passwordId}, " +
-                        "usernamePresent=${!parsed.usernameValue.isNullOrBlank()}, " +
-                        "passwordPresent=${!parsed.passwordValue.isNullOrBlank()}, " +
                         "package=${parsed.packageName}"
             )
 
@@ -58,7 +56,11 @@ class AssistStructureParser(
 
         if (parsed.packageName == null) {
             parsed.packageName = parsed.detectedAppIdPackage
-            Log.d(TAG, "Fallback package from detected app node: ${parsed.packageName}")
+
+            Log.d(
+                TAG,
+                "Fallback package from detected app node: ${parsed.packageName}"
+            )
         }
 
         return parsed
@@ -85,7 +87,10 @@ class AssistStructureParser(
         }
 
         for (index in 0 until node.childCount) {
-            traverseNode(node.getChildAt(index), state)
+            traverseNode(
+                node = node.getChildAt(index),
+                state = state
+            )
         }
     }
 
@@ -102,7 +107,6 @@ class AssistStructureParser(
                     id = autofillId,
                     type = CandidateType.PASSWORD,
                     usernameFieldType = null,
-                    value = metadata.valueText,
                     index = nodeIndex,
                     focused = node.isFocused
                 )
@@ -111,7 +115,7 @@ class AssistStructureParser(
             Log.d(
                 TAG,
                 "Collected password candidate id=$autofillId " +
-                        "focused=${node.isFocused} valuePresent=${metadata.valueText.isNotEmpty()}"
+                        "focused=${node.isFocused}"
             )
 
             return
@@ -125,7 +129,6 @@ class AssistStructureParser(
                     id = autofillId,
                     type = CandidateType.LOGIN,
                     usernameFieldType = fieldType,
-                    value = metadata.valueText,
                     index = nodeIndex,
                     focused = node.isFocused
                 )
@@ -133,8 +136,8 @@ class AssistStructureParser(
 
             Log.d(
                 TAG,
-                "Collected login candidate id=$autofillId focused=${node.isFocused} " +
-                        "type=$fieldType valuePresent=${metadata.valueText.isNotEmpty()}"
+                "Collected login candidate id=$autofillId " +
+                        "focused=${node.isFocused} type=$fieldType"
             )
         }
     }
@@ -161,16 +164,29 @@ class AssistStructureParser(
             .filter { it.type == CandidateType.PASSWORD }
             .sortedBy { it.index }
 
-        if (loginCandidates.isEmpty() && passwordCandidates.isEmpty()) return
+        if (
+            loginCandidates.isEmpty() &&
+            passwordCandidates.isEmpty()
+        ) {
+            return
+        }
 
-        val focusedCandidate = candidates.firstOrNull { it.focused }
+        val focusedCandidate = candidates.firstOrNull {
+            it.focused
+        }
 
         val selectedLogin = when (focusedCandidate?.type) {
             CandidateType.LOGIN -> focusedCandidate
 
-            CandidateType.PASSWORD -> loginCandidates
-                .lastOrNull { it.index < focusedCandidate.index }
-                ?: loginCandidates.minByOrNull { kotlin.math.abs(it.index - focusedCandidate.index) }
+            CandidateType.PASSWORD -> {
+                loginCandidates.lastOrNull {
+                    it.index < focusedCandidate.index
+                } ?: loginCandidates.minByOrNull {
+                    kotlin.math.abs(
+                        it.index - focusedCandidate.index
+                    )
+                }
+            }
 
             null -> loginCandidates.firstOrNull()
         }
@@ -185,9 +201,14 @@ class AssistStructureParser(
 
                 passwordCandidates.firstOrNull { password ->
                     password.index > focusedCandidate.index &&
-                            (nextLogin == null || password.index < nextLogin.index)
+                            (
+                                    nextLogin == null ||
+                                            password.index < nextLogin.index
+                                    )
                 } ?: passwordCandidates.minByOrNull {
-                    kotlin.math.abs(it.index - focusedCandidate.index)
+                    kotlin.math.abs(
+                        it.index - focusedCandidate.index
+                    )
                 }
             }
 
@@ -196,32 +217,29 @@ class AssistStructureParser(
 
         selectedLogin?.let { login ->
             parsed.usernameId = login.id
-            parsed.usernameFieldType = login.usernameFieldType ?: FieldType.UNKNOWN
-
-            if (login.value.isNotEmpty()) {
-                parsed.usernameValue = login.value
-            }
+            parsed.usernameFieldType =
+                login.usernameFieldType ?: FieldType.UNKNOWN
         }
 
         selectedPassword?.let { password ->
             parsed.passwordId = password.id
-
-            if (password.value.isNotEmpty()) {
-                parsed.passwordValue = password.value
-            }
         }
 
         Log.d(
             TAG,
-            "Resolved pair loginId=${parsed.usernameId}, passwordId=${parsed.passwordId}, " +
-                    "loginType=${parsed.usernameFieldType}, " +
-                    "loginPresent=${!parsed.usernameValue.isNullOrBlank()}, " +
-                    "passwordPresent=${!parsed.passwordValue.isNullOrBlank()}"
+            "Resolved pair usernameId=${parsed.usernameId}, " +
+                    "passwordId=${parsed.passwordId}, " +
+                    "usernameFieldType=${parsed.usernameFieldType}"
         )
     }
 
-    private fun ParsedStructure.mergeWith(other: ParsedStructure) {
-        if (packageName == null && other.packageName != null) {
+    private fun ParsedStructure.mergeWith(
+        other: ParsedStructure
+    ) {
+        if (
+            packageName == null &&
+            other.packageName != null
+        ) {
             packageName = other.packageName
         }
 
@@ -237,16 +255,12 @@ class AssistStructureParser(
             passwordId = other.passwordId
         }
 
-        if (usernameValue.isNullOrEmpty() && !other.usernameValue.isNullOrEmpty()) {
-            usernameValue = other.usernameValue
-        }
-
-        if (passwordValue.isNullOrEmpty() && !other.passwordValue.isNullOrEmpty()) {
-            passwordValue = other.passwordValue
-        }
-
-        if (detectedAppIdPackage == null && other.detectedAppIdPackage != null) {
-            detectedAppIdPackage = other.detectedAppIdPackage
+        if (
+            detectedAppIdPackage == null &&
+            other.detectedAppIdPackage != null
+        ) {
+            detectedAppIdPackage =
+                other.detectedAppIdPackage
         }
     }
 
@@ -266,7 +280,6 @@ class AssistStructureParser(
         val id: AutofillId,
         val type: CandidateType,
         val usernameFieldType: FieldType?,
-        val value: String,
         val index: Int,
         val focused: Boolean
     )
