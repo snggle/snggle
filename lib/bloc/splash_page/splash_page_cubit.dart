@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/splash_page/states/splash_page_enter_pin_state.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_app_set_up_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_loading_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_master_key_removed_state.dart';
-import 'package:snggle/bloc/splash_page/states/splash_page_setup_app_state.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_pin_auth_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
@@ -23,12 +23,12 @@ class SplashPageCubit extends Cubit<ASplashPageState> {
       bool masterKeyExistsBool = await _masterKeyService.isMasterKeyExists();
       bool databaseExistsBool = await _appService.isDataBaseExist();
       if (masterKeyExistsBool) {
-        emit(SplashPageEnterPinState());
+        emit(SplashPagePinAuthState());
       } else {
         if (databaseExistsBool) {
           emit(SplashPageMasterKeyRemovedState());
         } else {
-          emit(SplashPageSetupAppState());
+          emit(SplashPageAppSetUpState());
         }
       }
     } catch (e) {

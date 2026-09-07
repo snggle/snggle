@@ -46,7 +46,7 @@ class _AppMasterKeyCreatePageState extends State<AppMasterKeyCreatePage> {
       futureFunction: () {},
       onSuccess: (_) async {
         await AutoRouter.of(buildContext).push(
-          AppSetUpPinRoute(
+          AppPinSetUpRoute(
             mnemonicModel: mnemonicModel,
             appMasterKeyType: AppMasterKeyType.create,
           ),
