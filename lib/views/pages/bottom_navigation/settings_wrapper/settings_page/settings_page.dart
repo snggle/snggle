@@ -61,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
     bool? appPinChangedBool = await context.router.root.push<bool?>(
       AppPinChangeRoute(
         children: <PageRouteInfo>[
-          AppEnterPinRoute(appPinType: AppPinType.changePin),
+          AppPinEnterRoute(appPinType: AppPinType.change),
         ],
       ),
     );

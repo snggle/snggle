@@ -1,5 +1,5 @@
 enum AppPinType {
-  changePin,
-  enterPin,
-  setUpPin,
+  change,
+  enter,
+  setUp,
 }

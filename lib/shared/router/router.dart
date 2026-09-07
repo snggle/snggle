@@ -26,12 +26,12 @@ class AppRouter extends RootStackRouter {
       AutoRoute(
         page: AppPinChangeRoute.page,
         children: <AutoRoute>[
-          AutoRoute(page: AppEnterPinRoute.page, initial: true),
-          AutoRoute(page: AppSetUpPinRoute.page),
+          AutoRoute(page: AppPinEnterRoute.page, initial: true),
+          AutoRoute(page: AppPinSetUpRoute.page),
         ],
       ),
-      AutoRoute(page: AppSetUpPinRoute.page),
-      AutoRoute(page: AppEnterPinRoute.page),
+      AutoRoute(page: AppPinSetUpRoute.page),
+      AutoRoute(page: AppPinEnterRoute.page),
       AutoRoute(page: PrivacyPolicyRoute.page),
       AutoRoute(
         page: VaultCreateRecoverRoute.page,
