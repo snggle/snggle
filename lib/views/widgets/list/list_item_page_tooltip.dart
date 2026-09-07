@@ -8,7 +8,7 @@ import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/selection_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
-import 'package:snggle/views/pages/bottom_navigation/secrets_setup_pin_page.dart';
+import 'package:snggle/views/pages/local_pin_page/local_pin_set_up_page.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_agreement_dialog.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
@@ -104,7 +104,7 @@ class _ListItemPageTooltipState<T extends AListItemModel, C extends AListCubit<T
       context: context,
       useSafeArea: false,
       builder: (BuildContext context) {
-        return SecretsSetupPinPage(
+        return LocalPinSetUpPage(
           passwordValidCallback: (PasswordModel passwordModel) async {
             await widget.listCubit.lockSelection(selectedItems: selectionModel.selectedItems, newPasswordModel: passwordModel);
           },

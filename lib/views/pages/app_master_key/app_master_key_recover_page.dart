@@ -63,7 +63,7 @@ class _AppMasterKeyRecoverPageState extends State<AppMasterKeyRecoverPage> {
               _keyboardValueNotifier.hideKeyboard();
 
               await AutoRouter.of(context).push(
-                AppSetUpPinRoute(mnemonicModel: mnemonicModel, appMasterKeyType: AppMasterKeyType.recover),
+                AppPinSetUpRoute(mnemonicModel: mnemonicModel, appMasterKeyType: AppMasterKeyType.recover),
               );
             },
           ),

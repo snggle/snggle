@@ -27,17 +27,17 @@ import 'package:snggle/shared/models/vaults/vault_model.dart' as _i34;
 import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i37;
 import 'package:snggle/shared/utils/filesystem_path.dart' as _i35;
 import 'package:snggle/views/pages/app_master_key/app_master_key_create_page.dart'
-    as _i2;
+    as _i1;
 import 'package:snggle/views/pages/app_master_key/app_master_key_recover_page.dart'
-    as _i3;
+    as _i2;
 import 'package:snggle/views/pages/app_master_key/app_master_key_removed_page.dart'
-    as _i4;
+    as _i3;
 import 'package:snggle/views/pages/app_master_key/app_master_key_type.dart'
     as _i29;
-import 'package:snggle/views/pages/app_pin_page/app_enter_pin_page.dart' as _i1;
-import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart' as _i27;
-import 'package:snggle/views/pages/app_pin_page/app_set_up_pin_page.dart'
+import 'package:snggle/views/pages/app_pin_page/app_pin_enter_page.dart' as _i4;
+import 'package:snggle/views/pages/app_pin_page/app_pin_set_up_page.dart'
     as _i5;
+import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart' as _i27;
 import 'package:snggle/views/pages/bottom_navigation/apps_page.dart' as _i6;
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart'
     as _i7;
@@ -77,33 +77,81 @@ import 'package:snggle/views/pages/wallet_create_page/wallet_create_page.dart'
     as _i23;
 
 /// generated route for
-/// [_i1.AppEnterPinPage]
-class AppEnterPinRoute extends _i26.PageRouteInfo<AppEnterPinRouteArgs> {
-  AppEnterPinRoute({
-    _i27.AppPinType appPinType = _i27.AppPinType.enterPin,
-    _i28.Key? key,
-    List<_i26.PageRouteInfo>? children,
-  }) : super(
-         AppEnterPinRoute.name,
-         args: AppEnterPinRouteArgs(appPinType: appPinType, key: key),
-         initialChildren: children,
-       );
+/// [_i1.AppMasterKeyCreatePage]
+class AppMasterKeyCreateRoute extends _i26.PageRouteInfo<void> {
+  const AppMasterKeyCreateRoute({List<_i26.PageRouteInfo>? children})
+    : super(AppMasterKeyCreateRoute.name, initialChildren: children);
 
-  static const String name = 'AppEnterPinRoute';
+  static const String name = 'AppMasterKeyCreateRoute';
 
   static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<AppEnterPinRouteArgs>(
-        orElse: () => const AppEnterPinRouteArgs(),
-      );
-      return _i1.AppEnterPinPage(appPinType: args.appPinType, key: args.key);
+      return const _i1.AppMasterKeyCreatePage();
     },
   );
 }
 
-class AppEnterPinRouteArgs {
-  const AppEnterPinRouteArgs({
+/// generated route for
+/// [_i2.AppMasterKeyRecoverPage]
+class AppMasterKeyRecoverRoute extends _i26.PageRouteInfo<void> {
+  const AppMasterKeyRecoverRoute({List<_i26.PageRouteInfo>? children})
+    : super(AppMasterKeyRecoverRoute.name, initialChildren: children);
+
+  static const String name = 'AppMasterKeyRecoverRoute';
+
+  static _i26.PageInfo page = _i26.PageInfo(
+    name,
+    builder: (data) {
+      return const _i2.AppMasterKeyRecoverPage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i3.AppMasterKeyRemovedPage]
+class AppMasterKeyRemovedRoute extends _i26.PageRouteInfo<void> {
+  const AppMasterKeyRemovedRoute({List<_i26.PageRouteInfo>? children})
+    : super(AppMasterKeyRemovedRoute.name, initialChildren: children);
+
+  static const String name = 'AppMasterKeyRemovedRoute';
+
+  static _i26.PageInfo page = _i26.PageInfo(
+    name,
+    builder: (data) {
+      return const _i3.AppMasterKeyRemovedPage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i4.AppPinEnterPage]
+class AppPinEnterRoute extends _i26.PageRouteInfo<AppPinEnterRouteArgs> {
+  AppPinEnterRoute({
+    _i27.AppPinType appPinType = _i27.AppPinType.enterPin,
+    _i28.Key? key,
+    List<_i26.PageRouteInfo>? children,
+  }) : super(
+         AppPinEnterRoute.name,
+         args: AppPinEnterRouteArgs(appPinType: appPinType, key: key),
+         initialChildren: children,
+       );
+
+  static const String name = 'AppPinEnterRoute';
+
+  static _i26.PageInfo page = _i26.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<AppPinEnterRouteArgs>(
+        orElse: () => const AppPinEnterRouteArgs(),
+      );
+      return _i4.AppPinEnterPage(appPinType: args.appPinType, key: args.key);
+    },
+  );
+}
+
+class AppPinEnterRouteArgs {
+  const AppPinEnterRouteArgs({
     this.appPinType = _i27.AppPinType.enterPin,
     this.key,
   });
@@ -114,13 +162,13 @@ class AppEnterPinRouteArgs {
 
   @override
   String toString() {
-    return 'AppEnterPinRouteArgs{appPinType: $appPinType, key: $key}';
+    return 'AppPinEnterRouteArgs{appPinType: $appPinType, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    if (other is! AppEnterPinRouteArgs) return false;
+    if (other is! AppPinEnterRouteArgs) return false;
     return appPinType == other.appPinType && key == other.key;
   }
 
@@ -129,57 +177,9 @@ class AppEnterPinRouteArgs {
 }
 
 /// generated route for
-/// [_i2.AppMasterKeyCreatePage]
-class AppMasterKeyCreateRoute extends _i26.PageRouteInfo<void> {
-  const AppMasterKeyCreateRoute({List<_i26.PageRouteInfo>? children})
-    : super(AppMasterKeyCreateRoute.name, initialChildren: children);
-
-  static const String name = 'AppMasterKeyCreateRoute';
-
-  static _i26.PageInfo page = _i26.PageInfo(
-    name,
-    builder: (data) {
-      return const _i2.AppMasterKeyCreatePage();
-    },
-  );
-}
-
-/// generated route for
-/// [_i3.AppMasterKeyRecoverPage]
-class AppMasterKeyRecoverRoute extends _i26.PageRouteInfo<void> {
-  const AppMasterKeyRecoverRoute({List<_i26.PageRouteInfo>? children})
-    : super(AppMasterKeyRecoverRoute.name, initialChildren: children);
-
-  static const String name = 'AppMasterKeyRecoverRoute';
-
-  static _i26.PageInfo page = _i26.PageInfo(
-    name,
-    builder: (data) {
-      return const _i3.AppMasterKeyRecoverPage();
-    },
-  );
-}
-
-/// generated route for
-/// [_i4.AppMasterKeyRemovedPage]
-class AppMasterKeyRemovedRoute extends _i26.PageRouteInfo<void> {
-  const AppMasterKeyRemovedRoute({List<_i26.PageRouteInfo>? children})
-    : super(AppMasterKeyRemovedRoute.name, initialChildren: children);
-
-  static const String name = 'AppMasterKeyRemovedRoute';
-
-  static _i26.PageInfo page = _i26.PageInfo(
-    name,
-    builder: (data) {
-      return const _i4.AppMasterKeyRemovedPage();
-    },
-  );
-}
-
-/// generated route for
-/// [_i5.AppSetUpPinPage]
-class AppSetUpPinRoute extends _i26.PageRouteInfo<AppSetUpPinRouteArgs> {
-  AppSetUpPinRoute({
+/// [_i5.AppPinSetUpPage]
+class AppPinSetUpRoute extends _i26.PageRouteInfo<AppPinSetUpRouteArgs> {
+  AppPinSetUpRoute({
     _i29.AppMasterKeyType? appMasterKeyType,
     _i27.AppPinType appPinType = _i27.AppPinType.setUpPin,
     _i30.MnemonicModel? mnemonicModel,
@@ -188,8 +188,8 @@ class AppSetUpPinRoute extends _i26.PageRouteInfo<AppSetUpPinRouteArgs> {
     _i28.Key? key,
     List<_i26.PageRouteInfo>? children,
   }) : super(
-         AppSetUpPinRoute.name,
-         args: AppSetUpPinRouteArgs(
+         AppPinSetUpRoute.name,
+         args: AppPinSetUpRouteArgs(
            appMasterKeyType: appMasterKeyType,
            appPinType: appPinType,
            mnemonicModel: mnemonicModel,
@@ -199,15 +199,15 @@ class AppSetUpPinRoute extends _i26.PageRouteInfo<AppSetUpPinRouteArgs> {
          initialChildren: children,
        );
 
-  static const String name = 'AppSetUpPinRoute';
+  static const String name = 'AppPinSetUpRoute';
 
   static _i26.PageInfo page = _i26.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<AppSetUpPinRouteArgs>(
-        orElse: () => const AppSetUpPinRouteArgs(),
+      final args = data.argsAs<AppPinSetUpRouteArgs>(
+        orElse: () => const AppPinSetUpRouteArgs(),
       );
-      return _i5.AppSetUpPinPage(
+      return _i5.AppPinSetUpPage(
         appMasterKeyType: args.appMasterKeyType,
         appPinType: args.appPinType,
         mnemonicModel: args.mnemonicModel,
@@ -218,8 +218,8 @@ class AppSetUpPinRoute extends _i26.PageRouteInfo<AppSetUpPinRouteArgs> {
   );
 }
 
-class AppSetUpPinRouteArgs {
-  const AppSetUpPinRouteArgs({
+class AppPinSetUpRouteArgs {
+  const AppPinSetUpRouteArgs({
     this.appMasterKeyType,
     this.appPinType = _i27.AppPinType.setUpPin,
     this.mnemonicModel,
@@ -240,13 +240,13 @@ class AppSetUpPinRouteArgs {
 
   @override
   String toString() {
-    return 'AppSetUpPinRouteArgs{appMasterKeyType: $appMasterKeyType, appPinType: $appPinType, mnemonicModel: $mnemonicModel, initPinpadKeyboardState: $initPinpadKeyboardState, key: $key}';
+    return 'AppPinSetUpRouteArgs{appMasterKeyType: $appMasterKeyType, appPinType: $appPinType, mnemonicModel: $mnemonicModel, initPinpadKeyboardState: $initPinpadKeyboardState, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    if (other is! AppSetUpPinRouteArgs) return false;
+    if (other is! AppPinSetUpRouteArgs) return false;
     return appMasterKeyType == other.appMasterKeyType &&
         appPinType == other.appPinType &&
         mnemonicModel == other.mnemonicModel &&

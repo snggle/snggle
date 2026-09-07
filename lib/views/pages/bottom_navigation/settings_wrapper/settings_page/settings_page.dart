@@ -27,7 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
           CustomLargeListTile(
             leading: const AssetIcon(AppIcons.settings_change_app_pin, size: 42),
             title: 'Change Application PIN',
-            onTap: () => context.router.push(AppEnterPinRoute(appPinType: AppPinType.changePin)),
+            onTap: () => context.router.push(AppPinEnterRoute(appPinType: AppPinType.change)),
           ),
           CustomLargeListTile(
             leading: const AssetIcon(AppIcons.settings_privacy_policy, size: 42),
