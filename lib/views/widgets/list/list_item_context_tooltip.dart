@@ -4,8 +4,8 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart';
-import 'package:snggle/views/pages/bottom_navigation/secrets_auth_page.dart';
-import 'package:snggle/views/pages/bottom_navigation/secrets_setup_pin_page.dart';
+import 'package:snggle/views/pages/local_pin_page/local_pin_enter_page.dart';
+import 'package:snggle/views/pages/local_pin_page/local_pin_set_up_page.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_agreement_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/name_dialog.dart';
 import 'package:snggle/views/widgets/tooltip/context_tooltip/context_tooltip_content.dart';
@@ -129,7 +129,7 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
       context: context,
       useSafeArea: false,
       builder: (BuildContext context) {
-        return SecretsSetupPinPage(
+        return LocalPinSetUpPage(
           passwordValidCallback: (PasswordModel passwordModel) async {
             await widget.listCubit.lockSelection(selectedItems: <AListItemModel>[widget.listItemModel], newPasswordModel: passwordModel);
           },
@@ -144,7 +144,7 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
       context: context,
       useSafeArea: false,
       builder: (BuildContext context) {
-        return SecretsAuthPage(
+        return LocalPinEnterPage(
           title: 'REMOVE PIN',
           listItemModel: widget.listItemModel,
           passwordValidCallback: (PasswordModel passwordModel) async {

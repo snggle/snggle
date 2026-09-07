@@ -4,7 +4,7 @@ import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
-import 'package:snggle/views/pages/bottom_navigation/secrets_auth_page.dart';
+import 'package:snggle/views/pages/local_pin_page/local_pin_enter_page.dart';
 import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
 import 'package:snggle/views/widgets/drag/source/drag_source_gesture_detector.dart';
 import 'package:snggle/views/widgets/generic/selection_wrapper.dart';
@@ -120,7 +120,7 @@ class _ListItemActionsWrapperState<T extends AListItemModel, C extends AListCubi
       showDialog(
         context: context,
         barrierColor: Colors.transparent,
-        builder: (BuildContext context) => SecretsAuthPage(
+        builder: (BuildContext context) => LocalPinEnterPage(
           title: 'ENTER PIN',
           listItemModel: widget.listItemModel,
           passwordValidCallback: (PasswordModel passwordModel) async {

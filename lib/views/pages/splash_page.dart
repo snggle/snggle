@@ -62,7 +62,7 @@ class _SplashPageState extends State<SplashPage> {
     } else if (splashPageState is SplashPageMasterKeyRemovedState) {
       AutoRouter.of(context).replace(const AppMasterKeyRemovedRoute());
     } else if (splashPageState is SplashPageEnterPinState) {
-      AutoRouter.of(context).replace(AppEnterPinRoute());
+      AutoRouter.of(context).replace(AppPinEnterRoute());
     }
   }
 
