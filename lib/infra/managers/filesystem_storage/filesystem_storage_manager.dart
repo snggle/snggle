@@ -3,12 +3,12 @@ import 'dart:io';
 
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_root_key.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class FilesystemStorageManager {
   final RootDirectoryBuilder _rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
-  final FilesystemStorageKey _filesystemStorageKey;
+  final FilesystemStorageRootKey _filesystemStorageKey;
   final Completer<Directory> _rootDirectoryCompleter;
 
   FilesystemStorageManager({

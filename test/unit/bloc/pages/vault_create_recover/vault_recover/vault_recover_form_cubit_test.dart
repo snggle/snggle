@@ -5,7 +5,7 @@ import 'package:snggle/bloc/pages/vault_create_recover/vault_recover/vault_recov
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_subdirectory_key.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_child_key.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
@@ -28,7 +28,7 @@ void main() {
     );
 
     actualVaultRecoverPageCubit =
-        VaultRecoverPageCubit(parentFilesystemPath: FilesystemPath.fromString(FilesystemStorageSubdirectoryKey.vaults.name));
+        VaultRecoverPageCubit(parentFilesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name));
   });
 
   group('Tests of VaultRecoverPageCubit process', () {

@@ -1,3 +1,0 @@
-enum FilesystemStorageSubdirectoryKey {
-  vaults,
-}

@@ -7,7 +7,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/vault_list_pa
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_subdirectory_key.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_child_key.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
@@ -37,11 +37,11 @@ class VaultListPage extends StatefulWidget {
 }
 
 class _VaultListPageState extends State<VaultListPage> {
-  static String defaultPageTitle = FilesystemStorageSubdirectoryKey.vaults.name.toUpperCase();
+  static String defaultPageTitle = FilesystemStorageChildKey.vaults.name.toUpperCase();
   final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
   late final VaultListPageCubit vaultListPageCubit = VaultListPageCubit(
     depth: 0,
-    filesystemPath: FilesystemPath.fromString(FilesystemStorageSubdirectoryKey.vaults.name),
+    filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
     onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
   );
 
@@ -83,18 +83,17 @@ class _VaultListPageState extends State<VaultListPage> {
                   ),
                 ),
               ),
-            ] else
-              ...<Widget>[
-                SliverPageGrid(
-                  listItemSize: VaultListItemLayout.listItemSize,
-                  addButtonVisibleBool: listState.isSelectionEnabled == false,
-                  loadingBool: listState.loadingBool,
-                  items: listState.visibleItems,
-                  selectedItems: listState.selectedItems,
-                  vaultCreationButton: VaultListItemLayout(
-                    icon: ListItemCreationButton(
-                      size: VaultListItemLayout.listItemIconSize,
-                      onTap: _navigateToVaultCreateRecoverRoute,
+            ] else ...<Widget>[
+              SliverPageGrid(
+                listItemSize: VaultListItemLayout.listItemSize,
+                addButtonVisibleBool: listState.isSelectionEnabled == false,
+                loadingBool: listState.loadingBool,
+                items: listState.visibleItems,
+                selectedItems: listState.selectedItems,
+                vaultCreationButton: VaultListItemLayout(
+                  icon: ListItemCreationButton(
+                    size: VaultListItemLayout.listItemIconSize,
+                    onTap: _navigateToVaultCreateRecoverRoute,
                   ),
                 ),
                 itemBuilder: (AListItemModel listItemModel) {

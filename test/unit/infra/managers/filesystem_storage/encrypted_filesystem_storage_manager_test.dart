@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/filesystem_storage/encrypted_filesystem_storage_manager.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_child_key.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_manager.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_subdirectory_key.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_root_key.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
@@ -20,13 +20,13 @@ void main() {
       appPasswordModel: PasswordModel.fromPlaintext('1111'),
     );
 
-    actualFilesystemStorageManager = EncryptedFilesystemStorageManager(filesystemStorageKey: FilesystemStorageKey.test);
+    actualFilesystemStorageManager = EncryptedFilesystemStorageManager(filesystemStorageKey: FilesystemStorageRootKey.test);
   });
 
   group('Tests of EncryptedFilesystemStorageManager.read()', () {
     test('Should [return decrypted file content] if [file path EXISTS] (1st depth)', () async {
       // Act
-      String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString(FilesystemStorageSubdirectoryKey.vaults.name));
+      String actualFileContent = await actualFilesystemStorageManager.read(FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name));
 
       // Assert
       String expectedFileContent =
