@@ -6,6 +6,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_passw
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
+import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
@@ -100,6 +101,23 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                         label: 'Checksum',
                         textEditingController: generatePasswordPageCubit.checksumTextEditingController,
                       ),
+                      const SizedBox(height: 60),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 22.5, vertical: 25),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: <Widget>[
+                              GradientOutlinedButton.small(
+                                width: 176,
+                                label: 'Generate pass',
+                                onPressed: _regenerate,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 12),
                       _buildEditableEntryField(
                         textTheme: textTheme,
@@ -116,6 +134,27 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                           ),
                         ),
                         suffixWidgetConstraints: const BoxConstraints(minWidth: 34, minHeight: 34),
+                      ),
+                      const SizedBox(height: 12),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: LabelWrapperVertical.textField(
+                          label: 'Entropy: ${generatePasswordPageCubit.entropyTextEditingController} bits',
+                          labelStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
+                          labelPadding: EdgeInsets.zero,
+                          child: CustomTextField(
+                            autofocusBool: false,
+                            readOnlyBool: true,
+                            enableInteractiveSelectionBool: true,
+                            textEditingController: generatePasswordPageCubit.entropyTextEditingController,
+                            inputBorder: InputBorder.none,
+                            keyboardType: TextInputType.text,
+                            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+                            obscureTextBool: false,
+                            //suffixWidget: suffixWidget,
+                            //suffixWidgetConstraints: suffixWidgetConstraints,
+                          ),
+                        ),
                       ),
                       SizedBox(height: anyKeyboardVisibleBool ? 40 : 100),
                     ],
@@ -166,4 +205,6 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
   void _save() {
     AutoRouter.of(context).pop<String>(generatePasswordPageCubit.passwordTextEditingController.text);
   }
+
+  void _regenerate() {}
 }
