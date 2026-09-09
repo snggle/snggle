@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/parent_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_root_key.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -104,7 +104,7 @@ void main() {
       // Arrange
       RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
       Directory rootDirectory = await rootDirectoryBuilder.call();
-      Directory filesystemStorageDir = Directory('${rootDirectory.path}/${FilesystemStorageKey.filesystem_storage.name}');
+      Directory filesystemStorageDir = Directory('${rootDirectory.path}/${FilesystemStorageRootKey.filesystem_storage.name}');
 
       if (await filesystemStorageDir.exists()) {
         await filesystemStorageDir.delete(recursive: true);
@@ -121,8 +121,8 @@ void main() {
       // Arrange
       RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
       Directory rootDirectory = await rootDirectoryBuilder.call();
-      Directory filesystemStorageDir = Directory('${rootDirectory.path}/${FilesystemStorageKey.filesystem_storage.name}');
-      Directory vaultsDir = Directory('${rootDirectory.path}/${FilesystemStorageKey.filesystem_storage.name}/vaults');
+      Directory filesystemStorageDir = Directory('${rootDirectory.path}/${FilesystemStorageRootKey.filesystem_storage.name}');
+      Directory vaultsDir = Directory('${rootDirectory.path}/${FilesystemStorageRootKey.filesystem_storage.name}/vaults');
 
       if (await filesystemStorageDir.exists()) {
         await filesystemStorageDir.delete(recursive: true);
@@ -142,7 +142,7 @@ void main() {
       // Arrange
       RootDirectoryBuilder rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
       Directory rootDirectory = await rootDirectoryBuilder.call();
-      Directory filesystemStorageDir = Directory('${rootDirectory.path}/${FilesystemStorageKey.filesystem_storage.name}');
+      Directory filesystemStorageDir = Directory('${rootDirectory.path}/${FilesystemStorageRootKey.filesystem_storage.name}');
 
       if (await filesystemStorageDir.exists()) {
         await filesystemStorageDir.delete(recursive: true);
