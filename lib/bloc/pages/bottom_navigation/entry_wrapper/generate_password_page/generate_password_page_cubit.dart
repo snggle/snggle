@@ -10,6 +10,8 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   final TextEditingController passwordLengthTextEditingController = TextEditingController();
   final TextEditingController passwordTextEditingController = TextEditingController();
 
+  bool sip2CharacterSetBool = false;
+
   GeneratePasswordPageCubit() : super(const GeneratePasswordPageState());
 
   @override
