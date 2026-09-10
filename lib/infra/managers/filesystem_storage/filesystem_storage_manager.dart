@@ -62,7 +62,7 @@ class FilesystemStorageManager {
     bool parentDirectoryEmptyBool = parentDirectory.listSync().isEmpty;
     if (parentDirectoryEmptyBool) {
       await parentDirectory.delete();
-      await _deleteTabFilesystemStorage(parentDirectory);
+      await _deleteFilesystemStorageTab(parentDirectory);
     }
   }
 
@@ -71,7 +71,7 @@ class FilesystemStorageManager {
     return file.exists();
   }
 
-  Future<void> _deleteTabFilesystemStorage(Directory deletedDirectory) async {
+  Future<void> _deleteFilesystemStorageTab(Directory deletedDirectory) async {
     String vaultsDirectoryPath = await _buildAbsolutePath(relativePath: 'vaults');
     if (deletedDirectory.path != vaultsDirectoryPath) {
       return;
