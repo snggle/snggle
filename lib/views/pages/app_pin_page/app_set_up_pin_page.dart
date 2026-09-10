@@ -153,10 +153,24 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
     _pinpadKeyboardState = pinpadKeyboardState;
   }
 
-  void _handleConfirmPinChange(List<int> firstPinNumbersList, List<int> confirmPinNumbersList) {
+  Future<void> _handleConfirmPinChange(List<int> firstPinNumbersList, List<int> confirmPinNumbersList) async {
     _appSetUpPinPageCubit.updateConfirmPin(confirmPinNumbersList);
     if (firstPinNumbersList.length == confirmPinNumbersList.length) {
-      _trySetupPin();
+      await _trySetupPin();
+
+      bool appPinTypeChangeBool = widget._appPinType == AppPinType.changePin;
+      if (appPinTypeChangeBool) {
+        context.router.root.pop(true);
+        return;
+      }
+
+      bool masterKeyRecoverBool = widget._appMasterKeyType == AppMasterKeyType.recover;
+      String successDialogMessage = masterKeyRecoverBool
+          ? 'Your Master Key has been successfully recovered.'
+          : 'Your new Master Key has been successfully created.';
+
+      await _showSuccessDialog(successDialogMessage: successDialogMessage);
+      await context.router.root.replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
     }
   }
 
@@ -192,25 +206,12 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
       if (mounted == false) {
         return;
       }
-
-      bool appPinTypeChangeBool = widget._appPinType == AppPinType.changePin;
-      if (appPinTypeChangeBool) {
-        context.router.root.pop(true);
-        return;
-      }
-
-      bool masterKeyRecoverBool = widget._appMasterKeyType == AppMasterKeyType.recover;
-      await _showSuccessDialog(
-        message: masterKeyRecoverBool ? 'Your Master Key has been successfully recovered.' : 'Your new Master Key has been successfully created.',
-      );
-
-      await context.router.root.replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
     } catch (e) {
       AppLogger().log(message: 'Provided invalid confirm PIN');
     }
   }
 
-  Future<void> _showSuccessDialog({required String message}) async {
+  Future<void> _showSuccessDialog({required String successDialogMessage}) async {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -219,7 +220,7 @@ class _AppSetUpPinPageState extends State<AppSetUpPinPage> {
         return CustomDialog(
           title: 'Success',
           content: Text(
-            message,
+            successDialogMessage,
             textAlign: TextAlign.center,
           ),
           backgroundColor: Colors.white,

@@ -79,7 +79,6 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       barrierDismissible: false,
       barrierColor: Colors.transparent,
-      useRootNavigator: false,
       builder: (BuildContext dialogContext) {
         return CustomDialog(
           title: 'Success',
