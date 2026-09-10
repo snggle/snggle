@@ -45,10 +45,10 @@ class SecretsService {
   Future<void> save(ASecretsModel secretsModel, PasswordModel passwordModel) async {
     bool vaultBool = secretsModel is VaultSecretsModel;
     if (vaultBool) {
-      bool tabFilesystemStorageExistsBool = await _isTabFilesystemStorageExists();
+      bool filesystemStorageTabExistsBool = await _isFilesystemStorageTabExists();
 
-      if (tabFilesystemStorageExistsBool == false) {
-        await _createTabFilesystemStorage();
+      if (filesystemStorageTabExistsBool == false) {
+        await _createFilesystemStorageTab();
       }
     }
 
@@ -71,7 +71,7 @@ class SecretsService {
     return passwordModel.isValidForData(encryptedSecrets);
   }
 
-  Future<bool> _isTabFilesystemStorageExists() async {
+  Future<bool> _isFilesystemStorageTabExists() async {
     bool parentFilesystemStorageExistsBool = await _secretsRepository.isSecretExists(
       _vaultsRootPath,
     );
@@ -79,7 +79,7 @@ class SecretsService {
     return parentFilesystemStorageExistsBool;
   }
 
-  Future<void> _createTabFilesystemStorage() async {
+  Future<void> _createFilesystemStorageTab() async {
     GroupSecretsModel vaultsRootSecretsModel = GroupSecretsModel.generate(_vaultsRootPath);
     String vaultsRootSecretsJsonString = jsonEncode(vaultsRootSecretsModel.toJson());
     String encryptedVaultsRootSecrets = PasswordModel.defaultPassword().encrypt(decryptedData: vaultsRootSecretsJsonString);
