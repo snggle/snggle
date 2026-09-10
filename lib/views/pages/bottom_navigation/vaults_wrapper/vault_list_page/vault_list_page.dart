@@ -7,7 +7,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/vault_list_pa
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_child_key.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_tab_dir.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
@@ -37,11 +37,13 @@ class VaultListPage extends StatefulWidget {
 }
 
 class _VaultListPageState extends State<VaultListPage> {
-  static String defaultPageTitle = FilesystemStorageChildKey.vaults.name.toUpperCase();
+  final String _tabDirName = FilesystemStorageTabDir.vaults.name;
+  late final FilesystemPath _vaultsRootPath = FilesystemPath.fromString(_tabDirName);
+  late final String defaultPageTitle = _tabDirName.toUpperCase();
   final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
   late final VaultListPageCubit vaultListPageCubit = VaultListPageCubit(
     depth: 0,
-    filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+    filesystemPath: _vaultsRootPath,
     onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
   );
 

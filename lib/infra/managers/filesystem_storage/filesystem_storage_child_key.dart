@@ -1,3 +1,0 @@
-enum FilesystemStorageChildKey {
-  vaults,
-}

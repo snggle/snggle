@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_child_key.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_tab_dir.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
@@ -33,7 +33,7 @@ void main() {
       // Act
       VaultModel actualVaultModel =
       await globalLocator<VaultModelFactory>().createNewVault(
-          FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name), actualMnemonic, 'NEW VAULT');
+          FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name), actualMnemonic, 'NEW VAULT');
 
       // Assert
       VaultModel expectedVaultModel = VaultModel(
@@ -58,7 +58,7 @@ void main() {
       // Act
       VaultModel actualVaultModel =
       await globalLocator<VaultModelFactory>().createNewVault(
-          FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name), actualMnemonic, 'NEW VAULT');
+          FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name), actualMnemonic, 'NEW VAULT');
 
       // Assert
       VaultModel expectedVaultModel = VaultModel(
