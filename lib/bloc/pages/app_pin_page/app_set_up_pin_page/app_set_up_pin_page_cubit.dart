@@ -44,12 +44,10 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
 
   void setUpFirstPin() {
     AppSetUpPinPageEnterPinState appSetupPinPageEnterPinState = state as AppSetUpPinPageEnterPinState;
-    emit(
-      AppSetUpPinPageConfirmPinState(
-        firstPinNumbers: appSetupPinPageEnterPinState.firstPinNumbers,
-        confirmPinNumbers: const <int>[],
-      ),
-    );
+    emit(AppSetUpPinPageConfirmPinState(
+      firstPinNumbers: appSetupPinPageEnterPinState.firstPinNumbers,
+      confirmPinNumbers: const <int>[],
+    ));
   }
 
   Future<void> setUpConfirmPin() async {
@@ -63,12 +61,10 @@ class AppSetUpPinPageCubit extends Cubit<AAppSetUpPinPageState> {
       await _submitEnteredPin(passwordModel);
       await minOperationTime;
     } else {
-      emit(
-        AppSetUpPinPageInvalidPinState(
-          firstPinNumbers: appSetupPinPageConfirmPinState.firstPinNumbers,
-          confirmPinNumbers: appSetupPinPageConfirmPinState.confirmPinNumbers,
-        ),
-      );
+      emit(AppSetUpPinPageInvalidPinState(
+        firstPinNumbers: appSetupPinPageConfirmPinState.firstPinNumbers,
+        confirmPinNumbers: appSetupPinPageConfirmPinState.confirmPinNumbers,
+      ));
       throw InvalidPasswordException('PIN numbers are not equal');
     }
   }
