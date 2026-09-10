@@ -3,7 +3,7 @@ import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_child_key.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_tab_dir.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
@@ -118,7 +118,7 @@ void main() {
 
       actualVaultListPageCubit = VaultListPageCubit(
         depth: 0,
-        filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+        filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
@@ -141,7 +141,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[groupModel, vaultModel1, vaultModel2, vaultModel3],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -164,7 +164,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[updatedVaultModel3, groupModel, vaultModel1, vaultModel2],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -185,7 +185,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -208,7 +208,7 @@ void main() {
             selectedItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
           ),
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -226,7 +226,7 @@ void main() {
           loadingBool: false,
           selectionModel: SelectionModel(selectedItems: <AListItemModel>[], allItemsCount: 4),
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -248,7 +248,7 @@ void main() {
             selectedItems: <AListItemModel>[vaultModel1],
           ),
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -268,7 +268,7 @@ void main() {
             selectedItems: <AListItemModel>[vaultModel1, updatedGroupModel],
           ),
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -287,7 +287,7 @@ void main() {
           loadingBool: false,
           selectionModel: SelectionModel(selectedItems: <AListItemModel>[updatedGroupModel], allItemsCount: 4),
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -304,7 +304,7 @@ void main() {
           loadingBool: false,
           selectionModel: SelectionModel(selectedItems: <AListItemModel>[], allItemsCount: 4),
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -323,7 +323,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -350,7 +350,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -378,7 +378,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -408,7 +408,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -435,7 +435,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -460,7 +460,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -486,7 +486,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -511,7 +511,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -534,7 +534,7 @@ void main() {
             updatedVaultModel3.copyWith(name: 'NEW VAULT NAME'),
             vaultModel2,
           ],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -554,7 +554,7 @@ void main() {
             updatedVaultModel3.copyWith(name: 'NEW VAULT NAME'),
             vaultModel2,
           ],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -573,7 +573,7 @@ void main() {
 
       actualVaultListPageCubit = VaultListPageCubit(
         depth: 0,
-        filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+        filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
@@ -596,7 +596,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[groupModel, vaultModel1, vaultModel2, vaultModel3],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -624,7 +624,7 @@ void main() {
             vaultModel2,
             vaultModel3,
           ],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -661,7 +661,7 @@ void main() {
               ],
             ),
           ],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -680,7 +680,7 @@ void main() {
 
       actualVaultListPageCubit = VaultListPageCubit(
         depth: 0,
-        filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+        filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
@@ -703,7 +703,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[groupModel, vaultModel1, vaultModel2, vaultModel3],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -771,7 +771,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[groupModel, vaultModel1, vaultModel2, vaultModel3],
-          filesystemPath: FilesystemPath.fromString(FilesystemStorageChildKey.vaults.name),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
