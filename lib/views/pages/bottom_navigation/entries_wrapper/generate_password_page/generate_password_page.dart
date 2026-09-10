@@ -84,6 +84,32 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                   controller: scrollController,
                   child: Column(
                     children: <Widget>[
+                      MenuItemButton(
+                        leadingIcon: const AssetIcon(
+                          AppIcons.menu_rename,
+                          width: 20,
+                          height: 20,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            generatePasswordPageCubit.sip2CharacterSetBool = true;
+                          });
+                        },
+                        child: const Text('Non-whitespace ASCII'),
+                      ),
+                      MenuItemButton(
+                        leadingIcon: const AssetIcon(
+                          AppIcons.menu_rename,
+                          width: 20,
+                          height: 20,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            generatePasswordPageCubit.sip2CharacterSetBool = true;
+                          });
+                        },
+                        child: const Text('SNGGLE (SIP-2)'),
+                      ),
                       _buildEditableEntryField(
                         textTheme: textTheme,
                         label: 'Length',
@@ -206,5 +232,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     AutoRouter.of(context).pop<String>(generatePasswordPageCubit.passwordTextEditingController.text);
   }
 
-  void _regenerate() {}
+  void _regenerate() {
+    //TODO(Kamil): implement regeneration
+  }
 }
