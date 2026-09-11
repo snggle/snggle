@@ -6,8 +6,11 @@ import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_passw
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
+import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_character_set_type.dart';
+import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_length_type.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
+import 'package:snggle/views/widgets/custom/custom_single_select_menu.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
@@ -32,8 +35,21 @@ class GeneratePasswordPage extends StatefulWidget {
 }
 
 class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
+  static const List<PasswordCharacterSetType> _characterSetOptions = <PasswordCharacterSetType>[
+    PasswordCharacterSetType.ascii,
+    PasswordCharacterSetType.sip2,
+  ];
+  static const List<PasswordLengthType> _passwordLengthOptions = <PasswordLengthType>[
+    PasswordLengthType.good,
+    PasswordLengthType.excellent,
+    PasswordLengthType.superb,
+    PasswordLengthType.custom,
+  ];
+
   final ScrollController scrollController = ScrollController();
   final KeyboardValueNotifier keyboardValueNotifier = KeyboardValueNotifier();
+  final ValueNotifier<PasswordCharacterSetType> characterSetNotifier = ValueNotifier<PasswordCharacterSetType>(_characterSetOptions.first);
+  final ValueNotifier<PasswordLengthType> passwordLengthNotifier = ValueNotifier<PasswordLengthType>(PasswordLengthType.excellent);
 
   late bool _obscurePasswordBool;
 
@@ -50,6 +66,8 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
   void dispose() {
     scrollController.dispose();
     keyboardValueNotifier.dispose();
+    characterSetNotifier.dispose();
+    passwordLengthNotifier.dispose();
     generatePasswordPageCubit.close();
     super.dispose();
   }
@@ -84,32 +102,41 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                   controller: scrollController,
                   child: Column(
                     children: <Widget>[
-                      MenuItemButton(
-                        leadingIcon: const AssetIcon(
-                          AppIcons.menu_rename,
-                          width: 20,
-                          height: 20,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            generatePasswordPageCubit.sip2CharacterSetBool = true;
-                          });
+                      ValueListenableBuilder<PasswordCharacterSetType>(
+                        valueListenable: characterSetNotifier,
+                        builder: (BuildContext context, PasswordCharacterSetType selectedCharacterSetType, _) {
+                          return CustomSingleSelectMenu<PasswordCharacterSetType>(
+                            selectedValue: selectedCharacterSetType,
+                            options: _characterSetOptions,
+                            onSelected: _handleCharacterSetChanged,
+                            itemBuilder: (BuildContext context, PasswordCharacterSetType passwordCharacterSetType) {
+                              return Text(
+                                _getPasswordCharacterSetTitle(passwordCharacterSetType),
+                                overflow: TextOverflow.ellipsis,
+                                style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+                              );
+                            },
+                          );
                         },
-                        child: const Text('Non-whitespace ASCII'),
                       ),
-                      MenuItemButton(
-                        leadingIcon: const AssetIcon(
-                          AppIcons.menu_rename,
-                          width: 20,
-                          height: 20,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            generatePasswordPageCubit.sip2CharacterSetBool = true;
-                          });
+                      ValueListenableBuilder<PasswordLengthType>(
+                        valueListenable: passwordLengthNotifier,
+                        builder: (BuildContext context, PasswordLengthType selectedPasswordLengthType, _) {
+                          return CustomSingleSelectMenu<PasswordLengthType>(
+                            selectedValue: selectedPasswordLengthType,
+                            options: _passwordLengthOptions,
+                            onSelected: _handlePasswordLengthChanged,
+                            itemBuilder: (BuildContext context, PasswordLengthType passwordLengthType) {
+                              return Text(
+                                _getPasswordLengthTitle(passwordLengthType),
+                                overflow: TextOverflow.ellipsis,
+                                style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+                              );
+                            },
+                          );
                         },
-                        child: const Text('SNGGLE (SIP-2)'),
                       ),
+                      const SizedBox(height: 12),
                       _buildEditableEntryField(
                         textTheme: textTheme,
                         label: 'Length',
@@ -165,7 +192,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: LabelWrapperVertical.textField(
-                          label: 'Entropy: ${generatePasswordPageCubit.entropyTextEditingController} bits',
+                          label: 'Entropy: ${generatePasswordPageCubit.entropyTextEditingController.text} bits',
                           labelStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
                           labelPadding: EdgeInsets.zero,
                           child: CustomTextField(
@@ -175,10 +202,11 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                             textEditingController: generatePasswordPageCubit.entropyTextEditingController,
                             inputBorder: InputBorder.none,
                             keyboardType: TextInputType.text,
-                            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 0,
+                              vertical: 5,
+                            ),
                             obscureTextBool: false,
-                            //suffixWidget: suffixWidget,
-                            //suffixWidgetConstraints: suffixWidgetConstraints,
                           ),
                         ),
                       ),
@@ -230,6 +258,50 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
 
   void _save() {
     AutoRouter.of(context).pop<String>(generatePasswordPageCubit.passwordTextEditingController.text);
+  }
+
+  String _getPasswordCharacterSetTitle(PasswordCharacterSetType passwordCharacterSetType) {
+    switch (passwordCharacterSetType) {
+      case PasswordCharacterSetType.ascii:
+        return 'Non-whitespace ASCII';
+      case PasswordCharacterSetType.sip2:
+        return 'SNGGLE (SIP-2)';
+    }
+  }
+
+  String _getPasswordLengthTitle(PasswordLengthType passwordLengthType) {
+    switch (passwordLengthType) {
+      case PasswordLengthType.good:
+        return 'Good';
+      case PasswordLengthType.excellent:
+        return 'Excellent';
+      case PasswordLengthType.superb:
+        return 'Superb';
+      case PasswordLengthType.custom:
+        return 'Custom';
+    }
+  }
+
+  void _handleCharacterSetChanged(PasswordCharacterSetType passwordCharacterSetType) {
+    if (generatePasswordPageCubit.passwordCharacterSetType == passwordCharacterSetType) {
+      return;
+    }
+
+    setState(() {
+      characterSetNotifier.value = passwordCharacterSetType;
+      generatePasswordPageCubit.passwordCharacterSetType = passwordCharacterSetType;
+    });
+  }
+
+  void _handlePasswordLengthChanged(PasswordLengthType passwordLengthType) {
+    if (generatePasswordPageCubit.passwordLengthType == passwordLengthType) {
+      return;
+    }
+
+    setState(() {
+      passwordLengthNotifier.value = passwordLengthType;
+      generatePasswordPageCubit.passwordLengthType = passwordLengthType;
+    });
   }
 
   void _regenerate() {

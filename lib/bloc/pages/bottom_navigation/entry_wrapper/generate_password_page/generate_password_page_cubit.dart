@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/generate_password_page_state.dart';
+import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_character_set_type.dart';
+import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_length_type.dart';
 
 class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   final TextEditingController checksumTextEditingController = TextEditingController();
@@ -10,7 +12,8 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   final TextEditingController passwordLengthTextEditingController = TextEditingController();
   final TextEditingController passwordTextEditingController = TextEditingController();
 
-  bool sip2CharacterSetBool = false;
+  PasswordCharacterSetType passwordCharacterSetType = PasswordCharacterSetType.ascii;
+  PasswordLengthType passwordLengthType = PasswordLengthType.excellent;
 
   GeneratePasswordPageCubit() : super(const GeneratePasswordPageState());
 
