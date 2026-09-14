@@ -45,11 +45,16 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     PasswordLengthType.superb,
     PasswordLengthType.custom,
   ];
+  static const List<PasswordLengthType> _sip2PasswordLengthOptions = <PasswordLengthType>[
+    PasswordLengthType.good,
+    PasswordLengthType.custom,
+  ];
 
   final ScrollController scrollController = ScrollController();
   final KeyboardValueNotifier keyboardValueNotifier = KeyboardValueNotifier();
   final ValueNotifier<PasswordCharacterSetType> characterSetNotifier = ValueNotifier<PasswordCharacterSetType>(_characterSetOptions.first);
   final ValueNotifier<PasswordLengthType> passwordLengthNotifier = ValueNotifier<PasswordLengthType>(PasswordLengthType.excellent);
+  final FocusNode customPasswordLengthFocusNode = FocusNode();
 
   late bool _obscurePasswordBool;
 
@@ -68,6 +73,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     keyboardValueNotifier.dispose();
     characterSetNotifier.dispose();
     passwordLengthNotifier.dispose();
+    customPasswordLengthFocusNode.dispose();
     generatePasswordPageCubit.close();
     super.dispose();
   }
@@ -98,161 +104,230 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                     onTap: _save,
                   ),
                 ],
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: Column(
-                    children: <Widget>[
-                      ValueListenableBuilder<PasswordCharacterSetType>(
-                        valueListenable: characterSetNotifier,
-                        builder: (BuildContext context, PasswordCharacterSetType selectedCharacterSetType, _) {
-                          return CustomSingleSelectMenu<PasswordCharacterSetType>(
-                            selectedValue: selectedCharacterSetType,
-                            options: _characterSetOptions,
-                            onSelected: _handleCharacterSetChanged,
-                            itemBuilder: (BuildContext context, PasswordCharacterSetType passwordCharacterSetType) {
-                              return Text(
-                                _getPasswordCharacterSetTitle(passwordCharacterSetType),
-                                overflow: TextOverflow.ellipsis,
-                                style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      ValueListenableBuilder<PasswordLengthType>(
-                        valueListenable: passwordLengthNotifier,
-                        builder: (BuildContext context, PasswordLengthType selectedPasswordLengthType, _) {
-                          return CustomSingleSelectMenu<PasswordLengthType>(
-                            selectedValue: selectedPasswordLengthType,
-                            options: _passwordLengthOptions,
-                            onSelected: _handlePasswordLengthChanged,
-                            itemBuilder: (BuildContext context, PasswordLengthType passwordLengthType) {
-                              return Text(
-                                _getPasswordLengthTitle(passwordLengthType),
-                                overflow: TextOverflow.ellipsis,
-                                style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      _buildEditableEntryField(
-                        textTheme: textTheme,
-                        label: 'Length',
-                        textEditingController: generatePasswordPageCubit.passwordLengthTextEditingController,
-                      ),
-                      const SizedBox(height: 12),
-                      _buildEditableEntryField(
-                        textTheme: textTheme,
-                        label: 'Entropy',
-                        textEditingController: generatePasswordPageCubit.entropyTextEditingController,
-                      ),
-                      const SizedBox(height: 12),
-                      _buildEditableEntryField(
-                        textTheme: textTheme,
-                        label: 'Checksum',
-                        textEditingController: generatePasswordPageCubit.checksumTextEditingController,
-                      ),
-                      const SizedBox(height: 60),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 22.5, vertical: 25),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: <Widget>[
-                              GradientOutlinedButton.small(
-                                width: 176,
-                                label: 'Generate pass',
-                                onPressed: _regenerate,
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    return SingleChildScrollView(
+                      controller: scrollController,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                'Character Set',
+                                style: textTheme.bodyLarge?.copyWith(color: AppColors.darkGrey),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      _buildEditableEntryField(
-                        textTheme: textTheme,
-                        label: 'Password',
-                        textEditingController: generatePasswordPageCubit.passwordTextEditingController,
-                        obscureTextBool: _obscurePasswordBool,
-                        suffixWidget: InkWell(
-                          onTap: () => setState(() => _obscurePasswordBool = !_obscurePasswordBool),
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 6),
-                            child: AssetIcon(
-                              _obscurePasswordBool ? AppIcons.details_hide : AppIcons.details_show,
                             ),
-                          ),
-                        ),
-                        suffixWidgetConstraints: const BoxConstraints(minWidth: 34, minHeight: 34),
-                      ),
-                      const SizedBox(height: 12),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: LabelWrapperVertical.textField(
-                          label: 'Entropy: ${generatePasswordPageCubit.entropyTextEditingController.text} bits',
-                          labelStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
-                          labelPadding: EdgeInsets.zero,
-                          child: CustomTextField(
-                            autofocusBool: false,
-                            readOnlyBool: true,
-                            enableInteractiveSelectionBool: true,
-                            textEditingController: generatePasswordPageCubit.entropyTextEditingController,
-                            inputBorder: InputBorder.none,
-                            keyboardType: TextInputType.text,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 0,
-                              vertical: 5,
+                            ValueListenableBuilder<PasswordCharacterSetType>(
+                              valueListenable: characterSetNotifier,
+                              builder: (BuildContext context, PasswordCharacterSetType selectedCharacterSetType, _) {
+                                return CustomSingleSelectMenu<PasswordCharacterSetType>(
+                                  selectedValue: selectedCharacterSetType,
+                                  options: _characterSetOptions,
+                                  onSelected: _handleCharacterSetChanged,
+                                  itemBuilder: (BuildContext context, PasswordCharacterSetType passwordCharacterSetType) {
+                                    return Text(
+                                      _getPasswordCharacterSetTitle(passwordCharacterSetType),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+                                    );
+                                  },
+                                );
+                              },
                             ),
-                            obscureTextBool: false,
-                          ),
+                            const SizedBox(height: 12),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                'Password Security and Length',
+                                style: textTheme.bodyLarge?.copyWith(color: AppColors.darkGrey),
+                              ),
+                            ),
+                            ValueListenableBuilder<PasswordCharacterSetType>(
+                              valueListenable: characterSetNotifier,
+                              builder: (BuildContext context, PasswordCharacterSetType selectedCharacterSetType, _) {
+                                return ValueListenableBuilder<PasswordLengthType>(
+                                  valueListenable: passwordLengthNotifier,
+                                  builder: (BuildContext context, PasswordLengthType selectedPasswordLengthType, _) {
+                                    return CustomSingleSelectMenu<PasswordLengthType>(
+                                      selectedValue: selectedPasswordLengthType,
+                                      options: _getPasswordLengthOptions(selectedCharacterSetType),
+                                      onSelected: _handlePasswordLengthChanged,
+                                      itemBuilder: (BuildContext context, PasswordLengthType passwordLengthType) {
+                                        bool customLengthBool = passwordLengthType == PasswordLengthType.custom;
+                                        return Row(
+                                          children: <Widget>[
+                                            Text(
+                                              _getPasswordLengthTitle(passwordLengthType),
+                                              overflow: TextOverflow.ellipsis,
+                                              style: textTheme.bodyMedium?.copyWith(color: _getPasswordLengthColor(passwordLengthType)),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 22),
+                                              child: Text(
+                                                '•',
+                                                style: textTheme.bodyMedium?.copyWith(color: AppColors.warningOrange),
+                                              ),
+                                            ),
+                                            if (customLengthBool) ...<Widget>[
+                                              SizedBox(
+                                                width: 44,
+                                                child: CustomTextField(
+                                                  readOnlyBool: false,
+                                                  enableInteractiveSelectionBool: true,
+                                                  textEditingController: generatePasswordPageCubit.customPasswordLengthTextEditingController,
+                                                  focusNode: customPasswordLengthFocusNode,
+                                                  inputBorder: InputBorder.none,
+                                                  keyboardType: TextInputType.number,
+                                                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+                                                  obscureTextBool: false,
+                                                ),
+                                              ),
+                                            ],
+                                            Flexible(
+                                              child: Text(
+                                                _getPasswordLengthDescription(passwordLengthType),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            const SizedBox(height: 24),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 22.5, vertical: 25),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: <Widget>[
+                                    GradientOutlinedButton.small(
+                                      width: 176,
+                                      label: 'Regenerate',
+                                      onPressed: _regenerate,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: LabelWrapperVertical.textField(
+                                label: 'Password',
+                                labelStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
+                                labelPadding: EdgeInsets.zero,
+                                child: CustomTextField(
+                                  readOnlyBool: true,
+                                  enableInteractiveSelectionBool: true,
+                                  textEditingController: generatePasswordPageCubit.passwordTextEditingController,
+                                  inputBorder: InputBorder.none,
+                                  keyboardType: TextInputType.text,
+                                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+                                  obscureTextBool: _obscurePasswordBool,
+                                  suffixWidget: InkWell(
+                                    onTap: () => setState(() => _obscurePasswordBool = !_obscurePasswordBool),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right: 6),
+                                      child: AssetIcon(
+                                        _obscurePasswordBool ? AppIcons.details_hide : AppIcons.details_show,
+                                      ),
+                                    ),
+                                  ),
+                                  suffixWidgetConstraints: const BoxConstraints(minWidth: 34, minHeight: 34),
+                                ),
+                              ),
+                            ),
+                            ValueListenableBuilder<PasswordCharacterSetType>(
+                              valueListenable: characterSetNotifier,
+                              builder: (BuildContext context, PasswordCharacterSetType selectedCharacterSetType, _) {
+                                return ValueListenableBuilder<TextEditingValue>(
+                                  valueListenable: generatePasswordPageCubit.entropyTextEditingController,
+                                  builder: (BuildContext context, TextEditingValue entropyValue, _) {
+                                    return ValueListenableBuilder<TextEditingValue>(
+                                      valueListenable: generatePasswordPageCubit.passwordLengthTextEditingController,
+                                      builder: (BuildContext context, TextEditingValue lengthValue, _) {
+                                        return ValueListenableBuilder<TextEditingValue>(
+                                          valueListenable: generatePasswordPageCubit.checksumTextEditingController,
+                                          builder: (BuildContext context, TextEditingValue checksumValue, _) {
+                                            return Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  Text(
+                                                    'Entropy: ${entropyValue.text} bits',
+                                                    style: textTheme.bodySmall?.copyWith(
+                                                      color: AppColors.darkGrey,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                    child: Text(
+                                                      '•',
+                                                      style: textTheme.bodySmall?.copyWith(
+                                                        color: AppColors.warningOrange,
+                                                        fontWeight: FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'Length: ${lengthValue.text}',
+                                                    style: textTheme.bodySmall?.copyWith(
+                                                      color: AppColors.darkGrey,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  if (selectedCharacterSetType == PasswordCharacterSetType.sip2) ...<Widget>[
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                      child: Text(
+                                                        '•',
+                                                        style: textTheme.bodySmall?.copyWith(
+                                                          color: AppColors.warningOrange,
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      'Checksum: ${checksumValue.text}',
+                                                      style: textTheme.bodySmall?.copyWith(
+                                                        color: AppColors.darkGrey,
+                                                        fontWeight: FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                            SizedBox(height: anyKeyboardVisibleBool ? 40 : 100),
+                          ],
                         ),
                       ),
-                      SizedBox(height: anyKeyboardVisibleBool ? 40 : 100),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               );
             },
           ),
         );
       },
-    );
-  }
-
-  Widget _buildEditableEntryField({
-    required TextTheme textTheme,
-    required String label,
-    required TextEditingController textEditingController,
-    bool readOnlyBool = false,
-    bool autofocusBool = false,
-    bool obscureTextBool = false,
-    FocusNode? focusNode,
-    Widget? suffixWidget,
-    BoxConstraints? suffixWidgetConstraints,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: LabelWrapperVertical.textField(
-        label: label,
-        labelStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
-        labelPadding: EdgeInsets.zero,
-        child: CustomTextField(
-          autofocusBool: autofocusBool,
-          readOnlyBool: readOnlyBool,
-          focusNode: focusNode,
-          enableInteractiveSelectionBool: true,
-          textEditingController: textEditingController,
-          inputBorder: InputBorder.none,
-          keyboardType: TextInputType.text,
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
-          obscureTextBool: obscureTextBool,
-          suffixWidget: suffixWidget,
-          suffixWidgetConstraints: suffixWidgetConstraints,
-        ),
-      ),
     );
   }
 
@@ -287,14 +362,26 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       return;
     }
 
+    PasswordLengthType selectedPasswordLengthType = passwordLengthNotifier.value;
+    if (_passwordLengthSupported(passwordCharacterSetType, selectedPasswordLengthType) == false) {
+      selectedPasswordLengthType = PasswordLengthType.good;
+    }
+
     setState(() {
       characterSetNotifier.value = passwordCharacterSetType;
       generatePasswordPageCubit.passwordCharacterSetType = passwordCharacterSetType;
+      passwordLengthNotifier.value = selectedPasswordLengthType;
+      generatePasswordPageCubit.passwordLengthType = selectedPasswordLengthType;
     });
+
+    generatePasswordPageCubit.generatePassword();
   }
 
   void _handlePasswordLengthChanged(PasswordLengthType passwordLengthType) {
     if (generatePasswordPageCubit.passwordLengthType == passwordLengthType) {
+      if (passwordLengthType == PasswordLengthType.custom) {
+        _requestCustomPasswordLengthFocus();
+      }
       return;
     }
 
@@ -302,9 +389,62 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       passwordLengthNotifier.value = passwordLengthType;
       generatePasswordPageCubit.passwordLengthType = passwordLengthType;
     });
+
+    if (passwordLengthType == PasswordLengthType.custom) {
+      _requestCustomPasswordLengthFocus();
+    }
+
+    generatePasswordPageCubit.generatePassword();
+  }
+
+  List<PasswordLengthType> _getPasswordLengthOptions(PasswordCharacterSetType passwordCharacterSetType) {
+    switch (passwordCharacterSetType) {
+      case PasswordCharacterSetType.ascii:
+        return _passwordLengthOptions;
+      case PasswordCharacterSetType.sip2:
+        return _sip2PasswordLengthOptions;
+    }
+  }
+
+  bool _passwordLengthSupported(PasswordCharacterSetType passwordCharacterSetType, PasswordLengthType passwordLengthType) {
+    return _getPasswordLengthOptions(passwordCharacterSetType).contains(passwordLengthType);
+  }
+
+  void _requestCustomPasswordLengthFocus() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        customPasswordLengthFocusNode.requestFocus();
+      }
+    });
+  }
+
+  String _getPasswordLengthDescription(PasswordLengthType passwordLengthType) {
+    switch (passwordLengthType) {
+      case PasswordLengthType.good:
+        return '18 characters';
+      case PasswordLengthType.excellent:
+        return '20 characters';
+      case PasswordLengthType.superb:
+        return '40 characters';
+      case PasswordLengthType.custom:
+        return 'characters';
+    }
+  }
+
+  Color _getPasswordLengthColor(PasswordLengthType passwordLengthType) {
+    switch (passwordLengthType) {
+      case PasswordLengthType.good:
+        return AppColors.body3;
+      case PasswordLengthType.excellent:
+        return const Color(0xff087B08);
+      case PasswordLengthType.superb:
+        return const Color(0xff00E000);
+      case PasswordLengthType.custom:
+        return AppColors.body3;
+    }
   }
 
   void _regenerate() {
-    //TODO(Kamil): implement regeneration
+    generatePasswordPageCubit.generatePassword();
   }
 }
