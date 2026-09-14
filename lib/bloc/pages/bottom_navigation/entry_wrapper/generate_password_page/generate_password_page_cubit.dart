@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_pa
 
 class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   final TextEditingController checksumTextEditingController = TextEditingController();
+  final TextEditingController customPasswordLengthTextEditingController = TextEditingController();
   final TextEditingController entropyTextEditingController = TextEditingController();
   final TextEditingController passwordLengthTextEditingController = TextEditingController();
   final TextEditingController passwordTextEditingController = TextEditingController();
@@ -15,11 +17,14 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   PasswordCharacterSetType passwordCharacterSetType = PasswordCharacterSetType.ascii;
   PasswordLengthType passwordLengthType = PasswordLengthType.excellent;
 
+  final Random _random = Random.secure();
+
   GeneratePasswordPageCubit() : super(const GeneratePasswordPageState());
 
   @override
   Future<void> close() async {
     checksumTextEditingController.dispose();
+    customPasswordLengthTextEditingController.dispose();
     entropyTextEditingController.dispose();
     passwordLengthTextEditingController.dispose();
     passwordTextEditingController.dispose();
@@ -29,8 +34,55 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
 
   Future<void> init() async {
     checksumTextEditingController.text = '';
+    customPasswordLengthTextEditingController.text = '20';
     entropyTextEditingController.text = '';
     passwordLengthTextEditingController.text = '';
     passwordTextEditingController.text = '';
+
+    generatePassword();
+  }
+
+  void generatePassword() {
+    int passwordLength = _getPasswordLength();
+
+    String characterSet = _getCharacterSet();
+
+    String password = List<String>.generate(passwordLength, (_) => characterSet[_random.nextInt(characterSet.length)]).join();
+
+    passwordTextEditingController.text = password;
+    passwordLengthTextEditingController.text = passwordLength.toString();
+
+    print(passwordLength);
+    print(characterSet.length);
+    //TODO(Kamil): This should probably be done in cryptography_utils in the final version
+    double entropy = passwordLength * (log(characterSet.length) / ln2);
+
+    entropyTextEditingController.text = entropy.toStringAsFixed(1);
+
+    checksumTextEditingController.text = '';
+  }
+
+  int _getPasswordLength() {
+    switch (passwordLengthType) {
+      case PasswordLengthType.good:
+        return 18;
+      case PasswordLengthType.excellent:
+        return 20;
+      case PasswordLengthType.superb:
+        return 40;
+      case PasswordLengthType.custom:
+        return int.tryParse(customPasswordLengthTextEditingController.text) ?? 20;
+    }
+  }
+
+  String _getCharacterSet() {
+    switch (passwordCharacterSetType) {
+      case PasswordCharacterSetType.ascii:
+        return String.fromCharCodes(List<int>.generate(94, (int index) => 33 + index));
+
+      case PasswordCharacterSetType.sip2:
+        // TODO(Kamil): replace with the actual SIP-2 config
+        return String.fromCharCodes(List<int>.generate(94, (int index) => 33 + index));
+    }
   }
 }
