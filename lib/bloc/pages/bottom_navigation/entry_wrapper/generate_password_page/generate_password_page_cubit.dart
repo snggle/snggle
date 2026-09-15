@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/generate_password_page_state.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/sip2_password_generator.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_character_set_type.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_length_type.dart';
 
@@ -44,22 +45,27 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
 
   void generatePassword() {
     int passwordLength = _getPasswordLength();
-
     String characterSet = _getCharacterSet();
+    int entropyCharacterCount = passwordLength;
+    int checksumCharacterCount = 0;
+    String password;
 
-    String password = List<String>.generate(passwordLength, (_) => characterSet[_random.nextInt(characterSet.length)]).join();
+    if (passwordCharacterSetType == PasswordCharacterSetType.sip2) {
+      Sip2GeneratedPassword generatedPassword = Sip2PasswordGenerator(random: _random).generate(passwordLength);
+      password = generatedPassword.password;
+      entropyCharacterCount = generatedPassword.randomCharacterCount;
+      checksumCharacterCount = generatedPassword.checksumCharacterCount;
+    } else {
+      password = List<String>.generate(passwordLength, (_) => characterSet[_random.nextInt(characterSet.length)]).join();
+    }
 
     passwordTextEditingController.text = password;
     passwordLengthTextEditingController.text = passwordLength.toString();
 
-    print(passwordLength);
-    print(characterSet.length);
-    //TODO(Kamil): This should probably be done in cryptography_utils in the final version
-    double entropy = passwordLength * (log(characterSet.length) / ln2);
+    double entropy = entropyCharacterCount * (log(characterSet.length) / ln2);
 
     entropyTextEditingController.text = entropy.toStringAsFixed(1);
-
-    checksumTextEditingController.text = '';
+    checksumTextEditingController.text = checksumCharacterCount.toString();
   }
 
   int _getPasswordLength() {
@@ -81,8 +87,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
         return String.fromCharCodes(List<int>.generate(94, (int index) => 33 + index));
 
       case PasswordCharacterSetType.sip2:
-        // TODO(Kamil): replace with the actual SIP-2 config
-        return String.fromCharCodes(List<int>.generate(94, (int index) => 33 + index));
+        return Sip2PasswordGenerator.characterSet;
     }
   }
 }
