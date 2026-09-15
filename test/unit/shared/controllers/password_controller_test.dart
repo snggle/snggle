@@ -21,7 +21,7 @@ void main() {
     // navigated to Vault1
     test('Should [return default PasswordModel] if the [FilesystemPath EXISTS] in PasswordController and [has DEFAULT password]', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/vault1');
       globalLocator<PasswordController>().addPassword(PasswordModel.defaultPassword(), actualFilesystemPath);
 
       // Act
@@ -36,7 +36,7 @@ void main() {
     // navigated to Network1
     test('Should [return PasswordModel] if [all PasswordModels EXIST] in PasswordController and [has NOT ENCRYPTED parents]', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1/network1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/vault1/network1');
       globalLocator<PasswordController>().addPassword(PasswordModel.fromPlaintext('1111'), actualFilesystemPath);
 
       // Act
@@ -51,7 +51,7 @@ void main() {
     // navigated back from Network1
     test('Should [return default PasswordModel] if [PasswordModel NOT EXISTS] in PasswordController and [has NOT ENCRYPTED parents]', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1/network1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/vault1/network1');
       globalLocator<PasswordController>().removeByFilesystemPath(actualFilesystemPath);
 
       // Act
@@ -66,7 +66,7 @@ void main() {
     // navigated back from Vault1
     test('Should [return default PasswordModel] if [PasswordModel NOT EXISTS] in PasswordController and [has DEFAULT password]', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/vault1');
       globalLocator<PasswordController>().removeByFilesystemPath(actualFilesystemPath);
 
       // Act
@@ -81,7 +81,7 @@ void main() {
     // set password on Vault1
     test('Should [throw Exception] if [PasswordModel NOT EXISTS] in PasswordController and [has CUSTOM password]', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/vault1');
       await globalLocator<SecretsService>().changePassword(actualFilesystemPath, PasswordModel.defaultPassword(), PasswordModel.fromPlaintext('1111'));
 
       expect(
@@ -92,7 +92,7 @@ void main() {
 
     test('Should [throw Exception] if [all PasswordModel NOT EXISTS] in PasswordController and [has parents with CUSTOM password]', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1/network1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/vault1/network1');
 
       expect(
         () => globalLocator<PasswordController>().getPasswordByFilesystemPath(actualFilesystemPath),
@@ -103,7 +103,7 @@ void main() {
     // navigated to Vault1 again
     test('Should [return default PasswordModel] if the [FilesystemPath EXISTS] in PasswordController and [has CUSTOM password]', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/vault1');
       globalLocator<PasswordController>().addPassword(PasswordModel.fromPlaintext('1111'), actualFilesystemPath);
 
       // Act
@@ -118,7 +118,7 @@ void main() {
     // navigated to Network1 again
     test('Should [return PasswordModel] if [all PasswordModels EXIST] in PasswordController and [has ENCRYPTED parents]', () async {
       // Arrange
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1/network1');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/vault1/network1');
       globalLocator<PasswordController>().addPassword(PasswordModel.fromPlaintext('1111'), actualFilesystemPath);
 
       // Act

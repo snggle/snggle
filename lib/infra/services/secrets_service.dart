@@ -25,17 +25,30 @@ class SecretsService {
     return ASecretsModel.fromJson<T>(filesystemPath, json);
   }
 
-  Future<FilesystemPath> getEncryptedPath(FilesystemPath filesystemPath) async {
-    FilesystemPath encryptedFilesystemPath = filesystemPath;
-    while (encryptedFilesystemPath.pathSegments.isNotEmpty) {
-      bool defaultPasswordBool = await isPasswordValid(encryptedFilesystemPath, PasswordModel.defaultPassword());
+  Future<FilesystemPath> getEncryptedPath(
+      FilesystemPath filesystemPath,
+      ) async {
+    FilesystemPath currentPath = filesystemPath;
+
+    while (currentPath.pathSegments.isNotEmpty) {
+      if (currentPath.storageTabPathBool) {
+        currentPath = currentPath.pop();
+        continue;
+      }
+
+      bool defaultPasswordBool = await isPasswordValid(
+        currentPath,
+        PasswordModel.defaultPassword(),
+      );
+
       if (defaultPasswordBool) {
-        encryptedFilesystemPath = encryptedFilesystemPath.pop();
+        currentPath = currentPath.pop();
       } else {
-        return encryptedFilesystemPath;
+        return currentPath;
       }
     }
-    return encryptedFilesystemPath;
+
+    return currentPath;
   }
 
   Future<void> save(ASecretsModel secretsModel, PasswordModel passwordModel) async {

@@ -4,6 +4,7 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/group_entity/group_entity.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_tab_dir.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
@@ -32,8 +33,9 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      List<GroupModel> actualGroupModelList = await globalLocator<GroupsService>().getAllByParentPath(
-          const FilesystemPath.empty(), firstLevelBool: true);
+      List<GroupModel> actualGroupModelList =
+      await globalLocator<GroupsService>().getAllByParentPath(
+          FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name), firstLevelBool: true);
 
       // Assert
       List<GroupModel> expectedGroupModelList = <GroupModel>[
@@ -41,12 +43,12 @@ void main() {
           id: 1,
           encryptedBool: false,
           pinnedBool: false,
-          filesystemPath: FilesystemPath.fromString('group1'),
+          filesystemPath: FilesystemPath.fromString('vaults/group1'),
           name: 'VAULTS GROUP 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-            VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: '1024969286', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-            VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+            VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('vaults/group1/vault4'), fingerprint: '1024969286', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+            VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('vaults/group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
             // @formatter:on
           ],
         ),
@@ -60,8 +62,9 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      List<GroupModel> actualGroupModelList = await globalLocator<GroupsService>().getAllByParentPath(
-          const FilesystemPath.empty(), firstLevelBool: false);
+      List<GroupModel> actualGroupModelList =
+      await globalLocator<GroupsService>().getAllByParentPath(
+          FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name), firstLevelBool: false);
 
       // Assert
       List<GroupModel> expectedGroupModelList = <GroupModel>[
@@ -69,12 +72,12 @@ void main() {
           id: 1,
           encryptedBool: false,
           pinnedBool: false,
-          filesystemPath: FilesystemPath.fromString('group1'),
+          filesystemPath: FilesystemPath.fromString('vaults/group1'),
           name: 'VAULTS GROUP 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-            VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: '1024969286', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-            VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+            VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('vaults/group1/vault4'), fingerprint: '1024969286', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+            VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('vaults/group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
             // @formatter:on
           ],
         ),
@@ -82,12 +85,12 @@ void main() {
           id: 2,
           encryptedBool: false,
           pinnedBool: false,
-          filesystemPath: FilesystemPath.fromString('vault1/group2'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1/group2'),
           name: 'NETWORKS GROUP 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network6'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
-            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2/network8'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
+            NetworkGroupModel(id: 6, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2/network6'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum6'),
+            NetworkGroupModel(id: 8, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2/network8'), networkTemplateModel: PredefinedNetworkTemplates.ethereum, listItemsPreview: <AListItemModel>[], name: 'Ethereum8'),
             // @formatter:on
           ],
         ),
@@ -95,12 +98,12 @@ void main() {
           id: 3,
           encryptedBool: false,
           pinnedBool: false,
-          filesystemPath: FilesystemPath.fromString('vault1/network1/group3'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group3'),
           name: 'WALLETS GROUP 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-            WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3'),
-            WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4')
+            WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group3/wallet4'), name: 'WALLET 3'),
+            WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group3/wallet5'), name: 'WALLET 4')
             // @formatter:on
           ],
         ),
@@ -113,7 +116,7 @@ void main() {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/not_existing_path');
 
       // Act
       List<GroupModel> actualGroupModelList = await globalLocator<GroupsService>().getAllByParentPath(actualFilesystemPath, firstLevelBool: true);
@@ -128,7 +131,7 @@ void main() {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/not_existing_path');
 
       // Act
       List<GroupModel> actualGroupModelList = await globalLocator<GroupsService>().getAllByParentPath(actualFilesystemPath, firstLevelBool: false);
@@ -153,12 +156,12 @@ void main() {
         pinnedBool: false,
         encryptedBool: false,
         id: 1,
-        filesystemPath: FilesystemPath.fromString('group1'),
+        filesystemPath: FilesystemPath.fromString('vaults/group1'),
         name: 'VAULTS GROUP 1',
         listItemsPreview: <AListItemModel>[
           // @formatter:off
-          VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: '1024969286', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-          VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+          VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('vaults/group1/vault4'), fingerprint: '1024969286', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+          VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('vaults/group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
           // @formatter:on
         ],
       );
@@ -189,11 +192,11 @@ void main() {
           id: 1,
           encryptedBool: false,
           pinnedBool: false,
-          filesystemPath: FilesystemPath.fromString('group1'),
+          filesystemPath: FilesystemPath.fromString('vaults/group1'),
           name: 'VAULTS GROUP 1',
           listItemsPreview: <AListItemModel>[],
         ),
-        FilesystemPath.fromString('new/path/group1'),
+        FilesystemPath.fromString('vaults/new/path/group1'),
       );
 
       List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
@@ -205,18 +208,19 @@ void main() {
         const GroupEntity(id: 1,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'new/path/group1',
+            filesystemPathString: 'vaults/new/path/group1',
             name: 'VAULTS GROUP 1'),
         const GroupEntity(id: 2,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'vault1/group2',
+            filesystemPathString: 'vaults/vault1/group2',
             name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3,
+        const GroupEntity(
+            id: 3,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'vault1/network1/group3',
-            name: 'WALLETS GROUP 1')
+            filesystemPathString: 'vaults/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -230,8 +234,8 @@ void main() {
 
       // Act
       await globalLocator<GroupsService>().moveAllByParentPath(
-        FilesystemPath.fromString('vault1'),
-        FilesystemPath.fromString('new/path/vault1'),
+        FilesystemPath.fromString('vaults/vault1'),
+        FilesystemPath.fromString('vaults/new/path/vault1'),
       );
 
       List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
@@ -243,18 +247,20 @@ void main() {
         const GroupEntity(id: 1,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'group1',
+            filesystemPathString: 'vaults/group1',
             name: 'VAULTS GROUP 1'),
-        const GroupEntity(id: 2,
+        const GroupEntity(
+            id: 2,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'new/path/vault1/group2',
+            filesystemPathString: 'vaults/new/path/vault1/group2',
             name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3,
+        const GroupEntity(
+            id: 3,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'new/path/vault1/network1/group3',
-            name: 'WALLETS GROUP 1')
+            filesystemPathString: 'vaults/new/path/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -270,7 +276,7 @@ void main() {
         id: 1,
         encryptedBool: true,
         pinnedBool: true,
-        filesystemPath: FilesystemPath.fromString('group1'),
+        filesystemPath: FilesystemPath.fromString('vaults/group1'),
         name: 'UPDATED VAULTS GROUP 1',
         listItemsPreview: <AListItemModel>[],
       );
@@ -287,18 +293,19 @@ void main() {
         const GroupEntity(id: 1,
             encryptedBool: true,
             pinnedBool: true,
-            filesystemPathString: 'group1',
+            filesystemPathString: 'vaults/group1',
             name: 'UPDATED VAULTS GROUP 1'),
         const GroupEntity(id: 2,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'vault1/group2',
+            filesystemPathString: 'vaults/vault1/group2',
             name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3,
+        const GroupEntity(
+            id: 3,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'vault1/network1/group3',
-            name: 'WALLETS GROUP 1')
+            filesystemPathString: 'vaults/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -312,7 +319,7 @@ void main() {
         id: 99999,
         encryptedBool: true,
         pinnedBool: true,
-        filesystemPath: FilesystemPath.fromString('group1'),
+        filesystemPath: FilesystemPath.fromString('vaults/group1'),
         name: 'NEW VAULTS GROUP 1',
         listItemsPreview: <AListItemModel>[],
       );
@@ -329,22 +336,23 @@ void main() {
         const GroupEntity(id: 1,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'group1',
+            filesystemPathString: 'vaults/group1',
             name: 'VAULTS GROUP 1'),
         const GroupEntity(id: 2,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'vault1/group2',
+            filesystemPathString: 'vaults/vault1/group2',
             name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3,
+        const GroupEntity(
+            id: 3,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'vault1/network1/group3',
+            filesystemPathString: 'vaults/vault1/network1/group3',
             name: 'WALLETS GROUP 1'),
         const GroupEntity(id: 99999,
             encryptedBool: true,
             pinnedBool: true,
-            filesystemPathString: 'group1',
+            filesystemPathString: 'vaults/group1',
             name: 'NEW VAULTS GROUP 1'),
       ];
 
@@ -359,8 +367,8 @@ void main() {
 
       List<GroupModel> actualGroupsToUpdate = <GroupModel>[
         // @formatter:off
-        GroupModel(id: 1, encryptedBool: true, pinnedBool: true, filesystemPath: FilesystemPath.fromString('group1'), name: 'UPDATED VAULTS GROUP 1', listItemsPreview: <AListItemModel>[]),
-        GroupModel(id: 2, encryptedBool: true, pinnedBool: true, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'UPDATED NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
+        GroupModel(id: 1, encryptedBool: true, pinnedBool: true, filesystemPath: FilesystemPath.fromString('vaults/group1'), name: 'UPDATED VAULTS GROUP 1', listItemsPreview: <AListItemModel>[]),
+        GroupModel(id: 2, encryptedBool: true, pinnedBool: true, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2'), name: 'UPDATED NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
         // @formatter:on
       ];
 
@@ -376,18 +384,20 @@ void main() {
         const GroupEntity(id: 1,
             encryptedBool: true,
             pinnedBool: true,
-            filesystemPathString: 'group1',
+            filesystemPathString: 'vaults/group1',
             name: 'UPDATED VAULTS GROUP 1'),
-        const GroupEntity(id: 2,
+        const GroupEntity(
+            id: 2,
             encryptedBool: true,
             pinnedBool: true,
-            filesystemPathString: 'vault1/group2',
+            filesystemPathString: 'vaults/vault1/group2',
             name: 'UPDATED NETWORKS GROUP 1'),
-        const GroupEntity(id: 3,
+        const GroupEntity(
+            id: 3,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'vault1/network1/group3',
-            name: 'WALLETS GROUP 1')
+            filesystemPathString: 'vaults/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -399,8 +409,8 @@ void main() {
 
       List<GroupModel> actualGroupsToUpdate = <GroupModel>[
         // @formatter:off
-        GroupModel(id: 99998, encryptedBool: true, pinnedBool: true, filesystemPath: FilesystemPath.fromString('group1'), name: 'NEW VAULTS GROUP 1', listItemsPreview: <AListItemModel>[]),
-        GroupModel(id: 99999, encryptedBool: true, pinnedBool: true, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NEW NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
+        GroupModel(id: 99998, encryptedBool: true, pinnedBool: true, filesystemPath: FilesystemPath.fromString('vaults/group1'), name: 'NEW VAULTS GROUP 1', listItemsPreview: <AListItemModel>[]),
+        GroupModel(id: 99999, encryptedBool: true, pinnedBool: true, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2'), name: 'NEW NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
         // @formatter:on
       ];
 
@@ -416,27 +426,29 @@ void main() {
         const GroupEntity(id: 1,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'group1',
+            filesystemPathString: 'vaults/group1',
             name: 'VAULTS GROUP 1'),
         const GroupEntity(id: 2,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'vault1/group2',
+            filesystemPathString: 'vaults/vault1/group2',
             name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3,
+        const GroupEntity(
+            id: 3,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'vault1/network1/group3',
+            filesystemPathString: 'vaults/vault1/network1/group3',
             name: 'WALLETS GROUP 1'),
         const GroupEntity(id: 99998,
             encryptedBool: true,
             pinnedBool: true,
-            filesystemPathString: 'group1',
+            filesystemPathString: 'vaults/group1',
             name: 'NEW VAULTS GROUP 1'),
-        const GroupEntity(id: 99999,
+        const GroupEntity(
+            id: 99999,
             encryptedBool: true,
             pinnedBool: true,
-            filesystemPathString: 'vault1/group2',
+            filesystemPathString: 'vaults/vault1/group2',
             name: 'NEW NETWORKS GROUP 1'),
       ];
 
@@ -450,7 +462,7 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      await globalLocator<GroupsService>().deleteAllByParentPath(FilesystemPath.fromString('vault1'));
+      await globalLocator<GroupsService>().deleteAllByParentPath(FilesystemPath.fromString('vaults/vault1'));
 
       List<GroupEntity> actualGroupsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
         return isar.groups.where().findAll();
@@ -461,7 +473,7 @@ void main() {
         const GroupEntity(id: 1,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'group1',
+            filesystemPathString: 'vaults/group1',
             name: 'VAULTS GROUP 1'),
       ];
 
@@ -503,13 +515,14 @@ void main() {
         const GroupEntity(id: 2,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'vault1/group2',
+            filesystemPathString: 'vaults/vault1/group2',
             name: 'NETWORKS GROUP 1'),
-        const GroupEntity(id: 3,
+        const GroupEntity(
+            id: 3,
             encryptedBool: false,
             pinnedBool: false,
-            filesystemPathString: 'vault1/network1/group3',
-            name: 'WALLETS GROUP 1')
+            filesystemPathString: 'vaults/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -532,7 +545,7 @@ void main() {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vault1/network1/group3');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/vault1/network1/group3');
 
       // Act
       GroupModel? actualGroupModel = await globalLocator<GroupsService>().getByPath(actualFilesystemPath);
@@ -542,12 +555,12 @@ void main() {
         id: 3,
         encryptedBool: false,
         pinnedBool: false,
-        filesystemPath: FilesystemPath.fromString('vault1/network1/group3'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group3'),
         name: 'WALLETS GROUP 1',
         listItemsPreview: <AListItemModel>[
           // @formatter:off
-          WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet4'), name: 'WALLET 3'),
-          WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vault1/network1/group3/wallet5'), name: 'WALLET 4')
+          WalletModel(id: 4, encryptedBool: false, pinnedBool: false, address: '0x315C3d389598EAe9aA2bf5524556B9CFA857B97c', derivationPath: "m/44'/60'/0'/0/3", filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group3/wallet4'), name: 'WALLET 3'),
+          WalletModel(id: 5, encryptedBool: false, pinnedBool: false, address: '0x569f256904bBaA2d9Cb3AF3104fCE9f0fC43F639', derivationPath: "m/44'/60'/0'/0/4", filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group3/wallet5'), name: 'WALLET 4')
           // @formatter:on
         ],
       );
@@ -559,7 +572,7 @@ void main() {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
-      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('not_existing_path');
+      FilesystemPath actualFilesystemPath = FilesystemPath.fromString('vaults/not_existing_path');
 
       // Act
       GroupModel? actualGroupModel = await globalLocator<GroupsService>().getByPath(actualFilesystemPath);
@@ -575,14 +588,14 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
 
       // Act
-      GroupModel? actualGroupModel = await globalLocator<GroupsService>().updateFilesystemPath(1, FilesystemPath.fromString('new/group/path'));
+      GroupModel? actualGroupModel = await globalLocator<GroupsService>().updateFilesystemPath(1, FilesystemPath.fromString('vaults/new/group/path'));
 
       // Assert
       GroupModel expectedGroupModel = GroupModel(
         pinnedBool: false,
         encryptedBool: false,
         id: 1,
-        filesystemPath: FilesystemPath.fromString('new/group/path/group1'),
+        filesystemPath: FilesystemPath.fromString('vaults/new/group/path/group1'),
         name: 'VAULTS GROUP 1',
         listItemsPreview: <AListItemModel>[],
       );
@@ -596,7 +609,7 @@ void main() {
 
       // Assert
       expect(
-        globalLocator<GroupsService>().updateFilesystemPath(99999, FilesystemPath.fromString('new/group/path')),
+        globalLocator<GroupsService>().updateFilesystemPath(99999, FilesystemPath.fromString('vaults/new/group/path')),
         throwsA(isA<ChildKeyNotFoundException>()),
       );
     });

@@ -3,16 +3,17 @@ import 'dart:io';
 
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/child_key_not_found_exception.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_key.dart';
+import 'package:snggle/infra/exceptions/invalid_filesystem_path_exception.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_root_dir.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class FilesystemStorageManager {
   final RootDirectoryBuilder _rootDirectoryBuilder = globalLocator<RootDirectoryBuilder>();
-  final FilesystemStorageKey _filesystemStorageKey;
+  final FilesystemStorageRootDir _filesystemStorageRootDir;
   final Completer<Directory> _rootDirectoryCompleter;
 
   FilesystemStorageManager({
-    required this._filesystemStorageKey,
+    required this._filesystemStorageRootDir,
   }) : _rootDirectoryCompleter = Completer<Directory>() {
     _initStorage();
   }
@@ -43,11 +44,7 @@ class FilesystemStorageManager {
     }
     await previousFile.rename(newFile.path);
 
-    Directory parentDirectory = await _getParentDirectory(previousFilesystemPath);
-    bool parentDirectoryEmptyBool = parentDirectory.listSync().isEmpty;
-    if (parentDirectoryEmptyBool) {
-      await parentDirectory.delete();
-    }
+    await _deleteEmptyParentDirectories(previousFilesystemPath);
   }
 
   Future<void> delete(FilesystemPath filesystemPath) async {
@@ -58,11 +55,12 @@ class FilesystemStorageManager {
       throw ChildKeyNotFoundException();
     }
 
-    Directory parentDirectory = await _getParentDirectory(filesystemPath);
-    bool parentDirectoryEmptyBool = parentDirectory.listSync().isEmpty;
-    if (parentDirectoryEmptyBool) {
-      await parentDirectory.delete();
-    }
+    await _deleteEmptyParentDirectories(filesystemPath);
+  }
+
+  Future<bool> exists(FilesystemPath filesystemPath) async {
+    File file = await _getFile(filesystemPath);
+    return file.exists();
   }
 
   Future<void> _initStorage() async {
@@ -71,8 +69,37 @@ class FilesystemStorageManager {
   }
 
   Future<File> _getFile(FilesystemPath filesystemPath) async {
-    String absolutePath = await _buildAbsolutePath(relativePath: '${filesystemPath.fullPath}.snggle');
+    if (filesystemPath.storageTabPathBool) {
+      throw InvalidFilesystemPathException();
+    }
+
+    String absolutePath = await _buildAbsolutePath(
+      relativePath: '${filesystemPath.fullPath}.snggle',
+    );
+
     return File(absolutePath);
+  }
+
+  Future<void> _deleteEmptyParentDirectories(FilesystemPath filesystemPath) async {
+    Directory parentDirectory = await _getParentDirectory(filesystemPath);
+
+    bool parentDirectoryDeletedBool = await _deleteDirectoryIfEmpty(parentDirectory);
+    bool tabDirectoryDeletedBool = parentDirectoryDeletedBool && filesystemPath.firstLevelItemBool;
+
+    if (tabDirectoryDeletedBool) {
+      Directory rootDirectory = parentDirectory.parent;
+      await _deleteDirectoryIfEmpty(rootDirectory);
+    }
+  }
+
+  Future<bool> _deleteDirectoryIfEmpty(Directory directory) async {
+    bool directoryEmptyBool = directory.listSync().isEmpty;
+
+    if (directoryEmptyBool) {
+      await directory.delete();
+    }
+
+    return directoryEmptyBool;
   }
 
   Future<Directory> _getParentDirectory(FilesystemPath filesystemPath) async {
@@ -82,6 +109,6 @@ class FilesystemStorageManager {
 
   Future<String> _buildAbsolutePath({required String relativePath}) async {
     Directory rootDirectory = await _rootDirectoryCompleter.future;
-    return '${rootDirectory.path}/${_filesystemStorageKey.name}/$relativePath';
+    return '${rootDirectory.path}/${_filesystemStorageRootDir.name}/$relativePath';
   }
 }

@@ -41,6 +41,10 @@ class FilesystemPath extends Equatable {
 
   String get parentPath => pathSegments.sublist(0, pathSegments.length - 1).join('/');
 
+  bool get firstLevelItemBool => pathSegments.length == 2;
+
+  bool get storageTabPathBool => pathSegments.length == 1;
+
   @override
   List<Object?> get props => <Object>[pathSegments];
 }

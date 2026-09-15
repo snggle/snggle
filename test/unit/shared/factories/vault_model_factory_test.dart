@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_tab_dir.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
@@ -30,14 +31,16 @@ void main() {
       Mnemonic actualMnemonic = Mnemonic.fromMnemonicPhrase('practice bundle birth birth invite route loop spy weapon suffer truck bounce');
 
       // Act
-      VaultModel actualVaultModel = await globalLocator<VaultModelFactory>().createNewVault(const FilesystemPath.empty(), actualMnemonic, 'NEW VAULT');
+      VaultModel actualVaultModel =
+      await globalLocator<VaultModelFactory>().createNewVault(
+          FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name), actualMnemonic, 'NEW VAULT');
 
       // Assert
       VaultModel expectedVaultModel = VaultModel(
         id: 1,
         encryptedBool: false,
         pinnedBool: false,
-        filesystemPath: FilesystemPath.fromString('vault1'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         fingerprint: '381505146',
         name: 'NEW VAULT',
         index: 0,
@@ -53,14 +56,16 @@ void main() {
       Mnemonic actualMnemonic = Mnemonic.fromMnemonicPhrase('practice bundle birth birth invite route loop spy weapon suffer truck bounce');
 
       // Act
-      VaultModel actualVaultModel = await globalLocator<VaultModelFactory>().createNewVault(const FilesystemPath.empty(), actualMnemonic, 'NEW VAULT');
+      VaultModel actualVaultModel =
+      await globalLocator<VaultModelFactory>().createNewVault(
+          FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name), actualMnemonic, 'NEW VAULT');
 
       // Assert
       VaultModel expectedVaultModel = VaultModel(
         id: 6,
         encryptedBool: false,
         pinnedBool: false,
-        filesystemPath: FilesystemPath.fromString('vault6'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault6'),
         fingerprint: '381505146',
         name: 'NEW VAULT',
         index: 5,
@@ -78,16 +83,17 @@ void main() {
 
       List<VaultEntity> actualVaultEntityList = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286=', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vaults/vault1', fingerprint: '2429747484', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vaults/vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vaults/vault3', fingerprint: '405998762', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'vaults/group1/vault4', fingerprint: '1024969286=', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'vaults/group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
         // @formatter:on
       ];
 
       // Act
-      List<VaultModel> actualVaultModelList = await globalLocator<VaultModelFactory>().createFromEntities(actualVaultEntityList, previewEmptyBool: false);
+      List<VaultModel> actualVaultModelList =
+      await globalLocator<VaultModelFactory>().createFromEntities(actualVaultEntityList, previewEmptyBool: false);
 
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[
@@ -96,16 +102,16 @@ void main() {
           encryptedBool: false,
           pinnedBool: false,
           index: 0,
-          filesystemPath: FilesystemPath.fromString('vault1'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault1'),
           fingerprint: '2429747484',
           name: 'VAULT 1',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-            GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
-            NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
-            NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
-            NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
-            NetworkGroupModel(id: 10, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network10'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.solana, name: 'Solana1'),
+            GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
+            NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
+            NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
+            NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
+            NetworkGroupModel(id: 10, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network10'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.solana, name: 'Solana1'),
             // @formatter:on
           ],
         ),
@@ -114,12 +120,12 @@ void main() {
           encryptedBool: false,
           pinnedBool: false,
           index: 1,
-          filesystemPath: FilesystemPath.fromString('vault2'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault2'),
           fingerprint: '2619341544',
           name: 'VAULT 2',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-            NetworkGroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault2/network2'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum2'),
+            NetworkGroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault2/network2'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum2'),
             // @formatter:on
           ],
         ),
@@ -128,12 +134,12 @@ void main() {
           encryptedBool: false,
           pinnedBool: false,
           index: 2,
-          filesystemPath: FilesystemPath.fromString('vault3'),
+          filesystemPath: FilesystemPath.fromString('vaults/vault3'),
           fingerprint: '405998762',
           name: 'VAULT 3',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-            NetworkGroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault3/network3'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum3'),
+            NetworkGroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault3/network3'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum3'),
             // @formatter:on
           ],
         ),
@@ -142,12 +148,12 @@ void main() {
           encryptedBool: false,
           pinnedBool: false,
           index: 3,
-          filesystemPath: FilesystemPath.fromString('group1/vault4'),
+          filesystemPath: FilesystemPath.fromString('vaults/group1/vault4'),
           fingerprint: '1024969286=',
           name: 'VAULT 4',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-            NetworkGroupModel(id: 4, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('group1/vault4/network4'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum4'),
+            NetworkGroupModel(id: 4, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/group1/vault4/network4'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum4'),
             // @formatter:on
           ],
         ),
@@ -156,12 +162,12 @@ void main() {
           encryptedBool: false,
           pinnedBool: false,
           index: 4,
-          filesystemPath: FilesystemPath.fromString('group1/vault5'),
+          filesystemPath: FilesystemPath.fromString('vaults/group1/vault5'),
           fingerprint: '1980042394',
           name: 'VAULT 5',
           listItemsPreview: <AListItemModel>[
             // @formatter:off
-            NetworkGroupModel(id: 5, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('group1/vault5/network5'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum5'),
+            NetworkGroupModel(id: 5, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/group1/vault5/network5'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum5'),
             // @formatter:on
           ],
         ),
@@ -176,25 +182,26 @@ void main() {
 
       List<VaultEntity> actualVaultEntityList = <VaultEntity>[
         // @formatter:off
-        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vault1', fingerprint: '2429747484', name: 'VAULT 1'),
-        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vault2', fingerprint: '2619341544', name: 'VAULT 2'),
-        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vault3', fingerprint: '405998762', name: 'VAULT 3'),
-        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'group1/vault4', fingerprint: '1024969286=', name: 'VAULT 4'),
-        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
+        const VaultEntity(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPathString: 'vaults/vault1', fingerprint: '2429747484', name: 'VAULT 1'),
+        const VaultEntity(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPathString: 'vaults/vault2', fingerprint: '2619341544', name: 'VAULT 2'),
+        const VaultEntity(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPathString: 'vaults/vault3', fingerprint: '405998762', name: 'VAULT 3'),
+        const VaultEntity(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPathString: 'vaults/group1/vault4', fingerprint: '1024969286=', name: 'VAULT 4'),
+        const VaultEntity(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPathString: 'vaults/group1/vault5', fingerprint: '1980042394', name: 'VAULT 5')
         // @formatter:on
       ];
 
       // Act
-      List<VaultModel> actualVaultModelList = await globalLocator<VaultModelFactory>().createFromEntities(actualVaultEntityList, previewEmptyBool: true);
+      List<VaultModel> actualVaultModelList =
+      await globalLocator<VaultModelFactory>().createFromEntities(actualVaultEntityList, previewEmptyBool: true);
 
       // Assert
       List<VaultModel> expectedVaultModelList = <VaultModel>[
         // @formatter:off
-        VaultModel(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPath: FilesystemPath.fromString('vault1'), fingerprint: '2429747484', name: 'VAULT 1', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPath: FilesystemPath.fromString('vault2'), fingerprint: '2619341544', name: 'VAULT 2', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPath: FilesystemPath.fromString('vault3'), fingerprint: '405998762', name: 'VAULT 3', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: '1024969286=', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-        VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+        VaultModel(id: 1, encryptedBool: false, pinnedBool: false, index: 0, filesystemPath: FilesystemPath.fromString('vaults/vault1'), fingerprint: '2429747484', name: 'VAULT 1', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 2, encryptedBool: false, pinnedBool: false, index: 1, filesystemPath: FilesystemPath.fromString('vaults/vault2'), fingerprint: '2619341544', name: 'VAULT 2', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 3, encryptedBool: false, pinnedBool: false, index: 2, filesystemPath: FilesystemPath.fromString('vaults/vault3'), fingerprint: '405998762', name: 'VAULT 3', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('vaults/group1/vault4'), fingerprint: '1024969286=', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+        VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('vaults/group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
         // @formatter:on
       ];
 
@@ -214,7 +221,7 @@ void main() {
         index: 0,
         fingerprint: '2429747484',
         name: 'VAULT 1',
-        filesystemPathString: 'vault1',
+        filesystemPathString: 'vaults/vault1',
       );
 
       // Act
@@ -226,16 +233,16 @@ void main() {
         encryptedBool: false,
         pinnedBool: false,
         index: 0,
-        filesystemPath: FilesystemPath.fromString('vault1'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         fingerprint: '2429747484',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[
           // @formatter:off
-          GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
-          NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
-          NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
-          NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
-          NetworkGroupModel(id: 10, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network10'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.solana, name: 'Solana1'),
+          GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
+          NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
+          NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
+          NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
+          NetworkGroupModel(id: 10, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network10'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.solana, name: 'Solana1'),
           // @formatter:on
         ],
       );
@@ -254,7 +261,7 @@ void main() {
         index: 0,
         fingerprint: '2429747484',
         name: 'VAULT 1',
-        filesystemPathString: 'vault1',
+        filesystemPathString: 'vaults/vault1',
       );
 
       // Act
@@ -266,7 +273,7 @@ void main() {
         encryptedBool: false,
         pinnedBool: false,
         index: 0,
-        filesystemPath: FilesystemPath.fromString('vault1'),
+        filesystemPath: FilesystemPath.fromString('vaults/vault1'),
         fingerprint: '2429747484',
         name: 'VAULT 1',
         listItemsPreview: <AListItemModel>[],

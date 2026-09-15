@@ -3,6 +3,7 @@ import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/vault_list_page/vault_list_page_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/predefined_network_templates.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_tab_dir.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
@@ -25,12 +26,12 @@ void main() {
     id: 1,
     encryptedBool: false,
     pinnedBool: false,
-    filesystemPath: FilesystemPath.fromString('group1'),
+    filesystemPath: FilesystemPath.fromString('vaults/group1'),
     name: 'VAULTS GROUP 1',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
-      VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: '1024969286', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-      VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+      VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('vaults/group1/vault4'), fingerprint: '1024969286', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+      VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('vaults/group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
       // @formatter:on
     ],
   );
@@ -38,12 +39,12 @@ void main() {
     id: 1,
     encryptedBool: true,
     pinnedBool: true,
-    filesystemPath: FilesystemPath.fromString('group1'),
+    filesystemPath: FilesystemPath.fromString('vaults/group1'),
     name: 'UPDATED VAULTS GROUP 1',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
-      VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('group1/vault4'), fingerprint: '1024969286', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
-      VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
+      VaultModel(id: 4, encryptedBool: false, pinnedBool: false, index: 3, filesystemPath: FilesystemPath.fromString('vaults/group1/vault4'), fingerprint: '1024969286', name: 'VAULT 4', listItemsPreview: <AListItemModel>[]),
+      VaultModel(id: 5, encryptedBool: false, pinnedBool: false, index: 4, filesystemPath: FilesystemPath.fromString('vaults/group1/vault5'), fingerprint: '1980042394', name: 'VAULT 5', listItemsPreview: <AListItemModel>[])
       // @formatter:on
     ],
   );
@@ -52,16 +53,16 @@ void main() {
     encryptedBool: false,
     pinnedBool: false,
     index: 0,
-    filesystemPath: FilesystemPath.fromString('vault1'),
+    filesystemPath: FilesystemPath.fromString('vaults/vault1'),
     fingerprint: '2429747484',
     name: 'VAULT 1',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
-      GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
-      NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
-      NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
-      NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
-      NetworkGroupModel(id: 10, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault1/network10'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.solana, name: 'Solana1'),
+      GroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/group2'), name: 'NETWORKS GROUP 1', listItemsPreview: <AListItemModel>[]),
+      NetworkGroupModel(id: 1, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network1'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum1'),
+      NetworkGroupModel(id: 7, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network7'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum7'),
+      NetworkGroupModel(id: 9, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network9'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum9'),
+      NetworkGroupModel(id: 10, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault1/network10'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.solana, name: 'Solana1'),
       // @formatter:on
     ],
   );
@@ -70,12 +71,12 @@ void main() {
     encryptedBool: false,
     pinnedBool: false,
     index: 1,
-    filesystemPath: FilesystemPath.fromString('vault2'),
+    filesystemPath: FilesystemPath.fromString('vaults/vault2'),
     fingerprint: '2619341544',
     name: 'VAULT 2',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
-      NetworkGroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault2/network2'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum2'),
+      NetworkGroupModel(id: 2, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault2/network2'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum2'),
       // @formatter:on
     ],
   );
@@ -84,12 +85,12 @@ void main() {
     encryptedBool: false,
     pinnedBool: false,
     index: 2,
-    filesystemPath: FilesystemPath.fromString('vault3'),
+    filesystemPath: FilesystemPath.fromString('vaults/vault3'),
     fingerprint: '405998762',
     name: 'VAULT 3',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
-      NetworkGroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault3/network3'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum3'),
+      NetworkGroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault3/network3'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum3'),
       // @formatter:on
     ],
   );
@@ -98,12 +99,12 @@ void main() {
     encryptedBool: true,
     pinnedBool: true,
     index: 2,
-    filesystemPath: FilesystemPath.fromString('vault3'),
+    filesystemPath: FilesystemPath.fromString('vaults/vault3'),
     fingerprint: '405998762',
     name: 'UPDATED VAULT 3',
     listItemsPreview: <AListItemModel>[
       // @formatter:off
-      NetworkGroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vault3/network3'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum3'),
+      NetworkGroupModel(id: 3, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/vault3/network3'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum3'),
       // @formatter:on
     ],
   );
@@ -117,7 +118,7 @@ void main() {
 
       actualVaultListPageCubit = VaultListPageCubit(
         depth: 0,
-        filesystemPath: const FilesystemPath.empty(),
+        filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
@@ -140,7 +141,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[groupModel, vaultModel1, vaultModel2, vaultModel3],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -163,7 +164,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[updatedVaultModel3, groupModel, vaultModel1, vaultModel2],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -184,7 +185,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -207,7 +208,7 @@ void main() {
             selectedItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
           ),
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -225,7 +226,7 @@ void main() {
           loadingBool: false,
           selectionModel: SelectionModel(selectedItems: <AListItemModel>[], allItemsCount: 4),
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -247,7 +248,7 @@ void main() {
             selectedItems: <AListItemModel>[vaultModel1],
           ),
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -267,7 +268,7 @@ void main() {
             selectedItems: <AListItemModel>[vaultModel1, updatedGroupModel],
           ),
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -286,7 +287,7 @@ void main() {
           loadingBool: false,
           selectionModel: SelectionModel(selectedItems: <AListItemModel>[updatedGroupModel], allItemsCount: 4),
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -303,7 +304,7 @@ void main() {
           loadingBool: false,
           selectionModel: SelectionModel(selectedItems: <AListItemModel>[], allItemsCount: 4),
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -322,7 +323,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[updatedGroupModel, updatedVaultModel3, vaultModel1, vaultModel2],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -349,7 +350,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -377,7 +378,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -407,7 +408,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -434,7 +435,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -459,7 +460,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -485,7 +486,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -510,7 +511,7 @@ void main() {
             vaultModel1,
             vaultModel2,
           ],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -533,7 +534,7 @@ void main() {
             updatedVaultModel3.copyWith(name: 'NEW VAULT NAME'),
             vaultModel2,
           ],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -553,7 +554,7 @@ void main() {
             updatedVaultModel3.copyWith(name: 'NEW VAULT NAME'),
             vaultModel2,
           ],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -572,7 +573,7 @@ void main() {
 
       actualVaultListPageCubit = VaultListPageCubit(
         depth: 0,
-        filesystemPath: const FilesystemPath.empty(),
+        filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
@@ -595,7 +596,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[groupModel, vaultModel1, vaultModel2, vaultModel3],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -616,14 +617,14 @@ void main() {
           allItems: <AListItemModel>[
             groupModel.copyWith(
               listItemsPreview: <AListItemModel>[
-                vaultModel1.copyWith(filesystemPath: FilesystemPath.fromString('group1/vault1'), listItemsPreview: <AListItemModel>[]),
+                vaultModel1.copyWith(filesystemPath: FilesystemPath.fromString('vaults/group1/vault1'), listItemsPreview: <AListItemModel>[]),
                 ...groupModel.listItemsPreview,
               ],
             ),
             vaultModel2,
             vaultModel3,
           ],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -646,21 +647,21 @@ void main() {
               id: 4,
               pinnedBool: false,
               encryptedBool: false,
-              filesystemPath: FilesystemPath.fromString('group4'),
+              filesystemPath: FilesystemPath.fromString('vaults/group4'),
               listItemsPreview: <AListItemModel>[
-                vaultModel2.copyWith(filesystemPath: FilesystemPath.fromString('group4/vault2'), listItemsPreview: <AListItemModel>[]),
-                vaultModel3.copyWith(filesystemPath: FilesystemPath.fromString('group4/vault3'), listItemsPreview: <AListItemModel>[]),
+                vaultModel2.copyWith(filesystemPath: FilesystemPath.fromString('vaults/group4/vault2'), listItemsPreview: <AListItemModel>[]),
+                vaultModel3.copyWith(filesystemPath: FilesystemPath.fromString('vaults/group4/vault3'), listItemsPreview: <AListItemModel>[]),
               ],
               name: 'TEST GROUP',
             ),
             groupModel.copyWith(
               listItemsPreview: <AListItemModel>[
-                vaultModel1.copyWith(filesystemPath: FilesystemPath.fromString('group1/vault1'), listItemsPreview: <AListItemModel>[]),
+                vaultModel1.copyWith(filesystemPath: FilesystemPath.fromString('vaults/group1/vault1'), listItemsPreview: <AListItemModel>[]),
                 ...groupModel.listItemsPreview,
               ],
             ),
           ],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -679,7 +680,7 @@ void main() {
 
       actualVaultListPageCubit = VaultListPageCubit(
         depth: 0,
-        filesystemPath: const FilesystemPath.empty(),
+        filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
       );
     });
@@ -702,7 +703,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[groupModel, vaultModel1, vaultModel2, vaultModel3],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -727,12 +728,12 @@ void main() {
               encryptedBool: false,
               pinnedBool: false,
               index: 3,
-              filesystemPath: FilesystemPath.fromString('group1/vault4'),
+              filesystemPath: FilesystemPath.fromString('vaults/group1/vault4'),
               fingerprint: '1024969286',
               name: 'VAULT 4',
               listItemsPreview: <AListItemModel>[
                 // @formatter:off
-                NetworkGroupModel(id: 4, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('group1/vault4/network4'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum4'),
+                NetworkGroupModel(id: 4, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/group1/vault4/network4'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum4'),
                 // @formatter:on
               ],
             ),
@@ -741,17 +742,17 @@ void main() {
               encryptedBool: false,
               pinnedBool: false,
               index: 4,
-              filesystemPath: FilesystemPath.fromString('group1/vault5'),
+              filesystemPath: FilesystemPath.fromString('vaults/group1/vault5'),
               fingerprint: '1980042394',
               name: 'VAULT 5',
               listItemsPreview: <AListItemModel>[
                 // @formatter:off
-                NetworkGroupModel(id: 5, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('group1/vault5/network5'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum5'),
+                NetworkGroupModel(id: 5, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/group1/vault5/network5'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum5'),
                 // @formatter:on
               ],
             ),
           ],
-          filesystemPath: FilesystemPath.fromString('group1'),
+          filesystemPath: FilesystemPath.fromString('vaults/group1'),
         );
 
         expect(actualListState, expectedListState);
@@ -770,7 +771,7 @@ void main() {
           depth: 0,
           loadingBool: false,
           allItems: <AListItemModel>[groupModel, vaultModel1, vaultModel2, vaultModel3],
-          filesystemPath: const FilesystemPath.empty(),
+          filesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
         );
 
         expect(actualListState, expectedListState);
@@ -795,12 +796,12 @@ void main() {
               encryptedBool: false,
               pinnedBool: false,
               index: 3,
-              filesystemPath: FilesystemPath.fromString('group1/vault4'),
+              filesystemPath: FilesystemPath.fromString('vaults/group1/vault4'),
               fingerprint: '1024969286',
               name: 'VAULT 4',
               listItemsPreview: <AListItemModel>[
                 // @formatter:off
-                NetworkGroupModel(id: 4, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('group1/vault4/network4'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum4'),
+                NetworkGroupModel(id: 4, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/group1/vault4/network4'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum4'),
                 // @formatter:on
               ],
             ),
@@ -809,17 +810,17 @@ void main() {
               encryptedBool: false,
               pinnedBool: false,
               index: 4,
-              filesystemPath: FilesystemPath.fromString('group1/vault5'),
+              filesystemPath: FilesystemPath.fromString('vaults/group1/vault5'),
               fingerprint: '1980042394',
               name: 'VAULT 5',
               listItemsPreview: <AListItemModel>[
                 // @formatter:off
-                NetworkGroupModel(id: 5, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('group1/vault5/network5'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum5'),
+                NetworkGroupModel(id: 5, encryptedBool: false, pinnedBool: false, filesystemPath: FilesystemPath.fromString('vaults/group1/vault5/network5'), listItemsPreview: <AListItemModel>[], networkTemplateModel: PredefinedNetworkTemplates.ethereum, name: 'Ethereum5'),
                 // @formatter:on
               ],
             ),
           ],
-          filesystemPath: FilesystemPath.fromString('group1'),
+          filesystemPath: FilesystemPath.fromString('vaults/group1'),
         );
 
         expect(actualListState, expectedListState);
