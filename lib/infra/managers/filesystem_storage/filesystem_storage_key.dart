@@ -1,4 +1,0 @@
-enum FilesystemStorageKey {
-  secrets,
-  test,
-}

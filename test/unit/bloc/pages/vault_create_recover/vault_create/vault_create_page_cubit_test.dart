@@ -5,6 +5,7 @@ import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create
 import 'package:snggle/bloc/pages/vault_create_recover/vault_create/vault_create_page_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_tab_dir.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
@@ -23,7 +24,7 @@ void main() {
     );
 
     actualVaultCreatePageCubit = VaultCreatePageCubit(
-      parentFilesystemPath: const FilesystemPath.empty(),
+      parentFilesystemPath: FilesystemPath.fromString(FilesystemStorageTabDir.vaults.name),
     );
   });
 
@@ -138,7 +139,7 @@ void main() {
 
         // Output is always a random string because AES changes the initialization vector with Random Secure
         // and we cannot match the hardcoded expected result. That's why we check whether it is possible to decode database value
-        Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem(path: 'secrets');
+        Map<String, dynamic> actualSecretsFilesystemStructure = testDatabase.readRawFilesystem(path: 'filesystem_storage/vaults');
 
         List<VaultEntity> actualVaultsDatabaseValue = await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
           return isar.vaults.where().findAll();
