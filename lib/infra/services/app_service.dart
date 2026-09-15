@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_root_dir.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
@@ -15,25 +16,27 @@ class AppService {
 
   Future<bool> isDataBaseExist() async {
     Directory rootDirectory = await _rootDirectoryBuilder.call();
-    Directory secretsDirectory = Directory('${rootDirectory.path}/secrets');
+    Directory filesystemStorageDirectory = Directory('${rootDirectory.path}/${FilesystemStorageRootDir.filesystem_storage.name}');
 
-    if (await secretsDirectory.exists()) {
-      await for (FileSystemEntity fileSystemEntity in secretsDirectory.list(recursive: true, followLinks: false)) {
-        if (fileSystemEntity is! File) {
-          continue;
-        }
+    if (await filesystemStorageDirectory.exists() == false) {
+      return false;
+    }
 
-        String path = fileSystemEntity.path;
-        bool snggleFileBool = path.endsWith('.snggle');
+    await for (FileSystemEntity fileSystemEntity in filesystemStorageDirectory.list(recursive: true, followLinks: false)) {
+      if (fileSystemEntity is! File) {
+        continue;
+      }
 
-        if (snggleFileBool == false) {
-          continue;
-        }
+      String path = fileSystemEntity.path;
+      bool snggleFileBool = path.endsWith('.snggle');
 
-        int size = await fileSystemEntity.length();
-        if (size > 0) {
-          return true;
-        }
+      if (snggleFileBool == false) {
+        continue;
+      }
+
+      int size = await fileSystemEntity.length();
+      if (size > 0) {
+        return true;
       }
     }
     return false;
