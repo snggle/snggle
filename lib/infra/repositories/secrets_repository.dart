@@ -29,4 +29,8 @@ class SecretsRepository {
   Future<void> delete(FilesystemPath filesystemPath) async {
     await _filesystemStorageManager.delete(filesystemPath);
   }
+
+  Future<bool> hasEncrypted(FilesystemPath filesystemPath) async {
+    return _filesystemStorageManager.exists(filesystemPath);
+  }
 }

@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
-import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_tab_dir.dart';
 
 class FilesystemPath extends Equatable {
   final List<String> pathSegments;
@@ -42,27 +41,7 @@ class FilesystemPath extends Equatable {
 
   String get parentPath => pathSegments.sublist(0, pathSegments.length - 1).join('/');
 
-  bool get firstLevelItemBool => pathSegments.length == 1;
-
-  FilesystemStorageTabDir get filesystemStorageTabDir {
-    if (pathSegments.isEmpty) {
-      throw StateError('Cannot determine storage tab from an empty filesystem path');
-    }
-
-    String rootSegment = pathSegments.first;
-
-    if (rootSegment.startsWith('vault')) {
-      return FilesystemStorageTabDir.vaults;
-    }
-
-    if (rootSegment.startsWith('entry')) {
-      return FilesystemStorageTabDir.entries;
-    }
-
-    throw StateError(
-      'Cannot determine storage tab from path: $fullPath',
-    );
-  }
+  bool get firstLevelItemBool => pathSegments.length == 2;
 
   @override
   List<Object?> get props => <Object>[pathSegments];

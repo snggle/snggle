@@ -43,7 +43,7 @@ class _EntryListPageState extends State<EntryListPage> {
 
   late final EntryListPageCubit entryListPageCubit = EntryListPageCubit(
     depth: 0,
-    filesystemPath: const FilesystemPath.empty(),
+    filesystemPath: FilesystemPath.fromString('entries'),
     onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
   );
 

@@ -57,16 +57,18 @@ class FilesystemStorageManager {
     await _deleteEmptyParentDirectories(filesystemPath);
   }
 
+  Future<bool> exists(FilesystemPath filesystemPath) async {
+    File file = await _getFile(filesystemPath);
+    return file.exists();
+  }
+
   Future<void> _initStorage() async {
     Directory rootDirectory = await _rootDirectoryBuilder();
     _rootDirectoryCompleter.complete(rootDirectory);
   }
 
   Future<File> _getFile(FilesystemPath filesystemPath) async {
-    String absolutePath = await _buildAbsolutePath(
-      tabName: filesystemPath.filesystemStorageTabDir.name,
-      relativePath: '${filesystemPath.fullPath}.snggle',
-    );
+    String absolutePath = await _buildAbsolutePath(relativePath: '${filesystemPath.fullPath}.snggle');
     return File(absolutePath);
   }
 
@@ -93,15 +95,12 @@ class FilesystemStorageManager {
   }
 
   Future<Directory> _getParentDirectory(FilesystemPath filesystemPath) async {
-    String absolutePath = await _buildAbsolutePath(
-      tabName: filesystemPath.filesystemStorageTabDir.name,
-      relativePath: filesystemPath.parentPath,
-    );
+    String absolutePath = await _buildAbsolutePath(relativePath: filesystemPath.parentPath);
     return Directory(absolutePath);
   }
 
-  Future<String> _buildAbsolutePath({required String tabName, required String relativePath}) async {
+  Future<String> _buildAbsolutePath({required String relativePath}) async {
     Directory rootDirectory = await _rootDirectoryCompleter.future;
-    return '${rootDirectory.path}/${_filesystemStorageRootDir.name}/${tabName}/$relativePath';
+    return '${rootDirectory.path}/${_filesystemStorageRootDir.name}/$relativePath';
   }
 }

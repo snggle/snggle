@@ -35,6 +35,8 @@ class PasswordController {
 
   Future<bool> _isUnlocked(FilesystemPath filesystemPath) async {
     FilesystemPath encryptedFilesystemPath = await globalLocator<SecretsService>().getEncryptedPath(filesystemPath);
+
+
     if (encryptedFilesystemPath.pathSegments.isEmpty) {
       return true;
     }
