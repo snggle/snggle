@@ -7,6 +7,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_passw
 import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/sip2_password_generator.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_character_set_type.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_length_type.dart';
+import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_security_level.dart';
 
 class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   final TextEditingController checksumTextEditingController = TextEditingController();
@@ -20,7 +21,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
 
   final Random _random = Random.secure();
 
-  GeneratePasswordPageCubit() : super(const GeneratePasswordPageState());
+  GeneratePasswordPageCubit() : super(const GeneratePasswordPageState(passwordSecurityLevel: PasswordSecurityLevel.excellent));
 
   @override
   Future<void> close() async {
@@ -35,7 +36,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
 
   Future<void> init() async {
     checksumTextEditingController.text = '';
-    customPasswordLengthTextEditingController.text = '20';
+    customPasswordLengthTextEditingController.text = '';
     entropyTextEditingController.text = '';
     passwordLengthTextEditingController.text = '';
     passwordTextEditingController.text = '';
@@ -59,13 +60,28 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       password = List<String>.generate(passwordLength, (_) => characterSet[_random.nextInt(characterSet.length)]).join();
     }
 
-    passwordTextEditingController.text = password;
     passwordLengthTextEditingController.text = passwordLength.toString();
+    passwordTextEditingController.text = password;
 
     double entropy = entropyCharacterCount * (log(characterSet.length) / ln2);
 
     entropyTextEditingController.text = entropy.toStringAsFixed(1);
     checksumTextEditingController.text = checksumCharacterCount.toString();
+
+    PasswordSecurityLevel passwordSecurityLevel;
+    if (entropy < 80) {
+      passwordSecurityLevel = PasswordSecurityLevel.unsafe;
+    } else if (entropy < 112) {
+      passwordSecurityLevel = PasswordSecurityLevel.weak;
+    } else if (entropy < 128) {
+      passwordSecurityLevel = PasswordSecurityLevel.good;
+    } else if (entropy < 256) {
+      passwordSecurityLevel = PasswordSecurityLevel.excellent;
+    } else {
+      passwordSecurityLevel = PasswordSecurityLevel.superb;
+    }
+
+    emit(state.copyWith(passwordSecurityLevel: passwordSecurityLevel));
   }
 
   int _getPasswordLength() {
@@ -77,7 +93,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       case PasswordLengthType.superb:
         return 40;
       case PasswordLengthType.custom:
-        return int.tryParse(customPasswordLengthTextEditingController.text) ?? 20;
+        return int.parse(customPasswordLengthTextEditingController.text);
     }
   }
 
