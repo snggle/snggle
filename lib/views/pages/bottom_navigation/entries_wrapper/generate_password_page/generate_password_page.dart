@@ -8,10 +8,13 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_character_set_type.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_length_type.dart';
+import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_security_level.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_single_select_menu.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
@@ -57,6 +60,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
   final FocusNode customPasswordLengthFocusNode = FocusNode();
 
   late bool _obscurePasswordBool;
+  late PasswordLengthType _currentLength;
 
   late final GeneratePasswordPageCubit generatePasswordPageCubit = GeneratePasswordPageCubit();
 
@@ -264,45 +268,30 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                                 children: <Widget>[
                                                   Text(
                                                     'Entropy: ${entropyValue.text} bits',
-                                                    style: textTheme.bodySmall?.copyWith(
-                                                      color: AppColors.darkGrey,
-                                                      fontWeight: FontWeight.w400,
-                                                    ),
+                                                    style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                                   ),
                                                   Padding(
                                                     padding: const EdgeInsets.symmetric(horizontal: 12),
                                                     child: Text(
                                                       '•',
-                                                      style: textTheme.bodySmall?.copyWith(
-                                                        color: AppColors.warningOrange,
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
+                                                      style: textTheme.bodySmall?.copyWith(color: AppColors.warningOrange),
                                                     ),
                                                   ),
                                                   Text(
                                                     'Length: ${lengthValue.text}',
-                                                    style: textTheme.bodySmall?.copyWith(
-                                                      color: AppColors.darkGrey,
-                                                      fontWeight: FontWeight.w400,
-                                                    ),
+                                                    style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                                   ),
                                                   if (selectedCharacterSetType == PasswordCharacterSetType.sip2) ...<Widget>[
                                                     Padding(
                                                       padding: const EdgeInsets.symmetric(horizontal: 12),
                                                       child: Text(
                                                         '•',
-                                                        style: textTheme.bodySmall?.copyWith(
-                                                          color: AppColors.warningOrange,
-                                                          fontWeight: FontWeight.w400,
-                                                        ),
+                                                        style: textTheme.bodySmall?.copyWith(color: AppColors.warningOrange),
                                                       ),
                                                     ),
                                                     Text(
                                                       'Checksum: ${checksumValue.text}',
-                                                      style: textTheme.bodySmall?.copyWith(
-                                                        color: AppColors.darkGrey,
-                                                        fontWeight: FontWeight.w400,
-                                                      ),
+                                                      style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                                     ),
                                                   ],
                                                 ],
@@ -315,6 +304,46 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                   },
                                 );
                               },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 22.5, vertical: 25),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        '${state.passwordSecurityLevel.displayName} password',
+                                        style: textTheme.bodySmall?.copyWith(
+                                          color: switch (state.passwordSecurityLevel) {
+                                            PasswordSecurityLevel.unsafe => AppColors.warningRed,
+                                            PasswordSecurityLevel.weak => AppColors.warningOrange,
+                                            PasswordSecurityLevel.good => AppColors.darkGrey,
+                                            PasswordSecurityLevel.excellent => AppColors.darkGreen,
+                                            PasswordSecurityLevel.superb => AppColors.lightGreen,
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          onTap: _showPasswordSecurityHintDialog,
+                                          child: const SizedBox(
+                                            width: 34,
+                                            height: 34,
+                                            child: AssetIcon(AppIcons.icon_help, size: 25),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                             SizedBox(height: anyKeyboardVisibleBool ? 40 : 100),
                           ],
@@ -374,14 +403,12 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       generatePasswordPageCubit.passwordLengthType = selectedPasswordLengthType;
     });
 
-    generatePasswordPageCubit.generatePassword();
+    print('Suchar: Char Set changed');
+    _regenerate();
   }
 
   void _handlePasswordLengthChanged(PasswordLengthType passwordLengthType) {
     if (generatePasswordPageCubit.passwordLengthType == passwordLengthType) {
-      if (passwordLengthType == PasswordLengthType.custom) {
-        _requestCustomPasswordLengthFocus();
-      }
       return;
     }
 
@@ -392,9 +419,11 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
 
     if (passwordLengthType == PasswordLengthType.custom) {
       _requestCustomPasswordLengthFocus();
+      return;
     }
 
-    generatePasswordPageCubit.generatePassword();
+    print('Suchar: Length changed');
+    _regenerate();
   }
 
   List<PasswordLengthType> _getPasswordLengthOptions(PasswordCharacterSetType passwordCharacterSetType) {
@@ -436,15 +465,46 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       case PasswordLengthType.good:
         return AppColors.body3;
       case PasswordLengthType.excellent:
-        return const Color(0xff087B08);
+        return AppColors.darkGreen;
       case PasswordLengthType.superb:
-        return const Color(0xff00E000);
+        return AppColors.lightGreen;
       case PasswordLengthType.custom:
         return AppColors.body3;
     }
   }
 
   void _regenerate() {
+    if (_currentLength == PasswordLengthType.custom && ) {
+
+    }
     generatePasswordPageCubit.generatePassword();
+  }
+
+  Future<void> _showPasswordSecurityHintDialog() async {
+    await showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      useRootNavigator: true,
+      builder: (BuildContext context) => CustomDialog(
+        title: 'Password security\n',
+        content: const Text(
+          'Password entropy is used to estimate password strength . The higher the entropy, the more difficult it is to guess a password through brute-force attacks.'
+          '\n\nWe recognize the following levels of password security:'
+          '\nUnsafe: below 80 security bits'
+          '\nWeak: 80-112 security bits'
+          '\nGood: 112-128 security bits'
+          '\nExcellent: 128-256 security bits'
+          '\nSuperb: 256+ security bits'
+          '\n\nSIP-2 Character Set lowers the risk of transcription errors and ensures the password remains safe with at least 112 bits of entropy within the total length of 20 characters, including checksum.',
+          textAlign: TextAlign.center,
+        ),
+        options: <CustomDialogOption>[
+          CustomDialogOption(
+            label: 'Close',
+            onPressed: () {},
+          ),
+        ],
+      ),
+    );
   }
 }
