@@ -162,7 +162,6 @@ class _DragPopupState<T extends AListItemModel> extends State<DragPopup<T>> {
   Future<void> _createGroup(AListItemModel item1, AListItemModel item2) async {
     await showDialog(
       context: context,
-      barrierColor: Colors.transparent,
       builder: (BuildContext context) {
         return NameDialog(
           title: 'Create new folder',

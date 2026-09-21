@@ -53,7 +53,6 @@ class _TransactionListItemPageTooltipState extends State<TransactionListItemPage
   void _pressDeleteButton() {
     showDialog(
       context: context,
-      barrierColor: Colors.transparent,
       builder: (BuildContext context) => CustomAgreementDialog(
         title: 'Delete',
         content: 'Are you sure you want to delete selected items?',

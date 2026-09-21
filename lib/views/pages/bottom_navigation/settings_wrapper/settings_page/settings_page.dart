@@ -52,7 +52,6 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _handleWipeApplicationButtonPress() async {
     await showDialog(
       context: context,
-      barrierColor: Colors.transparent,
       useRootNavigator: true,
       builder: (_) => const AppWipeDialog(),
     );
@@ -78,7 +77,6 @@ class _SettingsPageState extends State<SettingsPage> {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.transparent,
       builder: (BuildContext dialogContext) {
         return CustomDialog(
           title: 'Success',

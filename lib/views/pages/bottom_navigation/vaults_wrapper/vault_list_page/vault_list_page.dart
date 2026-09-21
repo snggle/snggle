@@ -134,7 +134,6 @@ class _VaultListPageState extends State<VaultListPage> {
       unawaited(vaultListPageCubit.refreshAll());
       await showDialog(
         context: context,
-        barrierColor: Colors.transparent,
         builder: (BuildContext context) => CustomDialog(
           title: 'Success',
           content: Text(

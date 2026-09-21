@@ -44,7 +44,6 @@ class _AbiDisplayModeSelectorState extends State<AbiDisplayModeSelector> {
   Future<void> _showOptionsDialog() async {
     AbiDisplayModeType? abiDisplayModeType = await showDialog(
       context: context,
-      barrierColor: Colors.transparent,
       builder: (BuildContext context) {
         return AbiDisplayModeConfigDialog(abiDisplayModeType: this.abiDisplayModeType);
       },
