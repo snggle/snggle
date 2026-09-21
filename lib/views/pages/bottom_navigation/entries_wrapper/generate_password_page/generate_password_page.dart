@@ -60,7 +60,6 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
   final FocusNode customPasswordLengthFocusNode = FocusNode();
 
   late bool _obscurePasswordBool;
-  late PasswordLengthType _currentLength;
 
   late final GeneratePasswordPageCubit generatePasswordPageCubit = GeneratePasswordPageCubit();
 
@@ -312,20 +311,55 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: <Widget>[
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        '${state.passwordSecurityLevel.displayName} password',
-                                        style: textTheme.bodySmall?.copyWith(
-                                          color: switch (state.passwordSecurityLevel) {
-                                            PasswordSecurityLevel.unsafe => AppColors.warningRed,
-                                            PasswordSecurityLevel.weak => AppColors.warningOrange,
-                                            PasswordSecurityLevel.good => AppColors.darkGrey,
-                                            PasswordSecurityLevel.excellent => AppColors.darkGreen,
-                                            PasswordSecurityLevel.superb => AppColors.lightGreen,
-                                          },
+                                    Row(
+                                      children: <Widget>[
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child:
+                                                state.passwordSecurityLevel == PasswordSecurityLevel.unsafe ||
+                                                    state.passwordSecurityLevel == PasswordSecurityLevel.weak
+                                                ? Icon(
+                                                    Icons.warning_amber_rounded,
+                                                    size: 25,
+                                                    color: switch (state.passwordSecurityLevel) {
+                                                      PasswordSecurityLevel.unsafe => AppColors.warningRed,
+                                                      PasswordSecurityLevel.weak => AppColors.warningOrange,
+                                                      PasswordSecurityLevel.good => AppColors.darkGrey,
+                                                      PasswordSecurityLevel.excellent => AppColors.darkGreen,
+                                                      PasswordSecurityLevel.superb => AppColors.lightGreen,
+                                                    },
+                                                  )
+                                                : AssetIcon(
+                                                    AppIcons.menu_save,
+                                                    size: 25,
+                                                    color: switch (state.passwordSecurityLevel) {
+                                                      PasswordSecurityLevel.unsafe => AppColors.warningRed,
+                                                      PasswordSecurityLevel.weak => AppColors.warningOrange,
+                                                      PasswordSecurityLevel.good => AppColors.darkGrey,
+                                                      PasswordSecurityLevel.excellent => AppColors.darkGreen,
+                                                      PasswordSecurityLevel.superb => AppColors.lightGreen,
+                                                    },
+                                                  ),
+                                          ),
                                         ),
-                                      ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            '${state.passwordSecurityLevel.displayName} password',
+                                            style: textTheme.bodySmall?.copyWith(
+                                              color: switch (state.passwordSecurityLevel) {
+                                                PasswordSecurityLevel.unsafe => AppColors.warningRed,
+                                                PasswordSecurityLevel.weak => AppColors.warningOrange,
+                                                PasswordSecurityLevel.good => AppColors.darkGrey,
+                                                PasswordSecurityLevel.excellent => AppColors.darkGreen,
+                                                PasswordSecurityLevel.superb => AppColors.lightGreen,
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     Align(
                                       alignment: Alignment.centerRight,
@@ -474,8 +508,9 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
   }
 
   void _regenerate() {
-    if (_currentLength == PasswordLengthType.custom && ) {
-
+    if (generatePasswordPageCubit.passwordLengthType == PasswordLengthType.custom &&
+        generatePasswordPageCubit.customPasswordLengthTextEditingController.text.isEmpty) {
+      return;
     }
     generatePasswordPageCubit.generatePassword();
   }
