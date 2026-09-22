@@ -42,7 +42,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     PasswordCharacterSetType.ascii,
     PasswordCharacterSetType.sip2,
   ];
-  static const List<PasswordLengthType> _passwordLengthOptions = <PasswordLengthType>[
+  static const List<PasswordLengthType> _asciiPasswordLengthOptions = <PasswordLengthType>[
     PasswordLengthType.good,
     PasswordLengthType.excellent,
     PasswordLengthType.superb,
@@ -67,11 +67,13 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
   void initState() {
     super.initState();
     _obscurePasswordBool = widget.obscurePasswordBool ?? true;
+    customPasswordLengthFocusNode.addListener(_handleCustomPasswordLengthFocusChanged);
     generatePasswordPageCubit.init();
   }
 
   @override
   void dispose() {
+    customPasswordLengthFocusNode.removeListener(_handleCustomPasswordLengthFocusChanged);
     scrollController.dispose();
     keyboardValueNotifier.dispose();
     characterSetNotifier.dispose();
@@ -203,6 +205,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                 );
                               },
                             ),
+                            // TODO(Kamil): Replace SizedBoxes with some better method of aligning elements below to the lower part of the screen
                             const SizedBox(height: 12),
                             const SizedBox(height: 24),
                             Padding(
@@ -305,7 +308,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                               },
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 22.5, vertical: 25),
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: SizedBox(
                                 width: double.infinity,
                                 child: Stack(
@@ -322,7 +325,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                                     state.passwordSecurityLevel == PasswordSecurityLevel.weak
                                                 ? Icon(
                                                     Icons.warning_amber_rounded,
-                                                    size: 25,
+                                                    size: 20,
                                                     color: switch (state.passwordSecurityLevel) {
                                                       PasswordSecurityLevel.unsafe => AppColors.warningRed,
                                                       PasswordSecurityLevel.weak => AppColors.warningOrange,
@@ -333,7 +336,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                                   )
                                                 : AssetIcon(
                                                     AppIcons.menu_save,
-                                                    size: 25,
+                                                    size: 20,
                                                     color: switch (state.passwordSecurityLevel) {
                                                       PasswordSecurityLevel.unsafe => AppColors.warningRed,
                                                       PasswordSecurityLevel.weak => AppColors.warningOrange,
@@ -344,11 +347,12 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                                   ),
                                           ),
                                         ),
+                                        const SizedBox(width: 10),
                                         Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             '${state.passwordSecurityLevel.displayName} password',
-                                            style: textTheme.bodySmall?.copyWith(
+                                            style: textTheme.bodyMedium?.copyWith(
                                               color: switch (state.passwordSecurityLevel) {
                                                 PasswordSecurityLevel.unsafe => AppColors.warningRed,
                                                 PasswordSecurityLevel.weak => AppColors.warningOrange,
@@ -426,9 +430,6 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     }
 
     PasswordLengthType selectedPasswordLengthType = passwordLengthNotifier.value;
-    if (_passwordLengthSupported(passwordCharacterSetType, selectedPasswordLengthType) == false) {
-      selectedPasswordLengthType = PasswordLengthType.good;
-    }
 
     setState(() {
       characterSetNotifier.value = passwordCharacterSetType;
@@ -437,7 +438,6 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       generatePasswordPageCubit.passwordLengthType = selectedPasswordLengthType;
     });
 
-    print('Suchar: Char Set changed');
     _regenerate();
   }
 
@@ -456,21 +456,42 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       return;
     }
 
-    print('Suchar: Length changed');
+    _regenerate();
+  }
+
+  void _handleCustomPasswordLengthFocusChanged() {
+    if (generatePasswordPageCubit.customPasswordLengthTextEditingController.text.isEmpty) {
+      return;
+    }
+
+    if (customPasswordLengthFocusNode.hasFocus) {
+      setState(() {
+        passwordLengthNotifier.value = PasswordLengthType.custom;
+        generatePasswordPageCubit.passwordLengthType = PasswordLengthType.custom;
+      });
+      return;
+    }
+
+    if (generatePasswordPageCubit.customPasswordLengthTextEditingController.value.text ==
+        generatePasswordPageCubit.passwordTextEditingController.text.length.toString()) {
+      return;
+    }
+
+    setState(() {
+      passwordLengthNotifier.value = PasswordLengthType.custom;
+      generatePasswordPageCubit.passwordLengthType = PasswordLengthType.custom;
+    });
+
     _regenerate();
   }
 
   List<PasswordLengthType> _getPasswordLengthOptions(PasswordCharacterSetType passwordCharacterSetType) {
     switch (passwordCharacterSetType) {
       case PasswordCharacterSetType.ascii:
-        return _passwordLengthOptions;
+        return _asciiPasswordLengthOptions;
       case PasswordCharacterSetType.sip2:
         return _sip2PasswordLengthOptions;
     }
-  }
-
-  bool _passwordLengthSupported(PasswordCharacterSetType passwordCharacterSetType, PasswordLengthType passwordLengthType) {
-    return _getPasswordLengthOptions(passwordCharacterSetType).contains(passwordLengthType);
   }
 
   void _requestCustomPasswordLengthFocus() {
@@ -508,10 +529,6 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
   }
 
   void _regenerate() {
-    if (generatePasswordPageCubit.passwordLengthType == PasswordLengthType.custom &&
-        generatePasswordPageCubit.customPasswordLengthTextEditingController.text.isEmpty) {
-      return;
-    }
     generatePasswordPageCubit.generatePassword();
   }
 
