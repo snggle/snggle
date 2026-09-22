@@ -28,7 +28,7 @@ class ContextTooltipBackground extends StatelessWidget {
           child: Container(
             constraints: maxPopupWidth != null ? BoxConstraints(maxWidth: maxPopupWidth!) : null,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: Theme.of(context).dialogTheme.backgroundColor,
               border: Border.all(color: AppColors.middleGrey, width: borderWeight),
               borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
             ),
