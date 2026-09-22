@@ -157,12 +157,28 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
 
   void _pressDeleteButton() {
     widget.onCloseToolbar.call();
+    if (widget.listItemModel.encryptedBool) {
+      _authenticate();
+      return;
+    }
     showDialog(
       context: context,
       builder: (BuildContext context) => CustomAgreementDialog(
         title: 'Delete',
         content: 'Are you sure you want to delete this item?',
         onConfirm: _handleDelete,
+      ),
+    );
+  }
+
+  void _authenticate() {
+    showDialog<void>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) => SecretsAuthPage(
+        title: 'ENTER PIN',
+        listItemModel: widget.listItemModel,
+        passwordValidCallback: (PasswordModel _) => _handleDelete(),
       ),
     );
   }

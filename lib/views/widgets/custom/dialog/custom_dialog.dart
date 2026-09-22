@@ -86,7 +86,7 @@ class CustomDialog extends StatelessWidget {
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: backgroundColor,
+                        color: Colors.white.withValues(alpha: 0.75),
                         borderRadius: BorderRadius.circular(22),
                         border: gradientBorderEnabledBool ? GradientBoxBorder(gradient: borderGradient!) : Border.all(color: AppColors.middleGrey),
                       ),

@@ -84,31 +84,43 @@ class _ListItemPageTooltipState<T extends AListItemModel, C extends AListCubit<T
   }
 
   void _pressLockButton(SelectionModel selectionModel) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => CustomAgreementDialog(
-        title: 'Lock',
-        content: 'Are you sure you want to lock selected items?',
-        onConfirm: () {
-          _closeTooltip();
-          _lockSelection(selectionModel);
-        },
-      ),
-    );
+    int selectedItemsCount = selectionModel.selectedItems.length;
+
+    if (selectedItemsCount == 1) {
+      _lockSelection(selectionModel);
+    } else {
+      showDialog<void>(
+        context: context,
+        builder: (BuildContext context) => CustomAgreementDialog(
+          title: 'Lock',
+          content: 'Are you sure you want to lock selected items?',
+          onConfirm: () => _lockSelection(selectionModel),
+        ),
+      );
+    }
   }
 
-  void _lockSelection(SelectionModel selectionModel) {
-    showDialog(
+  Future<void> _lockSelection(SelectionModel selectionModel) async {
+    final C listCubit = widget.listCubit;
+
+    await showDialog(
       context: context,
       useSafeArea: false,
       builder: (BuildContext context) {
         return SecretsSetupPinPage(
           passwordValidCallback: (PasswordModel passwordModel) async {
-            await widget.listCubit.lockSelection(selectedItems: selectionModel.selectedItems, newPasswordModel: passwordModel);
+            await listCubit.lockSelection(selectedItems: selectionModel.selectedItems, newPasswordModel: passwordModel);
+            if (mounted) {
+              _closeTooltip();
+            }
           },
         );
       },
     );
+    if (mounted) {
+      listCubit.disableSelection();
+      _closeTooltip();
+    }
   }
 
   void _closeTooltip() {
