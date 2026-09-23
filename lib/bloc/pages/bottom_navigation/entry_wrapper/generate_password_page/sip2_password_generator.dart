@@ -30,10 +30,10 @@ class Sip2PasswordGenerator {
   });
 
   Sip2GeneratedPassword generate(int passwordLength) {
-    int checksumCharacterCount = getChecksumCharacterCount(passwordLength);
+    int checksumCharacterCount = _getChecksumCharacterCount(passwordLength);
     int randomCharacterCount = max(0, passwordLength - checksumCharacterCount);
     String randomPassword = _generateRandomPassword(randomCharacterCount);
-    String checksum = calculateChecksum(randomPassword, checksumCharacterCount);
+    String checksum = _calculateChecksum(randomPassword, checksumCharacterCount);
 
     return Sip2GeneratedPassword(
       password: '$randomPassword$checksum',
@@ -42,7 +42,7 @@ class Sip2PasswordGenerator {
     );
   }
 
-  static int getChecksumCharacterCount(int passwordLength) {
+  static int _getChecksumCharacterCount(int passwordLength) {
     if (passwordLength <= 0) {
       // TODO(Kamil): Exception?
       return 0;
@@ -53,7 +53,7 @@ class Sip2PasswordGenerator {
     return 2;
   }
 
-  static String calculateChecksum(String randomPassword, int checksumCharacterCount) {
+  static String _calculateChecksum(String randomPassword, int checksumCharacterCount) {
     if (checksumCharacterCount <= 0) {
       return '';
     }
