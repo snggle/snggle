@@ -115,175 +115,167 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                       controller: scrollController,
                       child: ConstrainedBox(
                         constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Text(
-                                'Character Set',
-                                style: textTheme.bodyLarge?.copyWith(color: AppColors.darkGrey),
+                        child: IntrinsicHeight(
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: Text(
+                                  'Character Set',
+                                  style: textTheme.bodyLarge?.copyWith(color: AppColors.darkGrey),
+                                ),
                               ),
-                            ),
-                            ValueListenableBuilder<PasswordCharacterSetType>(
-                              valueListenable: characterSetNotifier,
-                              builder: (BuildContext context, PasswordCharacterSetType selectedCharacterSetType, _) {
-                                return CustomSingleSelectMenu<PasswordCharacterSetType>(
-                                  selectedValue: selectedCharacterSetType,
-                                  options: _characterSetOptions,
-                                  onSelected: _handleCharacterSetChanged,
-                                  itemBuilder: (BuildContext context, PasswordCharacterSetType passwordCharacterSetType) {
-                                    return Text(
-                                      _getPasswordCharacterSetTitle(passwordCharacterSetType),
-                                      overflow: TextOverflow.ellipsis,
-                                      style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                            const SizedBox(height: 12),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Text(
-                                'Password Security and Length',
-                                style: textTheme.bodyLarge?.copyWith(color: AppColors.darkGrey),
+                              ValueListenableBuilder<PasswordCharacterSetType>(
+                                valueListenable: characterSetNotifier,
+                                builder: (BuildContext context, PasswordCharacterSetType selectedCharacterSetType, _) {
+                                  return CustomSingleSelectMenu<PasswordCharacterSetType>(
+                                    selectedValue: selectedCharacterSetType,
+                                    options: _characterSetOptions,
+                                    onSelected: _handleCharacterSetChanged,
+                                    itemBuilder: (BuildContext context, PasswordCharacterSetType passwordCharacterSetType) {
+                                      return Text(
+                                        _getPasswordCharacterSetTitle(passwordCharacterSetType),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+                                      );
+                                    },
+                                  );
+                                },
                               ),
-                            ),
-                            ValueListenableBuilder<PasswordCharacterSetType>(
-                              valueListenable: characterSetNotifier,
-                              builder: (BuildContext context, PasswordCharacterSetType selectedCharacterSetType, _) {
-                                return ValueListenableBuilder<PasswordLengthType>(
-                                  valueListenable: passwordLengthNotifier,
-                                  builder: (BuildContext context, PasswordLengthType selectedPasswordLengthType, _) {
-                                    return CustomSingleSelectMenu<PasswordLengthType>(
-                                      selectedValue: selectedPasswordLengthType,
-                                      options: _getPasswordLengthOptions(selectedCharacterSetType),
-                                      onSelected: _handlePasswordLengthChanged,
-                                      itemBuilder: (BuildContext context, PasswordLengthType passwordLengthType) {
-                                        bool customLengthBool = passwordLengthType == PasswordLengthType.custom;
-                                        return Row(
-                                          children: <Widget>[
-                                            Text(
-                                              _getPasswordLengthTitle(passwordLengthType),
-                                              overflow: TextOverflow.ellipsis,
-                                              style: textTheme.bodyMedium?.copyWith(color: _getPasswordLengthColor(passwordLengthType)),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 22),
-                                              child: Text(
-                                                '•',
-                                                style: textTheme.bodyMedium?.copyWith(color: AppColors.warningOrange),
+                              const SizedBox(height: 12),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: Text(
+                                  'Password Security and Length',
+                                  style: textTheme.bodyLarge?.copyWith(color: AppColors.darkGrey),
+                                ),
+                              ),
+                              ValueListenableBuilder<PasswordCharacterSetType>(
+                                valueListenable: characterSetNotifier,
+                                builder: (BuildContext context, PasswordCharacterSetType selectedCharacterSetType, _) {
+                                  return ValueListenableBuilder<PasswordLengthType>(
+                                    valueListenable: passwordLengthNotifier,
+                                    builder: (BuildContext context, PasswordLengthType selectedPasswordLengthType, _) {
+                                      return CustomSingleSelectMenu<PasswordLengthType>(
+                                        selectedValue: selectedPasswordLengthType,
+                                        options: _getPasswordLengthOptions(selectedCharacterSetType),
+                                        onSelected: _handlePasswordLengthChanged,
+                                        itemBuilder: (BuildContext context, PasswordLengthType passwordLengthType) {
+                                          bool customLengthBool = passwordLengthType == PasswordLengthType.custom;
+                                          return Row(
+                                            children: <Widget>[
+                                              Text(
+                                                _getPasswordLengthTitle(passwordLengthType),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: textTheme.bodyMedium?.copyWith(color: _getPasswordLengthColor(passwordLengthType)),
                                               ),
-                                            ),
-                                            if (customLengthBool) ...<Widget>[
-                                              SizedBox(
-                                                width: 44,
-                                                child: CustomTextField(
-                                                  readOnlyBool: false,
-                                                  enableInteractiveSelectionBool: true,
-                                                  textEditingController: generatePasswordPageCubit.customPasswordLengthTextEditingController,
-                                                  focusNode: customPasswordLengthFocusNode,
-                                                  inputBorder: InputBorder.none,
-                                                  keyboardType: TextInputType.number,
-                                                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
-                                                  obscureTextBool: false,
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 22),
+                                                child: Text(
+                                                  '•',
+                                                  style: textTheme.bodyMedium?.copyWith(color: AppColors.warningOrange),
+                                                ),
+                                              ),
+                                              if (customLengthBool) ...<Widget>[
+                                                SizedBox(
+                                                  width: 44,
+                                                  child: DecoratedBox(
+                                                    decoration: BoxDecoration(
+                                                      border: Border(bottom: BorderSide(color: AppColors.divider, width: 0.6)),
+                                                    ),
+                                                    child: CustomTextField(
+                                                      readOnlyBool: false,
+                                                      enableInteractiveSelectionBool: true,
+                                                      textEditingController: generatePasswordPageCubit.customPasswordLengthTextEditingController,
+                                                      focusNode: customPasswordLengthFocusNode,
+                                                      inputBorder: InputBorder.none,
+                                                      keyboardType: TextInputType.number,
+                                                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+                                                      obscureTextBool: false,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                              Flexible(
+                                                child: Text(
+                                                  _getPasswordLengthDescription(passwordLengthType),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
                                                 ),
                                               ),
                                             ],
-                                            Flexible(
-                                              child: Text(
-                                                _getPasswordLengthDescription(passwordLengthType),
-                                                overflow: TextOverflow.ellipsis,
-                                                style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                            // TODO(Kamil): Replace SizedBoxes with some better method of aligning elements below to the lower part of the screen
-                            const SizedBox(height: 12),
-                            const SizedBox(height: 24),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 22.5, vertical: 25),
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: <Widget>[
-                                    GradientOutlinedButton.small(
-                                      width: 176,
-                                      label: 'Regenerate',
-                                      onPressed: _regenerate,
-                                    ),
-                                  ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                              if (anyKeyboardVisibleBool) const SizedBox(height: 10000) else const Spacer(),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 22.5, vertical: 25),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: <Widget>[
+                                      GradientOutlinedButton.small(
+                                        width: 176,
+                                        label: 'Regenerate',
+                                        onPressed: _regenerate,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 12),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: LabelWrapperVertical.textField(
-                                label: 'Password',
-                                labelStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
-                                labelPadding: EdgeInsets.zero,
-                                child: CustomTextField(
-                                  readOnlyBool: true,
-                                  enableInteractiveSelectionBool: true,
-                                  textEditingController: generatePasswordPageCubit.passwordTextEditingController,
-                                  inputBorder: InputBorder.none,
-                                  keyboardType: TextInputType.text,
-                                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
-                                  obscureTextBool: _obscurePasswordBool,
-                                  suffixWidget: InkWell(
-                                    onTap: () => setState(() => _obscurePasswordBool = !_obscurePasswordBool),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 6),
-                                      child: AssetIcon(
-                                        _obscurePasswordBool ? AppIcons.details_hide : AppIcons.details_show,
+                              const SizedBox(height: 12),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: LabelWrapperVertical.textField(
+                                  label: 'Password',
+                                  labelStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
+                                  labelPadding: EdgeInsets.zero,
+                                  child: CustomTextField(
+                                    readOnlyBool: true,
+                                    enableInteractiveSelectionBool: true,
+                                    textEditingController: generatePasswordPageCubit.passwordTextEditingController,
+                                    inputBorder: InputBorder.none,
+                                    keyboardType: TextInputType.text,
+                                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+                                    obscureTextBool: _obscurePasswordBool,
+                                    suffixWidget: InkWell(
+                                      onTap: () => setState(() => _obscurePasswordBool = !_obscurePasswordBool),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(right: 6),
+                                        child: AssetIcon(
+                                          _obscurePasswordBool ? AppIcons.details_hide : AppIcons.details_show,
+                                        ),
                                       ),
                                     ),
+                                    suffixWidgetConstraints: const BoxConstraints(minWidth: 34, minHeight: 34),
                                   ),
-                                  suffixWidgetConstraints: const BoxConstraints(minWidth: 34, minHeight: 34),
                                 ),
                               ),
-                            ),
-                            ValueListenableBuilder<PasswordCharacterSetType>(
-                              valueListenable: characterSetNotifier,
-                              builder: (BuildContext context, PasswordCharacterSetType selectedCharacterSetType, _) {
-                                return ValueListenableBuilder<TextEditingValue>(
-                                  valueListenable: generatePasswordPageCubit.entropyTextEditingController,
-                                  builder: (BuildContext context, TextEditingValue entropyValue, _) {
-                                    return ValueListenableBuilder<TextEditingValue>(
-                                      valueListenable: generatePasswordPageCubit.passwordLengthTextEditingController,
-                                      builder: (BuildContext context, TextEditingValue lengthValue, _) {
-                                        return ValueListenableBuilder<TextEditingValue>(
-                                          valueListenable: generatePasswordPageCubit.checksumTextEditingController,
-                                          builder: (BuildContext context, TextEditingValue checksumValue, _) {
-                                            return Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Text(
-                                                    'Entropy: ${entropyValue.text} bits',
-                                                    style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                                                    child: Text(
-                                                      '•',
-                                                      style: textTheme.bodySmall?.copyWith(color: AppColors.warningOrange),
+                              ValueListenableBuilder<PasswordCharacterSetType>(
+                                valueListenable: characterSetNotifier,
+                                builder: (BuildContext context, PasswordCharacterSetType selectedCharacterSetType, _) {
+                                  return ValueListenableBuilder<TextEditingValue>(
+                                    valueListenable: generatePasswordPageCubit.entropyTextEditingController,
+                                    builder: (BuildContext context, TextEditingValue entropyValue, _) {
+                                      return ValueListenableBuilder<TextEditingValue>(
+                                        valueListenable: generatePasswordPageCubit.passwordLengthTextEditingController,
+                                        builder: (BuildContext context, TextEditingValue lengthValue, _) {
+                                          return ValueListenableBuilder<TextEditingValue>(
+                                            valueListenable: generatePasswordPageCubit.checksumTextEditingController,
+                                            builder: (BuildContext context, TextEditingValue checksumValue, _) {
+                                              return Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Entropy: ${entropyValue.text} bits',
+                                                      style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    'Length: ${lengthValue.text}',
-                                                    style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
-                                                  ),
-                                                  if (selectedCharacterSetType == PasswordCharacterSetType.sip2) ...<Widget>[
                                                     Padding(
                                                       padding: const EdgeInsets.symmetric(horizontal: 12),
                                                       child: Text(
@@ -292,99 +284,112 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      'Checksum: ${checksumValue.text}',
+                                                      'Length: ${lengthValue.text}',
                                                       style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                                     ),
+                                                    if (selectedCharacterSetType == PasswordCharacterSetType.sip2) ...<Widget>[
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                        child: Text(
+                                                          '•',
+                                                          style: textTheme.bodySmall?.copyWith(color: AppColors.warningOrange),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        'Checksum: ${checksumValue.text}',
+                                                        style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
+                                                      ),
+                                                    ],
                                                   ],
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child:
-                                                state.passwordSecurityLevel == PasswordSecurityLevel.unsafe ||
-                                                    state.passwordSecurityLevel == PasswordSecurityLevel.weak
-                                                ? Icon(
-                                                    Icons.warning_amber_rounded,
-                                                    size: 20,
-                                                    color: switch (state.passwordSecurityLevel) {
-                                                      PasswordSecurityLevel.unsafe => AppColors.warningRed,
-                                                      PasswordSecurityLevel.weak => AppColors.warningOrange,
-                                                      PasswordSecurityLevel.good => AppColors.darkGrey,
-                                                      PasswordSecurityLevel.excellent => AppColors.darkGreen,
-                                                      PasswordSecurityLevel.superb => AppColors.lightGreen,
-                                                    },
-                                                  )
-                                                : AssetIcon(
-                                                    AppIcons.menu_save,
-                                                    size: 20,
-                                                    color: switch (state.passwordSecurityLevel) {
-                                                      PasswordSecurityLevel.unsafe => AppColors.warningRed,
-                                                      PasswordSecurityLevel.weak => AppColors.warningOrange,
-                                                      PasswordSecurityLevel.good => AppColors.darkGrey,
-                                                      PasswordSecurityLevel.excellent => AppColors.darkGreen,
-                                                      PasswordSecurityLevel.superb => AppColors.lightGreen,
-                                                    },
-                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child:
+                                                  state.passwordSecurityLevel == PasswordSecurityLevel.unsafe ||
+                                                      state.passwordSecurityLevel == PasswordSecurityLevel.weak
+                                                  ? Icon(
+                                                      Icons.warning_amber_rounded,
+                                                      size: 20,
+                                                      color: switch (state.passwordSecurityLevel) {
+                                                        PasswordSecurityLevel.unsafe => AppColors.warningRed,
+                                                        PasswordSecurityLevel.weak => AppColors.warningOrange,
+                                                        PasswordSecurityLevel.good => AppColors.darkGrey,
+                                                        PasswordSecurityLevel.excellent => AppColors.darkGreen,
+                                                        PasswordSecurityLevel.superb => AppColors.lightGreen,
+                                                      },
+                                                    )
+                                                  : AssetIcon(
+                                                      AppIcons.menu_save,
+                                                      size: 20,
+                                                      color: switch (state.passwordSecurityLevel) {
+                                                        PasswordSecurityLevel.unsafe => AppColors.warningRed,
+                                                        PasswordSecurityLevel.weak => AppColors.warningOrange,
+                                                        PasswordSecurityLevel.good => AppColors.darkGrey,
+                                                        PasswordSecurityLevel.excellent => AppColors.darkGreen,
+                                                        PasswordSecurityLevel.superb => AppColors.lightGreen,
+                                                      },
+                                                    ),
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            '${state.passwordSecurityLevel.displayName} password',
-                                            style: textTheme.bodyMedium?.copyWith(
-                                              color: switch (state.passwordSecurityLevel) {
-                                                PasswordSecurityLevel.unsafe => AppColors.warningRed,
-                                                PasswordSecurityLevel.weak => AppColors.warningOrange,
-                                                PasswordSecurityLevel.good => AppColors.darkGrey,
-                                                PasswordSecurityLevel.excellent => AppColors.darkGreen,
-                                                PasswordSecurityLevel.superb => AppColors.lightGreen,
-                                              },
+                                          const SizedBox(width: 10),
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              '${state.passwordSecurityLevel.displayName} password',
+                                              style: textTheme.bodyMedium?.copyWith(
+                                                color: switch (state.passwordSecurityLevel) {
+                                                  PasswordSecurityLevel.unsafe => AppColors.warningRed,
+                                                  PasswordSecurityLevel.weak => AppColors.warningOrange,
+                                                  PasswordSecurityLevel.good => AppColors.darkGrey,
+                                                  PasswordSecurityLevel.excellent => AppColors.darkGreen,
+                                                  PasswordSecurityLevel.superb => AppColors.lightGreen,
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            onTap: _showPasswordSecurityHintDialog,
+                                            child: const SizedBox(
+                                              width: 34,
+                                              height: 34,
+                                              child: AssetIcon(AppIcons.icon_help, size: 25),
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          onTap: _showPasswordSecurityHintDialog,
-                                          child: const SizedBox(
-                                            width: 34,
-                                            height: 34,
-                                            child: AssetIcon(AppIcons.icon_help, size: 25),
-                                          ),
-                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: anyKeyboardVisibleBool ? 40 : 100),
-                          ],
+                              SizedBox(height: anyKeyboardVisibleBool ? 40 : 100),
+                            ],
+                          ),
                         ),
                       ),
                     );
