@@ -10,6 +10,9 @@ import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_pa
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_security_level.dart';
 
 class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
+  static const int minCustomPasswordLength = 5;
+  static const int maxCustomPasswordLength = 150;
+
   final TextEditingController checksumTextEditingController = TextEditingController();
   final TextEditingController customPasswordLengthTextEditingController = TextEditingController();
   final TextEditingController entropyTextEditingController = TextEditingController();
@@ -21,12 +24,16 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
 
   final Random _random = Random.secure();
 
-  GeneratePasswordPageCubit() : super(const GeneratePasswordPageState(passwordSecurityLevel: PasswordSecurityLevel.excellent));
+  GeneratePasswordPageCubit() : super(const GeneratePasswordPageState(passwordSecurityLevel: PasswordSecurityLevel.excellent)) {
+    customPasswordLengthTextEditingController.addListener(_normalizeCustomPasswordLength);
+  }
 
   @override
   Future<void> close() async {
     checksumTextEditingController.dispose();
-    customPasswordLengthTextEditingController.dispose();
+    customPasswordLengthTextEditingController
+      ..removeListener(_normalizeCustomPasswordLength)
+      ..dispose();
     entropyTextEditingController.dispose();
     passwordLengthTextEditingController.dispose();
     passwordTextEditingController.dispose();
@@ -93,8 +100,31 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       case PasswordLengthType.superb:
         return 40;
       case PasswordLengthType.custom:
-        return int.parse(customPasswordLengthTextEditingController.text);
+        return _clampCustomPasswordLength(customPasswordLengthTextEditingController.text);
     }
+  }
+
+  void _normalizeCustomPasswordLength() {
+    int clampedPasswordLength = _clampCustomPasswordLength(customPasswordLengthTextEditingController.text);
+    String clampedPasswordLengthString = clampedPasswordLength.toString();
+
+    if (customPasswordLengthTextEditingController.text == clampedPasswordLengthString) {
+      return;
+    }
+
+    customPasswordLengthTextEditingController.value = TextEditingValue(
+      text: clampedPasswordLengthString,
+      selection: TextSelection.collapsed(offset: clampedPasswordLengthString.length),
+    );
+  }
+
+  int _clampCustomPasswordLength(String text) {
+    int? passwordLength = int.tryParse(text);
+    if (passwordLength == null) {
+      return -1;
+    }
+
+    return passwordLength.clamp(minCustomPasswordLength, maxCustomPasswordLength);
   }
 
   String _getCharacterSet() {
