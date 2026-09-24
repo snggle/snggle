@@ -30,6 +30,10 @@ class Sip2PasswordGenerator {
   });
 
   Sip2GeneratedPassword generate(int passwordLength) {
+    if (passwordLength < 1) {
+      const FormatException('Password length cannot be lower than 1');
+    }
+
     int checksumCharacterCount = _getChecksumCharacterCount(passwordLength);
     int randomCharacterCount = max(0, passwordLength - checksumCharacterCount);
     String randomPassword = _generateRandomPassword(randomCharacterCount);
