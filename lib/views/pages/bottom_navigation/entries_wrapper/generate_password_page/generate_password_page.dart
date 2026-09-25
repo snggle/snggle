@@ -7,6 +7,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_passw
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
+import 'package:snggle/shared/utils/formatters/custom_password_length_input_formatter.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_character_set_type.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_length_type.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_security_level.dart';
@@ -190,7 +191,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                                       textEditingController: generatePasswordPageCubit.customPasswordLengthTextEditingController,
                                                       focusNode: customPasswordLengthFocusNode,
                                                       inputBorder: InputBorder.none,
-                                                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                                                      inputFormatters: <TextInputFormatter>[CustomPasswordLengthInputFormatter()],
                                                       keyboardType: TextInputType.number,
                                                       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
                                                       obscureTextBool: false,
@@ -455,10 +456,19 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       return;
     }
 
-    setState(() {
-      passwordLengthNotifier.value = passwordLengthType;
-      generatePasswordPageCubit.passwordLengthType = passwordLengthType;
-    });
+    if ((generatePasswordPageCubit.passwordLengthType == PasswordLengthType.excellent ||
+            generatePasswordPageCubit.passwordLengthType == PasswordLengthType.superb) &&
+        generatePasswordPageCubit.passwordCharacterSetType == PasswordCharacterSetType.sip2) {
+      setState(() {
+        passwordLengthNotifier.value = PasswordLengthType.good;
+        generatePasswordPageCubit.passwordLengthType = PasswordLengthType.good;
+      });
+    } else {
+      setState(() {
+        passwordLengthNotifier.value = passwordLengthType;
+        generatePasswordPageCubit.passwordLengthType = passwordLengthType;
+      });
+    }
 
     if (passwordLengthType == PasswordLengthType.custom) {
       _requestCustomPasswordLengthFocus();
@@ -470,6 +480,13 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
 
   void _handleCustomPasswordLengthFocusChanged() {
     if (generatePasswordPageCubit.customPasswordLengthTextEditingController.text.isEmpty) {
+      if (generatePasswordPageCubit.passwordLengthType == PasswordLengthType.custom) {
+        setState(() {
+          passwordLengthNotifier.value = PasswordLengthType.excellent;
+          generatePasswordPageCubit.passwordLengthType = PasswordLengthType.excellent;
+        });
+        return;
+      }
       return;
     }
 
@@ -520,7 +537,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       case PasswordLengthType.superb:
         return '40 characters';
       case PasswordLengthType.custom:
-        return 'characters';
+        return ' characters';
     }
   }
 

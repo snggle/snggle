@@ -31,7 +31,7 @@ class Sip2PasswordGenerator {
 
   Sip2GeneratedPassword generate(int passwordLength) {
     if (passwordLength < 1) {
-      const FormatException('Password length cannot be lower than 1');
+      ArgumentError('Invalid password length: $passwordLength. It should never be lower than 1');
     }
 
     int checksumCharacterCount = _getChecksumCharacterCount(passwordLength);
@@ -47,10 +47,6 @@ class Sip2PasswordGenerator {
   }
 
   static int _getChecksumCharacterCount(int passwordLength) {
-    if (passwordLength <= 0) {
-      // TODO(Kamil): Exception?
-      return 0;
-    }
     if (passwordLength <= _maxPasswordLengthWithOneChecksumCharacter) {
       return 1;
     }
@@ -58,10 +54,6 @@ class Sip2PasswordGenerator {
   }
 
   static String _calculateChecksum(String randomPassword, int checksumCharacterCount) {
-    if (checksumCharacterCount <= 0) {
-      return '';
-    }
-
     List<int> hashBytes = Sha256().convert(utf8.encode(randomPassword)).byteList;
     StringBuffer checksumStringBuffer = StringBuffer();
 
