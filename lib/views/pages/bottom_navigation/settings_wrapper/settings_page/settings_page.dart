@@ -84,7 +84,6 @@ class _SettingsPageState extends State<SettingsPage> {
             'Your Application PIN has been changed.',
             textAlign: TextAlign.center,
           ),
-          backgroundColor: Colors.transparent,
           options: <CustomDialogOption>[
             CustomDialogOption(
               label: 'Done',

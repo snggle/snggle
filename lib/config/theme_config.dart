@@ -6,7 +6,8 @@ class ThemeConfig {
   ThemeData _baseTheme = ThemeData(
     fontFamily: 'Bauhaus',
     brightness: Brightness.light,
-    dialogTheme: const DialogThemeData(
+    dialogTheme: DialogThemeData(
+      backgroundColor: AppColors.body2.withValues(alpha: 0.75),
       barrierColor: Colors.transparent,
     ),
   );
