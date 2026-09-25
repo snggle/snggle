@@ -38,11 +38,12 @@ class VaultListPage extends StatefulWidget {
 
 class _VaultListPageState extends State<VaultListPage> {
   final String _tabDirName = FilesystemStorageTabDir.vaults.name;
+  late final FilesystemPath _vaultsRootPath = FilesystemPath.fromString(_tabDirName);
   late final String defaultPageTitle = _tabDirName.toUpperCase();
   final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
   late final VaultListPageCubit vaultListPageCubit = VaultListPageCubit(
     depth: 0,
-    filesystemPath: FilesystemPath.fromString('vaults'),
+    filesystemPath: _vaultsRootPath,
     onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
   );
 

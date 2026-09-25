@@ -1,4 +1,3 @@
 enum FilesystemStorageTabDir {
   vaults,
-  entries,
 }
