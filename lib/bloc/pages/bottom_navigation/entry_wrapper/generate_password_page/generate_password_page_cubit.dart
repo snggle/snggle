@@ -24,16 +24,12 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
 
   final Random _random = Random.secure();
 
-  GeneratePasswordPageCubit() : super(const GeneratePasswordPageState(passwordSecurityLevel: PasswordSecurityLevel.excellent)) {
-    customPasswordLengthTextEditingController.addListener(_normalizeCustomPasswordLength);
-  }
+  GeneratePasswordPageCubit() : super(const GeneratePasswordPageState(passwordSecurityLevel: PasswordSecurityLevel.excellent));
 
   @override
   Future<void> close() async {
     checksumTextEditingController.dispose();
-    customPasswordLengthTextEditingController
-      ..removeListener(_normalizeCustomPasswordLength)
-      ..dispose();
+    customPasswordLengthTextEditingController.dispose();
     entropyTextEditingController.dispose();
     passwordLengthTextEditingController.dispose();
     passwordTextEditingController.dispose();
@@ -104,25 +100,8 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
     }
   }
 
-  void _normalizeCustomPasswordLength() {
-    int clampedPasswordLength = _clampCustomPasswordLength(customPasswordLengthTextEditingController.text);
-    String clampedPasswordLengthString = clampedPasswordLength.toString();
-
-    if (customPasswordLengthTextEditingController.text == clampedPasswordLengthString) {
-      return;
-    }
-
-    customPasswordLengthTextEditingController.value = TextEditingValue(
-      text: clampedPasswordLengthString,
-      selection: TextSelection.collapsed(offset: clampedPasswordLengthString.length),
-    );
-  }
-
   int _clampCustomPasswordLength(String text) {
-    int? passwordLength = int.tryParse(text);
-    if (passwordLength == null) {
-      return -1;
-    }
+    int? passwordLength = int.parse(text);
 
     return passwordLength.clamp(minCustomPasswordLength, maxCustomPasswordLength);
   }
