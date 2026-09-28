@@ -33,4 +33,12 @@ object FlutterConstants {
         "finishAutofillSave"
 
     const val METHOD_CANCEL_AUTOFILL_SAVE = "cancelAutofillSave"
+
+    const val PASSKEY_CREATE_CHANNEL = "snggle/passkey_create"
+
+    const val METHOD_GET_PASSKEY_CREATE_CONTEXT = "getPasskeyCreateContext"
+    const val METHOD_FINISH_PASSKEY_CREATE = "finishPasskeyCreate"
+    const val METHOD_CANCEL_PASSKEY_CREATE = "cancelPasskeyCreate"
+
+    const val LAUNCH_ACTION_PASSKEY_CREATE = "passkeyCreate"
 }
