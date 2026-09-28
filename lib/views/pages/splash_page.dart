@@ -8,6 +8,8 @@ import 'package:snggle/bloc/splash_page/states/splash_page_app_set_up_state.dart
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_master_key_removed_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_pin_auth_state.dart';
+import 'package:snggle/native_passkey_create.dart';
+import 'package:snggle/passkey_create_context.dart';
 import 'package:snggle/shared/native/app_launch_context.dart';
 import 'package:snggle/shared/native/app_launch_mode.dart';
 import 'package:snggle/shared/native/native_app_launch.dart';
@@ -28,6 +30,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     _splashPageCubit.init();
+    _loadPasskeyContext();
     super.initState();
   }
 
@@ -84,5 +87,14 @@ class _SplashPageState extends State<SplashPage> {
       useRootNavigator: true,
       builder: (_) => const ShortPrivacyPolicyDialog(),
     );
+  }
+
+  Future<void> _loadPasskeyContext() async {
+    PasskeyCreateContext context =
+    await NativePasskeyCreate.getContext();
+
+    print('PASSKEY callingPackage: ${context.callingPackage}');
+    print('PASSKEY requestJson: ${context.requestJson}');
+    print('PASSKEY clientDataHash: ${context.clientDataHash}');
   }
 }
