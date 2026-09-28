@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/generate_password_page_state.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/sip2_password_generator.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/password_generator.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_character_set_type.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_length_type.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_security_level.dart';
@@ -49,27 +49,16 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
 
   void generatePassword() {
     int passwordLength = _getPasswordLength();
-    String characterSet = _getCharacterSet();
-    int entropyCharacterCount = passwordLength;
-    int checksumCharacterCount = 0;
-    String password;
-
-    if (passwordCharacterSetType == PasswordCharacterSetType.sip2) {
-      Sip2GeneratedPassword generatedPassword = Sip2PasswordGenerator(random: _random).generate(passwordLength);
-      password = generatedPassword.password;
-      entropyCharacterCount = generatedPassword.randomCharacterCount;
-      checksumCharacterCount = generatedPassword.checksumCharacterCount;
-    } else {
-      password = List<String>.generate(passwordLength, (_) => characterSet[_random.nextInt(characterSet.length)]).join();
-    }
+    PasswordGenerator passwordGenerator = _getPasswordGenerator();
+    GeneratedPassword generatedPassword = passwordGenerator.generate(passwordLength);
 
     passwordLengthTextEditingController.text = passwordLength.toString();
-    passwordTextEditingController.text = password;
+    passwordTextEditingController.text = generatedPassword.password;
 
-    double entropy = entropyCharacterCount * (log(characterSet.length) / ln2);
+    double entropy = generatedPassword.randomCharacterCount * (log(passwordGenerator.characterSet.length) / ln2);
 
     entropyTextEditingController.text = entropy.toStringAsFixed(1);
-    checksumTextEditingController.text = checksumCharacterCount.toString();
+    checksumTextEditingController.text = generatedPassword.checksumCharacterCount.toString();
 
     PasswordSecurityLevel passwordSecurityLevel;
     if (entropy < 80) {
@@ -106,13 +95,13 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
     return passwordLength.clamp(minCustomPasswordLength, maxCustomPasswordLength);
   }
 
-  String _getCharacterSet() {
+  PasswordGenerator _getPasswordGenerator() {
     switch (passwordCharacterSetType) {
       case PasswordCharacterSetType.ascii:
-        return String.fromCharCodes(List<int>.generate(94, (int index) => 33 + index));
+        return PasswordGenerator(random: _random);
 
       case PasswordCharacterSetType.sip2:
-        return Sip2PasswordGenerator.characterSet;
+        return PasswordGenerator.sip2(random: _random);
     }
   }
 }
