@@ -1,107 +1,161 @@
 import 'dart:async';
-import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/generate_password_page_state.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/password_generator.dart';
-import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_character_set_type.dart';
-import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_length_type.dart';
-import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/generate_password_page/password_security_level.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/password_length_type.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/password_security_level.dart';
 
 class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   static const int minCustomPasswordLength = 5;
   static const int maxCustomPasswordLength = 150;
 
-  final TextEditingController checksumTextEditingController = TextEditingController();
-  final TextEditingController customPasswordLengthTextEditingController = TextEditingController();
-  final TextEditingController entropyTextEditingController = TextEditingController();
-  final TextEditingController passwordLengthTextEditingController = TextEditingController();
-  final TextEditingController passwordTextEditingController = TextEditingController();
+  static const List<PasswordLengthType> _asciiPasswordLengthOptions = <PasswordLengthType>[
+    PasswordLengthType.good,
+    PasswordLengthType.excellent,
+    PasswordLengthType.superb,
+    PasswordLengthType.custom,
+  ];
+  static const List<PasswordLengthType> _sip2PasswordLengthOptions = <PasswordLengthType>[
+    PasswordLengthType.good,
+    PasswordLengthType.custom,
+  ];
 
-  PasswordCharacterSetType passwordCharacterSetType = PasswordCharacterSetType.ascii;
-  PasswordLengthType passwordLengthType = PasswordLengthType.excellent;
-
-  final Random _random = Random.secure();
-
-  GeneratePasswordPageCubit() : super(const GeneratePasswordPageState(passwordSecurityLevel: PasswordSecurityLevel.excellent));
-
-  @override
-  Future<void> close() async {
-    checksumTextEditingController.dispose();
-    customPasswordLengthTextEditingController.dispose();
-    entropyTextEditingController.dispose();
-    passwordLengthTextEditingController.dispose();
-    passwordTextEditingController.dispose();
-
-    await super.close();
-  }
+  GeneratePasswordPageCubit({required bool obscurePasswordBool}) : super(GeneratePasswordPageState.initial(obscurePasswordBool: obscurePasswordBool));
 
   Future<void> init() async {
-    checksumTextEditingController.text = '';
-    customPasswordLengthTextEditingController.text = '';
-    entropyTextEditingController.text = '';
-    passwordLengthTextEditingController.text = '';
-    passwordTextEditingController.text = '';
-
     generatePassword();
+  }
+
+  void changeCharacterSet(CharacterSetType characterSetType) {
+    if (state.characterSetType == characterSetType) {
+      return;
+    }
+
+    List<PasswordLengthType> passwordLengthOptions = _getPasswordLengthOptions(characterSetType);
+    PasswordLengthType passwordLengthType = passwordLengthOptions.contains(state.passwordLengthType)
+        ? state.passwordLengthType
+        : _getDefaultPasswordLengthType(characterSetType);
+
+    emit(
+      state.copyWith(
+        characterSetType: characterSetType,
+        passwordLengthType: passwordLengthType,
+        passwordLengthOptions: passwordLengthOptions,
+      ),
+    );
+    generatePassword();
+  }
+
+  void changePasswordLengthType(PasswordLengthType passwordLengthType) {
+    PasswordLengthType nextPasswordLengthType = state.passwordLengthOptions.contains(passwordLengthType)
+        ? passwordLengthType
+        : _getDefaultPasswordLengthType(state.characterSetType);
+
+    if (state.passwordLengthType == nextPasswordLengthType) {
+      return;
+    }
+
+    emit(state.copyWith(passwordLengthType: nextPasswordLengthType));
+
+    if (nextPasswordLengthType != PasswordLengthType.custom) {
+      generatePassword();
+    }
+  }
+
+  void updateCustomPasswordLengthText(String text) {
+    if (state.customPasswordLengthText == text) {
+      return;
+    }
+
+    emit(state.copyWith(customPasswordLengthText: text));
+  }
+
+  void toggleObscurePassword() {
+    emit(state.copyWith(obscurePasswordBool: !state.obscurePasswordBool));
   }
 
   void generatePassword() {
     int passwordLength = _getPasswordLength();
     PasswordGenerator passwordGenerator = _getPasswordGenerator();
-    GeneratedPassword generatedPassword = passwordGenerator.generate(passwordLength);
+    Password password = passwordGenerator.generate(passwordLength);
+    double entropy = password.entropy;
 
-    passwordLengthTextEditingController.text = passwordLength.toString();
-    passwordTextEditingController.text = generatedPassword.password;
+    emit(
+      state.copyWith(
+        password: password.password,
+        passwordEntropy: entropy,
+        passwordLength: password.password.length,
+        checksumCharacterCount: password.checksumCharacterCount,
+        passwordSecurityLevel: _getPasswordSecurityLevel(entropy),
+      ),
+    );
+  }
 
-    double entropy = generatedPassword.randomCharacterCount * (log(passwordGenerator.characterSet.length) / ln2);
-
-    entropyTextEditingController.text = entropy.toStringAsFixed(1);
-    checksumTextEditingController.text = generatedPassword.checksumCharacterCount.toString();
-
-    PasswordSecurityLevel passwordSecurityLevel;
+  PasswordSecurityLevel _getPasswordSecurityLevel(double entropy) {
     if (entropy < 80) {
-      passwordSecurityLevel = PasswordSecurityLevel.unsafe;
-    } else if (entropy < 112) {
-      passwordSecurityLevel = PasswordSecurityLevel.weak;
-    } else if (entropy < 128) {
-      passwordSecurityLevel = PasswordSecurityLevel.good;
-    } else if (entropy < 256) {
-      passwordSecurityLevel = PasswordSecurityLevel.excellent;
-    } else {
-      passwordSecurityLevel = PasswordSecurityLevel.superb;
+      return PasswordSecurityLevel.unsafe;
     }
 
-    emit(state.copyWith(passwordSecurityLevel: passwordSecurityLevel));
+    if (entropy < 112) {
+      return PasswordSecurityLevel.weak;
+    }
+
+    if (entropy < 128) {
+      return PasswordSecurityLevel.good;
+    }
+
+    if (entropy < 256) {
+      return PasswordSecurityLevel.excellent;
+    }
+
+    return PasswordSecurityLevel.superb;
   }
 
   int _getPasswordLength() {
-    switch (passwordLengthType) {
+    switch (state.passwordLengthType) {
       case PasswordLengthType.good:
-        return 18;
       case PasswordLengthType.excellent:
-        return 20;
       case PasswordLengthType.superb:
-        return 40;
+        return state.passwordLengthType.defaultLength!;
       case PasswordLengthType.custom:
-        return _clampCustomPasswordLength(customPasswordLengthTextEditingController.text);
+        return _clampCustomPasswordLength(state.customPasswordLengthText);
     }
   }
 
   int _clampCustomPasswordLength(String text) {
-    int? passwordLength = int.parse(text);
+    int? passwordLength = int.tryParse(text);
+    if (passwordLength == null) {
+      return minCustomPasswordLength;
+    }
 
     return passwordLength.clamp(minCustomPasswordLength, maxCustomPasswordLength);
   }
 
   PasswordGenerator _getPasswordGenerator() {
-    switch (passwordCharacterSetType) {
-      case PasswordCharacterSetType.ascii:
-        return PasswordGenerator(random: _random);
+    switch (state.characterSetType) {
+      case CharacterSetType.ascii:
+        return PasswordGenerator.ascii();
+      case CharacterSetType.sip2:
+        return PasswordGenerator.sip2();
+    }
+  }
 
-      case PasswordCharacterSetType.sip2:
-        return PasswordGenerator.sip2(random: _random);
+  PasswordLengthType _getDefaultPasswordLengthType(CharacterSetType characterSetType) {
+    switch (characterSetType) {
+      case CharacterSetType.ascii:
+        return PasswordLengthType.excellent;
+      case CharacterSetType.sip2:
+        return PasswordLengthType.good;
+    }
+  }
+
+  List<PasswordLengthType> _getPasswordLengthOptions(CharacterSetType characterSetType) {
+    switch (characterSetType) {
+      case CharacterSetType.ascii:
+        return _asciiPasswordLengthOptions;
+      case CharacterSetType.sip2:
+        return _sip2PasswordLengthOptions;
     }
   }
 }
