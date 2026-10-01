@@ -1,7 +1,8 @@
 import 'package:flutter/services.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/generate_password_page_cubit.dart';
 
 class CustomPasswordLengthInputFormatter extends TextInputFormatter {
-  static final int _maxIndex = int.parse('150');
+  static const int _maxIndex = GeneratePasswordPageCubit.maxCustomPasswordLength;
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {

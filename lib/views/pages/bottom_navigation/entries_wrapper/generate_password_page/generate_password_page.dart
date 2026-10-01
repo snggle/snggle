@@ -80,8 +80,8 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     return BlocBuilder<GeneratePasswordPageCubit, GeneratePasswordPageState>(
       bloc: generatePasswordPageCubit,
       builder: (BuildContext context, GeneratePasswordPageState state) {
-        _syncControllerText(passwordTextEditingController, state.password);
-        _syncControllerText(customPasswordLengthTextEditingController, state.customPasswordLengthText);
+        passwordTextEditingController.text = state.password;
+        customPasswordLengthTextEditingController.text = state.customPasswordLengthText;
 
         return CustomScaffold(
           title: 'GENERATE PASSWORD',
@@ -144,6 +144,16 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                 onSelected: _handlePasswordLengthChanged,
                                 itemBuilder: (BuildContext context, PasswordLengthType passwordLengthType) {
                                   bool customLengthBool = passwordLengthType == PasswordLengthType.custom;
+                                  bool customLengthSelectedBool = state.passwordLengthType == PasswordLengthType.custom;
+
+                                  if (customLengthBool && customLengthSelectedBool == false) {
+                                    return Text(
+                                      passwordLengthType.displayName,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: textTheme.bodyMedium?.copyWith(color: _getPasswordLengthColor(passwordLengthType)),
+                                    );
+                                  }
+
                                   return Row(
                                     children: <Widget>[
                                       Text(
@@ -286,7 +296,8 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                               child: Material(
                                                 color: Colors.transparent,
                                                 child:
-                                                    state.passwordSecurityLevel == PasswordSecurityLevel.unsafe || state.passwordSecurityLevel == PasswordSecurityLevel.weak
+                                                    state.passwordSecurityLevel == PasswordSecurityLevel.unsafe ||
+                                                        state.passwordSecurityLevel == PasswordSecurityLevel.weak
                                                     ? Icon(
                                                         Icons.warning_amber_rounded,
                                                         size: 20,
@@ -304,7 +315,9 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                               alignment: Alignment.centerLeft,
                                               child: Text(
                                                 '${state.passwordSecurityLevel.displayName} password',
-                                                style: textTheme.bodyMedium?.copyWith(color: _getPasswordSecurityLevelColor(state.passwordSecurityLevel)),
+                                                style: textTheme.bodyMedium?.copyWith(
+                                                  color: _getPasswordSecurityLevelColor(state.passwordSecurityLevel),
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -349,35 +362,21 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
   }
 
   void _handlePasswordLengthChanged(PasswordLengthType passwordLengthType) {
-    generatePasswordPageCubit.changePasswordLengthType(passwordLengthType);
-
     if (passwordLengthType == PasswordLengthType.custom) {
+      generatePasswordPageCubit.selectCustomPasswordLength();
       _requestCustomPasswordLengthFocus();
+      return;
     }
+
+    generatePasswordPageCubit.changePasswordLengthType(passwordLengthType);
   }
 
   void _handleCustomPasswordLengthFocusChanged() {
-    GeneratePasswordPageState state = generatePasswordPageCubit.state;
-
-    if (customPasswordLengthTextEditingController.text.isEmpty) {
-      if (state.passwordLengthType == PasswordLengthType.custom) {
-        generatePasswordPageCubit.changePasswordLengthType(state.characterSetType == CharacterSetType.sip2 ? PasswordLengthType.good : PasswordLengthType.excellent);
-      }
-      return;
-    }
-
     if (customPasswordLengthFocusNode.hasFocus) {
-      generatePasswordPageCubit.changePasswordLengthType(PasswordLengthType.custom);
       return;
     }
 
-    if (customPasswordLengthTextEditingController.value.text == state.passwordLength.toString()) {
-      return;
-    }
-
-    generatePasswordPageCubit
-      ..changePasswordLengthType(PasswordLengthType.custom)
-      ..generatePassword();
+    generatePasswordPageCubit.applyCustomPasswordLength();
   }
 
   void _requestCustomPasswordLengthFocus() {
@@ -439,14 +438,6 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
 
   void _save() {
     AutoRouter.of(context).pop<String>(generatePasswordPageCubit.state.password);
-  }
-
-  void _syncControllerText(TextEditingController textEditingController, String text) {
-    if (textEditingController.text == text) {
-      return;
-    }
-
-    textEditingController.text = text;
   }
 
   Future<void> _showPasswordSecurityHintDialog() async {

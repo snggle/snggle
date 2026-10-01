@@ -7,8 +7,8 @@ import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_passw
 import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/password_security_level.dart';
 
 class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
-  static const int minCustomPasswordLength = 5;
-  static const int maxCustomPasswordLength = 150;
+  static const int minCustomPasswordLength = 4;
+  static const int maxCustomPasswordLength = 256;
 
   static const List<PasswordLengthType> _asciiPasswordLengthOptions = <PasswordLengthType>[
     PasswordLengthType.good,
@@ -52,15 +52,17 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
         ? passwordLengthType
         : _getDefaultPasswordLengthType(state.characterSetType);
 
+    if (nextPasswordLengthType == PasswordLengthType.custom) {
+      selectCustomPasswordLength();
+      return;
+    }
+
     if (state.passwordLengthType == nextPasswordLengthType) {
       return;
     }
 
     emit(state.copyWith(passwordLengthType: nextPasswordLengthType));
-
-    if (nextPasswordLengthType != PasswordLengthType.custom) {
-      generatePassword();
-    }
+    generatePassword();
   }
 
   void updateCustomPasswordLengthText(String text) {
@@ -71,11 +73,41 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
     emit(state.copyWith(customPasswordLengthText: text));
   }
 
+  void selectCustomPasswordLength() {
+    if (state.passwordLengthType == PasswordLengthType.custom) {
+      return;
+    }
+
+    emit(state.copyWith(passwordLengthType: PasswordLengthType.custom));
+  }
+
+  void applyCustomPasswordLength() {
+    if (state.passwordLengthType != PasswordLengthType.custom) {
+      return;
+    }
+
+    if (_isCustomPasswordLengthValid(state.customPasswordLengthText) == false) {
+      emit(state.copyWith(passwordLengthType: _getDefaultPasswordLengthType(state.characterSetType)));
+      generatePassword();
+
+      return;
+    }
+
+    int customPasswordLength = _clampCustomPasswordLength(state.customPasswordLengthText);
+    if (state.passwordLengthType == PasswordLengthType.custom && state.passwordLength == customPasswordLength) {
+      return;
+    }
+
+    emit(state.copyWith(passwordLengthType: PasswordLengthType.custom));
+    generatePassword();
+  }
+
   void toggleObscurePassword() {
     emit(state.copyWith(obscurePasswordBool: !state.obscurePasswordBool));
   }
 
   void generatePassword() {
+    print('Suchar: generate password');
     int passwordLength = _getPasswordLength();
     PasswordGenerator passwordGenerator = _getPasswordGenerator();
     Password password = passwordGenerator.generate(passwordLength);
@@ -126,10 +158,19 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   int _clampCustomPasswordLength(String text) {
     int? passwordLength = int.tryParse(text);
     if (passwordLength == null) {
-      return minCustomPasswordLength;
+      return PasswordLengthType.excellent.defaultLength!;
     }
 
     return passwordLength.clamp(minCustomPasswordLength, maxCustomPasswordLength);
+  }
+
+  bool _isCustomPasswordLengthValid(String text) {
+    int? passwordLength = int.tryParse(text);
+    if (passwordLength == null) {
+      return false;
+    }
+
+    return passwordLength >= minCustomPasswordLength && passwordLength <= maxCustomPasswordLength;
   }
 
   PasswordGenerator _getPasswordGenerator() {
