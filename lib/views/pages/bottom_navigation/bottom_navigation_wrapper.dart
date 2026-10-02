@@ -103,7 +103,7 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
     }
 
     await context.router.root.replaceAll(
-      <PageRouteInfo>[AppEnterPinRoute()],
+      <PageRouteInfo>[AppPinAuthRoute()],
     );
   }
 }
