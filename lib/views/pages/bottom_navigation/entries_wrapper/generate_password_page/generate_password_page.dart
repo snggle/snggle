@@ -192,7 +192,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                       ],
                                       Flexible(
                                         child: Text(
-                                          _getPasswordLengthDescription(passwordLengthType),
+                                          _getPasswordLengthDescription(state.characterSetType, passwordLengthType),
                                           overflow: TextOverflow.ellipsis,
                                           style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
                                         ),
@@ -262,11 +262,11 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                           style: textTheme.bodySmall?.copyWith(color: AppColors.warningOrange),
                                         ),
                                       ),
-                                      Text(
-                                        'Length: ${state.passwordLength}',
-                                        style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
-                                      ),
                                       if (state.characterSetType == CharacterSetType.sip2) ...<Widget>[
+                                        Text(
+                                          'Random: ${state.randomCharacterCount}',
+                                          style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
+                                        ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12),
                                           child: Text(
@@ -276,6 +276,11 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                         ),
                                         Text(
                                           'Checksum: ${state.checksumCharacterCount}',
+                                          style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
+                                        ),
+                                      ] else ...<Widget>[
+                                        Text(
+                                          'Length: ${state.passwordLength}',
                                           style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                         ),
                                       ],
@@ -409,9 +414,13 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     }
   }
 
-  String _getPasswordLengthDescription(PasswordLengthType passwordLengthType) {
+  String _getPasswordLengthDescription(CharacterSetType characterSetType, PasswordLengthType passwordLengthType) {
+    if (characterSetType == CharacterSetType.sip2 && passwordLengthType == PasswordLengthType.good) {
+      return '19 + 1 characters';
+    }
+
     if (passwordLengthType == PasswordLengthType.custom) {
-      return ' characters';
+      return '(${GeneratePasswordPageCubit.minCustomPasswordLength} - ${GeneratePasswordPageCubit.maxCustomPasswordLength}) characters';
     }
 
     return '${passwordLengthType.defaultLength} characters';

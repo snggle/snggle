@@ -11,6 +11,7 @@ class GeneratePasswordPageState extends Equatable {
   final double passwordEntropy;
   final int passwordLength;
   final int checksumCharacterCount;
+  final int randomCharacterCount;
   final bool obscurePasswordBool;
   final PasswordSecurityLevel passwordSecurityLevel;
   final List<PasswordLengthType> passwordLengthOptions;
@@ -23,6 +24,7 @@ class GeneratePasswordPageState extends Equatable {
     required this.passwordEntropy,
     required this.passwordLength,
     required this.checksumCharacterCount,
+    required this.randomCharacterCount,
     required this.passwordSecurityLevel,
     required this.passwordLengthOptions,
     this.obscurePasswordBool = true,
@@ -37,6 +39,7 @@ class GeneratePasswordPageState extends Equatable {
       passwordEntropy: 0,
       passwordLength: 0,
       checksumCharacterCount: 0,
+      randomCharacterCount: 0,
       passwordSecurityLevel: PasswordSecurityLevel.excellent,
       passwordLengthOptions: const <PasswordLengthType>[
         PasswordLengthType.good,
@@ -56,6 +59,7 @@ class GeneratePasswordPageState extends Equatable {
     double? passwordEntropy,
     int? passwordLength,
     int? checksumCharacterCount,
+    int? randomCharacterCount,
     bool? obscurePasswordBool,
     PasswordSecurityLevel? passwordSecurityLevel,
     List<PasswordLengthType>? passwordLengthOptions,
@@ -68,6 +72,7 @@ class GeneratePasswordPageState extends Equatable {
       passwordEntropy: passwordEntropy ?? this.passwordEntropy,
       passwordLength: passwordLength ?? this.passwordLength,
       checksumCharacterCount: checksumCharacterCount ?? this.checksumCharacterCount,
+      randomCharacterCount: randomCharacterCount ?? this.randomCharacterCount,
       obscurePasswordBool: obscurePasswordBool ?? this.obscurePasswordBool,
       passwordSecurityLevel: passwordSecurityLevel ?? this.passwordSecurityLevel,
       passwordLengthOptions: passwordLengthOptions ?? this.passwordLengthOptions,
@@ -83,6 +88,7 @@ class GeneratePasswordPageState extends Equatable {
     passwordEntropy,
     passwordLength,
     checksumCharacterCount,
+    randomCharacterCount,
     obscurePasswordBool,
     passwordSecurityLevel,
     passwordLengthOptions,

@@ -21,6 +21,8 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
     PasswordLengthType.custom,
   ];
 
+  PasswordLengthType _previousPasswordLengthType = PasswordLengthType.excellent;
+
   GeneratePasswordPageCubit({required bool obscurePasswordBool}) : super(GeneratePasswordPageState.initial(obscurePasswordBool: obscurePasswordBool));
 
   Future<void> init() async {
@@ -36,7 +38,6 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
     PasswordLengthType passwordLengthType = passwordLengthOptions.contains(state.passwordLengthType)
         ? state.passwordLengthType
         : _getDefaultPasswordLengthType(characterSetType);
-
     emit(
       state.copyWith(
         characterSetType: characterSetType,
@@ -44,6 +45,11 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
         passwordLengthOptions: passwordLengthOptions,
       ),
     );
+
+    if (passwordLengthType != PasswordLengthType.custom) {
+      _previousPasswordLengthType = passwordLengthType;
+    }
+
     generatePassword();
   }
 
@@ -61,6 +67,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       return;
     }
 
+    _previousPasswordLengthType = nextPasswordLengthType;
     emit(state.copyWith(passwordLengthType: nextPasswordLengthType));
     generatePassword();
   }
@@ -78,6 +85,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       return;
     }
 
+    _previousPasswordLengthType = state.passwordLengthType;
     emit(state.copyWith(passwordLengthType: PasswordLengthType.custom));
   }
 
@@ -87,7 +95,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
     }
 
     if (_isCustomPasswordLengthValid(state.customPasswordLengthText) == false) {
-      emit(state.copyWith(passwordLengthType: _getDefaultPasswordLengthType(state.characterSetType)));
+      emit(state.copyWith(passwordLengthType: _getFallbackPasswordLengthType()));
       generatePassword();
 
       return;
@@ -107,7 +115,6 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   }
 
   void generatePassword() {
-    print('Suchar: generate password');
     int passwordLength = _getPasswordLength();
     PasswordGenerator passwordGenerator = _getPasswordGenerator();
     Password password = passwordGenerator.generate(passwordLength);
@@ -119,6 +126,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
         passwordEntropy: entropy,
         passwordLength: password.password.length,
         checksumCharacterCount: password.checksumCharacterCount,
+        randomCharacterCount: password.randomCharacterCount,
         passwordSecurityLevel: _getPasswordSecurityLevel(entropy),
       ),
     );
@@ -147,6 +155,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   int _getPasswordLength() {
     switch (state.passwordLengthType) {
       case PasswordLengthType.good:
+        return state.characterSetType == CharacterSetType.sip2 ? 20 : PasswordLengthType.good.defaultLength!;
       case PasswordLengthType.excellent:
       case PasswordLengthType.superb:
         return state.passwordLengthType.defaultLength!;
@@ -189,6 +198,14 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       case CharacterSetType.sip2:
         return PasswordLengthType.good;
     }
+  }
+
+  PasswordLengthType _getFallbackPasswordLengthType() {
+    if (_previousPasswordLengthType != PasswordLengthType.custom && state.passwordLengthOptions.contains(_previousPasswordLengthType)) {
+      return _previousPasswordLengthType;
+    }
+
+    return _getDefaultPasswordLengthType(state.characterSetType);
   }
 
   List<PasswordLengthType> _getPasswordLengthOptions(CharacterSetType characterSetType) {
