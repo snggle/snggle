@@ -1,11 +1,11 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/splash_page/splash_page_cubit.dart';
-import 'package:snggle/bloc/splash_page/states/splash_page_enter_pin_state.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_app_set_up_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_error_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_loading_state.dart';
 import 'package:snggle/bloc/splash_page/states/splash_page_master_key_removed_state.dart';
-import 'package:snggle/bloc/splash_page/states/splash_page_setup_app_state.dart';
+import 'package:snggle/bloc/splash_page/states/splash_page_pin_auth_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/managers/secure_storage/secure_storage_key.dart';
 import 'package:snggle/shared/models/password_model.dart';
@@ -64,12 +64,12 @@ Future<void> main() async {
       actualSplashPageCubit = SplashPageCubit();
     });
 
-    test('Should [emit SplashPageSetupPinState] when [Database and MasterKey do not exists]', () async {
+    test('Should [emit SplashPageAppSetUpState] when [Database and MasterKey do not exists]', () async {
       // Act
       await actualSplashPageCubit.init();
 
       // Assert
-      ASplashPageState expectedSplashPageState = SplashPageSetupAppState();
+      ASplashPageState expectedSplashPageState = SplashPageAppSetUpState();
 
       expect(actualSplashPageCubit.state, expectedSplashPageState);
     });
@@ -130,12 +130,12 @@ Future<void> main() async {
       actualSplashPageCubit = SplashPageCubit();
     });
 
-    test('Should [emit SplashPageEnterPinState] when [MasterKey and dataBase exists]', () async {
+    test('Should [emit SplashPagePinAuthState] when [MasterKey and dataBase exists]', () async {
       // Act
       await actualSplashPageCubit.init();
 
       // Assert
-      ASplashPageState expectedSplashPageState = SplashPageEnterPinState();
+      ASplashPageState expectedSplashPageState = SplashPagePinAuthState();
 
       expect(actualSplashPageCubit.state, expectedSplashPageState);
     });
