@@ -40,10 +40,11 @@ import 'package:snggle/views/pages/app_pin_page/app_pin_change_wrapper.dart'
 import 'package:snggle/views/pages/app_pin_page/app_pin_set_up_page.dart'
     as _i6;
 import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart' as _i28;
-import 'package:snggle/views/pages/bottom_navigation/apps_page.dart' as _i7;
 import 'package:snggle/views/pages/bottom_navigation/bottom_navigation_wrapper.dart'
     as _i8;
 import 'package:snggle/views/pages/bottom_navigation/secrets_page.dart' as _i12;
+import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout/auto_logout_settings_page.dart'
+    as _i7;
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/privacy_policy_page/privacy_policy_page.dart'
     as _i11;
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/settings_page.dart'
@@ -279,17 +280,17 @@ class AppPinSetUpRouteArgs {
 }
 
 /// generated route for
-/// [_i7.AppsPage]
-class AppsRoute extends _i27.PageRouteInfo<void> {
-  const AppsRoute({List<_i27.PageRouteInfo>? children})
-    : super(AppsRoute.name, initialChildren: children);
+/// [_i7.AutoLogoutSettingsPage]
+class AutoLogoutSettingsRoute extends _i27.PageRouteInfo<void> {
+  const AutoLogoutSettingsRoute({List<_i27.PageRouteInfo>? children})
+    : super(AutoLogoutSettingsRoute.name, initialChildren: children);
 
-  static const String name = 'AppsRoute';
+  static const String name = 'AutoLogoutSettingsRoute';
 
   static _i27.PageInfo page = _i27.PageInfo(
     name,
     builder: (data) {
-      return const _i7.AppsPage();
+      return const _i7.AutoLogoutSettingsPage();
     },
   );
 }
