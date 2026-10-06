@@ -22,6 +22,7 @@ class ThemeConfig {
       scaffoldBackgroundColor: AppColors.body2,
       canvasColor: AppColors.body2,
       textButtonTheme: textButtonTheme,
+      switchTheme: switchTheme,
     );
   }
 
@@ -55,6 +56,7 @@ class ThemeConfig {
       labelMedium: baseTextStyle?.copyWith(fontSize: 12, letterSpacing: 0.72, height: 1),
       bodyMedium: baseTextStyle?.copyWith(fontSize: 14, letterSpacing: 1.5, height: 1.1),
     );
+
     return baseTheme;
   }
 
@@ -69,6 +71,32 @@ class ThemeConfig {
           color: AppColors.body1,
           fontFamily: 'Bauhaus',
         ),
+      ),
+    );
+  }
+
+  SwitchThemeData get switchTheme {
+    return SwitchThemeData(
+      thumbColor: WidgetStateProperty.resolveWith<Color>(
+        (Set<WidgetState> states) {
+          if (states.contains(WidgetState.disabled)) {
+            return AppColors.darkGrey;
+          }
+
+          return states.contains(WidgetState.selected) ? AppColors.body2 : AppColors.body3;
+        },
+      ),
+      trackColor: WidgetStateProperty.resolveWith<Color>(
+        (Set<WidgetState> states) {
+          if (states.contains(WidgetState.disabled)) {
+            return AppColors.lightGrey2;
+          }
+
+          return states.contains(WidgetState.selected) ? AppColors.body3 : AppColors.middleGrey;
+        },
+      ),
+      trackOutlineColor: const WidgetStatePropertyAll<Color>(
+        Colors.transparent,
       ),
     );
   }

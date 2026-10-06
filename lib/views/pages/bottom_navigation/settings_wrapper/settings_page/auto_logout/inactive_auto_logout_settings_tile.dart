@@ -31,8 +31,6 @@ class InactivityAutoLogoutSettingsTile extends StatelessWidget {
                 'Log out after a period without interaction.',
               ),
               value: autoLogoutState.inactivityLogoutEnabledBool,
-              activeTrackColor: Theme.of(buildContext).colorScheme.primary,
-              activeThumbColor: Theme.of(buildContext).colorScheme.surface,
               onChanged: (bool inactivityLogoutEnabledBool) =>
                   _handleEnabledChanged(
                     buildContext: buildContext,

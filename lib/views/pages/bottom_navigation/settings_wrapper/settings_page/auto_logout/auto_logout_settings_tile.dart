@@ -27,8 +27,6 @@ class AutoLogoutSettingsTile extends StatelessWidget {
             'Log out immediately when the app goes into the background.',
           ),
           value: autoLogoutState.automaticLogoutMode == AutomaticLogoutMode.on,
-          activeTrackColor: Theme.of(buildContext).colorScheme.primary,
-          activeThumbColor: Theme.of(buildContext).colorScheme.surface,
           onChanged: (bool automaticLogoutEnabledBool) => _handleModeChanged(
             buildContext: buildContext,
             automaticLogoutEnabledBool: automaticLogoutEnabledBool,
