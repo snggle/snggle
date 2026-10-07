@@ -20,8 +20,6 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
     PasswordLevelType.custom,
   ];
 
-  PasswordLevelType _previousPasswordLengthType = PasswordLevelType.excellent;
-
   GeneratePasswordPageCubit() : super(GeneratePasswordPageState.initial());
 
   Future<void> init() async {
@@ -37,6 +35,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
     PasswordLevelType passwordLengthType = state.passwordLengthType == PasswordLevelType.custom
         ? PasswordLevelType.custom
         : _getDefaultPasswordLengthType(characterSetType);
+
     emit(
       state.copyWith(
         characterSetType: characterSetType,
@@ -44,10 +43,6 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
         passwordLengthOptions: passwordLengthOptions,
       ),
     );
-
-    if (passwordLengthType != PasswordLevelType.custom) {
-      _previousPasswordLengthType = passwordLengthType;
-    }
 
     generatePassword();
   }
@@ -66,7 +61,6 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       return;
     }
 
-    _previousPasswordLengthType = nextPasswordLengthType;
     emit(state.copyWith(passwordLengthType: nextPasswordLengthType));
     generatePassword();
   }
@@ -84,7 +78,6 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       return;
     }
 
-    _previousPasswordLengthType = state.passwordLengthType;
     emit(state.copyWith(passwordLengthType: PasswordLevelType.custom));
   }
 
@@ -94,9 +87,6 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
     }
 
     if (_isCustomPasswordLengthValid(state.customPasswordLengthText) == false) {
-      emit(state.copyWith(passwordLengthType: _getFallbackPasswordLengthType()));
-      generatePassword();
-
       return;
     }
 
@@ -207,14 +197,6 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       case CharacterSetType.sip2:
         return PasswordLevelType.good;
     }
-  }
-
-  PasswordLevelType _getFallbackPasswordLengthType() {
-    if (_previousPasswordLengthType != PasswordLevelType.custom && state.passwordLengthOptions.contains(_previousPasswordLengthType)) {
-      return _previousPasswordLengthType;
-    }
-
-    return _getDefaultPasswordLengthType(state.characterSetType);
   }
 
   List<PasswordLevelType> _getPasswordLengthOptions(CharacterSetType characterSetType) {

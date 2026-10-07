@@ -91,6 +91,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
             keyboardValueNotifier: keyboardValueNotifier,
             builder: ({required bool customKeyboardVisibleBool, required bool nativeKeyboardVisibleBool}) {
               bool anyKeyboardVisibleBool = customKeyboardVisibleBool || nativeKeyboardVisibleBool;
+              bool confirmButtonActiveBool = state.passwordLengthType != PasswordLevelType.custom || state.customPasswordLengthInvalidBool == false;
 
               return ScrollableLayout(
                 scrollController: scrollController,
@@ -100,7 +101,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                   BottomTooltipItem(
                     label: 'Confirm',
                     assetIconData: AppIcons.menu_save,
-                    onTap: _save,
+                    onTap: confirmButtonActiveBool ? _save : null,
                   ),
                 ],
                 child: LayoutBuilder(
