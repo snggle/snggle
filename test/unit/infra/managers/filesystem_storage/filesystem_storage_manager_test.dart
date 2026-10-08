@@ -390,6 +390,59 @@ void main() {
       );
     });
 
+    test('Should [DELETE vaults tab folder] if [vaults directory becomes EMPTY]', () async {
+      // Act
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1'));
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1/id2'));
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id3'));
+
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'test');
+
+      // Assert
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'entries': <String, dynamic>{
+          'id4.snggle': 'odszyfrowanawartoscdlasecretowwplikuid4.snggle',
+        },
+      };
+
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
+    });
+
+    test('Should [DELETE entries tab folder] if [entries directory becomes EMPTY]', () async {
+      // Act
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('entries/id4'));
+
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'test');
+
+      // Assert
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{
+        'vaults': <String, dynamic>{
+          'id1': <String, dynamic>{
+            'id2.snggle': 'odszyfrowanawartoscdlasecretowwplikuid2.snggle',
+          },
+          'id1.snggle': 'odszyfrowanawartoscdlasecretowwplikuid1.snggle',
+          'id3.snggle': 'odszyfrowanawartoscdlasecretowwplikuid3.snggle',
+        },
+      };
+
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
+    });
+
+    test('Should [DELETE entries and vaults tab folders] if [vaults and entries directories become EMPTY]', () async {
+      // Act
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1'));
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1/id2'));
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id3'));
+      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('entries/id4'));
+
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'test');
+
+      // Assert
+      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{};
+
+      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
+    });
+
     test('Should [throw ChildKeyNotFoundException] if [file path NOT EXIST] in filesystem storage (3rd depth)', () async {
       // Assert
       expect(
