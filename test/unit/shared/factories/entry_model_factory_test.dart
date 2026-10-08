@@ -91,30 +91,10 @@ void main() {
     test('Should [return List of EntryModel] from given List of EntryEntity', () async {
       // Arrange
       List<EntryEntity> actualEntryEntityList = <EntryEntity>[
-        const EntryEntity(
-          id: 1,
-          encryptedBool: false,
-          pinnedBool: false,
-          emailExistsBool: true,
-          usernameExistsBool: true,
-          passwordExistsBool: true,
-          index: 0,
-          filesystemPathString: 'entries/entry1',
-          name: 'ENTRY 0',
-          website: 'https://snggle.com',
-        ),
-        const EntryEntity(
-          id: 2,
-          encryptedBool: false,
-          pinnedBool: false,
-          emailExistsBool: false,
-          usernameExistsBool: true,
-          passwordExistsBool: false,
-          index: 1,
-          filesystemPathString: 'entries/group1/entry2',
-          name: 'ENTRY 1',
-          website: 'https://snggle.com',
-        ),
+        // @formatter:off
+        const EntryEntity(id: 1, encryptedBool: false, pinnedBool: false, emailExistsBool: true, usernameExistsBool: true, passwordExistsBool: true, index: 0, filesystemPathString: 'entries/entry1', name: 'ENTRY 0', website: 'https://snggle.com'),
+        const EntryEntity(id: 2, encryptedBool: false, pinnedBool: false, emailExistsBool: false, usernameExistsBool: true, passwordExistsBool: false, index: 1, filesystemPathString: 'entries/group1/entry2', name: 'ENTRY 1', website: 'https://snggle.com'),
+        // @formatter:on
       ];
 
       // Act

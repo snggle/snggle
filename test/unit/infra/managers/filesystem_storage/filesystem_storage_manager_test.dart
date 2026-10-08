@@ -435,7 +435,7 @@ void main() {
       await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id3'));
       await actualFilesystemStorageManager.delete(FilesystemPath.fromString('entries/id4'));
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: 'test');
+      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: '');
 
       // Assert
       Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{};
