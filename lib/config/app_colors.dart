@@ -12,8 +12,13 @@ class AppColors {
   static Color darkGrey = const Color(0xFF969696);
   static Color blue = const Color(0xff00a6ff);
   static Color purple = const Color(0xff9900ff);
+  static Color darkGreen = const Color(0xff087B08);
   static Color warningOrange = const Color(0xFFFF9100);
   static Color warningRed = const Color(0xFFFF5050);
+
+  static Color good = const Color(0xFF0F766E);
+  static Color excellent = const Color(0xFF0369A1);
+  static Color magnificent = const Color(0xFF7C3AED);
 
   static Color divider = const Color(0xFFC7C7C7);
   static Color lineNumbers = const Color(0xFFF3F3F3);

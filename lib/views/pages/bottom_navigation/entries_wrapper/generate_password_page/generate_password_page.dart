@@ -173,14 +173,14 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                 onSelected: _handlePasswordLengthChanged,
                                 itemBuilder: (BuildContext context, PasswordLevelType passwordLengthType) {
                                   bool customLengthSelectedBool = passwordLengthType == PasswordLevelType.custom;
-                                  Color passwordColor = _getPasswordLengthColor(passwordLengthType);
+                                  Color passwordColor = _getPasswordSecurityLevelColor(passwordLengthType);
 
                                   return Row(
                                     children: <Widget>[
                                       if (customLengthSelectedBool)
                                         GradientText(
                                           passwordLengthType.displayName,
-                                          gradient: AppColors.customPasswordGradient,
+                                          gradient: AppColors.customPasswordGradient, //_test(passwordLengthType),
                                           overflow: TextOverflow.ellipsis,
                                           textStyle: textTheme.bodyMedium,
                                         )
@@ -436,20 +436,6 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     }
   }
 
-  Color _getPasswordLengthColor(PasswordLevelType passwordLengthType) {
-    switch (passwordLengthType) {
-      case PasswordLevelType.excellent:
-        return AppColors.blue;
-      case PasswordLevelType.magnificent:
-        return AppColors.purple;
-      //case PasswordLevelType.custom:
-      //return AppColors.customPasswordGradient;
-      case PasswordLevelType.good:
-      default:
-        return AppColors.body3;
-    }
-  }
-
   String _getPasswordLengthDescription(CharacterSetType characterSetType, PasswordLevelType passwordLengthType) {
     if (characterSetType == CharacterSetType.sip2 && passwordLengthType == PasswordLevelType.good) {
       return '19 + 1 characters';
@@ -469,12 +455,30 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       case PasswordLevelType.weak:
         return AppColors.warningOrange;
       case PasswordLevelType.excellent:
-        return AppColors.blue;
+        return AppColors.excellent;
       case PasswordLevelType.magnificent:
-        return AppColors.purple;
+        return AppColors.magnificent;
       case PasswordLevelType.good:
+        return AppColors.good;
       default:
         return AppColors.darkGrey;
+    }
+  }
+
+  Gradient _test(PasswordLevelType passwordSecurityLevel) {
+    switch (passwordSecurityLevel) {
+      case PasswordLevelType.unsafe:
+        return AppColors.primaryGradient;
+      case PasswordLevelType.weak:
+        return AppColors.validationGradient;
+      case PasswordLevelType.excellent:
+        return AppColors.warningOrangeGradient;
+      case PasswordLevelType.magnificent:
+        return AppColors.warningRedGradient;
+      case PasswordLevelType.good:
+        return AppColors.validationGradient;
+      default:
+        return AppColors.customPasswordGradient;
     }
   }
 
