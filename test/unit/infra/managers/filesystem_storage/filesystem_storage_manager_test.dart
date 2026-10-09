@@ -428,20 +428,23 @@ void main() {
       expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
     });
 
-    test('Should [DELETE entries and vaults tab folders] if [vaults and entries directories become EMPTY]', () async {
-      // Act
-      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1'));
-      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1/id2'));
-      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id3'));
-      await actualFilesystemStorageManager.delete(FilesystemPath.fromString('entries/id4'));
+    test(
+      'Should [DELETE vaults, entries and test (filesystem_storage equivalent) directories] if [vaults, entries and test directories become EMPTY]',
+      () async {
+        // Act
+        await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1'));
+        await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id1/id2'));
+        await actualFilesystemStorageManager.delete(FilesystemPath.fromString('vaults/id3'));
+        await actualFilesystemStorageManager.delete(FilesystemPath.fromString('entries/id4'));
 
-      Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: '');
+        Map<String, dynamic> actualUpdatedFilesystemStructure = testDatabase.readRawFilesystem(path: '');
 
-      // Assert
-      Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{};
+        // Assert
+        Map<String, dynamic> expectedUpdatedFilesystemStructure = <String, dynamic>{};
 
-      expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
-    });
+        expect(actualUpdatedFilesystemStructure, expectedUpdatedFilesystemStructure);
+      },
+    );
 
     test('Should [throw ChildKeyNotFoundException] if [file path NOT EXIST] in filesystem storage (3rd depth)', () async {
       // Assert
