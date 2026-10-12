@@ -4,29 +4,27 @@ import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_passw
 
 class GeneratePasswordPageState extends Equatable {
   final CharacterSetType characterSetType;
-  final PasswordLevelType passwordLengthType;
-  final String customPasswordLengthText;
+  final PasswordLevelType calculatedPasswordLevelType;
+  final PasswordLevelType selectedPasswordLevelType;
+  final String customPasswordLength;
   final String password;
   final double passwordEntropy;
-  final int passwordLength;
   final int checksumCharacterCount;
   final int randomCharacterCount;
   final bool obscurePasswordBool;
-  final PasswordLevelType passwordSecurityLevel;
-  final List<PasswordLevelType> passwordLengthOptions;
+  final List<PasswordLevelType> passwordLevelTypeList;
   final bool customPasswordLengthInvalidBool;
 
   const GeneratePasswordPageState({
     required this.characterSetType,
-    required this.passwordLengthType,
-    required this.customPasswordLengthText,
+    required this.calculatedPasswordLevelType,
+    required this.selectedPasswordLevelType,
+    required this.customPasswordLength,
     required this.password,
     required this.passwordEntropy,
-    required this.passwordLength,
     required this.checksumCharacterCount,
     required this.randomCharacterCount,
-    required this.passwordSecurityLevel,
-    required this.passwordLengthOptions,
+    required this.passwordLevelTypeList,
     this.obscurePasswordBool = true,
     this.customPasswordLengthInvalidBool = false,
   });
@@ -34,15 +32,14 @@ class GeneratePasswordPageState extends Equatable {
   factory GeneratePasswordPageState.initial() {
     return const GeneratePasswordPageState(
       characterSetType: CharacterSetType.ascii,
-      passwordLengthType: PasswordLevelType.excellent,
-      customPasswordLengthText: '',
+      calculatedPasswordLevelType: PasswordLevelType.excellent,
+      selectedPasswordLevelType: PasswordLevelType.excellent,
+      customPasswordLength: '',
       password: '',
       passwordEntropy: 0,
-      passwordLength: 0,
       checksumCharacterCount: 0,
       randomCharacterCount: 0,
-      passwordSecurityLevel: PasswordLevelType.excellent,
-      passwordLengthOptions: <PasswordLevelType>[
+      passwordLevelTypeList: <PasswordLevelType>[
         PasswordLevelType.good,
         PasswordLevelType.excellent,
         PasswordLevelType.magnificent,
@@ -53,30 +50,28 @@ class GeneratePasswordPageState extends Equatable {
 
   GeneratePasswordPageState copyWith({
     CharacterSetType? characterSetType,
-    PasswordLevelType? passwordLengthType,
-    String? customPasswordLengthText,
+    PasswordLevelType? calculatedPasswordLevelType,
+    PasswordLevelType? selectedPasswordLevelType,
+    String? customPasswordLength,
     String? password,
     double? passwordEntropy,
-    int? passwordLength,
     int? checksumCharacterCount,
     int? randomCharacterCount,
     bool? obscurePasswordBool,
-    PasswordLevelType? passwordSecurityLevel,
-    List<PasswordLevelType>? passwordLengthOptions,
+    List<PasswordLevelType>? passwordLevelTypeList,
     bool? customPasswordLengthInvalidBool,
   }) {
     return GeneratePasswordPageState(
       characterSetType: characterSetType ?? this.characterSetType,
-      passwordLengthType: passwordLengthType ?? this.passwordLengthType,
-      customPasswordLengthText: customPasswordLengthText ?? this.customPasswordLengthText,
+      calculatedPasswordLevelType: calculatedPasswordLevelType ?? this.calculatedPasswordLevelType,
+      selectedPasswordLevelType: selectedPasswordLevelType ?? this.selectedPasswordLevelType,
+      customPasswordLength: customPasswordLength ?? this.customPasswordLength,
       password: password ?? this.password,
       passwordEntropy: passwordEntropy ?? this.passwordEntropy,
-      passwordLength: passwordLength ?? this.passwordLength,
       checksumCharacterCount: checksumCharacterCount ?? this.checksumCharacterCount,
       randomCharacterCount: randomCharacterCount ?? this.randomCharacterCount,
       obscurePasswordBool: obscurePasswordBool ?? this.obscurePasswordBool,
-      passwordSecurityLevel: passwordSecurityLevel ?? this.passwordSecurityLevel,
-      passwordLengthOptions: passwordLengthOptions ?? this.passwordLengthOptions,
+      passwordLevelTypeList: passwordLevelTypeList ?? this.passwordLevelTypeList,
       customPasswordLengthInvalidBool: customPasswordLengthInvalidBool ?? this.customPasswordLengthInvalidBool,
     );
   }
@@ -84,16 +79,15 @@ class GeneratePasswordPageState extends Equatable {
   @override
   List<Object> get props => <Object>[
     characterSetType,
-    passwordLengthType,
-    customPasswordLengthText,
+    calculatedPasswordLevelType,
+    selectedPasswordLevelType,
+    customPasswordLength,
     password,
     passwordEntropy,
-    passwordLength,
     checksumCharacterCount,
     randomCharacterCount,
     obscurePasswordBool,
-    passwordSecurityLevel,
-    passwordLengthOptions,
+    passwordLevelTypeList,
     customPasswordLengthInvalidBool,
   ];
 }

@@ -81,7 +81,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       bloc: generatePasswordPageCubit,
       builder: (BuildContext context, GeneratePasswordPageState state) {
         passwordTextEditingController.text = state.password;
-        customPasswordLengthTextEditingController.text = state.customPasswordLengthText;
+        customPasswordLengthTextEditingController.text = state.customPasswordLength;
 
         return CustomScaffold(
           title: 'GENERATE PASSWORD',
@@ -90,7 +90,8 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
             keyboardValueNotifier: keyboardValueNotifier,
             builder: ({required bool customKeyboardVisibleBool, required bool nativeKeyboardVisibleBool}) {
               bool anyKeyboardVisibleBool = customKeyboardVisibleBool || nativeKeyboardVisibleBool;
-              bool confirmButtonActiveBool = state.passwordLengthType != PasswordLevelType.custom || state.customPasswordLengthInvalidBool == false;
+              bool confirmButtonActiveBool =
+                  state.selectedPasswordLevelType != PasswordLevelType.custom || state.customPasswordLengthInvalidBool == false;
 
               return ScrollableLayout(
                 scrollController: scrollController,
@@ -158,7 +159,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                   );
                                 },
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: 24),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 16),
                                 child: Text(
@@ -167,8 +168,8 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                 ),
                               ),
                               CustomSingleSelectMenu<PasswordLevelType>(
-                                selectedValue: state.passwordLengthType,
-                                options: state.passwordLengthOptions,
+                                selectedValue: state.selectedPasswordLevelType,
+                                options: state.passwordLevelTypeList,
                                 onSelected: _handlePasswordLengthChanged,
                                 itemBuilder: (BuildContext context, PasswordLevelType passwordLengthType) {
                                   bool customLengthSelectedBool = passwordLengthType == PasswordLevelType.custom;
@@ -222,7 +223,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                   );
                                 },
                               ),
-                              if (state.customPasswordLengthInvalidBool && state.passwordLengthType == PasswordLevelType.custom)
+                              if (state.customPasswordLengthInvalidBool && state.selectedPasswordLevelType == PasswordLevelType.custom)
                                 const Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 40),
                                   child: ErrorMessageListTile(
@@ -404,21 +405,21 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
 
   void _handlePasswordLengthChanged(PasswordLevelType passwordLengthType) {
     if (passwordLengthType == PasswordLevelType.custom) {
-      generatePasswordPageCubit.selectCustomPasswordLength();
+      generatePasswordPageCubit.selectCustomPasswordLevel();
       _requestCustomPasswordLengthFocus();
       return;
     }
 
-    generatePasswordPageCubit.changePasswordLengthType(passwordLengthType);
+    generatePasswordPageCubit.changePasswordLevelType(passwordLengthType);
   }
 
   void _handleCustomPasswordLengthFocusChanged() {
-    generatePasswordPageCubit.selectCustomPasswordLength();
+    generatePasswordPageCubit.selectCustomPasswordLevel();
     if (customPasswordLengthFocusNode.hasFocus) {
       return;
     }
 
-    generatePasswordPageCubit.applyCustomPasswordLength();
+    generatePasswordPageCubit.applyCustomPasswordLevel();
   }
 
   void _requestCustomPasswordLengthFocus() {
@@ -504,10 +505,10 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
         title: 'ASCII Character Set\n',
         content: const Text(
           'This character set contains 94 non-whitespace ASCII characters:'
-          '\n\nUppercase letters: ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-          '\n\nLowercase letters: abcdefghijklmnopqrstuvwxyz'
-          '\n\nDigits: 0123456789'
-          '\n\nSymbols: '
+          '\n\nUppercase letters:\nABCDEFGHIJKLMNOPQRSTUVWXYZ'
+          '\n\nLowercase letters:\nabcdefghijklmnopqrstuvwxyz'
+          '\n\nDigits:\n0123456789'
+          '\n\nSymbols:\n'
           r'''!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~''',
           textAlign: TextAlign.center,
         ),
@@ -530,13 +531,13 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
         title: 'Snggle Improvement Proposal - 2 Character Set',
         content: const Text(
           'This character set contains 94 non-whitespace ASCII characters:'
-          '\n\nUppercase letters: ABCDEFGHJKLMNPQRSTUVWXYZ'
+          '\n\nUppercase letters:\nABCDEFGHJKLMNPQRSTUVWXYZ'
           '\n - all uppercase characters excluding I and O'
-          '\n\nLowercase letters: abcdefghijklmnopqrstuvwxyz'
+          '\n\nLowercase letters:\nabcdefghijklmnopqrstuvwxyz'
           '\n - all lowercase characters excluding l'
-          '\n\nDigits: 0123456789'
+          '\n\nDigits:\n0123456789'
           '\n - all decimals excluding 0 and 1'
-          '\n\nSymbols: '
+          '\n\nSymbols:\n'
           '''!+-''',
           textAlign: TextAlign.center,
         ),

@@ -9,13 +9,13 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   static const int minCustomPasswordLength = 4;
   static const int maxCustomPasswordLength = 256;
 
-  static const List<PasswordLevelType> _asciiPasswordLengthOptions = <PasswordLevelType>[
+  static const List<PasswordLevelType> _asciiPasswordLevelOptions = <PasswordLevelType>[
     PasswordLevelType.good,
     PasswordLevelType.excellent,
     PasswordLevelType.magnificent,
     PasswordLevelType.custom,
   ];
-  static const List<PasswordLevelType> _sip2PasswordLengthOptions = <PasswordLevelType>[
+  static const List<PasswordLevelType> _sip2PasswordLevelOptions = <PasswordLevelType>[
     PasswordLevelType.good,
     PasswordLevelType.custom,
   ];
@@ -31,71 +31,72 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       return;
     }
 
-    List<PasswordLevelType> passwordLengthOptions = _getPasswordLengthOptions(characterSetType);
-    PasswordLevelType passwordLengthType = state.passwordLengthType == PasswordLevelType.custom
+    List<PasswordLevelType> passwordLevelOptions = _getPasswordLevelOptions(characterSetType);
+    PasswordLevelType passwordLevelType =
+        (state.selectedPasswordLevelType == PasswordLevelType.custom && state.customPasswordLengthInvalidBool == false)
         ? PasswordLevelType.custom
-        : _getDefaultPasswordLengthType(characterSetType);
+        : _getDefaultPasswordLevelTypeOptions(characterSetType);
 
     emit(
       state.copyWith(
         characterSetType: characterSetType,
-        passwordLengthType: passwordLengthType,
-        passwordLengthOptions: passwordLengthOptions,
+        selectedPasswordLevelType: passwordLevelType,
+        passwordLevelTypeList: passwordLevelOptions,
       ),
     );
 
     generatePassword();
   }
 
-  void changePasswordLengthType(PasswordLevelType passwordLengthType) {
-    PasswordLevelType nextPasswordLengthType = state.passwordLengthOptions.contains(passwordLengthType)
-        ? passwordLengthType
-        : _getDefaultPasswordLengthType(state.characterSetType);
+  void changePasswordLevelType(PasswordLevelType passwordLevelType) {
+    PasswordLevelType nextPasswordLevelTypeType = state.passwordLevelTypeList.contains(passwordLevelType)
+        ? passwordLevelType
+        : _getDefaultPasswordLevelTypeOptions(state.characterSetType);
 
-    if (nextPasswordLengthType == PasswordLevelType.custom) {
-      selectCustomPasswordLength();
+    if (nextPasswordLevelTypeType == PasswordLevelType.custom) {
+      selectCustomPasswordLevel();
       return;
     }
 
-    if (state.passwordLengthType == nextPasswordLengthType) {
+    if (state.selectedPasswordLevelType == nextPasswordLevelTypeType) {
       return;
     }
 
-    emit(state.copyWith(passwordLengthType: nextPasswordLengthType));
+    emit(state.copyWith(selectedPasswordLevelType: nextPasswordLevelTypeType));
     generatePassword();
   }
 
   void updateCustomPasswordLengthText(String text) {
-    if (state.customPasswordLengthText == text) {
+    if (state.customPasswordLength == text) {
       return;
     }
 
-    emit(state.copyWith(customPasswordLengthText: text));
+    emit(state.copyWith(customPasswordLength: text));
   }
 
-  void selectCustomPasswordLength() {
-    if (state.passwordLengthType == PasswordLevelType.custom) {
+  void selectCustomPasswordLevel() {
+    if (state.selectedPasswordLevelType == PasswordLevelType.custom) {
       return;
     }
 
-    emit(state.copyWith(passwordLengthType: PasswordLevelType.custom));
+    emit(state.copyWith(selectedPasswordLevelType: PasswordLevelType.custom));
   }
 
-  void applyCustomPasswordLength() {
-    if (state.passwordLengthType != PasswordLevelType.custom) {
+  void applyCustomPasswordLevel() {
+    if (state.selectedPasswordLevelType != PasswordLevelType.custom) {
       return;
     }
 
-    if (_isCustomPasswordLengthValid(state.customPasswordLengthText) == false) {
+    if (_isCustomPasswordLengthValid(state.customPasswordLength) == false) {
       return;
     }
 
-    int customPasswordLength = _clampCustomPasswordLength(state.customPasswordLengthText);
-    if (state.passwordLengthType == PasswordLevelType.custom && state.passwordLength == customPasswordLength) {
+    int customPasswordLevelLength = _clampCustomPasswordLength(state.customPasswordLength);
+    if (state.selectedPasswordLevelType == PasswordLevelType.custom && state.password.length == customPasswordLevelLength) {
       return;
     }
 
-    emit(state.copyWith(passwordLengthType: PasswordLevelType.custom));
+    emit(state.copyWith(selectedPasswordLevelType: PasswordLevelType.custom));
     generatePassword();
   }
 
@@ -113,15 +114,14 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       state.copyWith(
         password: password.password,
         passwordEntropy: entropy,
-        passwordLength: password.password.length,
         checksumCharacterCount: password.checksumCharacterCount,
         randomCharacterCount: password.randomCharacterCount,
-        passwordSecurityLevel: _getPasswordSecurityLevel(entropy),
+        calculatedPasswordLevelType: _calculatePasswordLevel(entropy),
       ),
     );
   }
 
-  PasswordLevelType _getPasswordSecurityLevel(double entropy) {
+  PasswordLevelType _calculatePasswordLevel(double entropy) {
     if (entropy < 80) {
       return PasswordLevelType.unsafe;
     }
@@ -142,9 +142,9 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   }
 
   int _getPasswordLength() {
-    switch (state.passwordLengthType) {
+    switch (state.selectedPasswordLevelType) {
       case PasswordLevelType.custom:
-        return _clampCustomPasswordLength(state.customPasswordLengthText);
+        return _clampCustomPasswordLength(state.customPasswordLength);
       case PasswordLevelType.good:
         return state.characterSetType == CharacterSetType.sip2
             ? PasswordLevelType.good.defaultLengthSip2!
@@ -152,28 +152,31 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       case PasswordLevelType.excellent:
       case PasswordLevelType.magnificent:
       default:
-        return state.passwordLengthType.defaultLengthAscii!;
+        return state.selectedPasswordLevelType.defaultLengthAscii!;
     }
   }
 
   int _clampCustomPasswordLength(String text) {
-    int? passwordLength = int.tryParse(text);
-    if (passwordLength == null) {
+    int? passwordLevel = int.tryParse(text);
+    if (passwordLevel == null) {
       return PasswordLevelType.excellent.defaultLengthAscii!;
     }
 
-    // TODO(KamiL): 4 chars long passwords are generated when switching char set with Custom selected and less than 4 custom pass length
-    return passwordLength.clamp(minCustomPasswordLength, maxCustomPasswordLength);
+    if (state.selectedPasswordLevelType == PasswordLevelType.custom && state.customPasswordLengthInvalidBool) {
+      emit(state.copyWith(selectedPasswordLevelType: _getDefaultPasswordLevelTypeOptions(state.characterSetType)));
+    }
+
+    return passwordLevel.clamp(minCustomPasswordLength, maxCustomPasswordLength);
   }
 
   bool _isCustomPasswordLengthValid(String text) {
-    int? passwordLength = int.tryParse(text);
-    if (passwordLength == null) {
+    int? passwordLevel = int.tryParse(text);
+    if (passwordLevel == null) {
       emit(state.copyWith(customPasswordLengthInvalidBool: true));
       return false;
     }
 
-    if (passwordLength >= minCustomPasswordLength && passwordLength <= maxCustomPasswordLength) {
+    if (passwordLevel >= minCustomPasswordLength && passwordLevel <= maxCustomPasswordLength) {
       emit(state.copyWith(customPasswordLengthInvalidBool: false));
       return true;
     } else {
@@ -191,7 +194,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
     }
   }
 
-  PasswordLevelType _getDefaultPasswordLengthType(CharacterSetType characterSetType) {
+  PasswordLevelType _getDefaultPasswordLevelTypeOptions(CharacterSetType characterSetType) {
     switch (characterSetType) {
       case CharacterSetType.ascii:
         return PasswordLevelType.excellent;
@@ -200,12 +203,12 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
     }
   }
 
-  List<PasswordLevelType> _getPasswordLengthOptions(CharacterSetType characterSetType) {
+  List<PasswordLevelType> _getPasswordLevelOptions(CharacterSetType characterSetType) {
     switch (characterSetType) {
       case CharacterSetType.ascii:
-        return _asciiPasswordLengthOptions;
+        return _asciiPasswordLevelOptions;
       case CharacterSetType.sip2:
-        return _sip2PasswordLengthOptions;
+        return _sip2PasswordLevelOptions;
     }
   }
 }
