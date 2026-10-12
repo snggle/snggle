@@ -162,6 +162,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       return PasswordLevelType.excellent.defaultLengthAscii!;
     }
 
+    // TODO(KamiL): 4 chars long passwords are generated when switching char set with Custom selected and less than 4 custom pass length
     return passwordLength.clamp(minCustomPasswordLength, maxCustomPasswordLength);
   }
 

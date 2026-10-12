@@ -22,7 +22,11 @@ class GradientText extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShaderMask(
       blendMode: BlendMode.srcIn,
-      shaderCallback: gradient.createShader,
+      shaderCallback: RadialGradient(
+        radius: 8,
+        center: Alignment.topLeft,
+        colors: gradient.colors,
+      ).createShader,
       child: Text(
         text,
         maxLines: maxLines,

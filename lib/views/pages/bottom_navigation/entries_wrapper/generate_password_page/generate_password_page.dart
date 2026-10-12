@@ -17,7 +17,6 @@ import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
-import 'package:snggle/views/widgets/generic/gradient_text.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
@@ -177,26 +176,18 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
 
                                   return Row(
                                     children: <Widget>[
-                                      if (customLengthSelectedBool)
-                                        GradientText(
-                                          passwordLengthType.displayName,
-                                          gradient: AppColors.customPasswordGradient, //_test(passwordLengthType),
-                                          overflow: TextOverflow.ellipsis,
-                                          textStyle: textTheme.bodyMedium,
-                                        )
-                                      else
-                                        Text(
-                                          passwordLengthType.displayName,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: textTheme.bodyMedium?.copyWith(
-                                            color: passwordColor,
-                                          ),
+                                      Text(
+                                        passwordLengthType.displayName,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: textTheme.bodyMedium?.copyWith(
+                                          color: passwordColor,
                                         ),
+                                      ),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 22),
                                         child: Text(
                                           '\u2022',
-                                          style: textTheme.bodyMedium?.copyWith(color: passwordColor),
+                                          style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
                                         ),
                                       ),
                                       if (customLengthSelectedBool) ...<Widget>[
@@ -251,7 +242,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                           width: 176,
                                           label: 'Re-roll',
                                           icon: const AssetIcon(AppIcons.dice),
-                                          onPressed: generatePasswordPageCubit.generatePassword,
+                                          onPressed: confirmButtonActiveBool ? generatePasswordPageCubit.generatePassword : null,
                                         ),
                                       ],
                                     ),
@@ -267,7 +258,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                     child: CustomTextField(
                                       readOnlyBool: true,
                                       enableInteractiveSelectionBool: true,
-                                      textEditingController: passwordTextEditingController,
+                                      textEditingController: confirmButtonActiveBool ? passwordTextEditingController : TextEditingController(),
                                       inputBorder: InputBorder.none,
                                       keyboardType: TextInputType.text,
                                       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
@@ -290,38 +281,45 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                   child: Row(
                                     children: <Widget>[
                                       Text(
-                                        'Entropy: ${state.passwordEntropy.toStringAsFixed(1)} bits',
+                                        confirmButtonActiveBool ? 'Entropy: ${state.passwordEntropy.toStringAsFixed(1)} bits' : 'Entropy: N/A',
                                         style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                       ),
-                                      Padding(
+                                      /*Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 12),
                                         child: Text(
                                           '\u2022',
-                                          style: textTheme.bodySmall?.copyWith(color: _getPasswordSecurityLevelColor(state.passwordSecurityLevel)),
+                                          style: textTheme.bodySmall?.copyWith(color: AppColors.body3),
                                         ),
-                                      ),
+                                      ),*/
                                       if (state.characterSetType == CharacterSetType.sip2) ...<Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                                          child: Text(
+                                            '\u2022',
+                                            style: textTheme.bodySmall?.copyWith(color: AppColors.body3),
+                                          ),
+                                        ),
                                         Text(
-                                          'Random: ${state.randomCharacterCount}',
+                                          confirmButtonActiveBool ? 'Random: ${state.randomCharacterCount}' : 'Random: N/A',
                                           style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12),
                                           child: Text(
                                             '\u2022',
-                                            style: textTheme.bodySmall?.copyWith(color: _getPasswordSecurityLevelColor(state.passwordSecurityLevel)),
+                                            style: textTheme.bodySmall?.copyWith(color: AppColors.body3),
                                           ),
                                         ),
                                         Text(
-                                          'Checksum: ${state.checksumCharacterCount}',
+                                          confirmButtonActiveBool ? 'Checksum: ${state.checksumCharacterCount}' : 'Checksum: N/A',
                                           style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                         ),
-                                      ] else ...<Widget>[
+                                      ] /*else ...<Widget>[
                                         Text(
-                                          'Length: ${state.passwordLength}',
+                                          confirmButtonActiveBool ? 'Length: N/A' :'Length: ${state.passwordLength}',
                                           style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                         ),
-                                      ],
+                                      ],*/,
                                     ],
                                   ),
                                 ),
@@ -332,7 +330,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                     child: Stack(
                                       alignment: Alignment.center,
                                       children: <Widget>[
-                                        Row(
+                                        /*Row(
                                           children: <Widget>[
                                             Align(
                                               alignment: Alignment.centerLeft,
@@ -364,7 +362,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                               ),
                                             ),
                                           ],
-                                        ),
+                                        ),*/
                                         Align(
                                           alignment: Alignment.centerRight,
                                           child: Material(
@@ -459,26 +457,9 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       case PasswordLevelType.magnificent:
         return AppColors.magnificent;
       case PasswordLevelType.good:
-        return AppColors.good;
+      //return AppColors.good;
       default:
-        return AppColors.darkGrey;
-    }
-  }
-
-  Gradient _test(PasswordLevelType passwordSecurityLevel) {
-    switch (passwordSecurityLevel) {
-      case PasswordLevelType.unsafe:
-        return AppColors.primaryGradient;
-      case PasswordLevelType.weak:
-        return AppColors.validationGradient;
-      case PasswordLevelType.excellent:
-        return AppColors.warningOrangeGradient;
-      case PasswordLevelType.magnificent:
-        return AppColors.warningRedGradient;
-      case PasswordLevelType.good:
-        return AppColors.validationGradient;
-      default:
-        return AppColors.customPasswordGradient;
+        return AppColors.body3;
     }
   }
 
