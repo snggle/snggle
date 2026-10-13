@@ -223,13 +223,18 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                   );
                                 },
                               ),
-                              if (state.customPasswordLengthInvalidBool && state.selectedPasswordLevelType == PasswordLevelType.custom)
-                                const Padding(
+                              AnimatedOpacity(
+                                opacity: state.customPasswordLengthInvalidBool && state.selectedPasswordLevelType == PasswordLevelType.custom
+                                    ? 1.0
+                                    : 0.0,
+                                duration: const Duration(milliseconds: 150),
+                                child: const Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 40),
                                   child: ErrorMessageListTile(
                                     message: 'Password length must be at least 4',
                                   ),
                                 ),
+                              ),
                               if (anyKeyboardVisibleBool == false) ...<Widget>[
                                 const Spacer(),
                                 Padding(
@@ -249,6 +254,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                     ),
                                   ),
                                 ),
+                                const Spacer(),
                                 const SizedBox(height: 12),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -400,6 +406,10 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
   }
 
   void _handleCharacterSetChanged(CharacterSetType passwordCharacterSetType) {
+    if (customPasswordLengthFocusNode.hasFocus) {
+      _cancelCustomPasswordLengthFocus();
+    }
+
     generatePasswordPageCubit.changeCharacterSet(passwordCharacterSetType);
   }
 
@@ -408,6 +418,10 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       generatePasswordPageCubit.selectCustomPasswordLevel();
       _requestCustomPasswordLengthFocus();
       return;
+    }
+
+    if (customPasswordLengthFocusNode.hasFocus) {
+      _cancelCustomPasswordLengthFocus();
     }
 
     generatePasswordPageCubit.changePasswordLevelType(passwordLengthType);
@@ -424,6 +438,10 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
 
   void _requestCustomPasswordLengthFocus() {
     customPasswordLengthFocusNode.requestFocus();
+  }
+
+  void _cancelCustomPasswordLengthFocus() {
+    customPasswordLengthFocusNode.unfocus();
   }
 
   String _getPasswordCharacterSetTitle(CharacterSetType passwordCharacterSetType) {
