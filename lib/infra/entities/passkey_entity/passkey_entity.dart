@@ -1,6 +1,3 @@
-
-import 'dart:typed_data';
-
 import 'package:equatable/equatable.dart';
 import 'package:isar_community/isar.dart';
 import 'package:snggle/shared/models/passkeys/passkey_model.dart';
@@ -19,8 +16,8 @@ class PasskeyEntity extends Equatable {
   final String userName;
   final String userDisplayName;
 
-  final Uint8List userId;
-  final Uint8List credentialId;
+  final List<int> userId;
+  final List<int> credentialId;
 
   final int algorithm;
   final int signCount;
@@ -72,8 +69,8 @@ class PasskeyEntity extends Equatable {
     String? rpName,
     String? userName,
     String? userDisplayName,
-    Uint8List? userId,
-    Uint8List? credentialId,
+    List<int>? userId,
+    List<int>? credentialId,
     int? algorithm,
     int? signCount,
     String? filesystemPathString,
@@ -97,8 +94,7 @@ class PasskeyEntity extends Equatable {
   }
 
   @ignore
-  FilesystemPath get filesystemPath =>
-      FilesystemPath.fromString(filesystemPathString);
+  FilesystemPath get filesystemPath => FilesystemPath.fromString(filesystemPathString);
 
   @override
   List<Object?> get props => <Object?>[
