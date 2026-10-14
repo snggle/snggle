@@ -15,8 +15,6 @@ class PasskeyModelFactory {
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
   Future<PasskeyModel> createNewPasskey({
-    required FilesystemPath parentFilesystemPath,
-    required String name,
     required String rpId,
     required String rpName,
     required String userName,
@@ -24,49 +22,46 @@ class PasskeyModelFactory {
     required Uint8List userId,
     required Uint8List credentialId,
     required Uint8List privateKey,
-    required PasswordModel passwordModel,
-    int algorithm = -7,
   }) async {
-    if (privateKey.length != 32 || credentialId.isEmpty || userId.isEmpty || rpId.isEmpty || algorithm != -7) {
-      throw ArgumentError('Invalid ES256 passkey data');
-    }
-
-    PasskeyModel item = PasskeyModel(
+    PasskeyModel passkeyModel = PasskeyModel(
       id: Isar.autoIncrement,
       encryptedBool: false,
       pinnedBool: false,
       filesystemPath: const FilesystemPath.empty(),
-      name: name,
+      name: rpName,
       rpId: rpId,
       rpName: rpName,
       userName: userName,
       userDisplayName: userDisplayName,
-      userId: Uint8List.fromList(userId),
-      credentialId: Uint8List.fromList(credentialId),
-      algorithm: algorithm,
+      userId: userId,
+      credentialId: credentialId,
+      algorithm: -7,
       signCount: 0,
     );
 
-    int id = await _passkeysService.save(item);
+    int passkeyId = await _passkeysService.save(passkeyModel);
+
     try {
-      item = await _passkeysService.updateFilesystemPath(id, parentFilesystemPath);
-      PasskeySecretsModel secrets = PasskeySecretsModel(
-        filesystemPath: item.filesystemPath,
-        privateKey: Uint8List.fromList(privateKey),
+      passkeyModel = await _passkeysService.updateFilesystemPath(passkeyId);
+
+      PasskeySecretsModel passkeySecretsModel = PasskeySecretsModel(
+        filesystemPath: passkeyModel.filesystemPath,
+        privateKey: privateKey,
       );
-      await _secretsService.save(secrets, passwordModel);
-      return item;
+
+      await _secretsService.save(
+        passkeySecretsModel,
+        PasswordModel.defaultPassword(),
+      );
+
+      return passkeyModel;
     } catch (_) {
-      // Best-effort cleanup; the original exception remains available.
-      try {
-        await _passkeysService.deleteById(id);
-      } catch (_) {}
+      await _passkeysService.deleteById(passkeyId);
       rethrow;
     }
   }
 
-  List<PasskeyModel> createFromEntities(List<PasskeyEntity> entities) =>
-      entities.map(createFromEntity).toList();
+  List<PasskeyModel> createFromEntities(List<PasskeyEntity> entities) => entities.map(createFromEntity).toList();
 
   PasskeyModel createFromEntity(PasskeyEntity entity) {
     return PasskeyModel(

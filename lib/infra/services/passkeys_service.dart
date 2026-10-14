@@ -8,46 +8,52 @@ import 'package:snggle/shared/models/passkeys/passkey_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class PasskeysService implements IListItemsService<PasskeyModel> {
-  final PasskeysRepository _repository = globalLocator<PasskeysRepository>();
+  final PasskeysRepository _passkeysRepository = globalLocator<PasskeysRepository>();
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
   @override
   Future<List<PasskeyModel>> getAllByParentPath(FilesystemPath parentFilesystemPath,
       {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
-    List<PasskeyEntity> entities = await _repository.getAllByParentPath(parentFilesystemPath);
+    List<PasskeyEntity> entities = await _passkeysRepository.getAllByParentPath(parentFilesystemPath);
     entities = entities.where((PasskeyEntity entity) =>
         entity.filesystemPath.isSubPathOf(parentFilesystemPath, firstLevelBool: firstLevelBool)).toList();
     return globalLocator<PasskeyModelFactory>().createFromEntities(entities);
   }
 
   Future<List<PasskeyModel>> getAllByRpId(String rpId) async {
-    List<PasskeyEntity> entities = await _repository.getAllByRpId(rpId);
+    List<PasskeyEntity> entities = await _passkeysRepository.getAllByRpId(rpId);
     return globalLocator<PasskeyModelFactory>().createFromEntities(entities);
   }
 
   Future<PasskeyModel> getByCredentialId(List<int> credentialId) async {
-    PasskeyEntity entity = await _repository.getByCredentialId(credentialId);
+    PasskeyEntity entity = await _passkeysRepository.getByCredentialId(credentialId);
     return globalLocator<PasskeyModelFactory>().createFromEntity(entity);
   }
 
   @override
   Future<PasskeyModel> getById(int id) async {
-    PasskeyEntity entity = await _repository.getById(id);
+    PasskeyEntity entity = await _passkeysRepository.getById(id);
     return globalLocator<PasskeyModelFactory>().createFromEntity(entity);
   }
 
   @override
-  Future<int> save(PasskeyModel item) => _repository.save(PasskeyEntity.fromPasskeyModel(item));
+  Future<int> save(PasskeyModel item) => _passkeysRepository.save(PasskeyEntity.fromPasskeyModel(item));
 
   @override
   Future<List<int>> saveAll(List<PasskeyModel> items) =>
-      _repository.saveAll(items.map(PasskeyEntity.fromPasskeyModel).toList());
+      _passkeysRepository.saveAll(items.map(PasskeyEntity.fromPasskeyModel).toList());
 
-  Future<PasskeyModel> updateFilesystemPath(int id, FilesystemPath parentFilesystemPath) async {
-    PasskeyEntity entity = await _repository.getById(id);
-    entity = entity.copyWith(filesystemPathString: parentFilesystemPath.add('passkey$id').fullPath);
-    await _repository.save(entity);
-    return globalLocator<PasskeyModelFactory>().createFromEntity(entity);
+  Future<PasskeyModel> updateFilesystemPath(int id) async {
+    PasskeyEntity passkeyEntity = await _passkeysRepository.getById(id);
+
+    passkeyEntity = passkeyEntity.copyWith(
+      filesystemPathString: 'passkeys/passkey$id',
+    );
+
+    await _passkeysRepository.save(passkeyEntity);
+
+    return globalLocator<PasskeyModelFactory>()
+        .createFromEntity(passkeyEntity);
   }
 
   @override
@@ -73,7 +79,7 @@ class PasskeysService implements IListItemsService<PasskeyModel> {
   Future<void> deleteById(int id) async {
     PasskeyModel item = await getById(id);
     await _secretsService.delete(item.filesystemPath);
-    await _repository.deleteById(id);
+    await _passkeysRepository.deleteById(id);
   }
 
   @override
