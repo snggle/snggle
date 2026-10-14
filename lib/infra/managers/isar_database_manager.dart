@@ -16,10 +16,14 @@ typedef DatabaseCall<T> = T Function(Isar isar);
 
 class IsarDatabaseManager {
   late Isar _isar;
+  late Isar _settingsIsar;
   bool initializedBool = false;
 
   Future<void> initDatabase({String? name}) async {
     String databaseName = name ?? Isar.defaultName;
+
+    bool defaultDatabaseBool = databaseName == Isar.defaultName;
+    String settingsDatabaseName = defaultDatabaseBool ? 'settings' : '${databaseName}_settings';
     Isar? databaseIsar = Isar.getInstance(databaseName);
 
     if (databaseIsar != null) {
@@ -43,6 +47,14 @@ class IsarDatabaseManager {
       name: databaseName,
       directory: rootDirectory.path,
     );
+    _settingsIsar =
+        Isar.getInstance(settingsDatabaseName) ??
+        await Isar.open(
+          <CollectionSchema<dynamic>>[SettingsEntitySchema],
+          name: settingsDatabaseName,
+          directory: rootDirectory.path,
+        );
+
     initializedBool = true;
   }
 
@@ -57,9 +69,17 @@ class IsarDatabaseManager {
     return databaseCall(_isar);
   }
 
+  T performSettings<T>(DatabaseCall<T> databaseCall) {
+    return databaseCall(_settingsIsar);
+  }
+
   Future<void> close() async {
     if (initializedBool == true && _isar.isOpen) {
       await _isar.close(deleteFromDisk: true);
+    }
+    bool settingsDatabaseOpenBool = initializedBool == true && _settingsIsar.isOpen;
+    if (settingsDatabaseOpenBool) {
+      await _settingsIsar.close(deleteFromDisk: true);
     }
     initializedBool = false;
   }

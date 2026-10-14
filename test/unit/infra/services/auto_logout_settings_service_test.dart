@@ -1,0 +1,223 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/entities/settings_entity/settings_entity.dart';
+import 'package:snggle/infra/repositories/settings_repository.dart';
+import 'package:snggle/infra/services/auto_logout_settings_service.dart';
+import 'package:snggle/shared/models/auto_logout_settings/auto_logout_settings_model.dart';
+import 'package:snggle/shared/models/auto_logout_settings/automatic_logout_mode.dart';
+import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timeout.dart';
+import 'package:snggle/shared/models/password_model.dart';
+
+import '../../../utils/database_mock.dart';
+import '../../../utils/test_database.dart';
+
+void main() {
+  late TestDatabase testDatabase;
+  late AutoLogoutSettingsService actualAutoLogoutSettingsService;
+  late SettingsRepository settingsRepository;
+
+  setUp(() async {
+    testDatabase = TestDatabase();
+    await testDatabase.init(
+      databaseMock: DatabaseMock.emptyDatabaseMock,
+      appPasswordModel: PasswordModel.fromPlaintext('1111'),
+    );
+
+    actualAutoLogoutSettingsService = globalLocator<AutoLogoutSettingsService>();
+    settingsRepository = globalLocator<SettingsRepository>();
+  });
+
+  tearDown(() async {
+    await testDatabase.close();
+  });
+
+  group('Tests of AutoLogoutSettingsService.getAutoLogoutSettings()', () {
+    test('Should [return defaults without creating a record] if [settings do not exist]', () async {
+      // Act
+      AutoLogoutSettingsModel actualAutoLogoutSettingsModel =
+      await actualAutoLogoutSettingsService.getAutoLogoutSettings();
+
+      // Assert
+      expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, true);
+      expect(actualAutoLogoutSettingsModel.automaticLogoutMode, AutomaticLogoutMode.on);
+      expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, InactivityLogoutTimeout.oneMinute);
+      expect(await settingsRepository.getSettings(), isNull);
+    });
+
+    test('Should [return saved settings] if [all settings exist]', () async {
+      // Arrange
+      await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
+        settingsEntity
+          ..inactivityLogoutEnabledBool = false
+          ..automaticLogoutModeName = AutomaticLogoutMode.off.name
+          ..inactivityLogoutTimeoutName = InactivityLogoutTimeout.fiveMinutes.name;
+      });
+
+      // Act
+      AutoLogoutSettingsModel actualAutoLogoutSettingsModel =
+      await actualAutoLogoutSettingsService.getAutoLogoutSettings();
+
+      // Assert
+      expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
+      expect(actualAutoLogoutSettingsModel.automaticLogoutMode, AutomaticLogoutMode.off);
+      expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, InactivityLogoutTimeout.fiveMinutes);
+    });
+
+    test('Should [use defaults for missing values] and [preserve a saved false flag]', () async {
+      // Arrange
+      await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
+        settingsEntity.inactivityLogoutEnabledBool = false;
+      });
+
+      // Act
+      AutoLogoutSettingsModel actualAutoLogoutSettingsModel =
+      await actualAutoLogoutSettingsService.getAutoLogoutSettings();
+
+      // Assert
+      expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
+      expect(actualAutoLogoutSettingsModel.automaticLogoutMode, AutomaticLogoutMode.on);
+      expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, InactivityLogoutTimeout.oneMinute);
+    });
+  });
+
+  group('Tests of AutoLogoutSettingsService.saveAutomaticLogoutMode()', () {
+    test('Should [create a settings record] if [settings do not exist]', () async {
+      // Act
+      await actualAutoLogoutSettingsService.saveAutomaticLogoutMode(AutomaticLogoutMode.off);
+
+      // Assert
+      SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+      expect(actualSettingsEntity?.automaticLogoutModeName, AutomaticLogoutMode.off.name);
+      expect(actualSettingsEntity?.inactivityLogoutEnabledBool, true);
+      expect(actualSettingsEntity?.inactivityLogoutTimeoutName, isNull);
+    });
+
+    for (AutomaticLogoutMode automaticLogoutMode in AutomaticLogoutMode.values) {
+      test('Should [save ${automaticLogoutMode.name}] and [preserve inactivity settings]', () async {
+        // Arrange
+        AutomaticLogoutMode initialAutomaticLogoutMode =
+        automaticLogoutMode == AutomaticLogoutMode.on ? AutomaticLogoutMode.off : AutomaticLogoutMode.on;
+
+        await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
+          settingsEntity
+            ..inactivityLogoutEnabledBool = false
+            ..automaticLogoutModeName = initialAutomaticLogoutMode.name
+            ..inactivityLogoutTimeoutName = InactivityLogoutTimeout.fiveMinutes.name;
+        });
+
+        // Act
+        await actualAutoLogoutSettingsService.saveAutomaticLogoutMode(automaticLogoutMode);
+
+        // Assert
+        SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+        expect(actualSettingsEntity?.automaticLogoutModeName, automaticLogoutMode.name);
+        expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
+        expect(actualSettingsEntity?.inactivityLogoutTimeoutName, InactivityLogoutTimeout.fiveMinutes.name);
+      });
+    }
+  });
+
+  group('Tests of AutoLogoutSettingsService.saveInactivityEnabledBool()', () {
+    for (bool inactivityLogoutEnabledBool in <bool>[false, true]) {
+      test('Should [save $inactivityLogoutEnabledBool] and [preserve mode and timeout]', () async {
+        // Arrange
+        await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
+          settingsEntity
+            ..inactivityLogoutEnabledBool = !inactivityLogoutEnabledBool
+            ..automaticLogoutModeName = AutomaticLogoutMode.off.name
+            ..inactivityLogoutTimeoutName = InactivityLogoutTimeout.fiveMinutes.name;
+        });
+
+        // Act
+        await actualAutoLogoutSettingsService.saveInactivityEnabledBool(
+          inactivityLogoutEnabledBool: inactivityLogoutEnabledBool,
+        );
+
+        // Assert
+        SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+        expect(actualSettingsEntity?.inactivityLogoutEnabledBool, inactivityLogoutEnabledBool);
+        expect(actualSettingsEntity?.automaticLogoutModeName, AutomaticLogoutMode.off.name);
+        expect(actualSettingsEntity?.inactivityLogoutTimeoutName, InactivityLogoutTimeout.fiveMinutes.name);
+      });
+    }
+
+    test('Should [save the default timeout] if [the saved timeout is null]', () async {
+      // Arrange
+      await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
+        settingsEntity.automaticLogoutModeName = AutomaticLogoutMode.off.name;
+      });
+
+      // Act
+      await actualAutoLogoutSettingsService.saveInactivityEnabledBool(
+        inactivityLogoutEnabledBool: false,
+      );
+
+      // Assert
+      SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+      expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
+      expect(actualSettingsEntity?.inactivityLogoutTimeoutName, InactivityLogoutTimeout.oneMinute.name);
+      expect(actualSettingsEntity?.automaticLogoutModeName, AutomaticLogoutMode.off.name);
+    });
+  });
+
+  group('Tests of AutoLogoutSettingsService.saveInactivityLogoutTimeout()', () {
+    for (InactivityLogoutTimeout inactivityLogoutTimeout in <InactivityLogoutTimeout>[
+      InactivityLogoutTimeout.oneMinute,
+      InactivityLogoutTimeout.fiveMinutes,
+    ]) {
+      test('Should [save ${inactivityLogoutTimeout.name}] and [preserve disabled logout switches]', () async {
+        // Arrange
+        InactivityLogoutTimeout initialInactivityLogoutTimeout =
+        inactivityLogoutTimeout == InactivityLogoutTimeout.oneMinute
+            ? InactivityLogoutTimeout.fiveMinutes
+            : InactivityLogoutTimeout.oneMinute;
+
+        await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
+          settingsEntity
+            ..inactivityLogoutEnabledBool = false
+            ..automaticLogoutModeName = AutomaticLogoutMode.off.name
+            ..inactivityLogoutTimeoutName = initialInactivityLogoutTimeout.name;
+        });
+
+        // Act
+        await actualAutoLogoutSettingsService.saveInactivityLogoutTimeout(inactivityLogoutTimeout);
+
+        // Assert
+        SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+        expect(actualSettingsEntity?.inactivityLogoutTimeoutName, inactivityLogoutTimeout.name);
+        expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
+        expect(actualSettingsEntity?.automaticLogoutModeName, AutomaticLogoutMode.off.name);
+      });
+    }
+
+    test('Should [create settings with inactivity enabled] if [settings do not exist]', () async {
+      // Act
+      await actualAutoLogoutSettingsService.saveInactivityLogoutTimeout(
+        InactivityLogoutTimeout.fiveMinutes,
+      );
+
+      // Assert
+      SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+      expect(actualSettingsEntity?.inactivityLogoutTimeoutName, InactivityLogoutTimeout.fiveMinutes.name);
+      expect(actualSettingsEntity?.inactivityLogoutEnabledBool, true);
+      expect(actualSettingsEntity?.automaticLogoutModeName, isNull);
+    });
+  });
+
+  group('Tests of AutoLogoutSettingsService simultaneous saves', () {
+    test('Should [preserve every change] when [different settings are saved simultaneously]', () async {
+      // Act
+      await Future.wait<void>(<Future<void>>[
+        actualAutoLogoutSettingsService.saveAutomaticLogoutMode(AutomaticLogoutMode.off),
+        actualAutoLogoutSettingsService.saveInactivityEnabledBool(inactivityLogoutEnabledBool: false),
+        actualAutoLogoutSettingsService.saveInactivityLogoutTimeout(InactivityLogoutTimeout.fiveMinutes),
+      ]);
+
+      // Assert
+      SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+      expect(actualSettingsEntity?.automaticLogoutModeName, AutomaticLogoutMode.off.name);
+      expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
+      expect(actualSettingsEntity?.inactivityLogoutTimeoutName, InactivityLogoutTimeout.fiveMinutes.name);
+    });
+  });
+}

@@ -1,7 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/pages/auto_logout_cubit/auto_logout_cubit.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout_cubit/auto_logout_cubit.dart';
 import 'package:snggle/shared/models/auto_logout_settings/automatic_logout_mode.dart';
 import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timeout.dart';
 import 'package:snggle/views/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout/auto_logout_settings_tile.dart';

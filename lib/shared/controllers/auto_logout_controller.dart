@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
-import 'package:snggle/bloc/pages/auto_logout_cubit/auto_logout_cubit.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout_cubit/auto_logout_cubit.dart';
 import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/shared/models/auto_logout_settings/automatic_logout_mode.dart';
 import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timeout.dart';
@@ -75,16 +75,13 @@ class AutoLogoutController {
     if (timerUnavailableBool) {
       return;
     }
-    Duration? inactivityLogoutDuration = _getInactivityLogoutDuration(
-      autoLogoutState.inactivityLogoutTimeout,
-    );
+    Duration? inactivityLogoutDuration = _getInactivityLogoutDuration(autoLogoutState.inactivityLogoutTimeout);
+    bool inactivityLogoutDurationMissingBool = inactivityLogoutDuration == null;
 
-    switch (inactivityLogoutDuration) {
-      case null:
-        return;
-      case Duration resolvedInactivityLogoutDuration:
-        _startInactivityLogoutTimer(resolvedInactivityLogoutDuration);
+    if (inactivityLogoutDurationMissingBool) {
+      return;
     }
+    _startInactivityLogoutTimer(inactivityLogoutDuration);
   }
 
   void _startInactivityLogoutTimer(Duration inactivityLogoutDuration) {
@@ -105,11 +102,10 @@ class AutoLogoutController {
     }
 
     _logoutInProgressBool = true;
-    _cancelInactivityLogoutTimer();
 
     try {
+      _cancelInactivityLogoutTimer();
       _appService.logout();
-
       await _appRouter.replaceAll(<PageRouteInfo>[const SplashRoute()]);
     } finally {
       _logoutInProgressBool = false;

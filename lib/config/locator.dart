@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:snggle/bloc/pages/auto_logout_cubit/auto_logout_cubit.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout_cubit/auto_logout_cubit.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/repositories/entries_repository.dart';
 import 'package:snggle/infra/repositories/groups_repository.dart';
@@ -91,6 +91,5 @@ void _initFactories() {
     ..registerLazySingleton<VaultModelFactory>(VaultModelFactory.new)
     ..registerLazySingleton<WalletModelFactory>(WalletModelFactory.new)
     ..registerLazySingleton<EntryModelFactory>(EntryModelFactory.new)
-    ..registerLazySingleton<WalletModelFactory>(WalletModelFactory.new)
     ..registerLazySingleton<AutoLogoutSettingsModelFactory>(AutoLogoutSettingsModelFactory.new);
 }
