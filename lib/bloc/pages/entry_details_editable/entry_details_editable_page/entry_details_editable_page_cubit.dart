@@ -26,7 +26,7 @@ class EntryDetailsEditablePageCubit extends Cubit<EntryDetailsEditablePageState>
   final TextEditingController usernameTextEditingController = TextEditingController();
   final TextEditingController passwordTextEditingController = TextEditingController();
 
-  final FilesystemPath? _parentFilesystemPath;
+  final FilesystemPath _parentFilesystemPath;
   final EntryModel? _entryModel;
   final EntryPageType _entryPageType;
 
@@ -52,7 +52,7 @@ class EntryDetailsEditablePageCubit extends Cubit<EntryDetailsEditablePageState>
   Future<void> init() async {
     nameTextEditingController.addListener(_updateEntryNameEmptyState);
 
-    if (_entryPageType == EntryPageType.entryPageCreate) {
+    if (_entryPageType == EntryPageType.create) {
       int lastEntryIndex = await _entriesService.getLastIndex();
 
       if (lastEntryIndex == -1) {
@@ -89,7 +89,7 @@ class EntryDetailsEditablePageCubit extends Cubit<EntryDetailsEditablePageState>
       emit(state.copyWith(entryNameEmptyBool: false));
     }
 
-    if (_entryPageType == EntryPageType.entryPageCreate) {
+    if (_entryPageType == EntryPageType.create) {
       return _createNewEntry();
     } else {
       return _updateEntry();
@@ -98,7 +98,7 @@ class EntryDetailsEditablePageCubit extends Cubit<EntryDetailsEditablePageState>
 
   Future<EntryModel?> _createNewEntry() async {
     return _entryModelFactory.createNewEntry(
-      _parentFilesystemPath!,
+      _parentFilesystemPath,
       nameTextEditingController.text,
       websiteTextEditingController.text,
       emailTextEditingController.text,

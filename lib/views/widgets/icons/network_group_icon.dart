@@ -19,7 +19,7 @@ class NetworkGroupIcon extends StatelessWidget {
       pinnedBool: networkGroupModel.pinnedBool,
       encryptedBool: networkGroupModel.encryptedBool,
       size: size,
-      child: ContainerIconGrid.fromListItemsPreview(
+      child: ContainerIconGrid(
         padding: EdgeInsets.all(size * 0.14),
         listItemsPreview: networkGroupModel.listItemsPreview,
       ),

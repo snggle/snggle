@@ -22,14 +22,14 @@ import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.
 
 @RoutePage()
 class EntryDetailsEditablePage extends StatefulWidget {
-  final FilesystemPath? parentFilesystemPath;
+  final FilesystemPath parentFilesystemPath;
   final EntryModel? entryModel;
   final EntryPageType entryPageType;
   final bool? obscurePasswordBool;
 
   const EntryDetailsEditablePage({
     required this.entryPageType,
-    this.parentFilesystemPath,
+    required this.parentFilesystemPath,
     this.entryModel,
     this.obscurePasswordBool = true,
     super.key,
@@ -75,8 +75,8 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
       builder: (BuildContext context, EntryDetailsEditablePageState state) {
         return CustomScaffold(
           title: switch (widget.entryPageType) {
-            EntryPageType.entryPageCreate => 'CREATE ENTRY',
-            EntryPageType.entryPageEdit => 'EDIT ENTRY',
+            EntryPageType.create => 'CREATE ENTRY',
+            EntryPageType.edit => 'EDIT ENTRY',
           },
           resizeToAvoidBottomInsetBool: true,
           body: KeyboardVisibilityBuilder(
@@ -192,7 +192,8 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
     );
   }
 
-  bool get _finishButtonEnabledBool => entryDetailsEditablePageCubit.state.entryNameEmptyBool == false;
+  bool get _finishButtonEnabledBool =>
+      entryDetailsEditablePageCubit.state.loadingBool == false && entryDetailsEditablePageCubit.state.entryNameEmptyBool == false;
 
   Future<void> _save() async {
     await CustomLoadingDialog.show<EntryModel?>(
@@ -203,8 +204,8 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
         if (entryModel != null) {
           AutoRouter.of(context).root.pop(
             switch (widget.entryPageType) {
-              EntryPageType.entryPageCreate => EntryCreateEditStatus.creationSuccessful,
-              EntryPageType.entryPageEdit => EntryCreateEditStatus.modificationSuccessful,
+              EntryPageType.create => EntryCreateEditStatus.creationSuccessful,
+              EntryPageType.edit => EntryCreateEditStatus.modificationSuccessful,
             },
           );
         }
