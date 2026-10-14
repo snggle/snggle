@@ -1,4 +1,4 @@
 enum EntryPageType {
-  entryPageCreate,
-  entryPageEdit,
+  create,
+  edit,
 }

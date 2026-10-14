@@ -56,7 +56,7 @@ class _ListItemContextTooltipState<T extends AListItemModel> extends State<ListI
             label: 'Pin',
             onTap: () => _handlePinValueChanged(true),
           ),
-        if (widget.allowItemRenamingBool && widget.listCubit.canBeRenamedBool(widget.listItemModel))
+        if (widget.allowItemRenamingBool)
           ContextTooltipItem(
             assetIconData: AppIcons.menu_rename,
             label: 'Rename',
