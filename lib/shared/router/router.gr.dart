@@ -343,7 +343,7 @@ class EntryDetailsEditableRoute
     extends _i30.PageRouteInfo<EntryDetailsEditableRouteArgs> {
   EntryDetailsEditableRoute({
     required _i36.EntryPageType entryPageType,
-    _i37.FilesystemPath? parentFilesystemPath,
+    required _i37.FilesystemPath parentFilesystemPath,
     _i38.EntryModel? entryModel,
     bool? obscurePasswordBool = true,
     _i32.Key? key,
@@ -380,7 +380,7 @@ class EntryDetailsEditableRoute
 class EntryDetailsEditableRouteArgs {
   const EntryDetailsEditableRouteArgs({
     required this.entryPageType,
-    this.parentFilesystemPath,
+    required this.parentFilesystemPath,
     this.entryModel,
     this.obscurePasswordBool = true,
     this.key,
@@ -388,7 +388,7 @@ class EntryDetailsEditableRouteArgs {
 
   final _i36.EntryPageType entryPageType;
 
-  final _i37.FilesystemPath? parentFilesystemPath;
+  final _i37.FilesystemPath parentFilesystemPath;
 
   final _i38.EntryModel? entryModel;
 

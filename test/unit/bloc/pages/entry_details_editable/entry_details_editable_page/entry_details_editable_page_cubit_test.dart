@@ -30,7 +30,7 @@ void main() {
       actualEntryDetailsEditablePageCubit = EntryDetailsEditablePageCubit(
         parentFilesystemPath: FilesystemPath.fromString('entries'),
         entryModel: null,
-        entryPageType: EntryPageType.entryPageCreate,
+        entryPageType: EntryPageType.create,
       );
     });
 
@@ -151,9 +151,9 @@ void main() {
       );
 
       actualEntryDetailsEditablePageCubit = EntryDetailsEditablePageCubit(
-        parentFilesystemPath: null,
+        parentFilesystemPath: actualEntryModel.filesystemPath,
         entryModel: actualEntryModel,
-        entryPageType: EntryPageType.entryPageEdit,
+        entryPageType: EntryPageType.edit,
       );
     });
 

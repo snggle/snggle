@@ -25,7 +25,7 @@ class EntryIcon extends StatelessWidget {
       pinnedBool: entryModel.pinnedBool,
       encryptedBool: entryModel.encryptedBool,
       size: size,
-      child: ContainerIconGrid(
+      child: ContainerIconGrid.fromContentPreview(
         padding: EdgeInsets.all(size * 0.14),
         contentPreview: entryModel.previewItems.map(_buildContentPreview).toList(),
       ),

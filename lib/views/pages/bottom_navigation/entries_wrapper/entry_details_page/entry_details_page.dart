@@ -105,7 +105,7 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
                         textTheme: textTheme,
                         label: 'Password',
                         textEditingController: entryDetailsPageCubit.passwordTextEditingController,
-                        obscureTextBool: true,
+                        obscureTextBool: _obscurePasswordBool,
                         suffixWidget: InkWell(
                           onTap: () => setState(() => _obscurePasswordBool = !_obscurePasswordBool),
                           child: Padding(
@@ -167,11 +167,16 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
   Future<void> _openEditEntryPage() async {
     EntryCreateEditStatus? entryCreateEditStatus = await AutoRouter.of(context).push<EntryCreateEditStatus?>(
       EntryDetailsEditableRoute(
-        entryPageType: EntryPageType.entryPageEdit,
+        entryPageType: EntryPageType.edit,
         entryModel: entryDetailsPageCubit.entryModel,
         obscurePasswordBool: _obscurePasswordBool,
+        parentFilesystemPath: entryDetailsPageCubit.entryModel.filesystemPath,
       ),
     );
+
+    if (mounted == false) {
+      return;
+    }
 
     _obscurePasswordBool = true;
 
