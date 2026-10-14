@@ -101,7 +101,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                   BottomTooltipItem(
                     label: 'Confirm',
                     assetIconData: AppIcons.menu_save,
-                    onTap: confirmButtonActiveBool ? _save : null,
+                    onTap: confirmButtonActiveBool ? _initConfirm : null,
                   ),
                 ],
                 child: LayoutBuilder(
@@ -455,7 +455,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
 
   String _getPasswordLengthDescription(CharacterSetType characterSetType, PasswordLevelType passwordLengthType) {
     if (characterSetType == CharacterSetType.sip2 && passwordLengthType == PasswordLevelType.good) {
-      return '19 + 1 characters';
+      return '${passwordLengthType.defaultLengthSip2} characters';
     }
 
     if (passwordLengthType == PasswordLevelType.custom) {
@@ -482,7 +482,17 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     }
   }
 
-  void _save() {
+  Future<void> _initConfirm() async {
+    bool weakPasswordBool =
+        generatePasswordPageCubit.state.calculatedPasswordLevelType == PasswordLevelType.unsafe ||
+        generatePasswordPageCubit.state.calculatedPasswordLevelType == PasswordLevelType.weak;
+
+    if (weakPasswordBool) {
+      await _showWeakPasswordDialog();
+    }
+  }
+
+  void _confirm() {
     AutoRouter.of(context).pop<String>(generatePasswordPageCubit.state.password);
   }
 
@@ -548,7 +558,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       builder: (BuildContext context) => CustomDialog(
         title: 'Snggle Improvement Proposal - 2 Character Set',
         content: const Text(
-          'This character set contains 94 non-whitespace ASCII characters:'
+          'This character set contains 64 characters:'
           '\n\nUppercase letters:\nABCDEFGHJKLMNPQRSTUVWXYZ'
           '\n - all uppercase characters excluding I and O'
           '\n\nLowercase letters:\nabcdefghijklmnopqrstuvwxyz'
@@ -556,13 +566,40 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
           '\n\nDigits:\n0123456789'
           '\n - all decimals excluding 0 and 1'
           '\n\nSymbols:\n'
-          '''!+-''',
+          '''!+-@=''',
           textAlign: TextAlign.center,
         ),
         options: <CustomDialogOption>[
           CustomDialogOption(
             label: 'Close',
             onPressed: () {},
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showWeakPasswordDialog() async {
+    await showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      useRootNavigator: true,
+      builder: (BuildContext context) => CustomDialog(
+        title: 'Insecure password',
+        content: const Text(
+          'This password may have insufficient security\n'
+          'and be susceptible to brute-force attacks.\n'
+          'Are you sure you want to use that password?',
+          textAlign: TextAlign.center,
+        ),
+        options: <CustomDialogOption>[
+          CustomDialogOption(
+            label: 'Cancel',
+            onPressed: () {},
+          ),
+          CustomDialogOption(
+            label: 'Confirm',
+            onPressed: _confirm,
           ),
         ],
       ),
