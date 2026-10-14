@@ -18,7 +18,7 @@ class VaultIcon extends StatelessWidget {
     return VaultContainerIcon.fromVaultModel(
       size: size,
       vaultModel: vaultModel,
-      child: ContainerIconGrid.fromListItemsPreview(
+      child: ContainerIconGrid(
         padding: EdgeInsets.all(size * 0.14),
         listItemsPreview: vaultModel.listItemsPreview,
       ),

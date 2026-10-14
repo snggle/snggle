@@ -61,11 +61,16 @@ class _CopyWrapperState extends State<CopyWrapper> {
   }
 
   void _copy() {
-    if (widget.obscureContentBool == true) {
+    if (widget.obscureContentBool) {
       CustomClipboard.setDataObscuringPreview(text: widget.value);
     } else {
       Clipboard.setData(ClipboardData(text: widget.value));
     }
+
+    if (mounted == false) {
+      return;
+    }
+
     customPopupMenuController.showMenu();
     Future<void>.delayed(const Duration(seconds: 2)).then((_) {
       if (mounted) {

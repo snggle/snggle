@@ -14,28 +14,25 @@ import 'package:snggle/views/widgets/icons/wallet_icon.dart';
 
 class ContainerIconGrid extends StatelessWidget {
   final List<Widget> contentPreview;
+  final List<AListItemModel> listItemsPreview;
   final EdgeInsets padding;
 
   const ContainerIconGrid({
+    required this.listItemsPreview,
+    required this.padding,
+    super.key,
+  }) : contentPreview = const <Widget>[];
+
+  const ContainerIconGrid.fromContentPreview({
     required this.contentPreview,
     required this.padding,
     super.key,
-  });
-
-  factory ContainerIconGrid.fromListItemsPreview({
-    required List<AListItemModel> listItemsPreview,
-    required EdgeInsets padding,
-    Key? key,
-  }) {
-    return ContainerIconGrid(
-      key: key,
-      padding: padding,
-      contentPreview: listItemsPreview.map(_buildPreviewChild).toList(),
-    );
-  }
+  }) : listItemsPreview = const <AListItemModel>[];
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> previewWidgetList = listItemsPreview.isEmpty ? contentPreview : listItemsPreview.map(_buildPreviewChild).toList();
+
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         double innerWidth = constraints.maxWidth - padding.horizontal;
@@ -44,7 +41,7 @@ class ContainerIconGrid extends StatelessWidget {
         double gridSize = min(innerWidth, innerHeight);
         double spacing = gridSize * 0.13;
 
-        int slotsPerSide = _calcSlotsPerSide(contentPreview.length);
+        int slotsPerSide = _calcSlotsPerSide(previewWidgetList.length);
         int slotsCount = slotsPerSide * slotsPerSide;
 
         return Padding(
@@ -59,11 +56,11 @@ class ContainerIconGrid extends StatelessWidget {
                 horizontalGap: spacing,
                 childCount: slotsCount,
                 itemBuilder: (BuildContext context, int index) {
-                  if (index >= contentPreview.length) {
+                  if (index >= previewWidgetList.length) {
                     return const SizedBox.expand();
                   }
 
-                  return contentPreview[index];
+                  return previewWidgetList[index];
                 },
               ),
             ),

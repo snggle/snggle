@@ -7,6 +7,7 @@ import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/entry_list_pag
 import 'package:snggle/bloc/pages/entry_details_editable/entry_page_type.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/exceptions/invalid_master_key_exception.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_tab_dir.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
@@ -22,6 +23,7 @@ import 'package:snggle/views/widgets/button/list_item_creation_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
+import 'package:snggle/views/widgets/custom/dialog/master_key_dialog.dart';
 import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/list/horizontal_list_item/horizontal_list_item_animation_wrapper.dart';
@@ -135,17 +137,29 @@ class _EntryListPageState extends State<EntryListPage> {
   }
 
   Future<void> _navigateToEntryCreateEditRoute() async {
-    EntryCreateEditStatus? entryCreateRecoverStatus = await AutoRouter.of(context).push<EntryCreateEditStatus?>(
+    EntryCreateEditStatus? entryCreateEditStatus = await AutoRouter.of(context).push<EntryCreateEditStatus?>(
       EntryDetailsEditableRoute(
         parentFilesystemPath: entryListPageCubit.state.filesystemPath,
-        entryPageType: EntryPageType.entryPageCreate,
+        entryPageType: EntryPageType.create,
       ),
     );
 
-    await _handleEntryCreateEditStatus(entryCreateRecoverStatus);
+    await _handleEntryCreateEditStatus(entryCreateEditStatus);
   }
 
   Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
+    if (listItemModel is EntryModel) {
+      try {
+        await entryListPageCubit.isEntryPasswordValid(listItemModel, passwordModel);
+      } on InvalidMasterKeyException {
+        if (mounted == false) {
+          return;
+        }
+        await MasterKeyDialog.show(context);
+        return;
+      }
+    }
+
     globalLocator<PasswordController>().addPassword(passwordModel, listItemModel.filesystemPath);
 
     if (listItemModel is EntryModel) {
