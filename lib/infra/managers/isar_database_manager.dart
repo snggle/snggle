@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
+import 'package:snggle/infra/entities/auto_logout_settings_entity/auto_logout_settings_entity.dart';
 import 'package:snggle/infra/entities/entry_entity/entry_entity.dart';
 import 'package:snggle/infra/entities/group_entity/group_entity.dart';
 import 'package:snggle/infra/entities/network_group_entity/network_group_entity.dart';
-import 'package:snggle/infra/entities/settings_entity/settings_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/ethereum_transaction_entity.dart';
 import 'package:snggle/infra/entities/transaction_entity/solana_transaction_entity.dart';
 import 'package:snggle/infra/entities/vault_entity/vault_entity.dart';
@@ -16,14 +16,10 @@ typedef DatabaseCall<T> = T Function(Isar isar);
 
 class IsarDatabaseManager {
   late Isar _isar;
-  late Isar _settingsIsar;
   bool initializedBool = false;
 
   Future<void> initDatabase({String? name}) async {
     String databaseName = name ?? Isar.defaultName;
-
-    bool defaultDatabaseBool = databaseName == Isar.defaultName;
-    String settingsDatabaseName = defaultDatabaseBool ? 'settings' : '${databaseName}_settings';
     Isar? databaseIsar = Isar.getInstance(databaseName);
 
     if (databaseIsar != null) {
@@ -42,18 +38,11 @@ class IsarDatabaseManager {
         EthereumTransactionEntitySchema,
         SolanaTransactionEntitySchema,
         EntryEntitySchema,
-        SettingsEntitySchema,
+        AutoLogoutSettingsEntitySchema,
       ],
       name: databaseName,
       directory: rootDirectory.path,
     );
-    _settingsIsar =
-        Isar.getInstance(settingsDatabaseName) ??
-        await Isar.open(
-          <CollectionSchema<dynamic>>[SettingsEntitySchema],
-          name: settingsDatabaseName,
-          directory: rootDirectory.path,
-        );
 
     initializedBool = true;
   }
@@ -69,18 +58,11 @@ class IsarDatabaseManager {
     return databaseCall(_isar);
   }
 
-  T performSettings<T>(DatabaseCall<T> databaseCall) {
-    return databaseCall(_settingsIsar);
-  }
-
   Future<void> close() async {
     if (initializedBool == true && _isar.isOpen) {
       await _isar.close(deleteFromDisk: true);
     }
-    bool settingsDatabaseOpenBool = initializedBool == true && _settingsIsar.isOpen;
-    if (settingsDatabaseOpenBool) {
-      await _settingsIsar.close(deleteFromDisk: true);
-    }
+
     initializedBool = false;
   }
 }

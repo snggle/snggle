@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/entities/settings_entity/settings_entity.dart';
-import 'package:snggle/infra/repositories/settings_repository.dart';
+import 'package:snggle/infra/entities/auto_logout_settings_entity/auto_logout_settings_entity.dart';
+import 'package:snggle/infra/repositories/auto_logout_settings_repository.dart';
 import 'package:snggle/shared/models/password_model.dart';
 
 import '../../../utils/database_mock.dart';
@@ -9,16 +9,13 @@ import '../../../utils/test_database.dart';
 
 void main() {
   late TestDatabase testDatabase;
-  late SettingsRepository actualSettingsRepository;
+  late AutoLogoutSettingsRepository actualSettingsRepository;
 
   setUp(() async {
     testDatabase = TestDatabase();
-    await testDatabase.init(
-      databaseMock: DatabaseMock.emptyDatabaseMock,
-      appPasswordModel: PasswordModel.fromPlaintext('1111'),
-    );
+    await testDatabase.init(databaseMock: DatabaseMock.emptyDatabaseMock, appPasswordModel: PasswordModel.fromPlaintext('1111'));
 
-    actualSettingsRepository = globalLocator<SettingsRepository>();
+    actualSettingsRepository = globalLocator<AutoLogoutSettingsRepository>();
   });
 
   tearDown(() async {
@@ -28,7 +25,7 @@ void main() {
   group('Tests of SettingsRepository.getSettings()', () {
     test('Should [return null] if [settings do not exist]', () async {
       // Act
-      SettingsEntity? actualSettingsEntity = await actualSettingsRepository.getSettings();
+      AutoLogoutSettingsEntity? actualSettingsEntity = await actualSettingsRepository.getSettings();
 
       // Assert
       expect(actualSettingsEntity, isNull);
@@ -36,20 +33,20 @@ void main() {
 
     test('Should [return saved settings] from [a new repository instance]', () async {
       // Arrange
-      await actualSettingsRepository.saveSettings((SettingsEntity settingsEntity) {
+      await actualSettingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
         settingsEntity
           ..inactivityLogoutEnabledBool = false
           ..automaticLogoutModeName = 'off'
           ..inactivityLogoutTimeoutName = 'fiveMinutes';
       });
 
-      SettingsRepository restoredSettingsRepository = SettingsRepository();
+      AutoLogoutSettingsRepository restoredSettingsRepository = AutoLogoutSettingsRepository();
 
       // Act
-      SettingsEntity? actualSettingsEntity = await restoredSettingsRepository.getSettings();
+      AutoLogoutSettingsEntity? actualSettingsEntity = await restoredSettingsRepository.getSettings();
 
       // Assert
-      expect(actualSettingsEntity?.id, SettingsEntity.settingsId);
+      expect(actualSettingsEntity?.id, AutoLogoutSettingsEntity.autoLogoutSettingsId);
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.automaticLogoutModeName, 'off');
       expect(actualSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');
@@ -59,7 +56,7 @@ void main() {
   group('Tests of SettingsRepository.saveSettings()', () {
     test('Should [create settings with the fixed ID] if [settings do not exist]', () async {
       // Act
-      await actualSettingsRepository.saveSettings((SettingsEntity settingsEntity) {
+      await actualSettingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
         settingsEntity
           ..inactivityLogoutEnabledBool = false
           ..automaticLogoutModeName = 'off'
@@ -67,8 +64,8 @@ void main() {
       });
 
       // Assert
-      SettingsEntity? actualSettingsEntity = await actualSettingsRepository.getSettings();
-      expect(actualSettingsEntity?.id, SettingsEntity.settingsId);
+      AutoLogoutSettingsEntity? actualSettingsEntity = await actualSettingsRepository.getSettings();
+      expect(actualSettingsEntity?.id, AutoLogoutSettingsEntity.autoLogoutSettingsId);
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.automaticLogoutModeName, 'off');
       expect(actualSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');
@@ -76,13 +73,13 @@ void main() {
 
     test('Should [preserve entity defaults] when [only one field is initially saved]', () async {
       // Act
-      await actualSettingsRepository.saveSettings((SettingsEntity settingsEntity) {
+      await actualSettingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
         settingsEntity.automaticLogoutModeName = 'off';
       });
 
       // Assert
-      SettingsEntity? actualSettingsEntity = await actualSettingsRepository.getSettings();
-      expect(actualSettingsEntity?.id, SettingsEntity.settingsId);
+      AutoLogoutSettingsEntity? actualSettingsEntity = await actualSettingsRepository.getSettings();
+      expect(actualSettingsEntity?.id, AutoLogoutSettingsEntity.autoLogoutSettingsId);
       expect(actualSettingsEntity?.automaticLogoutModeName, 'off');
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, true);
       expect(actualSettingsEntity?.inactivityLogoutTimeoutName, isNull);
@@ -90,7 +87,7 @@ void main() {
 
     test('Should [update existing settings] and [preserve untouched fields]', () async {
       // Arrange
-      await actualSettingsRepository.saveSettings((SettingsEntity settingsEntity) {
+      await actualSettingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
         settingsEntity
           ..inactivityLogoutEnabledBool = false
           ..automaticLogoutModeName = 'on'
@@ -98,13 +95,13 @@ void main() {
       });
 
       // Act
-      await actualSettingsRepository.saveSettings((SettingsEntity settingsEntity) {
+      await actualSettingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
         settingsEntity.automaticLogoutModeName = 'off';
       });
 
       // Assert
-      SettingsEntity? actualSettingsEntity = await actualSettingsRepository.getSettings();
-      expect(actualSettingsEntity?.id, SettingsEntity.settingsId);
+      AutoLogoutSettingsEntity? actualSettingsEntity = await actualSettingsRepository.getSettings();
+      expect(actualSettingsEntity?.id, AutoLogoutSettingsEntity.autoLogoutSettingsId);
       expect(actualSettingsEntity?.automaticLogoutModeName, 'off');
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');
@@ -113,20 +110,20 @@ void main() {
     test('Should [preserve every change] when [different fields are saved simultaneously]', () async {
       // Act
       await Future.wait<void>(<Future<void>>[
-        actualSettingsRepository.saveSettings((SettingsEntity settingsEntity) {
+        actualSettingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
           settingsEntity.inactivityLogoutEnabledBool = false;
         }),
-        actualSettingsRepository.saveSettings((SettingsEntity settingsEntity) {
+        actualSettingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
           settingsEntity.automaticLogoutModeName = 'off';
         }),
-        actualSettingsRepository.saveSettings((SettingsEntity settingsEntity) {
+        actualSettingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
           settingsEntity.inactivityLogoutTimeoutName = 'fiveMinutes';
         }),
       ]);
 
       // Assert
-      SettingsEntity? actualSettingsEntity = await actualSettingsRepository.getSettings();
-      expect(actualSettingsEntity?.id, SettingsEntity.settingsId);
+      AutoLogoutSettingsEntity? actualSettingsEntity = await actualSettingsRepository.getSettings();
+      expect(actualSettingsEntity?.id, AutoLogoutSettingsEntity.autoLogoutSettingsId);
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.automaticLogoutModeName, 'off');
       expect(actualSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');
@@ -138,7 +135,7 @@ void main() {
 
       // Act / Assert
       await expectLater(
-            () => actualSettingsRepository.saveSettings((SettingsEntity settingsEntity) {
+        () => actualSettingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
           settingsEntity.automaticLogoutModeName = 'off';
           throw expectedException;
         }),
@@ -150,7 +147,7 @@ void main() {
 
     test('Should [propagate the exception and preserve saved settings] if [the callback throws]', () async {
       // Arrange
-      await actualSettingsRepository.saveSettings((SettingsEntity settingsEntity) {
+      await actualSettingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
         settingsEntity
           ..inactivityLogoutEnabledBool = false
           ..automaticLogoutModeName = 'off'
@@ -161,7 +158,7 @@ void main() {
 
       // Act / Assert
       await expectLater(
-            () => actualSettingsRepository.saveSettings((SettingsEntity settingsEntity) {
+        () => actualSettingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
           settingsEntity
             ..inactivityLogoutEnabledBool = true
             ..automaticLogoutModeName = 'on'
@@ -171,8 +168,8 @@ void main() {
         throwsA(same(expectedException)),
       );
 
-      SettingsEntity? actualSettingsEntity = await actualSettingsRepository.getSettings();
-      expect(actualSettingsEntity?.id, SettingsEntity.settingsId);
+      AutoLogoutSettingsEntity? actualSettingsEntity = await actualSettingsRepository.getSettings();
+      expect(actualSettingsEntity?.id, AutoLogoutSettingsEntity.autoLogoutSettingsId);
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.automaticLogoutModeName, 'off');
       expect(actualSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');

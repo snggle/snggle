@@ -58,12 +58,13 @@ class AutoLogoutController {
   }
 
   void _handleAutoLogoutChanged(AutoLogoutState autoLogoutState) {
-    bool inactivitySettingsChangedBool =
-        autoLogoutState.inactivityLogoutEnabledBool != _autoLogoutState.inactivityLogoutEnabledBool ||
-        autoLogoutState.inactivityLogoutTimeout != _autoLogoutState.inactivityLogoutTimeout;
+    bool enabledChangedBool = autoLogoutState.inactivityLogoutEnabledBool != _autoLogoutState.inactivityLogoutEnabledBool;
+
+    bool timeoutChangedBool = autoLogoutState.inactivityLogoutTimeout != _autoLogoutState.inactivityLogoutTimeout;
 
     _autoLogoutState = autoLogoutState;
-    if (inactivitySettingsChangedBool) {
+
+    if (enabledChangedBool || timeoutChangedBool) {
       _restartInactivityLogoutTimer(autoLogoutState);
     }
   }
@@ -100,7 +101,6 @@ class AutoLogoutController {
     if (_logoutInProgressBool) {
       return;
     }
-
     _logoutInProgressBool = true;
 
     try {

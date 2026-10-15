@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/infra/entities/settings_entity/settings_entity.dart';
+import 'package:snggle/infra/entities/auto_logout_settings_entity/auto_logout_settings_entity.dart';
 import 'package:snggle/shared/factories/auto_logout_settings_model_factory.dart';
 import 'package:snggle/shared/models/auto_logout_settings/auto_logout_settings_model.dart';
 import 'package:snggle/shared/models/auto_logout_settings/automatic_logout_mode.dart';
@@ -14,42 +14,27 @@ void main() {
       AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(null);
 
       // Assert
-      expect(
-        actualAutoLogoutSettingsModel.inactivityLogoutBool,
-        AutoLogoutSettingsModel.defaultInactivityLogoutBool,
-      );
-      expect(
-        actualAutoLogoutSettingsModel.automaticLogoutMode,
-        AutoLogoutSettingsModel.defaultAutomaticLogoutMode,
-      );
-      expect(
-        actualAutoLogoutSettingsModel.inactivityLogoutTimeout,
-        AutoLogoutSettingsModel.defaultInactivityLogoutTimeout,
-      );
+      expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, AutoLogoutSettingsModel.defaultInactivityLogoutBool);
+      expect(actualAutoLogoutSettingsModel.automaticLogoutMode, AutoLogoutSettingsModel.defaultAutomaticLogoutMode);
+      expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, AutoLogoutSettingsModel.defaultInactivityLogoutTimeout);
     });
 
     test('Should [use default enum values] if [stored names NULL]', () {
       // Arrange
-      SettingsEntity settingsEntity = SettingsEntity();
+      AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity();
 
       // Act
       AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
 
       // Assert
       expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, true);
-      expect(
-        actualAutoLogoutSettingsModel.automaticLogoutMode,
-        AutoLogoutSettingsModel.defaultAutomaticLogoutMode,
-      );
-      expect(
-        actualAutoLogoutSettingsModel.inactivityLogoutTimeout,
-        AutoLogoutSettingsModel.defaultInactivityLogoutTimeout,
-      );
+      expect(actualAutoLogoutSettingsModel.automaticLogoutMode, AutoLogoutSettingsModel.defaultAutomaticLogoutMode);
+      expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, AutoLogoutSettingsModel.defaultInactivityLogoutTimeout);
     });
 
     test('Should [map enabled settings] with [one-minute timeout]', () {
       // Arrange
-      SettingsEntity settingsEntity = SettingsEntity()
+      AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity()
         ..inactivityLogoutEnabledBool = true
         ..automaticLogoutModeName = 'on'
         ..inactivityLogoutTimeoutName = 'oneMinute';
@@ -59,14 +44,8 @@ void main() {
 
       // Assert
       expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, true);
-      expect(
-        actualAutoLogoutSettingsModel.automaticLogoutMode,
-        AutomaticLogoutMode.on,
-      );
-      expect(
-        actualAutoLogoutSettingsModel.inactivityLogoutTimeout,
-        InactivityLogoutTimeout.oneMinute,
-      );
+      expect(actualAutoLogoutSettingsModel.automaticLogoutMode, AutomaticLogoutMode.on);
+      expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, InactivityLogoutTimeout.oneMinute);
     });
 
     for (bool inactivityLogoutEnabledBool in <bool>[false, true]) {
@@ -74,7 +53,7 @@ void main() {
         'Should [map saved settings] if [inactivity logout $inactivityLogoutEnabledBool]',
         () {
           // Arrange
-          SettingsEntity settingsEntity = SettingsEntity()
+          AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity()
             ..inactivityLogoutEnabledBool = inactivityLogoutEnabledBool
             ..automaticLogoutModeName = 'off'
             ..inactivityLogoutTimeoutName = 'fiveMinutes';
@@ -83,18 +62,9 @@ void main() {
           AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
 
           // Assert
-          expect(
-            actualAutoLogoutSettingsModel.inactivityLogoutBool,
-            inactivityLogoutEnabledBool,
-          );
-          expect(
-            actualAutoLogoutSettingsModel.automaticLogoutMode,
-            AutomaticLogoutMode.off,
-          );
-          expect(
-            actualAutoLogoutSettingsModel.inactivityLogoutTimeout,
-            InactivityLogoutTimeout.fiveMinutes,
-          );
+          expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, inactivityLogoutEnabledBool);
+          expect(actualAutoLogoutSettingsModel.automaticLogoutMode, AutomaticLogoutMode.off);
+          expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, InactivityLogoutTimeout.fiveMinutes);
         },
       );
     }
@@ -104,7 +74,7 @@ void main() {
         'Should [use default automatic logout mode] if [stored mode "$automaticLogoutModeName"]',
         () {
           // Arrange
-          SettingsEntity settingsEntity = SettingsEntity()
+          AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity()
             ..inactivityLogoutEnabledBool = false
             ..automaticLogoutModeName = automaticLogoutModeName
             ..inactivityLogoutTimeoutName = 'fiveMinutes';
@@ -114,14 +84,8 @@ void main() {
 
           // Assert
           expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
-          expect(
-            actualAutoLogoutSettingsModel.automaticLogoutMode,
-            AutoLogoutSettingsModel.defaultAutomaticLogoutMode,
-          );
-          expect(
-            actualAutoLogoutSettingsModel.inactivityLogoutTimeout,
-            InactivityLogoutTimeout.fiveMinutes,
-          );
+          expect(actualAutoLogoutSettingsModel.automaticLogoutMode, AutoLogoutSettingsModel.defaultAutomaticLogoutMode);
+          expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, InactivityLogoutTimeout.fiveMinutes);
         },
       );
     }
@@ -131,7 +95,7 @@ void main() {
         'Should [use default inactivity timeout] if [stored timeout "$inactivityLogoutTimeoutName"]',
         () {
           // Arrange
-          SettingsEntity settingsEntity = SettingsEntity()
+          AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity()
             ..inactivityLogoutEnabledBool = false
             ..automaticLogoutModeName = 'off'
             ..inactivityLogoutTimeoutName = inactivityLogoutTimeoutName;
@@ -141,14 +105,8 @@ void main() {
 
           // Assert
           expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
-          expect(
-            actualAutoLogoutSettingsModel.automaticLogoutMode,
-            AutomaticLogoutMode.off,
-          );
-          expect(
-            actualAutoLogoutSettingsModel.inactivityLogoutTimeout,
-            AutoLogoutSettingsModel.defaultInactivityLogoutTimeout,
-          );
+          expect(actualAutoLogoutSettingsModel.automaticLogoutMode, AutomaticLogoutMode.off);
+          expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, AutoLogoutSettingsModel.defaultInactivityLogoutTimeout);
         },
       );
     }
@@ -159,7 +117,7 @@ void main() {
         'if [timeout OFF] and [enabled flag $inactivityLogoutEnabledBool]',
         () {
           // Arrange
-          SettingsEntity settingsEntity = SettingsEntity()
+          AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity()
             ..inactivityLogoutEnabledBool = inactivityLogoutEnabledBool
             ..automaticLogoutModeName = 'on'
             ..inactivityLogoutTimeoutName = 'off';
@@ -169,14 +127,8 @@ void main() {
 
           // Assert
           expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
-          expect(
-            actualAutoLogoutSettingsModel.automaticLogoutMode,
-            AutomaticLogoutMode.on,
-          );
-          expect(
-            actualAutoLogoutSettingsModel.inactivityLogoutTimeout,
-            AutoLogoutSettingsModel.defaultInactivityLogoutTimeout,
-          );
+          expect(actualAutoLogoutSettingsModel.automaticLogoutMode, AutomaticLogoutMode.on);
+          expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, AutoLogoutSettingsModel.defaultInactivityLogoutTimeout);
         },
       );
     }
@@ -185,7 +137,7 @@ void main() {
       'Should [leave the source entity unchanged] when normalizing stored values',
       () {
         // Arrange
-        SettingsEntity settingsEntity = SettingsEntity()
+        AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity()
           ..id = 42
           ..inactivityLogoutEnabledBool = true
           ..automaticLogoutModeName = 'invalid_mode'
