@@ -192,8 +192,7 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
     );
   }
 
-  bool get _finishButtonEnabledBool =>
-      entryDetailsEditablePageCubit.state.loadingBool == false && entryDetailsEditablePageCubit.state.entryNameEmptyBool == false;
+  bool get _finishButtonEnabledBool => entryDetailsEditablePageCubit.state.entryNameEmptyBool == false;
 
   Future<void> _save() async {
     await CustomLoadingDialog.show<EntryModel?>(
