@@ -1,4 +1,0 @@
-enum EntryCreateEditStatus {
-  creationSuccessful,
-  modificationSuccessful,
-}

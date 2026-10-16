@@ -1,23 +1,21 @@
 import 'package:equatable/equatable.dart';
 
-class EntryDetailsEditablePageState extends Equatable {
+class EntryCreateEditPageState extends Equatable {
   final bool entryNameEmptyBool;
   final bool loadingBool;
 
-  const EntryDetailsEditablePageState({
+  const EntryCreateEditPageState({
     this.entryNameEmptyBool = false,
     this.loadingBool = false,
   });
 
-  const EntryDetailsEditablePageState.loading()
-      : entryNameEmptyBool = false,
-        loadingBool = true;
+  const EntryCreateEditPageState.loading() : entryNameEmptyBool = false, loadingBool = true;
 
-  EntryDetailsEditablePageState copyWith({
+  EntryCreateEditPageState copyWith({
     bool? entryNameEmptyBool,
     bool? loadingBool,
   }) {
-    return EntryDetailsEditablePageState(
+    return EntryCreateEditPageState(
       entryNameEmptyBool: entryNameEmptyBool ?? this.entryNameEmptyBool,
       loadingBool: loadingBool ?? this.loadingBool,
     );
