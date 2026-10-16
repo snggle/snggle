@@ -23,13 +23,18 @@ class PasskeyRegistrationService {
     _validateOptions(options);
     _validateContext(context);
 
-    ECPrivateKey privateKey = PasskeyKeyGenerator.generatePrivateKey();
+    ECPrivateKey ecPrivateKey = PasskeyKeyGenerator.generatePrivateKey();
 
     Uint8List credentialId = PasskeyCredentialIdGenerator.generate();
 
+    Uint8List publicKeyBytes = ecPrivateKey.ecPublicKey.uncompressed;
+
+    Uint8List x = Uint8List.sublistView(publicKeyBytes, 1, 33);
+    Uint8List y = Uint8List.sublistView(publicKeyBytes, 33, 65);
+
     Uint8List cosePublicKey = CborCosePublicKey(
-      x: privateKey.publicKey.x,
-      y: privateKey.publicKey.y,
+      x: x,
+      y: y,
     ).toSerializedCbor();
 
     Uint8List authenticatorData = PasskeyAuthenticatorDataBuilder.build(
@@ -42,8 +47,6 @@ class PasskeyRegistrationService {
       authenticatorData: authenticatorData,
     ).toSerializedCbor();
 
-    // Credential jest zapisywany dopiero po przygotowaniu
-    // wszystkich danych authenticatora.
     PasskeyModel passkeyModel = await _passkeyModelFactory.createNewPasskey(
       rpId: options.rpId,
       rpName: options.rpName,
@@ -51,7 +54,7 @@ class PasskeyRegistrationService {
       userDisplayName: options.userDisplayName,
       userId: options.userId,
       credentialId: credentialId,
-      privateKey: privateKey.bytes,
+      privateKey: _privateKeyToBytes(ecPrivateKey),
     );
 
     return PasskeyRegistrationResult(
@@ -85,5 +88,21 @@ class PasskeyRegistrationService {
         throw ArgumentError('Invalid clientDataHash');
       }
     }
+  }
+
+  Uint8List _privateKeyToBytes(ECPrivateKey ecPrivateKey) {
+    BigInt value = ecPrivateKey.d;
+    Uint8List bytes = Uint8List(32);
+
+    for (int i = 31; i >= 0; i--) {
+      bytes[i] = (value & BigInt.from(0xff)).toInt();
+      value >>= 8;
+    }
+
+    if (value != BigInt.zero) {
+      throw ArgumentError('Private key exceeds 32 bytes');
+    }
+
+    return bytes;
   }
 }

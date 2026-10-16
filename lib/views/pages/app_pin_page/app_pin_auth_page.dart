@@ -49,33 +49,33 @@ class _AppPinAuthPageState extends State<AppPinAuthPage> {
       builder: (BuildContext context, AAppPinAuthPageState appPinAuthPageState) {
         String? textWarning = _getTextWarning(appPinTypeChangeBool: appPinTypeChangeBool, appPinAuthPageState: appPinAuthPageState);
         return PopScope(
-            canPop: true,
-            onPopInvokedWithResult: (bool didPop, Object? result) {
-          if (didPop) {
-            NativeAutofillAuth.cancel();
-          }
-        },
-        child: PinpadScaffold(
-          header: textWarning != null ? PinpadBanner(text: textWarning) : null,
-          errorBool: appPinAuthPageState is AppPinAuthPageInvalidState,
-          title: title,
-          initialPinNumbersList: appPinAuthPageState.pinNumbers,
-          onChanged: _appPinAuthPageCubit.updatePinNumbers,
-          actionButtonsList: <Widget>[
-            CustomTextButton(
-              title: 'Confirm',
-              onPressed: () => _pressConfirmButton(
-                appPinTypeChangeBool: appPinTypeChangeBool,
-              ),
-            ),
-          ],
-          popButtonVisibleBool: appPinTypeChangeBool,
-          customPopVoidCallback: () async {
-            await _pressBackButton(appPinTypeChangeBool: appPinTypeChangeBool);
+          canPop: true,
+          onPopInvokedWithResult: (bool didPop, Object? result) {
+            if (didPop) {
+              NativeAutofillAuth.cancel();
+            }
           },
-          onKeyboardChanged: _handleKeyboardChanged,
-          initPinpadKeyboardState: _initPinpadKeyboardState,
-        ),
+          child: PinpadScaffold(
+            header: textWarning != null ? PinpadBanner(text: textWarning) : null,
+            errorBool: appPinAuthPageState is AppPinAuthPageInvalidState,
+            title: title,
+            initialPinNumbersList: appPinAuthPageState.pinNumbers,
+            onChanged: _appPinAuthPageCubit.updatePinNumbers,
+            actionButtonsList: <Widget>[
+              CustomTextButton(
+                title: 'Confirm',
+                onPressed: () => _pressConfirmButton(
+                  appPinTypeChangeBool: appPinTypeChangeBool,
+                ),
+              ),
+            ],
+            popButtonVisibleBool: appPinTypeChangeBool,
+            customPopVoidCallback: () async {
+              await _pressBackButton(appPinTypeChangeBool: appPinTypeChangeBool);
+            },
+            onKeyboardChanged: _handleKeyboardChanged,
+            initPinpadKeyboardState: _initPinpadKeyboardState,
+          ),
         );
       },
     );
@@ -120,6 +120,11 @@ class _AppPinAuthPageState extends State<AppPinAuthPage> {
 
           case AppLaunchMode.autofillSave:
             await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const AutofillSaveEntryRoute()]);
+
+          case AppLaunchMode.passkeyCreate:
+            await AutoRouter.of(context).replaceAll(
+              <PageRouteInfo>[const PasskeyCreateRoute()],
+            );
 
           case AppLaunchMode.main:
             await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);

@@ -1,4 +1,4 @@
-import 'dart:nativewrappers/_internal/vm/lib/typed_data_patch.dart';
+import 'dart:typed_data';
 
 import 'package:snggle/shared/models/passkeys/passkey_model.dart';
 

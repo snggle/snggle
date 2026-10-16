@@ -71,6 +71,34 @@ class PasskeyCreateActivity : FlutterActivity() {
         }
     }
 
+    private fun getPasskeyCreateContext(
+        result: MethodChannel.Result
+    ) {
+        val providerRequest =
+            PendingIntentHandler.retrieveProviderCreateCredentialRequest(intent)
+
+        val publicKeyRequest =
+            providerRequest?.callingRequest as? CreatePublicKeyCredentialRequest
+
+        if (publicKeyRequest == null) {
+            result.error(
+                "INVALID_REQUEST",
+                "Missing public key credential creation request",
+                null
+            )
+            return
+        }
+
+        result.success(
+            mapOf(
+                "requestJson" to publicKeyRequest.requestJson,
+                "clientDataHash" to publicKeyRequest.clientDataHash,
+                "origin" to "",
+                "privilegedBool" to false,
+                "callingPackage" to providerRequest.callingAppInfo.packageName
+            )
+        )
+    }
     private fun handlePasskeyCreateMethodCall(
         call: MethodCall,
         result: MethodChannel.Result
@@ -130,10 +158,36 @@ class PasskeyCreateActivity : FlutterActivity() {
             return
         }
 
+        if (providerRequest.callingAppInfo.packageName != "com.android.chrome") {
+            Log.e(TAG, "Unsupported calling application")
+            return
+        }
+
+        val privilegedAllowlist = resources.openRawResource(
+            R.raw.privileged_apps
+        ).bufferedReader().use { it.readText() }
+
+        val origin = try {
+            providerRequest.callingAppInfo.getOrigin(privilegedAllowlist)
+        } catch (exception: IllegalArgumentException) {
+            Log.e(TAG, "Invalid privileged allowlist", exception)
+            return
+        } catch (exception: IllegalStateException) {
+            Log.e(TAG, "Untrusted calling application", exception)
+            return
+        }
+
+        if (origin.isNullOrBlank()) {
+            Log.e(TAG, "Missing verified origin")
+            return
+        }
+
         passkeyCreateContext = PasskeyCreateContext(
             requestJson = callingRequest.requestJson,
             clientDataHash = callingRequest.clientDataHash,
-            callingPackage = providerRequest.callingAppInfo.packageName
+            callingPackage = providerRequest.callingAppInfo.packageName,
+            origin = origin,
+            privilegedBool = true
         )
     }
 
@@ -169,6 +223,8 @@ class PasskeyCreateActivity : FlutterActivity() {
     private data class PasskeyCreateContext(
         val requestJson: String = "",
         val clientDataHash: ByteArray? = null,
-        val callingPackage: String? = null
+        val callingPackage: String? = null,
+        val origin: String? = null,
+        val privilegedBool: Boolean = false
     )
 }

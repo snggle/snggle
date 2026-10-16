@@ -84,6 +84,7 @@ class _AppUnavailableDialogState extends State<AppUnavailableDialog> {
     return switch (mode) {
       AppLaunchMode.autofillAuth => NativeAutofillAuth.cancel(),
       AppLaunchMode.autofillSave => NativeAutofillSave.cancel(),
+      AppLaunchMode.autofillSave => NativeAutofillPasskeyCreate.cancel(),
       AppLaunchMode.main => throw StateError(
         'No finish action for AppLaunchMode.main',
       ),
