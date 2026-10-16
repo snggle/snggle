@@ -4,7 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/entry_list_page/entry_list_page_cubit.dart';
-import 'package:snggle/bloc/pages/entry_details_editable/entry_page_type.dart';
+import 'package:snggle/bloc/pages/entry_create_edit/entry_page_type.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/invalid_master_key_exception.dart';
@@ -16,7 +16,6 @@ import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
-import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/entry_list_page/entry_create_edit_status.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/entry_list_page/entry_list_item.dart';
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_group_list_item.dart';
 import 'package:snggle/views/widgets/button/list_item_creation_button.dart';
@@ -79,7 +78,7 @@ class _EntryListPageState extends State<EntryListPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: CustomBottomNavigationBar.contentHeight),
                     child: IconButton(
-                      onPressed: _navigateToEntryCreateEditRoute,
+                      onPressed: _navigateToEntryCreateRoute,
                       icon: const AssetIcon(AppIcons.page_add_button, size: 54),
                     ),
                   ),
@@ -94,7 +93,7 @@ class _EntryListPageState extends State<EntryListPage> {
                 creationButton: HorizontalListItemLayout(
                   iconWidget: ListItemCreationButton(
                     size: HorizontalListItemLayout.listItemIconSize,
-                    onTap: _navigateToEntryCreateEditRoute,
+                    onTap: _navigateToEntryCreateRoute,
                   ),
                 ),
                 itemBuilder: (AListItemModel listItemModel) {
@@ -136,15 +135,22 @@ class _EntryListPageState extends State<EntryListPage> {
     );
   }
 
-  Future<void> _navigateToEntryCreateEditRoute() async {
-    EntryCreateEditStatus? entryCreateEditStatus = await AutoRouter.of(context).push<EntryCreateEditStatus?>(
-      EntryDetailsEditableRoute(
-        parentFilesystemPath: entryListPageCubit.state.filesystemPath,
-        entryPageType: EntryPageType.create,
-      ),
-    );
+  Future<void> _navigateToEntryCreateRoute() async {
+    bool creationSavedBool =
+        (await AutoRouter.of(context).push<bool>(
+          EntryCreateEditRoute(
+            parentFilesystemPath: entryListPageCubit.state.filesystemPath,
+            entryPageType: EntryPageType.create,
+          ),
+        )) ??
+        false;
 
-    await _handleEntryCreateEditStatus(entryCreateEditStatus);
+    if (creationSavedBool == false || mounted == false) {
+      return;
+    }
+
+    unawaited(entryListPageCubit.refreshAll());
+    await _showCreationSuccessDialog();
   }
 
   Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
@@ -163,13 +169,12 @@ class _EntryListPageState extends State<EntryListPage> {
     globalLocator<PasswordController>().addPassword(passwordModel, listItemModel.filesystemPath);
 
     if (listItemModel is EntryModel) {
-      EntryCreateEditStatus? entryCreateEditStatus = await AutoRouter.of(context).push<EntryCreateEditStatus?>(
+      await AutoRouter.of(context).push<void>(
         EntryDetailsRoute(
           entryModel: listItemModel,
         ),
       );
-      await _handleEntryCreateEditStatus(entryCreateEditStatus);
-      if (entryCreateEditStatus == null) {
+      if (mounted) {
         await entryListPageCubit.refreshAll();
       }
     } else if (listItemModel is GroupModel) {
@@ -179,22 +184,14 @@ class _EntryListPageState extends State<EntryListPage> {
     }
   }
 
-  Future<void> _handleEntryCreateEditStatus(EntryCreateEditStatus? entryCreateEditStatus) async {
-    if (entryCreateEditStatus == null) {
-      return;
-    }
-
-    unawaited(entryListPageCubit.refreshAll());
+  Future<void> _showCreationSuccessDialog() async {
     await showDialog(
       context: context,
       barrierColor: Colors.transparent,
       builder: (BuildContext context) => CustomDialog(
         title: 'Success',
-        content: Text(
-          switch (entryCreateEditStatus) {
-            EntryCreateEditStatus.creationSuccessful => 'The entry creation process has been completed.',
-            EntryCreateEditStatus.modificationSuccessful => 'The entry modification process has been completed.',
-          },
+        content: const Text(
+          'The entry creation process has been completed.',
           textAlign: TextAlign.center,
         ),
         options: <CustomDialogOption>[
