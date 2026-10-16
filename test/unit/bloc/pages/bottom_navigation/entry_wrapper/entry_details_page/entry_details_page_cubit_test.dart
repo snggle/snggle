@@ -34,10 +34,12 @@ void main() {
       'entry_password_1',
     );
 
-    await globalLocator<EntriesService>().save(actualEntryModel.copyWith(
-      name: 'UPDATED ENTRY 0',
-      website: 'https://updated-entry1.example',
-    ));
+    await globalLocator<EntriesService>().save(
+      actualEntryModel.copyWith(
+        name: 'UPDATED ENTRY 0',
+        website: 'https://updated-entry1.example',
+      ),
+    );
 
     globalLocator<PasswordController>().addPassword(
       PasswordModel.defaultPassword(),
@@ -57,7 +59,7 @@ void main() {
   group('Tests of EntryDetailsPageCubit.init()', () {
     test('Should [load entry data and secrets into controllers]', () async {
       // Act
-      await actualEntryDetailsPageCubit.init();
+      await actualEntryDetailsPageCubit.refresh();
 
       // Assert
       EntryModel expectedEntryModel = EntryModel(
@@ -86,7 +88,7 @@ void main() {
   group('Tests of EntryDetailsPageCubit.save()', () {
     test('Should [update entry secrets] and keep [loadingBool == FALSE] after save', () async {
       // Arrange
-      await actualEntryDetailsPageCubit.init();
+      await actualEntryDetailsPageCubit.refresh();
       actualEntryDetailsPageCubit.emailTextEditingController.text = 'updated-entry1@example.com';
       actualEntryDetailsPageCubit.usernameTextEditingController.text = '';
       actualEntryDetailsPageCubit.passwordTextEditingController.text = '';

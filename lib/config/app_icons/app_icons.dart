@@ -39,11 +39,13 @@ class AppIcons {
   static const AssetIconData icon_container_network_solana = AssetIconData('assets/icons/icon_container_network_solana.svg');
   static const AssetIconData icon_container_network_unknown = AssetIconData('assets/icons/icon_container_network_unknown.svg');
   static const AssetIconData icon_container_vault_pinned_medium = AssetIconData('assets/icons/icon_container_vault_pinned_medium.svg');
-  static const AssetIconData icon_container_vault_pinned_medium_background =
-      AssetIconData('assets/icons/icon_container_vault_pinned_medium_background.svg');
+  static const AssetIconData icon_container_vault_pinned_medium_background = AssetIconData(
+    'assets/icons/icon_container_vault_pinned_medium_background.svg',
+  );
   static const AssetIconData icon_container_vault_unpinned_medium = AssetIconData('assets/icons/icon_container_vault_unpinned_medium.svg');
-  static const AssetIconData icon_container_vault_unpinned_medium_background =
-      AssetIconData('assets/icons/icon_container_vault_unpinned_medium_background.svg');
+  static const AssetIconData icon_container_vault_unpinned_medium_background = AssetIconData(
+    'assets/icons/icon_container_vault_unpinned_medium_background.svg',
+  );
   static const AssetIconData icon_entry_email = AssetIconData('assets/icons/icon_entry_email.svg');
   static const AssetIconData icon_entry_password = AssetIconData('assets/icons/icon_entry_password.svg');
   static const AssetIconData icon_entry_username = AssetIconData('assets/icons/icon_entry_username.svg');

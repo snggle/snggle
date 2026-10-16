@@ -15,13 +15,13 @@ class NetworkListPageCubit extends AListCubit<NetworkGroupModel> {
     required super.filesystemPath,
     required ValueChanged<FilesystemPath> onGroupNavigateBack,
   }) : super(
-          listItemsService: globalLocator<NetworkGroupsService>(),
-          childItemsServices: <IListItemsService<AListItemModel>>[
-            globalLocator<WalletsService>(),
-            globalLocator<GroupsService>(),
-          ],
-          onGroupNavigateBack: onGroupNavigateBack,
-        );
+         listItemsService: globalLocator<NetworkGroupsService>(),
+         childItemsServices: <IListItemsService<AListItemModel>>[
+           globalLocator<WalletsService>(),
+           globalLocator<GroupsService>(),
+         ],
+         onGroupNavigateBack: onGroupNavigateBack,
+       );
 
   @override
   bool canBeRenamedBool(AListItemModel item) => false;

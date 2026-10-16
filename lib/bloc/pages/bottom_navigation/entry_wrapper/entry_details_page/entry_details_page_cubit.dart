@@ -45,7 +45,7 @@ class EntryDetailsPageCubit extends Cubit<EntryDetailsPageState> {
     await super.close();
   }
 
-  Future<void> init() async {
+  Future<void> refresh() async {
     emit(state.copyWith(loadingBool: true));
 
     _entryModel = await _entriesService.getById(_entryModel.id);
