@@ -14,7 +14,7 @@ import 'package:auto_route/auto_route.dart' as _i30;
 import 'package:flutter/material.dart' as _i32;
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart'
     as _i45;
-import 'package:snggle/bloc/pages/entry_details_editable/entry_page_type.dart'
+import 'package:snggle/bloc/pages/entry_create_edit/entry_page_type.dart'
     as _i36;
 import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_state.dart'
     as _i35;
@@ -75,7 +75,7 @@ import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_detai
     as _i28;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_page.dart'
     as _i29;
-import 'package:snggle/views/pages/entry_details_editable/entry_details_editable_page/entry_details_editable_page.dart'
+import 'package:snggle/views/pages/entry_create_edit_page/entry_create_edit_page.dart'
     as _i10;
 import 'package:snggle/views/pages/splash_page.dart' as _i18;
 import 'package:snggle/views/pages/vault_create_recover/vault_create_page/vault_create_page.dart'
@@ -338,10 +338,10 @@ class EntriesSectionWrapperRoute extends _i30.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i10.EntryDetailsEditablePage]
-class EntryDetailsEditableRoute
-    extends _i30.PageRouteInfo<EntryDetailsEditableRouteArgs> {
-  EntryDetailsEditableRoute({
+/// [_i10.EntryCreateEditPage]
+class EntryCreateEditRoute
+    extends _i30.PageRouteInfo<EntryCreateEditRouteArgs> {
+  EntryCreateEditRoute({
     required _i36.EntryPageType entryPageType,
     required _i37.FilesystemPath parentFilesystemPath,
     _i38.EntryModel? entryModel,
@@ -349,8 +349,8 @@ class EntryDetailsEditableRoute
     _i32.Key? key,
     List<_i30.PageRouteInfo>? children,
   }) : super(
-         EntryDetailsEditableRoute.name,
-         args: EntryDetailsEditableRouteArgs(
+         EntryCreateEditRoute.name,
+         args: EntryCreateEditRouteArgs(
            entryPageType: entryPageType,
            parentFilesystemPath: parentFilesystemPath,
            entryModel: entryModel,
@@ -360,13 +360,13 @@ class EntryDetailsEditableRoute
          initialChildren: children,
        );
 
-  static const String name = 'EntryDetailsEditableRoute';
+  static const String name = 'EntryCreateEditRoute';
 
   static _i30.PageInfo page = _i30.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<EntryDetailsEditableRouteArgs>();
-      return _i10.EntryDetailsEditablePage(
+      final args = data.argsAs<EntryCreateEditRouteArgs>();
+      return _i10.EntryCreateEditPage(
         entryPageType: args.entryPageType,
         parentFilesystemPath: args.parentFilesystemPath,
         entryModel: args.entryModel,
@@ -377,8 +377,8 @@ class EntryDetailsEditableRoute
   );
 }
 
-class EntryDetailsEditableRouteArgs {
-  const EntryDetailsEditableRouteArgs({
+class EntryCreateEditRouteArgs {
+  const EntryCreateEditRouteArgs({
     required this.entryPageType,
     required this.parentFilesystemPath,
     this.entryModel,
@@ -398,13 +398,13 @@ class EntryDetailsEditableRouteArgs {
 
   @override
   String toString() {
-    return 'EntryDetailsEditableRouteArgs{entryPageType: $entryPageType, parentFilesystemPath: $parentFilesystemPath, entryModel: $entryModel, obscurePasswordBool: $obscurePasswordBool, key: $key}';
+    return 'EntryCreateEditRouteArgs{entryPageType: $entryPageType, parentFilesystemPath: $parentFilesystemPath, entryModel: $entryModel, obscurePasswordBool: $obscurePasswordBool, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    if (other is! EntryDetailsEditableRouteArgs) return false;
+    if (other is! EntryCreateEditRouteArgs) return false;
     return entryPageType == other.entryPageType &&
         parentFilesystemPath == other.parentFilesystemPath &&
         entryModel == other.entryModel &&

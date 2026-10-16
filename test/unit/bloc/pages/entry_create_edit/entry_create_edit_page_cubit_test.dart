@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/bloc/pages/entry_details_editable/entry_details_editable_page/entry_details_editable_page_cubit.dart';
-import 'package:snggle/bloc/pages/entry_details_editable/entry_details_editable_page/entry_details_editable_page_state.dart';
-import 'package:snggle/bloc/pages/entry_details_editable/entry_page_type.dart';
+import 'package:snggle/bloc/pages/entry_create_edit/entry_create_edit_page/entry_create_edit_page_cubit.dart';
+import 'package:snggle/bloc/pages/entry_create_edit/entry_create_edit_page/entry_create_edit_page_state.dart';
+import 'package:snggle/bloc/pages/entry_create_edit/entry_page_type.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/entries_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
@@ -12,14 +12,14 @@ import 'package:snggle/shared/models/entries/entry_secrets_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
-import '../../../../../utils/database_mock.dart';
-import '../../../../../utils/test_database.dart';
+import '../../../../utils/database_mock.dart';
+import '../../../../utils/test_database.dart';
 
 void main() {
   final TestDatabase testDatabase = TestDatabase();
 
-  group('Tests of EntryDetailsEditablePageCubit process (create mode)', () {
-    late EntryDetailsEditablePageCubit actualEntryDetailsEditablePageCubit;
+  group('Tests of EntryCreateEditPageCubit process (create mode)', () {
+    late EntryCreateEditPageCubit actualEntryCreateEditPageCubit;
 
     setUp(() async {
       await testDatabase.init(
@@ -27,25 +27,25 @@ void main() {
         appPasswordModel: PasswordModel.fromPlaintext('1111'),
       );
 
-      actualEntryDetailsEditablePageCubit = EntryDetailsEditablePageCubit(
+      actualEntryCreateEditPageCubit = EntryCreateEditPageCubit(
         parentFilesystemPath: FilesystemPath.fromString('entries'),
         entryModel: null,
         entryPageType: EntryPageType.create,
       );
     });
 
-    test('Should [emit EntryDetailsEditablePageState] with [loadingBool == TRUE]', () {
+    test('Should [emit EntryCreateEditPageState] with [loadingBool == TRUE]', () {
       // Assert
-      expect(actualEntryDetailsEditablePageCubit.state, const EntryDetailsEditablePageState.loading());
+      expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState.loading());
     });
 
     test('Should [initialize default entry name] if [database EMPTY]', () async {
       // Act
-      await actualEntryDetailsEditablePageCubit.init();
+      await actualEntryCreateEditPageCubit.init();
 
       // Assert
-      expect(actualEntryDetailsEditablePageCubit.state, const EntryDetailsEditablePageState());
-      expect(actualEntryDetailsEditablePageCubit.nameTextEditingController.text, 'Entry');
+      expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState());
+      expect(actualEntryCreateEditPageCubit.nameTextEditingController.text, 'Entry');
     });
 
     test('Should [initialize next entry name] if [database NOT EMPTY]', () async {
@@ -60,40 +60,40 @@ void main() {
       );
 
       // Act
-      await actualEntryDetailsEditablePageCubit.init();
+      await actualEntryCreateEditPageCubit.init();
 
       // Assert
-      expect(actualEntryDetailsEditablePageCubit.state, const EntryDetailsEditablePageState());
-      expect(actualEntryDetailsEditablePageCubit.nameTextEditingController.text, 'Entry 1');
+      expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState());
+      expect(actualEntryCreateEditPageCubit.nameTextEditingController.text, 'Entry 1');
     });
 
-    test('Should [return NULL] and [emit EntryDetailsEditablePageState] with [entryNameEmptyBool == TRUE] if [name EMPTY]', () async {
+    test('Should [return NULL] and [emit EntryCreateEditPageState] with [entryNameEmptyBool == TRUE] if [name EMPTY]', () async {
       // Arrange
-      await actualEntryDetailsEditablePageCubit.init();
-      actualEntryDetailsEditablePageCubit.nameTextEditingController.text = '   ';
+      await actualEntryCreateEditPageCubit.init();
+      actualEntryCreateEditPageCubit.nameTextEditingController.text = '   ';
 
       // Act
-      EntryModel? actualEntryModel = await actualEntryDetailsEditablePageCubit.save();
+      EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
 
       // Assert
       expect(actualEntryModel, null);
       expect(
-        actualEntryDetailsEditablePageCubit.state,
-        const EntryDetailsEditablePageState(entryNameEmptyBool: true),
+        actualEntryCreateEditPageCubit.state,
+        const EntryCreateEditPageState(entryNameEmptyBool: true),
       );
     });
 
     test('Should [return EntryModel] and save entry with secrets', () async {
       // Arrange
-      await actualEntryDetailsEditablePageCubit.init();
-      actualEntryDetailsEditablePageCubit.nameTextEditingController.text = 'ENTRY 0';
-      actualEntryDetailsEditablePageCubit.websiteTextEditingController.text = 'https://snggle.com';
-      actualEntryDetailsEditablePageCubit.emailTextEditingController.text = 'entry1@example.com';
-      actualEntryDetailsEditablePageCubit.usernameTextEditingController.text = 'entry_user_1';
-      actualEntryDetailsEditablePageCubit.passwordTextEditingController.text = 'entry_password_1';
+      await actualEntryCreateEditPageCubit.init();
+      actualEntryCreateEditPageCubit.nameTextEditingController.text = 'ENTRY 0';
+      actualEntryCreateEditPageCubit.websiteTextEditingController.text = 'https://snggle.com';
+      actualEntryCreateEditPageCubit.emailTextEditingController.text = 'entry1@example.com';
+      actualEntryCreateEditPageCubit.usernameTextEditingController.text = 'entry_user_1';
+      actualEntryCreateEditPageCubit.passwordTextEditingController.text = 'entry_password_1';
 
       // Act
-      EntryModel? actualEntryModel = await actualEntryDetailsEditablePageCubit.save();
+      EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
       EntrySecretsModel actualEntrySecrets = await globalLocator<SecretsService>().get(
         FilesystemPath.fromString('entries/entry1'),
         PasswordModel.defaultPassword(),
@@ -121,14 +121,14 @@ void main() {
 
       expect(actualEntryModel, expectedEntryModel);
       expect(actualEntrySecrets, expectedEntrySecrets);
-      expect(actualEntryDetailsEditablePageCubit.state, const EntryDetailsEditablePageState());
+      expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState());
     });
 
     tearDown(testDatabase.close);
   });
 
-  group('Tests of EntryDetailsEditablePageCubit process (edit mode)', () {
-    late EntryDetailsEditablePageCubit actualEntryDetailsEditablePageCubit;
+  group('Tests of EntryCreateEditPageCubit process (edit mode)', () {
+    late EntryCreateEditPageCubit actualEntryCreateEditPageCubit;
     late EntryModel actualEntryModel;
 
     setUp(() async {
@@ -150,42 +150,42 @@ void main() {
         actualEntryModel.filesystemPath,
       );
 
-      actualEntryDetailsEditablePageCubit = EntryDetailsEditablePageCubit(
+      actualEntryCreateEditPageCubit = EntryCreateEditPageCubit(
         parentFilesystemPath: actualEntryModel.filesystemPath,
         entryModel: actualEntryModel,
         entryPageType: EntryPageType.edit,
       );
     });
 
-    test('Should [emit EntryDetailsEditablePageState] with [loadingBool == TRUE]', () {
+    test('Should [emit EntryCreateEditPageState] with [loadingBool == TRUE]', () {
       // Assert
-      expect(actualEntryDetailsEditablePageCubit.state, const EntryDetailsEditablePageState.loading());
+      expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState.loading());
     });
 
     test('Should [initialize controllers] with entry values', () async {
       // Act
-      await actualEntryDetailsEditablePageCubit.init();
+      await actualEntryCreateEditPageCubit.init();
 
       // Assert
-      expect(actualEntryDetailsEditablePageCubit.state, const EntryDetailsEditablePageState());
-      expect(actualEntryDetailsEditablePageCubit.nameTextEditingController.text, 'ENTRY 0');
-      expect(actualEntryDetailsEditablePageCubit.websiteTextEditingController.text, 'https://snggle.com');
-      expect(actualEntryDetailsEditablePageCubit.emailTextEditingController.text, 'entry1@example.com');
-      expect(actualEntryDetailsEditablePageCubit.usernameTextEditingController.text, 'entry_user_1');
-      expect(actualEntryDetailsEditablePageCubit.passwordTextEditingController.text, 'entry_password_1');
+      expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState());
+      expect(actualEntryCreateEditPageCubit.nameTextEditingController.text, 'ENTRY 0');
+      expect(actualEntryCreateEditPageCubit.websiteTextEditingController.text, 'https://snggle.com');
+      expect(actualEntryCreateEditPageCubit.emailTextEditingController.text, 'entry1@example.com');
+      expect(actualEntryCreateEditPageCubit.usernameTextEditingController.text, 'entry_user_1');
+      expect(actualEntryCreateEditPageCubit.passwordTextEditingController.text, 'entry_password_1');
     });
 
     test('Should [return updated EntryModel] and update entry with secrets', () async {
       // Arrange
-      await actualEntryDetailsEditablePageCubit.init();
-      actualEntryDetailsEditablePageCubit.nameTextEditingController.text = 'UPDATED ENTRY 0';
-      actualEntryDetailsEditablePageCubit.websiteTextEditingController.text = 'https://updated-entry1.example';
-      actualEntryDetailsEditablePageCubit.emailTextEditingController.text = 'updated-entry1@example.com';
-      actualEntryDetailsEditablePageCubit.usernameTextEditingController.text = '';
-      actualEntryDetailsEditablePageCubit.passwordTextEditingController.text = '';
+      await actualEntryCreateEditPageCubit.init();
+      actualEntryCreateEditPageCubit.nameTextEditingController.text = 'UPDATED ENTRY 0';
+      actualEntryCreateEditPageCubit.websiteTextEditingController.text = 'https://updated-entry1.example';
+      actualEntryCreateEditPageCubit.emailTextEditingController.text = 'updated-entry1@example.com';
+      actualEntryCreateEditPageCubit.usernameTextEditingController.text = '';
+      actualEntryCreateEditPageCubit.passwordTextEditingController.text = '';
 
       // Act
-      EntryModel? actualUpdatedEntryModel = await actualEntryDetailsEditablePageCubit.save();
+      EntryModel? actualUpdatedEntryModel = await actualEntryCreateEditPageCubit.save();
       EntryModel actualSavedEntryModel = await globalLocator<EntriesService>().getById(actualEntryModel.id);
       EntrySecretsModel actualSavedEntrySecrets = await globalLocator<SecretsService>().get(
         actualEntryModel.filesystemPath,
@@ -215,7 +215,7 @@ void main() {
       expect(actualUpdatedEntryModel, expectedUpdatedEntryModel);
       expect(actualSavedEntryModel, expectedUpdatedEntryModel);
       expect(actualSavedEntrySecrets, expectedSavedEntrySecrets);
-      expect(actualEntryDetailsEditablePageCubit.state, const EntryDetailsEditablePageState());
+      expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState());
     });
 
     tearDown(testDatabase.close);

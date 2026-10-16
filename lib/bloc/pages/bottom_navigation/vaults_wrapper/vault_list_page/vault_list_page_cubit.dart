@@ -16,14 +16,14 @@ class VaultListPageCubit extends AListCubit<VaultModel> {
     required super.filesystemPath,
     required ValueChanged<FilesystemPath> onGroupNavigateBack,
   }) : super(
-          listItemsService: globalLocator<VaultsService>(),
-          childItemsServices: <IListItemsService<AListItemModel>>[
-            globalLocator<WalletsService>(),
-            globalLocator<NetworkGroupsService>(),
-            globalLocator<GroupsService>(),
-          ],
-          onGroupNavigateBack: onGroupNavigateBack,
-        );
+         listItemsService: globalLocator<VaultsService>(),
+         childItemsServices: <IListItemsService<AListItemModel>>[
+           globalLocator<WalletsService>(),
+           globalLocator<NetworkGroupsService>(),
+           globalLocator<GroupsService>(),
+         ],
+         onGroupNavigateBack: onGroupNavigateBack,
+       );
 
   @override
   bool canBeRenamedBool(AListItemModel item) => true;
