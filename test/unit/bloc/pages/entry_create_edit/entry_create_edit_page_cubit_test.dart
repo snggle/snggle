@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/pages/entry_create_edit/entry_create_edit_page/entry_create_edit_page_cubit.dart';
 import 'package:snggle/bloc/pages/entry_create_edit/entry_create_edit_page/entry_create_edit_page_state.dart';
-import 'package:snggle/bloc/pages/entry_create_edit/entry_page_type.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/entries_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
@@ -11,6 +10,7 @@ import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/models/entries/entry_secrets_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
+import 'package:snggle/views/pages/entry_create_edit/entry_page_type.dart';
 
 import '../../../../utils/database_mock.dart';
 import '../../../../utils/test_database.dart';
