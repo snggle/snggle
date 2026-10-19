@@ -14,8 +14,6 @@ import 'package:auto_route/auto_route.dart' as _i30;
 import 'package:flutter/material.dart' as _i32;
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart'
     as _i45;
-import 'package:snggle/bloc/pages/entry_create_edit/entry_page_type.dart'
-    as _i36;
 import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_state.dart'
     as _i35;
 import 'package:snggle/shared/models/entries/entry_model.dart' as _i38;
@@ -75,8 +73,10 @@ import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_detai
     as _i28;
 import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_page/wallet_list_page.dart'
     as _i29;
-import 'package:snggle/views/pages/entry_create_edit_page/entry_create_edit_page.dart'
+import 'package:snggle/views/pages/entry_create_edit/entry_create_edit_page/entry_create_edit_page.dart'
     as _i10;
+import 'package:snggle/views/pages/entry_create_edit/entry_page_type.dart'
+    as _i36;
 import 'package:snggle/views/pages/splash_page.dart' as _i18;
 import 'package:snggle/views/pages/vault_create_recover/vault_create_page/vault_create_page.dart'
     as _i19;
