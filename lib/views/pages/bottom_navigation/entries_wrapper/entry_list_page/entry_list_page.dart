@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/entry_list_page/entry_list_page_cubit.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/entries_wrapper/entry_list_page/entry_list_page_cubit.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/exceptions/invalid_master_key_exception.dart';

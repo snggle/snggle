@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/entry_details_page/entry_details_page_state.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/entries_wrapper/entry_details_page/entry_details_page_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/entries_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
