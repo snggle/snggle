@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/entry_list_page/entry_list_page_cubit.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/entries_wrapper/entry_list_page/entry_list_page_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/entries_service.dart';
 import 'package:snggle/infra/services/groups_service.dart';
