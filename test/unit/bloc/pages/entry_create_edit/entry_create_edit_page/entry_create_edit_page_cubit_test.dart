@@ -12,8 +12,8 @@ import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/entry_create_edit/entry_page_type.dart';
 
-import '../../../../utils/database_mock.dart';
-import '../../../../utils/test_database.dart';
+import '../../../../../utils/database_mock.dart';
+import '../../../../../utils/test_database.dart';
 
 void main() {
   final TestDatabase testDatabase = TestDatabase();

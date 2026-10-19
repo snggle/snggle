@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/entry_details_page/entry_details_page_state.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/entries_wrapper/entry_details_page/entry_details_page_state.dart';
 
 void main() {
   group('Tests of EntryDetailsPageState.loading() constructor', () {
