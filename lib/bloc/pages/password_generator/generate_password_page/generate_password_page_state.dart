@@ -1,6 +1,6 @@
 import 'package:cryptography_utils/cryptography_utils.dart' show CharacterSetType;
 import 'package:equatable/equatable.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/password_level_type.dart';
+import 'package:snggle/bloc/pages/password_generator/password_level_type.dart';
 
 class GeneratePasswordPageState extends Equatable {
   final CharacterSetType characterSetType;

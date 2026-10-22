@@ -233,7 +233,7 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
 
   Future<void> _showGeneratePasswordPage() async {
     String? generatedPassword = await AutoRouter.of(context).push<String>(
-      GeneratePasswordRoute(parentFilesystemPath: widget.parentFilesystemPath),
+      const PasswordGeneratorInitRoute(),
     );
 
     if (generatedPassword != null) {

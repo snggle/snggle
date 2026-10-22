@@ -3,12 +3,11 @@ import 'package:cryptography_utils/cryptography_utils.dart' show CharacterSetTyp
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/generate_password_page_cubit.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/generate_password_page_state.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/password_level_type.dart';
+import 'package:snggle/bloc/pages/password_generator/generate_password_page/generate_password_page_cubit.dart';
+import 'package:snggle/bloc/pages/password_generator/generate_password_page/generate_password_page_state.dart';
+import 'package:snggle/bloc/pages/password_generator/password_level_type.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
-import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/shared/utils/formatters/custom_password_length_input_formatter.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
@@ -26,11 +25,11 @@ import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.
 
 @RoutePage()
 class GeneratePasswordPage extends StatefulWidget {
-  final FilesystemPath? parentFilesystemPath;
-  final bool? obscurePasswordBool;
+  final bool obscurePasswordBool;
+  final bool advancedOptionsBool;
 
   const GeneratePasswordPage({
-    this.parentFilesystemPath,
+    this.advancedOptionsBool = false,
     this.obscurePasswordBool = true,
     super.key,
   });
@@ -40,7 +39,7 @@ class GeneratePasswordPage extends StatefulWidget {
 }
 
 class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
-  static const List<CharacterSetType> _characterSetOptions = <CharacterSetType>[
+  static const List<CharacterSetType> advancedOptions = <CharacterSetType>[
     CharacterSetType.ascii,
     CharacterSetType.sip2,
   ];
@@ -122,7 +121,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                               ),
                               CustomSingleSelectMenu<CharacterSetType>(
                                 selectedValue: state.characterSetType,
-                                options: _characterSetOptions,
+                                options: advancedOptions,
                                 onSelected: _handleCharacterSetChanged,
                                 itemBuilder: (BuildContext context, CharacterSetType passwordCharacterSetType) {
                                   return Stack(

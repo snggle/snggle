@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/generate_password_page_state.dart';
-import 'package:snggle/bloc/pages/bottom_navigation/entry_wrapper/generate_password_page/password_level_type.dart';
+import 'package:snggle/bloc/pages/password_generator/generate_password_page/generate_password_page_state.dart';
+import 'package:snggle/bloc/pages/password_generator/password_level_type.dart';
 
 class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   static const int minCustomPasswordLength = 4;
