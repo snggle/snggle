@@ -8,6 +8,7 @@ import 'package:snggle/infra/repositories/entries_repository.dart';
 import 'package:snggle/infra/repositories/groups_repository.dart';
 import 'package:snggle/infra/repositories/master_key_repository.dart';
 import 'package:snggle/infra/repositories/network_groups_repository.dart';
+import 'package:snggle/infra/repositories/passkeys_repository.dart';
 import 'package:snggle/infra/repositories/secrets_repository.dart';
 import 'package:snggle/infra/repositories/transactions_repository.dart';
 import 'package:snggle/infra/repositories/vaults_repository.dart';
@@ -17,6 +18,7 @@ import 'package:snggle/infra/services/entries_service.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/infra/services/network_groups_service.dart';
+import 'package:snggle/infra/services/passkeys_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/transaction_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
@@ -27,6 +29,7 @@ import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/factories/entry_model_factory.dart';
 import 'package:snggle/shared/factories/group_model_factory.dart';
 import 'package:snggle/shared/factories/network_group_model_factory.dart';
+import 'package:snggle/shared/factories/passkey_model_factory.dart';
 import 'package:snggle/shared/factories/vault_model_factory.dart';
 import 'package:snggle/shared/factories/wallet_model_factory.dart';
 
@@ -61,7 +64,8 @@ void _initRepositories() {
     ..registerLazySingleton<WalletsRepository>(WalletsRepository.new)
     ..registerLazySingleton<TransactionsRepository>(TransactionsRepository.new)
     ..registerLazySingleton<GroupsRepository>(GroupsRepository.new)
-    ..registerLazySingleton<EntriesRepository>(EntriesRepository.new);
+    ..registerLazySingleton<EntriesRepository>(EntriesRepository.new)
+    ..registerLazySingleton<PasskeysRepository>(PasskeysRepository.new);
 }
 
 void _initServices() {
@@ -74,7 +78,8 @@ void _initServices() {
     ..registerLazySingleton<WalletsService>(WalletsService.new)
     ..registerLazySingleton<TransactionsService>(TransactionsService.new)
     ..registerLazySingleton<GroupsService>(GroupsService.new)
-    ..registerLazySingleton<EntriesService>(EntriesService.new);
+    ..registerLazySingleton<EntriesService>(EntriesService.new)
+    ..registerLazySingleton<PasskeysService>(PasskeysService.new);
 }
 
 void _initFactories() {
@@ -83,5 +88,6 @@ void _initFactories() {
     ..registerLazySingleton<NetworkGroupModelFactory>(NetworkGroupModelFactory.new)
     ..registerLazySingleton<VaultModelFactory>(VaultModelFactory.new)
     ..registerLazySingleton<WalletModelFactory>(WalletModelFactory.new)
-    ..registerLazySingleton<EntryModelFactory>(EntryModelFactory.new);
+    ..registerLazySingleton<EntryModelFactory>(EntryModelFactory.new)
+    ..registerLazySingleton<PasskeyModelFactory>(PasskeyModelFactory.new);
 }
