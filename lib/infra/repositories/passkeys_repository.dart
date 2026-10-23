@@ -14,13 +14,13 @@ class PasskeysRepository {
   }
 
   Future<List<PasskeyEntity>> getAllByParentPath(FilesystemPath parentFilesystemPath) async {
-    return isarDatabaseManager.perform(
-      (Isar isar) => isar.passkeys.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).findAll(),
-    );
+    return isarDatabaseManager.perform((Isar isar) =>
+        isar.passkeys.where().filter().filesystemPathStringStartsWith(parentFilesystemPath.fullPath).findAll());
   }
 
   Future<List<PasskeyEntity>> getAllByRpId(String rpId) async {
-    return isarDatabaseManager.perform((Isar isar) => isar.passkeys.where().filter().rpIdEqualTo(rpId).findAll());
+    return isarDatabaseManager.perform((Isar isar) =>
+        isar.passkeys.where().filter().rpIdEqualTo(rpId).findAll());
   }
 
   Future<PasskeyEntity> getByCredentialId(List<int> credentialId) async {

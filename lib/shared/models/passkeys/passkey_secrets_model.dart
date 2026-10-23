@@ -13,9 +13,9 @@ class PasskeySecretsModel extends ASecretsModel {
   });
 
   factory PasskeySecretsModel.fromJson(
-    FilesystemPath filesystemPath,
-    Map<String, dynamic> json,
-  ) {
+      FilesystemPath filesystemPath,
+      Map<String, dynamic> json,
+      ) {
     return PasskeySecretsModel(
       filesystemPath: filesystemPath,
       privateKey: HexCodec.decode(json['private_key'] as String),

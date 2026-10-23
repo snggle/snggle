@@ -12,6 +12,8 @@ abstract class ASecretsModel extends Equatable {
 
   static T fromJson<T extends ASecretsModel>(FilesystemPath filesystemPath, Map<String, dynamic> json) {
     switch (T) {
+      case PasskeySecretsModel:
+        return PasskeySecretsModel.fromJson(filesystemPath, json) as T;
       case EntrySecretsModel:
         return EntrySecretsModel.fromJson(filesystemPath, json) as T;
       case VaultSecretsModel:

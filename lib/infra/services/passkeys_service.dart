@@ -12,15 +12,11 @@ class PasskeysService implements IListItemsService<PasskeyModel> {
   final SecretsService _secretsService = globalLocator<SecretsService>();
 
   @override
-  Future<List<PasskeyModel>> getAllByParentPath(
-    FilesystemPath parentFilesystemPath, {
-    bool firstLevelBool = false,
-    bool previewEmptyBool = false,
-  }) async {
+  Future<List<PasskeyModel>> getAllByParentPath(FilesystemPath parentFilesystemPath,
+      {bool firstLevelBool = false, bool previewEmptyBool = false}) async {
     List<PasskeyEntity> entities = await _passkeysRepository.getAllByParentPath(parentFilesystemPath);
-    entities = entities
-        .where((PasskeyEntity entity) => entity.filesystemPath.isSubPathOf(parentFilesystemPath, firstLevelBool: firstLevelBool))
-        .toList();
+    entities = entities.where((PasskeyEntity entity) =>
+        entity.filesystemPath.isSubPathOf(parentFilesystemPath, firstLevelBool: firstLevelBool)).toList();
     return globalLocator<PasskeyModelFactory>().createFromEntities(entities);
   }
 
@@ -44,7 +40,8 @@ class PasskeysService implements IListItemsService<PasskeyModel> {
   Future<int> save(PasskeyModel item) => _passkeysRepository.save(PasskeyEntity.fromPasskeyModel(item));
 
   @override
-  Future<List<int>> saveAll(List<PasskeyModel> items) => _passkeysRepository.saveAll(items.map(PasskeyEntity.fromPasskeyModel).toList());
+  Future<List<int>> saveAll(List<PasskeyModel> items) =>
+      _passkeysRepository.saveAll(items.map(PasskeyEntity.fromPasskeyModel).toList());
 
   Future<PasskeyModel> updateFilesystemPath(int id) async {
     PasskeyEntity passkeyEntity = await _passkeysRepository.getById(id);
@@ -55,7 +52,8 @@ class PasskeysService implements IListItemsService<PasskeyModel> {
 
     await _passkeysRepository.save(passkeyEntity);
 
-    return globalLocator<PasskeyModelFactory>().createFromEntity(passkeyEntity);
+    return globalLocator<PasskeyModelFactory>()
+        .createFromEntity(passkeyEntity);
   }
 
   @override
@@ -69,7 +67,8 @@ class PasskeysService implements IListItemsService<PasskeyModel> {
   Future<void> moveAllByParentPath(FilesystemPath previousFilesystemPath, FilesystemPath newFilesystemPath) async {
     List<PasskeyModel> items = await getAllByParentPath(previousFilesystemPath);
     // The deepest items first, as in the wallet implementation.
-    items.sort((PasskeyModel a, PasskeyModel b) => b.filesystemPath.fullPath.length.compareTo(a.filesystemPath.fullPath.length));
+    items.sort((PasskeyModel a, PasskeyModel b) =>
+        b.filesystemPath.fullPath.length.compareTo(a.filesystemPath.fullPath.length));
     for (PasskeyModel item in items) {
       FilesystemPath target = item.filesystemPath.replace(previousFilesystemPath.fullPath, newFilesystemPath.fullPath);
       await move(item, target);
@@ -86,7 +85,8 @@ class PasskeysService implements IListItemsService<PasskeyModel> {
   @override
   Future<void> deleteAllByParentPath(FilesystemPath parentFilesystemPath) async {
     List<PasskeyModel> items = await getAllByParentPath(parentFilesystemPath);
-    items.sort((PasskeyModel a, PasskeyModel b) => b.filesystemPath.fullPath.length.compareTo(a.filesystemPath.fullPath.length));
+    items.sort((PasskeyModel a, PasskeyModel b) =>
+        b.filesystemPath.fullPath.length.compareTo(a.filesystemPath.fullPath.length));
     for (PasskeyModel item in items) {
       await deleteById(item.id);
     }
