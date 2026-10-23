@@ -5,6 +5,7 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/shared/native/app_launch_mode.dart';
 import 'package:snggle/shared/native/autofill_auth/native_autofill_auth.dart';
 import 'package:snggle/shared/native/autofill_save/native_autofill_save.dart';
+import 'package:snggle/shared/native/passkey_create/native_passkey_create.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
@@ -84,6 +85,7 @@ class _AppUnavailableDialogState extends State<AppUnavailableDialog> {
     return switch (mode) {
       AppLaunchMode.autofillAuth => NativeAutofillAuth.cancel(),
       AppLaunchMode.autofillSave => NativeAutofillSave.cancel(),
+      AppLaunchMode.passkeyCreate => NativePasskeyCreate.cancel(),
       AppLaunchMode.main => throw StateError(
         'No finish action for AppLaunchMode.main',
       ),

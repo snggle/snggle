@@ -50,6 +50,7 @@ class AppRouter extends RootStackRouter {
         ],
       ),
       AutoRoute(page: AutofillSaveEntryRoute.page),
+      AutoRoute(page: PasskeyCreateRoute.page),
       AutoRoute(page: EntryDetailsEditableRoute.page),
       AutoRoute(
         page: BottomNavigationRoute.page,
