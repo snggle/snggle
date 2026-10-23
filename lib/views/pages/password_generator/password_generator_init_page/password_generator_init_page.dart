@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:snggle/bloc/pages/password_generator/password_character_set_mode.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
@@ -25,7 +26,7 @@ class PasswordGeneratorInitPage extends StatelessWidget {
       body: Column(
         children: <Widget>[
           TextButton(
-            onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute()),
+            onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.ascii)),
             child: const Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -37,7 +38,7 @@ class PasswordGeneratorInitPage extends StatelessWidget {
           ),
           const Spacer(flex: 50),
           TextButton(
-            onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute()),
+            onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.sip2)),
             child: const Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -49,7 +50,7 @@ class PasswordGeneratorInitPage extends StatelessWidget {
           ),
           const Spacer(flex: 50),
           TextButton(
-            onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(advancedOptionsBool: true)),
+            onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.advanced)),
             child: const Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[

@@ -13,22 +13,24 @@
 import 'package:auto_route/auto_route.dart' as _i33;
 import 'package:flutter/material.dart' as _i35;
 import 'package:snggle/bloc/pages/bottom_navigation/vaults_wrapper/wallet_details_page/wallet_details_page_cubit.dart'
-    as _i48;
+    as _i49;
 import 'package:snggle/bloc/pages/entry_details_editable/entry_page_type.dart'
     as _i39;
+import 'package:snggle/bloc/pages/password_generator/password_character_set_mode.dart'
+    as _i44;
 import 'package:snggle/bloc/widgets/pinpad/pinpad_keyboard/pinpad_keyboard_state.dart'
     as _i38;
 import 'package:snggle/shared/models/entries/entry_model.dart' as _i41;
-import 'package:snggle/shared/models/groups/network_group_model.dart' as _i47;
+import 'package:snggle/shared/models/groups/network_group_model.dart' as _i48;
 import 'package:snggle/shared/models/mnemonic_model.dart' as _i37;
 import 'package:snggle/shared/models/networks/network_template_model.dart'
     as _i43;
 import 'package:snggle/shared/models/transactions/ethereum_transaction_model.dart'
     as _i42;
 import 'package:snggle/shared/models/transactions/solana_transaction_model.dart'
-    as _i45;
-import 'package:snggle/shared/models/vaults/vault_model.dart' as _i44;
-import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i46;
+    as _i46;
+import 'package:snggle/shared/models/vaults/vault_model.dart' as _i45;
+import 'package:snggle/shared/models/wallets/wallet_model.dart' as _i47;
 import 'package:snggle/shared/utils/filesystem_path.dart' as _i40;
 import 'package:snggle/views/pages/app_master_key/app_master_key_create_page.dart'
     as _i1;
@@ -563,14 +565,15 @@ class EthereumTransactionDetailsRouteArgs {
 class GeneratePasswordRoute
     extends _i33.PageRouteInfo<GeneratePasswordRouteArgs> {
   GeneratePasswordRoute({
-    bool advancedOptionsBool = false,
+    _i44.PasswordCharacterSetMode characterSetMode =
+        _i44.PasswordCharacterSetMode.ascii,
     bool obscurePasswordBool = true,
     _i35.Key? key,
     List<_i33.PageRouteInfo>? children,
   }) : super(
          GeneratePasswordRoute.name,
          args: GeneratePasswordRouteArgs(
-           advancedOptionsBool: advancedOptionsBool,
+           characterSetMode: characterSetMode,
            obscurePasswordBool: obscurePasswordBool,
            key: key,
          ),
@@ -586,7 +589,7 @@ class GeneratePasswordRoute
         orElse: () => const GeneratePasswordRouteArgs(),
       );
       return _i14.GeneratePasswordPage(
-        advancedOptionsBool: args.advancedOptionsBool,
+        characterSetMode: args.characterSetMode,
         obscurePasswordBool: args.obscurePasswordBool,
         key: args.key,
       );
@@ -596,12 +599,12 @@ class GeneratePasswordRoute
 
 class GeneratePasswordRouteArgs {
   const GeneratePasswordRouteArgs({
-    this.advancedOptionsBool = false,
+    this.characterSetMode = _i44.PasswordCharacterSetMode.ascii,
     this.obscurePasswordBool = true,
     this.key,
   });
 
-  final bool advancedOptionsBool;
+  final _i44.PasswordCharacterSetMode characterSetMode;
 
   final bool obscurePasswordBool;
 
@@ -609,23 +612,21 @@ class GeneratePasswordRouteArgs {
 
   @override
   String toString() {
-    return 'GeneratePasswordRouteArgs{advancedOptionsBool: $advancedOptionsBool, obscurePasswordBool: $obscurePasswordBool, key: $key}';
+    return 'GeneratePasswordRouteArgs{characterSetMode: $characterSetMode, obscurePasswordBool: $obscurePasswordBool, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! GeneratePasswordRouteArgs) return false;
-    return advancedOptionsBool == other.advancedOptionsBool &&
+    return characterSetMode == other.characterSetMode &&
         obscurePasswordBool == other.obscurePasswordBool &&
         key == other.key;
   }
 
   @override
   int get hashCode =>
-      advancedOptionsBool.hashCode ^
-      obscurePasswordBool.hashCode ^
-      key.hashCode;
+      characterSetMode.hashCode ^ obscurePasswordBool.hashCode ^ key.hashCode;
 }
 
 /// generated route for
@@ -633,7 +634,7 @@ class GeneratePasswordRouteArgs {
 class NetworkListRoute extends _i33.PageRouteInfo<NetworkListRouteArgs> {
   NetworkListRoute({
     required String name,
-    required _i44.VaultModel vaultModel,
+    required _i45.VaultModel vaultModel,
     required _i40.FilesystemPath filesystemPath,
     _i35.Key? key,
     List<_i33.PageRouteInfo>? children,
@@ -674,7 +675,7 @@ class NetworkListRouteArgs {
 
   final String name;
 
-  final _i44.VaultModel vaultModel;
+  final _i45.VaultModel vaultModel;
 
   final _i40.FilesystemPath filesystemPath;
 
@@ -772,7 +773,7 @@ class SettingsRoute extends _i33.PageRouteInfo<void> {
 class SolanaTransactionDetailsRoute
     extends _i33.PageRouteInfo<SolanaTransactionDetailsRouteArgs> {
   SolanaTransactionDetailsRoute({
-    required _i45.SolanaTransactionModel solanaTransactionModel,
+    required _i46.SolanaTransactionModel solanaTransactionModel,
     required _i43.NetworkTemplateModel networkTemplateModel,
     _i35.Key? key,
     List<_i33.PageRouteInfo>? children,
@@ -808,7 +809,7 @@ class SolanaTransactionDetailsRouteArgs {
     this.key,
   });
 
-  final _i45.SolanaTransactionModel solanaTransactionModel;
+  final _i46.SolanaTransactionModel solanaTransactionModel;
 
   final _i43.NetworkTemplateModel networkTemplateModel;
 
@@ -1081,8 +1082,8 @@ class VaultsSectionWrapperRoute extends _i33.PageRouteInfo<void> {
 /// [_i29.WalletConnectPage]
 class WalletConnectRoute extends _i33.PageRouteInfo<WalletConnectRouteArgs> {
   WalletConnectRoute({
-    required _i44.VaultModel vaultModel,
-    required _i46.WalletModel walletModel,
+    required _i45.VaultModel vaultModel,
+    required _i47.WalletModel walletModel,
     required _i43.NetworkTemplateModel networkTemplateModel,
     _i35.Key? key,
     List<_i33.PageRouteInfo>? children,
@@ -1121,9 +1122,9 @@ class WalletConnectRouteArgs {
     this.key,
   });
 
-  final _i44.VaultModel vaultModel;
+  final _i45.VaultModel vaultModel;
 
-  final _i46.WalletModel walletModel;
+  final _i47.WalletModel walletModel;
 
   final _i43.NetworkTemplateModel networkTemplateModel;
 
@@ -1156,9 +1157,9 @@ class WalletConnectRouteArgs {
 /// [_i30.WalletCreatePage]
 class WalletCreateRoute extends _i33.PageRouteInfo<WalletCreateRouteArgs> {
   WalletCreateRoute({
-    required _i47.NetworkGroupModel networkGroupModel,
+    required _i48.NetworkGroupModel networkGroupModel,
     required _i40.FilesystemPath parentFilesystemPath,
-    required _i44.VaultModel vaultModel,
+    required _i45.VaultModel vaultModel,
     _i35.Key? key,
     List<_i33.PageRouteInfo>? children,
   }) : super(
@@ -1196,11 +1197,11 @@ class WalletCreateRouteArgs {
     this.key,
   });
 
-  final _i47.NetworkGroupModel networkGroupModel;
+  final _i48.NetworkGroupModel networkGroupModel;
 
   final _i40.FilesystemPath parentFilesystemPath;
 
-  final _i44.VaultModel vaultModel;
+  final _i45.VaultModel vaultModel;
 
   final _i35.Key? key;
 
@@ -1231,10 +1232,10 @@ class WalletCreateRouteArgs {
 /// [_i31.WalletDetailsPage]
 class WalletDetailsRoute extends _i33.PageRouteInfo<WalletDetailsRouteArgs> {
   WalletDetailsRoute({
-    required _i44.VaultModel vaultModel,
-    required _i47.NetworkGroupModel networkGroupModel,
-    required _i46.WalletModel walletModel,
-    required _i48.WalletDetailsPageCubit walletDetailsPageCubit,
+    required _i45.VaultModel vaultModel,
+    required _i48.NetworkGroupModel networkGroupModel,
+    required _i47.WalletModel walletModel,
+    required _i49.WalletDetailsPageCubit walletDetailsPageCubit,
     _i35.Key? key,
     List<_i33.PageRouteInfo>? children,
   }) : super(
@@ -1275,13 +1276,13 @@ class WalletDetailsRouteArgs {
     this.key,
   });
 
-  final _i44.VaultModel vaultModel;
+  final _i45.VaultModel vaultModel;
 
-  final _i47.NetworkGroupModel networkGroupModel;
+  final _i48.NetworkGroupModel networkGroupModel;
 
-  final _i46.WalletModel walletModel;
+  final _i47.WalletModel walletModel;
 
-  final _i48.WalletDetailsPageCubit walletDetailsPageCubit;
+  final _i49.WalletDetailsPageCubit walletDetailsPageCubit;
 
   final _i35.Key? key;
 
@@ -1315,9 +1316,9 @@ class WalletDetailsRouteArgs {
 class WalletListRoute extends _i33.PageRouteInfo<WalletListRouteArgs> {
   WalletListRoute({
     required String name,
-    required _i44.VaultModel vaultModel,
+    required _i45.VaultModel vaultModel,
     required _i40.FilesystemPath filesystemPath,
-    required _i47.NetworkGroupModel networkGroupModel,
+    required _i48.NetworkGroupModel networkGroupModel,
     _i35.Key? key,
     List<_i33.PageRouteInfo>? children,
   }) : super(
@@ -1360,11 +1361,11 @@ class WalletListRouteArgs {
 
   final String name;
 
-  final _i44.VaultModel vaultModel;
+  final _i45.VaultModel vaultModel;
 
   final _i40.FilesystemPath filesystemPath;
 
-  final _i47.NetworkGroupModel networkGroupModel;
+  final _i48.NetworkGroupModel networkGroupModel;
 
   final _i35.Key? key;
 

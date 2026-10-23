@@ -8,26 +8,14 @@ enum PasswordLevelType {
 
   String get displayName => '${name[0].toUpperCase()}${name.substring(1)}';
 
-  int? get defaultLengthAscii {
+  int? get entropyTarget {
     switch (this) {
       case PasswordLevelType.good:
-        return 18;
+        return 112;
       case PasswordLevelType.excellent:
-        return 20;
+        return 128;
       case PasswordLevelType.magnificent:
-        return 40;
-      case PasswordLevelType.custom:
-      default:
-        return null;
-    }
-  }
-
-  int? get defaultLengthSip2 {
-    switch (this) {
-      case PasswordLevelType.good:
-        return 20;
-      case PasswordLevelType.excellent:
-      case PasswordLevelType.magnificent:
+        return 256;
       case PasswordLevelType.custom:
       default:
         return null;
