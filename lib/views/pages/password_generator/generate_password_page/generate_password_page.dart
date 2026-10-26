@@ -10,12 +10,12 @@ import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/utils/formatters/custom_password_length_input_formatter.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
+import 'package:snggle/views/widgets/custom/custom_checkbox.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_single_select_menu.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
-import 'package:snggle/views/widgets/custom/dialog/dialog_checkbox_tile.dart';
 import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
@@ -116,61 +116,76 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      'Character Set',
-                                      style: textTheme.bodyLarge?.copyWith(color: AppColors.darkGrey),
-                                    ),
-                                    Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        onTap: () => _showCharacterSetHintDialog(state.characterSetMode),
-                                        child: const SizedBox(
-                                          width: 34,
-                                          height: 34,
-                                          child: AssetIcon(AppIcons.icon_help, size: 25),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                child: Text(
+                                  'Password Characters',
+                                  style: textTheme.bodyLarge?.copyWith(color: AppColors.darkGrey),
                                 ),
                               ),
                               if (state.characterSetMode == PasswordCharacterSetMode.advanced)
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                                  child: Column(
-                                    children: <Widget>[
-                                      DialogCheckboxTile(
-                                        title: 'Lowercase letters (a-z)',
-                                        selectedBool: state.advancedCharacterSettings?.lowercase ?? false,
-                                        onTap: generatePasswordPageCubit.toggleLowercase,
+                                Column(
+                                  children: <Widget>[
+                                    _buildCharacterCheckbox(
+                                      title: 'Lowercase letters',
+                                      selectedBool: state.advancedCharacterSettings?.lowercase ?? false,
+                                      onTap: generatePasswordPageCubit.toggleLowercase,
+                                    ),
+                                    _buildCharacterCheckbox(
+                                      title: 'Uppercase letters',
+                                      selectedBool: state.advancedCharacterSettings?.uppercase ?? false,
+                                      onTap: generatePasswordPageCubit.toggleUppercase,
+                                    ),
+                                    _buildCharacterCheckbox(
+                                      title: 'Numbers',
+                                      selectedBool: state.advancedCharacterSettings?.numbers ?? false,
+                                      onTap: generatePasswordPageCubit.toggleNumbers,
+                                    ),
+                                    Stack(
+                                      children: <Widget>[
+                                        Column(
+                                          children: <Widget>[
+                                            _buildCharacterCheckbox(
+                                              title: 'Special characters',
+                                              selectedBool: state.advancedCharacterSettings?.special ?? false,
+                                              onTap: generatePasswordPageCubit.toggleSpecial,
+                                            ),
+                                            _buildCharacterCheckbox(
+                                              title: 'Remove ambiguous letters',
+                                              selectedBool: state.removeAmbiguousBool,
+                                              onTap: generatePasswordPageCubit.toggleRemoveAmbiguous,
+                                            ),
+                                          ],
+                                        ),
+                                        Positioned.fill(
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(right: 10),
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                  onTap: _showAdvancedHintDialog,
+                                                  child: const SizedBox(
+                                                    width: 34,
+                                                    height: 34,
+                                                    child: AssetIcon(
+                                                      AppIcons.icon_help,
+                                                      size: 25,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    if (state.characterSettingsInvalidBool)
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 16),
+                                        child: ErrorMessageListTile(message: 'Select at least one character category'),
                                       ),
-                                      DialogCheckboxTile(
-                                        title: 'Uppercase letters (A-Z)',
-                                        selectedBool: state.advancedCharacterSettings?.uppercase ?? false,
-                                        onTap: generatePasswordPageCubit.toggleUppercase,
-                                      ),
-                                      DialogCheckboxTile(
-                                        title: 'Numbers (0-9)',
-                                        selectedBool: state.advancedCharacterSettings?.numbers ?? false,
-                                        onTap: generatePasswordPageCubit.toggleNumbers,
-                                      ),
-                                      DialogCheckboxTile(
-                                        title: 'Special characters',
-                                        selectedBool: state.advancedCharacterSettings?.special ?? false,
-                                        onTap: generatePasswordPageCubit.toggleSpecial,
-                                      ),
-                                      DialogCheckboxTile(
-                                        title: 'Remove ambiguous characters (I, O, l)',
-                                        selectedBool: state.removeAmbiguousBool,
-                                        onTap: generatePasswordPageCubit.toggleRemoveAmbiguous,
-                                      ),
-                                      if (state.characterSettingsInvalidBool)
-                                        const ErrorMessageListTile(message: 'Select at least one character category'),
-                                    ],
-                                  ),
+                                  ],
                                 ),
                               const SizedBox(height: 24),
                               Padding(
@@ -418,6 +433,29 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     );
   }
 
+  Widget _buildCharacterCheckbox({required String title, required bool selectedBool, required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 44),
+        color: Colors.transparent,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: <Widget>[
+            CustomCheckbox(selectedBool: selectedBool),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.body3),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _handlePasswordLengthChanged(PasswordLevelType passwordLengthType) {
     if (passwordLengthType == PasswordLevelType.custom) {
       generatePasswordPageCubit.selectCustomPasswordLevel();
@@ -569,12 +607,11 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       barrierColor: Colors.transparent,
       useRootNavigator: true,
       builder: (BuildContext context) => CustomDialog(
-        title: 'Advanced Character Set',
+        title: 'Special and ambiguous characters',
         content: const Text(
-          'Select the allowed character categories. Only characters from the selected categories can be generated.'
-          '\n\nRemove ambiguous characters excludes uppercase I and O, and lowercase l, from the enabled categories.'
-          '\n\nSelecting multiple categories does not guarantee that every password contains a character from every category.'
-          '\n\nPassword entropy depends on the effective alphabet size and the number of randomly generated characters.',
+          'Full list of special characters:'
+          '\n\n!"#\$%&\'()*+, -./:;<=>?@[\\]^_`{|}~'
+          '\n\nRemoving ambiguous letters disables uppercase I and O, as well as lowercase l.',
           textAlign: TextAlign.center,
         ),
         options: <CustomDialogOption>[

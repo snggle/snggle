@@ -25,36 +25,37 @@ class PasswordGeneratorInitPage extends StatelessWidget {
       },
       body: Column(
         children: <Widget>[
+          const Spacer(flex: 75),
           TextButton(
             onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.ascii)),
             child: const Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                AssetIcon(AppIcons.connect_wallet_qr, size: 144),
+                AssetIcon(AppIcons.password_generator_standard, size: 114),
                 SizedBox(height: 4),
                 Text('STANDARD'),
               ],
             ),
           ),
-          const Spacer(flex: 50),
+          const Spacer(flex: 75),
           TextButton(
             onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.sip2)),
             child: const Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                AssetIcon(AppIcons.connect_wallet_qr, size: 144),
+                AssetIcon(AppIcons.password_generator_snggle, size: 114),
                 SizedBox(height: 4),
                 Text('DISAMBIGUATED'),
               ],
             ),
           ),
-          const Spacer(flex: 50),
+          const Spacer(flex: 75),
           TextButton(
             onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.advanced)),
             child: const Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                AssetIcon(AppIcons.connect_wallet_qr, size: 144),
+                AssetIcon(AppIcons.password_generator_advanced, size: 114),
                 SizedBox(height: 4),
                 Text('ADVANCED'),
               ],
