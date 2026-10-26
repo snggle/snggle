@@ -126,6 +126,9 @@ class _AppPinAuthPageState extends State<AppPinAuthPage> {
               <PageRouteInfo>[const PasskeyCreateRoute()],
             );
 
+          case AppLaunchMode.passkeyGet:
+            await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const ReadOnlyPasskeysSectionWrapperRoute()]);
+
           case AppLaunchMode.main:
             await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const BottomNavigationRoute()]);
         }

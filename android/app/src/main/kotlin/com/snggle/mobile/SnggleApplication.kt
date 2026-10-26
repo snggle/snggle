@@ -3,6 +3,7 @@ package com.snggle.mobile
 import android.util.Log
 import com.snggle.mobile.common.FlutterConstants
 import io.flutter.app.FlutterApplication
+import io.flutter.FlutterInjector
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor

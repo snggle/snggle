@@ -7,15 +7,15 @@ import android.util.Log
 import androidx.credentials.CreatePublicKeyCredentialRequest
 import androidx.credentials.CreatePublicKeyCredentialResponse
 import androidx.credentials.provider.PendingIntentHandler
-import com.snggle.mobile.autofill.model.FieldType
-import com.snggle.mobile.autofill.model.ParsedAuthStructure
-import com.snggle.mobile.autofill.parser.AssistStructureParser
 import com.snggle.mobile.common.FlutterConstants
+import com.snggle.mobile.passkey.validator.PasskeyOriginValidator
 import com.snggle.mobile.R
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import org.json.JSONObject
 
 class PasskeyCreateActivity : FlutterActivity() {
 
@@ -41,6 +41,18 @@ class PasskeyCreateActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        val cachedEngine = FlutterEngineCache.getInstance()
+            .get(FlutterConstants.AUTOFILL_ENGINE_ID)
+
+        Log.d(
+            TAG,
+            "configureFlutterEngine: " +
+                    "engine=${System.identityHashCode(flutterEngine)}, " +
+                    "cachedEngine=${System.identityHashCode(cachedEngine)}, " +
+                    "usesCachedEngine=${flutterEngine === cachedEngine}, " +
+                    "dartExecuting=${flutterEngine.dartExecutor.isExecutingDart}"
+        )
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -70,34 +82,6 @@ class PasskeyCreateActivity : FlutterActivity() {
         }
     }
 
-    private fun getPasskeyCreateContext(
-        result: MethodChannel.Result
-    ) {
-        val providerRequest =
-            PendingIntentHandler.retrieveProviderCreateCredentialRequest(intent)
-
-        val publicKeyRequest =
-            providerRequest?.callingRequest as? CreatePublicKeyCredentialRequest
-
-        if (publicKeyRequest == null) {
-            result.error(
-                "INVALID_REQUEST",
-                "Missing public key credential creation request",
-                null
-            )
-            return
-        }
-
-        result.success(
-            mapOf(
-                "requestJson" to publicKeyRequest.requestJson,
-                "clientDataHash" to publicKeyRequest.clientDataHash,
-                "origin" to "",
-                "privilegedBool" to false,
-                "callingPackage" to providerRequest.callingAppInfo.packageName
-            )
-        )
-    }
     private fun handlePasskeyCreateMethodCall(
         call: MethodCall,
         result: MethodChannel.Result
@@ -157,27 +141,38 @@ class PasskeyCreateActivity : FlutterActivity() {
             return
         }
 
-        if (providerRequest.callingAppInfo.packageName != "com.android.chrome") {
-            Log.e(TAG, "Unsupported calling application")
+        val rpId = try {
+            JSONObject(callingRequest.requestJson)
+                .getJSONObject("rp")
+                .getString("id")
+        } catch (exception: Exception) {
+            Log.e(TAG, "Invalid passkey creation request", exception)
             return
         }
-
-        val privilegedAllowlist = resources.openRawResource(
-            R.raw.privileged_apps
-        ).bufferedReader().use { it.readText() }
 
         val origin = try {
-            providerRequest.callingAppInfo.getOrigin(privilegedAllowlist)
-        } catch (exception: IllegalArgumentException) {
-            Log.e(TAG, "Invalid privileged allowlist", exception)
-            return
-        } catch (exception: IllegalStateException) {
-            Log.e(TAG, "Untrusted calling application", exception)
+            PasskeyOriginValidator.validate(
+                context = this,
+                callingAppInfo = providerRequest.callingAppInfo,
+                rpId = rpId
+            )
+        } catch (exception: Exception) {
+            Log.e(TAG, "Passkey origin validation failed", exception)
             return
         }
 
-        if (origin.isNullOrBlank()) {
-            Log.e(TAG, "Missing verified origin")
+        Log.d(
+            TAG,
+            "PasskeyCreate verified: " +
+                    "origin=$origin, " +
+                    "rpId=$rpId, " +
+                    "callingPackage=${providerRequest.callingAppInfo.packageName}"
+        )
+
+        val clientDataHash = callingRequest.clientDataHash
+
+        if (clientDataHash == null || clientDataHash.size != 32) {
+            Log.e(TAG, "Invalid clientDataHash")
             return
         }
 

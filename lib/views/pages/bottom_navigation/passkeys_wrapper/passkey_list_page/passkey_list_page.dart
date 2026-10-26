@@ -71,15 +71,15 @@ class _PasskeyListPageState extends State<PasskeyListPage> {
                     ),
                     childBuilder:
                         (
-                          AnimationController fadeAnimationController,
-                          AnimationController slideAnimationController,
+                        AnimationController fadeAnimationController,
+                        AnimationController slideAnimationController,
                         ) {
-                          return PasskeyListItem(
-                            passkeyModel: listItemModel,
-                            fadeAnimationController: fadeAnimationController,
-                            slideAnimationController: slideAnimationController,
-                          );
-                        },
+                      return PasskeyListItem(
+                        passkeyModel: listItemModel,
+                        fadeAnimationController: fadeAnimationController,
+                        slideAnimationController: slideAnimationController,
+                      );
+                    },
                   );
                 },
               ),

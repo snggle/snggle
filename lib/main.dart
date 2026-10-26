@@ -8,6 +8,8 @@ import 'package:snggle/shared/router/router.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  debugPrint('SNGGLE: Dart main() started');
+
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.dark),
   );

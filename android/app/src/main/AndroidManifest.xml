@@ -69,6 +69,11 @@
                 android:hardwareAccelerated="true"
                 android:windowSoftInputMode="adjustResize" />
 
+        <activity
+                android:name=".passkey.activity.PasskeyGetActivity"
+                android:exported="false"
+                android:theme="@style/LaunchTheme" />
+
         <service
                 android:name=".passkey.service.SnggleCredentialProviderService"
                 android:enabled="true"

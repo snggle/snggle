@@ -27,7 +27,7 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
       routes: const <PageRouteInfo>[
         VaultsSectionWrapperRoute(),
         EntriesSectionWrapperRoute(),
-        AppsRoute(),
+        PasskeysSectionWrapperRoute(),
         SettingsRoute(),
       ],
       builder: (BuildContext context, Widget child) {
