@@ -5,8 +5,8 @@ import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/views/pages/vault_create_recover/repeated_vault_warning.dart';
 import 'package:snggle/views/pages/vault_create_recover/vault_name_form.dart';
+import 'package:snggle/views/widgets/form/mnemonic_form/mnemonic_form_editable.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
-import 'package:snggle/views/widgets/mnemonic_form/mnemonic_form_editable.dart';
 
 class VaultMnemonicFormEditable extends StatelessWidget {
   final bool mnemonicFilledBool;

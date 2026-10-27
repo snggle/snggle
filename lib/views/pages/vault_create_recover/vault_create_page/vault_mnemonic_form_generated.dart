@@ -7,7 +7,7 @@ import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/views/pages/vault_create_recover/repeated_vault_warning.dart';
 import 'package:snggle/views/pages/vault_create_recover/vault_name_form.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
-import 'package:snggle/views/widgets/mnemonic_form/mnemonic_form_generated.dart';
+import 'package:snggle/views/widgets/form/mnemonic_form/mnemonic_form_generated.dart';
 
 class VaultMnemonicFormGenerated extends StatefulWidget {
   final MnemonicModel mnemonicModel;

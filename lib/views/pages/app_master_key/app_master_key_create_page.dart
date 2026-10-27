@@ -5,7 +5,7 @@ import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/pages/app_master_key/app_master_key_type.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
-import 'package:snggle/views/widgets/mnemonic_form/mnemonic_form_generated.dart';
+import 'package:snggle/views/widgets/form/mnemonic_form/mnemonic_form_generated.dart';
 
 @RoutePage()
 class AppMasterKeyCreatePage extends StatefulWidget {

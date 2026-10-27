@@ -11,7 +11,7 @@ import 'package:snggle/views/pages/vault_create_recover/mnemonic_size_picker.dar
 import 'package:snggle/views/pages/vault_create_recover/vault_create_page/vault_mnemonic_form_generated.dart';
 import 'package:snggle/views/pages/vault_create_recover/vault_discard_dialog.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
-import 'package:snggle/views/widgets/generic/paginated_form/paginated_form.dart';
+import 'package:snggle/views/widgets/form/paginated_form/paginated_form.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 @RoutePage()
