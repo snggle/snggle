@@ -5,9 +5,9 @@ import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/vaults/vault_create_recover_status.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/views/pages/vault_create_recover/repeated_vault_warning.dart';
-import 'package:snggle/views/pages/vault_create_recover/vault_name_form.dart';
+import 'package:snggle/views/pages/vault_create_recover/vault_name_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
-import 'package:snggle/views/widgets/mnemonic_form/mnemonic_form_generated.dart';
+import 'package:snggle/views/widgets/form/mnemonic_form/mnemonic_form_generated.dart';
 
 class VaultMnemonicFormGenerated extends StatefulWidget {
   final MnemonicModel mnemonicModel;
@@ -36,7 +36,7 @@ class _VaultMnemonicFormGeneratedState extends State<VaultMnemonicFormGenerated>
           RepeatedVaultWarning.critical(
             repeatedVaultModel: widget.repeatedVaultModel!,
           ),
-        VaultNameForm(
+        VaultNameField(
           textEditingController: widget.vaultCreatePageCubit.vaultNameTextEditingController,
           nameEmptyBool: _nameEmptyBool,
         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
-import 'package:snggle/views/widgets/entry_form/entry_form_field.dart';
+import 'package:snggle/views/widgets/form/entry_form/entry_form_field.dart';
 import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 

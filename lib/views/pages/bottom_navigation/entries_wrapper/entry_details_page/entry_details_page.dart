@@ -13,7 +13,7 @@ import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
-import 'package:snggle/views/widgets/entry_form/entry_form.dart';
+import 'package:snggle/views/widgets/form/entry_form/entry_form.dart';
 import 'package:snggle/views/widgets/generic/gradient_scrollbar.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 

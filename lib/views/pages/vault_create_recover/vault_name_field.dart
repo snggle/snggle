@@ -3,11 +3,11 @@ import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 
-class VaultNameForm extends StatelessWidget {
+class VaultNameField extends StatelessWidget {
   final bool nameEmptyBool;
   final TextEditingController textEditingController;
 
-  const VaultNameForm({
+  const VaultNameField({
     required this.nameEmptyBool,
     required this.textEditingController,
     super.key,
