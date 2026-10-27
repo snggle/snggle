@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snggle/config/app_colors.dart';
 
 class CustomSwitch extends StatelessWidget {
   final bool valueBool;
@@ -17,7 +18,6 @@ class CustomSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext buildContext) {
     const Duration animationDuration = Duration(milliseconds: 200);
-    const Color greyColor = Color(0xFF969696);
     final bool disabledBool = valueChanged == null;
     final double scale = height / 28;
 
@@ -45,7 +45,7 @@ class CustomSwitch extends StatelessWidget {
                 alignment: valueBool ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(height / 2),
-                  border: Border.all(color: valueBool ? Colors.transparent : greyColor, width: 1.5 * scale),
+                  border: Border.all(color: valueBool ? Colors.transparent : AppColors.darkGrey, width: 1.5 * scale),
                   gradient: RadialGradient(
                     center: const Alignment(0.8, -0.8),
                     radius: 1.6,
@@ -57,7 +57,7 @@ class CustomSwitch extends StatelessWidget {
                   curve: Curves.easeInOut,
                   width: 22 * scale,
                   height: 22 * scale,
-                  decoration: BoxDecoration(color: valueBool ? Colors.white : greyColor, shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: valueBool ? Colors.white : AppColors.darkGrey, shape: BoxShape.circle),
                 ),
               ),
             ),
