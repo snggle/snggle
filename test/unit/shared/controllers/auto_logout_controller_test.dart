@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout_cubit/auto_logout_cubit.dart';
@@ -6,12 +7,13 @@ import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/auto_logout_controller.dart';
 import 'package:snggle/shared/models/auto_logout_settings/background_logout_mode.dart';
-import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timeout.dart';
+import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timer.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/router/router.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
+import 'package:snggle/views/pages/app_pin_page/app_pin_type.dart';
 
 import '../../../utils/database_mock.dart';
 import '../../../utils/test_database.dart';
@@ -29,9 +31,7 @@ void main() {
   bool controllerInitializedBool = false;
 
   setUp(() async {
-    testWidgetsFlutterBinding.handleAppLifecycleStateChanged(
-      AppLifecycleState.resumed,
-    );
+    testWidgetsFlutterBinding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
 
     testDatabase = TestDatabase();
     await testDatabase.init(
@@ -50,9 +50,7 @@ void main() {
       pinnedBool: false,
       address: '0x4BD51C77E08Ac696789464A079cEBeE203963Dce',
       derivationPath: "m/44'/60'/0'/0/0",
-      filesystemPath: FilesystemPath.fromString(
-        'vaults/vault1/network1/wallet1',
-      ),
+      filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/wallet1'),
       name: 'WALLET 0',
     );
     activeWalletController.setActiveWallet(walletModel: walletModel);
@@ -75,15 +73,32 @@ void main() {
     await testDatabase.close();
     await globalLocator.reset();
 
-    testWidgetsFlutterBinding.handleAppLifecycleStateChanged(
-      AppLifecycleState.resumed,
-    );
+    testWidgetsFlutterBinding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
   });
 
+  void controllerTest(String description, Future<void> Function() testBody) {
+    test(description, () {
+      addTearDown(testWidgetsFlutterBinding.postTest);
+
+      return testWidgetsFlutterBinding.runTest(
+        () async {
+          testWidgetsFlutterBinding.reset();
+          try {
+            await testBody();
+          } finally {
+            if (controllerInitializedBool) {
+              autoLogoutController.dispose();
+              controllerInitializedBool = false;
+            }
+          }
+        },
+        () {},
+        description: description,
+      );
+    });
+  }
+
   void initController() {
-    testWidgetsFlutterBinding.handleAppLifecycleStateChanged(
-      AppLifecycleState.resumed,
-    );
     autoLogoutController.init();
     controllerInitializedBool = true;
   }
@@ -95,414 +110,480 @@ void main() {
     }
   }
 
+  Future<void> navigateToAuthenticatedRoute() async {
+    await appRouter.replaceAll(<PageRouteInfo>[BottomNavigationRoute()]);
+    expect(appRouter.stack, hasLength(1));
+    expect(appRouter.stack.single.name, BottomNavigationRoute.name);
+  }
+
+  Future<void> pumpElapsed(Duration duration) async {
+    await testWidgetsFlutterBinding.pump(duration);
+    await testWidgetsFlutterBinding.pump();
+  }
+
+  void expectSessionPreserved() {
+    expect(activeWalletController.hasActiveWallet, true);
+    expect(activeWalletController.walletModel, walletModel);
+  }
+
+  void expectAppLoggedOut() {
+    expect(activeWalletController.hasActiveWallet, false);
+    expect(activeWalletController.walletModel, null);
+    expect(appRouter.stack, hasLength(1));
+    expect(appRouter.stack.single.name, SplashRoute.name);
+  }
+
   group('Tests of AutoLogoutController.init()', () {
-    for (MapEntry<InactivityLogoutTimeout, Duration> timeoutMapEntry in const <InactivityLogoutTimeout, Duration>{
-      InactivityLogoutTimeout.oneMinute: Duration(minutes: 1),
-      InactivityLogoutTimeout.fiveMinutes: Duration(minutes: 5),
+    controllerTest('Should [not start the timer] before the first authenticated route', () async {
+      // Arrange
+      initController();
+
+      // Act
+      await pumpElapsed(const Duration(minutes: 6));
+
+      // Assert
+      expectSessionPreserved();
+      expect(appRouter.stack, isEmpty);
+    });
+
+    controllerTest('Should [start the timer] after navigating from PIN authentication to the app', () async {
+      // Arrange
+      await appRouter.replaceAll(<PageRouteInfo>[AppPinAuthRoute()]);
+      initController();
+      await pumpElapsed(const Duration(minutes: 6));
+      expectSessionPreserved();
+
+      // Act
+      await navigateToAuthenticatedRoute();
+      await pumpElapsed(const Duration(seconds: 59));
+
+      // Assert
+      expectSessionPreserved();
+
+      // Act
+      await pumpElapsed(const Duration(seconds: 1));
+
+      // Assert
+      expectAppLoggedOut();
+    });
+
+    for (MapEntry<InactivityLogoutTimer, Duration> timeoutMapEntry in const <InactivityLogoutTimer, Duration>{
+      InactivityLogoutTimer.oneMinute: Duration(minutes: 1),
+      InactivityLogoutTimer.fiveMinutes: Duration(minutes: 5),
     }.entries) {
-      testWidgets(
-        'Should [logout after ${timeoutMapEntry.key.name}] without user interaction',
-        (WidgetTester tester) async {
-          try {
-            // Arrange
-            await tester.runAsync(() async {
-              await autoLogoutCubit.setInactivityLogoutTimeout(
-                inactivityLogoutTimeout: timeoutMapEntry.key,
-              );
-            });
+      controllerTest('Should [logout after ${timeoutMapEntry.key.name}] on an authenticated route', () async {
+        // Arrange
+        await testWidgetsFlutterBinding.runAsync(() async {
+          await autoLogoutCubit.setInactivityLogoutTimeout(inactivityLogoutTimeout: timeoutMapEntry.key);
+        });
+        await navigateToAuthenticatedRoute();
 
-            // Act
-            initController();
-            await tester.pump(
-              timeoutMapEntry.value - const Duration(seconds: 1),
-            );
+        // Act
+        initController();
+        await pumpElapsed(timeoutMapEntry.value - const Duration(seconds: 1));
 
-            // Assert
-            expect(activeWalletController.walletModel, walletModel);
-            expect(appRouter.stack, isEmpty);
+        // Assert
+        expectSessionPreserved();
 
-            // Act
-            await tester.pump(const Duration(seconds: 1));
+        // Act
+        await pumpElapsed(const Duration(seconds: 1));
 
-            // Assert
-            expect(activeWalletController.hasActiveWallet, false);
-            expect(activeWalletController.walletModel, null);
-            expect(appRouter.stack, hasLength(1));
-            expect(appRouter.stack.single.name, SplashRoute.name);
-          } finally {
-            disposeController();
-          }
-        },
-      );
+        // Assert
+        expectAppLoggedOut();
+      });
     }
 
-    testWidgets(
-      'Should [not logout] if [inactivity logout DISABLED]',
-      (WidgetTester tester) async {
-        try {
-          // Arrange
-          await tester.runAsync(() async {
-            await autoLogoutCubit.setInactivityEnabled(
-              inactivityLogoutEnabledBool: false,
-            );
-          });
+    controllerTest('Should [not logout] when inactivity logout is disabled', () async {
+      // Arrange
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: false);
+      });
+      await navigateToAuthenticatedRoute();
 
-          // Act
-          initController();
-          await tester.pump(const Duration(minutes: 6));
+      // Act
+      initController();
+      await pumpElapsed(const Duration(minutes: 6));
 
-          // Assert
-          expect(activeWalletController.walletModel, walletModel);
-          expect(appRouter.stack, isEmpty);
-        } finally {
-          disposeController();
-        }
-      },
-    );
+      // Assert
+      expectSessionPreserved();
+      expect(appRouter.stack.single.name, BottomNavigationRoute.name);
+    });
 
-    testWidgets(
-      'Should [not logout] if [inactivity timeout OFF]',
-      (WidgetTester tester) async {
-        try {
-          // Arrange
-          await tester.runAsync(() async {
-            await autoLogoutCubit.setInactivityLogoutTimeout(
-              inactivityLogoutTimeout: InactivityLogoutTimeout.off,
-            );
-          });
+    controllerTest('Should [not start the timer] while reading privacy policy on first launch', () async {
+      // Arrange
+      await appRouter.replaceAll(<PageRouteInfo>[const SplashRoute(), const PrivacyPolicyRoute()]);
+      initController();
 
-          // Act
-          initController();
-          await tester.pump(const Duration(minutes: 6));
+      // Act
+      autoLogoutController.handleUserInteraction();
+      await pumpElapsed(const Duration(minutes: 6));
 
-          // Assert
-          expect(activeWalletController.walletModel, walletModel);
-          expect(appRouter.stack, isEmpty);
-        } finally {
-          disposeController();
-        }
-      },
-    );
+      // Assert
+      expectSessionPreserved();
+      expect(appRouter.stack.last.name, PrivacyPolicyRoute.name);
+    });
+
+    for (MapEntry<String, PageRouteInfo> lockedRoute in <String, PageRouteInfo>{
+      'removed MasterKey': const AppMasterKeyRemovedRoute(),
+      'MasterKey creation': const AppMasterKeyCreateRoute(),
+      'MasterKey recovery': const AppMasterKeyRecoverRoute(),
+    }.entries) {
+      controllerTest('Should [not start the timer] during ${lockedRoute.key}', () async {
+        // Arrange
+        await appRouter.replaceAll(<PageRouteInfo>[lockedRoute.value]);
+        initController();
+
+        // Act
+        autoLogoutController.handleUserInteraction();
+        await pumpElapsed(const Duration(minutes: 6));
+
+        // Assert
+        expectSessionPreserved();
+        expect(appRouter.stack.single.name, lockedRoute.value.routeName);
+      });
+    }
   });
 
   group('Tests of AutoLogoutController.handleUserInteraction()', () {
-    testWidgets(
-      'Should [restart the full timeout] after user interaction',
-      (WidgetTester tester) async {
-        try {
-          // Arrange
-          initController();
-          await tester.pump(const Duration(seconds: 30));
+    controllerTest('Should [restart the full timeout] after user interaction', () async {
+      // Arrange
+      await navigateToAuthenticatedRoute();
+      initController();
+      await pumpElapsed(const Duration(seconds: 30));
 
-          // Act
-          autoLogoutController.handleUserInteraction();
-          await tester.pump(const Duration(seconds: 59));
+      // Act
+      autoLogoutController.handleUserInteraction();
+      await pumpElapsed(const Duration(seconds: 59));
 
-          // Assert
-          expect(activeWalletController.walletModel, walletModel);
-          expect(appRouter.stack, isEmpty);
+      // Assert
+      expectSessionPreserved();
 
-          // Act
-          await tester.pump(const Duration(seconds: 1));
+      // Act
+      await pumpElapsed(const Duration(seconds: 1));
 
-          // Assert
-          expect(activeWalletController.walletModel, null);
-          expect(appRouter.stack, hasLength(1));
-          expect(appRouter.stack.single.name, SplashRoute.name);
-        } finally {
-          disposeController();
-        }
-      },
-    );
+      // Assert
+      expectAppLoggedOut();
+    });
 
-    testWidgets(
-      'Should [allow another inactivity logout] after the previous logout completes',
-      (WidgetTester tester) async {
-        try {
-          // Arrange
-          initController();
-          await tester.pump(const Duration(minutes: 1));
-          expect(activeWalletController.walletModel, null);
-          activeWalletController.setActiveWallet(walletModel: walletModel);
+    controllerTest('Should [not restart the timer] after manual logout to the PIN screen', () async {
+      // Arrange
+      await navigateToAuthenticatedRoute();
+      initController();
+      await pumpElapsed(const Duration(seconds: 30));
 
-          // Act
-          autoLogoutController.handleUserInteraction();
-          await tester.pump(const Duration(seconds: 59));
+      // Act
+      globalLocator<AppService>().logout();
+      await appRouter.replaceAll(<PageRouteInfo>[AppPinAuthRoute()]);
+      autoLogoutController.handleUserInteraction();
+      await pumpElapsed(const Duration(minutes: 6));
 
-          // Assert
-          expect(activeWalletController.walletModel, walletModel);
+      // Assert
+      expect(activeWalletController.walletModel, null);
+      expect(appRouter.stack.single.name, AppPinAuthRoute.name);
+    });
 
-          // Act
-          await tester.pump(const Duration(seconds: 1));
+    controllerTest('Should [restart the timer] after logging in again following automatic logout', () async {
+      // Arrange
+      await navigateToAuthenticatedRoute();
+      initController();
+      await pumpElapsed(const Duration(minutes: 1));
+      expectAppLoggedOut();
 
-          // Assert
-          expect(activeWalletController.walletModel, null);
-          expect(appRouter.stack, hasLength(1));
-          expect(appRouter.stack.single.name, SplashRoute.name);
-        } finally {
-          disposeController();
-        }
-      },
-    );
+      // Act
+      activeWalletController.setActiveWallet(walletModel: walletModel);
+      await navigateToAuthenticatedRoute();
+      await pumpElapsed(const Duration(seconds: 59));
+
+      // Assert
+      expectSessionPreserved();
+
+      // Act
+      await pumpElapsed(const Duration(seconds: 1));
+
+      // Assert
+      expectAppLoggedOut();
+    });
+  });
+
+  group('Tests of AutoLogoutController route changes', () {
+    controllerTest('Should [keep the timer running] during Change Application PIN', () async {
+      // Arrange
+      await navigateToAuthenticatedRoute();
+      initController();
+      await pumpElapsed(const Duration(seconds: 30));
+
+      // Act
+      await appRouter.pushAll(<PageRouteInfo>[
+        AppPinChangeRoute(children: <PageRouteInfo>[AppPinAuthRoute(appPinType: AppPinType.change)]),
+      ]);
+      await testWidgetsFlutterBinding.pump();
+      expect(appRouter.stack.last.name, AppPinChangeRoute.name);
+      await pumpElapsed(const Duration(seconds: 29));
+
+      // Assert
+      expectSessionPreserved();
+
+      // Act
+      await pumpElapsed(const Duration(seconds: 1));
+
+      // Assert
+      expectAppLoggedOut();
+    });
+
+    controllerTest('Should [keep the timer running] while privacy policy is opened from Settings', () async {
+      // Arrange
+      await navigateToAuthenticatedRoute();
+      initController();
+      await pumpElapsed(const Duration(seconds: 30));
+
+      // Act
+      await appRouter.pushAll(<PageRouteInfo>[const PrivacyPolicyRoute()]);
+      await testWidgetsFlutterBinding.pump();
+      expect(appRouter.stack.last.name, PrivacyPolicyRoute.name);
+      await pumpElapsed(const Duration(seconds: 29));
+
+      // Assert
+      expectSessionPreserved();
+
+      // Act
+      await pumpElapsed(const Duration(seconds: 1));
+
+      // Assert
+      expectAppLoggedOut();
+    });
+
+    controllerTest('Should [pause the timer] when a locked route is pushed over the authenticated stack', () async {
+      // Arrange
+      await navigateToAuthenticatedRoute();
+      initController();
+      await pumpElapsed(const Duration(seconds: 30));
+
+      // Act
+      await appRouter.pushAll(<PageRouteInfo>[const AppMasterKeyRemovedRoute()]);
+      await testWidgetsFlutterBinding.pump();
+      await pumpElapsed(const Duration(minutes: 6));
+
+      // Assert
+      expectSessionPreserved();
+      expect(appRouter.stack.last.name, AppMasterKeyRemovedRoute.name);
+
+      // Act
+      await navigateToAuthenticatedRoute();
+      await pumpElapsed(const Duration(seconds: 59));
+
+      // Assert
+      expectSessionPreserved();
+
+      // Act
+      await pumpElapsed(const Duration(seconds: 1));
+
+      // Assert
+      expectAppLoggedOut();
+    });
+
+    controllerTest('Should [cancel the timer] after navigating away from the authenticated stack', () async {
+      // Arrange
+      await navigateToAuthenticatedRoute();
+      initController();
+      await pumpElapsed(const Duration(seconds: 30));
+
+      // Act
+      await appRouter.replaceAll(<PageRouteInfo>[const SplashRoute()]);
+      await pumpElapsed(const Duration(minutes: 6));
+
+      // Assert
+      expectSessionPreserved();
+      expect(appRouter.stack.single.name, SplashRoute.name);
+    });
   });
 
   group('Tests of AutoLogoutController settings updates', () {
-    testWidgets(
-      'Should [cancel logout when disabled] and [restart it when enabled]',
-      (WidgetTester tester) async {
-        try {
-          // Arrange
-          initController();
-          await tester.pump(const Duration(seconds: 30));
+    controllerTest('Should [cancel logout when disabled] and [restart it when enabled]', () async {
+      // Arrange
+      await navigateToAuthenticatedRoute();
+      initController();
+      await pumpElapsed(const Duration(seconds: 30));
 
-          // Act
-          await tester.runAsync(() async {
-            await autoLogoutCubit.setInactivityEnabled(
-              inactivityLogoutEnabledBool: false,
-            );
-          });
-          await tester.pump();
-          await tester.pump(const Duration(minutes: 6));
+      // Act
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: false);
+      });
+      await testWidgetsFlutterBinding.pump();
+      await pumpElapsed(const Duration(minutes: 6));
 
-          // Assert
-          expect(activeWalletController.walletModel, walletModel);
-          expect(appRouter.stack, isEmpty);
+      // Assert
+      expectSessionPreserved();
 
-          // Act
-          await tester.runAsync(() async {
-            await autoLogoutCubit.setInactivityEnabled(
-              inactivityLogoutEnabledBool: true,
-            );
-          });
-          await tester.pump();
-          await tester.pump(const Duration(seconds: 59));
+      // Act
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: true);
+      });
+      await testWidgetsFlutterBinding.pump();
+      await pumpElapsed(const Duration(seconds: 59));
 
-          // Assert
-          expect(activeWalletController.walletModel, walletModel);
-          expect(appRouter.stack, isEmpty);
+      // Assert
+      expectSessionPreserved();
 
-          // Act
-          await tester.pump(const Duration(seconds: 1));
+      // Act
+      await pumpElapsed(const Duration(seconds: 1));
 
-          // Assert
-          expect(activeWalletController.walletModel, null);
-          expect(appRouter.stack, hasLength(1));
-          expect(appRouter.stack.single.name, SplashRoute.name);
-        } finally {
-          disposeController();
-        }
-      },
-    );
+      // Assert
+      expectAppLoggedOut();
+    });
 
-    testWidgets(
-      'Should [replace the pending timeout] when its duration changes',
-      (WidgetTester tester) async {
-        try {
-          // Arrange
-          initController();
-          await tester.pump(const Duration(seconds: 30));
+    controllerTest('Should [replace the pending timeout] when its duration changes', () async {
+      // Arrange
+      await navigateToAuthenticatedRoute();
+      initController();
+      await pumpElapsed(const Duration(seconds: 30));
 
-          // Act
-          await tester.runAsync(() async {
-            await autoLogoutCubit.setInactivityLogoutTimeout(
-              inactivityLogoutTimeout: InactivityLogoutTimeout.fiveMinutes,
-            );
-          });
-          await tester.pump();
-          await tester.pump(const Duration(minutes: 4, seconds: 59));
+      // Act
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setInactivityLogoutTimeout(inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes);
+      });
+      await testWidgetsFlutterBinding.pump();
+      await pumpElapsed(const Duration(minutes: 4, seconds: 59));
 
-          // Assert
-          expect(activeWalletController.walletModel, walletModel);
-          expect(appRouter.stack, isEmpty);
+      // Assert
+      expectSessionPreserved();
 
-          // Act
-          await tester.pump(const Duration(seconds: 1));
+      // Act
+      await pumpElapsed(const Duration(seconds: 1));
 
-          // Assert
-          expect(activeWalletController.walletModel, null);
-          expect(appRouter.stack, hasLength(1));
-          expect(appRouter.stack.single.name, SplashRoute.name);
-        } finally {
-          disposeController();
-        }
-      },
-    );
+      // Assert
+      expectAppLoggedOut();
+    });
 
-    testWidgets(
-      'Should [preserve the pending timeout] when only background logout changes',
-      (WidgetTester tester) async {
-        try {
-          // Arrange
-          initController();
-          await tester.pump(const Duration(seconds: 30));
+    controllerTest('Should [preserve the pending timeout] when only background logout changes', () async {
+      // Arrange
+      await navigateToAuthenticatedRoute();
+      initController();
+      await pumpElapsed(const Duration(seconds: 30));
 
-          // Act
-          await tester.runAsync(() async {
-            await autoLogoutCubit.setBackgroundLogoutMode(
-              backgroundLogoutMode: BackgroundLogoutMode.off,
-            );
-          });
-          await tester.pump();
-          await tester.pump(const Duration(seconds: 29));
+      // Act
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setBackgroundLogoutMode(backgroundLogoutMode: BackgroundLogoutMode.off);
+      });
+      await testWidgetsFlutterBinding.pump();
+      await pumpElapsed(const Duration(seconds: 29));
 
-          // Assert
-          expect(activeWalletController.walletModel, walletModel);
-          expect(appRouter.stack, isEmpty);
+      // Assert
+      expectSessionPreserved();
 
-          // Act
-          await tester.pump(const Duration(seconds: 1));
+      // Act
+      await pumpElapsed(const Duration(seconds: 1));
 
-          // Assert
-          expect(activeWalletController.walletModel, null);
-          expect(appRouter.stack, hasLength(1));
-          expect(appRouter.stack.single.name, SplashRoute.name);
-        } finally {
-          disposeController();
-        }
-      },
-    );
+      // Assert
+      expectAppLoggedOut();
+    });
 
-    testWidgets(
-      'Should [cancel the pending timeout] when timeout changes to off',
-      (WidgetTester tester) async {
-        try {
-          // Arrange
-          initController();
-          await tester.pump(const Duration(seconds: 30));
+    controllerTest('Should [not start the timer] when settings change on the locked PIN screen', () async {
+      // Arrange
+      await appRouter.replaceAll(<PageRouteInfo>[AppPinAuthRoute()]);
+      initController();
 
-          // Act
-          await tester.runAsync(() async {
-            await autoLogoutCubit.setInactivityLogoutTimeout(
-              inactivityLogoutTimeout: InactivityLogoutTimeout.off,
-            );
-          });
-          await tester.pump();
-          await tester.pump(const Duration(minutes: 6));
+      // Act
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setInactivityLogoutTimeout(inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes);
+        await autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: false);
+        await autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: true);
+      });
+      await testWidgetsFlutterBinding.pump();
+      autoLogoutController.handleUserInteraction();
+      await pumpElapsed(const Duration(minutes: 6));
 
-          // Assert
-          expect(activeWalletController.walletModel, walletModel);
-          expect(appRouter.stack, isEmpty);
-        } finally {
-          disposeController();
-        }
-      },
-    );
+      // Assert
+      expectSessionPreserved();
+      expect(appRouter.stack.single.name, AppPinAuthRoute.name);
+    });
   });
 
   group('Tests of AutoLogoutController background logout', () {
-    testWidgets(
-      'Should [logout when hidden] but [not when only inactive]',
-      (WidgetTester tester) async {
-        try {
-          // Arrange
-          await tester.runAsync(() async {
-            await autoLogoutCubit.setInactivityEnabled(
-              inactivityLogoutEnabledBool: false,
-            );
-          });
-          initController();
+    controllerTest('Should [logout when hidden] but [not when only inactive]', () async {
+      // Arrange
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: false);
+      });
+      await navigateToAuthenticatedRoute();
+      initController();
 
-          // Act
-          testWidgetsFlutterBinding.handleAppLifecycleStateChanged(
-            AppLifecycleState.inactive,
-          );
-          await tester.pump();
+      // Act
+      testWidgetsFlutterBinding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      await testWidgetsFlutterBinding.pump();
 
-          // Assert
-          expect(activeWalletController.walletModel, walletModel);
-          expect(appRouter.stack, isEmpty);
+      // Assert
+      expectSessionPreserved();
 
-          // Act
-          testWidgetsFlutterBinding.handleAppLifecycleStateChanged(
-            AppLifecycleState.hidden,
-          );
-          await tester.pump();
+      // Act
+      testWidgetsFlutterBinding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      await testWidgetsFlutterBinding.pump();
 
-          // Assert
-          expect(activeWalletController.walletModel, null);
-          expect(appRouter.stack, hasLength(1));
-          expect(appRouter.stack.single.name, SplashRoute.name);
-        } finally {
-          disposeController();
-        }
-      },
-    );
+      // Assert
+      expectAppLoggedOut();
+    });
 
-    testWidgets(
-      'Should [not logout when hidden] after background logout is disabled',
-      (WidgetTester tester) async {
-        try {
-          // Arrange
-          await tester.runAsync(() async {
-            await autoLogoutCubit.setInactivityEnabled(
-              inactivityLogoutEnabledBool: false,
-            );
-          });
-          initController();
+    controllerTest('Should [not logout when hidden] after background logout is disabled', () async {
+      // Arrange
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: false);
+      });
+      await navigateToAuthenticatedRoute();
+      initController();
 
-          // Act
-          await tester.runAsync(() async {
-            await autoLogoutCubit.setBackgroundLogoutMode(
-              backgroundLogoutMode: BackgroundLogoutMode.off,
-            );
-          });
-          await tester.pump();
+      // Act
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setBackgroundLogoutMode(backgroundLogoutMode: BackgroundLogoutMode.off);
+      });
+      await testWidgetsFlutterBinding.pump();
+      testWidgetsFlutterBinding
+        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      await testWidgetsFlutterBinding.pump();
 
-          testWidgetsFlutterBinding
-            ..handleAppLifecycleStateChanged(
-              AppLifecycleState.inactive,
-            )
-            ..handleAppLifecycleStateChanged(
-              AppLifecycleState.hidden,
-            );
-          await tester.pump();
+      // Assert
+      expectSessionPreserved();
+      expect(appRouter.stack.single.name, BottomNavigationRoute.name);
+    });
 
-          // Assert
-          expect(activeWalletController.walletModel, walletModel);
-          expect(appRouter.stack, isEmpty);
-        } finally {
-          disposeController();
-        }
-      },
-    );
+    controllerTest('Should [not logout when hidden] before authentication', () async {
+      // Arrange
+      await appRouter.replaceAll(<PageRouteInfo>[AppPinAuthRoute()]);
+      initController();
+
+      // Act
+      testWidgetsFlutterBinding
+        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      await testWidgetsFlutterBinding.pump();
+
+      // Assert
+      expectSessionPreserved();
+      expect(appRouter.stack.single.name, AppPinAuthRoute.name);
+    });
   });
 
   group('Tests of AutoLogoutController.dispose()', () {
-    testWidgets(
-      'Should [cancel the timer] and [remove settings and lifecycle listeners]',
-      (WidgetTester tester) async {
-        try {
-          // Arrange
-          initController();
-          await tester.pump(const Duration(seconds: 30));
+    controllerTest('Should [cancel the timer] and [remove route, settings and lifecycle listeners]', () async {
+      // Arrange
+      await navigateToAuthenticatedRoute();
+      initController();
+      await pumpElapsed(const Duration(seconds: 30));
 
-          // Act
-          autoLogoutController.dispose();
-          controllerInitializedBool = false;
+      // Act
+      disposeController();
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setInactivityLogoutTimeout(inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes);
+      });
+      await appRouter.replaceAll(<PageRouteInfo>[const SplashRoute()]);
+      await navigateToAuthenticatedRoute();
+      testWidgetsFlutterBinding
+        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      await pumpElapsed(const Duration(minutes: 6));
 
-          await tester.runAsync(() async {
-            await autoLogoutCubit.setInactivityLogoutTimeout(
-              inactivityLogoutTimeout: InactivityLogoutTimeout.fiveMinutes,
-            );
-          });
-          await tester.pump();
-
-          testWidgetsFlutterBinding
-            ..handleAppLifecycleStateChanged(
-              AppLifecycleState.inactive,
-            )
-            ..handleAppLifecycleStateChanged(
-              AppLifecycleState.hidden,
-            );
-          await tester.pump(const Duration(minutes: 6));
-
-          // Assert
-          expect(activeWalletController.walletModel, walletModel);
-          expect(appRouter.stack, isEmpty);
-        } finally {
-          disposeController();
-        }
-      },
-    );
+      // Assert
+      expectSessionPreserved();
+      expect(appRouter.stack.single.name, BottomNavigationRoute.name);
+    });
   });
 }
