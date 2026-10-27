@@ -9,12 +9,12 @@ class AutoLogoutState extends Equatable {
 
   final bool inactivityLogoutEnabledBool;
   final BackgroundLogoutMode backgroundLogoutMode;
-  final InactivityLogoutTimeout inactivityLogoutTimeout;
+  final InactivityLogoutTimer inactivityLogoutTimeout;
 
   AutoLogoutState copyWith({
     bool? inactivityLogoutEnabledBool,
     BackgroundLogoutMode? backgroundLogoutMode,
-    InactivityLogoutTimeout? inactivityLogoutTimeout,
+    InactivityLogoutTimer? inactivityLogoutTimeout,
   }) {
     return AutoLogoutState(
       inactivityLogoutEnabledBool: inactivityLogoutEnabledBool ?? this.inactivityLogoutEnabledBool,

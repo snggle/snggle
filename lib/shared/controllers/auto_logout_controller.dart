@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout_cubit/auto_logout_cubit.dart';
 import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/shared/models/auto_logout_settings/background_logout_mode.dart';
-import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timeout.dart';
+import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timer.dart';
 import 'package:snggle/shared/router/router.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 
@@ -87,11 +87,11 @@ class AutoLogoutController {
     _startInactivityLogoutTimer(inactivityLogoutDuration);
   }
 
-  Duration? _getInactivityLogoutDuration(InactivityLogoutTimeout inactivityLogoutTimeout) {
+  Duration? _getInactivityLogoutDuration(InactivityLogoutTimer inactivityLogoutTimeout) {
     return switch (inactivityLogoutTimeout) {
-      InactivityLogoutTimeout.off => null,
-      InactivityLogoutTimeout.oneMinute => const Duration(minutes: 1),
-      InactivityLogoutTimeout.fiveMinutes => const Duration(minutes: 5),
+      InactivityLogoutTimer.off => null,
+      InactivityLogoutTimer.oneMinute => const Duration(minutes: 1),
+      InactivityLogoutTimer.fiveMinutes => const Duration(minutes: 5),
     };
   }
 

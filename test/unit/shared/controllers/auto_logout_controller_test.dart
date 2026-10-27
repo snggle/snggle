@@ -6,7 +6,7 @@ import 'package:snggle/infra/services/app_service.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/auto_logout_controller.dart';
 import 'package:snggle/shared/models/auto_logout_settings/background_logout_mode.dart';
-import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timeout.dart';
+import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timer.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/shared/router/router.dart';
@@ -96,9 +96,9 @@ void main() {
   }
 
   group('Tests of AutoLogoutController.init()', () {
-    for (MapEntry<InactivityLogoutTimeout, Duration> timeoutMapEntry in const <InactivityLogoutTimeout, Duration>{
-      InactivityLogoutTimeout.oneMinute: Duration(minutes: 1),
-      InactivityLogoutTimeout.fiveMinutes: Duration(minutes: 5),
+    for (MapEntry<InactivityLogoutTimer, Duration> timeoutMapEntry in const <InactivityLogoutTimer, Duration>{
+      InactivityLogoutTimer.oneMinute: Duration(minutes: 1),
+      InactivityLogoutTimer.fiveMinutes: Duration(minutes: 5),
     }.entries) {
       testWidgets(
         'Should [logout after ${timeoutMapEntry.key.name}] without user interaction',
@@ -167,7 +167,7 @@ void main() {
           // Arrange
           await tester.runAsync(() async {
             await autoLogoutCubit.setInactivityLogoutTimeout(
-              inactivityLogoutTimeout: InactivityLogoutTimeout.off,
+              inactivityLogoutTimeout: InactivityLogoutTimer.off,
             );
           });
 
@@ -305,7 +305,7 @@ void main() {
           // Act
           await tester.runAsync(() async {
             await autoLogoutCubit.setInactivityLogoutTimeout(
-              inactivityLogoutTimeout: InactivityLogoutTimeout.fiveMinutes,
+              inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes,
             );
           });
           await tester.pump();
@@ -373,7 +373,7 @@ void main() {
           // Act
           await tester.runAsync(() async {
             await autoLogoutCubit.setInactivityLogoutTimeout(
-              inactivityLogoutTimeout: InactivityLogoutTimeout.off,
+              inactivityLogoutTimeout: InactivityLogoutTimer.off,
             );
           });
           await tester.pump();
@@ -482,7 +482,7 @@ void main() {
 
           await tester.runAsync(() async {
             await autoLogoutCubit.setInactivityLogoutTimeout(
-              inactivityLogoutTimeout: InactivityLogoutTimeout.fiveMinutes,
+              inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes,
             );
           });
           await tester.pump();

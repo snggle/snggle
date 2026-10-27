@@ -4,7 +4,7 @@ import 'package:snggle/infra/repositories/auto_logout_settings_repository.dart';
 import 'package:snggle/shared/factories/auto_logout_settings_model_factory.dart';
 import 'package:snggle/shared/models/auto_logout_settings/auto_logout_settings_model.dart';
 import 'package:snggle/shared/models/auto_logout_settings/background_logout_mode.dart';
-import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timeout.dart';
+import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timer.dart';
 
 class AutoLogoutSettingsService {
   final AutoLogoutSettingsModelFactory _autoLogoutSettingsModelFactory = globalLocator<AutoLogoutSettingsModelFactory>();
@@ -31,7 +31,7 @@ class AutoLogoutSettingsService {
     });
   }
 
-  Future<void> saveInactivityLogoutTimeout(InactivityLogoutTimeout inactivityLogoutTimeout) async {
+  Future<void> saveInactivityLogoutTimeout(InactivityLogoutTimer inactivityLogoutTimeout) async {
     await _settingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
       AutoLogoutSettingsModel autoLogoutSettingsModel = _autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
 

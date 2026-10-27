@@ -1,5 +1,5 @@
 import 'package:snggle/shared/models/auto_logout_settings/background_logout_mode.dart';
-import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timeout.dart';
+import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timer.dart';
 
 class AutoLogoutSettingsModel {
   const AutoLogoutSettingsModel({
@@ -10,9 +10,9 @@ class AutoLogoutSettingsModel {
 
   static const bool defaultInactivityLogoutBool = true;
   static const BackgroundLogoutMode defaultBackgroundLogoutMode = BackgroundLogoutMode.on;
-  static const InactivityLogoutTimeout defaultInactivityLogoutTimeout = InactivityLogoutTimeout.oneMinute;
+  static const InactivityLogoutTimer defaultInactivityLogoutTimeout = InactivityLogoutTimer.oneMinute;
 
   final bool inactivityLogoutBool;
   final BackgroundLogoutMode backgroundLogoutMode;
-  final InactivityLogoutTimeout inactivityLogoutTimeout;
+  final InactivityLogoutTimer inactivityLogoutTimeout;
 }
