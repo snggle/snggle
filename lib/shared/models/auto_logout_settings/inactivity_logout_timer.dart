@@ -1,0 +1,4 @@
+enum InactivityLogoutTimer {
+  oneMinute,
+  fiveMinutes,
+}

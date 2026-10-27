@@ -90,7 +90,7 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
                               onTap: () => tabsRouter.setActiveIndex(2),
                             ),
                             CustomBottomNavigationBarItem(
-                              selectedBool: false,
+                              selectedBool: tabsRouter.activeIndex == 3,
                               assetIconData: AppIcons.bottom_navigation_logout,
                               onTap: _logout,
                             ),

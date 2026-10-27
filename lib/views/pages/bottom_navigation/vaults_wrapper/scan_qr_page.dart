@@ -5,6 +5,7 @@ import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:snggle/bloc/pages/scan_qr_page/scan_qr_page_cubit.dart';
 import 'package:snggle/bloc/pages/scan_qr_page/scan_qr_page_state.dart';
 import 'package:snggle/config/app_colors.dart';
+import 'package:snggle/shared/controllers/auto_logout_controller.dart';
 import 'package:snggle/shared/exceptions/read_tx_data_exception.dart';
 import 'package:snggle/shared/exceptions/read_tx_data_exception_msgs.dart';
 import 'package:snggle/shared/exceptions/read_tx_data_exception_type.dart';
@@ -138,7 +139,11 @@ class _ScanQRPageState extends State<ScanQRPage> {
 
   void _handleQRScanned(Barcode barcode) {
     if (barcode.code != null) {
+      double previousProgress = scanQRPageCubit.progressNotifier.value;
       scanQRPageCubit.processQR(barcode.code!);
+      if (scanQRPageCubit.progressNotifier.value > previousProgress) {
+        context.read<AutoLogoutController>().handleUserInteraction();
+      }
     }
   }
 }

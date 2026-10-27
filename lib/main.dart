@@ -8,10 +8,14 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/config/theme_config.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/app_service.dart';
+import 'package:snggle/shared/bindings/text_input_activity_binding.dart';
 import 'package:snggle/shared/controllers/auto_logout_controller.dart';
+import 'package:snggle/shared/platform/text_input_activity_messenger.dart';
 import 'package:snggle/shared/router/router.dart';
 
 Future<void> main() async {
+  TextInputActivityBinding();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setSystemUIOverlayStyle(
@@ -34,43 +38,60 @@ class AppCore extends StatefulWidget {
 }
 
 class _AppCoreState extends State<AppCore> {
+  TextInputActivityMessenger? _textInputActivityMessenger;
   final AppRouter _appRouter = AppRouter();
   late AutoLogoutController _autoLogoutController;
 
   @override
   void initState() {
     super.initState();
+
     _autoLogoutController = AutoLogoutController(
       appRouter: _appRouter,
       appService: globalLocator<AppService>(),
       autoLogoutCubit: context.read<AutoLogoutCubit>(),
     );
     _autoLogoutController.init();
+
+    BinaryMessenger binaryMessenger = ServicesBinding.instance.defaultBinaryMessenger;
+
+    if (binaryMessenger is TextInputActivityMessenger) {
+      _textInputActivityMessenger = binaryMessenger;
+      binaryMessenger.addListener(
+        _autoLogoutController.handleUserInteraction,
+      );
+    }
   }
 
   @override
   void dispose() {
+    _textInputActivityMessenger?.removeListener(
+      _autoLogoutController.handleUserInteraction,
+    );
     _autoLogoutController.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext buildContext) {
-    return MaterialApp.router(
-      routeInformationParser: _appRouter.defaultRouteParser(),
-      routerDelegate: _appRouter.delegate(),
-      theme: ThemeConfig().buildTheme(),
-      debugShowCheckedModeBanner: false,
-      builder: (BuildContext buildContext, Widget? routerWidget) {
-        return Listener(
-          behavior: HitTestBehavior.translucent,
-          onPointerDown: _handlePointerInteraction,
-          onPointerMove: _handlePointerInteraction,
-          onPointerSignal: _handlePointerInteraction,
-          onPointerPanZoomUpdate: _handlePointerInteraction,
-          child: routerWidget as Widget,
-        );
-      },
+  Widget build(BuildContext context) {
+    return RepositoryProvider<AutoLogoutController>.value(
+      value: _autoLogoutController,
+      child: MaterialApp.router(
+        routeInformationParser: _appRouter.defaultRouteParser(),
+        routerDelegate: _appRouter.delegate(),
+        theme: ThemeConfig().buildTheme(),
+        debugShowCheckedModeBanner: false,
+        builder: (BuildContext context, Widget? routerWidget) {
+          return Listener(
+            behavior: HitTestBehavior.translucent,
+            onPointerDown: _handlePointerInteraction,
+            onPointerMove: _handlePointerInteraction,
+            onPointerSignal: _handlePointerInteraction,
+            onPointerPanZoomUpdate: _handlePointerInteraction,
+            child: routerWidget!,
+          );
+        },
+      ),
     );
   }
 

@@ -84,6 +84,7 @@ class AppIcons {
   static const AssetIconData text_wrap = AssetIconData('assets/icons/text_wrap.svg');
   static const AssetIconData soundwave_big = AssetIconData('assets/icons/soundwave_big.svg');
   static const AssetIconData soundwave_small = AssetIconData('assets/icons/soundwave_small.svg');
+  static const AssetIconData settings_logout = AssetIconData('assets/icons/settings_logout.svg');
   static const AssetIconData wallet_metamask = AssetIconData('assets/icons/wallet_metamask.svg');
   static const AssetIconData wallet_solflare = AssetIconData('assets/icons/wallet_solflare.svg');
   static const AssetIconData wallet_trezor = AssetIconData('assets/icons/wallet_trezor.svg');

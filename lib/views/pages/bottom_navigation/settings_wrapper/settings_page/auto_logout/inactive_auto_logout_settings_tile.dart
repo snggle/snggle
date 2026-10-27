@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timeout.dart';
+import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timer.dart';
 import 'package:snggle/views/widgets/custom/custom_switch_list_tile.dart';
 
 class InactivityAutoLogoutSettingsTile extends StatelessWidget {
@@ -13,8 +13,8 @@ class InactivityAutoLogoutSettingsTile extends StatelessWidget {
 
   final bool inactivityLogoutEnabledBool;
   final ValueChanged<bool>? inactivityLogoutEnabledValueChanged;
-  final InactivityLogoutTimeout inactivityLogoutTimeout;
-  final ValueChanged<InactivityLogoutTimeout?>? inactivityLogoutTimeoutValueChanged;
+  final InactivityLogoutTimer inactivityLogoutTimeout;
+  final ValueChanged<InactivityLogoutTimer?>? inactivityLogoutTimeoutValueChanged;
 
   @override
   Widget build(BuildContext buildContext) {
@@ -29,16 +29,26 @@ class InactivityAutoLogoutSettingsTile extends StatelessWidget {
           subtitle: 'Log out after a period without interaction.',
         ),
         ListTile(
-          contentPadding: EdgeInsets.zero,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
           enabled: timeoutSelectionEnabledBool,
           title: const Text('Inactivity timeout'),
-          trailing: DropdownButton<InactivityLogoutTimeout>(
-            value: inactivityLogoutTimeout,
-            onChanged: timeoutSelectionEnabledBool ? inactivityLogoutTimeoutValueChanged : null,
-            items: const <DropdownMenuItem<InactivityLogoutTimeout>>[
-              DropdownMenuItem<InactivityLogoutTimeout>(value: InactivityLogoutTimeout.oneMinute, child: Text('1 minute')),
-              DropdownMenuItem<InactivityLogoutTimeout>(value: InactivityLogoutTimeout.fiveMinutes, child: Text('5 minutes')),
-            ],
+          trailing: AnimatedSwitcher(
+            duration: kThemeChangeDuration,
+            child: DropdownButton<InactivityLogoutTimer>(
+              key: ValueKey<bool>(timeoutSelectionEnabledBool),
+              value: inactivityLogoutTimeout,
+              onChanged: timeoutSelectionEnabledBool ? inactivityLogoutTimeoutValueChanged : null,
+              items: const <DropdownMenuItem<InactivityLogoutTimer>>[
+                DropdownMenuItem<InactivityLogoutTimer>(
+                  value: InactivityLogoutTimer.oneMinute,
+                  child: Text('1 minute'),
+                ),
+                DropdownMenuItem<InactivityLogoutTimer>(
+                  value: InactivityLogoutTimer.fiveMinutes,
+                  child: Text('5 minutes'),
+                ),
+              ],
+            ),
           ),
         ),
       ],

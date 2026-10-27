@@ -4,7 +4,7 @@ import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/auto_logout_settings_service.dart';
 import 'package:snggle/shared/models/auto_logout_settings/auto_logout_settings_model.dart';
 import 'package:snggle/shared/models/auto_logout_settings/background_logout_mode.dart';
-import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timeout.dart';
+import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timer.dart';
 
 part 'auto_logout_state.dart';
 
@@ -41,7 +41,7 @@ class AutoLogoutCubit extends Cubit<AutoLogoutState> {
     emit(state.copyWith(inactivityLogoutEnabledBool: inactivityLogoutEnabledBool));
   }
 
-  Future<void> setInactivityLogoutTimeout({required InactivityLogoutTimeout inactivityLogoutTimeout}) async {
+  Future<void> setInactivityLogoutTimeout({required InactivityLogoutTimer inactivityLogoutTimeout}) async {
     await _autoLogoutSettingsService.saveInactivityLogoutTimeout(inactivityLogoutTimeout);
     emit(state.copyWith(inactivityLogoutTimeout: inactivityLogoutTimeout));
   }

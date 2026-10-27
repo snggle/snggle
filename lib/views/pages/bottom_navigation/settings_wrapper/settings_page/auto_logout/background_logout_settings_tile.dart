@@ -17,7 +17,7 @@ class BackgroundLogoutSettingsTile extends StatelessWidget {
       title: 'Logout when the app is in the background',
       valueBool: backgroundLogoutEnabledBool,
       valueChanged: backgroundLogoutEnabledValueChanged,
-      subtitle: 'Log out immediately when the app goes into the background.',
+      subtitle: 'Log out immediately when the app goes into the background or the screen is locked.',
     );
   }
 }

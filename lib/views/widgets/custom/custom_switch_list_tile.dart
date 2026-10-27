@@ -19,11 +19,17 @@ class CustomSwitchListTile extends StatelessWidget {
   Widget build(BuildContext buildContext) {
     return MergeSemantics(
       child: ListTile(
-        contentPadding: EdgeInsets.zero,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
         enabled: valueChanged != null,
-        title: Text(title),
+        title: Text(
+          title,
+          style: const TextStyle(height: 1.0),
+        ),
         subtitle: switch (subtitle) {
-          String subtitle => Text(subtitle),
+          String subtitle => Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Text(subtitle),
+          ),
           null => null,
         },
         onTap: valueChanged == null ? null : () => valueChanged?.call(!valueBool),

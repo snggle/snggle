@@ -27,7 +27,6 @@ import 'package:snggle/infra/services/wallets_service.dart';
 import 'package:snggle/shared/controllers/active_wallet_controller.dart';
 import 'package:snggle/shared/controllers/master_key_controller.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
-import 'package:snggle/shared/factories/auto_logout_settings_model_factory.dart';
 import 'package:snggle/shared/factories/entry_model_factory.dart';
 import 'package:snggle/shared/factories/group_model_factory.dart';
 import 'package:snggle/shared/factories/network_group_model_factory.dart';
@@ -90,6 +89,5 @@ void _initFactories() {
     ..registerLazySingleton<NetworkGroupModelFactory>(NetworkGroupModelFactory.new)
     ..registerLazySingleton<VaultModelFactory>(VaultModelFactory.new)
     ..registerLazySingleton<WalletModelFactory>(WalletModelFactory.new)
-    ..registerLazySingleton<EntryModelFactory>(EntryModelFactory.new)
-    ..registerLazySingleton<AutoLogoutSettingsModelFactory>(AutoLogoutSettingsModelFactory.new);
+    ..registerLazySingleton<EntryModelFactory>(EntryModelFactory.new);
 }
