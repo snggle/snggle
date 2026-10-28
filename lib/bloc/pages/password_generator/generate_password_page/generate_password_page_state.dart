@@ -9,11 +9,9 @@ class GeneratePasswordPageState extends Equatable {
 
   final PasswordCharacterSetMode characterSetMode;
 
-  /// Null represents all categories being disabled. The library deliberately
-  /// rejects that incomplete selection, so it must never reach the generator.
+
   final PasswordCharactersConfig? advancedCharacterSettings;
 
-  /// Preserves the filter only while [advancedCharacterSettings] is null.
   final bool removeAmbiguousWhenInvalidBool;
   final PasswordLevelType calculatedPasswordLevelType;
   final PasswordLevelType selectedPasswordLevelType;
@@ -39,12 +37,10 @@ class GeneratePasswordPageState extends Equatable {
   });
 
   factory GeneratePasswordPageState.initial({
-    PasswordCharacterSetMode characterSetMode = PasswordCharacterSetMode.ascii,
+    required PasswordCharacterSetMode characterSetMode,
     bool obscurePasswordBool = true,
   }) {
-    PasswordLevelType initialPasswordLevelType = characterSetMode == PasswordCharacterSetMode.sip2
-        ? PasswordLevelType.good
-        : PasswordLevelType.excellent;
+    PasswordLevelType initialPasswordLevelType = PasswordLevelType.excellent;
     return GeneratePasswordPageState(
       characterSetMode: characterSetMode,
       advancedCharacterSettings: PasswordCharactersConfig(),

@@ -565,8 +565,7 @@ class EthereumTransactionDetailsRouteArgs {
 class GeneratePasswordRoute
     extends _i33.PageRouteInfo<GeneratePasswordRouteArgs> {
   GeneratePasswordRoute({
-    _i44.PasswordCharacterSetMode characterSetMode =
-        _i44.PasswordCharacterSetMode.ascii,
+    required _i44.PasswordCharacterSetMode characterSetMode,
     bool obscurePasswordBool = true,
     _i35.Key? key,
     List<_i33.PageRouteInfo>? children,
@@ -585,9 +584,7 @@ class GeneratePasswordRoute
   static _i33.PageInfo page = _i33.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<GeneratePasswordRouteArgs>(
-        orElse: () => const GeneratePasswordRouteArgs(),
-      );
+      final args = data.argsAs<GeneratePasswordRouteArgs>();
       return _i14.GeneratePasswordPage(
         characterSetMode: args.characterSetMode,
         obscurePasswordBool: args.obscurePasswordBool,
@@ -599,7 +596,7 @@ class GeneratePasswordRoute
 
 class GeneratePasswordRouteArgs {
   const GeneratePasswordRouteArgs({
-    this.characterSetMode = _i44.PasswordCharacterSetMode.ascii,
+    required this.characterSetMode,
     this.obscurePasswordBool = true,
     this.key,
   });

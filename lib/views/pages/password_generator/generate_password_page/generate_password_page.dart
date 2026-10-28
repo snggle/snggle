@@ -30,7 +30,7 @@ class GeneratePasswordPage extends StatefulWidget {
   final PasswordCharacterSetMode characterSetMode;
 
   const GeneratePasswordPage({
-    this.characterSetMode = PasswordCharacterSetMode.ascii,
+    required this.characterSetMode,
     this.obscurePasswordBool = true,
     super.key,
   });
@@ -114,13 +114,14 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                         child: IntrinsicHeight(
                           child: Column(
                             children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                child: Text(
-                                  'Password Characters',
-                                  style: textTheme.bodyLarge?.copyWith(color: AppColors.darkGrey),
+                              if (state.characterSetMode == PasswordCharacterSetMode.advanced)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  child: Text(
+                                    'Password Characters',
+                                    style: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
+                                  ),
                                 ),
-                              ),
                               if (state.characterSetMode == PasswordCharacterSetMode.advanced)
                                 Column(
                                   children: <Widget>[
@@ -192,7 +193,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                 padding: const EdgeInsets.symmetric(horizontal: 16),
                                 child: Text(
                                   'Password Security and Length',
-                                  style: textTheme.bodyLarge?.copyWith(color: AppColors.darkGrey),
+                                  style: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
                                 ),
                               ),
                               CustomSingleSelectMenu<PasswordLevelType>(
@@ -200,7 +201,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                 options: state.passwordLevelTypeList,
                                 onSelected: _handlePasswordLengthChanged,
                                 itemBuilder: (BuildContext context, PasswordLevelType passwordLengthType) {
-                                  bool customLengthSelectedBool = passwordLengthType == PasswordLevelType.custom;
+                                  bool customFieldBool = passwordLengthType == PasswordLevelType.custom;
                                   Color passwordColor = _getPasswordSecurityLevelColor(passwordLengthType);
 
                                   return Row(
@@ -219,7 +220,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                           style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
                                         ),
                                       ),
-                                      if (customLengthSelectedBool) ...<Widget>[
+                                      if (customFieldBool) ...<Widget>[
                                         SizedBox(
                                           width: 44,
                                           child: DecoratedBox(
@@ -266,7 +267,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                               if (anyKeyboardVisibleBool == false) ...<Widget>[
                                 const Spacer(),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 22.5, vertical: 25),
+                                  padding: const EdgeInsets.symmetric(horizontal: 22.5),
                                   child: SizedBox(
                                     width: double.infinity,
                                     child: Stack(
@@ -283,7 +284,6 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                   ),
                                 ),
                                 const Spacer(),
-                                const SizedBox(height: 12),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 10),
                                   child: LabelWrapperVertical.textField(
@@ -319,13 +319,6 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                         confirmButtonActiveBool ? 'Entropy: ${state.passwordEntropy.toStringAsFixed(1)} bits' : 'Entropy: N/A',
                                         style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                       ),
-                                      /*Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                                        child: Text(
-                                          '\u2022',
-                                          style: textTheme.bodySmall?.copyWith(color: AppColors.body3),
-                                        ),
-                                      ),*/
                                       if (state.characterSetMode == PasswordCharacterSetMode.sip2) ...<Widget>[
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -349,12 +342,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                           confirmButtonActiveBool ? 'Checksum: ${state.checksumCharacterCount}' : 'Checksum: N/A',
                                           style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                         ),
-                                      ] /*else ...<Widget>[
-                                        Text(
-                                          confirmButtonActiveBool ? 'Length: N/A' :'Length: ${state.passwordLength}',
-                                          style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
-                                        ),
-                                      ],*/,
+                                      ],
                                     ],
                                   ),
                                 ),
@@ -365,39 +353,6 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                     child: Stack(
                                       alignment: Alignment.center,
                                       children: <Widget>[
-                                        /*Row(
-                                          children: <Widget>[
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Material(
-                                                color: Colors.transparent,
-                                                child:
-                                                    state.passwordSecurityLevel == PasswordLevelType.unsafe ||
-                                                        state.passwordSecurityLevel == PasswordLevelType.weak
-                                                    ? Icon(
-                                                        Icons.warning_amber_rounded,
-                                                        size: 20,
-                                                        color: _getPasswordSecurityLevelColor(state.passwordSecurityLevel),
-                                                      )
-                                                    : AssetIcon(
-                                                        AppIcons.menu_save,
-                                                        size: 20,
-                                                        color: _getPasswordSecurityLevelColor(state.passwordSecurityLevel),
-                                                      ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                '${state.passwordSecurityLevel.displayName} password',
-                                                style: textTheme.bodyMedium?.copyWith(
-                                                  color: _getPasswordSecurityLevelColor(state.passwordSecurityLevel),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),*/
                                         Align(
                                           alignment: Alignment.centerRight,
                                           child: Material(
