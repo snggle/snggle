@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
-import 'package:snggle/views/widgets/custom/custom_text_field.dart';
-import 'package:snggle/views/widgets/generic/copy_wrapper.dart';
+import 'package:snggle/views/widgets/entry_form/entry_form_field.dart';
 import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
-import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class EntryForm extends StatelessWidget {
@@ -37,8 +34,8 @@ class EntryForm extends StatelessWidget {
       children: <Widget>[
         const SizedBox(height: 12),
         if (nameTextEditingController != null) ...<Widget>[
-          _buildEntryField(
-            context: context,
+          EntryFormField(
+            readOnlyBool: readOnlyBool,
             label: 'Name',
             textEditingController: nameTextEditingController!,
           ),
@@ -51,26 +48,26 @@ class EntryForm extends StatelessWidget {
             ),
           const SizedBox(height: 12),
         ],
-        _buildEntryField(
-          context: context,
+        EntryFormField(
+          readOnlyBool: readOnlyBool,
           label: 'Website',
           textEditingController: websiteTextEditingController,
         ),
         const SizedBox(height: 12),
-        _buildEntryField(
-          context: context,
+        EntryFormField(
+          readOnlyBool: readOnlyBool,
           label: 'Email',
           textEditingController: emailTextEditingController,
         ),
         const SizedBox(height: 12),
-        _buildEntryField(
-          context: context,
+        EntryFormField(
+          readOnlyBool: readOnlyBool,
           label: 'Username',
           textEditingController: usernameTextEditingController,
         ),
         const SizedBox(height: 12),
-        _buildEntryField(
-          context: context,
+        EntryFormField(
+          readOnlyBool: readOnlyBool,
           label: 'Password',
           textEditingController: passwordTextEditingController,
           obscureTextBool: obscurePasswordBool,
@@ -87,72 +84,6 @@ class EntryForm extends StatelessWidget {
           suffixWidgetConstraints: const BoxConstraints(minWidth: 34, minHeight: 34),
         ),
       ],
-    );
-  }
-
-  Widget _buildEntryField({
-    required BuildContext context,
-    required String label,
-    required TextEditingController textEditingController,
-    bool obscureTextBool = false,
-    bool obscureClipboardContentBool = false,
-    Widget? suffixWidget,
-    BoxConstraints? suffixWidgetConstraints,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: readOnlyBool
-          ? CopyWrapper.withCopyAction(
-              value: textEditingController.text,
-              obscureContentBool: obscureClipboardContentBool,
-              copyCallbackBuilder: (BuildContext context, VoidCallback copy) => _buildTextField(
-                context: context,
-                label: label,
-                textEditingController: textEditingController,
-                obscureTextBool: obscureTextBool,
-                onTap: copy,
-                suffixWidget: suffixWidget,
-                suffixWidgetConstraints: suffixWidgetConstraints,
-              ),
-            )
-          : _buildTextField(
-              context: context,
-              label: label,
-              textEditingController: textEditingController,
-              obscureTextBool: obscureTextBool,
-              suffixWidget: suffixWidget,
-              suffixWidgetConstraints: suffixWidgetConstraints,
-            ),
-    );
-  }
-
-  Widget _buildTextField({
-    required BuildContext context,
-    required String label,
-    required TextEditingController textEditingController,
-    bool obscureTextBool = false,
-    VoidCallback? onTap,
-    Widget? suffixWidget,
-    BoxConstraints? suffixWidgetConstraints,
-  }) {
-    TextTheme textTheme = Theme.of(context).textTheme;
-
-    return LabelWrapperVertical.textField(
-      label: label,
-      labelStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
-      labelPadding: EdgeInsets.zero,
-      child: CustomTextField(
-        readOnlyBool: readOnlyBool,
-        enableInteractiveSelectionBool: readOnlyBool == false,
-        textEditingController: textEditingController,
-        inputBorder: InputBorder.none,
-        keyboardType: TextInputType.text,
-        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
-        obscureTextBool: obscureTextBool,
-        onTap: onTap,
-        suffixWidget: suffixWidget,
-        suffixWidgetConstraints: suffixWidgetConstraints,
-      ),
     );
   }
 }
