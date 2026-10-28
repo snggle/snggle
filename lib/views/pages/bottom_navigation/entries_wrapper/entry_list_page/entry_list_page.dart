@@ -58,6 +58,7 @@ class _EntryListPageState extends State<EntryListPage> {
 
   @override
   void dispose() {
+    draggedItemNotifier.dispose();
     entryListPageCubit.close();
     super.dispose();
   }
