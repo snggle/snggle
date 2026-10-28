@@ -25,8 +25,8 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
   Widget build(BuildContext context) {
     return AutoTabsRouter(
       routes: const <PageRouteInfo>[
-        VaultsSectionWrapperRoute(),
         EntriesSectionWrapperRoute(),
+        VaultsSectionWrapperRoute(),
         AppsRoute(),
         SettingsRoute(),
       ],
@@ -50,12 +50,12 @@ class _BottomNavigationWrapperState extends State<BottomNavigationWrapper> {
                           bottomNavigationBarItems: <Widget>[
                             CustomBottomNavigationBarItem(
                               selectedBool: tabsRouter.activeIndex == 0,
-                              assetIconData: AppIcons.bottom_navigation_crypto,
+                              assetIconData: AppIcons.bottom_navigation_secrets,
                               onTap: () => tabsRouter.setActiveIndex(0),
                             ),
                             CustomBottomNavigationBarItem(
                               selectedBool: tabsRouter.activeIndex == 1,
-                              assetIconData: AppIcons.bottom_navigation_secrets,
+                              assetIconData: AppIcons.bottom_navigation_crypto,
                               onTap: () => tabsRouter.setActiveIndex(1),
                             ),
                             const CustomBottomNavigationBarScanIcon(),
