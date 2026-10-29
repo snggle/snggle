@@ -41,6 +41,4 @@ object FlutterConstants {
     const val METHOD_CANCEL_PASSKEY_CREATE = "cancelPasskeyCreate"
 
     const val LAUNCH_ACTION_PASSKEY_CREATE = "passkeyCreate"
-
-    const val PASSKEY_ENGINE_ID = "passkey_engine"
 }

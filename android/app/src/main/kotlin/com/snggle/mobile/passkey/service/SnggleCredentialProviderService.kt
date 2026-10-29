@@ -1,10 +1,12 @@
 package com.snggle.mobile.passkey.service
 
+
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.CancellationSignal
 import android.os.OutcomeReceiver
 import android.util.Log
+import androidx.credentials.provider.Action
 import androidx.credentials.provider.BeginGetPublicKeyCredentialOption
 import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.CreateCredentialException
@@ -19,6 +21,7 @@ import androidx.credentials.provider.CreateEntry
 import androidx.credentials.provider.CredentialProviderService
 import androidx.credentials.provider.ProviderClearCredentialStateRequest
 import com.snggle.mobile.passkey.activity.PasskeyCreateActivity
+import com.snggle.mobile.passkey.activity.PasskeyGetActivity
 
 class SnggleCredentialProviderService : CredentialProviderService() {
 
@@ -62,22 +65,36 @@ class SnggleCredentialProviderService : CredentialProviderService() {
     override fun onBeginGetCredentialRequest(
         request: BeginGetCredentialRequest,
         cancellationSignal: CancellationSignal,
-        callback: OutcomeReceiver<
-                BeginGetCredentialResponse,
-                GetCredentialException
-                >
+        callback: OutcomeReceiver<BeginGetCredentialResponse, GetCredentialException>
     ) {
         val passkeyOptions = request.beginGetCredentialOptions
             .filterIsInstance<BeginGetPublicKeyCredentialOption>()
 
-        Log.d("SngglePasskey", "Get credential request received")
         Log.d("SngglePasskey", "Passkey options count: ${passkeyOptions.size}")
 
         for (option in passkeyOptions) {
             Log.d("SngglePasskey", "Request JSON: ${option.requestJson}")
         }
 
-        callback.onResult(BeginGetCredentialResponse())
+        val intent = Intent(this, PasskeyGetActivity::class.java)
+
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            1,
+            intent,
+            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val action = Action(
+            title = "Choose from Snggle",
+            pendingIntent = pendingIntent
+        )
+
+        callback.onResult(
+            BeginGetCredentialResponse(
+                actions = listOf(action)
+            )
+        )
     }
 
     override fun onClearCredentialStateRequest(

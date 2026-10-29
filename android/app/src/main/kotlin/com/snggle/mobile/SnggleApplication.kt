@@ -17,9 +17,8 @@ class SnggleApplication : FlutterApplication() {
         Log.d(TAG, "Application started")
 
         cacheAutofillEngine()
-        cachePasskeyEngine()
 
-        Log.d(TAG, "Flutter engines cached")
+        Log.d(TAG, "Autofill engine cached")
     }
 
     private fun cacheAutofillEngine() {
@@ -33,25 +32,6 @@ class SnggleApplication : FlutterApplication() {
 
         FlutterEngineCache.getInstance().put(
             FlutterConstants.AUTOFILL_ENGINE_ID,
-            engine
-        )
-    }
-
-    private fun cachePasskeyEngine() {
-        val engine = FlutterEngine(this).apply {
-            GeneratedPluginRegistrant.registerWith(this)
-
-            dartExecutor.executeDartEntrypoint(
-                DartExecutor.DartEntrypoint(
-                    FlutterInjector.instance().flutterLoader().findAppBundlePath(),
-                    "package:snggle/passkey_provider_main.dart",
-                    "passkeyProviderMain"
-                )
-            )
-        }
-
-        FlutterEngineCache.getInstance().put(
-            FlutterConstants.PASSKEY_ENGINE_ID,
             engine
         )
     }
