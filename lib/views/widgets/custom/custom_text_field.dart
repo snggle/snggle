@@ -29,6 +29,7 @@ class CustomTextField extends StatefulWidget {
   final FocusNode? _focusNode;
   final TextInputType _keyboardType;
   final TextEditingController? _textEditingController;
+  final int? _maxLength;
   final InputBorder? _inputBorder;
   final List<TextInputFormatter>? _inputFormatters;
   final EdgeInsets? _padding;
@@ -59,6 +60,7 @@ class CustomTextField extends StatefulWidget {
     this._focusNode,
     this._keyboardType = TextInputType.none,
     this._textEditingController,
+    this._maxLength,
     this._inputBorder,
     this._inputFormatters,
     this._padding,
@@ -118,7 +120,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           enableInteractiveSelection: widget._enableInteractiveSelectionBool,
           enableSuggestions: false,
           autocorrect: false,
-          maxLength: 100,
+          maxLength: widget._maxLength ?? 100,
           controller: widget._textEditingController,
           focusNode: widget._focusNode,
           autofocus: widget._autofocusBool,
