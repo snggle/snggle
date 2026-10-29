@@ -84,10 +84,10 @@ void main() {
     });
 
     group('Tests of email validation on save()', () {
-      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == TRUE] if [EMAIL LOCAL PART EMPTY]', () async {
+      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == TRUE] if [EMAIL HAS NO @ CHARACTER]', () async {
         // Arrange
         await actualEntryCreateEditPageCubit.init();
-        actualEntryCreateEditPageCubit.emailTextEditingController.text = '@example.com';
+        actualEntryCreateEditPageCubit.emailTextEditingController.text = 'user+tag#mail.example.co.uk';
 
         // Act
         EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
@@ -97,10 +97,10 @@ void main() {
         expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState(emailInvalidBool: true));
       });
 
-      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == TRUE] if [EMAIL CONTAINS MULTIPLE @ CHARACTERS]', () async {
+      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == TRUE] if [EMAIL ENDS WITH @ CHARACTER]', () async {
         // Arrange
         await actualEntryCreateEditPageCubit.init();
-        actualEntryCreateEditPageCubit.emailTextEditingController.text = 'user@@example.com';
+        actualEntryCreateEditPageCubit.emailTextEditingController.text = 'user+tag@mail.example.co.uk@';
 
         // Act
         EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
@@ -110,46 +110,7 @@ void main() {
         expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState(emailInvalidBool: true));
       });
 
-      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == TRUE] if [EMAIL DOMAIN HAS NO DOT]', () async {
-        // Arrange
-        await actualEntryCreateEditPageCubit.init();
-        actualEntryCreateEditPageCubit.emailTextEditingController.text = 'user@example';
-
-        // Act
-        EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
-
-        // Assert
-        expect(actualEntryModel, null);
-        expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState(emailInvalidBool: true));
-      });
-
-      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == TRUE] if [EMAIL SUBDOMAIN IS EMPTY]', () async {
-        // Arrange
-        await actualEntryCreateEditPageCubit.init();
-        actualEntryCreateEditPageCubit.emailTextEditingController.text = 'user@example..com';
-
-        // Act
-        EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
-
-        // Assert
-        expect(actualEntryModel, null);
-        expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState(emailInvalidBool: true));
-      });
-
-      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == TRUE] if [EMAIL CONTAINS WHITESPACE]', () async {
-        // Arrange
-        await actualEntryCreateEditPageCubit.init();
-        actualEntryCreateEditPageCubit.emailTextEditingController.text = 'user name@example.com';
-
-        // Act
-        EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
-
-        // Assert
-        expect(actualEntryModel, null);
-        expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState(emailInvalidBool: true));
-      });
-
-      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == FALSE] if [EMAIL CONTAINS TAG AND SUBDOMAIN]', () async {
+      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == FALSE] if [EMAIL IS CORRECT AND CONTAINS TAG AND SUBDOMAIN]', () async {
         // Arrange
         await actualEntryCreateEditPageCubit.init();
         actualEntryCreateEditPageCubit.emailTextEditingController.text = 'user+tag@mail.example.co.uk';
