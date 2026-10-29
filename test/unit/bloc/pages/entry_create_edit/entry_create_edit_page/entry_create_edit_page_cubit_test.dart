@@ -83,6 +83,100 @@ void main() {
       );
     });
 
+    group('Tests of email validation on save()', () {
+      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == TRUE] if [EMAIL LOCAL PART EMPTY]', () async {
+        // Arrange
+        await actualEntryCreateEditPageCubit.init();
+        actualEntryCreateEditPageCubit.emailTextEditingController.text = '@example.com';
+
+        // Act
+        EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
+
+        // Assert
+        expect(actualEntryModel, null);
+        expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState(emailInvalidBool: true));
+      });
+
+      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == TRUE] if [EMAIL CONTAINS MULTIPLE @ CHARACTERS]', () async {
+        // Arrange
+        await actualEntryCreateEditPageCubit.init();
+        actualEntryCreateEditPageCubit.emailTextEditingController.text = 'user@@example.com';
+
+        // Act
+        EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
+
+        // Assert
+        expect(actualEntryModel, null);
+        expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState(emailInvalidBool: true));
+      });
+
+      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == TRUE] if [EMAIL DOMAIN HAS NO DOT]', () async {
+        // Arrange
+        await actualEntryCreateEditPageCubit.init();
+        actualEntryCreateEditPageCubit.emailTextEditingController.text = 'user@example';
+
+        // Act
+        EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
+
+        // Assert
+        expect(actualEntryModel, null);
+        expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState(emailInvalidBool: true));
+      });
+
+      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == TRUE] if [EMAIL SUBDOMAIN IS EMPTY]', () async {
+        // Arrange
+        await actualEntryCreateEditPageCubit.init();
+        actualEntryCreateEditPageCubit.emailTextEditingController.text = 'user@example..com';
+
+        // Act
+        EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
+
+        // Assert
+        expect(actualEntryModel, null);
+        expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState(emailInvalidBool: true));
+      });
+
+      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == TRUE] if [EMAIL CONTAINS WHITESPACE]', () async {
+        // Arrange
+        await actualEntryCreateEditPageCubit.init();
+        actualEntryCreateEditPageCubit.emailTextEditingController.text = 'user name@example.com';
+
+        // Act
+        EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
+
+        // Assert
+        expect(actualEntryModel, null);
+        expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState(emailInvalidBool: true));
+      });
+
+      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == FALSE] if [EMAIL CONTAINS TAG AND SUBDOMAIN]', () async {
+        // Arrange
+        await actualEntryCreateEditPageCubit.init();
+        actualEntryCreateEditPageCubit.emailTextEditingController.text = 'user+tag@mail.example.co.uk';
+
+        // Act
+        EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
+
+        // Assert
+        expect(actualEntryModel, isNotNull);
+        expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState());
+      });
+
+      test('Should [emit EntryCreateEditPageState] with [emailInvalidBool == FALSE] if [EMAIL EMPTY]', () async {
+        // Arrange
+        await actualEntryCreateEditPageCubit.init();
+        actualEntryCreateEditPageCubit.emailTextEditingController.text = '';
+
+        // Act
+        EntryModel? actualEntryModel = await actualEntryCreateEditPageCubit.save();
+
+        // Assert
+        expect(actualEntryModel, isNotNull);
+        expect(actualEntryModel!.emailExistsBool, false);
+        expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState());
+      });
+    });
+
     test('Should [return EntryModel] and save entry with secrets', () async {
       // Arrange
       await actualEntryCreateEditPageCubit.init();
@@ -124,7 +218,10 @@ void main() {
       expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState());
     });
 
-    tearDown(testDatabase.close);
+    tearDown(() async {
+      await actualEntryCreateEditPageCubit.close();
+      await testDatabase.close();
+    });
   });
 
   group('Tests of EntryCreateEditPageCubit process (edit mode)', () {
@@ -218,6 +315,9 @@ void main() {
       expect(actualEntryCreateEditPageCubit.state, const EntryCreateEditPageState());
     });
 
-    tearDown(testDatabase.close);
+    tearDown(() async {
+      await actualEntryCreateEditPageCubit.close();
+      await testDatabase.close();
+    });
   });
 }
