@@ -23,6 +23,7 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
   final TextEditingController nameTextEditingController = TextEditingController();
   final TextEditingController websiteTextEditingController = TextEditingController();
   final TextEditingController emailTextEditingController = TextEditingController();
+  final FocusNode emailFocusNode = FocusNode();
   final TextEditingController usernameTextEditingController = TextEditingController();
   final TextEditingController passwordTextEditingController = TextEditingController();
 
@@ -42,6 +43,7 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
   Future<void> close() async {
     nameTextEditingController.dispose();
     websiteTextEditingController.dispose();
+    emailFocusNode.dispose();
     emailTextEditingController.dispose();
     usernameTextEditingController.dispose();
     passwordTextEditingController.dispose();
@@ -51,6 +53,7 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
 
   Future<void> init() async {
     nameTextEditingController.addListener(_updateEntryNameEmptyState);
+    emailFocusNode.addListener(_handleEmailFocusChanged);
 
     if (_entryPageType == EntryPageType.create) {
       int lastEntryIndex = await _entriesService.getLastIndex();
@@ -82,11 +85,11 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
   }
 
   Future<EntryModel?> save() async {
-    if (nameTextEditingController.text.trim().isEmpty) {
-      emit(state.copyWith(entryNameEmptyBool: true));
+    emit(state.copyWith(entryNameEmptyBool: nameTextEditingController.text.trim().isEmpty));
+    _validateEmail();
+
+    if (state.entryNameEmptyBool || state.emailInvalidBool) {
       return null;
-    } else {
-      emit(state.copyWith(entryNameEmptyBool: false));
     }
 
     if (_entryPageType == EntryPageType.create) {
@@ -139,6 +142,27 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
     _entrySecretsModel = updatedSecrets;
 
     return updatedEntryModel;
+  }
+
+  void _handleEmailFocusChanged() {
+    if (emailFocusNode.hasFocus == false) {
+      _validateEmail();
+    }
+  }
+
+  void _validateEmail() {
+    String email = emailTextEditingController.text;
+    emit(state.copyWith(emailInvalidBool: email.isNotEmpty && _isValidEmailBool(email) == false));
+  }
+
+  bool _isValidEmailBool(String email) {
+    List<String> parts = email.split('@');
+    if (parts.length != 2 || parts[0].isEmpty) {
+      return false;
+    }
+
+    List<String> domainParts = parts[1].split('.');
+    return domainParts.length >= 2 && domainParts.every((String part) => part.isNotEmpty) && RegExp(r'\s').hasMatch(email) == false;
   }
 
   void _updateEntryNameEmptyState() {

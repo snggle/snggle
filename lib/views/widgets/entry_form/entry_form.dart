@@ -12,6 +12,8 @@ class EntryForm extends StatelessWidget {
   final TextEditingController passwordTextEditingController;
   final bool readOnlyBool;
   final bool entryNameEmptyBool;
+  final bool emailInvalidBool;
+  final FocusNode? emailFocusNode;
   final bool obscurePasswordBool;
   final VoidCallback onTogglePasswordVisibility;
 
@@ -25,6 +27,8 @@ class EntryForm extends StatelessWidget {
     required this.onTogglePasswordVisibility,
     this.nameTextEditingController,
     this.entryNameEmptyBool = false,
+    this.emailInvalidBool = false,
+    this.emailFocusNode,
     super.key,
   });
 
@@ -58,7 +62,15 @@ class EntryForm extends StatelessWidget {
           readOnlyBool: readOnlyBool,
           label: 'Email',
           textEditingController: emailTextEditingController,
+          focusNode: emailFocusNode,
         ),
+        if (emailInvalidBool)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: ErrorMessageListTile(
+              message: 'Enter a valid email address',
+            ),
+          ),
         const SizedBox(height: 12),
         EntryFormField(
           readOnlyBool: readOnlyBool,

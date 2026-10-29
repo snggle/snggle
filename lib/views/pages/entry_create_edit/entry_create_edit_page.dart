@@ -96,6 +96,8 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
                         nameTextEditingController: entryCreateEditPageCubit.nameTextEditingController,
                         websiteTextEditingController: entryCreateEditPageCubit.websiteTextEditingController,
                         emailTextEditingController: entryCreateEditPageCubit.emailTextEditingController,
+                        emailFocusNode: entryCreateEditPageCubit.emailFocusNode,
+                        emailInvalidBool: state.emailInvalidBool,
                         usernameTextEditingController: entryCreateEditPageCubit.usernameTextEditingController,
                         passwordTextEditingController: entryCreateEditPageCubit.passwordTextEditingController,
                         readOnlyBool: false,
@@ -115,7 +117,8 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
     );
   }
 
-  bool get _finishButtonEnabledBool => entryCreateEditPageCubit.state.entryNameEmptyBool == false;
+  bool get _finishButtonEnabledBool =>
+      entryCreateEditPageCubit.state.entryNameEmptyBool == false && entryCreateEditPageCubit.state.emailInvalidBool == false;
 
   Future<void> _save() async {
     await CustomLoadingDialog.show<EntryModel?>(
