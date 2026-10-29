@@ -8,6 +8,7 @@ class EntryFormField extends StatelessWidget {
   final String label;
   final TextEditingController textEditingController;
   final bool readOnlyBool;
+  final FocusNode? focusNode;
   final bool obscureTextBool;
   final bool obscureClipboardContentBool;
   final Widget? suffixWidget;
@@ -17,6 +18,7 @@ class EntryFormField extends StatelessWidget {
     required this.label,
     required this.textEditingController,
     required this.readOnlyBool,
+    this.focusNode,
     this.obscureTextBool = false,
     this.obscureClipboardContentBool = false,
     this.suffixWidget,
@@ -57,6 +59,7 @@ class EntryFormField extends StatelessWidget {
               labelStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
               labelPadding: EdgeInsets.zero,
               child: CustomTextField(
+                focusNode: focusNode,
                 readOnlyBool: readOnlyBool,
                 enableInteractiveSelectionBool: readOnlyBool == false,
                 textEditingController: textEditingController,
