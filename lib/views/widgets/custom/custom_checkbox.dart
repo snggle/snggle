@@ -7,10 +7,12 @@ import 'package:sprung/sprung.dart';
 
 class CustomCheckbox extends StatelessWidget {
   final bool selectedBool;
+  final bool squareCheckboxBool;
   final double size;
 
   const CustomCheckbox({
     required this.selectedBool,
+    this.squareCheckboxBool = false,
     this.size = 16,
     super.key,
   });
@@ -39,7 +41,9 @@ class CustomCheckbox extends StatelessWidget {
               duration: const Duration(milliseconds: 800),
               switchInCurve: Sprung.custom(mass: 1, stiffness: 100, damping: 15),
               switchOutCurve: Sprung.custom(mass: 1, stiffness: 100, damping: 15),
-              child: selectedBool ? AssetIcon(AppIcons.checkbox_selected, size: size) : AssetIcon(AppIcons.checkbox_unselected, size: size),
+              child: selectedBool
+                  ? AssetIcon(squareCheckboxBool ? AppIcons.checkbox_selected_square : AppIcons.checkbox_selected, size: size)
+                  : AssetIcon(squareCheckboxBool ? AppIcons.checkbox_unselected_square : AppIcons.checkbox_unselected, size: size),
             ),
           ),
         ],

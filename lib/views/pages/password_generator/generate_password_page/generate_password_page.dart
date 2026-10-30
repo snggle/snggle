@@ -180,15 +180,17 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                         ),
                                       ],
                                     ),
-
-                                    if (state.characterSettingsInvalidBool)
-                                      const Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 16),
+                                    AnimatedOpacity(
+                                      opacity: state.characterSettingsInvalidBool ? 1.0 : 0.0,
+                                      duration: const Duration(milliseconds: 150),
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 40),
                                         child: ErrorMessageListTile(message: 'Select at least one character category'),
                                       ),
+                                    ),
                                   ],
                                 ),
-                              const SizedBox(height: 24),
+                              //const SizedBox(height: 24),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 16),
                                 child: Text(
@@ -397,7 +399,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: <Widget>[
-            CustomCheckbox(selectedBool: selectedBool),
+            CustomCheckbox(selectedBool: selectedBool, squareCheckboxBool: true),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
@@ -519,87 +521,21 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     );
   }
 
-  Future<void> _showAsciiHintDialog() async {
-    await showDialog(
-      context: context,
-      barrierColor: Colors.transparent,
-      useRootNavigator: true,
-      builder: (BuildContext context) => CustomDialog(
-        title: 'ASCII Character Set\n',
-        content: const Text(
-          'This character set contains 94 non-whitespace ASCII characters:'
-          '\n\nUppercase letters:\nABCDEFGHIJKLMNOPQRSTUVWXYZ'
-          '\n\nLowercase letters:\nabcdefghijklmnopqrstuvwxyz'
-          '\n\nDigits:\n0123456789'
-          '\n\nSymbols:\n'
-          r'''!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~''',
-          textAlign: TextAlign.center,
-        ),
-        options: <CustomDialogOption>[
-          CustomDialogOption(
-            label: 'Close',
-            onPressed: () {},
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _showCharacterSetHintDialog(PasswordCharacterSetMode characterSetMode) async {
-    switch (characterSetMode) {
-      case PasswordCharacterSetMode.ascii:
-        await _showAsciiHintDialog();
-      case PasswordCharacterSetMode.sip2:
-        await _showSip2HintDialog();
-      case PasswordCharacterSetMode.advanced:
-        await _showAdvancedHintDialog();
-    }
-  }
-
   Future<void> _showAdvancedHintDialog() async {
     await showDialog(
       context: context,
       barrierColor: Colors.transparent,
       useRootNavigator: true,
       builder: (BuildContext context) => CustomDialog(
-        title: 'Special and ambiguous characters',
+        title: 'Special & ambiguous options\n',
         content: const Text(
-          'Full list of special characters:'
-          '\n\n!"#\$%&\'()*+, -./:;<=>?@[\\]^_`{|}~'
-          '\n\nRemoving ambiguous letters disables uppercase I and O, as well as lowercase l.',
+          'If enabled, the following special characters may be included in a password:'
+          '\n!"#\$%&\'()*+, -./:;<=>?@[\\]^_`{|}~'
+          '\n\nRemoving ambiguous letters disables:\n- uppercase I and O\n- lowercase l',
           textAlign: TextAlign.center,
         ),
         options: <CustomDialogOption>[
           CustomDialogOption(label: 'Close', onPressed: () {}),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _showSip2HintDialog() async {
-    await showDialog(
-      context: context,
-      barrierColor: Colors.transparent,
-      useRootNavigator: true,
-      builder: (BuildContext context) => CustomDialog(
-        title: 'Snggle Improvement Proposal - 2 Character Set',
-        content: const Text(
-          'This character set contains 64 characters:'
-          '\n\nUppercase letters:\nABCDEFGHJKLMNPQRSTUVWXYZ'
-          '\n - all uppercase characters excluding I and O'
-          '\n\nLowercase letters:\nabcdefghijkmnopqrstuvwxyz'
-          '\n - all lowercase characters excluding l'
-          '\n\nDigits:\n0123456789'
-          '\n - all digits, including 0 and 1'
-          '\n\nSymbols:\n'
-          '''!+-@=''',
-          textAlign: TextAlign.center,
-        ),
-        options: <CustomDialogOption>[
-          CustomDialogOption(
-            label: 'Close',
-            onPressed: () {},
-          ),
         ],
       ),
     );
@@ -611,11 +547,11 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       barrierColor: Colors.transparent,
       useRootNavigator: true,
       builder: (BuildContext context) => CustomDialog(
-        title: 'Insecure password',
+        title: 'Insecure password\n',
         content: const Text(
           'This password may have insufficient security\n'
           'and be susceptible to brute-force attacks.\n'
-          'Are you sure you want to use that password?',
+          'Are you sure you want to use this password?',
           textAlign: TextAlign.center,
         ),
         options: <CustomDialogOption>[

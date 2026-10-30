@@ -30,12 +30,34 @@ class PasswordGeneratorInitPage extends StatelessWidget {
           const Spacer(flex: 75),
           TextButton(
             onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.ascii)),
-            child: const Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                AssetIcon(AppIcons.password_generator_standard, size: 114),
-                SizedBox(height: 4),
-                Text('STANDARD'),
+                const AssetIcon(AppIcons.password_generator_standard, size: 114),
+                const SizedBox(height: 4),
+                SizedBox(
+                  width: double.infinity,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      const Text('STANDARD'),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => _showStandardHintDialog(context),
+                            child: const SizedBox(
+                              width: 34,
+                              height: 34,
+                              child: AssetIcon(AppIcons.icon_help, size: 25),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -47,21 +69,28 @@ class PasswordGeneratorInitPage extends StatelessWidget {
               children: <Widget>[
                 const AssetIcon(AppIcons.password_generator_snggle, size: 114),
                 const SizedBox(height: 4),
-                Row(
-                  children: <Widget>[
-                    const Text('DISAMBIGUATED'),
-                    InkWell(
-                      onTap: () => _showDisambiguatedHintDialog(context),
-                      child: const SizedBox(
-                        width: 34,
-                        height: 34,
-                        child: AssetIcon(
-                          AppIcons.icon_help,
-                          size: 25,
+                SizedBox(
+                  width: double.infinity,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      const Text('DISAMBIGUATED'),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => _showDisambiguatedHintDialog(context),
+                            child: const SizedBox(
+                              width: 34,
+                              height: 34,
+                              child: AssetIcon(AppIcons.icon_help, size: 25),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -90,11 +119,20 @@ class PasswordGeneratorInitPage extends StatelessWidget {
       barrierColor: Colors.transparent,
       useRootNavigator: true,
       builder: (BuildContext context) => CustomDialog(
-        title: 'Special and ambiguous characters',
+        title: 'Disambiguated character set',
         content: const Text(
-          'Full list of special characters:'
-          '\n\n!"#\$%&\'()*+, -./:;<=>?@[\\]^_`{|}~'
-          '\n\nRemoving ambiguous letters disables uppercase I and O, as well as lowercase l.',
+          'This character set contains\n64 characters.'
+          '\n\nUppercase letters:'
+          '\nABCDEFGHJKLMNPQRSTUVWXYZ'
+          '\n- all uppercase characters excluding I and O'
+          '\n\nLowercase letters:'
+          '\nabcdefghijkmnopqrstuvwxyz'
+          '\n- all lowercase characters excluding l'
+          '\n\nDigits:'
+          '\n0123456789'
+          '\n\nSymbols:'
+          '\n!+-@='
+          '\n\nDepending on password length, the last one or two characters in a password are not random, but constitute a checksum.',
           textAlign: TextAlign.center,
         ),
         options: <CustomDialogOption>[
@@ -110,11 +148,17 @@ class PasswordGeneratorInitPage extends StatelessWidget {
       barrierColor: Colors.transparent,
       useRootNavigator: true,
       builder: (BuildContext context) => CustomDialog(
-        title: 'Special and ambiguous characters',
+        title: 'Standard ASCII character set',
         content: const Text(
-          'Full list of special characters:'
-          '\n\n!"#\$%&\'()*+, -./:;<=>?@[\\]^_`{|}~'
-          '\n\nRemoving ambiguous letters disables uppercase I and O, as well as lowercase l.',
+          'This character set contains\n94 characters.'
+          '\n\nUppercase letters:'
+          '\nABCDEFGHIJKLMNOPQRSTUVWXYZ'
+          '\n\nLowercase letters:'
+          '\nabcdefghijklmnopqrstuvwxyz'
+          '\n\nDigits:'
+          '\n0123456789'
+          '\n\nSymbols:\n'
+          r'''!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~''',
           textAlign: TextAlign.center,
         ),
         options: <CustomDialogOption>[
