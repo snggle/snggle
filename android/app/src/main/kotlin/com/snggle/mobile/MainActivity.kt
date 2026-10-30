@@ -11,12 +11,19 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-    private val channelName = "custom_clipboard"
-
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "android_utils")
+            .setMethodCallHandler { call, result ->
+                if (call.method == "getApiLevel") {
+                    result.success(Build.VERSION.SDK_INT)
+                } else {
+                    result.notImplemented()
+                }
+            }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "custom_clipboard")
             .setMethodCallHandler { call, result ->
                 if (call.method == "setDataObscuringPreview") {
                     val text = call.arguments as? String
