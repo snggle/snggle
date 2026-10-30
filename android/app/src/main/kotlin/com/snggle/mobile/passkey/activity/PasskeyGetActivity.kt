@@ -1,24 +1,48 @@
 package com.snggle.mobile.passkey.activity
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
+import com.snggle.mobile.common.FlutterConstants
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodCall
+import io.flutter.plugin.common.MethodChannel
 
-class PasskeyGetActivity : Activity() {
+class PasskeyGetActivity : FlutterActivity() {
+
+    companion object {
+        private const val TAG = "SngglePasskey"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d("SngglePasskey", "PasskeyGetActivity opened")
+        Log.d(TAG, "PasskeyGetActivity opened")
+    }
 
-        Toast.makeText(
-            this,
-            "Snggle passkey selection",
-            Toast.LENGTH_LONG
-        ).show()
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
 
-        setResult(RESULT_CANCELED)
-        finish()
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            FlutterConstants.APP_LAUNCH_CHANNEL
+        ).setMethodCallHandler(::handleAppLaunchMethodCall)
+    }
+
+    private fun handleAppLaunchMethodCall(
+        call: MethodCall,
+        result: MethodChannel.Result
+    ) {
+        when (call.method) {
+            FlutterConstants.METHOD_GET_APP_LAUNCH_CONTEXT -> {
+                result.success(
+                    mapOf(
+                        "launchAction" to "passkeyGet"
+                    )
+                )
+            }
+
+            else -> result.notImplemented()
+        }
     }
 }

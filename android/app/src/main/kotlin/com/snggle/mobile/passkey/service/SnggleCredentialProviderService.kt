@@ -7,6 +7,7 @@ import android.os.CancellationSignal
 import android.os.OutcomeReceiver
 import android.util.Log
 import androidx.credentials.provider.Action
+import androidx.credentials.provider.AuthenticationAction
 import androidx.credentials.provider.BeginGetPublicKeyCredentialOption
 import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.CreateCredentialException
@@ -85,14 +86,16 @@ class SnggleCredentialProviderService : CredentialProviderService() {
             PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val action = Action(
-            title = "Choose from Snggle",
+        val authenticationAction = AuthenticationAction(
+            title = "Unlock Snggle",
             pendingIntent = pendingIntent
         )
 
+        Log.d("SngglePasskey", "Returning AuthenticationAction")
+
         callback.onResult(
             BeginGetCredentialResponse(
-                actions = listOf(action)
+                authenticationActions = listOf(authenticationAction)
             )
         )
     }
