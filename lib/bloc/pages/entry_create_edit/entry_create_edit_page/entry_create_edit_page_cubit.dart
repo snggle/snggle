@@ -23,9 +23,9 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
   final TextEditingController nameTextEditingController = TextEditingController();
   final TextEditingController websiteTextEditingController = TextEditingController();
   final TextEditingController emailTextEditingController = TextEditingController();
-  final FocusNode emailFocusNode = FocusNode();
   final TextEditingController usernameTextEditingController = TextEditingController();
   final TextEditingController passwordTextEditingController = TextEditingController();
+  final FocusNode emailFocusNode = FocusNode();
 
   final FilesystemPath _parentFilesystemPath;
   final EntryModel? _entryModel;

@@ -5,15 +5,15 @@ import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class EntryForm extends StatelessWidget {
+  final FocusNode? emailFocusNode;
   final TextEditingController? nameTextEditingController;
   final TextEditingController websiteTextEditingController;
   final TextEditingController emailTextEditingController;
   final TextEditingController usernameTextEditingController;
   final TextEditingController passwordTextEditingController;
   final bool readOnlyBool;
-  final bool entryNameEmptyBool;
   final bool emailInvalidBool;
-  final FocusNode? emailFocusNode;
+  final bool entryNameEmptyBool;
   final bool obscurePasswordBool;
   final VoidCallback onTogglePasswordVisibility;
 
@@ -26,8 +26,8 @@ class EntryForm extends StatelessWidget {
     required this.obscurePasswordBool,
     required this.onTogglePasswordVisibility,
     this.nameTextEditingController,
-    this.entryNameEmptyBool = false,
     this.emailInvalidBool = false,
+    this.entryNameEmptyBool = false,
     this.emailFocusNode,
     super.key,
   });
