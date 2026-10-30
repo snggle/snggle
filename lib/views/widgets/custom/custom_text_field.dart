@@ -11,6 +11,7 @@ class CustomTextField extends StatefulWidget {
   final bool _errorExistsBool;
   final bool _readOnlyBool;
   final bool _obscureTextBool;
+  final int? _maxLength;
   final String? _initialValue;
   final String? _prefixText;
   final String? _suffixText;
@@ -29,7 +30,6 @@ class CustomTextField extends StatefulWidget {
   final FocusNode? _focusNode;
   final TextInputType _keyboardType;
   final TextEditingController? _textEditingController;
-  final int? _maxLength;
   final InputBorder? _inputBorder;
   final List<TextInputFormatter>? _inputFormatters;
   final EdgeInsets? _padding;

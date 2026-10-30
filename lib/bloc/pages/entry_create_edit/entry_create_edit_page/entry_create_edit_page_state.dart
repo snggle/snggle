@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 class EntryCreateEditPageState extends Equatable {
-  final bool entryNameEmptyBool;
   final bool emailInvalidBool;
+  final bool entryNameEmptyBool;
   final bool loadingBool;
 
   const EntryCreateEditPageState({

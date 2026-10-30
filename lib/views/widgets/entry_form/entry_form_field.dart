@@ -8,9 +8,9 @@ class EntryFormField extends StatelessWidget {
   final String label;
   final TextEditingController textEditingController;
   final bool readOnlyBool;
-  final FocusNode? focusNode;
   final bool obscureTextBool;
   final bool obscureClipboardContentBool;
+  final FocusNode? focusNode;
   final Widget? suffixWidget;
   final BoxConstraints? suffixWidgetConstraints;
 
@@ -18,9 +18,9 @@ class EntryFormField extends StatelessWidget {
     required this.label,
     required this.textEditingController,
     required this.readOnlyBool,
-    this.focusNode,
     this.obscureTextBool = false,
     this.obscureClipboardContentBool = false,
+    this.focusNode,
     this.suffixWidget,
     this.suffixWidgetConstraints,
     super.key,
