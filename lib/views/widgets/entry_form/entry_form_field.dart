@@ -29,10 +29,11 @@ class EntryFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
+    bool emptyFieldBool = textEditingController.text.isEmpty;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: readOnlyBool
+      child: readOnlyBool && emptyFieldBool == false
           ? CopyWrapper.withCopyAction(
               value: textEditingController.text,
               obscureContentBool: obscureClipboardContentBool,

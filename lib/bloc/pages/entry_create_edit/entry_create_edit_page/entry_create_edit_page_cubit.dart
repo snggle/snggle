@@ -65,8 +65,8 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
       }
     } else {
       EntryModel entryModel = _entryModel!;
-      nameTextEditingController.text = entryModel.name;
-      websiteTextEditingController.text = entryModel.website;
+      nameTextEditingController.text = entryModel.name.trim();
+      websiteTextEditingController.text = entryModel.website.trim();
 
       PasswordModel entryPasswordModel = await _passwordController.getPasswordByFilesystemPath(entryModel.filesystemPath);
 
@@ -76,8 +76,8 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
       );
 
       _entrySecretsModel = entrySecretsModel;
-      emailTextEditingController.text = entrySecretsModel.email;
-      usernameTextEditingController.text = entrySecretsModel.username;
+      emailTextEditingController.text = entrySecretsModel.email.trim();
+      usernameTextEditingController.text = entrySecretsModel.username.trim();
       passwordTextEditingController.text = entrySecretsModel.password;
     }
 
@@ -102,20 +102,20 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
   Future<EntryModel?> _createNewEntry() async {
     return _entryModelFactory.createNewEntry(
       _parentFilesystemPath,
-      nameTextEditingController.text,
-      websiteTextEditingController.text,
-      emailTextEditingController.text,
-      usernameTextEditingController.text,
+      nameTextEditingController.text.trim(),
+      websiteTextEditingController.text.trim(),
+      emailTextEditingController.text.trim(),
+      usernameTextEditingController.text.trim(),
       passwordTextEditingController.text,
     );
   }
 
   Future<EntryModel?> _updateEntry() async {
     EntryModel entryModel = _entryModel!;
-    String name = nameTextEditingController.text;
-    String website = websiteTextEditingController.text;
-    String email = emailTextEditingController.text;
-    String username = usernameTextEditingController.text;
+    String name = nameTextEditingController.text.trim();
+    String website = websiteTextEditingController.text.trim();
+    String email = emailTextEditingController.text.trim();
+    String username = usernameTextEditingController.text.trim();
     String password = passwordTextEditingController.text;
 
     PasswordModel entryPasswordModel = await _passwordController.getPasswordByFilesystemPath(entryModel.filesystemPath);
@@ -123,16 +123,16 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
     EntrySecretsModel currentSecrets = _entrySecretsModel ?? await _secretsService.get(entryModel.filesystemPath, entryPasswordModel);
 
     Map<String, dynamic> json = currentSecrets.toJson()
-      ..['email'] = email
-      ..['username'] = username
+      ..['email'] = email.trim()
+      ..['username'] = username.trim()
       ..['password'] = password;
 
     EntrySecretsModel updatedSecrets = EntrySecretsModel.fromJson(entryModel.filesystemPath, json);
     EntryModel updatedEntryModel = entryModel.copyWith(
-      name: name,
-      website: website,
-      emailExistsBool: email.isNotEmpty,
-      usernameExistsBool: username.isNotEmpty,
+      name: name.trim(),
+      website: website.trim(),
+      emailExistsBool: email.trim().isNotEmpty,
+      usernameExistsBool: username.trim().isNotEmpty,
       passwordExistsBool: password.isNotEmpty,
     );
 
@@ -151,7 +151,7 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
   }
 
   void _validateEmail() {
-    String email = emailTextEditingController.text;
+    String email = emailTextEditingController.text.trim();
     emit(state.copyWith(emailInvalidBool: email.isNotEmpty && _isValidEmail(email) == false));
   }
 
