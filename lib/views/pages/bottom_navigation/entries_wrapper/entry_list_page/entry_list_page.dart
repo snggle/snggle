@@ -42,7 +42,7 @@ class EntryListPage extends StatefulWidget {
 class _EntryListPageState extends State<EntryListPage> {
   final String _tabDirName = FilesystemStorageTabDir.entries.name;
   late final FilesystemPath _entriesRootPath = FilesystemPath.fromString(_tabDirName);
-  late final String defaultPageTitle = _tabDirName.toUpperCase();
+  late final String defaultPageTitle = 'PASSWORD MANAGER';
   final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
   late final EntryListPageCubit entryListPageCubit = EntryListPageCubit(
     depth: 0,
