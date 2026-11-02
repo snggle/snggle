@@ -49,6 +49,13 @@ class AppRouter extends RootStackRouter {
           AutoRoute(page: ReadOnlyEntryDetailsRoute.page),
         ],
       ),
+      AutoRoute(
+        page: ReadOnlyPasskeysSectionWrapperRoute.page,
+        children: <AutoRoute>[
+          AutoRoute(page: ReadOnlyPasskeyListRoute.page, initial: true),
+          AutoRoute(page: ReadOnlyPasskeyDetailsRoute.page),
+        ],
+      ),
       AutoRoute(page: AutofillSaveEntryRoute.page),
       AutoRoute(page: PasskeyCreateRoute.page),
       AutoRoute(page: EntryDetailsEditableRoute.page),
@@ -75,7 +82,13 @@ class AppRouter extends RootStackRouter {
               AutoRoute(page: EntryDetailsRoute.page),
             ],
           ),
-          AutoRoute(page: AppsRoute.page),
+          AutoRoute(
+            page: PasskeysSectionWrapperRoute.page,
+            children: <AutoRoute>[
+              AutoRoute(page: PasskeyListRoute.page, initial: true),
+              AutoRoute(page: PasskeyDetailsRoute.page),
+            ],
+          ),
           AutoRoute(
             page: SettingsSectionWrapperRoute.page,
             children: <AutoRoute>[

@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.credentials.provider.Action
 import androidx.credentials.provider.AuthenticationAction
 import androidx.credentials.provider.BeginGetPublicKeyCredentialOption
+import androidx.credentials.provider.PendingIntentHandler
 import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.CreateCredentialException
 import androidx.credentials.exceptions.CreateCredentialUnknownException
@@ -26,39 +27,46 @@ import com.snggle.mobile.passkey.activity.PasskeyGetActivity
 
 class SnggleCredentialProviderService : CredentialProviderService() {
 
-    override fun onBeginCreateCredentialRequest(
-        request: BeginCreateCredentialRequest,
+    override fun onBeginGetCredentialRequest(
+        request: BeginGetCredentialRequest,
         cancellationSignal: CancellationSignal,
-        callback: OutcomeReceiver<
-                BeginCreateCredentialResponse,
-                CreateCredentialException
-                >
+        callback: OutcomeReceiver<BeginGetCredentialResponse, GetCredentialException>
     ) {
-        if (request !is BeginCreatePublicKeyCredentialRequest) {
-            callback.onError(CreateCredentialUnknownException())
+        val passkeyOptions = request.beginGetCredentialOptions
+            .filterIsInstance<BeginGetPublicKeyCredentialOption>()
+
+        Log.d(TAG, "Passkey options count: ${passkeyOptions.size}")
+
+        if (passkeyOptions.isEmpty()) {
+            callback.onResult(BeginGetCredentialResponse())
             return
         }
 
         val intent = Intent(
             this,
-            PasskeyCreateActivity::class.java
+            PasskeyGetActivity::class.java
+        )
+
+        PendingIntentHandler.setBeginGetCredentialRequest(
+            intent,
+            request
         )
 
         val pendingIntent = PendingIntent.getActivity(
             this,
-            0,
+            1,
             intent,
             PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val createEntry = CreateEntry(
-            accountName = "Snggle",
+        val authenticationAction = AuthenticationAction(
+            title = "Unlock Snggle",
             pendingIntent = pendingIntent
         )
 
         callback.onResult(
-            BeginCreateCredentialResponse(
-                createEntries = listOf(createEntry)
+            BeginGetCredentialResponse(
+                authenticationActions = listOf(authenticationAction)
             )
         )
     }
@@ -106,5 +114,9 @@ class SnggleCredentialProviderService : CredentialProviderService() {
         callback: OutcomeReceiver<Void?, ClearCredentialException>
     ) {
         callback.onResult(null)
+    }
+
+    companion object {
+        private const val TAG = "SngglePasskey"
     }
 }

@@ -1,4 +1,4 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/passkeys_wrapper/passkeys_list_page/passkey_list_page_cubit.dart';
@@ -11,14 +11,14 @@ import 'package:snggle/views/widgets/list/list_page_scaffold.dart';
 import 'package:snggle/views/widgets/list/sliver_page_list.dart';
 
 @RoutePage()
-class AppsPage extends StatefulWidget {
-  const AppsPage({super.key});
+class ReadOnlyPasskeyListPage extends StatefulWidget {
+  const ReadOnlyPasskeyListPage({super.key});
 
   @override
-  State<AppsPage> createState() => _AppsPageState();
+  State<ReadOnlyPasskeyListPage> createState() => _ReadOnlyPasskeyListPageState();
 }
 
-class _AppsPageState extends State<AppsPage> {
+class _ReadOnlyPasskeyListPageState extends State<ReadOnlyPasskeyListPage> {
   final PasskeyListPageCubit passkeyListPageCubit = PasskeyListPageCubit();
 
   @override

@@ -1,17 +1,27 @@
 package com.snggle.mobile.passkey.activity
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
+import androidx.credentials.provider.BeginGetPublicKeyCredentialOption
+import androidx.credentials.provider.PendingIntentHandler
 import com.snggle.mobile.common.FlutterConstants
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import org.json.JSONObject
 
 class PasskeyGetActivity : FlutterActivity() {
 
     companion object {
         private const val TAG = "SngglePasskey"
+
+        private const val PASSKEY_GET_CHANNEL = "snggle/passkey_get"
+
+        private const val METHOD_GET_PASSKEY_GET_CONTEXT = "getPasskeyGetContext"
+        private const val METHOD_SELECT_PASSKEY = "selectPasskey"
+        private const val METHOD_CANCEL = "cancel"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +37,11 @@ class PasskeyGetActivity : FlutterActivity() {
             flutterEngine.dartExecutor.binaryMessenger,
             FlutterConstants.APP_LAUNCH_CHANNEL
         ).setMethodCallHandler(::handleAppLaunchMethodCall)
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            PASSKEY_GET_CHANNEL
+        ).setMethodCallHandler(::handlePasskeyGetMethodCall)
     }
 
     private fun handleAppLaunchMethodCall(
@@ -40,6 +55,72 @@ class PasskeyGetActivity : FlutterActivity() {
                         "launchAction" to "passkeyGet"
                     )
                 )
+            }
+
+            else -> result.notImplemented()
+        }
+    }
+
+    private fun handlePasskeyGetMethodCall(
+        call: MethodCall,
+        result: MethodChannel.Result
+    ) {
+        when (call.method) {
+            METHOD_GET_PASSKEY_GET_CONTEXT -> {
+                val request = PendingIntentHandler.retrieveBeginGetCredentialRequest(intent)
+
+                val option = request
+                    ?.beginGetCredentialOptions
+                    ?.filterIsInstance<BeginGetPublicKeyCredentialOption>()
+                    ?.firstOrNull()
+
+                if (option == null) {
+                    result.error(
+                        "INVALID_REQUEST",
+                        "No passkey authentication request found",
+                        null
+                    )
+                    return
+                }
+
+                val requestJson = JSONObject(option.requestJson)
+
+                result.success(
+                    mapOf(
+                        "rpId" to requestJson.optString("rpId"),
+                        "requestJson" to option.requestJson
+                    )
+                )
+            }
+
+            METHOD_SELECT_PASSKEY -> {
+                val credentialId = call.argument<String>("credentialId")
+
+                if (credentialId == null) {
+                    result.error(
+                        "INVALID_ARGUMENT",
+                        "Credential ID is required",
+                        null
+                    )
+                    return
+                }
+
+                Log.d(TAG, "Passkey selected")
+
+                // TODO: Return BeginGetCredentialResponse
+                // containing the selected CredentialEntry.
+
+                result.error(
+                    "NOT_IMPLEMENTED",
+                    "Passkey selection is not implemented yet",
+                    null
+                )
+            }
+
+            METHOD_CANCEL -> {
+                setResult(Activity.RESULT_CANCELED)
+                result.success(null)
+                finish()
             }
 
             else -> result.notImplemented()
