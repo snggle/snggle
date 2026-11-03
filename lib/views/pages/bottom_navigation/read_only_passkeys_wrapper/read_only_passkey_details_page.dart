@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:snggle/shared/models/passkeys/passkey_model.dart';
+import 'package:snggle/shared/native/passkey_get/native_paskey_get.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/gradient_scrollbar.dart';
@@ -82,6 +83,17 @@ class _ReadOnlyPasskeyDetailsPageState extends State<ReadOnlyPasskeyDetailsPage>
                     _buildField(
                       label: 'Sign count',
                       value: passkeyModel.signCount.toString(),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await NativePasskeyGet.selectPasskey(
+                          credentialId: base64UrlEncode(
+                            passkeyModel.credentialId,
+                          ).replaceAll('=', ''),
+                        );
+                      },
+                      child: const Text('Authenticate'),
                     ),
                   ],
                 ),

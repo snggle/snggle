@@ -31,6 +31,8 @@ class PasskeyGetActivity : FlutterActivity() {
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        Log.d(TAG, "configureFlutterEngine called")
+
         super.configureFlutterEngine(flutterEngine)
 
         MethodChannel(
@@ -38,10 +40,7 @@ class PasskeyGetActivity : FlutterActivity() {
             FlutterConstants.APP_LAUNCH_CHANNEL
         ).setMethodCallHandler(::handleAppLaunchMethodCall)
 
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            PASSKEY_GET_CHANNEL
-        ).setMethodCallHandler(::handlePasskeyGetMethodCall)
+        Log.d(TAG, "App launch MethodChannel registered")
     }
 
     private fun handleAppLaunchMethodCall(
@@ -50,6 +49,8 @@ class PasskeyGetActivity : FlutterActivity() {
     ) {
         when (call.method) {
             FlutterConstants.METHOD_GET_APP_LAUNCH_CONTEXT -> {
+                Log.d(TAG, "Flutter requested app launch context: passkeyGet")
+
                 result.success(
                     mapOf(
                         "launchAction" to "passkeyGet"
@@ -67,14 +68,9 @@ class PasskeyGetActivity : FlutterActivity() {
     ) {
         when (call.method) {
             METHOD_GET_PASSKEY_GET_CONTEXT -> {
-                val request = PendingIntentHandler.retrieveBeginGetCredentialRequest(intent)
+                val requestJson = intent.getStringExtra("requestJson")
 
-                val option = request
-                    ?.beginGetCredentialOptions
-                    ?.filterIsInstance<BeginGetPublicKeyCredentialOption>()
-                    ?.firstOrNull()
-
-                if (option == null) {
+                if (requestJson == null) {
                     result.error(
                         "INVALID_REQUEST",
                         "No passkey authentication request found",
@@ -83,12 +79,12 @@ class PasskeyGetActivity : FlutterActivity() {
                     return
                 }
 
-                val requestJson = JSONObject(option.requestJson)
+                val request = JSONObject(requestJson)
 
                 result.success(
                     mapOf(
-                        "rpId" to requestJson.optString("rpId"),
-                        "requestJson" to option.requestJson
+                        "rpId" to request.optString("rpId"),
+                        "requestJson" to requestJson
                     )
                 )
             }
