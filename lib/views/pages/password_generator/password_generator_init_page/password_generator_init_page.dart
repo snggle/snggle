@@ -28,72 +28,68 @@ class PasswordGeneratorInitPage extends StatelessWidget {
       body: Column(
         children: <Widget>[
           const Spacer(flex: 75),
-          TextButton(
-            onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.ascii)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const AssetIcon(AppIcons.password_generator_standard, size: 114),
-                const SizedBox(height: 4),
-                SizedBox(
-                  width: double.infinity,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: <Widget>[
-                      const Text('STANDARD'),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => _showStandardHintDialog(context),
-                            child: const SizedBox(
-                              width: 34,
-                              height: 34,
-                              child: AssetIcon(AppIcons.icon_help, size: 25),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+          Stack(
+            children: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+                onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.ascii)),
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    AssetIcon(AppIcons.password_generator_standard, size: 114),
+                    SizedBox(height: 4),
+                    SizedBox(width: double.infinity, height: 34, child: Center(child: Text('STANDARD'))),
+                  ],
+                ),
+              ),
+              Positioned(
+                right: 12,
+                bottom: 8,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => _showStandardHintDialog(context),
+                    child: const SizedBox(
+                      width: 34,
+                      height: 34,
+                      child: AssetIcon(AppIcons.icon_help, size: 25),
+                    ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           const Spacer(flex: 75),
-          TextButton(
-            onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.sip2)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const AssetIcon(AppIcons.password_generator_snggle, size: 114),
-                const SizedBox(height: 4),
-                SizedBox(
-                  width: double.infinity,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: <Widget>[
-                      const Text('DISAMBIGUATED'),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => _showDisambiguatedHintDialog(context),
-                            child: const SizedBox(
-                              width: 34,
-                              height: 34,
-                              child: AssetIcon(AppIcons.icon_help, size: 25),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+          Stack(
+            children: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+                onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.sip2)),
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    AssetIcon(AppIcons.password_generator_snggle, size: 114),
+                    SizedBox(height: 4),
+                    SizedBox(width: double.infinity, height: 34, child: Center(child: Text('DISAMBIGUATED'))),
+                  ],
+                ),
+              ),
+              Positioned(
+                right: 12,
+                bottom: 8,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => _showDisambiguatedHintDialog(context),
+                    child: const SizedBox(
+                      width: 34,
+                      height: 34,
+                      child: AssetIcon(AppIcons.icon_help, size: 25),
+                    ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           const Spacer(flex: 75),
           TextButton(

@@ -114,7 +114,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                         child: IntrinsicHeight(
                           child: Column(
                             children: <Widget>[
-                              if (state.characterSetMode == PasswordCharacterSetMode.advanced)
+                              if (state.characterSetMode == PasswordCharacterSetMode.advanced) ...<Widget>[
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 16),
                                   child: Text(
@@ -122,75 +122,67 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                     style: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
                                   ),
                                 ),
-                              if (state.characterSetMode == PasswordCharacterSetMode.advanced)
-                                Column(
+                                _buildCharacterCheckbox(
+                                  title: 'Lowercase letters',
+                                  selectedBool: state.advancedCharacterSettings?.lowercase ?? false,
+                                  onTap: generatePasswordPageCubit.toggleLowercase,
+                                ),
+                                _buildCharacterCheckbox(
+                                  title: 'Uppercase letters',
+                                  selectedBool: state.advancedCharacterSettings?.uppercase ?? false,
+                                  onTap: generatePasswordPageCubit.toggleUppercase,
+                                ),
+                                _buildCharacterCheckbox(
+                                  title: 'Numbers',
+                                  selectedBool: state.advancedCharacterSettings?.numbers ?? false,
+                                  onTap: generatePasswordPageCubit.toggleNumbers,
+                                ),
+                                Stack(
                                   children: <Widget>[
-                                    _buildCharacterCheckbox(
-                                      title: 'Lowercase letters',
-                                      selectedBool: state.advancedCharacterSettings?.lowercase ?? false,
-                                      onTap: generatePasswordPageCubit.toggleLowercase,
-                                    ),
-                                    _buildCharacterCheckbox(
-                                      title: 'Uppercase letters',
-                                      selectedBool: state.advancedCharacterSettings?.uppercase ?? false,
-                                      onTap: generatePasswordPageCubit.toggleUppercase,
-                                    ),
-                                    _buildCharacterCheckbox(
-                                      title: 'Numbers',
-                                      selectedBool: state.advancedCharacterSettings?.numbers ?? false,
-                                      onTap: generatePasswordPageCubit.toggleNumbers,
-                                    ),
-                                    Stack(
+                                    Column(
                                       children: <Widget>[
-                                        Column(
-                                          children: <Widget>[
-                                            _buildCharacterCheckbox(
-                                              title: 'Special characters',
-                                              selectedBool: state.advancedCharacterSettings?.special ?? false,
-                                              onTap: generatePasswordPageCubit.toggleSpecial,
-                                            ),
-                                            _buildCharacterCheckbox(
-                                              title: 'Remove ambiguous letters',
-                                              selectedBool: state.removeAmbiguousBool,
-                                              onTap: generatePasswordPageCubit.toggleRemoveAmbiguous,
-                                            ),
-                                          ],
-                                        ),
-                                        Positioned.fill(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(right: 10),
-                                              child: Material(
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                  onTap: _showAdvancedHintDialog,
-                                                  child: const SizedBox(
-                                                    width: 34,
-                                                    height: 34,
-                                                    child: AssetIcon(
-                                                      AppIcons.icon_help,
-                                                      size: 25,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 44),
+                                          child: _buildCharacterCheckbox(
+                                            title: 'Special characters',
+                                            selectedBool: state.advancedCharacterSettings?.special ?? false,
+                                            onTap: generatePasswordPageCubit.toggleSpecial,
                                           ),
+                                        ),
+                                        if (state.characterSettingsInvalidBool)
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 30),
+                                            child: ErrorMessageListTile(message: 'Select at least one character category above'),
+                                          ),
+                                        _buildCharacterCheckbox(
+                                          title: 'Exclude ambiguous letters',
+                                          selectedBool: state.removeAmbiguousBool,
+                                          onTap: generatePasswordPageCubit.toggleRemoveAmbiguous,
                                         ),
                                       ],
                                     ),
-                                    AnimatedOpacity(
-                                      opacity: state.characterSettingsInvalidBool ? 1.0 : 0.0,
-                                      duration: const Duration(milliseconds: 150),
-                                      child: const Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 40),
-                                        child: ErrorMessageListTile(message: 'Select at least one character category'),
+                                    Positioned(
+                                      top: 0,
+                                      bottom: 0,
+                                      right: 10,
+                                      child: Center(
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            onTap: _showSpecialCharactersHintDialog,
+                                            child: const SizedBox(
+                                              width: 34,
+                                              height: 34,
+                                              child: AssetIcon(AppIcons.icon_help, size: 25),
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
-                              //const SizedBox(height: 24),
+                                const SizedBox(height: 6),
+                              ],
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 16),
                                 child: Text(
@@ -268,24 +260,21 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                               ),
                               if (anyKeyboardVisibleBool == false) ...<Widget>[
                                 const Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 22.5),
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: <Widget>[
-                                        GradientOutlinedButton.small(
-                                          width: 176,
-                                          label: 'Re-roll',
-                                          icon: const AssetIcon(AppIcons.dice),
-                                          onPressed: confirmButtonActiveBool ? generatePasswordPageCubit.generatePassword : null,
-                                        ),
-                                      ],
-                                    ),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: <Widget>[
+                                      GradientOutlinedButton.small(
+                                        width: 176,
+                                        label: 'Re-roll',
+                                        icon: const AssetIcon(AppIcons.dice),
+                                        onPressed: confirmButtonActiveBool ? generatePasswordPageCubit.generatePassword : null,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const Spacer(),
+                                const Spacer(flex: 5),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 10),
                                   child: LabelWrapperVertical.textField(
@@ -521,17 +510,16 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     );
   }
 
-  Future<void> _showAdvancedHintDialog() async {
+  Future<void> _showSpecialCharactersHintDialog() async {
     await showDialog(
       context: context,
       barrierColor: Colors.transparent,
       useRootNavigator: true,
       builder: (BuildContext context) => CustomDialog(
-        title: 'Special & ambiguous options\n',
+        title: 'Special characters\n',
         content: const Text(
           'If enabled, the following special characters may be included in a password:'
-          '\n!"#\$%&\'()*+, -./:;<=>?@[\\]^_`{|}~'
-          '\n\nRemoving ambiguous letters disables:\n- uppercase I and O\n- lowercase l',
+          '\n!"#\$%&\'()*+, -./:;<=>?@[\\]^_`{|}~',
           textAlign: TextAlign.center,
         ),
         options: <CustomDialogOption>[

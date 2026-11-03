@@ -28,19 +28,19 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   }
 
   void toggleLowercase() {
-    _updateAdvancedSettings(lowercase: state.advancedCharacterSettings?.lowercase == false);
+    _updateAdvancedSettings(lowercase: (state.advancedCharacterSettings?.lowercase ?? false) == false);
   }
 
   void toggleUppercase() {
-    _updateAdvancedSettings(uppercase: state.advancedCharacterSettings?.uppercase == false);
+    _updateAdvancedSettings(uppercase: (state.advancedCharacterSettings?.uppercase ?? false) == false);
   }
 
   void toggleNumbers() {
-    _updateAdvancedSettings(numbers: state.advancedCharacterSettings?.numbers == false);
+    _updateAdvancedSettings(numbers: (state.advancedCharacterSettings?.numbers ?? false) == false);
   }
 
   void toggleSpecial() {
-    _updateAdvancedSettings(special: state.advancedCharacterSettings?.special == false);
+    _updateAdvancedSettings(special: (state.advancedCharacterSettings?.special ?? false) == false);
   }
 
   void toggleRemoveAmbiguous() {
