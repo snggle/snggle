@@ -140,7 +140,7 @@ class _ReadOnlyPasskeyListPageState
     );
 
     await AutoRouter.of(context).push(
-      PasskeyDetailsRoute(
+      ReadOnlyPasskeyDetailsRoute(
         passkeyModel: listItemModel,
       ),
     );

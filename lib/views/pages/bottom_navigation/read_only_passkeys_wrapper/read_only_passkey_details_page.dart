@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:snggle/infra/services/passkey_authentication_service.dart';
 import 'package:snggle/shared/models/passkeys/passkey_model.dart';
 import 'package:snggle/shared/native/passkey_get/native_paskey_get.dart';
+import 'package:snggle/shared/native/passkey_get/passkey_get_context.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/generic/gradient_scrollbar.dart';
@@ -23,6 +26,8 @@ class ReadOnlyPasskeyDetailsPage extends StatefulWidget {
 
 class _ReadOnlyPasskeyDetailsPageState extends State<ReadOnlyPasskeyDetailsPage> {
   final ScrollController scrollController = ScrollController();
+  final PasskeyAuthenticationService _authenticationService =
+  PasskeyAuthenticationService();
 
   @override
   void dispose() {
@@ -86,13 +91,7 @@ class _ReadOnlyPasskeyDetailsPageState extends State<ReadOnlyPasskeyDetailsPage>
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: () async {
-                        await NativePasskeyGet.selectPasskey(
-                          credentialId: base64UrlEncode(
-                            passkeyModel.credentialId,
-                          ).replaceAll('=', ''),
-                        );
-                      },
+                      onPressed: _authenticate,
                       child: const Text('Authenticate'),
                     ),
                   ],
@@ -137,5 +136,65 @@ class _ReadOnlyPasskeyDetailsPageState extends State<ReadOnlyPasskeyDetailsPage>
       -257 => 'RS256 (RSA)',
       _ => 'Unknown ($algorithm)',
     };
+  }
+
+  Future<void> _authenticate() async {
+    try {
+      final PasskeyGetContext context =
+      await NativePasskeyGet.getPasskeyGetContext();
+
+      debugPrint('PasskeyGet mode: ${context.mode}');
+
+      final String credentialId = base64UrlEncode(
+        widget.passkeyModel.credentialId,
+      ).replaceAll('=', '');
+
+      if (context.mode == 'select') {
+        debugPrint('PasskeyGet: Selecting passkey');
+
+        await NativePasskeyGet.selectPasskey(
+          credentialId: credentialId,
+          username: widget.passkeyModel.userName,
+        );
+
+        debugPrint('PasskeyGet: Passkey selection completed');
+        return;
+      }
+
+      if (context.mode == 'authenticate') {
+        debugPrint('PasskeyGet: Authenticating');
+
+        if (credentialId != context.credentialId) {
+          throw StateError('Incorrect passkey selected');
+        }
+
+        final Uint8List? clientDataHash = context.clientDataHash;
+
+        if (clientDataHash == null) {
+          throw StateError('Missing clientDataHash');
+        }
+
+        final String responseJson =
+        await _authenticationService.authenticateWithClientDataHash(
+          passkeyModel: widget.passkeyModel,
+          requestJson: context.requestJson,
+          clientDataHash: clientDataHash,
+        );
+
+        debugPrint('PasskeyGet: Assertion generated');
+
+        await NativePasskeyGet.finishPasskeyGet(
+          responseJson: responseJson,
+        );
+
+        debugPrint('PasskeyGet: Authentication response returned');
+        return;
+      }
+
+      throw StateError('Unsupported passkey get mode: ${context.mode}');
+    } catch (exception, stackTrace) {
+      debugPrint('PasskeyGet ERROR: $exception');
+      debugPrintStack(stackTrace: stackTrace);
+    }
   }
 }
