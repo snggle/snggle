@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/views/widgets/custom/custom_checkbox.dart';
+import 'package:snggle/views/widgets/custom/custom_radio_button.dart';
 
 typedef CustomSingleSelectItemBuilder<T> = Widget Function(BuildContext context, T option);
 typedef CustomOptionBuilder<T> = Widget Function(BuildContext context, T customValue, ValueChanged<T> onChanged);
@@ -45,7 +45,7 @@ class _CustomSingleSelectMenuState<T> extends State<CustomSingleSelectMenu<T>> {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
                 children: <Widget>[
-                  CustomCheckbox(selectedBool: widget.options[i] == widget.selectedValue),
+                  CustomRadioButton(selectedBool: widget.options[i] == widget.selectedValue),
                   const SizedBox(width: 10),
                   Expanded(
                     child: widget.itemBuilder(context, widget.options[i]),
@@ -65,7 +65,7 @@ class _CustomSingleSelectMenuState<T> extends State<CustomSingleSelectMenu<T>> {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Row(
                     children: <Widget>[
-                      CustomCheckbox(selectedBool: widget.options.contains(widget.selectedValue) == false),
+                      CustomRadioButton(selectedBool: widget.options.contains(widget.selectedValue) == false),
                       const SizedBox(width: 10),
                       Text(
                         'Custom',

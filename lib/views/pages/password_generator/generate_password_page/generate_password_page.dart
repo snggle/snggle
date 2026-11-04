@@ -124,42 +124,28 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                 ),
                                 _buildCharacterCheckbox(
                                   title: 'Lowercase letters',
-                                  selectedBool: state.advancedCharacterSettings?.lowercase ?? false,
+                                  selectedBool: state.advancedCharacterSettings.lowercase,
                                   onTap: generatePasswordPageCubit.toggleLowercase,
                                 ),
                                 _buildCharacterCheckbox(
                                   title: 'Uppercase letters',
-                                  selectedBool: state.advancedCharacterSettings?.uppercase ?? false,
+                                  selectedBool: state.advancedCharacterSettings.uppercase,
                                   onTap: generatePasswordPageCubit.toggleUppercase,
                                 ),
                                 _buildCharacterCheckbox(
                                   title: 'Numbers',
-                                  selectedBool: state.advancedCharacterSettings?.numbers ?? false,
+                                  selectedBool: state.advancedCharacterSettings.numbers,
                                   onTap: generatePasswordPageCubit.toggleNumbers,
                                 ),
                                 Stack(
                                   children: <Widget>[
-                                    Column(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 44),
-                                          child: _buildCharacterCheckbox(
-                                            title: 'Special characters',
-                                            selectedBool: state.advancedCharacterSettings?.special ?? false,
-                                            onTap: generatePasswordPageCubit.toggleSpecial,
-                                          ),
-                                        ),
-                                        if (state.characterSettingsInvalidBool)
-                                          const Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 30),
-                                            child: ErrorMessageListTile(message: 'Select at least one character category above'),
-                                          ),
-                                        _buildCharacterCheckbox(
-                                          title: 'Exclude ambiguous letters',
-                                          selectedBool: state.removeAmbiguousBool,
-                                          onTap: generatePasswordPageCubit.toggleRemoveAmbiguous,
-                                        ),
-                                      ],
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 44),
+                                      child: _buildCharacterCheckbox(
+                                        title: 'Special characters',
+                                        selectedBool: state.advancedCharacterSettings.special,
+                                        onTap: generatePasswordPageCubit.toggleSpecial,
+                                      ),
                                     ),
                                     Positioned(
                                       top: 0,
@@ -274,7 +260,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                     ],
                                   ),
                                 ),
-                                const Spacer(flex: 5),
+                                const Spacer(),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 10),
                                   child: LabelWrapperVertical.textField(
@@ -518,7 +504,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       builder: (BuildContext context) => CustomDialog(
         title: 'Special characters\n',
         content: const Text(
-          'If enabled, the following special characters may be included in a password:'
+          'The following special characters may be included in a password:'
           '\n!"#\$%&\'()*+, -./:;<=>?@[\\]^_`{|}~',
           textAlign: TextAlign.center,
         ),

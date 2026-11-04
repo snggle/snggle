@@ -8,11 +8,8 @@ class GeneratePasswordPageState extends Equatable {
   static const int maxCustomPasswordLength = 256;
 
   final PasswordCharacterSetMode characterSetMode;
+  final PasswordCharactersConfig advancedCharacterSettings;
 
-
-  final PasswordCharactersConfig? advancedCharacterSettings;
-
-  final bool removeAmbiguousWhenInvalidBool;
   final PasswordLevelType calculatedPasswordLevelType;
   final PasswordLevelType selectedPasswordLevelType;
   final String customPasswordLength;
@@ -33,7 +30,6 @@ class GeneratePasswordPageState extends Equatable {
     required this.checksumCharacterCount,
     required this.randomCharacterCount,
     this.obscurePasswordBool = true,
-    this.removeAmbiguousWhenInvalidBool = false,
   });
 
   factory GeneratePasswordPageState.initial({
@@ -62,45 +58,38 @@ class GeneratePasswordPageState extends Equatable {
     PasswordLevelType.custom,
   ];
 
-  bool get removeAmbiguousBool => advancedCharacterSettings?.removeAmbiguous ?? removeAmbiguousWhenInvalidBool;
-
-  bool get characterSettingsInvalidBool => characterSetMode == PasswordCharacterSetMode.advanced && advancedCharacterSettings == null;
-
   bool get customPasswordLengthInvalidBool {
     int? length = int.tryParse(customPasswordLength);
     return length == null || length < minCustomPasswordLength || length > maxCustomPasswordLength;
   }
 
-  PasswordGeneratorConfig? get effectiveConfig {
+  PasswordGeneratorConfig get effectiveConfig {
     switch (characterSetMode) {
       case PasswordCharacterSetMode.ascii:
         return PasswordGeneratorConfig.ascii();
       case PasswordCharacterSetMode.sip2:
         return PasswordGeneratorConfig.sip2();
       case PasswordCharacterSetMode.advanced:
-        PasswordCharactersConfig? settings = advancedCharacterSettings;
-        return settings == null ? null : PasswordGeneratorConfig.advanced(settings);
+        return PasswordGeneratorConfig.advanced(advancedCharacterSettings);
     }
   }
 
   int? passwordLengthForLevel(PasswordLevelType level) {
     int? target = level.entropyTarget;
-    return target == null ? null : effectiveConfig?.minLengthForEntropy(target);
+    return target == null ? null : effectiveConfig.minLengthForEntropy(target);
   }
 
   int? get resolvedPasswordLength => selectedPasswordLevelType == PasswordLevelType.custom
       ? (customPasswordLengthInvalidBool ? null : int.parse(customPasswordLength))
       : passwordLengthForLevel(selectedPasswordLevelType);
 
-  bool get canGeneratePasswordBool => effectiveConfig != null && resolvedPasswordLength != null;
+  bool get canGeneratePasswordBool => resolvedPasswordLength != null;
 
   bool get passwordReadyBool => canGeneratePasswordBool && password.isNotEmpty && password.length == resolvedPasswordLength;
 
   GeneratePasswordPageState copyWith({
     PasswordCharacterSetMode? characterSetMode,
     PasswordCharactersConfig? advancedCharacterSettings,
-    bool clearAdvancedCharacterSettingsBool = false,
-    bool? removeAmbiguousWhenInvalidBool,
     PasswordLevelType? calculatedPasswordLevelType,
     PasswordLevelType? selectedPasswordLevelType,
     String? customPasswordLength,
@@ -112,8 +101,7 @@ class GeneratePasswordPageState extends Equatable {
   }) {
     return GeneratePasswordPageState(
       characterSetMode: characterSetMode ?? this.characterSetMode,
-      advancedCharacterSettings: clearAdvancedCharacterSettingsBool ? null : (advancedCharacterSettings ?? this.advancedCharacterSettings),
-      removeAmbiguousWhenInvalidBool: removeAmbiguousWhenInvalidBool ?? this.removeAmbiguousWhenInvalidBool,
+      advancedCharacterSettings: advancedCharacterSettings ?? this.advancedCharacterSettings,
       calculatedPasswordLevelType: calculatedPasswordLevelType ?? this.calculatedPasswordLevelType,
       selectedPasswordLevelType: selectedPasswordLevelType ?? this.selectedPasswordLevelType,
       customPasswordLength: customPasswordLength ?? this.customPasswordLength,
@@ -129,7 +117,6 @@ class GeneratePasswordPageState extends Equatable {
   List<Object?> get props => <Object?>[
     characterSetMode,
     advancedCharacterSettings,
-    removeAmbiguousWhenInvalidBool,
     calculatedPasswordLevelType,
     selectedPasswordLevelType,
     customPasswordLength,

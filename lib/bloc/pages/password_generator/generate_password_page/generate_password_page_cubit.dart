@@ -28,48 +28,38 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   }
 
   void toggleLowercase() {
-    _updateAdvancedSettings(lowercase: (state.advancedCharacterSettings?.lowercase ?? false) == false);
+    _updateAdvancedSettings(lowercase: state.advancedCharacterSettings.lowercase == false);
   }
 
   void toggleUppercase() {
-    _updateAdvancedSettings(uppercase: (state.advancedCharacterSettings?.uppercase ?? false) == false);
+    _updateAdvancedSettings(uppercase: state.advancedCharacterSettings.uppercase == false);
   }
 
   void toggleNumbers() {
-    _updateAdvancedSettings(numbers: (state.advancedCharacterSettings?.numbers ?? false) == false);
+    _updateAdvancedSettings(numbers: state.advancedCharacterSettings.numbers == false);
   }
 
   void toggleSpecial() {
-    _updateAdvancedSettings(special: (state.advancedCharacterSettings?.special ?? false) == false);
+    _updateAdvancedSettings(special: state.advancedCharacterSettings.special == false);
   }
 
-  void toggleRemoveAmbiguous() {
-    _updateAdvancedSettings(removeAmbiguous: state.removeAmbiguousBool == false);
-  }
+  void _updateAdvancedSettings({bool? lowercase, bool? uppercase, bool? numbers, bool? special}) {
+    PasswordCharactersConfig current = state.advancedCharacterSettings;
+    bool nextLowercase = lowercase ?? current.lowercase;
+    bool nextUppercase = uppercase ?? current.uppercase;
+    bool nextNumbers = numbers ?? current.numbers;
+    bool nextSpecial = special ?? current.special;
+    if (nextLowercase == false && nextUppercase == false && nextNumbers == false && nextSpecial == false) {
+      return;
+    }
 
-  void _updateAdvancedSettings({bool? lowercase, bool? uppercase, bool? numbers, bool? special, bool? removeAmbiguous}) {
-    PasswordCharactersConfig? current = state.advancedCharacterSettings;
-    bool nextLowercase = lowercase ?? current?.lowercase ?? false;
-    bool nextUppercase = uppercase ?? current?.uppercase ?? false;
-    bool nextNumbers = numbers ?? current?.numbers ?? false;
-    bool nextSpecial = special ?? current?.special ?? false;
-    bool nextRemoveAmbiguous = removeAmbiguous ?? state.removeAmbiguousBool;
-    bool emptyBool = nextLowercase == false && nextUppercase == false && nextNumbers == false && nextSpecial == false;
-
-    PasswordCharactersConfig? settings = emptyBool
-        ? null
-        : PasswordCharactersConfig(
-            lowercase: nextLowercase,
-            uppercase: nextUppercase,
-            numbers: nextNumbers,
-            special: nextSpecial,
-            removeAmbiguous: nextRemoveAmbiguous,
-          );
-    GeneratePasswordPageState nextState = state.copyWith(
-      advancedCharacterSettings: settings,
-      clearAdvancedCharacterSettingsBool: emptyBool,
-      removeAmbiguousWhenInvalidBool: emptyBool && nextRemoveAmbiguous,
+    PasswordCharactersConfig settings = PasswordCharactersConfig(
+      lowercase: nextLowercase,
+      uppercase: nextUppercase,
+      numbers: nextNumbers,
+      special: nextSpecial,
     );
+    GeneratePasswordPageState nextState = state.copyWith(advancedCharacterSettings: settings);
 
     if (state.characterSetMode == PasswordCharacterSetMode.advanced) {
       _generatePassword(nextState);
@@ -118,9 +108,9 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   }
 
   void _generatePassword(GeneratePasswordPageState nextState) {
-    PasswordGeneratorConfig? config = nextState.effectiveConfig;
+    PasswordGeneratorConfig config = nextState.effectiveConfig;
     int? length = nextState.resolvedPasswordLength;
-    if (config == null || length == null) {
+    if (length == null) {
       emit(
         nextState.copyWith(
           password: '',

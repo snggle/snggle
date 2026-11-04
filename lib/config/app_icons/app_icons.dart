@@ -21,6 +21,7 @@ class AppIcons {
   static const AssetIconData checkbox_selected_square = AssetIconData('assets/icons/checkbox_selected_square.svg');
   static const AssetIconData checkbox_unselected = AssetIconData('assets/icons/checkbox_unselected.svg');
   static const AssetIconData checkbox_unselected_square = AssetIconData('assets/icons/checkbox_unselected_square.svg');
+  static const AssetIconData radio_selected = AssetIconData('assets/icons/radio_selected.svg');
   static const AssetIconData connect_wallet_hardware = AssetIconData('assets/icons/connect_wallet_hardware.svg');
   static const AssetIconData connect_wallet_qr = AssetIconData('assets/icons/connect_wallet_qr.svg');
   static const AssetIconData details_hide = AssetIconData('assets/icons/details_hide.svg');
