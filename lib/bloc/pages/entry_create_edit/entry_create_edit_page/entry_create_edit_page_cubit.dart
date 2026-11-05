@@ -25,7 +25,6 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
   final TextEditingController emailTextEditingController = TextEditingController();
   final TextEditingController usernameTextEditingController = TextEditingController();
   final TextEditingController passwordTextEditingController = TextEditingController();
-  final FocusNode emailFocusNode = FocusNode();
 
   final FilesystemPath _parentFilesystemPath;
   final EntryModel? _entryModel;
@@ -43,7 +42,6 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
   Future<void> close() async {
     nameTextEditingController.dispose();
     websiteTextEditingController.dispose();
-    emailFocusNode.dispose();
     emailTextEditingController.dispose();
     usernameTextEditingController.dispose();
     passwordTextEditingController.dispose();
@@ -53,7 +51,7 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
 
   Future<void> init() async {
     nameTextEditingController.addListener(_updateEntryNameEmptyState);
-    emailFocusNode.addListener(_handleEmailFocusChanged);
+    emailTextEditingController.addListener(_validateEmail);
 
     if (_entryPageType == EntryPageType.create) {
       int lastEntryIndex = await _entriesService.getLastIndex();
@@ -142,12 +140,6 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
     _entrySecretsModel = updatedSecrets;
 
     return updatedEntryModel;
-  }
-
-  void _handleEmailFocusChanged() {
-    if (emailFocusNode.hasFocus == false) {
-      _validateEmail();
-    }
   }
 
   void _validateEmail() {
