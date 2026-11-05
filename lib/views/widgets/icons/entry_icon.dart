@@ -17,19 +17,15 @@ class EntryIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> contentPreview = <Widget>[];
-
-    for (EntryPreviewItemType previewItemType in entryModel.previewItems) {
-      contentPreview.add(EntryContentPreview(previewItemType: previewItemType));
-    }
-
     return ContainerIcon(
       pinnedBool: entryModel.pinnedBool,
       encryptedBool: entryModel.encryptedBool,
       size: size,
       child: ContainerIconGrid.fromContentPreview(
         padding: EdgeInsets.all(size * 0.14),
-        contentPreview: contentPreview,
+        contentPreview: <Widget>[
+          for (EntryPreviewItemType previewItemType in entryModel.previewItems) EntryContentPreview(previewItemType: previewItemType),
+        ],
       ),
     );
   }

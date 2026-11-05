@@ -24,15 +24,8 @@ class ContainerIconGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> previewWidgetList = <Widget>[];
-
-    if (listItemsPreview.isEmpty) {
-      previewWidgetList.addAll(contentPreview);
-    } else {
-      for (AListItemModel listItemModel in listItemsPreview) {
-        previewWidgetList.add(ContainerIconContentPreview(listItemModel: listItemModel));
-      }
-    }
+    bool listItemsUsedBool = listItemsPreview.isNotEmpty;
+    int itemsCount = listItemsUsedBool ? listItemsPreview.length : contentPreview.length;
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -42,7 +35,7 @@ class ContainerIconGrid extends StatelessWidget {
         double gridSize = min(innerWidth, innerHeight);
         double spacing = gridSize * 0.13;
 
-        int slotsPerSide = _calcSlotsPerSide(previewWidgetList.length);
+        int slotsPerSide = _calcSlotsPerSide(itemsCount);
         int slotsCount = slotsPerSide * slotsPerSide;
 
         return Padding(
@@ -57,11 +50,15 @@ class ContainerIconGrid extends StatelessWidget {
                 horizontalGap: spacing,
                 childCount: slotsCount,
                 itemBuilder: (BuildContext context, int index) {
-                  if (index >= previewWidgetList.length) {
+                  if (index >= itemsCount) {
                     return const SizedBox.expand();
                   }
 
-                  return previewWidgetList[index];
+                  if (listItemsUsedBool) {
+                    return ContainerIconContentPreview(listItemModel: listItemsPreview[index]);
+                  }
+
+                  return contentPreview[index];
                 },
               ),
             ),
