@@ -15,9 +15,10 @@ class VaultIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ContainerIcon.fromVaultModel(
+    return ContainerIcon(
+      pinnedBool: vaultModel.pinnedBool,
+      encryptedBool: vaultModel.encryptedBool,
       size: size,
-      vaultModel: vaultModel,
       child: ContainerIconGrid(
         padding: EdgeInsets.all(size * 0.14),
         listItemsPreview: vaultModel.listItemsPreview,
