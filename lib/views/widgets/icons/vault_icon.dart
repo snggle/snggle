@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
+import 'package:snggle/views/widgets/icons/container_icon.dart';
 import 'package:snggle/views/widgets/icons/container_icon_grid.dart';
-import 'package:snggle/views/widgets/icons/vault_container_icon.dart';
 
 class VaultIcon extends StatelessWidget {
   final double size;
@@ -15,7 +15,7 @@ class VaultIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VaultContainerIcon.fromVaultModel(
+    return ContainerIcon.fromVaultModel(
       size: size,
       vaultModel: vaultModel,
       child: ContainerIconGrid(

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
+import 'package:snggle/views/widgets/icons/container_icon.dart';
 import 'package:snggle/views/widgets/icons/container_icon_grid.dart';
-import 'package:snggle/views/widgets/icons/vault_container_icon.dart';
 
 class NetworkGroupIcon extends StatelessWidget {
   final NetworkGroupModel networkGroupModel;
@@ -15,7 +15,7 @@ class NetworkGroupIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VaultContainerIcon(
+    return ContainerIcon(
       pinnedBool: networkGroupModel.pinnedBool,
       encryptedBool: networkGroupModel.encryptedBool,
       size: size,

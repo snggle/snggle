@@ -1,13 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
-import 'package:snggle/config/app_colors.dart';
-import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/models/entries/entry_preview_item_type.dart';
-import 'package:snggle/views/widgets/icons/asset_icon.dart';
+import 'package:snggle/views/widgets/icons/container_icon.dart';
 import 'package:snggle/views/widgets/icons/container_icon_grid.dart';
-import 'package:snggle/views/widgets/icons/vault_container_icon.dart';
+import 'package:snggle/views/widgets/icons/entry_content_preview.dart';
 
 class EntryIcon extends StatelessWidget {
   final double size;
@@ -21,36 +17,20 @@ class EntryIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VaultContainerIcon(
+    List<Widget> contentPreview = <Widget>[];
+
+    for (EntryPreviewItemType previewItemType in entryModel.previewItems) {
+      contentPreview.add(EntryContentPreview(previewItemType: previewItemType));
+    }
+
+    return ContainerIcon(
       pinnedBool: entryModel.pinnedBool,
       encryptedBool: entryModel.encryptedBool,
       size: size,
       child: ContainerIconGrid.fromContentPreview(
         padding: EdgeInsets.all(size * 0.14),
-        contentPreview: entryModel.previewItems.map(_buildContentPreview).toList(),
+        contentPreview: contentPreview,
       ),
-    );
-  }
-
-  Widget _buildContentPreview(EntryPreviewItemType previewItemType) {
-    AssetIconData assetIconData = switch (previewItemType) {
-      EntryPreviewItemType.email => AppIcons.icon_entry_email,
-      EntryPreviewItemType.password => AppIcons.icon_entry_password,
-      EntryPreviewItemType.username => AppIcons.icon_entry_username,
-    };
-
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        double iconSize = min(constraints.maxWidth, constraints.maxHeight);
-
-        return Center(
-          child: AssetIcon(
-            assetIconData,
-            size: iconSize,
-            color: AppColors.body3,
-          ),
-        );
-      },
     );
   }
 }
