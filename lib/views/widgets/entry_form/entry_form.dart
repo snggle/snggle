@@ -5,7 +5,6 @@ import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 class EntryForm extends StatelessWidget {
-  final FocusNode? emailFocusNode;
   final TextEditingController? nameTextEditingController;
   final TextEditingController websiteTextEditingController;
   final TextEditingController emailTextEditingController;
@@ -28,7 +27,6 @@ class EntryForm extends StatelessWidget {
     this.nameTextEditingController,
     this.emailInvalidBool = false,
     this.entryNameEmptyBool = false,
-    this.emailFocusNode,
     super.key,
   });
 
@@ -62,7 +60,6 @@ class EntryForm extends StatelessWidget {
           readOnlyBool: readOnlyBool,
           label: 'Email',
           textEditingController: emailTextEditingController,
-          focusNode: emailFocusNode,
         ),
         if (emailInvalidBool)
           const Padding(

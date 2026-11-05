@@ -96,7 +96,6 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
                         nameTextEditingController: entryCreateEditPageCubit.nameTextEditingController,
                         websiteTextEditingController: entryCreateEditPageCubit.websiteTextEditingController,
                         emailTextEditingController: entryCreateEditPageCubit.emailTextEditingController,
-                        emailFocusNode: entryCreateEditPageCubit.emailFocusNode,
                         emailInvalidBool: state.emailInvalidBool,
                         usernameTextEditingController: entryCreateEditPageCubit.usernameTextEditingController,
                         passwordTextEditingController: entryCreateEditPageCubit.passwordTextEditingController,
