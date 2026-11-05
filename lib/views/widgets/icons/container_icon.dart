@@ -7,14 +7,14 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
-class VaultContainerIcon extends StatelessWidget {
+class ContainerIcon extends StatelessWidget {
   final bool pinnedBool;
   final bool encryptedBool;
   final double size;
   final Color? backgroundColor;
   final Widget? child;
 
-  const VaultContainerIcon({
+  const ContainerIcon({
     required this.pinnedBool,
     required this.encryptedBool,
     required this.size,
@@ -23,7 +23,7 @@ class VaultContainerIcon extends StatelessWidget {
     super.key,
   });
 
-  VaultContainerIcon.fromVaultModel({
+  ContainerIcon.fromVaultModel({
     required VaultModel vaultModel,
     required this.size,
     this.backgroundColor,
