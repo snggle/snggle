@@ -73,7 +73,7 @@ class _CopyWrapperState extends State<CopyWrapper> {
       return;
     }
 
-    // TODO(Kamil): Remove this workaround once Android versions below API level 33 are depreciated, newer versions handle copy confirmation natively.
+    // TODO(Kamil): Remove this workaround once Android versions below API level 33 are deprecated, newer versions handle copy confirmation natively.
     bool androidPopupDisplayedBool = await _isAndroidDisplayingPopup();
     if (androidPopupDisplayedBool) {
       return;
