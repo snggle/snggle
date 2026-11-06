@@ -395,7 +395,7 @@ void main() {
       test('Should [throw UnsupportedError] because entries cannot be renamed from this cubit', () async {
         // Assert
         expect(
-          () => actualEntryListPageCubit.renameItem(updatedEntryModel1, 'NEW ENTRY NAME'),
+              () => actualEntryListPageCubit.renameItem(updatedEntryModel1, 'NEW ENTRY NAME'),
           throwsA(isA<UnsupportedError>()),
         );
       });
