@@ -3,18 +3,12 @@ import 'package:equatable/equatable.dart';
 class EntryDetailsPageState extends Equatable {
   final bool loadingBool;
 
-  const EntryDetailsPageState({
-    this.loadingBool = false,
-  });
+  const EntryDetailsPageState({this.loadingBool = false});
 
   const EntryDetailsPageState.loading() : loadingBool = true;
 
-  EntryDetailsPageState copyWith({
-    bool? loadingBool,
-  }) {
-    return EntryDetailsPageState(
-      loadingBool: loadingBool ?? this.loadingBool,
-    );
+  EntryDetailsPageState copyWith({bool? loadingBool}) {
+    return EntryDetailsPageState(loadingBool: loadingBool ?? this.loadingBool);
   }
 
   @override

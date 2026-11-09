@@ -76,6 +76,7 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
             keyboardValueNotifier: keyboardValueNotifier,
             builder: ({required bool customKeyboardVisibleBool, required bool nativeKeyboardVisibleBool}) {
               bool anyKeyboardVisibleBool = customKeyboardVisibleBool || nativeKeyboardVisibleBool;
+              bool finishButtonEnabledBool = state.entryNameEmptyBool == false && state.emailInvalidBool == false;
 
               return ScrollableLayout(
                 scrollController: scrollController,
@@ -85,7 +86,7 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
                   BottomTooltipItem(
                     label: 'Save',
                     assetIconData: AppIcons.menu_save,
-                    onTap: _finishButtonEnabledBool ? _save : null,
+                    onTap: finishButtonEnabledBool ? _save : null,
                   ),
                 ],
                 child: SingleChildScrollView(
@@ -115,9 +116,6 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
       },
     );
   }
-
-  bool get _finishButtonEnabledBool =>
-      entryCreateEditPageCubit.state.entryNameEmptyBool == false && entryCreateEditPageCubit.state.emailInvalidBool == false;
 
   Future<void> _save() async {
     await CustomLoadingDialog.show<EntryModel?>(
