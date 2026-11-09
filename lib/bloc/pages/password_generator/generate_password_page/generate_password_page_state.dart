@@ -76,7 +76,7 @@ class GeneratePasswordPageState extends Equatable {
 
   int? passwordLengthForLevel(PasswordLevelType level) {
     int? target = level.entropyTarget;
-    return target == null ? null : effectiveConfig.minLengthForEntropy(target);
+    return target == null ? null : effectiveConfig.minimumLengthForEntropy(target);
   }
 
   int? get resolvedPasswordLength => selectedPasswordLevelType == PasswordLevelType.custom

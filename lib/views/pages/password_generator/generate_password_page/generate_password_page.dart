@@ -465,7 +465,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     if (generatePasswordPageCubit.state.passwordReadyBool == false) {
       return;
     }
-    AutoRouter.of(context).pop<String>(generatePasswordPageCubit.state.password);
+    AutoRouter.of(context).parent<StackRouter>()?.pop<String>(generatePasswordPageCubit.state.password);
   }
 
   Future<void> _showPasswordSecurityHintDialog() async {
