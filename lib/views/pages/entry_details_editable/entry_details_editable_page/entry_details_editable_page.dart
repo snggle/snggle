@@ -4,18 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/entry_details_editable/entry_details_editable_page/entry_details_editable_page_cubit.dart';
 import 'package:snggle/bloc/pages/entry_details_editable/entry_details_editable_page/entry_details_editable_page_state.dart';
 import 'package:snggle/bloc/pages/entry_details_editable/entry_page_type.dart';
-import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/bottom_navigation/entries_wrapper/entry_list_page/entry_create_edit_status.dart';
+import 'package:snggle/views/pages/entry_details_editable/entry_details_editable_page/editable_entry_field.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
-import 'package:snggle/views/widgets/custom/custom_text_field.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
 import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
-import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
@@ -70,8 +68,6 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
 
   @override
   Widget build(BuildContext context) {
-    TextTheme textTheme = Theme.of(context).textTheme;
-
     return BlocBuilder<EntryDetailsEditablePageCubit, EntryDetailsEditablePageState>(
       bloc: entryDetailsEditablePageCubit,
       builder: (BuildContext context, EntryDetailsEditablePageState state) {
@@ -101,12 +97,11 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
                   controller: scrollController,
                   child: Column(
                     children: <Widget>[
-                      _buildEditableEntryField(
-                        textTheme: textTheme,
+                      EditableEntryField(
                         label: 'Name',
                         textEditingController: entryDetailsEditablePageCubit.nameTextEditingController,
                       ),
-                      if (state.entryNameEmptyBool == true)
+                      if (state.entryNameEmptyBool)
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           child: ErrorMessageListTile(
@@ -114,26 +109,22 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
                           ),
                         ),
                       const SizedBox(height: 12),
-                      _buildEditableEntryField(
-                        textTheme: textTheme,
+                      EditableEntryField(
                         label: 'Website',
                         textEditingController: entryDetailsEditablePageCubit.websiteTextEditingController,
                       ),
                       const SizedBox(height: 12),
-                      _buildEditableEntryField(
-                        textTheme: textTheme,
+                      EditableEntryField(
                         label: 'Email',
                         textEditingController: entryDetailsEditablePageCubit.emailTextEditingController,
                       ),
                       const SizedBox(height: 12),
-                      _buildEditableEntryField(
-                        textTheme: textTheme,
+                      EditableEntryField(
                         label: 'Username',
                         textEditingController: entryDetailsEditablePageCubit.usernameTextEditingController,
                       ),
                       const SizedBox(height: 12),
-                      _buildEditableEntryField(
-                        textTheme: textTheme,
+                      EditableEntryField(
                         label: 'Password',
                         textEditingController: entryDetailsEditablePageCubit.passwordTextEditingController,
                         obscureTextBool: _obscurePasswordBool,
@@ -177,40 +168,6 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
     );
   }
 
-  Widget _buildEditableEntryField({
-    required TextTheme textTheme,
-    required String label,
-    required TextEditingController textEditingController,
-    bool readOnlyBool = false,
-    bool autofocusBool = false,
-    bool obscureTextBool = false,
-    FocusNode? focusNode,
-    Widget? suffixWidget,
-    BoxConstraints? suffixWidgetConstraints,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: LabelWrapperVertical.textField(
-        label: label,
-        labelStyle: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
-        labelPadding: EdgeInsets.zero,
-        child: CustomTextField(
-          autofocusBool: autofocusBool,
-          readOnlyBool: readOnlyBool,
-          focusNode: focusNode,
-          enableInteractiveSelectionBool: true,
-          textEditingController: textEditingController,
-          inputBorder: InputBorder.none,
-          keyboardType: TextInputType.text,
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
-          obscureTextBool: obscureTextBool,
-          suffixWidget: suffixWidget,
-          suffixWidgetConstraints: suffixWidgetConstraints,
-        ),
-      ),
-    );
-  }
-
   bool get _finishButtonEnabledBool => entryDetailsEditablePageCubit.state.entryNameEmptyBool == false;
 
   Future<void> _save() async {
@@ -219,7 +176,8 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
       title: 'Saving...',
       futureFunction: entryDetailsEditablePageCubit.save,
       onSuccess: (EntryModel? entryModel) async {
-        if (entryModel != null) {
+        bool entrySavedBool = entryModel != null;
+        if (entrySavedBool) {
           AutoRouter.of(context).root.pop(
             switch (widget.entryPageType) {
               EntryPageType.entryPageCreate => EntryCreateEditStatus.creationSuccessful,
@@ -236,8 +194,9 @@ class _EntryDetailsEditablePageState extends State<EntryDetailsEditablePage> {
       const PasswordGeneratorRoute(),
     );
 
-    if (generatedPassword != null) {
-      entryDetailsEditablePageCubit.passwordTextEditingController.text = generatedPassword;
+    bool passwordApplicableBool = mounted && generatedPassword != null;
+    if (passwordApplicableBool) {
+      entryDetailsEditablePageCubit.updatePassword(generatedPassword);
     }
   }
 }

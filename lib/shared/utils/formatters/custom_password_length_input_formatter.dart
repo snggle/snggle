@@ -1,25 +1,25 @@
 import 'package:flutter/services.dart';
-import 'package:snggle/bloc/pages/password_generator/generate_password_page/generate_password_page_cubit.dart';
 
 class CustomPasswordLengthInputFormatter extends TextInputFormatter {
-  static const int _maxIndex = GeneratePasswordPageCubit.maxCustomPasswordLength;
+  final int maximumLength;
+
+  CustomPasswordLengthInputFormatter({required this.maximumLength});
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text.isEmpty) {
+    bool emptyValueBool = newValue.text.isEmpty;
+    if (emptyValueBool) {
       return newValue;
     }
 
-    if (newValue.text.startsWith('0')) {
+    bool invalidCharactersBool = RegExp(r'^[1-9][0-9]*$').hasMatch(newValue.text) == false;
+    if (invalidCharactersBool) {
       return oldValue;
     }
 
-    int? intValue = int.tryParse(newValue.text);
-    if (intValue == null) {
-      return oldValue;
-    }
-
-    if (intValue > _maxIndex) {
+    int? passwordLength = int.tryParse(newValue.text);
+    bool invalidLengthBool = passwordLength == null || passwordLength > maximumLength;
+    if (invalidLengthBool) {
       return oldValue;
     }
 

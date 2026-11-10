@@ -9,8 +9,8 @@ import 'package:snggle/bloc/pages/password_generator/password_level_type.dart';
 import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/utils/formatters/custom_password_length_input_formatter.dart';
+import 'package:snggle/views/pages/password_generator/generate_password_page/password_character_checkbox.dart';
 import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
-import 'package:snggle/views/widgets/custom/custom_checkbox.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/custom_single_select_menu.dart';
 import 'package:snggle/views/widgets/custom/custom_text_field.dart';
@@ -26,11 +26,11 @@ import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.
 
 @RoutePage()
 class GeneratePasswordPage extends StatefulWidget {
+  final PasswordCharacterSetMode passwordCharacterSetMode;
   final bool obscurePasswordBool;
-  final PasswordCharacterSetMode characterSetMode;
 
   const GeneratePasswordPage({
-    required this.characterSetMode,
+    required this.passwordCharacterSetMode,
     this.obscurePasswordBool = true,
     super.key,
   });
@@ -40,11 +40,11 @@ class GeneratePasswordPage extends StatefulWidget {
 }
 
 class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
-  final ScrollController scrollController = ScrollController();
+  final FocusNode customPasswordLengthFocusNode = FocusNode();
   final KeyboardValueNotifier keyboardValueNotifier = KeyboardValueNotifier();
+  final ScrollController scrollController = ScrollController();
   final TextEditingController customPasswordLengthTextEditingController = TextEditingController();
   final TextEditingController passwordTextEditingController = TextEditingController();
-  final FocusNode customPasswordLengthFocusNode = FocusNode();
 
   late final GeneratePasswordPageCubit generatePasswordPageCubit;
 
@@ -52,16 +52,16 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
   void initState() {
     super.initState();
     generatePasswordPageCubit = GeneratePasswordPageCubit(
-      characterSetMode: widget.characterSetMode,
+      passwordCharacterSetMode: widget.passwordCharacterSetMode,
       obscurePasswordBool: widget.obscurePasswordBool,
     );
-    customPasswordLengthFocusNode.addListener(_handleCustomPasswordLengthFocusChanged);
+    customPasswordLengthFocusNode.addListener(_handleLengthFocus);
     generatePasswordPageCubit.init();
   }
 
   @override
   void dispose() {
-    customPasswordLengthFocusNode.removeListener(_handleCustomPasswordLengthFocusChanged);
+    customPasswordLengthFocusNode.removeListener(_handleLengthFocus);
     scrollController.dispose();
     keyboardValueNotifier.dispose();
     customPasswordLengthTextEditingController.dispose();
@@ -78,13 +78,17 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     return BlocBuilder<GeneratePasswordPageCubit, GeneratePasswordPageState>(
       bloc: generatePasswordPageCubit,
       builder: (BuildContext context, GeneratePasswordPageState state) {
-        if (passwordTextEditingController.text != state.password) {
+        bool passwordChangedBool = passwordTextEditingController.text != state.password;
+        if (passwordChangedBool) {
           passwordTextEditingController.text = state.password;
         }
-        if (customPasswordLengthTextEditingController.text != state.customPasswordLength) {
+        bool customLengthChangedBool = customPasswordLengthTextEditingController.text != state.customPasswordLength;
+        if (customLengthChangedBool) {
           customPasswordLengthTextEditingController.text = state.customPasswordLength;
         }
 
+        bool advancedModeBool = state.passwordCharacterSetMode == PasswordCharacterSetMode.advanced;
+        bool checksumModeBool = state.passwordCharacterSetMode == PasswordCharacterSetMode.sip2;
         return CustomScaffold(
           title: 'GENERATE PASSWORD',
           resizeToAvoidBottomInsetBool: true,
@@ -92,6 +96,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
             keyboardValueNotifier: keyboardValueNotifier,
             builder: ({required bool customKeyboardVisibleBool, required bool nativeKeyboardVisibleBool}) {
               bool anyKeyboardVisibleBool = customKeyboardVisibleBool || nativeKeyboardVisibleBool;
+              bool keyboardHiddenBool = anyKeyboardVisibleBool == false;
               bool confirmButtonActiveBool = state.passwordReadyBool;
 
               return ScrollableLayout(
@@ -114,7 +119,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                         child: IntrinsicHeight(
                           child: Column(
                             children: <Widget>[
-                              if (state.characterSetMode == PasswordCharacterSetMode.advanced) ...<Widget>[
+                              if (advancedModeBool) ...<Widget>[
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 16),
                                   child: Text(
@@ -122,29 +127,29 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                     style: textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
                                   ),
                                 ),
-                                _buildCharacterCheckbox(
+                                PasswordCharacterCheckbox(
                                   title: 'Lowercase letters',
-                                  selectedBool: state.advancedCharacterSettings.lowercase,
-                                  onTap: generatePasswordPageCubit.toggleLowercase,
+                                  selectedBool: state.advancedPasswordCharactersConfig.lowercase,
+                                  onTapVoidCallback: generatePasswordPageCubit.toggleLowercase,
                                 ),
-                                _buildCharacterCheckbox(
+                                PasswordCharacterCheckbox(
                                   title: 'Uppercase letters',
-                                  selectedBool: state.advancedCharacterSettings.uppercase,
-                                  onTap: generatePasswordPageCubit.toggleUppercase,
+                                  selectedBool: state.advancedPasswordCharactersConfig.uppercase,
+                                  onTapVoidCallback: generatePasswordPageCubit.toggleUppercase,
                                 ),
-                                _buildCharacterCheckbox(
+                                PasswordCharacterCheckbox(
                                   title: 'Numbers',
-                                  selectedBool: state.advancedCharacterSettings.numbers,
-                                  onTap: generatePasswordPageCubit.toggleNumbers,
+                                  selectedBool: state.advancedPasswordCharactersConfig.numbers,
+                                  onTapVoidCallback: generatePasswordPageCubit.toggleNumbers,
                                 ),
                                 Stack(
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.only(right: 44),
-                                      child: _buildCharacterCheckbox(
+                                      child: PasswordCharacterCheckbox(
                                         title: 'Special characters',
-                                        selectedBool: state.advancedCharacterSettings.special,
-                                        onTap: generatePasswordPageCubit.toggleSpecial,
+                                        selectedBool: state.advancedPasswordCharactersConfig.special,
+                                        onTapVoidCallback: generatePasswordPageCubit.toggleSpecial,
                                       ),
                                     ),
                                     Positioned(
@@ -155,7 +160,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                         child: Material(
                                           color: Colors.transparent,
                                           child: InkWell(
-                                            onTap: _showSpecialCharactersHintDialog,
+                                            onTap: _showCharactersHint,
                                             child: const SizedBox(
                                               width: 34,
                                               height: 34,
@@ -178,16 +183,16 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                               ),
                               CustomSingleSelectMenu<PasswordLevelType>(
                                 selectedValue: state.selectedPasswordLevelType,
-                                options: state.passwordLevelTypeList,
-                                onSelected: _handlePasswordLengthChanged,
-                                itemBuilder: (BuildContext context, PasswordLevelType passwordLengthType) {
-                                  bool customFieldBool = passwordLengthType == PasswordLevelType.custom;
-                                  Color passwordColor = _getPasswordSecurityLevelColor(passwordLengthType);
+                                options: state.selectablePasswordLevels,
+                                onSelected: _handleLengthChanged,
+                                itemBuilder: (BuildContext context, PasswordLevelType passwordLevelType) {
+                                  bool customFieldBool = passwordLevelType == PasswordLevelType.custom;
+                                  Color passwordColor = _getSecurityColor(passwordLevelType);
 
                                   return Row(
                                     children: <Widget>[
                                       Text(
-                                        passwordLengthType.displayName,
+                                        passwordLevelType.displayName,
                                         overflow: TextOverflow.ellipsis,
                                         style: textTheme.bodyMedium?.copyWith(
                                           color: passwordColor,
@@ -212,18 +217,22 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                               textEditingController: customPasswordLengthTextEditingController,
                                               focusNode: customPasswordLengthFocusNode,
                                               inputBorder: InputBorder.none,
-                                              inputFormatters: <TextInputFormatter>[CustomPasswordLengthInputFormatter()],
+                                              inputFormatters: <TextInputFormatter>[
+                                                CustomPasswordLengthInputFormatter(
+                                                  maximumLength: GeneratePasswordPageState.maximumCustomPasswordLength,
+                                                ),
+                                              ],
                                               keyboardType: TextInputType.number,
                                               padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
                                               obscureTextBool: false,
-                                              onChanged: generatePasswordPageCubit.updateCustomPasswordLengthText,
+                                              onChanged: generatePasswordPageCubit.updateCustomLength,
                                             ),
                                           ),
                                         ),
                                       ],
                                       Flexible(
                                         child: Text(
-                                          _getPasswordLengthDescription(state, passwordLengthType),
+                                          _getLengthDescription(state, passwordLevelType),
                                           overflow: TextOverflow.ellipsis,
                                           style: textTheme.bodyMedium?.copyWith(color: AppColors.body3),
                                         ),
@@ -244,7 +253,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                   ),
                                 ),
                               ),
-                              if (anyKeyboardVisibleBool == false) ...<Widget>[
+                              if (keyboardHiddenBool) ...<Widget>[
                                 const Spacer(),
                                 SizedBox(
                                   width: double.infinity,
@@ -296,7 +305,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                         confirmButtonActiveBool ? 'Entropy: ${state.passwordEntropy.toStringAsFixed(1)} bits' : 'Entropy: N/A',
                                         style: textTheme.bodySmall?.copyWith(color: AppColors.darkGrey),
                                       ),
-                                      if (state.characterSetMode == PasswordCharacterSetMode.sip2) ...<Widget>[
+                                      if (checksumModeBool) ...<Widget>[
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 12),
                                           child: Text(
@@ -335,7 +344,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
                                           child: Material(
                                             color: Colors.transparent,
                                             child: InkWell(
-                                              onTap: _showPasswordSecurityHintDialog,
+                                              onTap: _showSecurityHint,
                                               child: const SizedBox(
                                                 width: 34,
                                                 height: 34,
@@ -365,71 +374,30 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     );
   }
 
-  Widget _buildCharacterCheckbox({required String title, required bool selectedBool, required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 44),
-        color: Colors.transparent,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          children: <Widget>[
-            CustomCheckbox(selectedBool: selectedBool, squareCheckboxBool: true),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.body3),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _handlePasswordLengthChanged(PasswordLevelType passwordLengthType) {
-    if (passwordLengthType == PasswordLevelType.custom) {
-      generatePasswordPageCubit.selectCustomPasswordLevel();
-      _requestCustomPasswordLengthFocus();
-      return;
-    }
-
-    if (customPasswordLengthFocusNode.hasFocus) {
-      _cancelCustomPasswordLengthFocus();
-    }
-
-    generatePasswordPageCubit.changePasswordLevelType(passwordLengthType);
-  }
-
-  void _handleCustomPasswordLengthFocusChanged() {
-    if (customPasswordLengthFocusNode.hasFocus) {
-      generatePasswordPageCubit.selectCustomPasswordLevel();
-      return;
-    }
-
-    generatePasswordPageCubit.applyCustomPasswordLevel();
-  }
-
-  void _requestCustomPasswordLengthFocus() {
-    customPasswordLengthFocusNode.requestFocus();
-  }
-
-  void _cancelCustomPasswordLengthFocus() {
+  void _cancelLengthFocus() {
     customPasswordLengthFocusNode.unfocus();
   }
 
-  String _getPasswordLengthDescription(GeneratePasswordPageState state, PasswordLevelType passwordLengthType) {
-    if (passwordLengthType == PasswordLevelType.custom) {
-      return '(${GeneratePasswordPageCubit.minCustomPasswordLength} - ${GeneratePasswordPageCubit.maxCustomPasswordLength}) characters';
+  void _confirm() {
+    bool passwordUnavailableBool = generatePasswordPageCubit.state.passwordReadyBool == false;
+    if (passwordUnavailableBool) {
+      return;
+    }
+    AutoRouter.of(context).parent<StackRouter>()?.pop<String>(generatePasswordPageCubit.state.password);
+  }
+
+  String _getLengthDescription(GeneratePasswordPageState state, PasswordLevelType passwordLevelType) {
+    bool customLevelBool = passwordLevelType == PasswordLevelType.custom;
+    if (customLevelBool) {
+      return '(${GeneratePasswordPageCubit.minimumCustomPasswordLength} - ${GeneratePasswordPageCubit.maximumCustomPasswordLength}) characters';
     }
 
-    int? length = state.passwordLengthForLevel(passwordLengthType);
+    int? length = state.calculatePasswordLength(passwordLevelType);
     return length == null ? 'N/A characters' : '$length characters';
   }
 
-  Color _getPasswordSecurityLevelColor(PasswordLevelType passwordSecurityLevel) {
-    switch (passwordSecurityLevel) {
+  Color _getSecurityColor(PasswordLevelType passwordLevelType) {
+    switch (passwordLevelType) {
       case PasswordLevelType.unsafe:
         return AppColors.warningRed;
       case PasswordLevelType.weak:
@@ -439,20 +407,44 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
       case PasswordLevelType.magnificent:
         return AppColors.magnificent;
       case PasswordLevelType.good:
-      //return AppColors.good;
       default:
         return AppColors.body3;
     }
   }
 
-  Future<void> _initConfirm() async {
-    if (generatePasswordPageCubit.state.passwordReadyBool == false) {
+  void _handleLengthChanged(PasswordLevelType passwordLevelType) {
+    bool customLevelBool = passwordLevelType == PasswordLevelType.custom;
+    if (customLevelBool) {
+      generatePasswordPageCubit.selectCustomPasswordLevel();
+      _requestLengthFocus();
       return;
     }
 
-    bool weakPasswordBool =
-        generatePasswordPageCubit.state.calculatedPasswordLevelType == PasswordLevelType.unsafe ||
-        generatePasswordPageCubit.state.calculatedPasswordLevelType == PasswordLevelType.weak;
+    bool customLengthFocusedBool = customPasswordLengthFocusNode.hasFocus;
+    if (customLengthFocusedBool) {
+      _cancelLengthFocus();
+    }
+
+    generatePasswordPageCubit.changePasswordLevelType(passwordLevelType);
+  }
+
+  void _handleLengthFocus() {
+    bool customLengthFocusedBool = customPasswordLengthFocusNode.hasFocus;
+    if (customLengthFocusedBool) {
+      generatePasswordPageCubit.selectCustomPasswordLevel();
+      return;
+    }
+
+    generatePasswordPageCubit.applyCustomPasswordLevel();
+  }
+
+  Future<void> _initConfirm() async {
+    bool passwordUnavailableBool = generatePasswordPageCubit.state.passwordReadyBool == false;
+    if (passwordUnavailableBool) {
+      return;
+    }
+
+    bool weakPasswordBool = generatePasswordPageCubit.shouldWarnPassword();
 
     if (weakPasswordBool) {
       await _showWeakPasswordDialog();
@@ -461,14 +453,30 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
     }
   }
 
-  void _confirm() {
-    if (generatePasswordPageCubit.state.passwordReadyBool == false) {
-      return;
-    }
-    AutoRouter.of(context).parent<StackRouter>()?.pop<String>(generatePasswordPageCubit.state.password);
+  void _requestLengthFocus() {
+    customPasswordLengthFocusNode.requestFocus();
   }
 
-  Future<void> _showPasswordSecurityHintDialog() async {
+  Future<void> _showCharactersHint() async {
+    await showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      useRootNavigator: true,
+      builder: (BuildContext context) => CustomDialog(
+        title: 'Special characters\n',
+        content: const Text(
+          'The following special characters may be included in a password:'
+          '\n!"#\$%&\'()*+, -./:;<=>?@[\\]^_`{|}~',
+          textAlign: TextAlign.center,
+        ),
+        options: <CustomDialogOption>[
+          CustomDialogOption(label: 'Close', onPressed: () {}),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showSecurityHint() async {
     await showDialog(
       context: context,
       barrierColor: Colors.transparent,
@@ -491,25 +499,6 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
             label: 'Close',
             onPressed: () {},
           ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _showSpecialCharactersHintDialog() async {
-    await showDialog(
-      context: context,
-      barrierColor: Colors.transparent,
-      useRootNavigator: true,
-      builder: (BuildContext context) => CustomDialog(
-        title: 'Special characters\n',
-        content: const Text(
-          'The following special characters may be included in a password:'
-          '\n!"#\$%&\'()*+, -./:;<=>?@[\\]^_`{|}~',
-          textAlign: TextAlign.center,
-        ),
-        options: <CustomDialogOption>[
-          CustomDialogOption(label: 'Close', onPressed: () {}),
         ],
       ),
     );

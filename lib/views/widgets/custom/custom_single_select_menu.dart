@@ -33,28 +33,30 @@ class _CustomSingleSelectMenuState<T> extends State<CustomSingleSelectMenu<T>> {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
+    bool customOptionAvailableBool = widget.customOptionBuilder != null;
+    bool customOptionSelectedBool = widget.options.contains(widget.selectedValue) == false;
 
     return Column(
       children: <Widget>[
-        for (int i = 0; i < widget.options.length; i++)
+        for (T option in widget.options)
           GestureDetector(
-            onTap: () => widget.onSelected(widget.options[i]),
+            onTap: () => widget.onSelected(option),
             child: Container(
               height: 44,
               color: Colors.transparent,
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
                 children: <Widget>[
-                  CustomRadioButton(selectedBool: widget.options[i] == widget.selectedValue),
+                  CustomRadioButton(selectedBool: option == widget.selectedValue),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: widget.itemBuilder(context, widget.options[i]),
+                    child: widget.itemBuilder(context, option),
                   ),
                 ],
               ),
             ),
           ),
-        if (widget.customOptionBuilder != null)
+        if (customOptionAvailableBool)
           GestureDetector(
             onTap: () => widget.onSelected(customValue as T),
             child: Column(
@@ -74,7 +76,7 @@ class _CustomSingleSelectMenuState<T> extends State<CustomSingleSelectMenu<T>> {
                     ],
                   ),
                 ),
-                if (widget.options.contains(widget.selectedValue) == false)
+                if (customOptionSelectedBool)
                   widget.customOptionBuilder!(
                     context,
                     customValue as T,

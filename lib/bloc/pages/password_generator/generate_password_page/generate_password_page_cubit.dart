@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cryptography_utils/cryptography_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/password_generator/generate_password_page/generate_password_page_state.dart';
@@ -7,112 +5,122 @@ import 'package:snggle/bloc/pages/password_generator/password_character_set_mode
 import 'package:snggle/bloc/pages/password_generator/password_level_type.dart';
 
 class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
-  static const int minCustomPasswordLength = GeneratePasswordPageState.minCustomPasswordLength;
-  static const int maxCustomPasswordLength = GeneratePasswordPageState.maxCustomPasswordLength;
+  static const int maximumCustomPasswordLength = GeneratePasswordPageState.maximumCustomPasswordLength;
+  static const int minimumCustomPasswordLength = GeneratePasswordPageState.minimumCustomPasswordLength;
 
   GeneratePasswordPageCubit({
-    PasswordCharacterSetMode characterSetMode = PasswordCharacterSetMode.ascii,
+    PasswordCharacterSetMode passwordCharacterSetMode = PasswordCharacterSetMode.ascii,
     bool obscurePasswordBool = true,
-  }) : super(GeneratePasswordPageState.initial(characterSetMode: characterSetMode, obscurePasswordBool: obscurePasswordBool));
+  }) : super(GeneratePasswordPageState.initial(passwordCharacterSetMode: passwordCharacterSetMode, obscurePasswordBool: obscurePasswordBool));
 
-  Future<void> init() async {
-    generatePassword();
+  void applyCustomPasswordLevel() {
+    bool regenerationRequiredBool = state.selectedPasswordLevelType == PasswordLevelType.custom && state.passwordReadyBool == false;
+    if (regenerationRequiredBool) {
+      generatePassword();
+    }
   }
 
-  void changeCharacterSetMode(PasswordCharacterSetMode characterSetMode) {
-    if (state.characterSetMode == characterSetMode) {
+  void changeCharacterSetMode(PasswordCharacterSetMode passwordCharacterSetMode) {
+    bool matchingCharacterSetBool = state.passwordCharacterSetMode == passwordCharacterSetMode;
+    if (matchingCharacterSetBool) {
       return;
     }
 
-    _generatePassword(state.copyWith(characterSetMode: characterSetMode));
-  }
-
-  void toggleLowercase() {
-    _updateAdvancedSettings(lowercase: state.advancedCharacterSettings.lowercase == false);
-  }
-
-  void toggleUppercase() {
-    _updateAdvancedSettings(uppercase: state.advancedCharacterSettings.uppercase == false);
-  }
-
-  void toggleNumbers() {
-    _updateAdvancedSettings(numbers: state.advancedCharacterSettings.numbers == false);
-  }
-
-  void toggleSpecial() {
-    _updateAdvancedSettings(special: state.advancedCharacterSettings.special == false);
-  }
-
-  void _updateAdvancedSettings({bool? lowercase, bool? uppercase, bool? numbers, bool? special}) {
-    PasswordCharactersConfig current = state.advancedCharacterSettings;
-    bool nextLowercase = lowercase ?? current.lowercase;
-    bool nextUppercase = uppercase ?? current.uppercase;
-    bool nextNumbers = numbers ?? current.numbers;
-    bool nextSpecial = special ?? current.special;
-    if (nextLowercase == false && nextUppercase == false && nextNumbers == false && nextSpecial == false) {
-      return;
-    }
-
-    PasswordCharactersConfig settings = PasswordCharactersConfig(
-      lowercase: nextLowercase,
-      uppercase: nextUppercase,
-      numbers: nextNumbers,
-      special: nextSpecial,
-    );
-    GeneratePasswordPageState nextState = state.copyWith(advancedCharacterSettings: settings);
-
-    if (state.characterSetMode == PasswordCharacterSetMode.advanced) {
-      _generatePassword(nextState);
-    } else {
-      emit(nextState);
-    }
+    _generatePassword(state.copyWith(passwordCharacterSetMode: passwordCharacterSetMode));
   }
 
   void changePasswordLevelType(PasswordLevelType passwordLevelType) {
-    if (state.passwordLevelTypeList.contains(passwordLevelType) == false || state.selectedPasswordLevelType == passwordLevelType) {
+    bool selectionUnavailableBool =
+        state.selectablePasswordLevels.contains(passwordLevelType) == false || state.selectedPasswordLevelType == passwordLevelType;
+    if (selectionUnavailableBool) {
       return;
     }
 
     _generatePassword(state.copyWith(selectedPasswordLevelType: passwordLevelType));
   }
 
-  void updateCustomPasswordLengthText(String text) {
-    if (state.customPasswordLength == text) {
-      return;
-    }
+  void generatePassword() {
+    _generatePassword(state);
+  }
 
-    GeneratePasswordPageState nextState = state.copyWith(customPasswordLength: text);
-    if (state.selectedPasswordLevelType == PasswordLevelType.custom) {
-      _generatePassword(nextState);
-    } else {
-      emit(nextState);
-    }
+  void init() {
+    generatePassword();
   }
 
   void selectCustomPasswordLevel() {
     changePasswordLevelType(PasswordLevelType.custom);
   }
 
-  void applyCustomPasswordLevel() {
-    if (state.selectedPasswordLevelType == PasswordLevelType.custom && state.passwordReadyBool == false) {
-      generatePassword();
-    }
+  bool shouldWarnPassword() {
+    return state.calculatedPasswordLevelType == PasswordLevelType.unsafe || state.calculatedPasswordLevelType == PasswordLevelType.weak;
+  }
+
+  void toggleLowercase() {
+    _updateAdvancedSettings(lowercaseBool: state.advancedPasswordCharactersConfig.lowercase == false);
+  }
+
+  void toggleNumbers() {
+    _updateAdvancedSettings(numbersBool: state.advancedPasswordCharactersConfig.numbers == false);
   }
 
   void toggleObscurePassword() {
-    emit(state.copyWith(obscurePasswordBool: !state.obscurePasswordBool));
+    emit(state.copyWith(obscurePasswordBool: state.obscurePasswordBool == false));
   }
 
-  void generatePassword() {
-    _generatePassword(state);
+  void toggleSpecial() {
+    _updateAdvancedSettings(specialBool: state.advancedPasswordCharactersConfig.special == false);
   }
 
-  void _generatePassword(GeneratePasswordPageState nextState) {
-    PasswordGeneratorConfig config = nextState.effectiveConfig;
-    int? length = nextState.resolvedPasswordLength;
-    if (length == null) {
+  void toggleUppercase() {
+    _updateAdvancedSettings(uppercaseBool: state.advancedPasswordCharactersConfig.uppercase == false);
+  }
+
+  void updateCustomLength(String customPasswordLength) {
+    bool matchingLengthBool = state.customPasswordLength == customPasswordLength;
+    if (matchingLengthBool) {
+      return;
+    }
+
+    GeneratePasswordPageState generatePasswordPageState = state.copyWith(customPasswordLength: customPasswordLength);
+    bool customLevelSelectedBool = state.selectedPasswordLevelType == PasswordLevelType.custom;
+    if (customLevelSelectedBool) {
+      _generatePassword(generatePasswordPageState);
+    } else {
+      emit(generatePasswordPageState);
+    }
+  }
+
+  PasswordLevelType _calculatePasswordLevel(double entropy) {
+    bool unsafeLevelBool = entropy < 80;
+    if (unsafeLevelBool) {
+      return PasswordLevelType.unsafe;
+    }
+
+    bool weakLevelBool = entropy < 112;
+    if (weakLevelBool) {
+      return PasswordLevelType.weak;
+    }
+
+    bool goodLevelBool = entropy < 128;
+    if (goodLevelBool) {
+      return PasswordLevelType.good;
+    }
+
+    bool excellentLevelBool = entropy < 256;
+    if (excellentLevelBool) {
+      return PasswordLevelType.excellent;
+    }
+
+    return PasswordLevelType.magnificent;
+  }
+
+  void _generatePassword(GeneratePasswordPageState generatePasswordPageState) {
+    PasswordGeneratorConfig passwordGeneratorConfig = generatePasswordPageState.passwordGeneratorConfig;
+    int? length = generatePasswordPageState.resolvedPasswordLength;
+    bool invalidLengthBool = length == null;
+    if (invalidLengthBool) {
       emit(
-        nextState.copyWith(
+        generatePasswordPageState.copyWith(
           password: '',
           passwordEntropy: 0,
           checksumCharacterCount: 0,
@@ -123,9 +131,9 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
       return;
     }
 
-    Password password = PasswordGenerator(config).generate(length);
+    Password password = PasswordGenerator(passwordGeneratorConfig).generate(length);
     emit(
-      nextState.copyWith(
+      generatePasswordPageState.copyWith(
         password: password.password,
         passwordEntropy: password.entropy,
         checksumCharacterCount: password.checksumCharacterCount,
@@ -135,23 +143,30 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
     );
   }
 
-  PasswordLevelType _calculatePasswordLevel(double entropy) {
-    if (entropy < 80) {
-      return PasswordLevelType.unsafe;
+  void _updateAdvancedSettings({bool? lowercaseBool, bool? uppercaseBool, bool? numbersBool, bool? specialBool}) {
+    PasswordCharactersConfig currentPasswordCharactersConfig = state.advancedPasswordCharactersConfig;
+    bool nextLowercaseBool = lowercaseBool ?? currentPasswordCharactersConfig.lowercase;
+    bool nextUppercaseBool = uppercaseBool ?? currentPasswordCharactersConfig.uppercase;
+    bool nextNumbersBool = numbersBool ?? currentPasswordCharactersConfig.numbers;
+    bool nextSpecialBool = specialBool ?? currentPasswordCharactersConfig.special;
+    bool emptyCharacterSetBool = nextLowercaseBool == false && nextUppercaseBool == false && nextNumbersBool == false && nextSpecialBool == false;
+    if (emptyCharacterSetBool) {
+      return;
     }
 
-    if (entropy < 112) {
-      return PasswordLevelType.weak;
-    }
+    PasswordCharactersConfig passwordCharactersConfig = PasswordCharactersConfig(
+      lowercase: nextLowercaseBool,
+      uppercase: nextUppercaseBool,
+      numbers: nextNumbersBool,
+      special: nextSpecialBool,
+    );
+    GeneratePasswordPageState generatePasswordPageState = state.copyWith(advancedPasswordCharactersConfig: passwordCharactersConfig);
 
-    if (entropy < 128) {
-      return PasswordLevelType.good;
+    bool advancedModeBool = state.passwordCharacterSetMode == PasswordCharacterSetMode.advanced;
+    if (advancedModeBool) {
+      _generatePassword(generatePasswordPageState);
+    } else {
+      emit(generatePasswordPageState);
     }
-
-    if (entropy < 256) {
-      return PasswordLevelType.excellent;
-    }
-
-    return PasswordLevelType.magnificent;
   }
 }

@@ -6,7 +6,7 @@ void main() {
   group('Tests of CustomPasswordLengthInputFormatter.formatEditUpdate()', () {
     test('Should [return NEW VALUE] if [new value EMPTY]', () {
       // Arrange
-      CustomPasswordLengthInputFormatter actualCustomPasswordLengthInputFormatter = CustomPasswordLengthInputFormatter();
+      CustomPasswordLengthInputFormatter actualCustomPasswordLengthInputFormatter = CustomPasswordLengthInputFormatter(maximumLength: 256);
 
       // Act
       TextEditingValue actualTextEditingValue = actualCustomPasswordLengthInputFormatter.formatEditUpdate(
@@ -22,7 +22,7 @@ void main() {
 
     test('Should [return NEW VALUE] if [new value < 256]', () {
       // Arrange
-      CustomPasswordLengthInputFormatter actualCustomPasswordLengthInputFormatter = CustomPasswordLengthInputFormatter();
+      CustomPasswordLengthInputFormatter actualCustomPasswordLengthInputFormatter = CustomPasswordLengthInputFormatter(maximumLength: 256);
 
       // Act
       TextEditingValue actualTextEditingValue = actualCustomPasswordLengthInputFormatter.formatEditUpdate(
@@ -38,7 +38,7 @@ void main() {
 
     test('Should [return OLD VALUE] if [new value > 256]', () {
       // Arrange
-      CustomPasswordLengthInputFormatter actualCustomPasswordLengthInputFormatter = CustomPasswordLengthInputFormatter();
+      CustomPasswordLengthInputFormatter actualCustomPasswordLengthInputFormatter = CustomPasswordLengthInputFormatter(maximumLength: 256);
 
       // Act
       TextEditingValue actualTextEditingValue = actualCustomPasswordLengthInputFormatter.formatEditUpdate(
@@ -54,7 +54,7 @@ void main() {
 
     test('Should [return OLD VALUE] if [new value STARTS WITH 0]', () {
       // Arrange
-      CustomPasswordLengthInputFormatter actualCustomPasswordLengthInputFormatter = CustomPasswordLengthInputFormatter();
+      CustomPasswordLengthInputFormatter actualCustomPasswordLengthInputFormatter = CustomPasswordLengthInputFormatter(maximumLength: 256);
 
       // Act
       TextEditingValue actualTextEditingValue = actualCustomPasswordLengthInputFormatter.formatEditUpdate(
@@ -70,7 +70,7 @@ void main() {
 
     test('Should [return OLD VALUE] if [new value NOT NUMBER]', () {
       // Arrange
-      CustomPasswordLengthInputFormatter actualCustomPasswordLengthInputFormatter = CustomPasswordLengthInputFormatter();
+      CustomPasswordLengthInputFormatter actualCustomPasswordLengthInputFormatter = CustomPasswordLengthInputFormatter(maximumLength: 256);
 
       // Act
       TextEditingValue actualTextEditingValue = actualCustomPasswordLengthInputFormatter.formatEditUpdate(
@@ -81,6 +81,27 @@ void main() {
       // Assert
       TextEditingValue expectedTextEditingValue = const TextEditingValue(text: '', selection: TextSelection(baseOffset: 0, extentOffset: 0));
 
+      expect(actualTextEditingValue, expectedTextEditingValue);
+    });
+    test('Rejects negative, signed, decimal and whitespace input', () {
+      CustomPasswordLengthInputFormatter actualCustomPasswordLengthInputFormatter = CustomPasswordLengthInputFormatter(maximumLength: 256);
+      TextEditingValue expectedTextEditingValue = const TextEditingValue(text: '25');
+      for (String invalidInput in <String>['-4', '+4', '4.5', ' 4', '04']) {
+        TextEditingValue actualTextEditingValue = actualCustomPasswordLengthInputFormatter.formatEditUpdate(
+          expectedTextEditingValue,
+          TextEditingValue(text: invalidInput),
+        );
+        expect(actualTextEditingValue, expectedTextEditingValue);
+      }
+    });
+
+    test('Accepts the maximum length', () {
+      CustomPasswordLengthInputFormatter actualCustomPasswordLengthInputFormatter = CustomPasswordLengthInputFormatter(maximumLength: 256);
+      TextEditingValue expectedTextEditingValue = const TextEditingValue(text: '256');
+      TextEditingValue actualTextEditingValue = actualCustomPasswordLengthInputFormatter.formatEditUpdate(
+        const TextEditingValue(text: '25'),
+        expectedTextEditingValue,
+      );
       expect(actualTextEditingValue, expectedTextEditingValue);
     });
   });

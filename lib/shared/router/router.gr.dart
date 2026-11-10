@@ -565,14 +565,14 @@ class EthereumTransactionDetailsRouteArgs {
 class GeneratePasswordRoute
     extends _i33.PageRouteInfo<GeneratePasswordRouteArgs> {
   GeneratePasswordRoute({
-    required _i44.PasswordCharacterSetMode characterSetMode,
+    required _i44.PasswordCharacterSetMode passwordCharacterSetMode,
     bool obscurePasswordBool = true,
     _i35.Key? key,
     List<_i33.PageRouteInfo>? children,
   }) : super(
          GeneratePasswordRoute.name,
          args: GeneratePasswordRouteArgs(
-           characterSetMode: characterSetMode,
+           passwordCharacterSetMode: passwordCharacterSetMode,
            obscurePasswordBool: obscurePasswordBool,
            key: key,
          ),
@@ -586,7 +586,7 @@ class GeneratePasswordRoute
     builder: (data) {
       final args = data.argsAs<GeneratePasswordRouteArgs>();
       return _i14.GeneratePasswordPage(
-        characterSetMode: args.characterSetMode,
+        passwordCharacterSetMode: args.passwordCharacterSetMode,
         obscurePasswordBool: args.obscurePasswordBool,
         key: args.key,
       );
@@ -596,12 +596,12 @@ class GeneratePasswordRoute
 
 class GeneratePasswordRouteArgs {
   const GeneratePasswordRouteArgs({
-    required this.characterSetMode,
+    required this.passwordCharacterSetMode,
     this.obscurePasswordBool = true,
     this.key,
   });
 
-  final _i44.PasswordCharacterSetMode characterSetMode;
+  final _i44.PasswordCharacterSetMode passwordCharacterSetMode;
 
   final bool obscurePasswordBool;
 
@@ -609,21 +609,23 @@ class GeneratePasswordRouteArgs {
 
   @override
   String toString() {
-    return 'GeneratePasswordRouteArgs{characterSetMode: $characterSetMode, obscurePasswordBool: $obscurePasswordBool, key: $key}';
+    return 'GeneratePasswordRouteArgs{passwordCharacterSetMode: $passwordCharacterSetMode, obscurePasswordBool: $obscurePasswordBool, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! GeneratePasswordRouteArgs) return false;
-    return characterSetMode == other.characterSetMode &&
+    return passwordCharacterSetMode == other.passwordCharacterSetMode &&
         obscurePasswordBool == other.obscurePasswordBool &&
         key == other.key;
   }
 
   @override
   int get hashCode =>
-      characterSetMode.hashCode ^ obscurePasswordBool.hashCode ^ key.hashCode;
+      passwordCharacterSetMode.hashCode ^
+      obscurePasswordBool.hashCode ^
+      key.hashCode;
 }
 
 /// generated route for

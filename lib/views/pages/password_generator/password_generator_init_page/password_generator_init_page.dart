@@ -21,7 +21,8 @@ class PasswordGeneratorInitPage extends StatelessWidget {
       customPopCallback: () {
         StackRouter? parentRouter = context.router.parent<StackRouter>();
 
-        if (parentRouter != null) {
+        bool parentAvailableBool = parentRouter != null;
+        if (parentAvailableBool) {
           parentRouter.maybePop();
         }
       },
@@ -32,13 +33,17 @@ class PasswordGeneratorInitPage extends StatelessWidget {
             children: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
-                onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.ascii)),
+                onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(passwordCharacterSetMode: PasswordCharacterSetMode.ascii)),
                 child: const Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     AssetIcon(AppIcons.password_generator_standard, size: 114),
                     SizedBox(height: 4),
-                    SizedBox(width: double.infinity, height: 34, child: Center(child: Text('STANDARD'))),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 34,
+                      child: Center(child: Text('STANDARD')),
+                    ),
                   ],
                 ),
               ),
@@ -64,13 +69,17 @@ class PasswordGeneratorInitPage extends StatelessWidget {
             children: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
-                onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.sip2)),
+                onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(passwordCharacterSetMode: PasswordCharacterSetMode.sip2)),
                 child: const Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     AssetIcon(AppIcons.password_generator_snggle, size: 114),
                     SizedBox(height: 4),
-                    SizedBox(width: double.infinity, height: 34, child: Center(child: Text('DISAMBIGUATED'))),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 34,
+                      child: Center(child: Text('DISAMBIGUATED')),
+                    ),
                   ],
                 ),
               ),
@@ -93,7 +102,7 @@ class PasswordGeneratorInitPage extends StatelessWidget {
           ),
           const Spacer(flex: 75),
           TextButton(
-            onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(characterSetMode: PasswordCharacterSetMode.advanced)),
+            onPressed: () => AutoRouter.of(context).push<String>(GeneratePasswordRoute(passwordCharacterSetMode: PasswordCharacterSetMode.advanced)),
             child: const Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
