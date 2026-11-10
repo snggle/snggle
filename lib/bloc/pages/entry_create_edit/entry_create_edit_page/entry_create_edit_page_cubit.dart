@@ -144,14 +144,11 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
 
   void _validateEmail() {
     String email = emailTextEditingController.text;
-    emit(state.copyWith(emailInvalidBool: email.isNotEmpty && _isValidEmail(email) == false));
-  }
-
-  bool _isValidEmail(String email) {
     bool atSignExistsBool = email.contains('@');
     bool atSignNotLastBool = email.endsWith('@') == false;
+    bool emailValidBool = atSignExistsBool && atSignNotLastBool;
 
-    return atSignExistsBool && atSignNotLastBool;
+    emit(state.copyWith(emailInvalidBool: email.isNotEmpty && emailValidBool == false));
   }
 
   void _updateEntryNameEmptyState() {
