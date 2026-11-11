@@ -116,11 +116,11 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
     }
 
     unawaited(entryDetailsPageCubit.refresh());
-    await _showModificationSuccessDialog();
+    _showModificationSuccessDialog();
   }
 
-  Future<void> _showModificationSuccessDialog() async {
-    await showDialog(
+  void _showModificationSuccessDialog() {
+    showDialog(
       context: context,
       barrierColor: Colors.transparent,
       builder: (BuildContext context) => CustomDialog(

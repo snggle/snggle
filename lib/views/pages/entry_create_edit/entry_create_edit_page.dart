@@ -135,13 +135,13 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
     );
   }
 
-  Future<void> _showDiscardDialog() async {
+  void _showDiscardDialog() {
     String discardMessage = switch (widget.entryPageType) {
       EntryPageType.edit => 'You will lose all changes made to this entry.',
       EntryPageType.create => 'You will lose all data in this entry.',
     };
 
-    await showDialog(
+    showDialog(
       context: context,
       useRootNavigator: true,
       builder: (BuildContext context) => CustomDialog(

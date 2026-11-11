@@ -151,7 +151,7 @@ class _EntryListPageState extends State<EntryListPage> {
     }
 
     unawaited(entryListPageCubit.refreshAll());
-    await _showCreationSuccessDialog();
+    _showCreationSuccessDialog();
   }
 
   Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
@@ -185,8 +185,8 @@ class _EntryListPageState extends State<EntryListPage> {
     }
   }
 
-  Future<void> _showCreationSuccessDialog() async {
-    await showDialog(
+  void _showCreationSuccessDialog() {
+    showDialog(
       context: context,
       barrierColor: Colors.transparent,
       builder: (BuildContext context) => CustomDialog(
