@@ -8,6 +8,8 @@ import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/entry_create_edit/entry_page_type.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
+import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
 import 'package:snggle/views/widgets/entry_form/entry_form.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
@@ -71,6 +73,9 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
             EntryPageType.create => 'CREATE ENTRY',
             EntryPageType.edit => 'EDIT ENTRY',
           },
+          popAvailableBool: false,
+          customSystemPopCallback: _showDiscardDialog,
+          customPopCallback: _showDiscardDialog,
           resizeToAvoidBottomInsetBool: true,
           body: KeyboardVisibilityBuilder(
             keyboardValueNotifier: keyboardValueNotifier,
@@ -103,7 +108,7 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
                         readOnlyBool: false,
                         entryNameEmptyBool: state.entryNameEmptyBool,
                         obscurePasswordBool: _obscurePasswordBool,
-                        onTogglePasswordVisibility: () => setState(() => _obscurePasswordBool = !_obscurePasswordBool),
+                        onTogglePasswordVisibility: () => setState(() => _obscurePasswordBool = _obscurePasswordBool == false),
                       ),
                       SizedBox(height: anyKeyboardVisibleBool ? 40 : 100),
                     ],
@@ -128,5 +133,38 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
         }
       },
     );
+  }
+
+  Future<void> _showDiscardDialog() async {
+    String discardMessage = switch (widget.entryPageType) {
+      EntryPageType.edit => 'You will lose all changes made to this entry.',
+      EntryPageType.create => 'You will lose all data in this entry.',
+    };
+
+    await showDialog(
+      context: context,
+      useRootNavigator: true,
+      builder: (BuildContext context) => CustomDialog(
+        title: 'Discard changes?',
+        content: Text(
+          discardMessage,
+          textAlign: TextAlign.center,
+        ),
+        options: <CustomDialogOption>[
+          CustomDialogOption(
+            label: 'Cancel',
+            onPressed: () {},
+          ),
+          CustomDialogOption(
+            label: 'Discard',
+            onPressed: _navigateBack,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _navigateBack() {
+    AutoRouter.of(context).pop();
   }
 }

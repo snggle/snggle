@@ -85,7 +85,7 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
                       passwordTextEditingController: entryDetailsPageCubit.passwordTextEditingController,
                       readOnlyBool: true,
                       obscurePasswordBool: _obscurePasswordBool,
-                      onTogglePasswordVisibility: () => setState(() => _obscurePasswordBool = !_obscurePasswordBool),
+                      onTogglePasswordVisibility: () => setState(() => _obscurePasswordBool = _obscurePasswordBool == false),
                     ),
                   ),
                 ),
@@ -109,7 +109,7 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
         )) ??
         false;
 
-    _obscurePasswordBool = true;
+    setState(() => _obscurePasswordBool = true);
 
     if (modificationSavedBool == false || mounted == false) {
       return;
