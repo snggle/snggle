@@ -29,9 +29,9 @@ class AutoLogoutSettingsPage extends StatelessWidget {
                   inactivityLogoutEnabledBool: autoLogoutState.inactivityLogoutEnabledBool,
                   inactivityLogoutEnabledValueChanged: (bool inactivityLogoutEnabledBool) =>
                       autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: inactivityLogoutEnabledBool),
-                  inactivityLogoutTimeout: autoLogoutState.inactivityLogoutTimeout,
-                  inactivityLogoutTimeoutValueChanged: (InactivityLogoutTimer? inactivityLogoutTimeout) =>
-                      _handleTimeoutChanged(buildContext, inactivityLogoutTimeout),
+                  inactivityLogoutTimer: autoLogoutState.inactivityLogoutTimer,
+                  inactivityLogoutTimerValueChanged: (InactivityLogoutTimer? inactivityLogoutTimer) =>
+                      _handleTimeoutChanged(buildContext, inactivityLogoutTimer),
                 ),
                 const Divider(height: 32, indent: 24, endIndent: 24),
                 BackgroundLogoutSettingsTile(
@@ -52,7 +52,7 @@ class AutoLogoutSettingsPage extends StatelessWidget {
     return buildContext.read<AutoLogoutCubit>().setBackgroundLogoutMode(backgroundLogoutMode: backgroundLogoutMode);
   }
 
-  Future<void> _handleTimeoutChanged(BuildContext buildContext, InactivityLogoutTimer? inactivityLogoutTimeout) async {
-    await buildContext.read<AutoLogoutCubit>().setInactivityLogoutTimeout(inactivityLogoutTimeout: inactivityLogoutTimeout!);
+  Future<void> _handleTimeoutChanged(BuildContext buildContext, InactivityLogoutTimer? inactivityLogoutTimer) async {
+    await buildContext.read<AutoLogoutCubit>().setInactivityLogoutTimer(inactivityLogoutTimer: inactivityLogoutTimer!);
   }
 }

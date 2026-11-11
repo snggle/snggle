@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/entities/auto_logout_settings_entity/auto_logout_settings_entity.dart';
+import 'package:snggle/infra/entities/settings_entity/settings_entity.dart';
 import 'package:snggle/infra/exceptions/parent_key_not_found_exception.dart';
 import 'package:snggle/infra/managers/filesystem_storage/filesystem_storage_root_dir.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
@@ -28,6 +28,19 @@ void main() {
   tearDown(() async {
     await testDatabase.close();
   });
+
+  Future<void> saveAutoLogoutSettings() async {
+    await globalLocator<IsarDatabaseManager>().perform((Isar isar) {
+      return isar.writeTxn(() async {
+        await isar.settings.put(
+          SettingsEntity()
+            ..backgroundLogoutModeName = 'off'
+            ..inactivityLogoutEnabledBool = true
+            ..inactivityLogoutTimerName = 'fiveMinutes',
+        );
+      });
+    });
+  }
 
   group('Tests of AppService.isPasswordValid()', () {
     test('Should [return TRUE] if [master key EXISTS] in database and given [password VALID]', () async {
@@ -57,8 +70,8 @@ void main() {
       await testDatabase.updateDatabaseMock(DatabaseMock.emptyDatabaseMock);
 
       // Assert
-      expect(
-        () => globalLocator<AppService>().isPasswordValid(PasswordModel.fromPlaintext('1111')),
+      await expectLater(
+        globalLocator<AppService>().isPasswordValid(PasswordModel.fromPlaintext('1111')),
         throwsA(isA<ParentKeyNotFoundException>()),
       );
     });
@@ -68,21 +81,20 @@ void main() {
     test('Should [preserve logout settings] if [user logs out]', () async {
       // Arrange
       await testDatabase.updateDatabaseMock(DatabaseMock.fullDatabaseMock);
+      await saveAutoLogoutSettings();
 
       // Act
       globalLocator<AppService>().logout();
 
       // Assert
-      AutoLogoutSettingsEntity? actualAutoLogoutSettingsEntity = await globalLocator<IsarDatabaseManager>().perform(
-        (Isar isar) => isar.autoLogoutSettings.get(
-          AutoLogoutSettingsEntity.autoLogoutSettingsId,
-        ),
+      SettingsEntity? actualAutoLogoutSettingsEntity = await globalLocator<IsarDatabaseManager>().perform(
+        (Isar isar) => isar.settings.get(SettingsEntity.settingsId),
       );
 
       expect(actualAutoLogoutSettingsEntity, isNotNull);
       expect(actualAutoLogoutSettingsEntity?.backgroundLogoutModeName, 'off');
       expect(actualAutoLogoutSettingsEntity?.inactivityLogoutEnabledBool, true);
-      expect(actualAutoLogoutSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');
+      expect(actualAutoLogoutSettingsEntity?.inactivityLogoutTimerName, 'fiveMinutes');
     });
   });
 
@@ -116,10 +128,7 @@ void main() {
       // Assert
       expect(Isar.getInstance(testDatabase.testSessionUUID), isNull);
 
-      expect(
-        () => globalLocator<IsarDatabaseManager>().perform((Isar isar) => isar.getSize()),
-        throwsA(isA<IsarError>()),
-      );
+      await expectLater(() async => globalLocator<IsarDatabaseManager>().perform((Isar isar) => isar.getSize()), throwsA(isA<IsarError>()));
     });
 
     test('Should [wipe data] and [clear session data]', () async {
@@ -140,49 +149,37 @@ void main() {
         name: 'WALLET 0',
       );
 
-      actualActiveWalletController.setActiveWallet(
-        walletModel: actualWalletModel,
-      );
+      actualActiveWalletController.setActiveWallet(walletModel: actualWalletModel);
 
       // Act
       await globalLocator<AppService>().wipeAll();
 
       // Assert
-      expect(
-        () async => actualMasterKeyController.encrypt('some_value'),
-        throwsA(
-          isA<Exception>().having(
-            (Exception exception) => exception.toString(),
-            'message',
-            contains('does not contain password'),
-          ),
-        ),
+      await expectLater(
+        actualMasterKeyController.encrypt('some_value'),
+        throwsA(isA<Exception>().having((Exception exception) => exception.toString(), 'message', contains('does not contain password'))),
       );
       expect(actualActiveWalletController.hasActiveWallet, false);
       expect(actualActiveWalletController.walletModel, null);
     });
+
     test('Should [remove logout settings] if [app data is wiped]', () async {
       // Arrange
       IsarDatabaseManager actualIsarDatabaseManager = globalLocator<IsarDatabaseManager>();
+      await saveAutoLogoutSettings();
 
-      AutoLogoutSettingsEntity? actualSettingsBeforeWipeEntity = await actualIsarDatabaseManager.perform(
-        (Isar isar) => isar.autoLogoutSettings.get(
-          AutoLogoutSettingsEntity.autoLogoutSettingsId,
-        ),
+      SettingsEntity? actualSettingsBeforeWipeEntity = await actualIsarDatabaseManager.perform(
+        (Isar isar) => isar.settings.get(SettingsEntity.settingsId),
       );
       expect(actualSettingsBeforeWipeEntity, isNotNull);
 
       // Act
       await globalLocator<AppService>().wipeAll();
-      await actualIsarDatabaseManager.initDatabase(
-        name: testDatabase.testSessionUUID,
-      );
+      await actualIsarDatabaseManager.initDatabase(name: testDatabase.testSessionUUID);
 
       // Assert
-      AutoLogoutSettingsEntity? actualSettingsAfterWipeEntity = await actualIsarDatabaseManager.perform(
-        (Isar isar) => isar.autoLogoutSettings.get(
-          AutoLogoutSettingsEntity.autoLogoutSettingsId,
-        ),
+      SettingsEntity? actualSettingsAfterWipeEntity = await actualIsarDatabaseManager.perform(
+        (Isar isar) => isar.settings.get(SettingsEntity.settingsId),
       );
       expect(actualSettingsAfterWipeEntity, isNull);
     });

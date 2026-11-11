@@ -6,19 +6,19 @@ class InactivityAutoLogoutSettingsTile extends StatelessWidget {
   const InactivityAutoLogoutSettingsTile({
     required this.inactivityLogoutEnabledBool,
     required this.inactivityLogoutEnabledValueChanged,
-    required this.inactivityLogoutTimeout,
-    required this.inactivityLogoutTimeoutValueChanged,
+    required this.inactivityLogoutTimer,
+    required this.inactivityLogoutTimerValueChanged,
     super.key,
   });
 
   final bool inactivityLogoutEnabledBool;
   final ValueChanged<bool>? inactivityLogoutEnabledValueChanged;
-  final InactivityLogoutTimer inactivityLogoutTimeout;
-  final ValueChanged<InactivityLogoutTimer?>? inactivityLogoutTimeoutValueChanged;
+  final InactivityLogoutTimer inactivityLogoutTimer;
+  final ValueChanged<InactivityLogoutTimer?>? inactivityLogoutTimerValueChanged;
 
   @override
   Widget build(BuildContext buildContext) {
-    bool timeoutSelectionEnabledBool = inactivityLogoutEnabledBool && inactivityLogoutTimeoutValueChanged != null;
+    bool timeoutSelectionEnabledBool = inactivityLogoutEnabledBool && inactivityLogoutTimerValueChanged != null;
 
     return Column(
       children: <Widget>[
@@ -36,8 +36,8 @@ class InactivityAutoLogoutSettingsTile extends StatelessWidget {
             duration: kThemeChangeDuration,
             child: DropdownButton<InactivityLogoutTimer>(
               key: ValueKey<bool>(timeoutSelectionEnabledBool),
-              value: inactivityLogoutTimeout,
-              onChanged: timeoutSelectionEnabledBool ? inactivityLogoutTimeoutValueChanged : null,
+              value: inactivityLogoutTimer,
+              onChanged: timeoutSelectionEnabledBool ? inactivityLogoutTimerValueChanged : null,
               items: const <DropdownMenuItem<InactivityLogoutTimer>>[
                 DropdownMenuItem<InactivityLogoutTimer>(
                   value: InactivityLogoutTimer.oneMinute,
