@@ -7,7 +7,7 @@ class AutoLogoutSettingsEntity {
   static const int autoLogoutSettingsId = 1;
 
   Id id = autoLogoutSettingsId;
-  bool inactivityLogoutEnabledBool = true;
-  String? inactivityLogoutTimeoutName;
+  bool inactivityLogoutEnabledBool = false;
+  String? inactivityLogoutTimerName;
   String? backgroundLogoutModeName;
 }

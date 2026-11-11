@@ -37,7 +37,7 @@ void main() {
         settingsEntity
           ..inactivityLogoutEnabledBool = false
           ..backgroundLogoutModeName = 'off'
-          ..inactivityLogoutTimeoutName = 'fiveMinutes';
+          ..inactivityLogoutTimerName = 'fiveMinutes';
       });
 
       AutoLogoutSettingsRepository restoredSettingsRepository = AutoLogoutSettingsRepository();
@@ -49,7 +49,7 @@ void main() {
       expect(actualSettingsEntity?.id, AutoLogoutSettingsEntity.autoLogoutSettingsId);
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.backgroundLogoutModeName, 'off');
-      expect(actualSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');
+      expect(actualSettingsEntity?.inactivityLogoutTimerName, 'fiveMinutes');
     });
   });
 
@@ -60,7 +60,7 @@ void main() {
         settingsEntity
           ..inactivityLogoutEnabledBool = false
           ..backgroundLogoutModeName = 'off'
-          ..inactivityLogoutTimeoutName = 'fiveMinutes';
+          ..inactivityLogoutTimerName = 'fiveMinutes';
       });
 
       // Assert
@@ -68,7 +68,7 @@ void main() {
       expect(actualSettingsEntity?.id, AutoLogoutSettingsEntity.autoLogoutSettingsId);
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.backgroundLogoutModeName, 'off');
-      expect(actualSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');
+      expect(actualSettingsEntity?.inactivityLogoutTimerName, 'fiveMinutes');
     });
 
     test('Should [preserve entity defaults] when [only one field is initially saved]', () async {
@@ -82,7 +82,7 @@ void main() {
       expect(actualSettingsEntity?.id, AutoLogoutSettingsEntity.autoLogoutSettingsId);
       expect(actualSettingsEntity?.backgroundLogoutModeName, 'off');
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, true);
-      expect(actualSettingsEntity?.inactivityLogoutTimeoutName, isNull);
+      expect(actualSettingsEntity?.inactivityLogoutTimerName, isNull);
     });
 
     test('Should [update existing settings] and [preserve untouched fields]', () async {
@@ -91,7 +91,7 @@ void main() {
         settingsEntity
           ..inactivityLogoutEnabledBool = false
           ..backgroundLogoutModeName = 'on'
-          ..inactivityLogoutTimeoutName = 'fiveMinutes';
+          ..inactivityLogoutTimerName = 'fiveMinutes';
       });
 
       // Act
@@ -104,7 +104,7 @@ void main() {
       expect(actualSettingsEntity?.id, AutoLogoutSettingsEntity.autoLogoutSettingsId);
       expect(actualSettingsEntity?.backgroundLogoutModeName, 'off');
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
-      expect(actualSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');
+      expect(actualSettingsEntity?.inactivityLogoutTimerName, 'fiveMinutes');
     });
 
     test('Should [preserve every change] when [different fields are saved simultaneously]', () async {
@@ -117,7 +117,7 @@ void main() {
           settingsEntity.backgroundLogoutModeName = 'off';
         }),
         actualSettingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
-          settingsEntity.inactivityLogoutTimeoutName = 'fiveMinutes';
+          settingsEntity.inactivityLogoutTimerName = 'fiveMinutes';
         }),
       ]);
 
@@ -126,7 +126,7 @@ void main() {
       expect(actualSettingsEntity?.id, AutoLogoutSettingsEntity.autoLogoutSettingsId);
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.backgroundLogoutModeName, 'off');
-      expect(actualSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');
+      expect(actualSettingsEntity?.inactivityLogoutTimerName, 'fiveMinutes');
     });
 
     test('Should [propagate the exception without creating settings] if [the callback throws]', () async {
@@ -151,7 +151,7 @@ void main() {
         settingsEntity
           ..inactivityLogoutEnabledBool = false
           ..backgroundLogoutModeName = 'off'
-          ..inactivityLogoutTimeoutName = 'fiveMinutes';
+          ..inactivityLogoutTimerName = 'fiveMinutes';
       });
 
       Exception expectedException = Exception('Settings update failed.');
@@ -162,7 +162,7 @@ void main() {
           settingsEntity
             ..inactivityLogoutEnabledBool = true
             ..backgroundLogoutModeName = 'on'
-            ..inactivityLogoutTimeoutName = 'oneMinute';
+            ..inactivityLogoutTimerName = 'oneMinute';
           throw expectedException;
         }),
         throwsA(same(expectedException)),
@@ -172,7 +172,7 @@ void main() {
       expect(actualSettingsEntity?.id, AutoLogoutSettingsEntity.autoLogoutSettingsId);
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.backgroundLogoutModeName, 'off');
-      expect(actualSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');
+      expect(actualSettingsEntity?.inactivityLogoutTimerName, 'fiveMinutes');
     });
   });
 }

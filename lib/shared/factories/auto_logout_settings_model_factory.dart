@@ -10,9 +10,9 @@ class AutoLogoutSettingsModelFactory {
       orElse: () => AutoLogoutSettingsModel.defaultBackgroundLogoutMode,
     );
 
-    InactivityLogoutTimer inactivityLogoutTimeout = InactivityLogoutTimer.values.firstWhere(
-      (InactivityLogoutTimer inactivityLogoutTimeout) => inactivityLogoutTimeout.name == settingsEntity?.inactivityLogoutTimeoutName,
-      orElse: () => AutoLogoutSettingsModel.defaultInactivityLogoutTimeout,
+    InactivityLogoutTimer inactivityLogoutTimer = InactivityLogoutTimer.values.firstWhere(
+      (InactivityLogoutTimer inactivityLogoutTimer) => inactivityLogoutTimer.name == settingsEntity?.inactivityLogoutTimerName,
+      orElse: () => AutoLogoutSettingsModel.defaultInactivityLogoutTimer,
     );
 
     bool inactivityLogoutEnabledBool = settingsEntity?.inactivityLogoutEnabledBool ?? AutoLogoutSettingsModel.defaultInactivityLogoutBool;
@@ -20,7 +20,7 @@ class AutoLogoutSettingsModelFactory {
     return AutoLogoutSettingsModel(
       inactivityLogoutBool: inactivityLogoutEnabledBool,
       backgroundLogoutMode: automaticLogoutMode,
-      inactivityLogoutTimeout: inactivityLogoutTimeout,
+      inactivityLogoutTimer: inactivityLogoutTimer,
     );
   }
 }

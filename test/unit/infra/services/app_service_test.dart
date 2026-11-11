@@ -82,7 +82,7 @@ void main() {
       expect(actualAutoLogoutSettingsEntity, isNotNull);
       expect(actualAutoLogoutSettingsEntity?.backgroundLogoutModeName, 'off');
       expect(actualAutoLogoutSettingsEntity?.inactivityLogoutEnabledBool, true);
-      expect(actualAutoLogoutSettingsEntity?.inactivityLogoutTimeoutName, 'fiveMinutes');
+      expect(actualAutoLogoutSettingsEntity?.inactivityLogoutTimerName, 'fiveMinutes');
     });
   });
 

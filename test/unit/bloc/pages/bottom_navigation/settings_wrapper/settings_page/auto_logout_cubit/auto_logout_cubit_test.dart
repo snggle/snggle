@@ -35,9 +35,9 @@ void main() {
     test('Should [use default settings] as initial state', () {
       // Arrange
       const AutoLogoutState expectedAutoLogoutState = AutoLogoutState(
-        inactivityLogoutEnabledBool: true,
+        inactivityLogoutEnabledBool: false,
         backgroundLogoutMode: BackgroundLogoutMode.on,
-        inactivityLogoutTimeout: InactivityLogoutTimer.oneMinute,
+        inactivityLogoutTimer: InactivityLogoutTimer.oneMinute,
       );
 
       // Assert
@@ -48,9 +48,9 @@ void main() {
       test('Should [use default settings] when [settings are not saved]', () async {
         // Arrange
         const AutoLogoutState expectedAutoLogoutState = AutoLogoutState(
-          inactivityLogoutEnabledBool: true,
+          inactivityLogoutEnabledBool: false,
           backgroundLogoutMode: BackgroundLogoutMode.on,
-          inactivityLogoutTimeout: InactivityLogoutTimer.oneMinute,
+          inactivityLogoutTimer: InactivityLogoutTimer.oneMinute,
         );
 
         // Act
@@ -65,9 +65,9 @@ void main() {
         await autoLogoutSettingsService.saveBackgroundLogoutMode(BackgroundLogoutMode.off);
 
         const AutoLogoutState expectedAutoLogoutState = AutoLogoutState(
-          inactivityLogoutEnabledBool: true,
+          inactivityLogoutEnabledBool: false,
           backgroundLogoutMode: BackgroundLogoutMode.off,
-          inactivityLogoutTimeout: InactivityLogoutTimer.oneMinute,
+          inactivityLogoutTimer: InactivityLogoutTimer.oneMinute,
         );
 
         // Act
@@ -79,14 +79,14 @@ void main() {
 
       test('Should [load saved settings] instead of [default settings]', () async {
         // Arrange
-        await autoLogoutSettingsService.saveInactivityEnabledBool(inactivityLogoutEnabledBool: false);
+        await autoLogoutSettingsService.saveInactivityEnabledBool(inactivityLogoutEnabledBool: true);
         await autoLogoutSettingsService.saveBackgroundLogoutMode(BackgroundLogoutMode.off);
-        await autoLogoutSettingsService.saveInactivityLogoutTimeout(InactivityLogoutTimer.fiveMinutes);
+        await autoLogoutSettingsService.saveInactivityLogoutTimer(InactivityLogoutTimer.fiveMinutes);
 
         const AutoLogoutState expectedAutoLogoutState = AutoLogoutState(
-          inactivityLogoutEnabledBool: false,
+          inactivityLogoutEnabledBool: true,
           backgroundLogoutMode: BackgroundLogoutMode.off,
-          inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes,
+          inactivityLogoutTimer: InactivityLogoutTimer.fiveMinutes,
         );
 
         // Act
@@ -97,7 +97,7 @@ void main() {
       });
     });
 
-    group('Tests of [AutoLogoutCubit.setAutomaticLogoutMode]', () {
+    group('Tests of [AutoLogoutCubit.setBackgroundLogoutMode]', () {
       for (BackgroundLogoutMode backgroundLogoutMode in BackgroundLogoutMode.values) {
         test('Should [save ${backgroundLogoutMode.name}] and [preserve inactivity settings]', () async {
           // Arrange
@@ -107,13 +107,13 @@ void main() {
 
           await autoLogoutSettingsService.saveBackgroundLogoutMode(initialAutomaticLogoutMode);
           await autoLogoutSettingsService.saveInactivityEnabledBool(inactivityLogoutEnabledBool: false);
-          await autoLogoutSettingsService.saveInactivityLogoutTimeout(InactivityLogoutTimer.fiveMinutes);
+          await autoLogoutSettingsService.saveInactivityLogoutTimer(InactivityLogoutTimer.fiveMinutes);
           await actualAutoLogoutCubit.init();
 
           AutoLogoutState expectedAutoLogoutState = AutoLogoutState(
             inactivityLogoutEnabledBool: false,
             backgroundLogoutMode: backgroundLogoutMode,
-            inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes,
+            inactivityLogoutTimer: InactivityLogoutTimer.fiveMinutes,
           );
 
           // Act
@@ -126,12 +126,12 @@ void main() {
 
           expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, backgroundLogoutMode);
           expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
-          expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, InactivityLogoutTimer.fiveMinutes);
+          expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.fiveMinutes);
         });
       }
     });
 
-    group('Tests of [AutoLogoutCubit.setInactivityEnabledBool]', () {
+    group('Tests of [AutoLogoutCubit.setInactivityEnabled]', () {
       for (bool inactivityLogoutEnabledBool in <bool>[false, true]) {
         test('Should [save $inactivityLogoutEnabledBool] and [preserve mode and timeout]', () async {
           // Arrange
@@ -139,13 +139,13 @@ void main() {
             inactivityLogoutEnabledBool: !inactivityLogoutEnabledBool,
           );
           await autoLogoutSettingsService.saveBackgroundLogoutMode(BackgroundLogoutMode.off);
-          await autoLogoutSettingsService.saveInactivityLogoutTimeout(InactivityLogoutTimer.fiveMinutes);
+          await autoLogoutSettingsService.saveInactivityLogoutTimer(InactivityLogoutTimer.fiveMinutes);
           await actualAutoLogoutCubit.init();
 
           AutoLogoutState expectedAutoLogoutState = AutoLogoutState(
             inactivityLogoutEnabledBool: inactivityLogoutEnabledBool,
             backgroundLogoutMode: BackgroundLogoutMode.off,
-            inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes,
+            inactivityLogoutTimer: InactivityLogoutTimer.fiveMinutes,
           );
 
           // Act
@@ -160,23 +160,23 @@ void main() {
 
           expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, inactivityLogoutEnabledBool);
           expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
-          expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, InactivityLogoutTimer.fiveMinutes);
+          expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.fiveMinutes);
         });
       }
     });
 
-    group('Tests of [AutoLogoutCubit.setInactivityLogoutTimeout]', () {
-      for (InactivityLogoutTimer inactivityLogoutTimeout in <InactivityLogoutTimer>[
+    group('Tests of [AutoLogoutCubit.setInactivityLogoutTimer]', () {
+      for (InactivityLogoutTimer inactivityLogoutTimer in <InactivityLogoutTimer>[
         InactivityLogoutTimer.oneMinute,
         InactivityLogoutTimer.fiveMinutes,
       ]) {
-        test('Should [save ${inactivityLogoutTimeout.name}] and [preserve logout switches]', () async {
+        test('Should [save ${inactivityLogoutTimer.name}] and [preserve logout switches]', () async {
           // Arrange
-          InactivityLogoutTimer initialInactivityLogoutTimeout = inactivityLogoutTimeout == InactivityLogoutTimer.oneMinute
+          InactivityLogoutTimer initialInactivityLogoutTimer = inactivityLogoutTimer == InactivityLogoutTimer.oneMinute
               ? InactivityLogoutTimer.fiveMinutes
               : InactivityLogoutTimer.oneMinute;
 
-          await autoLogoutSettingsService.saveInactivityLogoutTimeout(initialInactivityLogoutTimeout);
+          await autoLogoutSettingsService.saveInactivityLogoutTimer(initialInactivityLogoutTimer);
           await autoLogoutSettingsService.saveInactivityEnabledBool(inactivityLogoutEnabledBool: false);
           await autoLogoutSettingsService.saveBackgroundLogoutMode(BackgroundLogoutMode.off);
           await actualAutoLogoutCubit.init();
@@ -184,12 +184,12 @@ void main() {
           AutoLogoutState expectedAutoLogoutState = AutoLogoutState(
             inactivityLogoutEnabledBool: false,
             backgroundLogoutMode: BackgroundLogoutMode.off,
-            inactivityLogoutTimeout: inactivityLogoutTimeout,
+            inactivityLogoutTimer: inactivityLogoutTimer,
           );
 
           // Act
-          await actualAutoLogoutCubit.setInactivityLogoutTimeout(
-            inactivityLogoutTimeout: inactivityLogoutTimeout,
+          await actualAutoLogoutCubit.setInactivityLogoutTimer(
+            inactivityLogoutTimer: inactivityLogoutTimer,
           );
 
           // Assert
@@ -197,7 +197,7 @@ void main() {
 
           AutoLogoutSettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getAutoLogoutSettings();
 
-          expect(actualAutoLogoutSettingsModel.inactivityLogoutTimeout, inactivityLogoutTimeout);
+          expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, inactivityLogoutTimer);
           expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
           expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
         });
@@ -208,8 +208,8 @@ void main() {
       // Arrange
       await actualAutoLogoutCubit.setBackgroundLogoutMode(backgroundLogoutMode: BackgroundLogoutMode.off);
       await actualAutoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: false);
-      await actualAutoLogoutCubit.setInactivityLogoutTimeout(
-        inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes,
+      await actualAutoLogoutCubit.setInactivityLogoutTimer(
+        inactivityLogoutTimer: InactivityLogoutTimer.fiveMinutes,
       );
 
       AutoLogoutCubit restoredAutoLogoutCubit = AutoLogoutCubit();
@@ -218,7 +218,7 @@ void main() {
       const AutoLogoutState expectedAutoLogoutState = AutoLogoutState(
         inactivityLogoutEnabledBool: false,
         backgroundLogoutMode: BackgroundLogoutMode.off,
-        inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes,
+        inactivityLogoutTimer: InactivityLogoutTimer.fiveMinutes,
       );
 
       // Act

@@ -39,10 +39,6 @@ class AutoLogoutController {
     _cancelInactivityLogoutTimer();
   }
 
-  void handleUserInteraction() {
-    _restartInactivityLogoutTimer();
-  }
-
   void init() {
     _autoLogoutState = _autoLogoutCubit.state;
     _appLifecycleListener = AppLifecycleListener(onHide: _handleAppHidden);
@@ -50,6 +46,23 @@ class AutoLogoutController {
     _appRouter.addListener(_handleRouteChanged);
 
     _handleRouteChanged();
+  }
+
+  void handleUserInteraction() {
+    _cancelInactivityLogoutTimer();
+
+    bool inactivityLogoutBlockedBool = _autoLogoutState.inactivityLogoutEnabledBool == false || _appUnlockedBool == false || _logoutInProgressBool;
+    if (inactivityLogoutBlockedBool) {
+      return;
+    }
+
+    Duration inactivityLogoutDuration = switch (_autoLogoutState.inactivityLogoutTimer) {
+      InactivityLogoutTimer.oneMinute => const Duration(minutes: 1),
+      InactivityLogoutTimer.fiveMinutes => const Duration(minutes: 5),
+    };
+
+    _startDebugTimer(inactivityLogoutDuration);
+    _inactivityLogoutTimer = Timer(inactivityLogoutDuration, _handleLogout);
   }
 
   void _handleAppHidden() {
@@ -62,11 +75,11 @@ class AutoLogoutController {
   void _handleAutoLogoutChanged(AutoLogoutState autoLogoutState) {
     bool inactivitySettingsChangedBool =
         autoLogoutState.inactivityLogoutEnabledBool != _autoLogoutState.inactivityLogoutEnabledBool ||
-        autoLogoutState.inactivityLogoutTimeout != _autoLogoutState.inactivityLogoutTimeout;
+        autoLogoutState.inactivityLogoutTimer != _autoLogoutState.inactivityLogoutTimer;
     _autoLogoutState = autoLogoutState;
 
     if (inactivitySettingsChangedBool) {
-      _restartInactivityLogoutTimer();
+      handleUserInteraction();
     }
   }
 
@@ -80,7 +93,7 @@ class AutoLogoutController {
     _appUnlockedBool = unlockedBool;
 
     if (unlockedChangedBool) {
-      _restartInactivityLogoutTimer();
+      handleUserInteraction();
     }
   }
 
@@ -89,31 +102,6 @@ class AutoLogoutController {
         autoRoutePage.name == AppMasterKeyRemovedRoute.name ||
         autoRoutePage.name == AppMasterKeyCreateRoute.name ||
         autoRoutePage.name == AppMasterKeyRecoverRoute.name;
-  }
-
-  void _restartInactivityLogoutTimer() {
-    _cancelInactivityLogoutTimer();
-
-    bool inactivityLogoutBlockedBool = _autoLogoutState.inactivityLogoutEnabledBool == false || _appUnlockedBool == false || _logoutInProgressBool;
-    if (inactivityLogoutBlockedBool) {
-      return;
-    }
-
-    Duration inactivityLogoutDuration = _getInactivityLogoutDuration(_autoLogoutState.inactivityLogoutTimeout);
-
-    _startInactivityLogoutTimer(inactivityLogoutDuration);
-  }
-
-  Duration _getInactivityLogoutDuration(InactivityLogoutTimer inactivityLogoutTimeout) {
-    return switch (inactivityLogoutTimeout) {
-      InactivityLogoutTimer.oneMinute => const Duration(minutes: 1),
-      InactivityLogoutTimer.fiveMinutes => const Duration(minutes: 5),
-    };
-  }
-
-  void _startInactivityLogoutTimer(Duration inactivityLogoutDuration) {
-    _startDebugTimer(inactivityLogoutDuration);
-    _inactivityLogoutTimer = Timer(inactivityLogoutDuration, () => unawaited(_handleLogout()));
   }
 
   Future<void> _handleLogout() async {

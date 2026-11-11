@@ -29,10 +29,10 @@ class AutoLogoutSettingsService {
     );
   }
 
-  Future<void> saveInactivityLogoutTimeout(InactivityLogoutTimer inactivityLogoutTimer) {
+  Future<void> saveInactivityLogoutTimer(InactivityLogoutTimer inactivityLogoutTimer) {
     return _settingsRepository.saveSettings(
       (AutoLogoutSettingsEntity settingsEntity) {
-        settingsEntity.inactivityLogoutTimeoutName = inactivityLogoutTimer.name;
+        settingsEntity.inactivityLogoutTimerName = inactivityLogoutTimer.name;
       },
     );
   }
