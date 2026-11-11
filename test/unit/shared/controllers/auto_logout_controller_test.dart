@@ -110,6 +110,11 @@ void main() {
     }
   }
 
+  Future<void> enableInactivityLogout() async {
+    await testWidgetsFlutterBinding.runAsync(() => autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: true));
+    await testWidgetsFlutterBinding.pump();
+  }
+
   Future<void> navigateToAuthenticatedRoute() async {
     await appRouter.replaceAll(<PageRouteInfo>[BottomNavigationRoute()]);
     expect(appRouter.stack, hasLength(1));
@@ -136,6 +141,7 @@ void main() {
   group('Tests of AutoLogoutController.init()', () {
     controllerTest('Should [not start the timer] before the first authenticated route', () async {
       // Arrange
+      await enableInactivityLogout();
       initController();
 
       // Act
@@ -148,6 +154,7 @@ void main() {
 
     controllerTest('Should [start the timer] after navigating from PIN authentication to the app', () async {
       // Arrange
+      await enableInactivityLogout();
       await appRouter.replaceAll(<PageRouteInfo>[AppPinAuthRoute()]);
       initController();
       await pumpElapsed(const Duration(minutes: 6));
@@ -167,41 +174,58 @@ void main() {
       expectAppLoggedOut();
     });
 
-    for (MapEntry<InactivityLogoutTimer, Duration> timeoutMapEntry in const <InactivityLogoutTimer, Duration>{
-      InactivityLogoutTimer.oneMinute: Duration(minutes: 1),
-      InactivityLogoutTimer.fiveMinutes: Duration(minutes: 5),
-    }.entries) {
-      controllerTest('Should [logout after ${timeoutMapEntry.key.name}] on an authenticated route', () async {
-        // Arrange
-        await testWidgetsFlutterBinding.runAsync(() async {
-          await autoLogoutCubit.setInactivityLogoutTimeout(inactivityLogoutTimeout: timeoutMapEntry.key);
-        });
-        await navigateToAuthenticatedRoute();
-
-        // Act
-        initController();
-        await pumpElapsed(timeoutMapEntry.value - const Duration(seconds: 1));
-
-        // Assert
-        expectSessionPreserved();
-
-        // Act
-        await pumpElapsed(const Duration(seconds: 1));
-
-        // Assert
-        expectAppLoggedOut();
-      });
-    }
-
-    controllerTest('Should [not logout] when inactivity logout is disabled', () async {
+    controllerTest('Should [logout after oneMinute] on an authenticated route', () async {
       // Arrange
+      await enableInactivityLogout();
       await testWidgetsFlutterBinding.runAsync(() async {
-        await autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: false);
+        await autoLogoutCubit.setInactivityLogoutTimer(inactivityLogoutTimer: InactivityLogoutTimer.oneMinute);
       });
       await navigateToAuthenticatedRoute();
 
       // Act
       initController();
+      await pumpElapsed(const Duration(minutes: 1) - const Duration(seconds: 1));
+
+      // Assert
+      expectSessionPreserved();
+
+      // Act
+      await pumpElapsed(const Duration(seconds: 1));
+
+      // Assert
+      expectAppLoggedOut();
+    });
+
+    controllerTest('Should [logout after fiveMinutes] on an authenticated route', () async {
+      // Arrange
+      await enableInactivityLogout();
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setInactivityLogoutTimer(inactivityLogoutTimer: InactivityLogoutTimer.fiveMinutes);
+      });
+      await navigateToAuthenticatedRoute();
+
+      // Act
+      initController();
+      await pumpElapsed(const Duration(minutes: 5) - const Duration(seconds: 1));
+
+      // Assert
+      expectSessionPreserved();
+
+      // Act
+      await pumpElapsed(const Duration(seconds: 1));
+
+      // Assert
+      expectAppLoggedOut();
+    });
+
+    controllerTest('Should [keep inactivity logout disabled] by default', () async {
+      // Arrange
+      expect(autoLogoutCubit.state.inactivityLogoutEnabledBool, false);
+      await navigateToAuthenticatedRoute();
+
+      // Act
+      initController();
+      autoLogoutController.handleUserInteraction();
       await pumpElapsed(const Duration(minutes: 6));
 
       // Assert
@@ -211,6 +235,7 @@ void main() {
 
     controllerTest('Should [not start the timer] while reading privacy policy on first launch', () async {
       // Arrange
+      await enableInactivityLogout();
       await appRouter.replaceAll(<PageRouteInfo>[const SplashRoute(), const PrivacyPolicyRoute()]);
       initController();
 
@@ -223,30 +248,56 @@ void main() {
       expect(appRouter.stack.last.name, PrivacyPolicyRoute.name);
     });
 
-    for (MapEntry<String, PageRouteInfo> lockedRoute in <String, PageRouteInfo>{
-      'removed MasterKey': const AppMasterKeyRemovedRoute(),
-      'MasterKey creation': const AppMasterKeyCreateRoute(),
-      'MasterKey recovery': const AppMasterKeyRecoverRoute(),
-    }.entries) {
-      controllerTest('Should [not start the timer] during ${lockedRoute.key}', () async {
-        // Arrange
-        await appRouter.replaceAll(<PageRouteInfo>[lockedRoute.value]);
-        initController();
+    controllerTest('Should [not start the timer] during removed MasterKey', () async {
+      // Arrange
+      await enableInactivityLogout();
+      await appRouter.replaceAll(<PageRouteInfo>[const AppMasterKeyRemovedRoute()]);
+      initController();
 
-        // Act
-        autoLogoutController.handleUserInteraction();
-        await pumpElapsed(const Duration(minutes: 6));
+      // Act
+      autoLogoutController.handleUserInteraction();
+      await pumpElapsed(const Duration(minutes: 6));
 
-        // Assert
-        expectSessionPreserved();
-        expect(appRouter.stack.single.name, lockedRoute.value.routeName);
-      });
-    }
+      // Assert
+      expectSessionPreserved();
+      expect(appRouter.stack.single.name, AppMasterKeyRemovedRoute.name);
+    });
+
+    controllerTest('Should [not start the timer] during MasterKey creation', () async {
+      // Arrange
+      await enableInactivityLogout();
+      await appRouter.replaceAll(<PageRouteInfo>[const AppMasterKeyCreateRoute()]);
+      initController();
+
+      // Act
+      autoLogoutController.handleUserInteraction();
+      await pumpElapsed(const Duration(minutes: 6));
+
+      // Assert
+      expectSessionPreserved();
+      expect(appRouter.stack.single.name, AppMasterKeyCreateRoute.name);
+    });
+
+    controllerTest('Should [not start the timer] during MasterKey recovery', () async {
+      // Arrange
+      await enableInactivityLogout();
+      await appRouter.replaceAll(<PageRouteInfo>[const AppMasterKeyRecoverRoute()]);
+      initController();
+
+      // Act
+      autoLogoutController.handleUserInteraction();
+      await pumpElapsed(const Duration(minutes: 6));
+
+      // Assert
+      expectSessionPreserved();
+      expect(appRouter.stack.single.name, AppMasterKeyRecoverRoute.name);
+    });
   });
 
   group('Tests of AutoLogoutController.handleUserInteraction()', () {
     controllerTest('Should [restart the full timeout] after user interaction', () async {
       // Arrange
+      await enableInactivityLogout();
       await navigateToAuthenticatedRoute();
       initController();
       await pumpElapsed(const Duration(seconds: 30));
@@ -267,6 +318,7 @@ void main() {
 
     controllerTest('Should [not restart the timer] after manual logout to the PIN screen', () async {
       // Arrange
+      await enableInactivityLogout();
       await navigateToAuthenticatedRoute();
       initController();
       await pumpElapsed(const Duration(seconds: 30));
@@ -284,6 +336,7 @@ void main() {
 
     controllerTest('Should [restart the timer] after logging in again following automatic logout', () async {
       // Arrange
+      await enableInactivityLogout();
       await navigateToAuthenticatedRoute();
       initController();
       await pumpElapsed(const Duration(minutes: 1));
@@ -308,6 +361,7 @@ void main() {
   group('Tests of AutoLogoutController route changes', () {
     controllerTest('Should [keep the timer running] during Change Application PIN', () async {
       // Arrange
+      await enableInactivityLogout();
       await navigateToAuthenticatedRoute();
       initController();
       await pumpElapsed(const Duration(seconds: 30));
@@ -332,6 +386,7 @@ void main() {
 
     controllerTest('Should [keep the timer running] while privacy policy is opened from Settings', () async {
       // Arrange
+      await enableInactivityLogout();
       await navigateToAuthenticatedRoute();
       initController();
       await pumpElapsed(const Duration(seconds: 30));
@@ -354,6 +409,7 @@ void main() {
 
     controllerTest('Should [pause the timer] when a locked route is pushed over the authenticated stack', () async {
       // Arrange
+      await enableInactivityLogout();
       await navigateToAuthenticatedRoute();
       initController();
       await pumpElapsed(const Duration(seconds: 30));
@@ -383,6 +439,7 @@ void main() {
 
     controllerTest('Should [cancel the timer] after navigating away from the authenticated stack', () async {
       // Arrange
+      await enableInactivityLogout();
       await navigateToAuthenticatedRoute();
       initController();
       await pumpElapsed(const Duration(seconds: 30));
@@ -400,6 +457,7 @@ void main() {
   group('Tests of AutoLogoutController settings updates', () {
     controllerTest('Should [cancel logout when disabled] and [restart it when enabled]', () async {
       // Arrange
+      await enableInactivityLogout();
       await navigateToAuthenticatedRoute();
       initController();
       await pumpElapsed(const Duration(seconds: 30));
@@ -433,13 +491,14 @@ void main() {
 
     controllerTest('Should [replace the pending timeout] when its duration changes', () async {
       // Arrange
+      await enableInactivityLogout();
       await navigateToAuthenticatedRoute();
       initController();
       await pumpElapsed(const Duration(seconds: 30));
 
       // Act
       await testWidgetsFlutterBinding.runAsync(() async {
-        await autoLogoutCubit.setInactivityLogoutTimeout(inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes);
+        await autoLogoutCubit.setInactivityLogoutTimer(inactivityLogoutTimer: InactivityLogoutTimer.fiveMinutes);
       });
       await testWidgetsFlutterBinding.pump();
       await pumpElapsed(const Duration(minutes: 4, seconds: 59));
@@ -456,6 +515,7 @@ void main() {
 
     controllerTest('Should [preserve the pending timeout] when only background logout changes', () async {
       // Arrange
+      await enableInactivityLogout();
       await navigateToAuthenticatedRoute();
       initController();
       await pumpElapsed(const Duration(seconds: 30));
@@ -484,7 +544,7 @@ void main() {
 
       // Act
       await testWidgetsFlutterBinding.runAsync(() async {
-        await autoLogoutCubit.setInactivityLogoutTimeout(inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes);
+        await autoLogoutCubit.setInactivityLogoutTimer(inactivityLogoutTimer: InactivityLogoutTimer.fiveMinutes);
         await autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: false);
         await autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: true);
       });
@@ -501,9 +561,7 @@ void main() {
   group('Tests of AutoLogoutController background logout', () {
     controllerTest('Should [logout when hidden] but [not when only inactive]', () async {
       // Arrange
-      await testWidgetsFlutterBinding.runAsync(() async {
-        await autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: false);
-      });
+      expect(autoLogoutCubit.state.inactivityLogoutEnabledBool, false);
       await navigateToAuthenticatedRoute();
       initController();
 
@@ -524,9 +582,7 @@ void main() {
 
     controllerTest('Should [not logout when hidden] after background logout is disabled', () async {
       // Arrange
-      await testWidgetsFlutterBinding.runAsync(() async {
-        await autoLogoutCubit.setInactivityEnabled(inactivityLogoutEnabledBool: false);
-      });
+      expect(autoLogoutCubit.state.inactivityLogoutEnabledBool, false);
       await navigateToAuthenticatedRoute();
       initController();
 
@@ -565,6 +621,7 @@ void main() {
   group('Tests of AutoLogoutController.dispose()', () {
     controllerTest('Should [cancel the timer] and [remove route, settings and lifecycle listeners]', () async {
       // Arrange
+      await enableInactivityLogout();
       await navigateToAuthenticatedRoute();
       initController();
       await pumpElapsed(const Duration(seconds: 30));
@@ -572,7 +629,7 @@ void main() {
       // Act
       disposeController();
       await testWidgetsFlutterBinding.runAsync(() async {
-        await autoLogoutCubit.setInactivityLogoutTimeout(inactivityLogoutTimeout: InactivityLogoutTimer.fiveMinutes);
+        await autoLogoutCubit.setInactivityLogoutTimer(inactivityLogoutTimer: InactivityLogoutTimer.fiveMinutes);
       });
       await appRouter.replaceAll(<PageRouteInfo>[const SplashRoute()]);
       await navigateToAuthenticatedRoute();

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auto_logout_settings_entity.dart';
+part of 'settings_entity.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,94 +9,101 @@ part of 'auto_logout_settings_entity.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetAutoLogoutSettingsEntityCollection on Isar {
-  IsarCollection<AutoLogoutSettingsEntity> get autoLogoutSettings =>
-      this.collection();
+extension GetSettingsEntityCollection on Isar {
+  IsarCollection<SettingsEntity> get settings => this.collection();
 }
 
-const AutoLogoutSettingsEntitySchema = CollectionSchema(
-  name: r'AutoLogoutSettingsEntity',
-  id: -4497747896893334149,
+const SettingsEntitySchema = CollectionSchema(
+  name: r'SettingsEntity',
+  id: -7271317039764597112,
   properties: {
     r'backgroundLogoutModeName': PropertySchema(
       id: 0,
       name: r'backgroundLogoutModeName',
       type: IsarType.string,
+      enumMap: _SettingsEntitybackgroundLogoutModeEnumValueMap,
     ),
     r'inactivityLogoutEnabledBool': PropertySchema(
       id: 1,
       name: r'inactivityLogoutEnabledBool',
       type: IsarType.bool,
     ),
-    r'inactivityLogoutTimeoutName': PropertySchema(
+    r'inactivityLogoutTimerName': PropertySchema(
       id: 2,
-      name: r'inactivityLogoutTimeoutName',
+      name: r'inactivityLogoutTimerName',
       type: IsarType.string,
+      enumMap: _SettingsEntityinactivityLogoutTimerEnumValueMap,
     ),
   },
 
-  estimateSize: _autoLogoutSettingsEntityEstimateSize,
-  serialize: _autoLogoutSettingsEntitySerialize,
-  deserialize: _autoLogoutSettingsEntityDeserialize,
-  deserializeProp: _autoLogoutSettingsEntityDeserializeProp,
+  estimateSize: _settingsEntityEstimateSize,
+  serialize: _settingsEntitySerialize,
+  deserialize: _settingsEntityDeserialize,
+  deserializeProp: _settingsEntityDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {},
   embeddedSchemas: {},
 
-  getId: _autoLogoutSettingsEntityGetId,
-  getLinks: _autoLogoutSettingsEntityGetLinks,
-  attach: _autoLogoutSettingsEntityAttach,
+  getId: _settingsEntityGetId,
+  getLinks: _settingsEntityGetLinks,
+  attach: _settingsEntityAttach,
   version: '3.3.2',
 );
 
-int _autoLogoutSettingsEntityEstimateSize(
-  AutoLogoutSettingsEntity object,
+int _settingsEntityEstimateSize(
+  SettingsEntity object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
   {
-    final value = object.backgroundLogoutModeName;
+    final value = object.backgroundLogoutMode;
     if (value != null) {
-      bytesCount += 3 + value.length * 3;
+      bytesCount += 3 + value.name.length * 3;
     }
   }
   {
-    final value = object.inactivityLogoutTimeoutName;
+    final value = object.inactivityLogoutTimer;
     if (value != null) {
-      bytesCount += 3 + value.length * 3;
+      bytesCount += 3 + value.name.length * 3;
     }
   }
   return bytesCount;
 }
 
-void _autoLogoutSettingsEntitySerialize(
-  AutoLogoutSettingsEntity object,
+void _settingsEntitySerialize(
+  SettingsEntity object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.backgroundLogoutModeName);
+  writer.writeString(offsets[0], object.backgroundLogoutMode?.name);
   writer.writeBool(offsets[1], object.inactivityLogoutEnabledBool);
-  writer.writeString(offsets[2], object.inactivityLogoutTimeoutName);
+  writer.writeString(offsets[2], object.inactivityLogoutTimer?.name);
 }
 
-AutoLogoutSettingsEntity _autoLogoutSettingsEntityDeserialize(
+SettingsEntity _settingsEntityDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = AutoLogoutSettingsEntity();
-  object.backgroundLogoutModeName = reader.readStringOrNull(offsets[0]);
+  final object = SettingsEntity();
+  object.backgroundLogoutMode =
+      _SettingsEntitybackgroundLogoutModeValueEnumMap[reader.readStringOrNull(
+        offsets[0],
+      )];
   object.id = id;
   object.inactivityLogoutEnabledBool = reader.readBool(offsets[1]);
-  object.inactivityLogoutTimeoutName = reader.readStringOrNull(offsets[2]);
+  object.inactivityLogoutTimer =
+      _SettingsEntityinactivityLogoutTimerValueEnumMap[reader.readStringOrNull(
+        offsets[2],
+      )];
   return object;
 }
 
-P _autoLogoutSettingsEntityDeserializeProp<P>(
+P _settingsEntityDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -104,73 +111,75 @@ P _autoLogoutSettingsEntityDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readStringOrNull(offset)) as P;
+      return (_SettingsEntitybackgroundLogoutModeValueEnumMap[reader
+              .readStringOrNull(offset)])
+          as P;
     case 1:
       return (reader.readBool(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
+      return (_SettingsEntityinactivityLogoutTimerValueEnumMap[reader
+              .readStringOrNull(offset)])
+          as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Id _autoLogoutSettingsEntityGetId(AutoLogoutSettingsEntity object) {
+const _SettingsEntitybackgroundLogoutModeEnumValueMap = {
+  r'on': r'on',
+  r'off': r'off',
+};
+const _SettingsEntitybackgroundLogoutModeValueEnumMap = {
+  r'on': BackgroundLogoutMode.on,
+  r'off': BackgroundLogoutMode.off,
+};
+const _SettingsEntityinactivityLogoutTimerEnumValueMap = {
+  r'oneMinute': r'oneMinute',
+  r'fiveMinutes': r'fiveMinutes',
+};
+const _SettingsEntityinactivityLogoutTimerValueEnumMap = {
+  r'oneMinute': InactivityLogoutTimer.oneMinute,
+  r'fiveMinutes': InactivityLogoutTimer.fiveMinutes,
+};
+
+Id _settingsEntityGetId(SettingsEntity object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _autoLogoutSettingsEntityGetLinks(
-  AutoLogoutSettingsEntity object,
-) {
+List<IsarLinkBase<dynamic>> _settingsEntityGetLinks(SettingsEntity object) {
   return [];
 }
 
-void _autoLogoutSettingsEntityAttach(
+void _settingsEntityAttach(
   IsarCollection<dynamic> col,
   Id id,
-  AutoLogoutSettingsEntity object,
+  SettingsEntity object,
 ) {
   object.id = id;
 }
 
-extension AutoLogoutSettingsEntityQueryWhereSort
-    on
-        QueryBuilder<
-          AutoLogoutSettingsEntity,
-          AutoLogoutSettingsEntity,
-          QWhere
-        > {
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterWhere>
-  anyId() {
+extension SettingsEntityQueryWhereSort
+    on QueryBuilder<SettingsEntity, SettingsEntity, QWhere> {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension AutoLogoutSettingsEntityQueryWhere
-    on
-        QueryBuilder<
-          AutoLogoutSettingsEntity,
-          AutoLogoutSettingsEntity,
-          QWhereClause
-        > {
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterWhereClause
-  >
-  idEqualTo(Id id) {
+extension SettingsEntityQueryWhere
+    on QueryBuilder<SettingsEntity, SettingsEntity, QWhereClause> {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterWhereClause> idEqualTo(
+    Id id,
+  ) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterWhereClause
-  >
-  idNotEqualTo(Id id) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterWhereClause> idNotEqualTo(
+    Id id,
+  ) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -192,12 +201,10 @@ extension AutoLogoutSettingsEntityQueryWhere
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterWhereClause
-  >
-  idGreaterThan(Id id, {bool include = false}) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterWhereClause> idGreaterThan(
+    Id id, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -205,12 +212,10 @@ extension AutoLogoutSettingsEntityQueryWhere
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterWhereClause
-  >
-  idLessThan(Id id, {bool include = false}) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterWhereClause> idLessThan(
+    Id id, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -218,12 +223,7 @@ extension AutoLogoutSettingsEntityQueryWhere
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterWhereClause
-  >
-  idBetween(
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -242,19 +242,10 @@ extension AutoLogoutSettingsEntityQueryWhere
   }
 }
 
-extension AutoLogoutSettingsEntityQueryFilter
-    on
-        QueryBuilder<
-          AutoLogoutSettingsEntity,
-          AutoLogoutSettingsEntity,
-          QFilterCondition
-        > {
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  backgroundLogoutModeNameIsNull() {
+extension SettingsEntityQueryFilter
+    on QueryBuilder<SettingsEntity, SettingsEntity, QFilterCondition> {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  backgroundLogoutModeIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         const FilterCondition.isNull(property: r'backgroundLogoutModeName'),
@@ -262,12 +253,8 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  backgroundLogoutModeNameIsNotNull() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  backgroundLogoutModeIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         const FilterCondition.isNotNull(property: r'backgroundLogoutModeName'),
@@ -275,12 +262,11 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  backgroundLogoutModeNameEqualTo(String? value, {bool caseSensitive = true}) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  backgroundLogoutModeEqualTo(
+    BackgroundLogoutMode? value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.equalTo(
@@ -292,13 +278,9 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  backgroundLogoutModeNameGreaterThan(
-    String? value, {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  backgroundLogoutModeGreaterThan(
+    BackgroundLogoutMode? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -314,13 +296,9 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  backgroundLogoutModeNameLessThan(
-    String? value, {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  backgroundLogoutModeLessThan(
+    BackgroundLogoutMode? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -336,14 +314,10 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  backgroundLogoutModeNameBetween(
-    String? lower,
-    String? upper, {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  backgroundLogoutModeBetween(
+    BackgroundLogoutMode? lower,
+    BackgroundLogoutMode? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -362,15 +336,8 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  backgroundLogoutModeNameStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  backgroundLogoutModeStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.startsWith(
@@ -382,12 +349,8 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  backgroundLogoutModeNameEndsWith(String value, {bool caseSensitive = true}) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  backgroundLogoutModeEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.endsWith(
@@ -399,12 +362,8 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  backgroundLogoutModeNameContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  backgroundLogoutModeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.contains(
@@ -416,12 +375,8 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  backgroundLogoutModeNameMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  backgroundLogoutModeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.matches(
@@ -433,12 +388,8 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  backgroundLogoutModeNameIsEmpty() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  backgroundLogoutModeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.equalTo(
@@ -449,12 +400,8 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  backgroundLogoutModeNameIsNotEmpty() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  backgroundLogoutModeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.greaterThan(
@@ -465,12 +412,9 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  idEqualTo(Id value) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition> idEqualTo(
+    Id value,
+  ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.equalTo(property: r'id', value: value),
@@ -478,11 +422,7 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
   idGreaterThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -495,11 +435,7 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
   idLessThan(Id value, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -512,12 +448,7 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  idBetween(
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -536,11 +467,7 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
   inactivityLogoutEnabledBoolEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
@@ -552,47 +479,33 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  inactivityLogoutTimeoutNameIsNull() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  inactivityLogoutTimerIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'inactivityLogoutTimeoutName'),
+        const FilterCondition.isNull(property: r'inactivityLogoutTimerName'),
       );
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  inactivityLogoutTimeoutNameIsNotNull() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  inactivityLogoutTimerIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        const FilterCondition.isNotNull(
-          property: r'inactivityLogoutTimeoutName',
-        ),
+        const FilterCondition.isNotNull(property: r'inactivityLogoutTimerName'),
       );
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  inactivityLogoutTimeoutNameEqualTo(
-    String? value, {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  inactivityLogoutTimerEqualTo(
+    InactivityLogoutTimer? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.equalTo(
-          property: r'inactivityLogoutTimeoutName',
+          property: r'inactivityLogoutTimerName',
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -600,13 +513,9 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  inactivityLogoutTimeoutNameGreaterThan(
-    String? value, {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  inactivityLogoutTimerGreaterThan(
+    InactivityLogoutTimer? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -614,7 +523,7 @@ extension AutoLogoutSettingsEntityQueryFilter
       return query.addFilterCondition(
         FilterCondition.greaterThan(
           include: include,
-          property: r'inactivityLogoutTimeoutName',
+          property: r'inactivityLogoutTimerName',
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -622,13 +531,9 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  inactivityLogoutTimeoutNameLessThan(
-    String? value, {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  inactivityLogoutTimerLessThan(
+    InactivityLogoutTimer? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -636,7 +541,7 @@ extension AutoLogoutSettingsEntityQueryFilter
       return query.addFilterCondition(
         FilterCondition.lessThan(
           include: include,
-          property: r'inactivityLogoutTimeoutName',
+          property: r'inactivityLogoutTimerName',
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -644,14 +549,10 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  inactivityLogoutTimeoutNameBetween(
-    String? lower,
-    String? upper, {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  inactivityLogoutTimerBetween(
+    InactivityLogoutTimer? lower,
+    InactivityLogoutTimer? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -659,7 +560,7 @@ extension AutoLogoutSettingsEntityQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.between(
-          property: r'inactivityLogoutTimeoutName',
+          property: r'inactivityLogoutTimerName',
           lower: lower,
           includeLower: includeLower,
           upper: upper,
@@ -670,19 +571,12 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  inactivityLogoutTimeoutNameStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  inactivityLogoutTimerStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.startsWith(
-          property: r'inactivityLogoutTimeoutName',
+          property: r'inactivityLogoutTimerName',
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -690,19 +584,12 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  inactivityLogoutTimeoutNameEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  inactivityLogoutTimerEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.endsWith(
-          property: r'inactivityLogoutTimeoutName',
+          property: r'inactivityLogoutTimerName',
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -710,19 +597,12 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  inactivityLogoutTimeoutNameContains(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  inactivityLogoutTimerContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.contains(
-          property: r'inactivityLogoutTimeoutName',
+          property: r'inactivityLogoutTimerName',
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -730,19 +610,12 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  inactivityLogoutTimeoutNameMatches(
-    String pattern, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  inactivityLogoutTimerMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.matches(
-          property: r'inactivityLogoutTimeoutName',
+          property: r'inactivityLogoutTimerName',
           wildcard: pattern,
           caseSensitive: caseSensitive,
         ),
@@ -750,32 +623,24 @@ extension AutoLogoutSettingsEntityQueryFilter
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  inactivityLogoutTimeoutNameIsEmpty() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  inactivityLogoutTimerIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.equalTo(
-          property: r'inactivityLogoutTimeoutName',
+          property: r'inactivityLogoutTimerName',
           value: '',
         ),
       );
     });
   }
 
-  QueryBuilder<
-    AutoLogoutSettingsEntity,
-    AutoLogoutSettingsEntity,
-    QAfterFilterCondition
-  >
-  inactivityLogoutTimeoutNameIsNotEmpty() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterFilterCondition>
+  inactivityLogoutTimerIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.greaterThan(
-          property: r'inactivityLogoutTimeoutName',
+          property: r'inactivityLogoutTimerName',
           value: '',
         ),
       );
@@ -783,145 +648,118 @@ extension AutoLogoutSettingsEntityQueryFilter
   }
 }
 
-extension AutoLogoutSettingsEntityQueryObject
-    on
-        QueryBuilder<
-          AutoLogoutSettingsEntity,
-          AutoLogoutSettingsEntity,
-          QFilterCondition
-        > {}
+extension SettingsEntityQueryObject
+    on QueryBuilder<SettingsEntity, SettingsEntity, QFilterCondition> {}
 
-extension AutoLogoutSettingsEntityQueryLinks
-    on
-        QueryBuilder<
-          AutoLogoutSettingsEntity,
-          AutoLogoutSettingsEntity,
-          QFilterCondition
-        > {}
+extension SettingsEntityQueryLinks
+    on QueryBuilder<SettingsEntity, SettingsEntity, QFilterCondition> {}
 
-extension AutoLogoutSettingsEntityQuerySortBy
-    on
-        QueryBuilder<
-          AutoLogoutSettingsEntity,
-          AutoLogoutSettingsEntity,
-          QSortBy
-        > {
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
-  sortByBackgroundLogoutModeName() {
+extension SettingsEntityQuerySortBy
+    on QueryBuilder<SettingsEntity, SettingsEntity, QSortBy> {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+  sortByBackgroundLogoutMode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'backgroundLogoutModeName', Sort.asc);
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
-  sortByBackgroundLogoutModeNameDesc() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+  sortByBackgroundLogoutModeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'backgroundLogoutModeName', Sort.desc);
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
   sortByInactivityLogoutEnabledBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'inactivityLogoutEnabledBool', Sort.asc);
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
   sortByInactivityLogoutEnabledBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'inactivityLogoutEnabledBool', Sort.desc);
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
-  sortByInactivityLogoutTimeoutName() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+  sortByInactivityLogoutTimer() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'inactivityLogoutTimeoutName', Sort.asc);
+      return query.addSortBy(r'inactivityLogoutTimerName', Sort.asc);
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
-  sortByInactivityLogoutTimeoutNameDesc() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+  sortByInactivityLogoutTimerDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'inactivityLogoutTimeoutName', Sort.desc);
+      return query.addSortBy(r'inactivityLogoutTimerName', Sort.desc);
     });
   }
 }
 
-extension AutoLogoutSettingsEntityQuerySortThenBy
-    on
-        QueryBuilder<
-          AutoLogoutSettingsEntity,
-          AutoLogoutSettingsEntity,
-          QSortThenBy
-        > {
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
-  thenByBackgroundLogoutModeName() {
+extension SettingsEntityQuerySortThenBy
+    on QueryBuilder<SettingsEntity, SettingsEntity, QSortThenBy> {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+  thenByBackgroundLogoutMode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'backgroundLogoutModeName', Sort.asc);
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
-  thenByBackgroundLogoutModeNameDesc() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+  thenByBackgroundLogoutModeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'backgroundLogoutModeName', Sort.desc);
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
-  thenById() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
-  thenByIdDesc() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
   thenByInactivityLogoutEnabledBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'inactivityLogoutEnabledBool', Sort.asc);
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
   thenByInactivityLogoutEnabledBoolDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'inactivityLogoutEnabledBool', Sort.desc);
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
-  thenByInactivityLogoutTimeoutName() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+  thenByInactivityLogoutTimer() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'inactivityLogoutTimeoutName', Sort.asc);
+      return query.addSortBy(r'inactivityLogoutTimerName', Sort.asc);
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QAfterSortBy>
-  thenByInactivityLogoutTimeoutNameDesc() {
+  QueryBuilder<SettingsEntity, SettingsEntity, QAfterSortBy>
+  thenByInactivityLogoutTimerDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'inactivityLogoutTimeoutName', Sort.desc);
+      return query.addSortBy(r'inactivityLogoutTimerName', Sort.desc);
     });
   }
 }
 
-extension AutoLogoutSettingsEntityQueryWhereDistinct
-    on
-        QueryBuilder<
-          AutoLogoutSettingsEntity,
-          AutoLogoutSettingsEntity,
-          QDistinct
-        > {
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QDistinct>
-  distinctByBackgroundLogoutModeName({bool caseSensitive = true}) {
+extension SettingsEntityQueryWhereDistinct
+    on QueryBuilder<SettingsEntity, SettingsEntity, QDistinct> {
+  QueryBuilder<SettingsEntity, SettingsEntity, QDistinct>
+  distinctByBackgroundLogoutMode({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(
         r'backgroundLogoutModeName',
@@ -930,55 +768,50 @@ extension AutoLogoutSettingsEntityQueryWhereDistinct
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QDistinct>
+  QueryBuilder<SettingsEntity, SettingsEntity, QDistinct>
   distinctByInactivityLogoutEnabledBool() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'inactivityLogoutEnabledBool');
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, AutoLogoutSettingsEntity, QDistinct>
-  distinctByInactivityLogoutTimeoutName({bool caseSensitive = true}) {
+  QueryBuilder<SettingsEntity, SettingsEntity, QDistinct>
+  distinctByInactivityLogoutTimer({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(
-        r'inactivityLogoutTimeoutName',
+        r'inactivityLogoutTimerName',
         caseSensitive: caseSensitive,
       );
     });
   }
 }
 
-extension AutoLogoutSettingsEntityQueryProperty
-    on
-        QueryBuilder<
-          AutoLogoutSettingsEntity,
-          AutoLogoutSettingsEntity,
-          QQueryProperty
-        > {
-  QueryBuilder<AutoLogoutSettingsEntity, int, QQueryOperations> idProperty() {
+extension SettingsEntityQueryProperty
+    on QueryBuilder<SettingsEntity, SettingsEntity, QQueryProperty> {
+  QueryBuilder<SettingsEntity, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, String?, QQueryOperations>
-  backgroundLogoutModeNameProperty() {
+  QueryBuilder<SettingsEntity, BackgroundLogoutMode?, QQueryOperations>
+  backgroundLogoutModeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'backgroundLogoutModeName');
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, bool, QQueryOperations>
+  QueryBuilder<SettingsEntity, bool, QQueryOperations>
   inactivityLogoutEnabledBoolProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'inactivityLogoutEnabledBool');
     });
   }
 
-  QueryBuilder<AutoLogoutSettingsEntity, String?, QQueryOperations>
-  inactivityLogoutTimeoutNameProperty() {
+  QueryBuilder<SettingsEntity, InactivityLogoutTimer?, QQueryOperations>
+  inactivityLogoutTimerProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'inactivityLogoutTimeoutName');
+      return query.addPropertyName(r'inactivityLogoutTimerName');
     });
   }
 }

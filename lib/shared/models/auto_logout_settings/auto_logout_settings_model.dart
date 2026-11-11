@@ -5,14 +5,14 @@ class AutoLogoutSettingsModel {
   const AutoLogoutSettingsModel({
     required this.inactivityLogoutBool,
     required this.backgroundLogoutMode,
-    required this.inactivityLogoutTimeout,
+    required this.inactivityLogoutTimer,
   });
 
-  static const bool defaultInactivityLogoutBool = true;
+  static const bool defaultInactivityLogoutBool = false;
   static const BackgroundLogoutMode defaultBackgroundLogoutMode = BackgroundLogoutMode.on;
-  static const InactivityLogoutTimer defaultInactivityLogoutTimeout = InactivityLogoutTimer.oneMinute;
+  static const InactivityLogoutTimer defaultInactivityLogoutTimer = InactivityLogoutTimer.oneMinute;
 
   final bool inactivityLogoutBool;
   final BackgroundLogoutMode backgroundLogoutMode;
-  final InactivityLogoutTimer inactivityLogoutTimeout;
+  final InactivityLogoutTimer inactivityLogoutTimer;
 }

@@ -16,7 +16,7 @@ class AutoLogoutCubit extends Cubit<AutoLogoutState> {
         const AutoLogoutState(
           inactivityLogoutEnabledBool: AutoLogoutSettingsModel.defaultInactivityLogoutBool,
           backgroundLogoutMode: AutoLogoutSettingsModel.defaultBackgroundLogoutMode,
-          inactivityLogoutTimeout: AutoLogoutSettingsModel.defaultInactivityLogoutTimeout,
+          inactivityLogoutTimer: AutoLogoutSettingsModel.defaultInactivityLogoutTimer,
         ),
       );
 
@@ -26,7 +26,7 @@ class AutoLogoutCubit extends Cubit<AutoLogoutState> {
       state.copyWith(
         inactivityLogoutEnabledBool: autoLogoutSettingsModel.inactivityLogoutBool,
         backgroundLogoutMode: autoLogoutSettingsModel.backgroundLogoutMode,
-        inactivityLogoutTimeout: autoLogoutSettingsModel.inactivityLogoutTimeout,
+        inactivityLogoutTimer: autoLogoutSettingsModel.inactivityLogoutTimer,
       ),
     );
   }
@@ -41,8 +41,8 @@ class AutoLogoutCubit extends Cubit<AutoLogoutState> {
     emit(state.copyWith(inactivityLogoutEnabledBool: inactivityLogoutEnabledBool));
   }
 
-  Future<void> setInactivityLogoutTimeout({required InactivityLogoutTimer inactivityLogoutTimeout}) async {
-    await _autoLogoutSettingsService.saveInactivityLogoutTimeout(inactivityLogoutTimeout);
-    emit(state.copyWith(inactivityLogoutTimeout: inactivityLogoutTimeout));
+  Future<void> setInactivityLogoutTimer({required InactivityLogoutTimer inactivityLogoutTimer}) async {
+    await _autoLogoutSettingsService.saveInactivityLogoutTimer(inactivityLogoutTimer);
+    emit(state.copyWith(inactivityLogoutTimer: inactivityLogoutTimer));
   }
 }

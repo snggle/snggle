@@ -56,18 +56,6 @@ class TextInputActivityMessenger extends ChangeNotifier implements BinaryMesseng
     });
   }
 
-  MethodCall? _decodeMessage(ByteData? messageByteData) {
-    bool messageMissingBool = messageByteData == null;
-    if (messageMissingBool) {
-      return null;
-    }
-    try {
-      return _jsonMethodCodec.decodeMethodCall(messageByteData);
-    } catch (_) {
-      return null;
-    }
-  }
-
   void _handleIncoming(ByteData? messageByteData) {
     MethodCall? methodCall = _decodeMessage(messageByteData);
     bool ignoredMessageBool = methodCall == null || _clientId == null;
@@ -115,6 +103,18 @@ class TextInputActivityMessenger extends ChangeNotifier implements BinaryMesseng
       case 'TextInput.clearClient':
         _clientId = null;
         break;
+    }
+  }
+
+  MethodCall? _decodeMessage(ByteData? messageByteData) {
+    bool messageMissingBool = messageByteData == null;
+    if (messageMissingBool) {
+      return null;
+    }
+    try {
+      return _jsonMethodCodec.decodeMethodCall(messageByteData);
+    } catch (_) {
+      return null;
     }
   }
 }
