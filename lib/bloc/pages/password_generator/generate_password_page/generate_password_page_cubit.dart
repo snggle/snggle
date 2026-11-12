@@ -14,7 +14,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
   }) : super(GeneratePasswordPageState.initial(passwordCharacterSetMode: passwordCharacterSetMode, obscurePasswordBool: obscurePasswordBool));
 
   void applyCustomPasswordLevel() {
-    bool regenerationRequiredBool = state.selectedPasswordLevelType == PasswordLevelType.custom && state.passwordReadyBool == false;
+    bool regenerationRequiredBool = state.selectedPasswordLevelType == PasswordLevelType.custom && state.passwordUpdatedBool == false;
     if (regenerationRequiredBool) {
       generatePassword();
     }
@@ -116,7 +116,7 @@ class GeneratePasswordPageCubit extends Cubit<GeneratePasswordPageState> {
 
   void _generatePassword(GeneratePasswordPageState generatePasswordPageState) {
     PasswordGeneratorConfig passwordGeneratorConfig = generatePasswordPageState.passwordGeneratorConfig;
-    int? length = generatePasswordPageState.resolvedPasswordLength;
+    int? length = generatePasswordPageState.setPasswordLength;
     bool invalidLengthBool = length == null;
     if (invalidLengthBool) {
       emit(

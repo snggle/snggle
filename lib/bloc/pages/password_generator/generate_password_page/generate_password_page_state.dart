@@ -86,7 +86,7 @@ class GeneratePasswordPageState extends Equatable {
     return length == null || length < minimumCustomPasswordLength || length > maximumCustomPasswordLength;
   }
 
-  bool get generationAvailableBool => resolvedPasswordLength != null;
+  bool get generationAvailableBool => setPasswordLength != null;
 
   PasswordGeneratorConfig get passwordGeneratorConfig {
     switch (passwordCharacterSetMode) {
@@ -99,9 +99,9 @@ class GeneratePasswordPageState extends Equatable {
     }
   }
 
-  bool get passwordReadyBool => generationAvailableBool && password.isNotEmpty && password.length == resolvedPasswordLength;
+  bool get passwordUpdatedBool => generationAvailableBool && password.isNotEmpty && password.length == setPasswordLength;
 
-  int? get resolvedPasswordLength => selectedPasswordLevelType == PasswordLevelType.custom
+  int? get setPasswordLength => selectedPasswordLevelType == PasswordLevelType.custom
       ? (customPasswordLengthInvalidBool ? null : int.parse(customPasswordLength))
       : calculatePasswordLength(selectedPasswordLevelType);
 

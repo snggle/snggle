@@ -97,7 +97,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
             builder: ({required bool customKeyboardVisibleBool, required bool nativeKeyboardVisibleBool}) {
               bool anyKeyboardVisibleBool = customKeyboardVisibleBool || nativeKeyboardVisibleBool;
               bool keyboardHiddenBool = anyKeyboardVisibleBool == false;
-              bool confirmButtonActiveBool = state.passwordReadyBool;
+              bool confirmButtonActiveBool = state.passwordUpdatedBool;
 
               return ScrollableLayout(
                 scrollController: scrollController,
@@ -379,7 +379,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
   }
 
   void _confirm() {
-    bool passwordUnavailableBool = generatePasswordPageCubit.state.passwordReadyBool == false;
+    bool passwordUnavailableBool = generatePasswordPageCubit.state.passwordUpdatedBool == false;
     if (passwordUnavailableBool) {
       return;
     }
@@ -439,7 +439,7 @@ class _GeneratePasswordPageState extends State<GeneratePasswordPage> {
   }
 
   Future<void> _initConfirm() async {
-    bool passwordUnavailableBool = generatePasswordPageCubit.state.passwordReadyBool == false;
+    bool passwordUnavailableBool = generatePasswordPageCubit.state.passwordUpdatedBool == false;
     if (passwordUnavailableBool) {
       return;
     }
