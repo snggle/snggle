@@ -88,7 +88,7 @@ void main() {
 
       // Assert
       SettingsEntity? actualAutoLogoutSettingsEntity = await globalLocator<IsarDatabaseManager>().perform(
-            (Isar isar) => isar.settings.get(SettingsEntity.autoLogoutSettingsId),
+        (Isar isar) => isar.settings.get(SettingsEntity.autoLogoutSettingsId),
       );
 
       expect(actualAutoLogoutSettingsEntity, isNotNull);
@@ -129,7 +129,7 @@ void main() {
       expect(Isar.getInstance(testDatabase.testSessionUUID), isNull);
 
       await expectLater(
-            () async => globalLocator<IsarDatabaseManager>().perform((Isar isar) => isar.getSize()),
+        () async => globalLocator<IsarDatabaseManager>().perform((Isar isar) => isar.getSize()),
         throwsA(isA<IsarError>()),
       );
     });
@@ -176,7 +176,7 @@ void main() {
       await saveAutoLogoutSettings();
 
       SettingsEntity? actualSettingsBeforeWipeEntity = await actualIsarDatabaseManager.perform(
-            (Isar isar) => isar.settings.get(SettingsEntity.autoLogoutSettingsId),
+        (Isar isar) => isar.settings.get(SettingsEntity.autoLogoutSettingsId),
       );
       expect(actualSettingsBeforeWipeEntity, isNotNull);
 
@@ -188,7 +188,7 @@ void main() {
 
       // Assert
       SettingsEntity? actualSettingsAfterWipeEntity = await actualIsarDatabaseManager.perform(
-            (Isar isar) => isar.settings.get(SettingsEntity.autoLogoutSettingsId),
+        (Isar isar) => isar.settings.get(SettingsEntity.autoLogoutSettingsId),
       );
       expect(actualSettingsAfterWipeEntity, isNull);
     });

@@ -48,71 +48,252 @@ void main() {
       expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.oneMinute);
     });
 
-    for (bool inactivityLogoutEnabledBool in <bool>[false, true]) {
-      test(
-        'Should [map saved settings] if [inactivity logout $inactivityLogoutEnabledBool]',
-        () {
-          // Arrange
-          SettingsEntity settingsEntity = SettingsEntity()
-            ..inactivityLogoutEnabledBool = inactivityLogoutEnabledBool
-            ..backgroundLogoutModeName = 'off'
-            ..inactivityLogoutTimerName = 'fiveMinutes';
+    test(
+      'Should [map saved settings] if [inactivity logout false]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = false
+          ..backgroundLogoutModeName = 'off'
+          ..inactivityLogoutTimerName = 'fiveMinutes';
 
-          // Act
-          AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
 
-          // Assert
-          expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, inactivityLogoutEnabledBool);
-          expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
-          expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.fiveMinutes);
-        },
-      );
-    }
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.fiveMinutes);
+      },
+    );
 
-    for (String? backgroundLogoutModeName in <String?>[null, '', 'invalid_mode']) {
-      test(
-        'Should [use default background logout mode] if [stored mode "$backgroundLogoutModeName"]',
-        () {
-          // Arrange
-          SettingsEntity settingsEntity = SettingsEntity()
-            ..inactivityLogoutEnabledBool = false
-            ..backgroundLogoutModeName = backgroundLogoutModeName
-            ..inactivityLogoutTimerName = 'fiveMinutes';
+    test(
+      'Should [map saved settings] if [inactivity logout true]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = true
+          ..backgroundLogoutModeName = 'off'
+          ..inactivityLogoutTimerName = 'fiveMinutes';
 
-          // Act
-          AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
 
-          // Assert
-          expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
-          expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, AutoLogoutSettingsModel.defaultBackgroundLogoutMode);
-          expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.fiveMinutes);
-        },
-      );
-    }
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, true);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.fiveMinutes);
+      },
+    );
 
-    for (String? inactivityLogoutTimerName in <String?>[null, '', 'invalid_timeout', 'off']) {
-      for (bool inactivityLogoutEnabledBool in <bool>[false, true]) {
-        test(
-          'Should [use default inactivity timer] and [preserve enabled flag $inactivityLogoutEnabledBool] '
-          'if [stored timeout "$inactivityLogoutTimerName"]',
-          () {
-            // Arrange
-            SettingsEntity settingsEntity = SettingsEntity()
-              ..inactivityLogoutEnabledBool = inactivityLogoutEnabledBool
-              ..backgroundLogoutModeName = 'off'
-              ..inactivityLogoutTimerName = inactivityLogoutTimerName;
+    test(
+      'Should [use default background logout mode] if [stored mode "null"]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = false
+          ..backgroundLogoutModeName = null
+          ..inactivityLogoutTimerName = 'fiveMinutes';
 
-            // Act
-            AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
 
-            // Assert
-            expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, inactivityLogoutEnabledBool);
-            expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
-            expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, AutoLogoutSettingsModel.defaultInactivityLogoutTimer);
-          },
-        );
-      }
-    }
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, AutoLogoutSettingsModel.defaultBackgroundLogoutMode);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.fiveMinutes);
+      },
+    );
+
+    test(
+      'Should [use default background logout mode] if [stored mode ""]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = false
+          ..backgroundLogoutModeName = ''
+          ..inactivityLogoutTimerName = 'fiveMinutes';
+
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, AutoLogoutSettingsModel.defaultBackgroundLogoutMode);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.fiveMinutes);
+      },
+    );
+
+    test(
+      'Should [use default background logout mode] if [stored mode "invalid_mode"]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = false
+          ..backgroundLogoutModeName = 'invalid_mode'
+          ..inactivityLogoutTimerName = 'fiveMinutes';
+
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, AutoLogoutSettingsModel.defaultBackgroundLogoutMode);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.fiveMinutes);
+      },
+    );
+
+    test(
+      'Should [use default inactivity timer] and [preserve enabled flag false] if [stored timeout "null"]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = false
+          ..backgroundLogoutModeName = 'off'
+          ..inactivityLogoutTimerName = null;
+
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, AutoLogoutSettingsModel.defaultInactivityLogoutTimer);
+      },
+    );
+
+    test(
+      'Should [use default inactivity timer] and [preserve enabled flag true] if [stored timeout "null"]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = true
+          ..backgroundLogoutModeName = 'off'
+          ..inactivityLogoutTimerName = null;
+
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, true);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, AutoLogoutSettingsModel.defaultInactivityLogoutTimer);
+      },
+    );
+
+    test(
+      'Should [use default inactivity timer] and [preserve enabled flag false] if [stored timeout ""]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = false
+          ..backgroundLogoutModeName = 'off'
+          ..inactivityLogoutTimerName = '';
+
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, AutoLogoutSettingsModel.defaultInactivityLogoutTimer);
+      },
+    );
+
+    test(
+      'Should [use default inactivity timer] and [preserve enabled flag true] if [stored timeout ""]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = true
+          ..backgroundLogoutModeName = 'off'
+          ..inactivityLogoutTimerName = '';
+
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, true);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, AutoLogoutSettingsModel.defaultInactivityLogoutTimer);
+      },
+    );
+
+    test(
+      'Should [use default inactivity timer] and [preserve enabled flag false] if [stored timeout "invalid_timeout"]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = false
+          ..backgroundLogoutModeName = 'off'
+          ..inactivityLogoutTimerName = 'invalid_timeout';
+
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, AutoLogoutSettingsModel.defaultInactivityLogoutTimer);
+      },
+    );
+
+    test(
+      'Should [use default inactivity timer] and [preserve enabled flag true] if [stored timeout "invalid_timeout"]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = true
+          ..backgroundLogoutModeName = 'off'
+          ..inactivityLogoutTimerName = 'invalid_timeout';
+
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, true);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, AutoLogoutSettingsModel.defaultInactivityLogoutTimer);
+      },
+    );
+
+    test(
+      'Should [use default inactivity timer] and [preserve enabled flag false] if [stored timeout "off"]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = false
+          ..backgroundLogoutModeName = 'off'
+          ..inactivityLogoutTimerName = 'off';
+
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, AutoLogoutSettingsModel.defaultInactivityLogoutTimer);
+      },
+    );
+
+    test(
+      'Should [use default inactivity timer] and [preserve enabled flag true] if [stored timeout "off"]',
+      () {
+        // Arrange
+        SettingsEntity settingsEntity = SettingsEntity()
+          ..inactivityLogoutEnabledBool = true
+          ..backgroundLogoutModeName = 'off'
+          ..inactivityLogoutTimerName = 'off';
+
+        // Act
+        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
+
+        // Assert
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, true);
+        expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
+        expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, AutoLogoutSettingsModel.defaultInactivityLogoutTimer);
+      },
+    );
 
     test('Should [leave the source entity unchanged] when applying default values', () {
       // Arrange

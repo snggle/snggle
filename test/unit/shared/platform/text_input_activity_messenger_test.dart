@@ -91,25 +91,57 @@ void main() {
       expect(activityCount, 1);
     });
 
-    for (Object? invalidArguments in <Object?>[
-      null,
-      <Object?>[],
-      <Object?>['12'],
-      12,
-    ]) {
-      test('Should [clear the active client] if [setClient arguments are $invalidArguments]', () async {
-        // Arrange
-        await setClient(12);
+    test('Should [clear the active client] if [setClient arguments are null]', () async {
+      // Arrange
+      await setClient(12);
 
-        // Act
-        await messenger.send(textInputChannel, codec.encodeMethodCall(MethodCall('TextInput.setClient', invalidArguments)));
-        await sendIncoming('TextInputClient.updateEditingState', <Object?>[12, <String, Object?>{}]);
+      // Act
+      await messenger.send(textInputChannel, codec.encodeMethodCall(const MethodCall('TextInput.setClient', null)));
+      await sendIncoming('TextInputClient.updateEditingState', <Object?>[12, <String, Object?>{}]);
 
-        // Assert
-        expect(activityCount, 0);
-        expect(forwardedCount, 1);
-      });
-    }
+      // Assert
+      expect(activityCount, 0);
+      expect(forwardedCount, 1);
+    });
+
+    test('Should [clear the active client] if [setClient arguments are []]', () async {
+      // Arrange
+      await setClient(12);
+
+      // Act
+      await messenger.send(textInputChannel, codec.encodeMethodCall(const MethodCall('TextInput.setClient', <Object?>[])));
+      await sendIncoming('TextInputClient.updateEditingState', <Object?>[12, <String, Object?>{}]);
+
+      // Assert
+      expect(activityCount, 0);
+      expect(forwardedCount, 1);
+    });
+
+    test('Should [clear the active client] if [setClient arguments are [12]]', () async {
+      // Arrange
+      await setClient(12);
+
+      // Act
+      await messenger.send(textInputChannel, codec.encodeMethodCall(const MethodCall('TextInput.setClient', <Object?>['12'])));
+      await sendIncoming('TextInputClient.updateEditingState', <Object?>[12, <String, Object?>{}]);
+
+      // Assert
+      expect(activityCount, 0);
+      expect(forwardedCount, 1);
+    });
+
+    test('Should [clear the active client] if [setClient arguments are 12]', () async {
+      // Arrange
+      await setClient(12);
+
+      // Act
+      await messenger.send(textInputChannel, codec.encodeMethodCall(const MethodCall('TextInput.setClient', 12)));
+      await sendIncoming('TextInputClient.updateEditingState', <Object?>[12, <String, Object?>{}]);
+
+      // Assert
+      expect(activityCount, 0);
+      expect(forwardedCount, 1);
+    });
 
     test('Should [stop tracking] after [TextInput.clearClient]', () async {
       // Arrange
@@ -193,26 +225,77 @@ void main() {
   });
 
   group('Tests of TextInputActivityMessenger activity notifications', () {
-    for (String activityMethod in const <String>[
-      'TextInputClient.updateEditingState',
-      'TextInputClient.updateEditingStateWithDeltas',
-      'TextInputClient.performAction',
-      'TextInputClient.performSelectors',
-      'TextInputClient.updateFloatingCursor',
-      'TextInputClient.updateEditingStateWithTag',
-    ]) {
-      test('Should [notify once] for [$activityMethod] from [the active client]', () async {
-        // Arrange
-        await setClient(12);
+    test('Should [notify once] for [TextInputClient.updateEditingState] from [the active client]', () async {
+      // Arrange
+      await setClient(12);
 
-        // Act
-        await sendIncoming(activityMethod, <Object?>[12, <String, Object?>{}]);
+      // Act
+      await sendIncoming('TextInputClient.updateEditingState', <Object?>[12, <String, Object?>{}]);
 
-        // Assert
-        expect(activityCount, 1);
-        expect(forwardedCount, 1);
-      });
-    }
+      // Assert
+      expect(activityCount, 1);
+      expect(forwardedCount, 1);
+    });
+
+    test('Should [notify once] for [TextInputClient.updateEditingStateWithDeltas] from [the active client]', () async {
+      // Arrange
+      await setClient(12);
+
+      // Act
+      await sendIncoming('TextInputClient.updateEditingStateWithDeltas', <Object?>[12, <String, Object?>{}]);
+
+      // Assert
+      expect(activityCount, 1);
+      expect(forwardedCount, 1);
+    });
+
+    test('Should [notify once] for [TextInputClient.performAction] from [the active client]', () async {
+      // Arrange
+      await setClient(12);
+
+      // Act
+      await sendIncoming('TextInputClient.performAction', <Object?>[12, <String, Object?>{}]);
+
+      // Assert
+      expect(activityCount, 1);
+      expect(forwardedCount, 1);
+    });
+
+    test('Should [notify once] for [TextInputClient.performSelectors] from [the active client]', () async {
+      // Arrange
+      await setClient(12);
+
+      // Act
+      await sendIncoming('TextInputClient.performSelectors', <Object?>[12, <String, Object?>{}]);
+
+      // Assert
+      expect(activityCount, 1);
+      expect(forwardedCount, 1);
+    });
+
+    test('Should [notify once] for [TextInputClient.updateFloatingCursor] from [the active client]', () async {
+      // Arrange
+      await setClient(12);
+
+      // Act
+      await sendIncoming('TextInputClient.updateFloatingCursor', <Object?>[12, <String, Object?>{}]);
+
+      // Assert
+      expect(activityCount, 1);
+      expect(forwardedCount, 1);
+    });
+
+    test('Should [notify once] for [TextInputClient.updateEditingStateWithTag] from [the active client]', () async {
+      // Arrange
+      await setClient(12);
+
+      // Act
+      await sendIncoming('TextInputClient.updateEditingStateWithTag', <Object?>[12, <String, Object?>{}]);
+
+      // Assert
+      expect(activityCount, 1);
+      expect(forwardedCount, 1);
+    });
 
     test('Should [ignore activity] if [no client has been registered]', () async {
       // Act
@@ -318,9 +401,11 @@ void main() {
       ];
 
       // Act
-      for (ByteData? incomingMessage in incomingMessages) {
-        await delegate.dispatch(textInputChannel, incomingMessage);
-      }
+      await delegate.dispatch(textInputChannel, incomingMessages[0]);
+      await delegate.dispatch(textInputChannel, incomingMessages[1]);
+      await delegate.dispatch(textInputChannel, incomingMessages[2]);
+      await delegate.dispatch(textInputChannel, incomingMessages[3]);
+      await delegate.dispatch(textInputChannel, incomingMessages[4]);
 
       // Assert
       expect(activityCount, 0);
