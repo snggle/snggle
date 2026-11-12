@@ -122,8 +122,8 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
     );
   }
 
-  Future<void> _save() async {
-    await CustomLoadingDialog.show<EntryModel?>(
+  void _save() {
+    CustomLoadingDialog.show<EntryModel?>(
       context: context,
       title: 'Saving...',
       futureFunction: entryCreateEditPageCubit.save,

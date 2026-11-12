@@ -33,9 +33,7 @@ class EntryDetailsPage extends StatefulWidget {
 class _EntryDetailsPageState extends State<EntryDetailsPage> {
   final ScrollController scrollController = ScrollController();
 
-  late final EntryDetailsPageCubit entryDetailsPageCubit = EntryDetailsPageCubit(
-    entryModel: widget.entryModel,
-  );
+  late final EntryDetailsPageCubit entryDetailsPageCubit = EntryDetailsPageCubit(entryModel: widget.entryModel);
 
   bool _obscurePasswordBool = true;
 

@@ -44,9 +44,7 @@ class EntryForm extends StatelessWidget {
           if (entryNameEmptyBool)
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: ErrorMessageListTile(
-                message: 'Entry name cannot be empty',
-              ),
+              child: ErrorMessageListTile(message: 'Entry name cannot be empty'),
             ),
           const SizedBox(height: 12),
         ],
@@ -64,9 +62,7 @@ class EntryForm extends StatelessWidget {
         if (emailInvalidBool)
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            child: ErrorMessageListTile(
-              message: 'Enter a valid email address',
-            ),
+            child: ErrorMessageListTile(message: 'Enter a valid email address'),
           ),
         const SizedBox(height: 12),
         EntryFormField(
@@ -85,9 +81,7 @@ class EntryForm extends StatelessWidget {
             onTap: onTogglePasswordVisibility,
             child: Padding(
               padding: const EdgeInsets.only(right: 6),
-              child: AssetIcon(
-                obscurePasswordBool ? AppIcons.details_hide : AppIcons.details_show,
-              ),
+              child: AssetIcon(obscurePasswordBool ? AppIcons.details_hide : AppIcons.details_show),
             ),
           ),
           suffixWidgetConstraints: const BoxConstraints(minWidth: 34, minHeight: 34),

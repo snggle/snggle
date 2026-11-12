@@ -39,10 +39,10 @@ class ContainerIconGridItem extends StatelessWidget {
     super.key,
   }) : pinnedBool = vaultModel.pinnedBool,
        encryptedBool = vaultModel.encryptedBool,
-       pinnedBorder = AppIcons.icon_container_vault_pinned_medium,
-       pinnedBackground = AppIcons.icon_container_vault_pinned_medium_background,
-       unpinnedBorder = AppIcons.icon_container_vault_unpinned_medium,
-       unpinnedBackground = AppIcons.icon_container_vault_unpinned_medium_background,
+       pinnedBorder = AppIcons.icon_container_pinned_medium,
+       pinnedBackground = AppIcons.icon_container_pinned_medium_background,
+       unpinnedBorder = AppIcons.icon_container_unpinned_medium,
+       unpinnedBackground = AppIcons.icon_container_unpinned_medium_background,
        icon = null;
 
   ContainerIconGridItem.fromGroupModel({
@@ -65,10 +65,10 @@ class ContainerIconGridItem extends StatelessWidget {
     super.key,
   }) : pinnedBool = networkGroupModel.pinnedBool,
        encryptedBool = networkGroupModel.encryptedBool,
-       pinnedBorder = AppIcons.icon_container_vault_pinned_medium,
-       pinnedBackground = AppIcons.icon_container_vault_pinned_medium_background,
-       unpinnedBorder = AppIcons.icon_container_vault_unpinned_medium,
-       unpinnedBackground = AppIcons.icon_container_vault_unpinned_medium_background,
+       pinnedBorder = AppIcons.icon_container_pinned_medium,
+       pinnedBackground = AppIcons.icon_container_pinned_medium_background,
+       unpinnedBorder = AppIcons.icon_container_unpinned_medium,
+       unpinnedBackground = AppIcons.icon_container_unpinned_medium_background,
        icon = networkGroupModel.networkTemplateModel.networkIconType.listSmallIcon;
 
   ContainerIconGridItem.fromEntryModel({
@@ -78,10 +78,10 @@ class ContainerIconGridItem extends StatelessWidget {
     super.key,
   }) : pinnedBool = entryModel.pinnedBool,
        encryptedBool = entryModel.encryptedBool,
-       pinnedBorder = AppIcons.icon_container_vault_pinned_medium,
-       pinnedBackground = AppIcons.icon_container_vault_pinned_medium_background,
-       unpinnedBorder = AppIcons.icon_container_vault_unpinned_medium,
-       unpinnedBackground = AppIcons.icon_container_vault_unpinned_medium_background,
+       pinnedBorder = AppIcons.icon_container_pinned_medium,
+       pinnedBackground = AppIcons.icon_container_pinned_medium_background,
+       unpinnedBorder = AppIcons.icon_container_unpinned_medium,
+       unpinnedBackground = AppIcons.icon_container_unpinned_medium_background,
        icon = null;
 
   @override

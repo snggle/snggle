@@ -170,18 +170,13 @@ class _EntryListPageState extends State<EntryListPage> {
     globalLocator<PasswordController>().addPassword(passwordModel, listItemModel.filesystemPath);
 
     if (listItemModel is EntryModel) {
-      await AutoRouter.of(context).push<void>(
-        EntryDetailsRoute(
-          entryModel: listItemModel,
-        ),
-      );
+      await AutoRouter.of(context).push<void>(EntryDetailsRoute(entryModel: listItemModel));
+
       if (mounted) {
         await entryListPageCubit.refreshAll();
       }
     } else if (listItemModel is GroupModel) {
-      await entryListPageCubit.navigateNext(
-        filesystemPath: listItemModel.filesystemPath,
-      );
+      await entryListPageCubit.navigateNext(filesystemPath: listItemModel.filesystemPath);
     }
   }
 
