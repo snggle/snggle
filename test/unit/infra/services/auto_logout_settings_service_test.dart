@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/entities/auto_logout_settings_entity/auto_logout_settings_entity.dart';
+import 'package:snggle/infra/entities/settings_entity/settings_entity.dart';
 import 'package:snggle/infra/repositories/auto_logout_settings_repository.dart';
 import 'package:snggle/infra/services/auto_logout_settings_service.dart';
 import 'package:snggle/shared/models/auto_logout_settings/auto_logout_settings_model.dart';
@@ -34,7 +34,7 @@ void main() {
       AutoLogoutSettingsModel actualAutoLogoutSettingsModel = await actualAutoLogoutSettingsService.getAutoLogoutSettings();
 
       // Assert
-      expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, true);
+      expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
       expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.on);
       expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.oneMinute);
       expect(await settingsRepository.getSettings(), isNull);
@@ -42,7 +42,7 @@ void main() {
 
     test('Should [return saved settings] if [all settings exist]', () async {
       // Arrange
-      await settingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
+      await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
         settingsEntity
           ..inactivityLogoutEnabledBool = false
           ..backgroundLogoutModeName = BackgroundLogoutMode.off.name
@@ -60,7 +60,7 @@ void main() {
 
     test('Should [use default enum values] if [stored names are invalid] without changing the stored entity', () async {
       // Arrange
-      await settingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
+      await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
         settingsEntity
           ..inactivityLogoutEnabledBool = false
           ..backgroundLogoutModeName = 'invalid_mode'
@@ -75,14 +75,14 @@ void main() {
       expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, AutoLogoutSettingsModel.defaultBackgroundLogoutMode);
       expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, AutoLogoutSettingsModel.defaultInactivityLogoutTimer);
 
-      AutoLogoutSettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+      SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
       expect(actualSettingsEntity?.backgroundLogoutModeName, 'invalid_mode');
       expect(actualSettingsEntity?.inactivityLogoutTimerName, 'invalid_timeout');
     });
 
     test('Should [use defaults for missing values] and [preserve a saved false flag]', () async {
       // Arrange
-      await settingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
+      await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
         settingsEntity.inactivityLogoutEnabledBool = false;
       });
 
@@ -102,9 +102,9 @@ void main() {
       await actualAutoLogoutSettingsService.saveBackgroundLogoutMode(BackgroundLogoutMode.off);
 
       // Assert
-      AutoLogoutSettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+      SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
       expect(actualSettingsEntity?.backgroundLogoutModeName, BackgroundLogoutMode.off.name);
-      expect(actualSettingsEntity?.inactivityLogoutEnabledBool, true);
+      expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.inactivityLogoutTimerName, isNull);
     });
 
@@ -115,7 +115,7 @@ void main() {
             ? BackgroundLogoutMode.off
             : BackgroundLogoutMode.on;
 
-        await settingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
+        await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
           settingsEntity
             ..inactivityLogoutEnabledBool = false
             ..backgroundLogoutModeName = initialAutomaticLogoutMode.name
@@ -126,7 +126,7 @@ void main() {
         await actualAutoLogoutSettingsService.saveBackgroundLogoutMode(automaticLogoutMode);
 
         // Assert
-        AutoLogoutSettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+        SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
         expect(actualSettingsEntity?.backgroundLogoutModeName, automaticLogoutMode.name);
         expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
         expect(actualSettingsEntity?.inactivityLogoutTimerName, InactivityLogoutTimer.fiveMinutes.name);
@@ -138,7 +138,7 @@ void main() {
     for (bool inactivityLogoutEnabledBool in <bool>[false, true]) {
       test('Should [save $inactivityLogoutEnabledBool] and [preserve mode and timeout]', () async {
         // Arrange
-        await settingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
+        await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
           settingsEntity
             ..inactivityLogoutEnabledBool = !inactivityLogoutEnabledBool
             ..backgroundLogoutModeName = BackgroundLogoutMode.off.name
@@ -149,7 +149,7 @@ void main() {
         await actualAutoLogoutSettingsService.saveInactivityEnabledBool(inactivityLogoutEnabledBool: inactivityLogoutEnabledBool);
 
         // Assert
-        AutoLogoutSettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+        SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
         expect(actualSettingsEntity?.inactivityLogoutEnabledBool, inactivityLogoutEnabledBool);
         expect(actualSettingsEntity?.backgroundLogoutModeName, BackgroundLogoutMode.off.name);
         expect(actualSettingsEntity?.inactivityLogoutTimerName, InactivityLogoutTimer.fiveMinutes.name);
@@ -158,7 +158,7 @@ void main() {
 
     test('Should [preserve a null timeout] and [return the default timeout when reading settings]', () async {
       // Arrange
-      await settingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
+      await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
         settingsEntity.backgroundLogoutModeName = BackgroundLogoutMode.off.name;
       });
 
@@ -166,7 +166,7 @@ void main() {
       await actualAutoLogoutSettingsService.saveInactivityEnabledBool(inactivityLogoutEnabledBool: false);
 
       // Assert
-      AutoLogoutSettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+      SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.inactivityLogoutTimerName, isNull);
       expect(actualSettingsEntity?.backgroundLogoutModeName, BackgroundLogoutMode.off.name);
@@ -182,7 +182,7 @@ void main() {
       await actualAutoLogoutSettingsService.saveInactivityEnabledBool(inactivityLogoutEnabledBool: false);
 
       // Assert
-      AutoLogoutSettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+      SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
       expect(actualSettingsEntity, isNotNull);
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.backgroundLogoutModeName, isNull);
@@ -206,7 +206,7 @@ void main() {
             ? InactivityLogoutTimer.fiveMinutes
             : InactivityLogoutTimer.oneMinute;
 
-        await settingsRepository.saveSettings((AutoLogoutSettingsEntity settingsEntity) {
+        await settingsRepository.saveSettings((SettingsEntity settingsEntity) {
           settingsEntity
             ..inactivityLogoutEnabledBool = false
             ..backgroundLogoutModeName = BackgroundLogoutMode.off.name
@@ -217,21 +217,21 @@ void main() {
         await actualAutoLogoutSettingsService.saveInactivityLogoutTimer(inactivityLogoutTimer);
 
         // Assert
-        AutoLogoutSettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+        SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
         expect(actualSettingsEntity?.inactivityLogoutTimerName, inactivityLogoutTimer.name);
         expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
         expect(actualSettingsEntity?.backgroundLogoutModeName, BackgroundLogoutMode.off.name);
       });
     }
 
-    test('Should [create settings with inactivity enabled] if [settings do not exist]', () async {
+    test('Should [create settings with inactivity disabled by default] if [settings do not exist]', () async {
       // Act
       await actualAutoLogoutSettingsService.saveInactivityLogoutTimer(InactivityLogoutTimer.fiveMinutes);
 
       // Assert
-      AutoLogoutSettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+      SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
       expect(actualSettingsEntity?.inactivityLogoutTimerName, InactivityLogoutTimer.fiveMinutes.name);
-      expect(actualSettingsEntity?.inactivityLogoutEnabledBool, true);
+      expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.backgroundLogoutModeName, isNull);
     });
   });
@@ -246,7 +246,7 @@ void main() {
       ]);
 
       // Assert
-      AutoLogoutSettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
+      SettingsEntity? actualSettingsEntity = await settingsRepository.getSettings();
       expect(actualSettingsEntity?.backgroundLogoutModeName, BackgroundLogoutMode.off.name);
       expect(actualSettingsEntity?.inactivityLogoutEnabledBool, false);
       expect(actualSettingsEntity?.inactivityLogoutTimerName, InactivityLogoutTimer.fiveMinutes.name);

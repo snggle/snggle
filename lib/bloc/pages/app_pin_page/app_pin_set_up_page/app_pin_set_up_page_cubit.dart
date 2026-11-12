@@ -4,6 +4,7 @@ import 'package:snggle/bloc/pages/app_pin_page/app_pin_set_up_page/states/app_pi
 import 'package:snggle/bloc/pages/app_pin_page/app_pin_set_up_page/states/app_pin_set_up_page_enter_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_pin_set_up_page/states/app_pin_set_up_page_invalid_state.dart';
 import 'package:snggle/bloc/pages/app_pin_page/app_pin_set_up_page/states/app_pin_set_up_page_loading_state.dart';
+import 'package:snggle/bloc/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout_cubit/auto_logout_cubit.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 import 'package:snggle/infra/services/app_service.dart';
@@ -91,6 +92,7 @@ class AppPinSetUpPageCubit extends Cubit<AAppPinSetUpPageState> {
     if (appMasterKeyType == AppMasterKeyType.create) {
       await _appService.wipeAll();
       await globalLocator<IsarDatabaseManager>().initDatabase();
+      await globalLocator<AutoLogoutCubit>().init();
     }
     if (mnemonicModel == null) {
       throw Exception('Mnemonic cannot be empty');

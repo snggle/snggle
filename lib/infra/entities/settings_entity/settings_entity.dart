@@ -1,9 +1,9 @@
 import 'package:isar_community/isar.dart';
 
-part 'auto_logout_settings_entity.g.dart';
+part 'settings_entity.g.dart';
 
-@Collection(accessor: 'autoLogoutSettings')
-class AutoLogoutSettingsEntity {
+@Collection(accessor: 'settings')
+class SettingsEntity {
   static const int autoLogoutSettingsId = 1;
 
   Id id = autoLogoutSettingsId;

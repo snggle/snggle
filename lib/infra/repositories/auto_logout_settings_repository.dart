@@ -1,6 +1,6 @@
 import 'package:isar_community/isar.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/entities/auto_logout_settings_entity/auto_logout_settings_entity.dart';
+import 'package:snggle/infra/entities/settings_entity/settings_entity.dart';
 import 'package:snggle/infra/managers/isar_database_manager.dart';
 
 class AutoLogoutSettingsRepository {
@@ -9,20 +9,20 @@ class AutoLogoutSettingsRepository {
   AutoLogoutSettingsRepository({IsarDatabaseManager? isarDatabaseManager})
     : _isarDatabaseManager = isarDatabaseManager ?? globalLocator<IsarDatabaseManager>();
 
-  Future<AutoLogoutSettingsEntity?> getSettings() {
+  Future<SettingsEntity?> getSettings() {
     return _isarDatabaseManager.perform((Isar isar) {
-      return isar.autoLogoutSettings.get(AutoLogoutSettingsEntity.autoLogoutSettingsId);
+      return isar.settings.get(SettingsEntity.autoLogoutSettingsId);
     });
   }
 
-  Future<void> saveSettings(void Function(AutoLogoutSettingsEntity settingsEntity) updateSettingsCallback) {
+  Future<void> saveSettings(void Function(SettingsEntity settingsEntity) updateSettingsCallback) {
     return _isarDatabaseManager.perform((Isar isar) {
       return isar.writeTxn(() async {
-        AutoLogoutSettingsEntity settingsEntity =
-            await isar.autoLogoutSettings.get(AutoLogoutSettingsEntity.autoLogoutSettingsId) ?? AutoLogoutSettingsEntity();
+        SettingsEntity settingsEntity =
+            await isar.settings.get(SettingsEntity.autoLogoutSettingsId) ?? SettingsEntity();
 
         updateSettingsCallback(settingsEntity);
-        await isar.autoLogoutSettings.put(settingsEntity);
+        await isar.settings.put(settingsEntity);
       });
     });
   }

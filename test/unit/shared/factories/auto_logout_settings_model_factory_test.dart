@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snggle/infra/entities/auto_logout_settings_entity/auto_logout_settings_entity.dart';
+import 'package:snggle/infra/entities/settings_entity/settings_entity.dart';
 import 'package:snggle/shared/factories/auto_logout_settings_model_factory.dart';
 import 'package:snggle/shared/models/auto_logout_settings/auto_logout_settings_model.dart';
 import 'package:snggle/shared/models/auto_logout_settings/background_logout_mode.dart';
@@ -21,7 +21,7 @@ void main() {
 
     test('Should [use default settings] if [stored names NULL]', () {
       // Arrange
-      AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity();
+      SettingsEntity settingsEntity = SettingsEntity();
 
       // Act
       AutoLogoutSettingsModel actualAutoLogoutSettingsModel = autoLogoutSettingsModelFactory.createFromEntity(settingsEntity);
@@ -34,7 +34,7 @@ void main() {
 
     test('Should [map enabled settings] with [one-minute timeout]', () {
       // Arrange
-      AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity()
+      SettingsEntity settingsEntity = SettingsEntity()
         ..inactivityLogoutEnabledBool = true
         ..backgroundLogoutModeName = 'on'
         ..inactivityLogoutTimerName = 'oneMinute';
@@ -51,9 +51,9 @@ void main() {
     for (bool inactivityLogoutEnabledBool in <bool>[false, true]) {
       test(
         'Should [map saved settings] if [inactivity logout $inactivityLogoutEnabledBool]',
-            () {
+        () {
           // Arrange
-          AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity()
+          SettingsEntity settingsEntity = SettingsEntity()
             ..inactivityLogoutEnabledBool = inactivityLogoutEnabledBool
             ..backgroundLogoutModeName = 'off'
             ..inactivityLogoutTimerName = 'fiveMinutes';
@@ -72,9 +72,9 @@ void main() {
     for (String? backgroundLogoutModeName in <String?>[null, '', 'invalid_mode']) {
       test(
         'Should [use default background logout mode] if [stored mode "$backgroundLogoutModeName"]',
-            () {
+        () {
           // Arrange
-          AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity()
+          SettingsEntity settingsEntity = SettingsEntity()
             ..inactivityLogoutEnabledBool = false
             ..backgroundLogoutModeName = backgroundLogoutModeName
             ..inactivityLogoutTimerName = 'fiveMinutes';
@@ -94,10 +94,10 @@ void main() {
       for (bool inactivityLogoutEnabledBool in <bool>[false, true]) {
         test(
           'Should [use default inactivity timer] and [preserve enabled flag $inactivityLogoutEnabledBool] '
-              'if [stored timeout "$inactivityLogoutTimerName"]',
-              () {
+          'if [stored timeout "$inactivityLogoutTimerName"]',
+          () {
             // Arrange
-            AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity()
+            SettingsEntity settingsEntity = SettingsEntity()
               ..inactivityLogoutEnabledBool = inactivityLogoutEnabledBool
               ..backgroundLogoutModeName = 'off'
               ..inactivityLogoutTimerName = inactivityLogoutTimerName;
@@ -116,7 +116,7 @@ void main() {
 
     test('Should [leave the source entity unchanged] when applying default values', () {
       // Arrange
-      AutoLogoutSettingsEntity settingsEntity = AutoLogoutSettingsEntity()
+      SettingsEntity settingsEntity = SettingsEntity()
         ..id = 42
         ..inactivityLogoutEnabledBool = true
         ..backgroundLogoutModeName = 'invalid_mode'

@@ -146,7 +146,10 @@ class AutoLogoutController {
       (_) {
         Duration remainingDuration = inactivityLogoutDuration - _stopwatch.elapsed;
         int remainingSeconds = remainingDuration.isNegative ? 0 : (remainingDuration.inMilliseconds / 1000).ceil();
-        debugPrint('[AutoLogout] Remaining: ${remainingSeconds}s');
+        if (kDebugMode) {
+          debugPrint('[AutoLogout] Time remaining: ${remainingSeconds}s');
+        }
+
       },
     );
   }
