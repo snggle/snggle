@@ -34,10 +34,10 @@ void main() {
 
       // Assert
       GroupModel expectedGroupModel = GroupModel(
-        id: 5,
+        id: 6,
         pinnedBool: false,
         encryptedBool: false,
-        filesystemPath: FilesystemPath.fromString('vaults/test/path/group5'),
+        filesystemPath: FilesystemPath.fromString('vaults/test/path/group6'),
         listItemsPreview: <AListItemModel>[],
         name: 'NEW GROUP',
       );
@@ -50,15 +50,27 @@ void main() {
     test('Should [return GroupModel] with values from given GroupEntity when [previewEmptyBool == false]', () async {
       // Arrange
       List<GroupEntity> actualGroupEntityList = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/group1', name: 'VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/vault1/group2', name: 'NETWORKS GROUP 1'),
+        const GroupEntity(id: 1,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/group1',
+            name: 'VAULTS GROUP 1'),
+        const GroupEntity(id: 2,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/vault1/group2',
+            name: 'NETWORKS GROUP 1'),
         const GroupEntity(
-            id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/vault1/network1/group3', name: 'WALLETS GROUP 1')
+            id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
       ];
 
       // Act
       List<GroupModel> actualGroupModelList =
-          await globalLocator<GroupModelFactory>().createFromEntities(actualGroupEntityList, previewEmptyBool: false);
+      await globalLocator<GroupModelFactory>().createFromEntities(actualGroupEntityList, previewEmptyBool: false);
 
       // Assert
       List<GroupModel> expectedGroupModelList = <GroupModel>[
@@ -109,15 +121,27 @@ void main() {
     test('Should [return GroupModel] with values from given GroupEntity when [previewEmptyBool == true]', () async {
       // Arrange
       List<GroupEntity> actualGroupEntityList = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/group1', name: 'VAULTS GROUP 1'),
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/vault1/group2', name: 'NETWORKS GROUP 1'),
+        const GroupEntity(id: 1,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/group1',
+            name: 'VAULTS GROUP 1'),
+        const GroupEntity(id: 2,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/vault1/group2',
+            name: 'NETWORKS GROUP 1'),
         const GroupEntity(
-            id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/vault1/network1/group3', name: 'WALLETS GROUP 1')
+            id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
       ];
 
       // Act
       List<GroupModel> actualGroupModelList =
-          await globalLocator<GroupModelFactory>().createFromEntities(actualGroupEntityList, previewEmptyBool: true);
+      await globalLocator<GroupModelFactory>().createFromEntities(actualGroupEntityList, previewEmptyBool: true);
 
       // Assert
       List<GroupModel> expectedGroupModelList = <GroupModel>[

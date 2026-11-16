@@ -590,13 +590,13 @@ void main() {
           loadingBool: false,
           allItems: <AListItemModel>[
             GroupModel(
-              id: 5,
+              id: 6,
               pinnedBool: false,
               encryptedBool: false,
-              filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group5'),
+              filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group6'),
               listItemsPreview: <AListItemModel>[
-                walletModel2.copyWith(filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group5/wallet2')),
-                walletModel3.copyWith(filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group5/wallet3')),
+                walletModel2.copyWith(filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group6/wallet2')),
+                walletModel3.copyWith(filesystemPath: FilesystemPath.fromString('vaults/vault1/network1/group6/wallet3')),
               ],
               name: 'TEST GROUP',
             ),
