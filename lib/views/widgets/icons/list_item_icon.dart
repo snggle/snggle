@@ -1,10 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
+import 'package:snggle/shared/models/passkeys/passkey_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
 import 'package:snggle/views/widgets/icons/entry_icon.dart';
@@ -37,6 +40,12 @@ class ListItemIcon extends StatelessWidget {
         return GroupIcon.fromGroupModel(size: size, groupModel: groupModel);
       case EntryModel entryModel:
         return EntryIcon(size: size, entryModel: entryModel);
+      case PasskeyModel _:
+        return SvgPicture.asset(
+          AppIcons.placeholder_passkey.assetName,
+          width: size,
+          height: size,
+        );
       default:
         return const SizedBox();
     }

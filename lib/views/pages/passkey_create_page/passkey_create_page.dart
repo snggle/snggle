@@ -6,6 +6,8 @@ import 'package:snggle/shared/models/passkeys/passkey_registration_result.dart';
 import 'package:snggle/shared/native/passkey_create/native_passkey_create.dart';
 import 'package:snggle/shared/native/passkey_create/passkey_create_context.dart';
 import 'package:snggle/shared/utils/passkey/passkey_registration_response_builder.dart';
+import 'package:snggle/views/widgets/button/custom_text_button.dart';
+import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 
 @RoutePage()
 class PasskeyCreatePage extends StatefulWidget {
@@ -18,6 +20,7 @@ class PasskeyCreatePage extends StatefulWidget {
 class _PasskeyCreatePageState extends State<PasskeyCreatePage> {
   PasskeyCreateContext? _passkeyCreateContext;
   String? _error;
+  bool _loadingBool = false;
 
   @override
   void initState() {
@@ -27,7 +30,8 @@ class _PasskeyCreatePageState extends State<PasskeyCreatePage> {
 
   Future<void> _loadContext() async {
     try {
-      PasskeyCreateContext passkeyCreateContext = await NativePasskeyCreate.getContext();
+      PasskeyCreateContext passkeyCreateContext =
+      await NativePasskeyCreate.getContext();
 
       if (!mounted) {
         return;
@@ -42,75 +46,115 @@ class _PasskeyCreatePageState extends State<PasskeyCreatePage> {
       }
 
       setState(() {
-        _error = e.toString();
+        _error = 'Failed to load passkey request.';
       });
+
+      debugPrint('Failed to load passkey context: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_error != null) {
-      return Scaffold(
-        body: Center(child: Text(_error!)),
-      );
-    }
+    TextTheme textTheme = Theme.of(context).textTheme;
 
-    if (_passkeyCreateContext == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Create passkey')),
+    return CustomScaffold(
+      title: 'CREATE PASSKEY',
+      popButtonVisible: true,
+      popAvailableBool: false,
+      customPopCallback: _cancel,
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            const Text('Create a passkey for:'),
-            Text(_passkeyCreateContext!.callingPackage ?? 'Unknown app'),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _createPasskey,
-              child: const Text('Create passkey'),
-            ),
-            const TextButton(
-              onPressed: NativePasskeyCreate.cancel,
-              child: Text('Cancel'),
-            ),
-          ],
+        child: _passkeyCreateContext == null && _error == null
+            ? const CircularProgressIndicator()
+            : Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                _getRpId(),
+                textAlign: TextAlign.center,
+                style: textTheme.headlineMedium,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Create a passkey to sign in securely without a password.',
+                textAlign: TextAlign.center,
+                style: textTheme.bodyMedium,
+              ),
+              if (_error != null) ...<Widget>[
+                const SizedBox(height: 24),
+                Text(
+                  _error!,
+                  textAlign: TextAlign.center,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: Colors.red,
+                  ),
+                ),
+              ],
+              const SizedBox(height: 48),
+              if (_error == null)
+                CustomTextButton(
+                  title: _loadingBool ? 'Creating...' : 'Create',
+                  onPressed: _loadingBool ? null : _createPasskey,
+                ),
+              CustomTextButton(
+                title: 'Cancel',
+                onPressed: _loadingBool ? null : _cancel,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Future<void> _createPasskey() async {
-    PasskeyCreateContext? createContext = _passkeyCreateContext;
+  String _getRpId() {
+    String? origin = _passkeyCreateContext?.origin;
 
-    if (createContext == null) {
+    if (origin == null || origin.isEmpty) {
+      return 'PASSKEY';
+    }
+
+    return Uri.tryParse(origin)?.host ?? 'PASSKEY';
+  }
+
+  Future<void> _cancel() async {
+    if (_loadingBool) {
       return;
     }
 
+    await NativePasskeyCreate.cancel();
+  }
+
+  Future<void> _createPasskey() async {
+    PasskeyCreateContext? createContext = _passkeyCreateContext;
+
+    if (createContext == null || _loadingBool) {
+      return;
+    }
+
+    setState(() {
+      _loadingBool = true;
+      _error = null;
+    });
+
     try {
       String? origin = createContext.origin;
-
-      debugPrint('Origin: ${createContext.origin}');
-      debugPrint('Privileged: ${createContext.privilegedBool}');
-      debugPrint('ClientDataHash length: ${createContext.clientDataHash?.length}');
-      debugPrint('Request JSON: ${createContext.requestJson}');
 
       if (origin == null || origin.isEmpty) {
         throw StateError('Passkey origin is missing');
       }
 
-      PasskeyRegistrationContext registrationContext = PasskeyRegistrationContext(
+      PasskeyRegistrationContext registrationContext =
+      PasskeyRegistrationContext(
         requestJson: createContext.requestJson,
         clientDataHash: createContext.clientDataHash,
         origin: origin,
         privilegedBool: createContext.privilegedBool,
       );
 
-      PasskeyRegistrationResult result = await PasskeyRegistrationService().register(
+      PasskeyRegistrationResult result =
+      await PasskeyRegistrationService().register(
         context: registrationContext,
       );
 
@@ -121,15 +165,25 @@ class _PasskeyCreatePageState extends State<PasskeyCreatePage> {
         publicKey: result.publicKey,
       );
 
-      debugPrint('PASSKEY responseJson: $responseJson');
-
       await NativePasskeyCreate.finish(
         responseJson: responseJson,
       );
-
-      debugPrint('PASSKEY finish completed');
     } catch (e) {
       debugPrint('Passkey creation failed: $e');
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _error = 'Failed to create passkey.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loadingBool = false;
+        });
+      }
     }
   }
 }
