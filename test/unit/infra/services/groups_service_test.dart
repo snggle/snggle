@@ -216,8 +216,21 @@ void main() {
             filesystemPathString: 'vaults/vault1/group2',
             name: 'NETWORKS GROUP 1'),
         const GroupEntity(
-            id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/vault1/network1/group3', name: 'WALLETS GROUP 1'),
-        const GroupEntity(id: 4, encryptedBool: false, pinnedBool: false, filesystemPathString: 'entries/group1', name: 'ENTRIES GROUP 1')
+            id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
+        const GroupEntity(id: 4,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'entries/group1',
+            name: 'ENTRIES GROUP 1'),
+        const GroupEntity(id: 5,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'passkeys/group1',
+            name: 'PASSKEYS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -253,8 +266,21 @@ void main() {
             filesystemPathString: 'vaults/new/path/vault1/group2',
             name: 'NETWORKS GROUP 1'),
         const GroupEntity(
-            id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/new/path/vault1/network1/group3', name: 'WALLETS GROUP 1'),
-        const GroupEntity(id: 4, encryptedBool: false, pinnedBool: false, filesystemPathString: 'entries/group1', name: 'ENTRIES GROUP 1')
+            id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/new/path/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
+        const GroupEntity(id: 4,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'entries/group1',
+            name: 'ENTRIES GROUP 1'),
+        const GroupEntity(id: 5,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'passkeys/group1',
+            name: 'PASSKEYS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -295,9 +321,23 @@ void main() {
             filesystemPathString: 'vaults/vault1/group2',
             name: 'NETWORKS GROUP 1'),
         const GroupEntity(
-            id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/vault1/network1/group3', name: 'WALLETS GROUP 1'),
-        const GroupEntity(id: 4, encryptedBool: false, pinnedBool: false, filesystemPathString: 'entries/group1', name: 'ENTRIES GROUP 1')
+            id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
+        const GroupEntity(id: 4,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'entries/group1',
+            name: 'ENTRIES GROUP 1'),
+        const GroupEntity(id: 5,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'passkeys/group1',
+            name: 'PASSKEYS GROUP 1'),
       ];
+
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
     });
@@ -335,9 +375,26 @@ void main() {
             filesystemPathString: 'vaults/vault1/group2',
             name: 'NETWORKS GROUP 1'),
         const GroupEntity(
-            id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/vault1/network1/group3', name: 'WALLETS GROUP 1'),
-        const GroupEntity(id: 4, encryptedBool: false, pinnedBool: false, filesystemPathString: 'entries/group1', name: 'ENTRIES GROUP 1'),
-        const GroupEntity(id: 99999, encryptedBool: true, pinnedBool: true, filesystemPathString: 'vaults/group1', name: 'NEW VAULTS GROUP 1'),
+            id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
+        const GroupEntity(id: 4,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'entries/group1',
+            name: 'ENTRIES GROUP 1'),
+        const GroupEntity(id: 5,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'passkeys/group1',
+            name: 'PASSKEYS GROUP 1'),
+        const GroupEntity(id: 99999,
+            encryptedBool: true,
+            pinnedBool: true,
+            filesystemPathString: 'vaults/group1',
+            name: 'NEW VAULTS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -377,8 +434,21 @@ void main() {
             filesystemPathString: 'vaults/vault1/group2',
             name: 'UPDATED NETWORKS GROUP 1'),
         const GroupEntity(
-            id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/vault1/network1/group3', name: 'WALLETS GROUP 1'),
-        const GroupEntity(id: 4, encryptedBool: false, pinnedBool: false, filesystemPathString: 'entries/group1', name: 'ENTRIES GROUP 1'),
+            id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
+        const GroupEntity(id: 4,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'entries/group1',
+            name: 'ENTRIES GROUP 1'),
+        const GroupEntity(id: 5,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'passkeys/group1',
+            name: 'PASSKEYS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -415,9 +485,26 @@ void main() {
             filesystemPathString: 'vaults/vault1/group2',
             name: 'NETWORKS GROUP 1'),
         const GroupEntity(
-            id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/vault1/network1/group3', name: 'WALLETS GROUP 1'),
-        const GroupEntity(id: 4, encryptedBool: false, pinnedBool: false, filesystemPathString: 'entries/group1', name: 'ENTRIES GROUP 1'),
-        const GroupEntity(id: 99998, encryptedBool: true, pinnedBool: true, filesystemPathString: 'vaults/group1', name: 'NEW VAULTS GROUP 1'),
+            id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
+        const GroupEntity(id: 4,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'entries/group1',
+            name: 'ENTRIES GROUP 1'),
+        const GroupEntity(id: 5,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'passkeys/group1',
+            name: 'PASSKEYS GROUP 1'),
+        const GroupEntity(id: 99998,
+            encryptedBool: true,
+            pinnedBool: true,
+            filesystemPathString: 'vaults/group1',
+            name: 'NEW VAULTS GROUP 1'),
         const GroupEntity(
             id: 99999,
             encryptedBool: true,
@@ -444,8 +531,21 @@ void main() {
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 1, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/group1', name: 'VAULTS GROUP 1'),
-        const GroupEntity(id: 4, encryptedBool: false, pinnedBool: false, filesystemPathString: 'entries/group1', name: 'ENTRIES GROUP 1'),
+        const GroupEntity(id: 1,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/group1',
+            name: 'VAULTS GROUP 1'),
+        const GroupEntity(id: 4,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'entries/group1',
+            name: 'ENTRIES GROUP 1'),
+        const GroupEntity(id: 5,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'passkeys/group1',
+            name: 'PASSKEYS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);
@@ -483,10 +583,27 @@ void main() {
 
       // Assert
       List<GroupEntity> expectedGroupsDatabaseValue = <GroupEntity>[
-        const GroupEntity(id: 2, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/vault1/group2', name: 'NETWORKS GROUP 1'),
+        const GroupEntity(id: 2,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/vault1/group2',
+            name: 'NETWORKS GROUP 1'),
         const GroupEntity(
-            id: 3, encryptedBool: false, pinnedBool: false, filesystemPathString: 'vaults/vault1/network1/group3', name: 'WALLETS GROUP 1'),
-        const GroupEntity(id: 4, encryptedBool: false, pinnedBool: false, filesystemPathString: 'entries/group1', name: 'ENTRIES GROUP 1'),
+            id: 3,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'vaults/vault1/network1/group3',
+            name: 'WALLETS GROUP 1'),
+        const GroupEntity(id: 4,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'entries/group1',
+            name: 'ENTRIES GROUP 1'),
+        const GroupEntity(id: 5,
+            encryptedBool: false,
+            pinnedBool: false,
+            filesystemPathString: 'passkeys/group1',
+            name: 'PASSKEYS GROUP 1'),
       ];
 
       expect(actualGroupsDatabaseValue, expectedGroupsDatabaseValue);

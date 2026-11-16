@@ -644,13 +644,13 @@ void main() {
           loadingBool: false,
           allItems: <AListItemModel>[
             GroupModel(
-              id: 5,
+              id: 6,
               pinnedBool: false,
               encryptedBool: false,
-              filesystemPath: FilesystemPath.fromString('vaults/group5'),
+              filesystemPath: FilesystemPath.fromString('vaults/group6'),
               listItemsPreview: <AListItemModel>[
-                vaultModel2.copyWith(filesystemPath: FilesystemPath.fromString('vaults/group5/vault2'), listItemsPreview: <AListItemModel>[]),
-                vaultModel3.copyWith(filesystemPath: FilesystemPath.fromString('vaults/group5/vault3'), listItemsPreview: <AListItemModel>[]),
+                vaultModel2.copyWith(filesystemPath: FilesystemPath.fromString('vaults/group6/vault2'), listItemsPreview: <AListItemModel>[]),
+                vaultModel3.copyWith(filesystemPath: FilesystemPath.fromString('vaults/group6/vault3'), listItemsPreview: <AListItemModel>[]),
               ],
               name: 'TEST GROUP',
             ),

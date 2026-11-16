@@ -395,7 +395,7 @@ void main() {
       test('Should [throw UnsupportedError] because entries cannot be renamed from this cubit', () async {
         // Assert
         expect(
-          () => actualEntryListPageCubit.renameItem(updatedEntryModel1, 'NEW ENTRY NAME'),
+              () => actualEntryListPageCubit.renameItem(updatedEntryModel1, 'NEW ENTRY NAME'),
           throwsA(isA<UnsupportedError>()),
         );
       });
@@ -512,16 +512,16 @@ void main() {
         loadingBool: false,
         allItems: <AListItemModel>[
           GroupModel(
-            id: 5,
+            id: 6,
             pinnedBool: false,
             encryptedBool: false,
-            filesystemPath: FilesystemPath.fromString('entries/group5'),
+            filesystemPath: FilesystemPath.fromString('entries/group6'),
             listItemsPreview: <AListItemModel>[
               groupModel.copyWith(
-                filesystemPath: FilesystemPath.fromString('entries/group5/group1'),
+                filesystemPath: FilesystemPath.fromString('entries/group6/group1'),
                 listItemsPreview: <AListItemModel>[],
               ),
-              entryModel1.copyWith(filesystemPath: FilesystemPath.fromString('entries/group5/entry1')),
+              entryModel1.copyWith(filesystemPath: FilesystemPath.fromString('entries/group6/entry1')),
             ],
             name: 'TEST GROUP',
           ),
