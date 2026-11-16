@@ -68,34 +68,6 @@ class PasskeyCreateActivity : FlutterActivity() {
         }
     }
 
-    private fun getPasskeyCreateContext(
-        result: MethodChannel.Result
-    ) {
-        val providerRequest =
-            PendingIntentHandler.retrieveProviderCreateCredentialRequest(intent)
-
-        val publicKeyRequest =
-            providerRequest?.callingRequest as? CreatePublicKeyCredentialRequest
-
-        if (publicKeyRequest == null) {
-            result.error(
-                "INVALID_REQUEST",
-                "Missing public key credential creation request",
-                null
-            )
-            return
-        }
-
-        result.success(
-            mapOf(
-                "requestJson" to publicKeyRequest.requestJson,
-                "clientDataHash" to publicKeyRequest.clientDataHash,
-                "origin" to "",
-                "privilegedBool" to false,
-                "callingPackage" to providerRequest.callingAppInfo.packageName
-            )
-        )
-    }
     private fun handlePasskeyCreateMethodCall(
         call: MethodCall,
         result: MethodChannel.Result
