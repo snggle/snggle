@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:snggle/bloc/generic/list/list_rename_type.dart';
 import 'package:snggle/bloc/generic/list/list_state.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/groups_service.dart';
@@ -22,17 +23,17 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
 
   final IListItemsService<T> listItemsService;
   final List<IListItemsService<AListItemModel>> childItemsServices;
+  final ListRenameType listRenameType;
   final ValueChanged<FilesystemPath> onGroupNavigateBack;
 
   AListCubit({
     required this.listItemsService,
     required this.childItemsServices,
+    required this.listRenameType,
     required this.onGroupNavigateBack,
     required FilesystemPath filesystemPath,
     required int depth,
   }) : super(ListState.loading(depth: depth, filesystemPath: filesystemPath));
-
-  bool canBeRenamedBool(AListItemModel item);
 
   Future<void> deleteItem(AListItemModel item) async {
     await _deleteChildItemsByPath(item.filesystemPath);
@@ -56,6 +57,14 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
     }
   }
 
+  bool isRenameAllowed(AListItemModel listItemModel) {
+    return switch (listRenameType) {
+      ListRenameType.noItems => false,
+      ListRenameType.foldersOnly => listItemModel is GroupModel,
+      ListRenameType.allItems => true,
+    };
+  }
+
   Future<void> moveItem(AListItemModel item, FilesystemPath newFilesystemPath, {bool reloadBool = true}) async {
     FilesystemPath previousItemFilesystemPath = item.filesystemPath;
     FilesystemPath newItemFilesystemPath = item.filesystemPath.replace(item.filesystemPath.parentPath, newFilesystemPath.fullPath);
@@ -74,7 +83,8 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
   }
 
   Future<void> renameItem(AListItemModel item, String newName) async {
-    if (canBeRenamedBool(item)) {
+    bool listRenameAllowedBool = isRenameAllowed(item);
+    if (listRenameAllowedBool) {
       await _renameItem(item, newName);
       await refreshAll();
     } else {

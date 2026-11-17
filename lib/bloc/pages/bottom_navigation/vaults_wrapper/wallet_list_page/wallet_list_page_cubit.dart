@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
+import 'package:snggle/bloc/generic/list/list_rename_type.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/i_list_items_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
@@ -15,9 +16,7 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
   }) : super(
          listItemsService: globalLocator<WalletsService>(),
          childItemsServices: <IListItemsService<AListItemModel>>[],
+         listRenameType: ListRenameType.allItems,
          onGroupNavigateBack: onGroupNavigateBack,
        );
-
-  @override
-  bool canBeRenamedBool(AListItemModel item) => true;
 }

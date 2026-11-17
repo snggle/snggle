@@ -79,7 +79,6 @@ class _NetworkListPageState extends State<NetworkListPage> {
                   childBuilder: (AnimationController fadeAnimationController, AnimationController slideAnimationController) {
                     return ListItemActionsWrapper<NetworkGroupModel, NetworkListPageCubit>(
                       allowItemDeletionBool: false,
-                      allowItemRenamingBool: false,
                       defaultPageTitle: widget.name,
                       draggedItemNotifier: draggedItemNotifier,
                       listItemSize: HorizontalListItemLayout.listItemSize,

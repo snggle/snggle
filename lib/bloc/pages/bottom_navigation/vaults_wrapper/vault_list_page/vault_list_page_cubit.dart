@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snggle/bloc/generic/list/a_list_cubit.dart';
+import 'package:snggle/bloc/generic/list/list_rename_type.dart';
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/i_list_items_service.dart';
@@ -22,9 +23,7 @@ class VaultListPageCubit extends AListCubit<VaultModel> {
            globalLocator<NetworkGroupsService>(),
            globalLocator<GroupsService>(),
          ],
+         listRenameType: ListRenameType.allItems,
          onGroupNavigateBack: onGroupNavigateBack,
        );
-
-  @override
-  bool canBeRenamedBool(AListItemModel item) => true;
 }

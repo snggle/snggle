@@ -24,7 +24,6 @@ class ListItemActionsWrapper<T extends AListItemModel, C extends AListCubit<T>> 
   final Widget child;
   final DraggedItemNotifier draggedItemNotifier;
   final bool allowItemDeletionBool;
-  final bool allowItemRenamingBool;
   final EdgeInsets selectionPadding;
 
   const ListItemActionsWrapper({
@@ -36,7 +35,6 @@ class ListItemActionsWrapper<T extends AListItemModel, C extends AListCubit<T>> 
     required this.child,
     required this.draggedItemNotifier,
     this.allowItemDeletionBool = true,
-    this.allowItemRenamingBool = true,
     this.selectionPadding = EdgeInsets.zero,
     super.key,
   });
@@ -93,7 +91,7 @@ class _ListItemActionsWrapperState<T extends AListItemModel, C extends AListCubi
         controller: actionsPopupController,
         content: ListItemContextTooltip<T>(
           allowItemDeletionBool: widget.allowItemDeletionBool,
-          allowItemRenamingBool: widget.allowItemRenamingBool,
+          allowItemRenamingBool: widget.listCubit.isRenameAllowed(listItemModel),
           listItemModel: listItemModel,
           listCubit: widget.listCubit,
           pageTooltip: ListItemPageTooltip<T, C>(listCubit: widget.listCubit),

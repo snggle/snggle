@@ -102,7 +102,6 @@ class _EntryListPageState extends State<EntryListPage> {
                     key: Key('item${listItemModel.filesystemPath.fullPath}'),
                     childBuilder: (AnimationController fadeAnimationController, AnimationController slideAnimationController) {
                       return ListItemActionsWrapper<EntryModel, EntryListPageCubit>(
-                        allowItemRenamingBool: entryListPageCubit.canBeRenamedBool(listItemModel),
                         defaultPageTitle: defaultPageTitle,
                         draggedItemNotifier: draggedItemNotifier,
                         listItemSize: HorizontalListItemLayout.listItemSize,
