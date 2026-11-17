@@ -17,7 +17,4 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
          childItemsServices: <IListItemsService<AListItemModel>>[],
          onGroupNavigateBack: onGroupNavigateBack,
        );
-
-  @override
-  bool canBeRenamedBool(AListItemModel item) => true;
 }

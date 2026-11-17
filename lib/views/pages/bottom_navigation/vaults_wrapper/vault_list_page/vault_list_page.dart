@@ -108,6 +108,7 @@ class _VaultListPageState extends State<VaultListPage> {
                     listCubit: vaultListPageCubit,
                     listItemModel: listItemModel,
                     onNavigate: _navigateToNextPage,
+                    allowItemRenamingBool: vaultListPageCubit.canBeRenamedBool(listItemModel),
                     child: VaultListItemLayout(
                       title: listItemModel.name,
                       icon: ListItemIcon(

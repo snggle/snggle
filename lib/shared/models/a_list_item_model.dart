@@ -31,6 +31,8 @@ abstract class AListItemModel with EquatableMixin {
 
   bool get draggableBool => true;
 
+  bool get canBeRenamedBool => true;
+
   String? get name => _name;
 
   int compareTo(AListItemModel other) {

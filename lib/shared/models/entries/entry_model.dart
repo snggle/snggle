@@ -53,6 +53,9 @@ class EntryModel extends AListItemModel {
   String get defaultItemName => 'Entry';
 
   @override
+  bool get canBeRenamedBool => false;
+
+  @override
   String get name {
     return super.name ?? 'Entry $index'.toUpperCase();
   }

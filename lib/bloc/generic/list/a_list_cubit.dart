@@ -32,7 +32,7 @@ abstract class AListCubit<T extends AListItemModel> extends Cubit<ListState> {
     required int depth,
   }) : super(ListState.loading(depth: depth, filesystemPath: filesystemPath));
 
-  bool canBeRenamedBool(AListItemModel item);
+  bool canBeRenamedBool(AListItemModel item) => item.canBeRenamedBool;
 
   Future<void> deleteItem(AListItemModel item) async {
     await _deleteChildItemsByPath(item.filesystemPath);

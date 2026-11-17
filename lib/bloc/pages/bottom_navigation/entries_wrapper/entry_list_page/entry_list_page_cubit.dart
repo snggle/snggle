@@ -6,7 +6,6 @@ import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/i_list_items_service.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
 import 'package:snggle/shared/models/entries/entry_model.dart';
-import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
@@ -23,9 +22,6 @@ class EntryListPageCubit extends AListCubit<EntryModel> {
          ],
          onGroupNavigateBack: onGroupNavigateBack,
        );
-
-  @override
-  bool canBeRenamedBool(AListItemModel item) => item is GroupModel;
 
   Future<bool> isEntryPasswordValid(EntryModel entryModel, PasswordModel passwordModel) {
     return secretsService.isPasswordValid(entryModel.filesystemPath, passwordModel);

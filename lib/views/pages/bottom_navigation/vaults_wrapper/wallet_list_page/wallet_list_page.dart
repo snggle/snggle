@@ -118,6 +118,7 @@ class _WalletListPageState extends State<WalletListPage> {
                         listItemModel: listItemModel,
                         onNavigate: _navigateToNextPage,
                         selectionPadding: const EdgeInsets.all(5),
+                        allowItemRenamingBool: walletListPageCubit.canBeRenamedBool(listItemModel),
                         child: switch (listItemModel) {
                           WalletModel walletModel => WalletListItem(
                             walletModel: walletModel,

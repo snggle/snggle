@@ -35,8 +35,8 @@ class ListItemActionsWrapper<T extends AListItemModel, C extends AListCubit<T>> 
     required this.onNavigate,
     required this.child,
     required this.draggedItemNotifier,
+    required this.allowItemRenamingBool,
     this.allowItemDeletionBool = true,
-    this.allowItemRenamingBool = true,
     this.selectionPadding = EdgeInsets.zero,
     super.key,
   });
