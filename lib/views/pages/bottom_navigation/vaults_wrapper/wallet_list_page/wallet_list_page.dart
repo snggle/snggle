@@ -111,6 +111,7 @@ class _WalletListPageState extends State<WalletListPage> {
                     key: Key('item${listItemModel.filesystemPath.fullPath}'),
                     childBuilder: (AnimationController fadeAnimationController, AnimationController slideAnimationController) {
                       return ListItemActionsWrapper<WalletModel, WalletListPageCubit>(
+                        allowItemRenamingBool: walletListPageCubit.canBeRenamedBool(listItemModel),
                         defaultPageTitle: widget.name,
                         draggedItemNotifier: draggedItemNotifier,
                         listItemSize: HorizontalListItemLayout.listItemSize,

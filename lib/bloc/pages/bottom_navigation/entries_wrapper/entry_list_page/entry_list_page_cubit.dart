@@ -25,7 +25,7 @@ class EntryListPageCubit extends AListCubit<EntryModel> {
        );
 
   @override
-  bool canBeRenamedBool(AListItemModel item) => item is GroupModel;
+  bool get allowRenamingBool => false;
 
   Future<bool> isEntryPasswordValid(EntryModel entryModel, PasswordModel passwordModel) {
     return secretsService.isPasswordValid(entryModel.filesystemPath, passwordModel);

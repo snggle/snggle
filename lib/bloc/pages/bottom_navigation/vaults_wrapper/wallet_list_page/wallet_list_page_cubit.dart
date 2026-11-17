@@ -19,5 +19,5 @@ class WalletListPageCubit extends AListCubit<WalletModel> {
        );
 
   @override
-  bool canBeRenamedBool(AListItemModel item) => true;
+  bool get allowRenamingBool => true;
 }

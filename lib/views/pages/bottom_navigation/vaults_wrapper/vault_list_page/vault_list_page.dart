@@ -101,6 +101,7 @@ class _VaultListPageState extends State<VaultListPage> {
                 ),
                 itemBuilder: (AListItemModel listItemModel) {
                   return ListItemActionsWrapper<VaultModel, VaultListPageCubit>(
+                    allowItemRenamingBool: vaultListPageCubit.canBeRenamedBool(listItemModel),
                     key: Key('item${listItemModel.filesystemPath.fullPath}'),
                     defaultPageTitle: defaultPageTitle,
                     draggedItemNotifier: draggedItemNotifier,

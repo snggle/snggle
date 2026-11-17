@@ -26,5 +26,5 @@ class VaultListPageCubit extends AListCubit<VaultModel> {
        );
 
   @override
-  bool canBeRenamedBool(AListItemModel item) => true;
+  bool get allowRenamingBool => true;
 }
