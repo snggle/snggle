@@ -13,6 +13,10 @@ import 'package:snggle/shared/utils/logger/app_logger.dart';
 import 'package:snggle/shared/utils/logger/log_level.dart';
 
 class AutoLogoutController {
+  static const bool _timerLogsEnabledBool = bool.fromEnvironment(
+    'AUTO_LOGOUT_TIMER_LOGS',
+    defaultValue: false,
+  );
   final AppRouter _appRouter;
   final AppService _appService;
   final AutoLogoutCubit _autoLogoutCubit;
@@ -133,7 +137,7 @@ class AutoLogoutController {
   }
 
   void _startDebugTimer(Duration inactivityLogoutDuration) {
-    if (kDebugMode == false) {
+    if (kDebugMode == false || _timerLogsEnabledBool == false) {
       return;
     }
 
@@ -146,9 +150,7 @@ class AutoLogoutController {
       (_) {
         Duration remainingDuration = inactivityLogoutDuration - _stopwatch.elapsed;
         int remainingSeconds = remainingDuration.isNegative ? 0 : (remainingDuration.inMilliseconds / 1000).ceil();
-        if (kDebugMode) {
-          debugPrint('[AutoLogout] Time remaining: ${remainingSeconds}s');
-        }
+        debugPrint('[AutoLogout] Time remaining: ${remainingSeconds}s');
       },
     );
   }
