@@ -55,6 +55,7 @@ class _VaultListPageState extends State<VaultListPage> {
 
   @override
   void dispose() {
+    draggedItemNotifier.dispose();
     vaultListPageCubit.close();
     super.dispose();
   }

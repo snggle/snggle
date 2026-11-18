@@ -6,10 +6,12 @@ import 'package:snggle/shared/utils/string_utils.dart';
 class CustomTextField extends StatefulWidget {
   final bool _enabledBool;
   final bool _autofocusBool;
+  final bool _dynamicSuffixBool;
   final bool _enableInteractiveSelectionBool;
   final bool _errorExistsBool;
   final bool _readOnlyBool;
   final bool _obscureTextBool;
+  final int? _maxLength;
   final String? _initialValue;
   final String? _prefixText;
   final String? _suffixText;
@@ -24,6 +26,7 @@ class CustomTextField extends StatefulWidget {
   final BoxConstraints? _suffixWidgetConstraints;
   final ValueChanged<String>? _onChanged;
   final ValueChanged<bool>? _onFocusChanged;
+  final GestureTapCallback? _onTap;
   final FocusNode? _focusNode;
   final TextInputType _keyboardType;
   final TextEditingController? _textEditingController;
@@ -34,6 +37,7 @@ class CustomTextField extends StatefulWidget {
   const CustomTextField({
     this._enabledBool = true,
     this._autofocusBool = false,
+    this._dynamicSuffixBool = false,
     this._enableInteractiveSelectionBool = false,
     this._errorExistsBool = false,
     this._readOnlyBool = false,
@@ -52,9 +56,11 @@ class CustomTextField extends StatefulWidget {
     this._suffixWidgetConstraints,
     this._onChanged,
     this._onFocusChanged,
+    this._onTap,
     this._focusNode,
     this._keyboardType = TextInputType.none,
     this._textEditingController,
+    this._maxLength,
     this._inputBorder,
     this._inputFormatters,
     this._padding,
@@ -103,7 +109,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
       valueListenable: widget._textEditingController!,
       builder: (BuildContext context, TextEditingValue value, _) {
         bool suffixExistsBool = widget._suffixWidget != null;
-        double suffixOffset = suffixExistsBool ? _calculateSuffixOffset(value, theme, prefixStyle, textStyle, suffixStyle) : 0;
+        bool dynamicSuffixBool = widget._dynamicSuffixBool;
+        bool offsetSuffixBool = suffixExistsBool && dynamicSuffixBool;
+        double suffixOffset = offsetSuffixBool ? _calculateSuffixOffset(value, theme, prefixStyle, textStyle, suffixStyle) : 0;
 
         return TextField(
           enabled: widget._enabledBool,
@@ -112,7 +120,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           enableInteractiveSelection: widget._enableInteractiveSelectionBool,
           enableSuggestions: false,
           autocorrect: false,
-          maxLength: 100,
+          maxLength: widget._maxLength ?? 100,
           controller: widget._textEditingController,
           focusNode: widget._focusNode,
           autofocus: widget._autofocusBool,
@@ -121,6 +129,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           cursorWidth: 1.5,
           obscuringCharacter: '*',
           onChanged: widget._onChanged?.call,
+          onTap: widget._onTap,
           style: widget._enabledBool
               ? textStyle?.copyWith(
                   color: widget._errorExistsBool ? null : AppColors.body3,
