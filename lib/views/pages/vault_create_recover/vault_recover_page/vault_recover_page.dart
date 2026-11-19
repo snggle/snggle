@@ -55,7 +55,7 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
           customSystemPopCallback: _handleSystemPop,
           actions: <Widget>[
             IconButton(
-              onPressed: () => _isFirstPage() ? context.router.root.pop() : _showDiscardDialog(onDiscardPressed: context.router.root.pop),
+              onPressed: _handleCloseRoute,
               icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
             ),
           ],
@@ -83,9 +83,6 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
   }
 
   void _handleCustomPop() {
-    FocusScope.of(context).unfocus();
-    _keyboardValueNotifier.hideKeyboard();
-
     if (_pageController.page != 0) {
       _showDiscardDialog(onDiscardPressed: _navigateToPreviousPage);
     } else {
@@ -94,9 +91,6 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
   }
 
   void _handleSystemPop() {
-    FocusScope.of(context).unfocus();
-    _keyboardValueNotifier.hideKeyboard();
-
     if (_isFirstPage() == false) {
       _showDiscardDialog(onDiscardPressed: _navigateToPreviousPage);
     } else {
@@ -104,11 +98,25 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
     }
   }
 
+  void _handleCloseRoute() {
+    if (_isFirstPage() == false) {
+      _showDiscardDialog(onDiscardPressed: context.router.root.pop);
+    } else {
+      context.router.root.pop();
+    }
+  }
+
   Future<void> _showDiscardDialog({required VoidCallback onDiscardPressed}) async {
     await showDialog(
       context: context,
       useRootNavigator: true,
-      builder: (_) => VaultDiscardDialog(onDiscardPressed: onDiscardPressed),
+      builder: (_) => VaultDiscardDialog(
+        onDiscardPressed: () {
+          FocusScope.of(context).unfocus();
+          _keyboardValueNotifier.hideKeyboard();
+          onDiscardPressed();
+        },
+      ),
     );
   }
 
@@ -127,6 +135,7 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
   }
 
   void _navigateToPreviousPage() {
+    FocusScope.of(context).requestScopeFocus();
     _pageController.previousPage(duration: const Duration(milliseconds: 150), curve: Curves.easeIn);
   }
 }
