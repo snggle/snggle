@@ -11,7 +11,7 @@ import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
-import 'package:snggle/views/widgets/entry_form/entry_form.dart';
+import 'package:snggle/views/widgets/form/entry_form/entry_form.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_visibility_builder.dart';

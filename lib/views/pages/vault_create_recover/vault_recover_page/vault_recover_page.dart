@@ -11,7 +11,7 @@ import 'package:snggle/views/pages/vault_create_recover/mnemonic_size_picker.dar
 import 'package:snggle/views/pages/vault_create_recover/vault_discard_dialog.dart';
 import 'package:snggle/views/pages/vault_create_recover/vault_recover_page/vault_mnemonic_form_editable.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
-import 'package:snggle/views/widgets/generic/paginated_form/paginated_form.dart';
+import 'package:snggle/views/widgets/generic/paginated_wrapper.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
 
@@ -59,7 +59,7 @@ class _VaultRecoverPageState extends State<VaultRecoverPage> {
               icon: AssetIcon(AppIcons.app_bar_close, size: 20, color: AppColors.body1),
             ),
           ],
-          body: PaginatedForm(
+          body: PaginatedWrapper(
             pageController: _pageController,
             pages: <Widget>[
               MnemonicSizePicker(onSizeSelected: _handleMnemonicSizeSelected, advancedWarningBool: false),

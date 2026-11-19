@@ -1,25 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:snggle/config/app_colors.dart';
 
-class PaginatedForm extends StatefulWidget {
+class PaginatedWrapper extends StatefulWidget {
   final List<Widget> pages;
   final PageController pageController;
 
-  const PaginatedForm({
+  const PaginatedWrapper({
     required this.pages,
     required this.pageController,
     super.key,
   });
 
-  static _PaginatedFormState of(BuildContext context) {
-    return context.findAncestorStateOfType<_PaginatedFormState>()!;
+  static _PaginatedWrapperState of(BuildContext context) {
+    return context.findAncestorStateOfType<_PaginatedWrapperState>()!;
   }
 
   @override
-  State<StatefulWidget> createState() => _PaginatedFormState();
+  State<StatefulWidget> createState() => _PaginatedWrapperState();
 }
 
-class _PaginatedFormState extends State<PaginatedForm> {
+class _PaginatedWrapperState extends State<PaginatedWrapper> {
   late ValueNotifier<int> currentPageIndexNotifier = ValueNotifier<int>(widget.pageController.initialPage);
 
   @override
