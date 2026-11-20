@@ -15,12 +15,12 @@ import 'package:snggle/infra/repositories/transactions_repository.dart';
 import 'package:snggle/infra/repositories/vaults_repository.dart';
 import 'package:snggle/infra/repositories/wallets_repository.dart';
 import 'package:snggle/infra/services/app_service.dart';
-import 'package:snggle/infra/services/auto_logout_settings_service.dart';
 import 'package:snggle/infra/services/entries_service.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/master_key_service.dart';
 import 'package:snggle/infra/services/network_groups_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
+import 'package:snggle/infra/services/settings_service.dart';
 import 'package:snggle/infra/services/transaction_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
@@ -80,7 +80,7 @@ void _initServices() {
     ..registerLazySingleton<TransactionsService>(TransactionsService.new)
     ..registerLazySingleton<GroupsService>(GroupsService.new)
     ..registerLazySingleton<EntriesService>(EntriesService.new)
-    ..registerLazySingleton<AutoLogoutSettingsService>(AutoLogoutSettingsService.new);
+    ..registerLazySingleton<SettingsService>(SettingsService.new);
 }
 
 void _initFactories() {

@@ -15,7 +15,7 @@ class AutoLogoutSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext buildContext) {
     return CustomScaffold(
-      title: 'Auto-Logout',
+      title: 'Automatic Logout',
       body: BlocBuilder<AutoLogoutCubit, AutoLogoutState>(
         builder: (BuildContext buildContext, AutoLogoutState autoLogoutState) {
           AutoLogoutCubit autoLogoutCubit = buildContext.read<AutoLogoutCubit>();
