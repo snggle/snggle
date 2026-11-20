@@ -23,6 +23,7 @@ class AutoLogoutController {
   late final AppLifecycleListener _appLifecycleListener;
   late final StreamSubscription<AutoLogoutState> _autoLogoutStateStreamSubscription;
   late AutoLogoutState _autoLogoutState;
+  Timer? _backgroundLogoutTimer;
   Timer? _inactivityLogoutTimer;
   Timer? _debugTimer;
 
@@ -36,12 +37,13 @@ class AutoLogoutController {
     _appLifecycleListener.dispose();
     _autoLogoutStateStreamSubscription.cancel();
     _appRouter.removeListener(_handleRouteChanged);
+    _cancelBackgroundLogoutTimer();
     _cancelInactivityLogoutTimer();
   }
 
   void init() {
     _autoLogoutState = _autoLogoutCubit.state;
-    _appLifecycleListener = AppLifecycleListener(onHide: _handleAppHidden);
+    _appLifecycleListener = AppLifecycleListener(onHide: _handleAppHidden, onShow: _handleAppShown);
     _autoLogoutStateStreamSubscription = _autoLogoutCubit.stream.listen(_handleAutoLogoutChanged);
     _appRouter.addListener(_handleRouteChanged);
 
@@ -67,7 +69,13 @@ class AutoLogoutController {
 
   void _handleAppHidden() {
     bool backgroundLogoutEnabledBool = _autoLogoutState.backgroundLogoutMode == BackgroundLogoutMode.on;
-    if (backgroundLogoutEnabledBool) {
+    if (backgroundLogoutEnabledBool && _appUnlockedBool) {
+      _backgroundLogoutTimer ??= Timer(const Duration(seconds: 1), _handleLogout);
+    }
+  }
+
+  void _handleAppShown() {
+    if (_backgroundLogoutTimer != null) {
       unawaited(_handleLogout());
     }
   }
@@ -78,6 +86,9 @@ class AutoLogoutController {
         autoLogoutState.inactivityLogoutTimer != _autoLogoutState.inactivityLogoutTimer;
     _autoLogoutState = autoLogoutState;
 
+    if (autoLogoutState.backgroundLogoutMode == BackgroundLogoutMode.off) {
+      _cancelBackgroundLogoutTimer();
+    }
     if (inactivitySettingsChangedBool) {
       handleUserInteraction();
     }
@@ -92,6 +103,9 @@ class AutoLogoutController {
     bool unlockedChangedBool = _appUnlockedBool != unlockedBool;
     _appUnlockedBool = unlockedBool;
 
+    if (!unlockedBool) {
+      _cancelBackgroundLogoutTimer();
+    }
     if (unlockedChangedBool) {
       handleUserInteraction();
     }
@@ -114,6 +128,7 @@ class AutoLogoutController {
     _appUnlockedBool = false;
 
     try {
+      _cancelBackgroundLogoutTimer();
       _cancelInactivityLogoutTimer();
       _appService.logout();
       AppLogger().log(message: 'App automatically logged out', logLevel: LogLevel.info);
@@ -121,6 +136,11 @@ class AutoLogoutController {
     } finally {
       _logoutInProgressBool = false;
     }
+  }
+
+  void _cancelBackgroundLogoutTimer() {
+    _backgroundLogoutTimer?.cancel();
+    _backgroundLogoutTimer = null;
   }
 
   void _cancelInactivityLogoutTimer() {

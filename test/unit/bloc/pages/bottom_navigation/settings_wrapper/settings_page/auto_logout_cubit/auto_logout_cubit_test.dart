@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/settings_wrapper/settings_page/auto_logout_cubit/auto_logout_cubit.dart';
 import 'package:snggle/config/locator.dart';
-import 'package:snggle/infra/services/auto_logout_settings_service.dart';
-import 'package:snggle/shared/models/auto_logout_settings/auto_logout_settings_model.dart';
+import 'package:snggle/infra/services/settings_service.dart';
 import 'package:snggle/shared/models/auto_logout_settings/background_logout_mode.dart';
 import 'package:snggle/shared/models/auto_logout_settings/inactivity_logout_timer.dart';
+import 'package:snggle/shared/models/auto_logout_settings/settings_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 
 import '../../../../../../../utils/database_mock.dart';
@@ -13,7 +13,7 @@ import '../../../../../../../utils/test_database.dart';
 void main() {
   late TestDatabase testDatabase;
   late AutoLogoutCubit actualAutoLogoutCubit;
-  late AutoLogoutSettingsService autoLogoutSettingsService;
+  late SettingsService autoLogoutSettingsService;
 
   group('Tests of [AutoLogoutCubit]', () {
     setUp(() async {
@@ -23,7 +23,7 @@ void main() {
         appPasswordModel: PasswordModel.defaultPassword(),
       );
 
-      autoLogoutSettingsService = globalLocator<AutoLogoutSettingsService>();
+      autoLogoutSettingsService = globalLocator<SettingsService>();
       actualAutoLogoutCubit = AutoLogoutCubit();
     });
 
@@ -117,7 +117,7 @@ void main() {
         // Assert
         expect(actualAutoLogoutCubit.state, expectedAutoLogoutState);
 
-        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getAutoLogoutSettings();
+        SettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getSettings();
 
         expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.on);
         expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
@@ -143,7 +143,7 @@ void main() {
         // Assert
         expect(actualAutoLogoutCubit.state, expectedAutoLogoutState);
 
-        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getAutoLogoutSettings();
+        SettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getSettings();
 
         expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
         expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
@@ -171,7 +171,7 @@ void main() {
         // Assert
         expect(actualAutoLogoutCubit.state, expectedAutoLogoutState);
 
-        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getAutoLogoutSettings();
+        SettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getSettings();
 
         expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
         expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
@@ -197,7 +197,7 @@ void main() {
         // Assert
         expect(actualAutoLogoutCubit.state, expectedAutoLogoutState);
 
-        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getAutoLogoutSettings();
+        SettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getSettings();
 
         expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, true);
         expect(actualAutoLogoutSettingsModel.backgroundLogoutMode, BackgroundLogoutMode.off);
@@ -225,7 +225,7 @@ void main() {
         // Assert
         expect(actualAutoLogoutCubit.state, expectedAutoLogoutState);
 
-        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getAutoLogoutSettings();
+        SettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getSettings();
 
         expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.oneMinute);
         expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);
@@ -251,7 +251,7 @@ void main() {
         // Assert
         expect(actualAutoLogoutCubit.state, expectedAutoLogoutState);
 
-        AutoLogoutSettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getAutoLogoutSettings();
+        SettingsModel actualAutoLogoutSettingsModel = await autoLogoutSettingsService.getSettings();
 
         expect(actualAutoLogoutSettingsModel.inactivityLogoutTimer, InactivityLogoutTimer.fiveMinutes);
         expect(actualAutoLogoutSettingsModel.inactivityLogoutBool, false);

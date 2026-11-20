@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -81,7 +83,7 @@ void main() {
       addTearDown(testWidgetsFlutterBinding.postTest);
 
       return testWidgetsFlutterBinding.runTest(
-        () async {
+            () async {
           testWidgetsFlutterBinding.reset();
           try {
             await testBody();
@@ -92,7 +94,7 @@ void main() {
             }
           }
         },
-        () {},
+            () {},
         description: description,
       );
     });
@@ -407,7 +409,7 @@ void main() {
       expectAppLoggedOut();
     });
 
-    controllerTest('Should [pause the timer] when a locked route is pushed over the authenticated stack', () async {
+    controllerTest('Should [cancel the timer] when a locked route is pushed over the authenticated stack', () async {
       // Arrange
       await enableInactivityLogout();
       await navigateToAuthenticatedRoute();
@@ -558,28 +560,72 @@ void main() {
     });
   });
 
-  group('Tests of AutoLogoutController background logout', () {
-    controllerTest('Should [logout when hidden] but [not when only inactive]', () async {
+  group('Tests of AutoLogoutController background logout timing', () {
+    controllerTest('Should [schedule logout one second after hiding]', () async {
       // Arrange
-      expect(autoLogoutCubit.state.inactivityLogoutEnabledBool, false);
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setBackgroundLogoutMode(
+          backgroundLogoutMode: BackgroundLogoutMode.on,
+        );
+      });
       await navigateToAuthenticatedRoute();
       initController();
 
       // Act
-      testWidgetsFlutterBinding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
-      await testWidgetsFlutterBinding.pump();
+      testWidgetsFlutterBinding.handleAppLifecycleStateChanged(
+        AppLifecycleState.inactive,
+      );
+      await pumpElapsed(const Duration(seconds: 1));
 
       // Assert
       expectSessionPreserved();
 
       // Act
-      testWidgetsFlutterBinding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
-      await testWidgetsFlutterBinding.pump();
+      testWidgetsFlutterBinding.handleAppLifecycleStateChanged(
+        AppLifecycleState.hidden,
+      );
+      await pumpElapsed(const Duration(milliseconds: 999));
+
+      // Assert
+      expectSessionPreserved();
+
+      // Act
+      await pumpElapsed(const Duration(milliseconds: 1));
 
       // Assert
       expectAppLoggedOut();
     });
 
+    controllerTest('Should [logout immediately] when shown before the timer fires', () async {
+      // Arrange
+      await testWidgetsFlutterBinding.runAsync(() async {
+        await autoLogoutCubit.setBackgroundLogoutMode(
+          backgroundLogoutMode: BackgroundLogoutMode.on,
+        );
+      });
+      await navigateToAuthenticatedRoute();
+      initController();
+
+      testWidgetsFlutterBinding
+        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+
+      await pumpElapsed(const Duration(milliseconds: 500));
+      expectSessionPreserved();
+
+      // Act
+      testWidgetsFlutterBinding
+        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+
+      await testWidgetsFlutterBinding.pump();
+
+      // Assert
+      expectAppLoggedOut();
+    });
+  });
+
+  group('Tests of AutoLogoutController background logout', () {
     controllerTest('Should [not logout when hidden] after background logout is disabled', () async {
       // Arrange
       expect(autoLogoutCubit.state.inactivityLogoutEnabledBool, false);
@@ -594,7 +640,7 @@ void main() {
       testWidgetsFlutterBinding
         ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
         ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
-      await testWidgetsFlutterBinding.pump();
+      await pumpElapsed(const Duration(seconds: 1));
 
       // Assert
       expectSessionPreserved();
@@ -610,7 +656,7 @@ void main() {
       testWidgetsFlutterBinding
         ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
         ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
-      await testWidgetsFlutterBinding.pump();
+      await pumpElapsed(const Duration(seconds: 1));
 
       // Assert
       expectSessionPreserved();
@@ -643,4 +689,32 @@ void main() {
       expect(appRouter.stack.single.name, BottomNavigationRoute.name);
     });
   });
+}
+
+class _ManualTimer implements Timer {
+  final Duration delay;
+  final void Function() _callback;
+
+  @override
+  bool isActive = true;
+
+  @override
+  int tick = 0;
+
+  _ManualTimer(this.delay, this._callback);
+
+  @override
+  void cancel() {
+    isActive = false;
+  }
+
+  void fire() {
+    if (!isActive) {
+      return;
+    }
+
+    isActive = false;
+    tick++;
+    _callback();
+  }
 }
