@@ -15,6 +15,7 @@ class EntryForm extends StatelessWidget {
   final bool entryNameEmptyBool;
   final bool obscurePasswordBool;
   final VoidCallback onTogglePasswordVisibility;
+  final Widget? totpSectionWidget;
 
   const EntryForm({
     required this.websiteTextEditingController,
@@ -27,11 +28,14 @@ class EntryForm extends StatelessWidget {
     this.nameTextEditingController,
     this.emailInvalidBool = false,
     this.entryNameEmptyBool = false,
+    this.totpSectionWidget,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool totpSectionExistsBool = totpSectionWidget != null;
+
     return Column(
       children: <Widget>[
         const SizedBox(height: 12),
@@ -86,6 +90,7 @@ class EntryForm extends StatelessWidget {
           ),
           suffixWidgetConstraints: const BoxConstraints(minWidth: 34, minHeight: 34),
         ),
+        if (totpSectionExistsBool) totpSectionWidget!,
       ],
     );
   }

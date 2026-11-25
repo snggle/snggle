@@ -20,8 +20,6 @@ import 'package:snggle/views/pages/bottom_navigation/vaults_wrapper/wallet_list_
 import 'package:snggle/views/pages/entry_create_edit/entry_page_type.dart';
 import 'package:snggle/views/widgets/button/list_item_creation_button.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
-import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
-import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/custom/dialog/master_key_dialog.dart';
 import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
@@ -137,21 +135,21 @@ class _EntryListPageState extends State<EntryListPage> {
   }
 
   Future<void> _navigateToEntryCreateRoute() async {
-    bool creationSavedBool =
-        (await AutoRouter.of(context).push<bool>(
-          EntryCreateEditRoute(
-            parentFilesystemPath: entryListPageCubit.state.filesystemPath,
-            entryPageType: EntryPageType.create,
-          ),
-        )) ??
-        false;
+    EntryModel? entryModel = await AutoRouter.of(context).push<EntryModel>(
+      EntryCreateEditRoute(
+        parentFilesystemPath: entryListPageCubit.state.filesystemPath,
+        entryPageType: EntryPageType.create,
+      ),
+    );
 
-    if (creationSavedBool == false || mounted == false) {
+    bool creationUnavailableBool = entryModel == null || mounted == false;
+    if (creationUnavailableBool) {
       return;
     }
 
+    EntryDetailsRoute entryDetailsRoute = EntryDetailsRoute(entryModel: entryModel, newEntryBool: true);
+    await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const EntryListRoute(), entryDetailsRoute]);
     unawaited(entryListPageCubit.refreshAll());
-    _showCreationSuccessDialog();
   }
 
   Future<void> _navigateToNextPage(AListItemModel listItemModel, PasswordModel passwordModel) async {
@@ -170,33 +168,12 @@ class _EntryListPageState extends State<EntryListPage> {
     globalLocator<PasswordController>().addPassword(passwordModel, listItemModel.filesystemPath);
 
     if (listItemModel is EntryModel) {
-      await AutoRouter.of(context).push<void>(EntryDetailsRoute(entryModel: listItemModel));
+      EntryDetailsRoute entryDetailsRoute = EntryDetailsRoute(entryModel: listItemModel);
+      await AutoRouter.of(context).replaceAll(<PageRouteInfo>[const EntryListRoute(), entryDetailsRoute]);
 
-      if (mounted) {
-        await entryListPageCubit.refreshAll();
-      }
+      unawaited(entryListPageCubit.refreshAll());
     } else if (listItemModel is GroupModel) {
       await entryListPageCubit.navigateNext(filesystemPath: listItemModel.filesystemPath);
     }
-  }
-
-  void _showCreationSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierColor: Colors.transparent,
-      builder: (BuildContext context) => CustomDialog(
-        title: 'Success',
-        content: const Text(
-          'The entry creation process has been completed.',
-          textAlign: TextAlign.center,
-        ),
-        options: <CustomDialogOption>[
-          CustomDialogOption(
-            label: 'Done',
-            onPressed: () {},
-          ),
-        ],
-      ),
-    );
   }
 }

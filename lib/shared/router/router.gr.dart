@@ -428,11 +428,16 @@ class EntryCreateEditRouteArgs {
 class EntryDetailsRoute extends _i31.PageRouteInfo<EntryDetailsRouteArgs> {
   EntryDetailsRoute({
     required _i39.EntryModel entryModel,
+    bool newEntryBool = false,
     _i33.Key? key,
     List<_i31.PageRouteInfo>? children,
   }) : super(
          EntryDetailsRoute.name,
-         args: EntryDetailsRouteArgs(entryModel: entryModel, key: key),
+         args: EntryDetailsRouteArgs(
+           entryModel: entryModel,
+           newEntryBool: newEntryBool,
+           key: key,
+         ),
          initialChildren: children,
        );
 
@@ -442,32 +447,45 @@ class EntryDetailsRoute extends _i31.PageRouteInfo<EntryDetailsRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<EntryDetailsRouteArgs>();
-      return _i11.EntryDetailsPage(entryModel: args.entryModel, key: args.key);
+      return _i11.EntryDetailsPage(
+        entryModel: args.entryModel,
+        newEntryBool: args.newEntryBool,
+        key: args.key,
+      );
     },
   );
 }
 
 class EntryDetailsRouteArgs {
-  const EntryDetailsRouteArgs({required this.entryModel, this.key});
+  const EntryDetailsRouteArgs({
+    required this.entryModel,
+    this.newEntryBool = false,
+    this.key,
+  });
 
   final _i39.EntryModel entryModel;
+
+  final bool newEntryBool;
 
   final _i33.Key? key;
 
   @override
   String toString() {
-    return 'EntryDetailsRouteArgs{entryModel: $entryModel, key: $key}';
+    return 'EntryDetailsRouteArgs{entryModel: $entryModel, newEntryBool: $newEntryBool, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! EntryDetailsRouteArgs) return false;
-    return entryModel == other.entryModel && key == other.key;
+    return entryModel == other.entryModel &&
+        newEntryBool == other.newEntryBool &&
+        key == other.key;
   }
 
   @override
-  int get hashCode => entryModel.hashCode ^ key.hashCode;
+  int get hashCode =>
+      entryModel.hashCode ^ newEntryBool.hashCode ^ key.hashCode;
 }
 
 /// generated route for

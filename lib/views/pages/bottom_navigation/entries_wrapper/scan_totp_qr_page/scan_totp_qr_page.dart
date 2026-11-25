@@ -8,6 +8,7 @@ import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/exceptions/read_totp_data_exception_msgs.dart';
 import 'package:snggle/shared/exceptions/read_totp_data_exception_type.dart';
 import 'package:snggle/shared/models/entries/entry_model.dart';
+import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
@@ -132,10 +133,7 @@ class _ScanTotpQRPageState extends State<ScanTotpQRPage> {
   }
 
   void _closeEntry() {
-    Navigator.of(context, rootNavigator: true)
-      ..pop()
-      ..pop()
-      ..pop();
+    Navigator.of(context, rootNavigator: true).popUntil(ModalRoute.withName(BottomNavigationRoute.name));
   }
 
   void _handleQRScanned(Barcode barcode) {

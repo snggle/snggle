@@ -12,6 +12,7 @@ class EntryFormField extends StatelessWidget {
   final bool obscureTextBool;
   final bool obscureClipboardContentBool;
   final bool autofocusBool;
+  final bool tapToCopyBool;
   final FocusNode? focusNode;
   final List<TextInputFormatter>? inputFormatters;
   final Widget? suffixWidget;
@@ -24,6 +25,7 @@ class EntryFormField extends StatelessWidget {
     this.obscureTextBool = false,
     this.obscureClipboardContentBool = false,
     this.autofocusBool = false,
+    this.tapToCopyBool = true,
     this.focusNode,
     this.inputFormatters,
     this.suffixWidget,
@@ -34,11 +36,11 @@ class EntryFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
-    bool emptyFieldBool = textEditingController.text.isEmpty;
+    bool copyAvailableBool = tapToCopyBool && readOnlyBool && textEditingController.text.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: readOnlyBool && emptyFieldBool == false
+      child: copyAvailableBool
           ? CopyWrapper.withCopyAction(
               value: textEditingController.text,
               obscureContentBool: obscureClipboardContentBool,

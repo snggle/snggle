@@ -111,7 +111,7 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
 
     if (totpSecretTextEditingController.text.trim().isEmpty) {
       removeTotp();
-    } else if (_isSecretValid()) {
+    } else if (_isTotpSecretValid()) {
       _totpSecret = TotpSecretInputParser.fromInput(totpSecretTextEditingController.text);
       totpSecretTextEditingController.text = _totpSecret;
       emit(state.copyWith(totpExistsBool: true, totpInvalidBool: false));
@@ -231,7 +231,7 @@ class EntryCreateEditPageCubit extends Cubit<EntryCreateEditPageState> {
     _totpSecretRestoreBool = false;
   }
 
-  bool _isSecretValid() {
+  bool _isTotpSecretValid() {
     try {
       String totpSecret = TotpSecretInputParser.fromInput(totpSecretTextEditingController.text);
       TOTP.generate(totpSecret);

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/entry_create_edit/entry_create_edit_page/entry_create_edit_page_cubit.dart';
 import 'package:snggle/bloc/pages/entry_create_edit/entry_create_edit_page/entry_create_edit_page_state.dart';
@@ -10,14 +9,12 @@ import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/entry_create_edit/entry_page_type.dart';
 import 'package:snggle/views/pages/two_factor_options_page/two_factor_options_type.dart';
-import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
 import 'package:snggle/views/widgets/form/entry_form/entry_form.dart';
-import 'package:snggle/views/widgets/form/entry_form/entry_form_field.dart';
-import 'package:snggle/views/widgets/generic/error_message_list_tile.dart';
+import 'package:snggle/views/widgets/form/entry_form/entry_form_totp_secret_field.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
@@ -137,65 +134,18 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
                         entryNameEmptyBool: state.entryNameEmptyBool,
                         obscurePasswordBool: _obscurePasswordBool,
                         onTogglePasswordVisibility: () => setState(() => _obscurePasswordBool = _obscurePasswordBool == false),
-                      ),
-                      if (totpFieldVisibleBool) ...<Widget>[
-                        const SizedBox(height: 12),
-                        EntryFormField(
-                          label: 'TOTP Secret Key',
-                          textEditingController: entryCreateEditPageCubit.totpSecretTextEditingController,
+                        totpSectionWidget: EntryFormTotpSecretField(
+                          obscureSecretBool: obscureCurrentTotpSecretBool,
                           readOnlyBool: _readOnlyTotpBool,
-                          autofocusBool: _readOnlyTotpBool == false,
-                          focusNode: totpSecretFocusNode,
-                          inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp('[A-Za-z2-7=]'))],
-                          obscureTextBool: obscureCurrentTotpSecretBool,
-                          obscureClipboardContentBool: true,
-                          suffixWidget: InkWell(
-                            onTap: _toggleTotpVisibility,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 6),
-                              child: AssetIcon(obscureCurrentTotpSecretBool ? AppIcons.details_hide : AppIcons.details_show),
-                            ),
-                          ),
-                          suffixWidgetConstraints: const BoxConstraints(minWidth: 34, minHeight: 34),
+                          secretFieldVisibleBool: totpFieldVisibleBool,
+                          secretInvalidBool: state.totpInvalidBool,
+                          totpExistsBool: state.totpExistsBool,
+                          secretFocusNode: totpSecretFocusNode,
+                          secretTextEditingController: entryCreateEditPageCubit.totpSecretTextEditingController,
+                          onToggleSecretVisibility: _toggleTotpVisibility,
+                          onSelectTwoFactorType: totpOptionsVisibleBool ? _selectTwoFactorType : null,
                         ),
-                        if (state.totpInvalidBool)
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: ErrorMessageListTile(message: 'Secret is invalid'),
-                          ),
-                        const SizedBox(height: 12),
-                      ],
-                      if (totpOptionsVisibleBool)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 22.5, vertical: 25),
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: <Widget>[
-                                GradientOutlinedButton.small(
-                                  width: 176,
-                                  label: state.totpExistsBool ? 'Overwrite 2FA' : 'Enable 2FA',
-                                  onPressed: _selectTwoFactorType,
-                                ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: _showTotpHintDialog,
-                                      child: const SizedBox(
-                                        width: 34,
-                                        height: 34,
-                                        child: AssetIcon(AppIcons.icon_help, size: 25),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                      ),
                       SizedBox(height: anyKeyboardVisibleBool ? 40 : 100),
                     ],
                   ),
@@ -251,9 +201,16 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
       futureFunction: entryCreateEditPageCubit.save,
       onSuccess: (EntryModel? entryModel) {
         bool savedEntryAvailableBool = entryModel != null && mounted;
-        if (savedEntryAvailableBool) {
-          entryCreateEditPageCubit.finishTotpEditingSession();
-          AutoRouter.of(context).root.pop<bool>(true);
+        if (savedEntryAvailableBool == false) {
+          return;
+        }
+
+        entryCreateEditPageCubit.finishTotpEditingSession();
+        bool newEntryBool = widget.entryPageType == EntryPageType.create;
+        if (newEntryBool) {
+          AutoRouter.of(context).pop<EntryModel>(entryModel);
+        } else {
+          AutoRouter.of(context).pop<bool>(true);
         }
       },
     );
@@ -362,28 +319,6 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
         options: <CustomDialogOption>[
           CustomDialogOption(label: 'Cancel', onPressed: () {}),
           CustomDialogOption(label: 'Discard', onPressed: _returnToTwoFactorOptions),
-        ],
-      ),
-    );
-  }
-
-  void _showTotpHintDialog() {
-    showDialog<void>(
-      context: context,
-      barrierColor: Colors.transparent,
-      useRootNavigator: true,
-      builder: (BuildContext context) => CustomDialog(
-        title: '2 Factor Authentication\n',
-        content: const Text(
-          '2FA is an electronic authentication method in which a user is granted access to a service only after successfully presenting '
-          'at least two distinct types of evidence (or factors) to an authentication mechanism. It prevents a single point of failure '
-          '(e.g. leaked password) from compromising personal data.\n\n'
-          'Time-based One-Time Password (TOTP) 2FA can be enabled by providing the TOTP secret, either inserting it manually or in a form of a QR code. '
-          'Setting a new secret will overwrite the already existing one. Manually inserting an empty secret will disable 2FA.',
-          textAlign: TextAlign.center,
-        ),
-        options: <CustomDialogOption>[
-          CustomDialogOption(label: 'Close', onPressed: () {}),
         ],
       ),
     );

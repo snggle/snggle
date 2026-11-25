@@ -23,6 +23,7 @@ class AppIcons {
   static const AssetIconData connect_wallet_qr = AssetIconData('assets/icons/connect_wallet_qr.svg');
   static const AssetIconData details_hide = AssetIconData('assets/icons/details_hide.svg');
   static const AssetIconData details_show = AssetIconData('assets/icons/details_show.svg');
+  static const AssetIconData export = AssetIconData('assets/icons/export.svg');
   static const AssetIconData horizontal_tile_network_bitcoin = AssetIconData('assets/icons/horizontal_tile_network_bitcoin.svg');
   static const AssetIconData horizontal_tile_network_cosmos = AssetIconData('assets/icons/horizontal_tile_network_cosmos.svg');
   static const AssetIconData horizontal_tile_network_ethereum = AssetIconData('assets/icons/horizontal_tile_network_ethereum.svg');
@@ -46,8 +47,8 @@ class AppIcons {
   static const AssetIconData icon_entry_password = AssetIconData('assets/icons/icon_entry_password.svg');
   static const AssetIconData icon_entry_totp = AssetIconData('assets/icons/icon_entry_totp.svg');
   static const AssetIconData icon_entry_username = AssetIconData('assets/icons/icon_entry_username.svg');
-  static const AssetIconData icon_help = AssetIconData('assets/icons/icon_help.svg');
-  static const AssetIconData icon_totp_manual_entry = AssetIconData('assets/icons/icon_totp_manual_entry.svg');
+  static const AssetIconData help = AssetIconData('assets/icons/help.svg');
+  static const AssetIconData keyboard = AssetIconData('assets/icons/keyboard.svg');
   static const AssetIconData keyboard_arrow_left = AssetIconData('assets/icons/keyboard_arrow_left.svg');
   static const AssetIconData keyboard_arrow_right = AssetIconData('assets/icons/keyboard_arrow_right.svg');
   static const AssetIconData keyboard_collapse = AssetIconData('assets/icons/keyboard_collapse.svg');

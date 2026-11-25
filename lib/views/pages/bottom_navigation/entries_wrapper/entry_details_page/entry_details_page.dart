@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/entries_wrapper/entry_details_page/entry_details_page_cubit.dart';
 import 'package:snggle/bloc/pages/bottom_navigation/entries_wrapper/entry_details_page/entry_details_page_state.dart';
-import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
@@ -15,16 +14,18 @@ import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/form/entry_form/entry_form.dart';
-import 'package:snggle/views/widgets/form/entry_form/entry_form_field.dart';
+import 'package:snggle/views/widgets/form/entry_form/entry_form_totp_code_field.dart';
 import 'package:snggle/views/widgets/generic/gradient_scrollbar.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 
 @RoutePage()
 class EntryDetailsPage extends StatefulWidget {
   final EntryModel entryModel;
+  final bool newEntryBool;
 
   const EntryDetailsPage({
     required this.entryModel,
+    this.newEntryBool = false,
     super.key,
   });
 
@@ -43,6 +44,14 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
   void initState() {
     super.initState();
     entryDetailsPageCubit.refresh();
+
+    if (widget.newEntryBool) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _showSuccessDialog('The entry creation process has been completed.');
+        }
+      });
+    }
   }
 
   @override
@@ -54,8 +63,6 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    TextTheme textTheme = Theme.of(context).textTheme;
-
     return BlocBuilder<EntryDetailsPageCubit, EntryDetailsPageState>(
       bloc: entryDetailsPageCubit,
       builder: (BuildContext context, EntryDetailsPageState entryDetailsPageState) {
@@ -80,54 +87,20 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: <Widget>[
-                        EntryForm(
-                          websiteTextEditingController: entryDetailsPageCubit.websiteTextEditingController,
-                          emailTextEditingController: entryDetailsPageCubit.emailTextEditingController,
-                          usernameTextEditingController: entryDetailsPageCubit.usernameTextEditingController,
-                          passwordTextEditingController: entryDetailsPageCubit.passwordTextEditingController,
-                          readOnlyBool: true,
-                          obscurePasswordBool: _obscurePasswordBool,
-                          onTogglePasswordVisibility: () => setState(() => _obscurePasswordBool = _obscurePasswordBool == false),
-                        ),
-                        if (entryDetailsPageState.totpExistsBool) ...<Widget>[
-                          const SizedBox(height: 12),
-                          EntryFormField(
-                            label: 'One-Time Password',
-                            textEditingController: entryDetailsPageCubit.totpTextEditingController,
-                            readOnlyBool: true,
-                            obscureClipboardContentBool: true,
-                            suffixWidget: TweenAnimationBuilder<double>(
-                              key: ValueKey<String>(entryDetailsPageCubit.totpTextEditingController.text),
-                              tween: Tween<double>(begin: entryDetailsPageState.totpRemainingSeconds / 30, end: 0),
-                              duration: Duration(seconds: entryDetailsPageState.totpRemainingSeconds),
-                              builder: (BuildContext context, double animatedProgress, Widget? child) {
-                                return Stack(
-                                  alignment: Alignment.center,
-                                  children: <Widget>[
-                                    Transform.flip(
-                                      flipX: true,
-                                      child: CircularProgressIndicator(
-                                        value: animatedProgress,
-                                        strokeWidth: 2.2,
-                                        backgroundColor: AppColors.lightGrey3,
-                                        color: AppColors.warningOrange,
-                                      ),
-                                    ),
-                                    if (child != null) child,
-                                  ],
-                                );
-                              },
-                              child: Text(
-                                '${entryDetailsPageState.totpRemainingSeconds}',
-                                style: textTheme.labelLarge?.copyWith(color: AppColors.body3),
-                              ),
-                            ),
-                            suffixWidgetConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-                          ),
-                        ],
-                      ],
+                    child: EntryForm(
+                      websiteTextEditingController: entryDetailsPageCubit.websiteTextEditingController,
+                      emailTextEditingController: entryDetailsPageCubit.emailTextEditingController,
+                      usernameTextEditingController: entryDetailsPageCubit.usernameTextEditingController,
+                      passwordTextEditingController: entryDetailsPageCubit.passwordTextEditingController,
+                      readOnlyBool: true,
+                      obscurePasswordBool: _obscurePasswordBool,
+                      onTogglePasswordVisibility: () => setState(() => _obscurePasswordBool = _obscurePasswordBool == false),
+                      totpSectionWidget: entryDetailsPageState.totpExistsBool
+                          ? EntryFormTotpCodeField(
+                              remainingSeconds: entryDetailsPageState.totpRemainingSeconds,
+                              totpTextEditingController: entryDetailsPageCubit.totpCodeTextEditingController,
+                            )
+                          : null,
                     ),
                   ),
                 ),
@@ -158,19 +131,16 @@ class _EntryDetailsPageState extends State<EntryDetailsPage> {
     }
 
     unawaited(entryDetailsPageCubit.refresh());
-    _showModificationSuccessDialog();
+    _showSuccessDialog('The entry modification process has been completed.');
   }
 
-  void _showModificationSuccessDialog() {
-    showDialog(
+  void _showSuccessDialog(String message) {
+    showDialog<void>(
       context: context,
       barrierColor: Colors.transparent,
       builder: (BuildContext context) => CustomDialog(
         title: 'Success',
-        content: const Text(
-          'The entry modification process has been completed.',
-          textAlign: TextAlign.center,
-        ),
+        content: Text(message, textAlign: TextAlign.center),
         options: <CustomDialogOption>[
           CustomDialogOption(
             label: 'Done',

@@ -3,13 +3,15 @@ import 'package:snggle/shared/router/router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Page,Route')
 class AppRouter extends RootStackRouter {
+  static const Duration _fadeDuration = Duration(milliseconds: 100);
+
   @override
   RouteType get defaultRouteType {
     return RouteType.custom(
       opaque: false,
       transitionsBuilder: TransitionsBuilders.fadeIn,
-      duration: const Duration(milliseconds: 100),
-      reverseDuration: const Duration(milliseconds: 100),
+      duration: _fadeDuration,
+      reverseDuration: _fadeDuration,
     );
   }
 
@@ -64,7 +66,13 @@ class AppRouter extends RootStackRouter {
             page: EntriesSectionWrapperRoute.page,
             children: <AutoRoute>[
               AutoRoute(page: EntryListRoute.page, initial: true),
-              AutoRoute(page: EntryDetailsRoute.page),
+              CustomRoute<void>(
+                page: EntryDetailsRoute.page,
+                opaque: false,
+                transitionsBuilder: TransitionsBuilders.fadeIn,
+                duration: Duration.zero,
+                reverseDuration: _fadeDuration,
+              ),
             ],
           ),
           AutoRoute(page: AppsRoute.page),

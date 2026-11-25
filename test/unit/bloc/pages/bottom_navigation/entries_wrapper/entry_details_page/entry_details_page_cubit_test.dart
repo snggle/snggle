@@ -90,7 +90,7 @@ void main() {
         expect(actualEntryDetailsPageCubit.emailTextEditingController.text, 'entry1@example.com');
         expect(actualEntryDetailsPageCubit.usernameTextEditingController.text, 'entry_user_1');
         expect(actualEntryDetailsPageCubit.passwordTextEditingController.text, 'entry_password_1');
-        expect(actualEntryDetailsPageCubit.totpTextEditingController.text, '');
+        expect(actualEntryDetailsPageCubit.totpCodeTextEditingController.text, '');
       });
     });
 
@@ -165,7 +165,7 @@ void main() {
         );
 
         expect(actualEntryDetailsPageCubit.state, expectedEntryDetailsPageState);
-        expect(actualEntryDetailsPageCubit.totpTextEditingController.text, '578 294');
+        expect(actualEntryDetailsPageCubit.totpCodeTextEditingController.text, '578 294');
       });
     });
 
@@ -213,7 +213,7 @@ void main() {
         expect(actualSavedEntryModel, expectedSavedEntryModel);
         expect(actualSavedEntrySecrets, expectedSavedEntrySecrets);
         expect(actualEntryDetailsPageCubit.state, expectedEntryDetailsPageState);
-        expect(actualEntryDetailsPageCubit.totpTextEditingController.text, '578 294');
+        expect(actualEntryDetailsPageCubit.totpCodeTextEditingController.text, '578 294');
       });
     });
   });
