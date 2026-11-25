@@ -77,7 +77,7 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
         message: 'Did not find the repeated vault, proceeded with vault creation',
         logLevel: LogLevel.info,
       );
-      await _createVault(mnemonicWords);
+      await _createVault(mnemonicWords, fingerprint);
     }
   }
 
@@ -89,11 +89,11 @@ class VaultCreatePageCubit extends Cubit<VaultCreatePageState> {
     }
   }
 
-  Future<void> _createVault(List<String> mnemonicWords) async {
+  Future<void> _createVault(List<String> mnemonicWords, String fingerprint) async {
     Mnemonic mnemonic = Mnemonic(mnemonicWords);
 
     String vaultName = vaultNameTextEditingController.text.trim();
-    VaultModel vaultModel = await _vaultModelFactory.createNewVault(_parentFilesystemPath, mnemonic, vaultName);
+    VaultModel vaultModel = await _vaultModelFactory.createNewVault(_parentFilesystemPath, mnemonic, fingerprint, vaultName);
 
     // TODO(dominik): Temporary solution to use network template. In the future, there will be dedicated page to create network template
     NetworkTemplateModel networkTemplateModelEthereum = PredefinedNetworkTemplates.ethereum;

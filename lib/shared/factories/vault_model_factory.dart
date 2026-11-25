@@ -13,7 +13,6 @@ import 'package:snggle/shared/models/mnemonic_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/vaults/vault_secrets_model.dart';
-import 'package:snggle/shared/utils/crypto/mnemonic_fingerprint_calculator.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 
 class VaultModelFactory {
@@ -22,9 +21,8 @@ class VaultModelFactory {
   final SecretsService _secretsService = globalLocator<SecretsService>();
   final NetworkGroupsService _networkGroupsService = globalLocator<NetworkGroupsService>();
 
-  Future<VaultModel> createNewVault(FilesystemPath parentFilesystemPath, Mnemonic mnemonic, [String? name]) async {
+  Future<VaultModel> createNewVault(FilesystemPath parentFilesystemPath, Mnemonic mnemonic, String fingerprint, [String? name]) async {
     int lastVaultIndex = await _vaultsService.getLastIndex();
-
     VaultModel vaultModel = VaultModel(
       id: Isar.autoIncrement,
       index: lastVaultIndex + 1,
@@ -33,8 +31,9 @@ class VaultModelFactory {
       filesystemPath: const FilesystemPath.empty(),
       name: name,
       listItemsPreview: <VaultModel>[],
-      fingerprint: await MnemonicFingerprintCalculator.calc(mnemonic),
+      fingerprint: fingerprint,
     );
+
     int vaultId = await _vaultsService.save(vaultModel);
     vaultModel = await _vaultsService.updateFilesystemPath(vaultId, parentFilesystemPath);
 
@@ -67,7 +66,8 @@ class VaultModelFactory {
     List<AListItemModel> listItemsPreview = <AListItemModel>[
       ...groupsPreview,
       ...networkGroupsPreview,
-    ]..sort((AListItemModel a, AListItemModel b) => a.compareTo(b));
+    ]
+      ..sort((AListItemModel a, AListItemModel b) => a.compareTo(b));
 
     return VaultModel(
       index: vaultEntity.index,

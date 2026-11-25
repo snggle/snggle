@@ -72,7 +72,7 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
       emit(state.copyWith(repeatedVaultModel: repeatedVaultModel));
     } catch (e) {
       AppLogger().log(message: 'Did not find the repeated vault, proceeded with vault recovery', logLevel: LogLevel.info);
-      await _createVault(mnemonicWords);
+      await _createVault(mnemonicWords, fingerprint);
       emit(state.copyWith(mnemonicFilledBool: false));
     }
   }
@@ -101,16 +101,13 @@ class VaultRecoverPageCubit extends Cubit<VaultRecoverPageState> {
     }
   }
 
-  Future<void> _createVault(List<String> mnemonicWords) async {
+  Future<void> _createVault(List<String> mnemonicWords, String fingerprint) async {
     Mnemonic mnemonic = Mnemonic(mnemonicWords);
-
     String vaultName = vaultNameTextEditingController.text;
-    VaultModel vaultModel = await _vaultModelFactory.createNewVault(_parentFilesystemPath, mnemonic, vaultName);
-
+    VaultModel vaultModel = await _vaultModelFactory.createNewVault(_parentFilesystemPath, mnemonic, fingerprint, vaultName);
     // TODO(dominik): Temporary solution to use network template. In the future, there will be dedicated page to create network template
     NetworkTemplateModel networkTemplateModelEthereum = PredefinedNetworkTemplates.ethereum;
     NetworkTemplateModel networkTemplateModelSolana = PredefinedNetworkTemplates.solana;
-
     await _networkGroupsModelFactory.createNewNetworkGroup(
       vaultModel.filesystemPath,
       networkTemplateModelEthereum.name,
