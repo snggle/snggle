@@ -4,6 +4,7 @@ import 'package:snggle/infra/entities/group_entity/group_entity.dart';
 import 'package:snggle/infra/services/entries_service.dart';
 import 'package:snggle/infra/services/groups_service.dart';
 import 'package:snggle/infra/services/network_groups_service.dart';
+import 'package:snggle/infra/services/passkeys_service.dart';
 import 'package:snggle/infra/services/secrets_service.dart';
 import 'package:snggle/infra/services/vaults_service.dart';
 import 'package:snggle/infra/services/wallets_service.dart';
@@ -12,6 +13,7 @@ import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/groups/group_secrets_model.dart';
 import 'package:snggle/shared/models/groups/network_group_model.dart';
+import 'package:snggle/shared/models/passkeys/passkey_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/models/vaults/vault_model.dart';
 import 'package:snggle/shared/models/wallets/wallet_model.dart';
@@ -21,6 +23,7 @@ class GroupModelFactory {
   final VaultsService _vaultsService = globalLocator<VaultsService>();
   final WalletsService _walletsService = globalLocator<WalletsService>();
   final EntriesService _entriesService = globalLocator<EntriesService>();
+  final PasskeysService _passkeysService = globalLocator<PasskeysService>();
   final GroupsService _groupsService = globalLocator<GroupsService>();
   final NetworkGroupsService _networkGroupsService = globalLocator<NetworkGroupsService>();
   final SecretsService _secretsService = globalLocator<SecretsService>();
@@ -56,6 +59,7 @@ class GroupModelFactory {
     List<NetworkGroupModel> networkGroupsPreview = <NetworkGroupModel>[];
     List<WalletModel> walletsPreview = <WalletModel>[];
     List<EntryModel> entriesPreview = <EntryModel>[];
+    List<PasskeyModel> passkeysPreview = <PasskeyModel>[];
 
     if (previewEmptyBool == false) {
       groupsPreview = await _groupsService.getAllByParentPath(groupEntity.filesystemPath, firstLevelBool: true, previewEmptyBool: true);
@@ -63,6 +67,7 @@ class GroupModelFactory {
       vaultsPreview = await _vaultsService.getAllByParentPath(groupEntity.filesystemPath, firstLevelBool: true, previewEmptyBool: true);
       walletsPreview = await _walletsService.getAllByParentPath(groupEntity.filesystemPath, firstLevelBool: true);
       entriesPreview = await _entriesService.getAllByParentPath(groupEntity.filesystemPath, firstLevelBool: true);
+      passkeysPreview = await _passkeysService.getAllByParentPath(groupEntity.filesystemPath, firstLevelBool: true);
     }
 
     List<AListItemModel> listItemsPreview = <AListItemModel>[
@@ -71,6 +76,7 @@ class GroupModelFactory {
       ...networkGroupsPreview,
       ...walletsPreview,
       ...entriesPreview,
+      ...passkeysPreview,
     ]..sort((AListItemModel a, AListItemModel b) => a.compareTo(b));
 
     return GroupModel(

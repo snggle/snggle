@@ -5,9 +5,11 @@ import 'package:snggle/bloc/pages/bottom_navigation/passkeys_wrapper/passkeys_li
 import 'package:snggle/config/locator.dart';
 import 'package:snggle/shared/controllers/password_controller.dart';
 import 'package:snggle/shared/models/a_list_item_model.dart';
+import 'package:snggle/shared/models/groups/group_model.dart';
 import 'package:snggle/shared/models/passkeys/passkey_model.dart';
 import 'package:snggle/shared/models/password_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
+import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/bottom_navigation/passkeys_wrapper/passkey_list_page/passkey_list_item.dart';
 import 'package:snggle/views/widgets/custom/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart';
 import 'package:snggle/views/widgets/drag/dragged_item/dragged_item_notifier.dart';
@@ -22,18 +24,19 @@ class ReadOnlyPasskeyListPage extends StatefulWidget {
   const ReadOnlyPasskeyListPage({super.key});
 
   @override
-  State<ReadOnlyPasskeyListPage> createState() =>
-      _ReadOnlyPasskeyListPageState();
+  State<ReadOnlyPasskeyListPage> createState() => _ReadOnlyPasskeyListPageState();
 }
 
-class _ReadOnlyPasskeyListPageState
-    extends State<ReadOnlyPasskeyListPage> {
+class _ReadOnlyPasskeyListPageState extends State<ReadOnlyPasskeyListPage> {
   static const String defaultPageTitle = 'PASSKEYS';
 
   final DraggedItemNotifier draggedItemNotifier = DraggedItemNotifier();
 
-  final PasskeyListPageCubit passkeyListPageCubit =
-  PasskeyListPageCubit();
+  late final PasskeyListPageCubit passkeyListPageCubit = PasskeyListPageCubit(
+    depth: 0,
+    filesystemPath: FilesystemPath.fromString('passkeys'),
+    onGroupNavigateBack: globalLocator<PasswordController>().removeByFilesystemPath,
+  );
 
   @override
   void initState() {
@@ -55,9 +58,7 @@ class _ReadOnlyPasskeyListPageState
       bodyBuilder: (BuildContext context, ListState listState) {
         return CustomScrollView(
           shrinkWrap: listState.isScrollDisabled,
-          physics: listState.isScrollDisabled
-              ? const NeverScrollableScrollPhysics()
-              : const BouncingScrollPhysics(),
+          physics: listState.isScrollDisabled ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
           slivers: <Widget>[
             if (listState.isEmpty)
               const SliverFillRemaining(
@@ -88,31 +89,27 @@ class _ReadOnlyPasskeyListPageState
                     key: Key(
                       'item${listItemModel.filesystemPath.fullPath}',
                     ),
-                    childBuilder: (
-                        AnimationController fadeAnimationController,
-                        AnimationController slideAnimationController,
+                    childBuilder:
+                        (
+                          AnimationController fadeAnimationController,
+                          AnimationController slideAnimationController,
                         ) {
-                      return ListItemActionsWrapper<
-                          PasskeyModel,
-                          PasskeyListPageCubit>(
-                        allowItemRenamingBool: false,
-                        defaultPageTitle: defaultPageTitle,
-                        draggedItemNotifier: draggedItemNotifier,
-                        listItemSize:
-                        HorizontalListItemLayout.listItemSize,
-                        listCubit: passkeyListPageCubit,
-                        listItemModel: listItemModel,
-                        onNavigate: _navigateToNextPage,
-                        selectionPadding: const EdgeInsets.all(5),
-                        child: PasskeyListItem(
-                          passkeyModel: listItemModel,
-                          fadeAnimationController:
-                          fadeAnimationController,
-                          slideAnimationController:
-                          slideAnimationController,
-                        ),
-                      );
-                    },
+                          return ListItemActionsWrapper<PasskeyModel, PasskeyListPageCubit>(
+                            allowItemRenamingBool: false,
+                            defaultPageTitle: defaultPageTitle,
+                            draggedItemNotifier: draggedItemNotifier,
+                            listItemSize: HorizontalListItemLayout.listItemSize,
+                            listCubit: passkeyListPageCubit,
+                            listItemModel: listItemModel,
+                            onNavigate: _navigateToNextPage,
+                            selectionPadding: const EdgeInsets.all(5),
+                            child: PasskeyListItem(
+                              passkeyModel: listItemModel,
+                              fadeAnimationController: fadeAnimationController,
+                              slideAnimationController: slideAnimationController,
+                            ),
+                          );
+                        },
                   );
                 },
               ),
@@ -127,24 +124,26 @@ class _ReadOnlyPasskeyListPageState
   }
 
   Future<void> _navigateToNextPage(
-      AListItemModel listItemModel,
-      PasswordModel passwordModel,
-      ) async {
-    if (listItemModel is! PasskeyModel) {
-      return;
+    AListItemModel listItemModel,
+    PasswordModel passwordModel,
+  ) async {
+    if (listItemModel is PasskeyModel) {
+      globalLocator<PasswordController>().addPassword(
+        passwordModel,
+        listItemModel.filesystemPath,
+      );
+
+      await AutoRouter.of(context).push(
+        ReadOnlyPasskeyDetailsRoute(
+          passkeyModel: listItemModel,
+        ),
+      );
+
+      await passkeyListPageCubit.refreshAll();
+    } else if (listItemModel is GroupModel) {
+      await passkeyListPageCubit.navigateNext(
+        filesystemPath: listItemModel.filesystemPath,
+      );
     }
-
-    globalLocator<PasswordController>().addPassword(
-      passwordModel,
-      listItemModel.filesystemPath,
-    );
-
-    await AutoRouter.of(context).push(
-      ReadOnlyPasskeyDetailsRoute(
-        passkeyModel: listItemModel,
-      ),
-    );
-
-    await passkeyListPageCubit.refreshAll();
   }
 }
