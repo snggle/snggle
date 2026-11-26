@@ -119,6 +119,7 @@ class AutoLogoutController {
   }
 
   Future<void> _handleLogout() async {
+    debugPrint('[AutoLogout] Logout started: ${DateTime.now()}');
     bool logoutBlockedBool = _logoutInProgressBool || _appUnlockedBool == false;
     if (logoutBlockedBool) {
       return;
