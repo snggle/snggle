@@ -3,22 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snggle/bloc/pages/entry_create_edit/entry_create_edit_page/entry_create_edit_page_cubit.dart';
 import 'package:snggle/bloc/pages/entry_create_edit/entry_create_edit_page/entry_create_edit_page_state.dart';
+import 'package:snggle/config/app_colors.dart';
 import 'package:snggle/config/app_icons/app_icons.dart';
 import 'package:snggle/shared/models/entries/entry_model.dart';
 import 'package:snggle/shared/router/router.gr.dart';
 import 'package:snggle/shared/utils/filesystem_path.dart';
 import 'package:snggle/views/pages/entry_create_edit/entry_page_type.dart';
-import 'package:snggle/views/pages/two_factor_options_page/two_factor_options_type.dart';
+import 'package:snggle/views/widgets/button/gradient_outlined_button.dart';
 import 'package:snggle/views/widgets/custom/custom_scaffold.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_dialog_option.dart';
 import 'package:snggle/views/widgets/custom/dialog/custom_loading_dialog.dart';
 import 'package:snggle/views/widgets/form/entry_form/entry_form.dart';
-import 'package:snggle/views/widgets/form/entry_form/entry_form_totp_secret_field.dart';
+import 'package:snggle/views/widgets/generic/label_wrapper_vertical.dart';
 import 'package:snggle/views/widgets/generic/scrollable_layout.dart';
 import 'package:snggle/views/widgets/icons/asset_icon.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_value_notifier.dart';
 import 'package:snggle/views/widgets/keyboard/keyboard_visibility_builder.dart';
+import 'package:snggle/views/widgets/qr/qr_result_scaffold.dart';
 import 'package:snggle/views/widgets/tooltip/bottom_tooltip/bottom_tooltip_item.dart';
 
 @RoutePage()
@@ -43,13 +45,8 @@ class EntryCreateEditPage extends StatefulWidget {
 class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
   final ScrollController scrollController = ScrollController();
   final KeyboardValueNotifier keyboardValueNotifier = KeyboardValueNotifier();
-  final FocusNode totpSecretFocusNode = FocusNode();
 
   late bool _obscurePasswordBool;
-  bool _obscureNewTotpSecretBool = true;
-  bool _obscureTotpSecretBool = true;
-  bool _readOnlyTotpBool = true;
-  bool _settingNewTotpBool = false;
 
   late final EntryCreateEditPageCubit entryCreateEditPageCubit = EntryCreateEditPageCubit(
     parentFilesystemPath: widget.parentFilesystemPath,
@@ -68,7 +65,6 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
   void dispose() {
     scrollController.dispose();
     keyboardValueNotifier.dispose();
-    totpSecretFocusNode.dispose();
     entryCreateEditPageCubit.close();
     super.dispose();
   }
@@ -78,35 +74,20 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
     return BlocBuilder<EntryCreateEditPageCubit, EntryCreateEditPageState>(
       bloc: entryCreateEditPageCubit,
       builder: (BuildContext context, EntryCreateEditPageState state) {
-        bool totpFieldVisibleBool = state.totpExistsBool || _settingNewTotpBool;
-        bool obscureCurrentTotpSecretBool = _settingNewTotpBool ? _obscureNewTotpSecretBool : _obscureTotpSecretBool;
-        bool totpOptionsVisibleBool = state.loadingBool == false && _settingNewTotpBool == false;
-
         return CustomScaffold(
           title: switch (widget.entryPageType) {
             EntryPageType.create => 'CREATE ENTRY',
             EntryPageType.edit => 'EDIT ENTRY',
           },
-          actions: _settingNewTotpBool
-              ? <Widget>[
-                  InkWell(
-                    onTap: _showDiscardDialog,
-                    child: const Padding(
-                      padding: EdgeInsets.only(right: 6),
-                      child: AssetIcon(AppIcons.app_bar_close),
-                    ),
-                  ),
-                ]
-              : null,
           popAvailableBool: false,
-          customSystemPopCallback: _handleBackPressed,
-          customPopCallback: _handleBackPressed,
+          customSystemPopCallback: _showDiscardDialog,
+          customPopCallback: _showDiscardDialog,
           resizeToAvoidBottomInsetBool: true,
           body: KeyboardVisibilityBuilder(
             keyboardValueNotifier: keyboardValueNotifier,
             builder: ({required bool customKeyboardVisibleBool, required bool nativeKeyboardVisibleBool}) {
               bool anyKeyboardVisibleBool = customKeyboardVisibleBool || nativeKeyboardVisibleBool;
-              bool finishButtonEnabledBool = state.entryNameEmptyBool == false && state.emailInvalidBool == false && state.totpInvalidBool == false;
+              bool finishButtonEnabledBool = state.loadingBool == false && state.entryNameEmptyBool == false && state.emailInvalidBool == false;
 
               return ScrollableLayout(
                 scrollController: scrollController,
@@ -116,7 +97,7 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
                   BottomTooltipItem(
                     label: 'Save',
                     assetIconData: AppIcons.menu_save,
-                    onTap: finishButtonEnabledBool ? _saveOrShowDialog : null,
+                    onTap: finishButtonEnabledBool ? _save : null,
                   ),
                 ],
                 child: SingleChildScrollView(
@@ -134,16 +115,57 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
                         entryNameEmptyBool: state.entryNameEmptyBool,
                         obscurePasswordBool: _obscurePasswordBool,
                         onTogglePasswordVisibility: () => setState(() => _obscurePasswordBool = _obscurePasswordBool == false),
-                        totpSectionWidget: EntryFormTotpSecretField(
-                          obscureSecretBool: obscureCurrentTotpSecretBool,
-                          readOnlyBool: _readOnlyTotpBool,
-                          secretFieldVisibleBool: totpFieldVisibleBool,
-                          secretInvalidBool: state.totpInvalidBool,
-                          totpExistsBool: state.totpExistsBool,
-                          secretFocusNode: totpSecretFocusNode,
-                          secretTextEditingController: entryCreateEditPageCubit.totpSecretTextEditingController,
-                          onToggleSecretVisibility: _toggleTotpVisibility,
-                          onSelectTwoFactorType: totpOptionsVisibleBool ? _selectTwoFactorType : null,
+                        totpSectionWidget: Padding(
+                          padding: const EdgeInsets.only(left: 5, right: 5, top: 12),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  'TOTP Secret Key',
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () => _showTotpHintDialog(context),
+                                    child: const SizedBox(
+                                      width: 34,
+                                      height: 34,
+                                      child: AssetIcon(AppIcons.help, size: 25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 22.5, vertical: 5),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              GradientOutlinedButton.small(
+                                width: 176,
+                                label: state.totpExistsBool ? 'Overwrite 2FA' : 'Enable 2FA',
+                                onPressed: _showTwoFactorOptions,
+                              ),
+                              if (state.totpExistsBool) ...<Widget>[
+                                const SizedBox(width: 12),
+                                GradientOutlinedButton.small(
+                                  width: 176,
+                                  label: 'Display 2FA Secret',
+                                  onPressed: _handleExportPressed,
+                                ),
+                              ],
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(height: anyKeyboardVisibleBool ? 40 : 100),
@@ -158,42 +180,6 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
     );
   }
 
-  void _handleBackPressed() {
-    if (_settingNewTotpBool == false) {
-      _showDiscardDialog();
-      return;
-    }
-
-    bool emptySecretBool = entryCreateEditPageCubit.totpSecretTextEditingController.text.trim().isEmpty;
-    if (emptySecretBool) {
-      _returnToTwoFactorOptions();
-    } else {
-      _showDiscardNewTotpDialog();
-    }
-  }
-
-  void _saveOrShowDialog() {
-    if (entryCreateEditPageCubit.shouldConfirmTotpRemoval()) {
-      _showDisableTotpDialog();
-    } else {
-      _save();
-    }
-  }
-
-  Future<void> _returnToTwoFactorOptions() async {
-    entryCreateEditPageCubit
-      ..restorePreviousTotp()
-      ..finishTotpEditingSession();
-
-    setState(() {
-      _readOnlyTotpBool = true;
-      _settingNewTotpBool = false;
-      _obscureNewTotpSecretBool = true;
-    });
-
-    await _selectTwoFactorType();
-  }
-
   void _save() {
     CustomLoadingDialog.show<EntryModel?>(
       context: context,
@@ -205,7 +191,6 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
           return;
         }
 
-        entryCreateEditPageCubit.finishTotpEditingSession();
         bool newEntryBool = widget.entryPageType == EntryPageType.create;
         if (newEntryBool) {
           AutoRouter.of(context).pop<EntryModel>(entryModel);
@@ -216,59 +201,17 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
     );
   }
 
-  Future<void> _selectTwoFactorType() async {
+  Future<void> _showTwoFactorOptions() async {
     FocusScope.of(context).unfocus();
 
-    TwoFactorOptionsType? twoFactorOptionsType = await AutoRouter.of(context).push<TwoFactorOptionsType>(
-      TwoFactorOptionsRoute(entryModel: widget.entryModel, parentFilesystemPath: widget.parentFilesystemPath),
+    String? totpSecret = await AutoRouter.of(context).push<String>(
+      TwoFactorOptionsRoute(entryModel: widget.entryModel, totpExistsBool: entryCreateEditPageCubit.state.totpExistsBool),
     );
 
-    bool optionsUnavailableBool = twoFactorOptionsType == null || mounted == false;
-    if (optionsUnavailableBool) {
-      return;
+    bool secretApplicableBool = mounted && totpSecret != null;
+    if (secretApplicableBool) {
+      entryCreateEditPageCubit.updateTotpSecret(totpSecret);
     }
-
-    entryCreateEditPageCubit.startTotpEditingSession();
-    bool manualSecretInputBool = twoFactorOptionsType.manualSecretInputBool;
-    if (manualSecretInputBool) {
-      entryCreateEditPageCubit.removeTotp();
-    } else {
-      entryCreateEditPageCubit.totpSecretTextEditingController.text = twoFactorOptionsType.totpSecret;
-    }
-
-    setState(() {
-      _readOnlyTotpBool = manualSecretInputBool == false;
-      _settingNewTotpBool = true;
-    });
-
-    if (manualSecretInputBool) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          totpSecretFocusNode.requestFocus();
-        }
-      });
-    }
-  }
-
-  void _showDisableTotpDialog() {
-    showDialog<void>(
-      context: context,
-      barrierColor: Colors.transparent,
-      useRootNavigator: true,
-      builder: (BuildContext context) => CustomDialog(
-        title: 'Disabling 2FA',
-        content: const Text(
-          'Saving an empty secret will disable 2FA.\n'
-          'You may lose access to the service.\n'
-          'Are you sure you want to continue?',
-          textAlign: TextAlign.center,
-        ),
-        options: <CustomDialogOption>[
-          CustomDialogOption(label: 'Cancel', onPressed: () {}),
-          CustomDialogOption(label: 'Save', onPressed: _save),
-        ],
-      ),
-    );
   }
 
   void _showDiscardDialog() {
@@ -305,32 +248,53 @@ class _EntryCreateEditPageState extends State<EntryCreateEditPage> {
     );
   }
 
-  void _showDiscardNewTotpDialog() {
+  void _showTotpHintDialog(BuildContext context) {
     showDialog<void>(
       context: context,
       barrierColor: Colors.transparent,
       useRootNavigator: true,
       builder: (BuildContext context) => CustomDialog(
-        title: 'Discard new 2FA?',
+        title: '2 Factor Authentication\n',
         content: const Text(
-          'You will lose the entered 2FA data in this entry and the 2FA will return to the previous state.',
+          '2FA is an electronic authentication method in which a user is granted access to a service only after successfully presenting '
+          'at least two distinct types of evidence (or factors) to an authentication mechanism. It prevents a single point of failure '
+          '(e.g. leaked password) from compromising personal data.\n\n'
+          'Time-based One-Time Password (TOTP) 2FA can be enabled by providing the TOTP secret, either inserting it manually or in a form of a QR code. '
+          'Setting a new secret will overwrite the already existing one. Manually inserting an empty secret will disable 2FA.',
           textAlign: TextAlign.center,
         ),
         options: <CustomDialogOption>[
-          CustomDialogOption(label: 'Cancel', onPressed: () {}),
-          CustomDialogOption(label: 'Discard', onPressed: _returnToTwoFactorOptions),
+          CustomDialogOption(label: 'Close', onPressed: () {}),
         ],
       ),
     );
   }
 
-  void _toggleTotpVisibility() {
-    setState(() {
-      if (_settingNewTotpBool) {
-        _obscureNewTotpSecretBool = _obscureNewTotpSecretBool == false;
-      } else {
-        _obscureTotpSecretBool = _obscureTotpSecretBool == false;
-      }
-    });
+  Future<void> _handleExportPressed() async {
+    Uri? totpExportUri = await entryCreateEditPageCubit.getTotpExportUri();
+
+    bool exportAvailableBool = totpExportUri != null;
+    if (exportAvailableBool) {
+      await _showTotpExport(context, totpExportUri);
+    }
+  }
+
+  Future<void> _showTotpExport(BuildContext context, Uri totpExportUri) {
+    return showDialog<void>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return QRResultScaffold.fromPlaintext(
+          title: 'Export TOTP Secret',
+          plaintext: totpExportUri.toString(),
+          customPopCallback: () => Navigator.of(context).pop(),
+          child: LabelWrapperVertical(
+            label: '',
+            bottomBorderVisibleBool: false,
+            child: Text(totpExportUri.queryParameters['secret'].toString(), textAlign: TextAlign.center),
+          ),
+        );
+      },
+    );
   }
 }

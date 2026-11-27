@@ -25,6 +25,11 @@ class ScanTotpQRPageCubit extends Cubit<ScanTotpQRPageState> {
 
     try {
       String totpSecret = TotpSecretInputParser.fromInput(data, inputFromQrBool: true);
+      bool secretInvalidBool = TotpSecretInputParser.isValidTotpSecret(totpSecret) == false;
+      if (secretInvalidBool) {
+        throw const ReadTotpDataException(ReadTotpDataExceptionType.unsupported);
+      }
+
       _finishScanning(totpSecret);
     } on ReadTotpDataException catch (e) {
       _onError(e.readTotpDataExceptionType);

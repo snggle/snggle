@@ -9,7 +9,7 @@ class ReadTotpDataExceptionMsgs {
 
   static String getDescriptionForQR(ReadTotpDataExceptionType type) => switch (type) {
         ReadTotpDataExceptionType.unsupported =>
-          'The scanned QR code does not contain the TOTP secret configuration. Please ensure you are using a valid QR code or enter the TOTP secret manually.',
+          'Scan a QR code with a valid TOTP configuration or enter the TOTP secret manually.',
         ReadTotpDataExceptionType.unsupportedTotpConfiguration => 'The scanned QR code contains unsupported configuration of TOTP parameters.',
         ReadTotpDataExceptionType.secretNotFound =>
           'The scanned QR code does not contains a TOTP Secret. Please ensure you are using a valid QR code or enter the TOTP secret manually.',

@@ -1,3 +1,4 @@
+import 'package:codec_utils/codec_utils.dart';
 import 'package:snggle/shared/exceptions/read_totp_data_exception.dart';
 import 'package:snggle/shared/exceptions/read_totp_data_exception_type.dart';
 
@@ -33,6 +34,14 @@ class TotpSecretInputParser {
     }
 
     return _normalizeSecret(trimmedInput);
+  }
+
+  static bool isValidTotpSecret(String totpSecret) {
+    try {
+      return Base32Decoder.decode(totpSecret).isNotEmpty;
+    } catch (_) {
+      return false;
+    }
   }
 
   static void _validateSupportedTotpConfiguration(Map<String, String> qrParameters) {
